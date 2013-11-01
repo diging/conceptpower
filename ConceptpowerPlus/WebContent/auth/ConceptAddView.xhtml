@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:util="http://java.sun.com/jsf/composite/util"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<h:head>
+
+	<title>Add Concept</title>
+	<h:outputStylesheet library="css" name="style.css" />
+
+
+</h:head>
+<h:body>
+<f:view>
+	<div id="main">
+	<div id="header">
+	<div id="logo">
+	<div id="logo_text"><!-- class="logo_colour", allows you to change the colour of the text -->
+	<h1><a href="index.html">Concept<span class="logo_colour">power</span></a></h1>
+	<h2>dHPS</h2>
+	</div>
+	</div>
+	<div id="menubar"><h:form>
+		<ul id="menu">
+			<li><h:commandLink value="Welcome" action="welcome"></h:commandLink></li>
+			<li class="selected"><h:commandLink value="Concept Lists"
+				action="conceptLists"></h:commandLink></li>
+			<li><h:commandLink value="Concept Types" action="conceptTypes"></h:commandLink></li>
+			<li><h:commandLink value="Manage Users" action="manageUsers"></h:commandLink></li>
+			<li><h:commandLink value="Logout"
+				action="#{loginController.logout}"></h:commandLink></li>
+		</ul>
+	</h:form></div>
+	</div>
+	<div id="content_header"></div>
+	<div id="site_content">
+	<div class="sidebar">
+	<h2></h2>
+
+	<h:form>
+		<p>Open concept search:<br></br>
+		<h:commandLink id="conceptSearch" target="_blank"
+			action="conceptSearch">
+			<h:graphicImage library="images" name="7.png" height="12"/>	Concept Search
+		</h:commandLink>
+		</p>
+	</h:form></div>
+	<div id="content">
+
+	<h1>Add new concept</h1>
+	<p>Add a new concept here.</p>
+
+	<h:form>
+		<h:panelGrid columns="3">
+			<h:outputLabel value="Concept"></h:outputLabel>
+			<h:inputText id="concept" value="#{conceptAddView.conceptEntry.word}"
+				required="true" label="Concept" size="65">
+			</h:inputText>
+			<h:message for="concept" style="color:red" />
+
+			<h:outputLabel value="POS"></h:outputLabel>
+			<h:selectOneMenu id="pos" value="#{conceptAddView.conceptEntry.pos}"
+				label="POS" required="true">
+				<f:selectItem noSelectionOption="true" itemLabel="Select POS"></f:selectItem>
+				<f:selectItem itemValue="noun" itemLabel="Nouns" />
+				<f:selectItem itemValue="verb" itemLabel="Verb" />
+				<f:selectItem itemValue="adverb" itemLabel="Adverb" />
+				<f:selectItem itemValue="adjective" itemLabel="Adjective" />
+				<f:selectItem itemValue="other" itemLabel="Other" />
+			</h:selectOneMenu>
+			<h:message for="pos" style="color:red" />
+
+			<h:outputLabel value="Concept list"></h:outputLabel>
+			<h:selectOneMenu id="conceptlist"
+				value="#{conceptAddView.conceptEntry.conceptList}" required="true">
+				<f:selectItem noSelectionOption="true" itemLabel="Select concept list"></f:selectItem>
+				<f:selectItems value="#{conceptAddView.conceptLists}" var="list"
+					itemLabel="#{list.conceptListName}"
+					itemValue="#{list.conceptListName}" />
+			</h:selectOneMenu>
+			<h:message for="conceptlist" style="color:red" />
+
+			<h:outputLabel value="Description"></h:outputLabel>
+			<h:inputTextarea id="description" label="Description"
+				value="#{conceptAddView.conceptEntry.description}" required="true"
+				rows="5" cols="50" />
+			<h:message for="description" style="color:red" />
+
+			<h:outputLabel value="Synonyms"></h:outputLabel>
+			<rich:dataTable  rows="0" value="#{conceptAddView.synonyms}" var="concept" iterationStatusVar="it2" id="synonymsTable" >
+	            <rich:column>
+	            <a4j:region>
+		            <a4j:commandLink styleClass="no-decor" render="synonymsTable, searchResults" action="#{conceptAddView.removeSynonym}" value="Remove">
+		           	 	<f:setPropertyActionListener target="#{conceptAddView.synyonymToBeRemoved}" value="#{concept.id}" />
+		           	</a4j:commandLink>
+		        </a4j:region>
+	            </rich:column>
+	            <rich:column>
+	                #{concept.word}
+	            </rich:column>
+	            <rich:column>
+	                #{concept.description}
+	            </rich:column>
+            </rich:dataTable>
+			<h:commandButton styleClass="button" value="Add synonym">
+				<rich:componentControl target="popup" operation="show" />
+			</h:commandButton>
+
+			<h:outputLabel value="Concept type"></h:outputLabel>
+			<h:selectOneMenu id="concepttype"
+				value="#{conceptAddView.conceptEntry.typeId}" required="true"
+				label="Concept type">
+				<f:selectItem noSelectionOption="true" itemLabel="Select one"></f:selectItem>
+				<f:selectItems value="#{conceptAddView.availableTypes}" var="t"
+					itemLabel="#{t.typeName}" itemValue="#{t.typeId}" />
+			</h:selectOneMenu>
+			<h:message for="concepttype" style="color:red" />
+
+
+			<h:outputLabel value="Equals"></h:outputLabel>
+			<h:inputText id="equals"
+				value="#{conceptAddView.conceptEntry.equalTo}" required="false"
+				label="equals" size="65">
+			</h:inputText>
+			<h:message for="equals" style="color:red" />
+
+			<h:outputLabel value="Similar to"></h:outputLabel>
+			<h:inputText id="similarTo"
+				value="#{conceptAddView.conceptEntry.similarTo}" required="false"
+				label="similar to" size="65">
+			</h:inputText>
+			<h:message for="similarTo" style="color:red" />
+
+		</h:panelGrid>
+
+		<h:commandButton styleClass="button" action="#{conceptAddView.createConcept}" value="Add concept"></h:commandButton>
+
+
+	</h:form> 
+	<rich:popupPanel id="popup" modal="false" autosized="true"
+		resizeable="false">
+		<f:facet name="header">
+			<h:outputText value="Search synonym" />
+		</f:facet>
+
+		<h:form>
+			<f:ajax execute="@form" render="searchResults">
+				<h:inputText value="#{conceptAddView.searchPhrase}" />
+				<h:commandButton action="#{conceptAddView.searchForSynonyms}"
+					value="submit" />
+
+			</f:ajax>
+
+			<rich:dataTable value="#{conceptAddView.searchResults}" var="found"
+				iterationStatusVar="it" id="searchResults" rows="15">
+				<rich:column>
+					<f:facet name="header">Word</f:facet>
+		                #{found.word}
+	           		 </rich:column>
+				<rich:column>
+					<f:facet name="header">POS</f:facet>
+		                #{found.pos}
+	           		 </rich:column>
+				<rich:column>
+					<f:facet name="header">Description</f:facet>
+		                #{found.description}
+	           		 </rich:column>
+				<rich:column>
+					<a4j:commandLink styleClass="no-decor" render="synonymsTable"
+						action="#{conceptAddView.addSynonymToList}" oncomplete="#{rich:component('popup')}.hide(); return false;">
+						Add
+						<f:setPropertyActionListener target="#{conceptAddView.addedSynonym}"
+							value="#{found}" />
+					</a4j:commandLink>
+				</rich:column>
+				<f:facet name="footer">
+					<rich:dataScroller page="#{conceptAddView.page}" />
+				</f:facet>
+			</rich:dataTable>
+		</h:form>
+		<p></p>
+		<h:outputLink value="#"
+			onclick="#{rich:component('popup')}.hide(); return false;">
+		                Cancel
+		        </h:outputLink>
+
+	</rich:popupPanel></div>
+	</div>
+	<div id="content_footer"></div>
+	<ui:include src="../footer.xhtml" /></div>
+	</f:view>
+</h:body>
+</html>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+
+Name       : Black Berry
+Description: A fixed-width design suitable for small sites and blogs.
+Version    : 1.0
+Released   : 20071215
+
+-->
+	<title>Login to ConceptPower</title>
+	<h:outputStylesheet library="css" name="style.css" />
+</h:head>
+<h:body>
+	<div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="index.html">Concept<span class="logo_colour">power</span></a></h1>
+          <h2>dHPS</h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <h:form>
+        <ul id="menu">
+          <li ><h:commandLink value="Concept Search" action="conceptSearch"></h:commandLink></li>
+           <li class="selected"><h:commandLink value="Login" action="login"></h:commandLink></li>
+        </ul>
+        </h:form>
+      </div>
+    </div>
+    <div id="content_header"></div>
+    <div id="site_content">
+    <div class="sidebar">
+    
+    <h4>No login?</h4>
+	 <p>Write Julia an email: jdamerow@asu.edu </p>
+	
+	
+    </div>
+    <div id="content">
+	
+	<h1 class="title">Login</h1>
+	<p>Login to manage Conceptpower!</p>
+	
+	<f:loadBundle basename="edu.asu.conceptpower.messages" var="msg" /> <h:form>
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{msg.user}"></h:outputLabel>
+			<h:inputText id="name" value="#{loginController.name}" required="true" label="User ID">
+			</h:inputText>
+			<h:message for="name" style="color:red" />
+			
+			<h:outputLabel value="#{msg.password}"></h:outputLabel>
+			<h:inputSecret id="pw" value="#{loginController.passwd}" required="true" label="Password">
+			</h:inputSecret>
+			<h:message for="pw" style="color:red" />
+		</h:panelGrid>
+		<h:commandButton styleClass="button" action="#{loginController.login}"
+			value="#{msg.login}"></h:commandButton>
+		
+	</h:form>
+
+</div>
+</div>
+    <div id="content_footer"></div>
+    <ui:include src="footer.xhtml" />
+    
+  </div>
+</h:body>
+</html>

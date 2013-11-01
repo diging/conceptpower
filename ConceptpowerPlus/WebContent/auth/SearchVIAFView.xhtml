@@ -1,0 +1,277 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head profile="http://a9.com/-/spec/opensearch/1.1/">
+<link href="/viaf/css/viaf.css" rel="stylesheet" type="text/css"></link>
+<link type="text/css" rel="stylesheet" href="/viaf/css/jquery-ui.css"></link>
+<meta xmlns="http://www.w3.org/1999/xhtml" http-equiv="Content-Type" content="text/html; charset=UTF-8" ></meta>
+<link href="/viaf/images/viaf.ico" rel="shortcut icon" ></link>
+<title>VIAF</title>
+<link href="http://viaf.org/allFieldsSearch.xml" type="application/opensearchdescription+xml" title="VIAF Search" rel="search" ></link>
+</head>
+<body onLoad="document.getElementById('searchTerms').focus()">
+<div xmlns="" id="masthed">
+<div id="mastTitles">
+<h1>
+<a href="http://viaf.org/" class="mast-title">VIAF</a>
+</h1>
+<h2>Virtual International Authority File</h2>
+</div>
+</div>
+<div xmlns="http://www.w3.org/1999/xhtml" id="body">
+<div xmlns="http://www.w3.org/1999/xhtml" id="maincontent">
+<div xmlns="" id="searchdisplay">
+<div id="searchdisplay-inner">
+<h4 class="searchh4">Search</h4>
+<div class="yui-skin-sam" id="searchInner">
+<form name="visibleForm" id="visibleForm" onSubmit="return doSearch(this);">
+<fieldset id="fieldset-field">
+<label>
+<span xmlns="http://www.w3.org/1999/xhtml" class="langHi0">Select Field:</span></label><select gtbfieldid="9" size="1" name="selector0"><option value="cql.any">All Fields</option><option value="local.names">All</option><option value="local.corporateNames">Corporate Names</option><option value="local.geographicNames">Geographic Names</option><option value="local.personalNames">Personal Names</option><option value="local.uniformTitleWorks">Works</option><option value="local.uniformTitleExpressions">Expressions</option><option value="local.mainHeadingEl">Preferred Headings</option><option value="Xlocal.names">Exact Heading</option><option value="local.title">Bibliographic Titles</option></select>
+</fieldset>
+<fieldset id="fieldset-index">
+<label>Select Index:</label><select name="selector1" size="1" gtbfieldid="10"><option value="viaf">All VIAF</option><option value="nla">Australia</option><option value="vlacc">Belgium (Flemish)</option><option value="lac">Canada</option><option value="bnc">Catalunya</option><option value="nkc">Czech</option><option value="dbc">Denmark (DBC)</option><option value="egaxa">Egypt</option><option value="bnf">France (BnF)</option><option value="sudoc">France (Sudoc)</option><option value="dnb">Germany</option><option value="jpg">Getty (ULAN)</option><option value="bnc bne">Hisp&aacute;nica</option><option value="nszl">Hungary</option><option value="isni">ISNI</option><option value="ndl">Japan (NDL)</option><option value="nii">Japan (NII)</option><option value="nli">Israel</option><option value="iccu">Italy</option><option value="LNB">Latvia</option><option value="LNL">Lebanon</option><option value="lc">LC (NACO)</option><option value="nta">Netherlands</option><option value="bibsys">Norway (BIBSYS)</option><option value="nlp">Poland (National Library)</option><option value="nukat">Poland (NUKAT)</option><option value="ptbnp">Portugal</option><option value="nlb">Singapore</option><option value="bne">Spain</option><option value="selibr">Sweden</option><option value="swnl">Swiss (National Library)</option><option value="rero">Swiss (RERO)</option><option value="rsl">Russia</option><option value="bav">Vatican</option><option value="wkp">Wikipedia</option><option value="xa">xA</option></select>
+</fieldset>
+<fieldset id="fieldset-textenter">
+<label>Search Terms:></label>
+<div class="ui-widget">
+<input id="searchTerms" size="40"></input>
+</div>
+</fieldset>
+<fieldset id="fieldset-submit">
+<input type="submit" title="Search VIAF" id="btnSearch2" value="Search"></input>
+</fieldset>
+</form>
+</div>
+</div>
+</div>
+</div>
+<div xmlns="http://www.w3.org/1999/xhtml" id="aboutviaf"></div>
+<h1 xmlns="http://www.w3.org/1999/xhtml">VIAF: The Virtual International Authority File</h1>
+<p xmlns="http://www.w3.org/1999/xhtml">The VIAF&trade; (Virtual International Authority File) combines multiple name authority files into a single OCLC-hosted name authority service. The goal of the service is to lower the cost and increase the utility of library authority files by matching and linking widely-used authority files and making that information available on the Web.</p>
+<p xmlns="http://www.w3.org/1999/xhtml">Participating institutions are:<ul class="partlibs">
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/NLA.png" />
+</span>
+<a href="http://www.nla.gov.au/">National Library of Australia</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/LAC.png" />
+</span>
+<a href="http://www.collectionscanada.gc.ca">Library and Archives Canada</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/NKC.png" />
+</span>
+<a href="http://www.nkp.cz/">National Library of the Czech Republic</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/EGAXA.png" />
+</span>
+<a href="http://www.bibalex.org/">Bibliotheca Alexandrina (Egypt)</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/VLACC.png" />
+</span>
+<a href="http://www.bibnet.be/portaal/Bibnet/Open-Vlacc">Flemish Public Libraries</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/DBC.png" />
+</span>
+<a href="http://www.dbc.dk">Denmark (DBC)-test</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/BNF.png" />
+</span>
+<a href="http://www.bnf.fr/">Biblioth&egrave;que nationale de France</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/SUDOC.png" />
+</span>
+<a href="http://www.sudoc.abes.fr/">SUDOC (France)</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/DNB.png" />
+</span>
+<a href="http://www.d-nb.de/">Deutsche Nationalbibliothek</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/JPG.png" />
+</span>
+<a href="http://www.getty.edu/research/conducting_research/vocabularies/">Getty Research Institute</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/NSZL.png" />
+</span>
+<a href="http://www.oszk.hu/">National Sz&eacute;ch&eacute;nyi Library (Hungary)</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/NLI.png" />
+</span>
+<a href="http://web.nli.org.il/sites/NLI">National Library of Israel</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/ICCU.png" />
+</span>
+<a href="http://www.sbn.it/opacsbn/opac/iccu/informazioni.jsp">Istituto Centrale per il Catalogo Unico (Italy)</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/NDL.png" />
+</span>
+<a href="http://www.ndl.go.jp">National Diet Library (Japan)</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/LNB.png" />
+</span>
+<a href="http://www.lnb.lv">National Library of Latvia</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/NTA.png" />
+</span>
+<a href="http://www.kb.nl">National Library of the Netherlands-test</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/BIBSYS.png" />
+</span>
+<a href="http://www.bibsys.no/">Norway (BIBSYS)</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/NLP.png" />
+</span>
+<a href="http://bn.org.pl">National Library of Poland</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/NUKAT.png" />
+</span>
+<a href="http://centrum.nukat.edu.pl/">NUKAT Center (Poland)</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/PTBNP.png" />
+</span>
+<a href="http://www.bnportugal.pt/">Biblioteca Nacional de Portugal</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/BNE.png" />
+</span>
+<a href="http://www.bne.es/">Biblioteca Nacional de Espa&ntilde;a</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/SELIBR.png" />
+</span>
+<a href="http://www.kb.se/">National Library of Sweden</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/SWNL.png" />
+</span>
+<a href="http://www.nb.admin.ch/slb/">Swiss National Library</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/RERO.png" />
+</span>
+<a href="http://www.rero.ch/">RERO (Switzerland)</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/LC.png" />
+</span>
+<a href="http://www.loc.gov/">Library of Congress/NACO</a>
+</li>
+<ul class="flagsublist">
+<li>
+<a href="http://bnm.unam.mx/">Biblioteca Nacional de M&eacute;xico</a>
+</li>
+<li>
+<a href="http://www.bl.uk/">British Library</a>
+</li>
+<li>
+<a href="http://www.nal.usda.gov/">National Agricultural Library (U.S.)</a>
+</li>
+<li>
+<a href="http://www.nlm.nih.gov/">National Library of Medicine (U.S.)</a>
+</li>
+<li>
+<a href="http://www.natlib.govt.nz/">National Library of New Zealand</a>
+</li>
+<li>
+<a href="http://www.nls.uk/">National Library of South Africa</a>
+</li>
+<li>
+<a href="http://www.nlsa.ac.za/">National Library of South Africa</a>
+</li>
+<li>
+<a href="http://www.llgc.org.uk/">National Library of Wales</a>
+</li>
+</ul>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/BAV.png" />
+</span>
+<a href="http://www.vaticanlibrary.va">Vatican Library</a>
+</li>
+</ul>
+</p>
+<p xmlns="http://www.w3.org/1999/xhtml">We also load files into VIAF for testing:<ul class="partlibs">
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/RSL.png" />
+</span>
+<a href="http://www.rsl.ru/">Russian State Library-test</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/WKP.png" />
+</span>
+<a href="http://www.wikipedia.org">Wikipedia (en)-test</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/NLB.png" />
+</span>
+<a href="http://www.nlb.gov.sg/">National Library Board (Singapore)-test</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/BNC.png" />
+</span>
+<a href="http://www.bnc.cat">Biblioteca de Catalunya-test</a>
+</li>
+<li>
+<span class="flags">
+<img src="/viaf/images/flags/LNL.png" />
+</span>
+<a href="http://www.lnl.gov.lb">Lebanese National Library-test</a>
+</li>
+</ul>
+</p>
+<div xmlns="http://www.w3.org/1999/xhtml" id="searchnote">
+<p>The search box at the top of this page searches a merged view of VIAF derived from the name authority and related bibliographic data of the participating libraries.</p>
+<p>More information can be found at  <a href="http://www.oclc.org/viaf/">http://www.oclc.org/viaf/</a>.</p>
+</div>
+<div xmlns="" class="clearing"></div>
+<div xmlns="" id="footer2-wrap"></div>
+</div></body>
+</html>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:util="http://java.sun.com/jsf/composite/util"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<h:head>
+
+	<title>Add Wordnet Concept to Concept</title>
+	<h:outputStylesheet library="css" name="style.css" />
+
+
+</h:head>
+<h:body>
+<f:view>
+	<div id="main">
+	<div id="header">
+	<div id="logo">
+	<div id="logo_text"><!-- class="logo_colour", allows you to change the colour of the text -->
+	<h1><a href="index.html">Concept<span class="logo_colour">power</span></a></h1>
+	<h2>dHPS</h2>
+	</div>
+	</div>
+	<div id="menubar"><h:form>
+		<ul id="menu">
+			<li><h:commandLink value="Welcome" action="welcome"></h:commandLink></li>
+			<li class="selected"><h:commandLink value="Concept Lists"
+				action="conceptLists"></h:commandLink></li>
+			<li><h:commandLink value="Concept Types" action="conceptTypes"></h:commandLink></li>
+			<li><h:commandLink value="Manage Users" action="manageUsers"></h:commandLink></li>
+			<li><h:commandLink value="Logout"
+				action="#{loginController.logout}"></h:commandLink></li>
+		</ul>
+	</h:form></div>
+	</div>
+	<div id="content_header"></div>
+	<div id="site_content">
+	<div class="sidebar">
+	<h2></h2>
+
+	<h:form>
+		<p>Open concept search:<br></br>
+		<h:commandLink id="conceptSearch" target="_blank"
+			action="conceptSearch">
+			<h:graphicImage library="images" name="7.png" height="12"/>	Concept Search
+		</h:commandLink>
+		</p>
+	</h:form>
+	
+	
+	
+	</div>
+	<div id="content">
+
+	<h1>Add Wordnet concept to concept</h1>
+	<p>Add a Wordnet concept to an existing concept. Do that if you for example found out that you've created a concept that already existed in Wordnet and you don't want to loose the additional data you've entered.</p>
+	
+	<p>
+	You chose to add a Wordnet concept to the following concept:
+	<h:form>
+		<h3>#{wNConceptToWrapperAddView.selectedConceptWrapper.entry.word}</h3>
+		<h:outputText value="#{wNConceptToWrapperAddView.selectedConceptWrapper.description}" escape="false"/>
+        <br/><br/>
+        <table class="greyContent">
+        <tr><td>Id:</td><td>#{wNConceptToWrapperAddView.selectedConceptWrapper.entry.id}</td></tr>
+        <tr><td>Wordnet Id:</td><td>#{wNConceptToWrapperAddView.selectedConceptWrapper.entry.wordnetId}</td></tr>
+        <tr><td>POS:</td><td>#{wNConceptToWrapperAddView.selectedConceptWrapper.entry.pos}</td></tr>
+        <tr><td>Concept List:</td><td>#{wNConceptToWrapperAddView.selectedConceptWrapper.entry.conceptList}</td></tr>
+        <tr><td>Type:</td><td>#{wNConceptToWrapperAddView.selectedConceptWrapper.type.typeName}</td></tr>
+        <tr><td>Equal to:</td><td>#{wNConceptToWrapperAddView.selectedConceptWrapper.entry.equalTo}</td></tr>
+        <tr><td>Similar to:</td><td>#{wNConceptToWrapperAddView.selectedConceptWrapper.entry.similarTo}</td></tr>
+        <tr><td>Creator:</td><td>#{wNConceptToWrapperAddView.selectedConceptWrapper.creator.user}</td></tr>
+        </table>
+		<p/>
+		
+	</h:form> 
+	</p>
+	
+	<h2>1. Search for Wordnet concept</h2>
+
+	<h:form>
+		<p></p>
+		<h:panelGrid columns="2" cellpadding="4px" columnClasses="greyContent, greyContent">
+			<h:outputLabel value="Create wrapper for Wordnet concept:"></h:outputLabel>
+			<h:inputText id="wnconcept" value="#{conceptSearch.concept}"
+				label="Concept">
+			</h:inputText>
+
+
+			<h:outputLabel value="POS"></h:outputLabel>
+			<h:selectOneMenu id="pos" value="#{conceptSearch.pos}" label="POS">
+				<f:selectItem itemValue="noun" itemLabel="Nouns" />
+				<f:selectItem itemValue="verb" itemLabel="Verb" />
+				<f:selectItem itemValue="adverb" itemLabel="Adverb" />
+				<f:selectItem itemValue="adjective" itemLabel="Adjective" />
+				<f:selectItem itemValue="other" itemLabel="Other" />
+			</h:selectOneMenu>
+
+		</h:panelGrid>
+		<p/>
+		<h:commandButton styleClass="button" action="#{conceptSearch.search}"
+			value="Search">
+		</h:commandButton>
+	</h:form>
+	
+	<h2>2. Select Wordnet concept from search results</h2>
+	
+	<h4>The following concepts were found:</h4>
+	Remember, you can only create a wrapper for concepts in Wordnet!
+	<p></p>
+	<h:form style="width: 910px;">
+	<!--  Search results -->
+	<rich:extendedDataTable selection="#{conceptSearch.selection}" selectionMode="single" value="#{conceptSearch.foundConcepts}"
+			var="con" id="search_table" width="910px">
+			<a4j:ajax execute="@form"
+				event="selectionchange"
+				listener="#{wNConceptToWrapperAddView.selectionChanged}" render="outputSelectedConcept outputSelectedConceptDesc createWrapperSubmitButton outputSelectedConceptId" />
+			<rich:column sortable="false">
+			<a4j:region>
+				<a4j:commandLink action="#{conceptSearch.selectForShow}" value="Details" render="pp" oncomplete="#{rich:component('pp')}.show(); return false;">
+                    <f:setPropertyActionListener target="#{conceptSearch.selectedConceptId}" value="#{con.entry.id}" />    
+         		</a4j:commandLink>
+         	</a4j:region>
+			</rich:column>
+			<rich:column sortable="false">
+				<!-- column header -->
+				<f:facet name="header">term</f:facet>
+				<!-- row record -->
+    				#{con.entry.word}
+    		</rich:column>
+
+			<rich:column sortable="false">
+				<f:facet name="header">Id</f:facet>
+    				#{con.entry.id}
+    		</rich:column>
+
+			<rich:column>
+				<f:facet name="header">Wordnet Id</f:facet>
+    				#{con.entry.wordnetId}
+    		</rich:column>
+
+			<rich:column>
+				<f:facet name="header">POS</f:facet>
+    				#{con.entry.pos}
+    		</rich:column>
+
+			<rich:column>
+				<f:facet name="header">Conceptlist</f:facet>
+    				#{con.entry.conceptList}
+    			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">Description</f:facet>
+    				#{con.entry.description}
+    			</rich:column>
+			<rich:column>
+				<f:facet name="header">Type</f:facet>
+				#{con.type.typeName}
+    		</rich:column>
+    		<rich:column>
+				<f:facet name="header" >Synonyms</f:facet>
+				<a4j:repeat value="#{con.synonyms}" var="syn">
+				<a4j:outputPanel > -> #{syn.word}
+					<rich:tooltip id="tt" styleClass="tooltip" layout="block">
+             	 	  #{syn.description}
+           		 	</rich:tooltip>
+           		 </a4j:outputPanel>
+				</a4j:repeat>
+    		</rich:column>
+    		
+		</rich:extendedDataTable>
+	</h:form>
+	<!--  Search Details  -->
+	<rich:popupPanel id="pp" resizeable="true" 
+                    header="Concept: #{conceptSearch.selectedConcept.entry.word}">
+        <f:facet name="controls">
+            <h:outputLink value="#" onclick="#{rich:component('pp')}.hide(); return false;">
+                Close [X]
+            </h:outputLink>
+        </f:facet>
+         <p><b>#{conceptSearch.selectedConcept.entry.word}</b>
+        <br/><br/>
+        #{conceptSearch.selectedConcept.entry.description}
+        </p>
+        <table class="greyContent">
+        <tr><td>Id:</td><td>#{conceptSearch.selectedConcept.entry.id}</td></tr>
+        <tr><td>Wordnet Id:</td><td>#{conceptSearch.selectedConcept.entry.wordnetId}</td></tr>
+        <tr><td>POS:</td><td>#{conceptSearch.selectedConcept.entry.pos}</td></tr>
+        <tr><td>Concept List:</td><td>#{conceptSearch.selectedConcept.entry.conceptList}</td></tr>
+        <tr><td>Type:</td><td>#{conceptSearch.selectedConcept.type.typeName}</td></tr>
+        <tr><td>Equal to:</td><td>#{conceptSearch.selectedConcept.entry.equalTo}</td></tr>
+        <tr><td>Similar to:</td><td>#{conceptSearch.selectedConcept.entry.similarTo}</td></tr>
+        <tr><td>Creator:</td><td>#{conceptSearch.selectedConcept.creator.user}</td></tr>
+        </table>
+        
+    </rich:popupPanel>
+    <p/>
+    <!--  Selected Wordnet Concept -->
+    <h2>3. Selected concept</h2>
+	<p>
+	You've selected the following concept:
+	</p>
+	<h3><h:outputText id="outputSelectedConcept" value="#{not empty wNConceptToWrapperAddView.selectedWordnetConcept ? wNConceptToWrapperAddView.selectedWordnetConcept.entry.word : 'No Wordnet concept selected!'}" /></h3>
+	<p>Wordnet ID: <h:outputText id="outputSelectedConceptId" value="#{wNConceptToWrapperAddView.selectedWordnetConcept.entry.wordnetId}" /></p>
+	<p>
+	<h:outputText id="outputSelectedConceptDesc" value="#{wNConceptToWrapperAddView.selectedWordnetConcept.entry.description}" />
+	</p>
+	
+	<h:form>
+		<h:commandButton styleClass="button" id="createWrapperSubmitButton" action="#{wNConceptToWrapperAddView.addWordnetConcept}" disabled="#{empty wNConceptToWrapperAddView.selectedWordnetConcept}"  value="Add Wordnet concept to concept"></h:commandButton>
+	</h:form>
+	</div>
+	</div>
+	<div id="content_footer"></div>
+	<ui:include src="../footer.xhtml" /></div>
+	</f:view>
+</h:body>
+</html>

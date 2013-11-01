@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:util="http://java.sun.com/jsf/composite/util"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<h:head>
+
+	<title>Concept Types</title>
+	<h:outputStylesheet library="css" name="style.css" />
+
+
+</h:head>
+<h:body>
+	<div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text -->
+          <h1><a href="index.html">Concept<span class="logo_colour">power</span></a></h1>
+          <h2>dHPS</h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <h:form>
+        <ul id="menu"> 
+        <li><h:commandLink value="Welcome" action="welcome"></h:commandLink></li>
+        <li><h:commandLink value="Concept Lists" action="conceptLists"></h:commandLink></li>
+		<li class="selected"><h:commandLink value="Concept Types" action="conceptTypes"></h:commandLink></li>
+		<li><h:commandLink value="Manage Users" action="manageUsers"></h:commandLink></li>
+		<li><h:commandLink value="Logout" action="#{loginController.logout}"></h:commandLink></li>
+        </ul>
+        </h:form>
+      </div>
+    </div>
+    <div id="content_header"></div>
+    <div id="site_content">
+   
+    <div id="content_wide">
+    
+    
+	<h1 >Types</h1>
+	<p>
+	See existing types below.
+	</p>
+	
+	<h4>Manage types</h4>
+    <h:form>
+    <ul>
+    	<li><h:commandLink value="Add New Type" action="addType"/></li>
+    </ul>
+    </h:form>
+	
+	<h:form>
+		<rich:dataTable rows="10" value="#{typesView.datamodel}" var="type" sortMode="single">
+			<rich:column style="vertical-align: top;">
+    			<f:facet name="header"></f:facet>
+    			 <a4j:region>
+		            <a4j:commandLink styleClass="no-decor" action="#{typesView.selectForEdit}" value="Edit">
+		           	 	<f:setPropertyActionListener target="#{typesView.selectedTypeForEdit}" value="#{type.type.typeId}" />
+		           	</a4j:commandLink>
+		       	</a4j:region>
+		    </rich:column>
+			<rich:column style="vertical-align: top; width:30px">
+				<!-- column header -->
+				<f:facet name="header">Name</f:facet>
+				<!-- row record -->
+    				#{type.type.typeName}
+    		</rich:column>
+
+			<rich:column style="vertical-align: top;">
+				<f:facet name="header">Type URI</f:facet>
+    				#{type.typeURI}
+    		</rich:column>
+    		
+			<rich:column style="vertical-align: top;">
+				<f:facet name="header">Description</f:facet>
+    				#{type.type.description}
+    		</rich:column>
+    		
+    		<rich:column style="vertical-align: top; width:30px">
+				<f:facet name="header">Super type</f:facet>
+    				#{type.supertype.typeName}
+    		</rich:column>
+    		
+    		<rich:column  style="vertical-align: top; width:30px">
+				<f:facet name="header">Matches</f:facet>
+    				#{type.type.matches}
+    		</rich:column>
+    		
+    		<rich:column  style="vertical-align: top; width:30px">
+				<f:facet name="header">Created by</f:facet>
+    				#{type.type.creatorId}
+    		</rich:column>
+    		
+    		<rich:column  style="vertical-align: top; width:30px">
+				<f:facet name="header">Modified</f:facet>
+    				#{type.type.modified}
+    		</rich:column>
+
+			<f:facet name="footer">
+				<rich:dataScroller page="#{typesView.page}" />
+			</f:facet>
+		</rich:dataTable>
+
+	</h:form>
+
+	</div>
+</div>
+    <div id="content_footer"></div>
+    <ui:include src="../footer.xhtml" />
+    
+  </div>
+</h:body>
+</html>

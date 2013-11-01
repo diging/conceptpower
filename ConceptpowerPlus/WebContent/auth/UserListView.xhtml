@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:util="http://java.sun.com/jsf/composite/util"
+	xmlns:rich="http://richfaces.org/rich">
+<h:head>
+
+	<title>Users</title>
+	<h:outputStylesheet library="css" name="style.css" />
+
+
+</h:head>
+<h:body>
+	<div id="main">
+	<div id="header">
+	<div id="logo">
+	<div id="logo_text"><!-- class="logo_colour", allows you to change the colour of the text -->
+	<h1><a href="index.html">Concept<span class="logo_colour">power</span></a></h1>
+	<h2>dHPS</h2>
+	</div>
+	</div>
+	<div id="menubar"><h:form>
+		<ul id="menu">
+			<li><h:commandLink value="Welcome" action="welcome"></h:commandLink></li>
+			<li><h:commandLink value="Concept Lists" action="conceptLists"></h:commandLink></li>
+			<li><h:commandLink value="Concept Types" action="conceptTypes"></h:commandLink></li>
+			<li class="selected"><h:commandLink value="Manage Users"
+				action="manageUsers"></h:commandLink></li>
+			<li><h:commandLink value="Logout"
+				action="#{loginController.logout}"></h:commandLink></li>
+		</ul>
+	</h:form></div>
+	</div>
+	<div id="content_header"></div>
+	<div id="site_content">
+	<div class="sidebar">
+	<h2></h2>
+
+	<h:panelGroup rendered="#{userListView.hasAccess}">
+
+		<h4>Manage users</h4>
+		<h:form>
+			<ul>
+				<li><h:commandLink value="Add New User" action="addUser" /></li>
+			</ul>
+		</h:form>
+
+	</h:panelGroup>
+	</div>
+	<div id="content">
+	<h:panelGroup rendered="#{userListView.hasAccess}">
+		<h1>Users</h1>
+		<p>See registered users below.</p>
+
+		<h:form>
+		<rich:dataTable value="#{userListView.datamodel}" var="user">
+			<rich:column>
+    			<h:commandLink action="resetPassword">
+    				<f:param name="userid" value="#{user.user}" />
+    				<h:graphicImage title="Reset password" alt="Reset password" library="images" width="14" name="27.png" />
+				</h:commandLink>
+    		</rich:column>
+			<rich:column>
+    			<h:commandLink action="#{userListView.removeUser}">
+					<h:graphicImage title="Delete user" alt="Delete user" library="images" name="51_14.png" />
+				</h:commandLink>
+    		</rich:column>
+			<rich:column>
+				<!-- column header -->
+				<f:facet name="header">User</f:facet>
+				<!-- row record -->
+    				#{user.user}
+    		</rich:column>
+    		<!-- <h:column>
+				<f:facet name="header">Name</f:facet>
+				#{user.name}
+    		</h:column> -->
+
+			<rich:column>
+				<f:facet name="header">Is Admin</f:facet>
+    				#{user.isAdmin}
+    			</rich:column>
+    			
+    		
+		</rich:dataTable>
+		</h:form>
+		
+	</h:panelGroup> 
+	
+	<h:panelGroup rendered="#{!(userListView.hasAccess)}">
+		<h1>Sorry, content restricted!</h1>
+		<p>You have to have administrator rights to see this page.</p>
+	</h:panelGroup>
+	</div>
+	</div>
+	<div id="content_footer"></div>
+	<ui:include src="../footer.xhtml" /></div>
+</h:body>
+</html>
