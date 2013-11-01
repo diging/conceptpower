@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<h:head>
+
+	<title>Concept Lists</title>
+	<h:outputStylesheet library="css" name="style.css" />
+
+</h:head>
+<h:body>
+	<div id="main">
+		<div id="header">
+			<div id="logo">
+				<div id="logo_text">
+					<!-- class="logo_colour", allows you to change the colour of the text -->
+					<h1>
+						<a href="index.html">Concept<span class="logo_colour">power</span></a>
+					</h1>
+					<h2>dHPS</h2>
+				</div>
+			</div>
+			<div id="menubar">
+				<h:form>
+					<ul id="menu">
+						<li><h:commandLink value="Welcome" action="welcome"></h:commandLink></li>
+						<li class="selected"><h:commandLink value="Concept Lists"
+								action="conceptLists"></h:commandLink></li>
+						<li><h:commandLink value="Concept Types"
+								action="conceptTypes"></h:commandLink></li>
+						<li><h:commandLink value="Manage Users" action="manageUsers"></h:commandLink></li>
+						<li><h:commandLink value="Logout"
+								action="#{loginController.logout}"></h:commandLink></li>
+					</ul>
+				</h:form>
+			</div>
+		</div>
+		<div id="content_header"></div>
+		<div id="site_content">
+
+			<div id="content_wide">
+
+				<h1>Concept list</h1>
+				<p>Here you find all stored concept list in the selected concept
+					list.</p>
+
+				<h2>Concepts</h2>
+				<h:form>
+					<rich:dataTable id="conceptList" width="100%"
+						value="#{conceptListView.entries}" var="con" rows="25">
+
+						<rich:column>
+							<a4j:region>
+								<f:facet name="header"></f:facet>
+
+								<a4j:commandLink action="#{conceptListView.selectForShow}"
+									value="Details" render="detailsPP"
+									oncomplete="#{rich:component('detailsPP')}.show(); return false;">
+									<f:setPropertyActionListener
+										target="#{conceptListView.selectedConceptIdForShow}"
+										value="#{con.entry.id}" />
+								</a4j:commandLink>
+							</a4j:region>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+
+							<a4j:region>
+								<a4j:commandLink styleClass="no-decor"
+									action="#{conceptListView.selectForEdit}">
+									<f:setPropertyActionListener
+										target="#{conceptListView.selectedConceptForEdit}"
+										value="#{con.entry.id}" />
+										<h:graphicImage title="Edit concept" alt="Edit concept" library="images" name="39.png" width="14" />
+								</a4j:commandLink>
+							</a4j:region>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"></f:facet>
+
+							<a4j:region>
+								<a4j:commandLink styleClass="no-decor"
+									action="#{conceptListView.selectForDelete}">
+									<h:graphicImage title="Delete concept" alt="Delete concept" library="images" name="51_14.png" />
+									<f:setPropertyActionListener
+										target="#{conceptListView.conceptIdForDelete}"
+										value="#{con.entry.id}" />
+								</a4j:commandLink>
+							</a4j:region>
+
+						</rich:column>
+						<rich:column>
+							<!-- column header -->
+							<f:facet name="header">term</f:facet>
+							<!-- row record -->
+							<a4j:commandLink styleClass="no-decor"
+								action="#{conceptListView.selectForShowDetails}"
+								value="#{con.entry.word}">
+								<f:setPropertyActionListener
+									target="#{conceptListView.selectedConceptIdForShow}"
+									value="#{con.entry.id}" />
+							</a4j:commandLink>
+						</rich:column>
+
+						<rich:column>
+							<f:facet name="header">Id</f:facet>
+			    			#{con.entry.id}
+			    		</rich:column>
+
+						<rich:column>
+							<f:facet name="header">Wordnet Id</f:facet>
+			    			#{con.entry.wordnetId}
+			    		</rich:column>
+
+						<rich:column>
+							<f:facet name="header">POS</f:facet>
+				    		#{con.entry.pos}
+				    	</rich:column>
+
+						<rich:column>
+							<f:facet name="header">Conceptlist</f:facet>
+			    			#{con.entry.conceptList}
+			    		</rich:column>
+
+						<rich:column>
+							<f:facet name="header">Description</f:facet>
+							<h:outputText value="#{con.description}" escape="false" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Type</f:facet>
+								#{con.type.typeName}
+				    		</rich:column>
+						<rich:column>
+							<f:facet name="header">Synonyms</f:facet>
+							<a4j:repeat value="#{con.synonyms}" var="syn">
+								<a4j:outputPanel> -> #{syn.word}
+									<rich:tooltip id="tt" styleClass="tooltip" layout="block">
+				             	 	  #{syn.description}
+				           		 	</rich:tooltip>
+								</a4j:outputPanel>
+							</a4j:repeat>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Created by</f:facet>
+			    			#{con.creator.user}
+			    		</rich:column>
+						<f:facet name="footer">
+						<a4j:region>
+							<rich:dataScroller maxPages="10" >
+								
+							</rich:dataScroller>
+						</a4j:region>
+						</f:facet>
+
+					</rich:dataTable>
+
+				</h:form>
+
+				<rich:popupPanel width="400" id="detailsPP" resizeable="true"
+					header="Concept: #{conceptListView.selectedConceptForShow.entry.word}">
+					<f:facet name="controls">
+						<h:outputLink value="#"
+							onclick="#{rich:component('detailsPP')}.hide(); return false;">
+              				Close [X]
+            			</h:outputLink>
+					</f:facet>
+					<b>#{conceptListView.selectedConceptForShow.entry.word}</b>
+					<br />
+					<br />
+					<h:outputText
+						value="#{conceptListView.selectedConceptForShow.description}"
+						escape="false" />
+					<br />
+					<br />
+					<table class="greyContent">
+						<tr>
+							<td>Id:</td>
+							<td>#{conceptListView.selectedConceptForShow.entry.id}</td>
+						</tr>
+						<tr>
+							<td>URI:</td>
+							<td>#{conceptListView.selectedConceptForShow.uri}</td>
+						</tr>
+						<tr>
+							<td>Wordnet Id:</td>
+							<td>#{conceptListView.selectedConceptForShow.entry.wordnetId}</td>
+						</tr>
+						<tr>
+							<td>POS:</td>
+							<td>#{conceptListView.selectedConceptForShow.entry.pos}</td>
+						</tr>
+						<tr>
+							<td>Concept List:</td>
+							<td>#{conceptListView.selectedConceptForShow.entry.conceptList}</td>
+						</tr>
+						<tr>
+							<td>Type:</td>
+							<td>#{conceptListView.selectedConceptForShow.type.typeName}</td>
+						</tr>
+						<tr>
+							<td>Equal to:</td>
+							<td>#{conceptListView.selectedConceptForShow.entry.equalTo}</td>
+						</tr>
+						<tr>
+							<td>Similar to:</td>
+							<td>#{conceptListView.selectedConceptForShow.entry.similarTo}</td>
+						</tr>
+						<tr>
+							<td>Creator:</td>
+							<td>#{conceptListView.selectedConceptForShow.creator.user}</td>
+						</tr>
+					</table>
+
+				</rich:popupPanel>
+
+
+
+			</div>
+		</div>
+		<div id="content_footer"></div>
+		<ui:include src="../footer.xhtml" />
+
+	</div>
+</h:body>
+</html>
