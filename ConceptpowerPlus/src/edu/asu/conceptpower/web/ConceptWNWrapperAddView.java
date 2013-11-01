@@ -42,17 +42,8 @@ public class ConceptWNWrapperAddView implements Serializable {
 	private int page = 1;
 	private ConceptEntry addedSynonym;
 	private ConceptEntryWrapper selectedConcept;
-
-	private ArrayList<ConceptEntryWrapper> selectedConcepts;
-
-	public ArrayList<ConceptEntryWrapper> getSelectedConcepts() {
-		return selectedConcepts;
-	}
-
-	public void setSelectedConcepts(
-			ArrayList<ConceptEntryWrapper> selectedConcepts) {
-		this.selectedConcepts = selectedConcepts;
-	}
+	private Boolean disable = true;
+	private List<ConceptEntryWrapper> selectedConcepts;
 
 	private String synyonymToBeRemoved;
 
@@ -198,9 +189,11 @@ public class ConceptWNWrapperAddView implements Serializable {
 
 		conceptEntry.setCreatorId(loginController.getUser().getUser());
 		String wordnetID = "";
+
 		for (ConceptEntryWrapper entry : selectedConcepts) {
 			wordnetID += (entry.getEntry().getWordnetId() + ",");
 		}
+
 		conceptEntry.setWordnetId(wordnetID);
 
 		ConceptManager conceptManager;
@@ -286,10 +279,10 @@ public class ConceptWNWrapperAddView implements Serializable {
 		return searchPhrase;
 	}
 
-	public void searchForSynonyms() {
+	public String searchForSynonyms() {
 		ConceptManager conceptManager = getConceptManager();
 		if (conceptManager == null)
-			return;
+			return "";
 
 		ConceptEntry[] entries = conceptManager
 				.getConceptListEntriesForWord(searchPhrase.trim());
@@ -301,6 +294,7 @@ public class ConceptWNWrapperAddView implements Serializable {
 
 		searchResults = founds;
 		conceptManager.close();
+		return "";
 	}
 
 	public void removeSynonym() {
@@ -375,14 +369,11 @@ public class ConceptWNWrapperAddView implements Serializable {
 					selectedConcepts.add(concemptEntryWrapper);
 			}
 		}
-	}
-
-	public void setSelectedConcept(ConceptEntryWrapper selectedConcept) {
-		this.selectedConcept = selectedConcept;
-	}
-
-	public ConceptEntryWrapper getSelectedConcept() {
-		return selectedConcept;
+		if (selectedConcepts.isEmpty()) {
+			this.setDisable(true);
+		} else {
+			this.setDisable(false);
+		}
 	}
 
 	public void setConceptSearch(ConceptSearch conceptSearch) {
@@ -393,4 +384,28 @@ public class ConceptWNWrapperAddView implements Serializable {
 		return conceptSearch;
 	}
 
+	public ConceptEntryWrapper getSelectedConcept() {
+		return selectedConcept;
+	}
+
+	public void setSelectedConcept(ConceptEntryWrapper selectedConcept) {
+		this.selectedConcept = selectedConcept;
+	}
+
+	public Boolean getDisable() {
+		return disable;
+	}
+
+	public void setDisable(Boolean disable) {
+		this.disable = disable;
+	}
+
+	public List<ConceptEntryWrapper> getSelectedConcepts() {
+		return selectedConcepts;
+	}
+
+	public void setSelectedConcepts(
+			ArrayList<ConceptEntryWrapper> selectedConcepts) {
+		this.selectedConcepts = selectedConcepts;
+	}
 }
