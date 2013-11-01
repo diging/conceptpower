@@ -11,4 +11,5 @@ public interface SearchFieldNames {
 	public final static String TYPE_ID = "type_id";
 	public final static String CREATOR = "creator";
 	public final static String MODIFIED = "modified_by";
+	public final static String WORDNETID = "wordnetid";
 }
