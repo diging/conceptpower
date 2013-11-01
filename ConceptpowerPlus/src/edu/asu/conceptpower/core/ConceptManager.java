@@ -40,8 +40,6 @@ public class ConceptManager {
 	protected String CONCEPT_PREFIX = "CON";
 	protected String LIST_PREFIX = "LIST";
 
-	private String generatedID;
-
 	public ConceptManager(DatabaseManager wordnetCache,
 			DatabaseManager dictionary, WordNetConfiguration config)
 			throws IOException {
@@ -129,10 +127,31 @@ public class ConceptManager {
 	protected void fillConceptEntry(ConceptEntry entry) {
 		if (entry.getId() != null && entry.getWordnetId() != null
 				&& !entry.getId().equals(entry.getWordnetId())) {
-			String wordnetId = entry.getWordnetId();
-			ConceptEntry wnEntry = wordnetManager.getConcept(wordnetId);
-			entry.setSynonymIds(wnEntry.getSynonymIds());
-			entry.setSynsetIds(entry.getSynsetIds());
+			// generate the synonym ids
+			StringBuffer sb = new StringBuffer();
+
+			if (entry.getSynonymIds() != null) {
+				String wordnetIds = (entry.getWordnetId() != null ? entry
+						.getWordnetId() : "");
+				if (wordnetIds != null) {
+					String[] ids = wordnetIds.trim().split(
+							Constants.CONCEPT_SEPARATOR);
+					if (ids != null) {
+						for (String id : ids) {
+							if (id != null && !id.trim().isEmpty()) {
+								ConceptEntry wordnetEntry = wordnetManager
+										.getConcept(id);
+								if (wordnetEntry != null) {
+									sb.append(wordnetEntry.getSynonymIds());
+								}
+							}
+						}
+					}
+				}
+			}
+
+			entry.setSynonymIds(sb.toString());
+			//entry.setSynsetIds(entry.getSynsetIds());
 		}
 	}
 
