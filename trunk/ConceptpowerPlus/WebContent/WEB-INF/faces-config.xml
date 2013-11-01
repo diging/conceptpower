@@ -359,6 +359,22 @@
 			<to-view-id>/auth/ResetPasswordView.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+	<navigation-rule>
+		<display-name>auth/ConceptLists.xhtml</display-name>
+		<from-view-id>/auth/ConceptLists.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>newVIAFconcept</from-outcome>
+			<to-view-id>/auth/SearchVIAFView.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<display-name>auth/SearchVIAFView.xhtml</display-name>
+		<from-view-id>/auth/SearchVIAFView.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>login</from-outcome>
+			<to-view-id>/LoginView.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 	
 	<!--  validators -->
 	 <validator>
