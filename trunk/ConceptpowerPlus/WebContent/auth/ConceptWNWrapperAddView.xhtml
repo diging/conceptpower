@@ -104,7 +104,7 @@
 							var="con" id="search_table" width="910px">
 							<a4j:ajax execute="@form" event="selectionchange"
 								listener="#{conceptWNWrapperAddView.selectionChanged}"
-								render="outputSelectedConcept outputSelectedConceptDesc createWrapperSubmitButton" />
+								render="selectedList createWrapperSubmitButton" />
 							<rich:column sortable="false">
 								<a4j:region>
 									<a4j:commandLink action="#{conceptSearch.selectForShow}"
@@ -217,14 +217,22 @@
 					<!--  Selected Wordnet Concept -->
 					<h2>3. Enter additional information</h2>
 					<p>Selected Wordnet concept:</p>
-					<h5>
-						<h:outputText id="outputSelectedConcept"
-							value="#{not empty conceptWNWrapperAddView.selectedConcept ? conceptWNWrapperAddView.selectedConcept.entry.word : 'No Wordnet concept selected!'} #{not empty conceptWNWrapperAddView.selectedConcept ? '[' : ''}#{conceptWNWrapperAddView.selectedConcept.entry.wordnetId}#{not empty conceptWNWrapperAddView.selectedConcept ? ']' : ''}" />
-					</h5>
-					<p>
-						<h:outputText id="outputSelectedConceptDesc"
-							value="#{conceptWNWrapperAddView.selectedConcept.entry.description}" />
-					</p>
+
+					<rich:panel id="selectedList" style="border:0px">
+						<a4j:repeat value="#{conceptWNWrapperAddView.selectedConcepts}"
+							var="con">
+							<a4j:outputPanel>
+								<h5>
+									<h:outputText id="outputSelectedConcept"
+										value="#{con.entry.word}'['#{con.entry.wordnetId}']'" />
+								</h5>
+								<p>
+									<h:outputText id="outputSelectedConceptDesc"
+										value="#{con.entry.description}" />
+								</p>
+							</a4j:outputPanel>
+						</a4j:repeat>
+					</rich:panel>
 
 					<!-- Additional information -->
 					<h:form>
@@ -266,15 +274,14 @@
 									</a4j:region>
 								</rich:column>
 								<rich:column>
-	                #{concept.word}
-	            </rich:column>
+	              				  #{concept.word}
+	         				   </rich:column>
 								<rich:column>
-	                #{concept.description}
-	            </rich:column>
+	        			        #{concept.description}
+	      				      </rich:column>
 							</rich:dataTable>
-							<h:commandButton styleClass="button" value="Add synonym"
-								action="#{conceptWNWrapperAddView.test}">
-
+							<h:commandButton styleClass="button" value="Add synonym">
+								<rich:componentControl target="popup" operation="show"></rich:componentControl>
 							</h:commandButton>
 
 							<h:outputLabel value="Concept type"></h:outputLabel>
@@ -306,6 +313,7 @@
 						<p />
 						<h:commandButton styleClass="button"
 							id="createWrapperSubmitButton"
+							disabled="#{conceptWNWrapperAddView.disable}"
 							action="#{conceptWNWrapperAddView.createConceptWrapper}"
 							value="Create Wordnet concept wrapper"></h:commandButton>
 

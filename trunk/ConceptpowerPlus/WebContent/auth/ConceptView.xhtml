@@ -65,20 +65,20 @@
 				<h4>Concept tools:</h4>
 				<h:form>
 					<h:panelGroup id="toolList">
-					<ul >
-						<li><h:commandLink
-								disabled="#{not empty conceptView.concept.wrappedWordnetEntry ? true : false}"
-								styleClass="canDisable"
-								action="#{conceptView.selectForAddWordnetConcept}"
-								value="Add Wordnet Concept To Concept" /></li>
-						<li><a4j:commandLink
-								disabled="#{empty conceptView.concept.wrappedWordnetEntry ? true : false}"
-								styleClass="canDisable"
-								value="Remove Wordnet Concept from Concept"
-								oncomplete="#{rich:component('confirmRemove')}.show(); return false;" />
-						</li>
-					</ul>	
-					</h:panelGroup>	
+						<ul>
+							<li><h:commandLink
+									disabled="#{not empty conceptView.concept.wrappedWordnetEntries}"
+									styleClass="canDisable"
+									action="#{conceptView.selectForAddWordnetConcept}"
+									value="Add Wordnet Concept To Concept" /></li>
+							<li><a4j:commandLink
+									disabled="#{empty conceptView.concept.wrappedWordnetEntries}"
+									styleClass="canDisable"
+									value="Remove Wordnet Concept from Concept"
+									oncomplete="#{rich:component('confirmRemove')}.show(); return false;" />
+							</li>
+						</ul>
+					</h:panelGroup>
 				</h:form>
 
 			</div>
@@ -87,68 +87,68 @@
 				<h1>View concept</h1>
 				<p>Concept details</p>
 
-				<h:form id="conceptForm" >
+				<h:form id="conceptForm">
 					<h:panelGroup id="conceptFormGroup">
-					<h2>#{conceptView.concept.entry.word}</h2>
-					<h:outputText value="#{conceptView.concept.description}"
-						escape="false" />
-					<br />
-					<br />
-					<table class="greyContent">
-						<tr>
-							<td>Id:</td>
-							<td>#{conceptView.concept.entry.id}</td>
-						</tr>
-						<tr>
-							<td>URI:</td>
-							<td>#{conceptView.concept.uri}</td>
-						</tr>
-						<tr>
-							<td>Wordnet Id:</td>
-							<td>#{conceptView.concept.entry.wordnetId}</td>
-						</tr>
-						<tr>
-							<td>POS:</td>
-							<td>#{conceptView.concept.entry.pos}</td>
-						</tr>
-						<tr>
-							<td>Concept List:</td>
-							<td>#{conceptView.concept.entry.conceptList}</td>
-						</tr>
-						<tr>
-							<td>Type:</td>
-							<td>#{conceptView.concept.type.typeName}</td>
-						</tr>
-						<tr>
-							<td>Synonyms:</td>
-							<td><a4j:repeat value="#{conceptView.concept.synonyms}"
-									var="syn">
-									<a4j:outputPanel> #{syn.word}<br />
-										<rich:tooltip id="tt" styleClass="tooltip" layout="block">
+						<h2>#{conceptView.concept.entry.word}</h2>
+						<h:outputText value="#{conceptView.concept.description}"
+							escape="false" />
+						<br />
+						<br />
+						<table class="greyContent">
+							<tr>
+								<td>Id:</td>
+								<td>#{conceptView.concept.entry.id}</td>
+							</tr>
+							<tr>
+								<td>URI:</td>
+								<td>#{conceptView.concept.uri}</td>
+							</tr>
+							<tr>
+								<td>Wordnet Id:</td>
+								<td>#{conceptView.concept.entry.wordnetId}</td>
+							</tr>
+							<tr>
+								<td>POS:</td>
+								<td>#{conceptView.concept.entry.pos}</td>
+							</tr>
+							<tr>
+								<td>Concept List:</td>
+								<td>#{conceptView.concept.entry.conceptList}</td>
+							</tr>
+							<tr>
+								<td>Type:</td>
+								<td>#{conceptView.concept.type.typeName}</td>
+							</tr>
+							<tr>
+								<td>Synonyms:</td>
+								<td><a4j:repeat value="#{conceptView.concept.synonyms}"
+										var="syn">
+										<a4j:outputPanel> #{syn.word}<br />
+											<rich:tooltip id="tt" styleClass="tooltip" layout="block">
              	 	  #{syn.description}
            		 	</rich:tooltip>
-									</a4j:outputPanel>
-								</a4j:repeat></td>
-						</tr>
-						<tr>
-							<td>Equal to:</td>
-							<td>#{conceptView.concept.entry.equalTo}</td>
-						</tr>
-						<tr>
-							<td>Similar to:</td>
-							<td>#{conceptView.concept.entry.similarTo}</td>
-						</tr>
-						<tr>
-							<td>Creator:</td>
-							<td>#{conceptView.concept.creator.user}</td>
-						</tr>
-						<tr>
-							<td>Modified:</td>
-							<td>#{conceptView.concept.entry.modified}</td>
-						</tr>
-					</table>
+										</a4j:outputPanel>
+									</a4j:repeat></td>
+							</tr>
+							<tr>
+								<td>Equal to:</td>
+								<td>#{conceptView.concept.entry.equalTo}</td>
+							</tr>
+							<tr>
+								<td>Similar to:</td>
+								<td>#{conceptView.concept.entry.similarTo}</td>
+							</tr>
+							<tr>
+								<td>Creator:</td>
+								<td>#{conceptView.concept.creator.user}</td>
+							</tr>
+							<tr>
+								<td>Modified:</td>
+								<td>#{conceptView.concept.entry.modified}</td>
+							</tr>
+						</table>
 
-				</h:panelGroup>
+					</h:panelGroup>
 				</h:form>
 
 				<rich:popupPanel width="400" id="confirmRemove" resizeable="true"
@@ -163,23 +163,21 @@
 						<h:outputText
 							value="Do you really want to remove the Wordnet Concept from this concept?"
 							style="FONT-SIZE: 120%; " />
-						<br />
-						<br />
-						<br />
-					<p>
-						<h:panelGroup>
-						<h:form>
-							<a4j:commandButton styleClass="button" value="OK" style="margin-right: 10px;"
-								action="#{conceptView.removeWordnetConcept}" 
-								render="conceptFormGroup toolList" execute="@form"
-								oncomplete="#{rich:component('confirmRemove')}.hide();return false"
-								/>
-								
-							<input type="button" class="button" value="Cancel"
-								onclick="#{rich:component('confirmRemove')}.hide();return false" />
-						</h:form>
-						</h:panelGroup>
-					</p>
+						<br /> <br /> <br />
+						<p>
+							<h:panelGroup>
+								<h:form>
+									<a4j:commandButton styleClass="button" value="OK"
+										style="margin-right: 10px;"
+										action="#{conceptView.removeWordnetConcept}"
+										render="conceptFormGroup toolList" execute="@form"
+										oncomplete="#{rich:component('confirmRemove')}.hide();return false" />
+
+									<input type="button" class="button" value="Cancel"
+										onclick="#{rich:component('confirmRemove')}.hide();return false" />
+								</h:form>
+							</h:panelGroup>
+						</p>
 					</center>
 				</rich:popupPanel>
 
