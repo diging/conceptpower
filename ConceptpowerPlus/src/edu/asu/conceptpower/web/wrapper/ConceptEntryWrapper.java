@@ -18,61 +18,54 @@ public class ConceptEntryWrapper implements Serializable {
 	private List<ConceptEntry> synonyms;
 	private ConceptType type;
 	private User creator;
-	private ConceptEntry wrappedWordnetEntry;
+	private List<ConceptEntry> wrappedWordnetEntries;
 	private String description;
-	
+
 	public ConceptEntryWrapper(ConceptEntry entry) {
 		this.entry = entry;
 	}
-	
+
 	public ConceptEntry getEntry() {
 		return entry;
 	}
+
 	public void setEntry(ConceptEntry entry) {
 		this.entry = entry;
 	}
+
 	public List<ConceptEntry> getSynonyms() {
 		return synonyms;
 	}
+
 	public void setSynonyms(List<ConceptEntry> synonyms) {
 		this.synonyms = synonyms;
 	}
+
 	public ConceptType getType() {
 		return type;
 	}
+
 	public void setType(ConceptType type) {
 		this.type = type;
 	}
+
 	public User getCreator() {
 		return creator;
 	}
+
 	public void setCreator(User creator) {
 		this.creator = creator;
 	}
 
-	public void setWrappedWordnetEntry(ConceptEntry wrappedWordnetEntry) {
-		this.wrappedWordnetEntry = wrappedWordnetEntry;
+	public void setWrappedWordnetEntries(List<ConceptEntry> wrappedWordnetEntries) {
+		this.wrappedWordnetEntries = wrappedWordnetEntries;
 	}
 
-	public ConceptEntry getWrappedWordnetEntry() {
-		return wrappedWordnetEntry;
+	public List<ConceptEntry> getWrappedWordnetEntries() {
+		return wrappedWordnetEntries;
 	}
 
 	public String getDescription() {
-		if (description == null) {
-			StringBuffer sb = new StringBuffer();
-			if (entry.getDescription() != null) {
-				sb.append(entry.getDescription());
-				sb.append("<br/><br/>");
-			}
-			if (wrappedWordnetEntry != null && wrappedWordnetEntry.getDescription() != null) {
-				sb.append("Wordnet description:<br/>");
-				sb.append("<i>" + wrappedWordnetEntry.getWord() + "</i><br/>");
-				sb.append(wrappedWordnetEntry.getDescription());
-			}
-			
-			return sb.toString();
-		}
 		return description;
 	}
 
@@ -83,10 +76,8 @@ public class ConceptEntryWrapper implements Serializable {
 	public String getUri() {
 		if (entry == null)
 			return "";
-		
+
 		return URICreator.getURI(entry);
 	}
 
-	
-	
 }
