@@ -42,7 +42,7 @@ public class ConceptSearch implements Serializable {
 	@ManagedProperty("#{wordNetConfController}")
 	private WordNetConfController configurationController;
 
-	private List<ConceptEntryWrapper> selectedConcepts = new ArrayList<ConceptEntryWrapper>();
+	private List<ConceptEntryWrapper> selectedConcepts;
 
 	public WordNetConfController getConfigurationController() {
 		return configurationController;
@@ -169,17 +169,7 @@ public class ConceptSearch implements Serializable {
 	}
 
 	public List<ConceptEntryWrapper> selectionChanged() {
-		// if (selection instanceof HashSet<?>) {
-		// Iterator<?> it = ((HashSet<?>) selection).iterator();
-		// while (it.hasNext()) {
-		// Object selectionIdx = it.next();
-		// if (selectionIdx instanceof Integer) {
-		// return foundConcepts.get((Integer) selectionIdx);
-		// }
-		// }
-		// }
-		// return null;
-		selectedConcepts.clear();
+		selectedConcepts = new ArrayList<ConceptEntryWrapper>();
 		if (selection instanceof HashSet<?>) {
 			Iterator<?> it = ((HashSet<?>) selection).iterator();
 			while (it.hasNext()) {

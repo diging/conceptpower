@@ -84,7 +84,7 @@ public class ConceptView extends DatabaseBean implements Serializable {
 		}
 		
 		concept.getEntry().setWordnetId(null);
-		concept.setWrappedWordnetEntry(null);
+		concept.setWrappedWordnetEntries(null);
 		
 		String userId = loginController.getUser().getUser();
 		String modified = concept.getEntry().getModified() != null ? concept.getEntry().getModified(): "";
