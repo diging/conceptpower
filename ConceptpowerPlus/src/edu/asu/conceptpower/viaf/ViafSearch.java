@@ -12,7 +12,7 @@ package edu.asu.conceptpower.viaf;
 	public static void main(String[] args) {
 	 
 		 try {
-	 
+	 // converting xml to object
 			File file = new File("C:\\file.xml");
 			JAXBContext jaxbContext = JAXBContext.newInstance(ViafSearch.class);
 	 
