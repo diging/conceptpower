@@ -160,10 +160,7 @@ public class ConceptWNWrapperAddView implements Serializable {
 		return founds;
 	}
 
-	public String createConceptWrapper() {
-
-		if (!(selectedConcepts.size() > 0))
-			return "failed";
+	public void fillConcept() {
 
 		StringBuffer sb = new StringBuffer();
 		for (ConceptEntry synonym : synonyms)
@@ -173,20 +170,6 @@ public class ConceptWNWrapperAddView implements Serializable {
 		conceptEntry.setWord(selectedConcepts.get(0).getEntry().getWord());
 		conceptEntry.setPos(selectedConcepts.get(0).getEntry().getPos());
 
-		DatabaseProvider provider = getDatabaseController()
-				.getDatabaseProvider();
-
-		DatabaseManager manager = provider
-				.getDatabaseManager(DBNames.WORDNET_CACHE);
-
-		String conceptList = conceptEntry.getConceptList();
-
-		if (loginController.getUser() == null)
-			return "failed";
-
-		if (loginController.getUser() == null)
-			return "failed";
-
 		conceptEntry.setCreatorId(loginController.getUser().getUser());
 		String wordnetID = "";
 
@@ -195,6 +178,29 @@ public class ConceptWNWrapperAddView implements Serializable {
 		}
 
 		conceptEntry.setWordnetId(wordnetID);
+		String userId = loginController.getUser().getUser();
+		conceptEntry.setCreatorId(userId);
+
+	}
+
+	public String createConceptWrapper() {
+
+		if (!(selectedConcepts.size() > 0))
+			return "failed";
+
+		if (loginController.getUser() == null)
+			return "failed";
+
+		if (loginController.getUser() == null)
+			return "failed";
+
+		fillConcept();
+
+		DatabaseProvider provider = getDatabaseController()
+				.getDatabaseProvider();
+
+		DatabaseManager manager = provider
+				.getDatabaseManager(DBNames.WORDNET_CACHE);
 
 		ConceptManager conceptManager;
 		try {
@@ -207,11 +213,8 @@ public class ConceptWNWrapperAddView implements Serializable {
 			return "failed";
 		}
 
-		String userId = loginController.getUser().getUser();
-		conceptEntry.setCreatorId(userId);
-
+		String conceptList = conceptEntry.getConceptList();
 		ConceptList list = conceptManager.getConceptList(conceptList);
-
 		FacesUtil.setSessionMapValue(Parameter.SELECTED_LIST, list);
 
 		try {
@@ -407,5 +410,9 @@ public class ConceptWNWrapperAddView implements Serializable {
 	public void setSelectedConcepts(
 			ArrayList<ConceptEntryWrapper> selectedConcepts) {
 		this.selectedConcepts = selectedConcepts;
+	}
+
+	public String test() {
+		return "";
 	}
 }

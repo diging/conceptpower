@@ -89,22 +89,39 @@ public class WNConceptToWrapperAddView extends DatabaseBean implements
 		}
 	}
 
+	public void fillConcept() {
+
+		String wordnetID = "";
+		for (ConceptEntryWrapper entry : selectedWordnetConcepts) {
+			wordnetID += (entry.getEntry().getWordnetId() + ",");
+		}
+		selectedConceptWrapper.getEntry().setWordnetId(wordnetID);
+		String userId = loginController.getUser().getUser();
+		String modified = selectedConceptWrapper.getEntry().getModified() != null ? selectedConceptWrapper
+				.getEntry().getModified() : "";
+		if (!modified.trim().isEmpty())
+			modified += ", ";
+		selectedConceptWrapper.getEntry().setModified(
+				modified + userId + "@" + (new Date()).toString());
+	}
+
 	public String addWordnetConcept() {
 		if (!(selectedWordnetConcepts.size() > 0))
 			return "failed";
+
+		if (loginController.getUser() == null)
+			return "failed";
+
+		if (loginController.getUser() == null)
+			return "failed";
+
+		fillConcept();
 
 		DatabaseProvider provider = getDatabaseController()
 				.getDatabaseProvider();
 
 		DatabaseManager manager = provider
 				.getDatabaseManager(DBNames.WORDNET_CACHE);
-
-		if (loginController.getUser() == null)
-			return "failed";
-
-		if (loginController.getUser() == null)
-			return "failed";
-
 		ConceptManager conceptManager;
 		try {
 			conceptManager = new ConceptManager(manager,
@@ -115,24 +132,6 @@ public class WNConceptToWrapperAddView extends DatabaseBean implements
 			e.printStackTrace();
 			return "failed";
 		}
-
-		String wordnetID = "";
-		for (ConceptEntryWrapper entry : selectedWordnetConcepts) {
-			wordnetID += (entry.getEntry().getWordnetId() + ",");
-		}
-		selectedConceptWrapper.getEntry().setWordnetId(wordnetID);
-
-		// need to modify
-		// selectedConceptWrapper.setWrappedWordnetEntry(selectedWordnetConcept
-		// .getEntry());
-
-		String userId = loginController.getUser().getUser();
-		String modified = selectedConceptWrapper.getEntry().getModified() != null ? selectedConceptWrapper
-				.getEntry().getModified() : "";
-		if (!modified.trim().isEmpty())
-			modified += ", ";
-		selectedConceptWrapper.getEntry().setModified(
-				modified + userId + "@" + (new Date()).toString());
 
 		conceptManager.storeModifiedConcept(selectedConceptWrapper.getEntry());
 		conceptManager.close();
