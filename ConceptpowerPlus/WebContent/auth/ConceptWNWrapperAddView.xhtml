@@ -280,9 +280,13 @@
 	        			        #{concept.description}
 	      				      </rich:column>
 							</rich:dataTable>
-							<h:commandButton styleClass="button" value="Add synonym">
-								<rich:componentControl target="popup" operation="show"></rich:componentControl>
-							</h:commandButton>
+
+
+							<a4j:commandButton styleClass="button" value="Add synonymhgh"
+								execute="@this" oncomplete="#{rich:component('popup')}.show();"
+								actionListener="#{conceptWNWrapperAddView.backupSelectedWordnetConcepts}">
+
+							</a4j:commandButton>
 
 							<h:outputLabel value="Concept type"></h:outputLabel>
 							<h:selectOneMenu id="concepttype"
@@ -328,7 +332,7 @@
 						</f:facet>
 
 						<h:form>
-							<f:ajax execute="@form" render="searchResults">
+							<f:ajax execute="@this" render="searchResults">
 								<h:inputText value="#{conceptWNWrapperAddView.searchPhrase}" />
 								<h:commandButton
 									action="#{conceptWNWrapperAddView.searchForSynonyms}"
