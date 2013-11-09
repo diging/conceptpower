@@ -44,7 +44,6 @@ public class ConceptWNWrapperAddView implements Serializable {
 	private ConceptEntryWrapper selectedConcept;
 	private Boolean disable = true;
 	private List<ConceptEntryWrapper> selectedConcepts;
-	private List<ConceptEntryWrapper> backupSelectedConcepts;
 
 	private String synyonymToBeRemoved;
 
@@ -413,11 +412,4 @@ public class ConceptWNWrapperAddView implements Serializable {
 		this.selectedConcepts = selectedConcepts;
 	}
 
-	public String backupSelectedWordnetConcepts() {
-		backupSelectedConcepts = new ArrayList<ConceptEntryWrapper>();
-		for (ConceptEntryWrapper selectedEntry : selectedConcepts) {
-			backupSelectedConcepts.add(selectedEntry);
-		}
-		return "";
-	}
 }
