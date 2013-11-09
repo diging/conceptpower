@@ -58,15 +58,15 @@
 					</h:form>
 				</div>
 				<div id="content">
-
-					<h1>Add new Wordnet concept wrapper</h1>
-					<p>Add a wrapper for a concept in Wordnet. Do that if you for
-						example want to attach an "equals to" URI a concept that already
-						exists in Wordnet.</p>
-
-					<h2>1. Search for Wordnet concept</h2>
-
 					<h:form>
+						<h1>Add new Wordnet concept wrapper</h1>
+						<p>Add a wrapper for a concept in Wordnet. Do that if you for
+							example want to attach an "equals to" URI a concept that already
+							exists in Wordnet.</p>
+
+						<h2>1. Search for Wordnet concept</h2>
+
+
 						<p></p>
 						<h:panelGrid columns="2" cellpadding="4px"
 							columnClasses="greyContent, greyContent">
@@ -90,152 +90,210 @@
 						<h:commandButton styleClass="button"
 							action="#{conceptSearch.search}" value="Search">
 						</h:commandButton>
-					</h:form>
 
-					<h2>2. Select Wordnet concept from search results</h2>
+						<h2>2. Select Wordnet concept from search results</h2>
 
-					<h4>The following concepts were found:</h4>
+						<h4>The following concepts were found:</h4>
 					Remember, you can only create a wrapper for concepts in Wordnet!
 					<p></p>
-					<h:form style="width: 910px;">
-						<!--  Search results -->
-						<rich:extendedDataTable selection="#{conceptSearch.selection}"
-							selectionMode="multiple" value="#{conceptSearch.foundConcepts}"
-							var="con" id="search_table" width="910px">
-							<a4j:ajax execute="@form" event="selectionchange"
-								listener="#{conceptWNWrapperAddView.selectionChanged}"
-								render="selectedList createWrapperSubmitButton" />
-							<rich:column sortable="false">
-								<a4j:region>
-									<a4j:commandLink action="#{conceptSearch.selectForShow}"
-										value="Details" render="pp"
-										oncomplete="#{rich:component('pp')}.show(); return false;">
-										<f:setPropertyActionListener
-											target="#{conceptSearch.selectedConceptId}"
-											value="#{con.entry.id}" />
-									</a4j:commandLink>
-								</a4j:region>
-							</rich:column>
-							<rich:column sortable="false">
-								<!-- column header -->
-								<f:facet name="header">term</f:facet>
-								<!-- row record -->
+						<div style="width: 910px;">
+							<!--  Search results -->
+							<rich:extendedDataTable selection="#{conceptSearch.selection}"
+								selectionMode="multiple" value="#{conceptSearch.foundConcepts}"
+								var="con" id="search_table" width="910px">
+								<a4j:ajax execute="@form" event="selectionchange"
+									listener="#{conceptWNWrapperAddView.selectionChanged}"
+									render="selectedList createWrapperSubmitButton" />
+								<rich:column sortable="false">
+									<a4j:region>
+										<a4j:commandLink action="#{conceptSearch.selectForShow}"
+											value="Details" render="pp"
+											oncomplete="#{rich:component('pp')}.show(); return false;">
+											<f:setPropertyActionListener
+												target="#{conceptSearch.selectedConceptId}"
+												value="#{con.entry.id}" />
+										</a4j:commandLink>
+									</a4j:region>
+								</rich:column>
+								<rich:column sortable="false">
+									<!-- column header -->
+									<f:facet name="header">term</f:facet>
+									<!-- row record -->
     				#{con.entry.word}
     		</rich:column>
 
-							<rich:column sortable="false">
-								<f:facet name="header">Id</f:facet>
+								<rich:column sortable="false">
+									<f:facet name="header">Id</f:facet>
     				#{con.entry.id}
     		</rich:column>
 
-							<rich:column>
-								<f:facet name="header">Wordnet Id</f:facet>
+								<rich:column>
+									<f:facet name="header">Wordnet Id</f:facet>
     				#{con.entry.wordnetId}
     		</rich:column>
 
-							<rich:column>
-								<f:facet name="header">POS</f:facet>
+								<rich:column>
+									<f:facet name="header">POS</f:facet>
     				#{con.entry.pos}
     		</rich:column>
 
-							<rich:column>
-								<f:facet name="header">Conceptlist</f:facet>
+								<rich:column>
+									<f:facet name="header">Conceptlist</f:facet>
     				#{con.entry.conceptList}
     			</rich:column>
 
-							<rich:column>
-								<f:facet name="header">Description</f:facet>
+								<rich:column>
+									<f:facet name="header">Description</f:facet>
     				#{con.entry.description}
     			</rich:column>
-							<rich:column>
-								<f:facet name="header">Type</f:facet>
+								<rich:column>
+									<f:facet name="header">Type</f:facet>
 				#{con.type.typeName}
     		</rich:column>
-							<rich:column>
-								<f:facet name="header">Synonyms</f:facet>
-								<a4j:repeat value="#{con.synonyms}" var="syn">
-									<a4j:outputPanel> -> #{syn.word}
+								<rich:column>
+									<f:facet name="header">Synonyms</f:facet>
+									<a4j:repeat value="#{con.synonyms}" var="syn">
+										<a4j:outputPanel> -> #{syn.word}
 					<rich:tooltip id="tt" styleClass="tooltip" layout="block">
              	 	  #{syn.description}
            		 	</rich:tooltip>
-									</a4j:outputPanel>
-								</a4j:repeat>
-							</rich:column>
+										</a4j:outputPanel>
+									</a4j:repeat>
+								</rich:column>
 
-						</rich:extendedDataTable>
-					</h:form>
-					<!--  Search Details  -->
-					<rich:popupPanel id="pp" resizeable="true"
-						header="Concept: #{conceptSearch.selectedConcept.entry.word}">
-						<f:facet name="controls">
-							<h:outputLink value="#"
-								onclick="#{rich:component('pp')}.hide(); return false;">
+							</rich:extendedDataTable>
+						</div>
+						<!--  Search Details  -->
+						<rich:popupPanel id="pp" resizeable="true"
+							header="Concept: #{conceptSearch.selectedConcept.entry.word}">
+							<f:facet name="controls">
+								<h:outputLink value="#"
+									onclick="#{rich:component('pp')}.hide(); return false;">
                 Close [X]
             </h:outputLink>
-						</f:facet>
-						<p>
-							<b>#{conceptSearch.selectedConcept.entry.word}</b> <br /> <br />
-							#{conceptSearch.selectedConcept.entry.description}
-						</p>
-						<table class="greyContent">
-							<tr>
-								<td>Id:</td>
-								<td>#{conceptSearch.selectedConcept.entry.id}</td>
-							</tr>
-							<tr>
-								<td>Wordnet Id:</td>
-								<td>#{conceptSearch.selectedConcept.entry.wordnetId}</td>
-							</tr>
-							<tr>
-								<td>POS:</td>
-								<td>#{conceptSearch.selectedConcept.entry.pos}</td>
-							</tr>
-							<tr>
-								<td>Concept List:</td>
-								<td>#{conceptSearch.selectedConcept.entry.conceptList}</td>
-							</tr>
-							<tr>
-								<td>Type:</td>
-								<td>#{conceptSearch.selectedConcept.type.typeName}</td>
-							</tr>
-							<tr>
-								<td>Equal to:</td>
-								<td>#{conceptSearch.selectedConcept.entry.equalTo}</td>
-							</tr>
-							<tr>
-								<td>Similar to:</td>
-								<td>#{conceptSearch.selectedConcept.entry.similarTo}</td>
-							</tr>
-							<tr>
-								<td>Creator:</td>
-								<td>#{conceptSearch.selectedConcept.creator.user}</td>
-							</tr>
-						</table>
+							</f:facet>
+							<p>
+								<b>#{conceptSearch.selectedConcept.entry.word}</b> <br /> <br />
+								#{conceptSearch.selectedConcept.entry.description}
+							</p>
+							<table class="greyContent">
+								<tr>
+									<td>Id:</td>
+									<td>#{conceptSearch.selectedConcept.entry.id}</td>
+								</tr>
+								<tr>
+									<td>Wordnet Id:</td>
+									<td>#{conceptSearch.selectedConcept.entry.wordnetId}</td>
+								</tr>
+								<tr>
+									<td>POS:</td>
+									<td>#{conceptSearch.selectedConcept.entry.pos}</td>
+								</tr>
+								<tr>
+									<td>Concept List:</td>
+									<td>#{conceptSearch.selectedConcept.entry.conceptList}</td>
+								</tr>
+								<tr>
+									<td>Type:</td>
+									<td>#{conceptSearch.selectedConcept.type.typeName}</td>
+								</tr>
+								<tr>
+									<td>Equal to:</td>
+									<td>#{conceptSearch.selectedConcept.entry.equalTo}</td>
+								</tr>
+								<tr>
+									<td>Similar to:</td>
+									<td>#{conceptSearch.selectedConcept.entry.similarTo}</td>
+								</tr>
+								<tr>
+									<td>Creator:</td>
+									<td>#{conceptSearch.selectedConcept.creator.user}</td>
+								</tr>
+							</table>
 
-					</rich:popupPanel>
-					<p />
-					<!--  Selected Wordnet Concept -->
-					<h2>3. Enter additional information</h2>
-					<p>Selected Wordnet concept:</p>
+						</rich:popupPanel>
+						<p />
+						<!--  Selected Wordnet Concept -->
+						<rich:panel id="selectedList" style="border:0px">
+							<a4j:repeat value="#{conceptWNWrapperAddView.selectedConcepts}"
+								var="con">
+								<a4j:outputPanel>
+									<h5>
+										<h:outputText id="outputSelectedConcept"
+											value="#{con.entry.word}'['#{con.entry.wordnetId}']'" />
+									</h5>
+									<p>
+										<h:outputText id="outputSelectedConceptDesc"
+											value="#{con.entry.description}" />
+									</p>
+								</a4j:outputPanel>
+							</a4j:repeat>
+						</rich:panel>
 
-					<rich:panel id="selectedList" style="border:0px">
-						<a4j:repeat value="#{conceptWNWrapperAddView.selectedConcepts}"
-							var="con">
-							<a4j:outputPanel>
-								<h5>
-									<h:outputText id="outputSelectedConcept"
-										value="#{con.entry.word}'['#{con.entry.wordnetId}']'" />
-								</h5>
-								<p>
-									<h:outputText id="outputSelectedConceptDesc"
-										value="#{con.entry.description}" />
-								</p>
-							</a4j:outputPanel>
-						</a4j:repeat>
-					</rich:panel>
 
-					<!-- Additional information -->
+
+
+						<!--  Synonym popup -->
+						<rich:popupPanel id="popup" modal="false" autosized="true"
+							resizeable="false" domElementAttachment="parent">
+							<f:facet name="header">
+								<h:outputText value="Search synonym" />
+							</f:facet>
+
+
+							<f:ajax execute="@form" render="searchResults">
+								<h:inputText value="#{conceptWNWrapperAddView.searchPhrase}" />
+								<h:commandButton
+									action="#{conceptWNWrapperAddView.searchForSynonyms}"
+									value="submit" />
+
+							</f:ajax>
+
+							<rich:dataTable value="#{conceptWNWrapperAddView.searchResults}"
+								var="found" iterationStatusVar="it" id="searchResults" rows="15">
+								<rich:column>
+									<f:facet name="header">Word</f:facet>
+		                #{found.word}
+	           		 </rich:column>
+								<rich:column>
+									<f:facet name="header">POS</f:facet>
+		                #{found.pos}
+	           		 </rich:column>
+								<rich:column>
+									<f:facet name="header">Description</f:facet>
+		                #{found.description}
+	           		 </rich:column>
+								<rich:column>
+									<a4j:commandLink styleClass="no-decor" render="synonymsTable"
+										action="#{conceptWNWrapperAddView.addSynonymToList}"
+										oncomplete="#{rich:component('popup')}.hide(); return false;">
+						Add
+						<f:setPropertyActionListener
+											target="#{conceptWNWrapperAddView.addedSynonym}"
+											value="#{found}" />
+									</a4j:commandLink>
+								</rich:column>
+								<f:facet name="footer">
+									<rich:dataScroller page="#{conceptWNWrapperAddView.page}" />
+								</f:facet>
+							</rich:dataTable>
+
+							<p></p>
+							<h:outputLink value="#"
+								onclick="#{rich:component('popup')}.hide(); return false;">
+		                Cancel
+		        </h:outputLink>
+
+						</rich:popupPanel>
+
+					</h:form>
 					<h:form>
+						<h2>3. Enter additional information</h2>
+						<p>Selected Wordnet concept:</p>
+
+
+						<!-- Additional information -->
+
 						<h:panelGrid columns="3"
 							columnClasses="greyContent,greyContent,greyContent">
 
@@ -280,13 +338,9 @@
 	        			        #{concept.description}
 	      				      </rich:column>
 							</rich:dataTable>
-
-
-							<a4j:commandButton styleClass="button" value="Add synonymhgh"
-								execute="@this" oncomplete="#{rich:component('popup')}.show();"
-								actionListener="#{conceptWNWrapperAddView.backupSelectedWordnetConcepts}">
-
-							</a4j:commandButton>
+							<h:commandButton styleClass="button" value="Add synonym">
+								<rich:componentControl target="popup" operation="show"></rich:componentControl>
+							</h:commandButton>
 
 							<h:outputLabel value="Concept type"></h:outputLabel>
 							<h:selectOneMenu id="concepttype"
@@ -321,61 +375,7 @@
 							action="#{conceptWNWrapperAddView.createConceptWrapper}"
 							value="Create Wordnet concept wrapper"></h:commandButton>
 
-
 					</h:form>
-
-					<!--  Synonym popup -->
-					<rich:popupPanel id="popup" modal="false" autosized="true"
-						resizeable="false">
-						<f:facet name="header">
-							<h:outputText value="Search synonym" />
-						</f:facet>
-
-						<h:form>
-							<f:ajax execute="@this" render="searchResults">
-								<h:inputText value="#{conceptWNWrapperAddView.searchPhrase}" />
-								<h:commandButton
-									action="#{conceptWNWrapperAddView.searchForSynonyms}"
-									value="submit" />
-
-							</f:ajax>
-
-							<rich:dataTable value="#{conceptWNWrapperAddView.searchResults}"
-								var="found" iterationStatusVar="it" id="searchResults" rows="15">
-								<rich:column>
-									<f:facet name="header">Word</f:facet>
-		                #{found.word}
-	           		 </rich:column>
-								<rich:column>
-									<f:facet name="header">POS</f:facet>
-		                #{found.pos}
-	           		 </rich:column>
-								<rich:column>
-									<f:facet name="header">Description</f:facet>
-		                #{found.description}
-	           		 </rich:column>
-								<rich:column>
-									<a4j:commandLink styleClass="no-decor" render="synonymsTable"
-										action="#{conceptWNWrapperAddView.addSynonymToList}"
-										oncomplete="#{rich:component('popup')}.hide(); return false;">
-						Add
-						<f:setPropertyActionListener
-											target="#{conceptWNWrapperAddView.addedSynonym}"
-											value="#{found}" />
-									</a4j:commandLink>
-								</rich:column>
-								<f:facet name="footer">
-									<rich:dataScroller page="#{conceptWNWrapperAddView.page}" />
-								</f:facet>
-							</rich:dataTable>
-						</h:form>
-						<p></p>
-						<h:outputLink value="#"
-							onclick="#{rich:component('popup')}.hide(); return false;">
-		                Cancel
-		        </h:outputLink>
-
-					</rich:popupPanel>
 				</div>
 			</div>
 			<div id="content_footer"></div>
