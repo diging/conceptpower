@@ -17,5 +17,10 @@
 		<put-attribute name="content"
 			value="/WEB-INF/views/home.jsp" />
 	</definition>
+	<definition name="exception" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/exception.jsp" />
+	</definition>
 
 </tiles-definitions>
