@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <h:head>
 
 	<title>Concept Lists</title>
@@ -51,51 +52,26 @@
 				<h2>Concepts</h2>
 				<h:form>
 					<rich:dataTable id="conceptList" width="100%"
-						value="#{conceptListView.entries}" var="con" rows="25">
+						value="#{conceptListView.entries}" var="con" rows="5">
 
-						<rich:column>
-							<a4j:region>
-								<f:facet name="header"></f:facet>
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column>
+									<h:outputText value="tem" />
+								</rich:column>
 
-								<a4j:commandLink action="#{conceptListView.selectForShow}"
-									value="Details" render="detailsPP"
-									oncomplete="#{rich:component('detailsPP')}.show(); return false;">
-									<f:setPropertyActionListener
-										target="#{conceptListView.selectedConceptIdForShow}"
-										value="#{con.entry.id}" />
-								</a4j:commandLink>
-							</a4j:region>
-						</rich:column>
-						<rich:column>
-							<f:facet name="header"></f:facet>
+								<rich:column>
+									<h:outputText value="Description" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
 
-							<a4j:region>
-								<a4j:commandLink styleClass="no-decor"
-									action="#{conceptListView.selectForEdit}">
-									<f:setPropertyActionListener
-										target="#{conceptListView.selectedConceptForEdit}"
-										value="#{con.entry.id}" />
-										<h:graphicImage title="Edit concept" alt="Edit concept" library="images" name="39.png" width="14" />
-								</a4j:commandLink>
-							</a4j:region>
-						</rich:column>
-						<rich:column>
-							<f:facet name="header"></f:facet>
 
-							<a4j:region>
-								<a4j:commandLink styleClass="no-decor"
-									action="#{conceptListView.selectForDelete}">
-									<h:graphicImage title="Delete concept" alt="Delete concept" library="images" name="51_14.png" />
-									<f:setPropertyActionListener
-										target="#{conceptListView.conceptIdForDelete}"
-										value="#{con.entry.id}" />
-								</a4j:commandLink>
-							</a4j:region>
 
-						</rich:column>
-						<rich:column>
+						<rich:column filterBy="#{con.entry.word}" filterEvent="onkeyup"
+							filterValue="#{conceptListView.filterTerm}">
 							<!-- column header -->
-							<f:facet name="header">term</f:facet>
+
 							<!-- row record -->
 							<a4j:commandLink styleClass="no-decor"
 								action="#{conceptListView.selectForShowDetails}"
@@ -106,54 +82,18 @@
 							</a4j:commandLink>
 						</rich:column>
 
-						<rich:column>
-							<f:facet name="header">Id</f:facet>
-			    			#{con.entry.id}
-			    		</rich:column>
+						<rich:column filterBy="#{con.description}" filterEvent="onkeyup"
+							filterValue="#{conceptListView.filterDescription}">
 
-						<rich:column>
-							<f:facet name="header">Wordnet Id</f:facet>
-			    			#{con.entry.wordnetId}
-			    		</rich:column>
-
-						<rich:column>
-							<f:facet name="header">POS</f:facet>
-				    		#{con.entry.pos}
-				    	</rich:column>
-
-						<rich:column>
-							<f:facet name="header">Conceptlist</f:facet>
-			    			#{con.entry.conceptList}
-			    		</rich:column>
-
-						<rich:column>
-							<f:facet name="header">Description</f:facet>
 							<h:outputText value="#{con.description}" escape="false" />
 						</rich:column>
-						<rich:column>
-							<f:facet name="header">Type</f:facet>
-								#{con.type.typeName}
-				    		</rich:column>
-						<rich:column>
-							<f:facet name="header">Synonyms</f:facet>
-							<a4j:repeat value="#{con.synonyms}" var="syn">
-								<a4j:outputPanel> -> #{syn.word}
-									<rich:tooltip id="tt" styleClass="tooltip" layout="block">
-				             	 	  #{syn.description}
-				           		 	</rich:tooltip>
-								</a4j:outputPanel>
-							</a4j:repeat>
-						</rich:column>
-						<rich:column>
-							<f:facet name="header">Created by</f:facet>
-			    			#{con.creator.user}
-			    		</rich:column>
+
 						<f:facet name="footer">
-						<a4j:region>
-							<rich:dataScroller maxPages="10" >
-								
-							</rich:dataScroller>
-						</a4j:region>
+							<a4j:region>
+								<rich:dataScroller maxPages="10" id="scroller">
+
+								</rich:dataScroller>
+							</a4j:region>
 						</f:facet>
 
 					</rich:dataTable>
