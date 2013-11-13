@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
 
 	@Autowired
-	private UsersManager userManager;
+	private IUserManager userManager;
 	
 	@Override
 	public UserDetails loadUserByUsername(String arg0)

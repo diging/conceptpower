@@ -17,12 +17,13 @@
 		<intercept-url pattern="/resources/**" access="permitAll" />
 		
 		<!-- here go admin pages -->
+		<intercept-url pattern="/auth/user/**" access="hasRole('ROLE_CP_ADMIN')" />
 		
 		<intercept-url pattern="/auth/**" access="isAuthenticated()" />
 		
-		<form-login login-page="/login" default-target-url="/welcome"
+		<form-login login-page="/login" default-target-url="/login"
 			authentication-failure-url="/loginfailed" />
-		<form-login login-page="/welcome" default-target-url="/welcome"
+		<form-login login-page="/welcome" default-target-url="/login"
 			authentication-failure-url="/loginfailed" />
 		<logout logout-success-url="/logout" invalidate-session="true" />
 	</http>

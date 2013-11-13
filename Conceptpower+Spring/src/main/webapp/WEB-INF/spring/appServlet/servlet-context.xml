@@ -27,7 +27,6 @@
         </beans:property>
 	</beans:bean>
 	
-	
 	<context:component-scan base-package="edu.asu.conceptpower.web" />
 	
 	
