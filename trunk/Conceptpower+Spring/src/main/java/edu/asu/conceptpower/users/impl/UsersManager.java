@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.users;
+package edu.asu.conceptpower.users.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import edu.asu.conceptpower.users.IUserManager;
+import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.users.UserDatabaseClient;
+
 /**
  * Managing class for user management.
  * 
@@ -18,7 +22,7 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public class UsersManager {
+public class UsersManager implements IUserManager {
 
 	@Autowired
 	private UserDatabaseClient client;
@@ -29,17 +33,20 @@ public class UsersManager {
 		admins = new HashMap<String, String>();
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.users.IUserManager#setAdmins(java.util.Map)
+	 */
+	@Override
 	public void setAdmins(Map<String, String> admins) {
 		if (admins != null)
 			this.admins = admins;
 		else admins = new HashMap<String, String>();
 	}
 	
-	/**
-	 * Find a user by its user id.
-	 * @param name user id
-	 * @return user or null
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.users.IUserManager#findUser(java.lang.String)
 	 */
+	@Override
 	public User findUser(String name) {
 		if (admins.containsKey(name)) {
 			String storedPW = admins.get(name);
@@ -51,6 +58,10 @@ public class UsersManager {
 		return user;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.users.IUserManager#getUser(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public User getUser(String name, String pw) {
 		
 		if (admins.containsKey(name)) {
@@ -62,6 +73,10 @@ public class UsersManager {
 		return user;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.users.IUserManager#getAllUsers()
+	 */
+	@Override
 	public User[] getAllUsers() {
 		User[] users = client.getAllUser();
 		List<User> userNames = new ArrayList<User>();
@@ -75,6 +90,10 @@ public class UsersManager {
 		return userNames.toArray(new User[userNames.size()]);
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.users.IUserManager#addUser(edu.asu.conceptpower.users.User)
+	 */
+	@Override
 	public User addUser(User user) {
 		encryptPassword(user);
 		client.addUser(user);
@@ -85,10 +104,18 @@ public class UsersManager {
 		user.setPw(BCrypt.hashpw(user.getPw(), BCrypt.gensalt()));
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.users.IUserManager#deleteUser(java.lang.String)
+	 */
+	@Override
 	public void deleteUser(String username) {
 		client.deleteUser(username);
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.users.IUserManager#storeModifiedUser(edu.asu.conceptpower.users.User)
+	 */
+	@Override
 	public void storeModifiedUser(User user) {
 		client.update(user);
 	}

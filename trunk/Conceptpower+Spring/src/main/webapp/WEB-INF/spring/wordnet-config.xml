@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	
-	<bean id="wordNetConfiguration" class="edu.asu.conceptpower.wordnet.WordNetConfiguration">
+	<bean class="edu.asu.conceptpower.wordnet.WordNetConfiguration">
 		<property name="wordnetPath" value="/usr/local/WordNet-3.0/" />
 		<property name="dictFolder" value="dict" />
 	</bean>

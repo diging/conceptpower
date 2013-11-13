@@ -12,7 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -30,7 +29,6 @@ import edu.mit.jwi.item.WordID;
 public class WordNetManager {
 	
 	@Autowired
-	@Qualifier("wordNetConfiguration")
 	private WordNetConfiguration configuration;
 	
 	private IDictionary dict;

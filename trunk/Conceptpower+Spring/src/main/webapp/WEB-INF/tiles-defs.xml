@@ -7,13 +7,17 @@
 	<!-- Base definitions -->
 	<definition name="base.definition" template="/WEB-INF/tiles/skeleton.jsp">
 		<put-attribute name="title" value="" />
+		<put-attribute name="navigation" value="" />
 		<put-attribute name="sidebar" value="" />
 		<put-attribute name="content" value="" />
+		<put-attribute name="header" value="" />
 		<put-attribute name="currentPage" value="home" />
 	</definition>
 	
+	<!--  welcome etc -->
 	<definition name="welcome" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/home.jsp" />
 	</definition>
@@ -21,6 +25,15 @@
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/exception.jsp" />
+	</definition>
+	
+	<!-- users management-->
+	<definition name="auth/user/list" extends="base.definition">
+		<put-attribute name="title" value="User Management" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="header" value="/WEB-INF/views/auth/user/list-header.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/user/list.jsp" />
 	</definition>
 
 </tiles-definitions>
