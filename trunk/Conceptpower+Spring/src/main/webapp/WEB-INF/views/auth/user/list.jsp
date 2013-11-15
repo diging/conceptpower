@@ -6,6 +6,7 @@
 	class="display dataTable" width="100%">
 	<thead>
 		<tr>
+			<th></th>
 			<th>Username</th>
 			<th>Name</th>
 			<th>User is admin</th>
@@ -14,9 +15,10 @@
 	<tbody>
 		<c:forEach var="user" items="${users}">
 			<tr>
+				<td><a href="${pageContext.servletContext.contextPath}/auth/user/edit/${user.user}"><img src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png" /></a></td>
 				<td>${user.user}</td>
 				<td>${user.name}</td>
-				<td>${user.isAdmin}</td>
+				<td><c:if test="${user.isAdmin}"><img src="${pageContext.servletContext.contextPath}/resources/img/check_mark_16x16.png" /></c:if></td>
 			</tr>
 		</c:forEach>
 	</tbody>
