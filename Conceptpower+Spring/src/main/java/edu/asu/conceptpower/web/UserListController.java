@@ -23,4 +23,5 @@ public class UserListController {
 		return "auth/user/list";
 	}
 
+
 }

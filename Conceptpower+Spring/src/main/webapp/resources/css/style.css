@@ -364,6 +364,7 @@ ul#menu li a:hover
  
 table td {
 	vertical-align: top;
+	padding: 5px;
 }
   
 table.general
