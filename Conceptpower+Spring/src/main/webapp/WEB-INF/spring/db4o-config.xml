@@ -6,19 +6,19 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
 	<bean id="userDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
-		<property name="databasePath" value="/Users/jdamerow/Server/conceptpower/users.db" />
+		<property name="databasePath" value="I:\Eclipse Chetan\workspcae\cp db\users.db" />
 	</bean>
 	
 	<bean id="conceptDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
-		<property name="databasePath" value="/Users/jdamerow/Server/conceptpower/conceptLists.db" />
+		<property name="databasePath" value="I:\Eclipse Chetan\workspcae\cp db\conceptLists.db" />
 	</bean>
 	
 	<bean id="wordnetCacheDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
-		<property name="databasePath" value="/Users/jdamerow/Server/conceptpower/wordnetCache.db" />
+		<property name="databasePath" value="I:\Eclipse Chetan\workspcae\cp db\wordnetCache.db" />
 	</bean>
 	
 	<bean id="typesDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
-		<property name="databasePath" value="/Users/jdamerow/Server/conceptpower/conceptTypes.db" />
+		<property name="databasePath" value="I:\Eclipse Chetan\workspcae\cp db\conceptTypes.db" />
 	</bean>
 		
 </beans>

@@ -13,27 +13,31 @@
 		<put-attribute name="header" value="" />
 		<put-attribute name="currentPage" value="home" />
 	</definition>
-	
-	<!--  welcome etc -->
+
+	<!-- welcome etc -->
 	<definition name="welcome" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
-		<put-attribute name="content"
-			value="/WEB-INF/views/home.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
 	</definition>
 	<definition name="exception" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
-		<put-attribute name="content"
-			value="/WEB-INF/views/exception.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/exception.jsp" />
 	</definition>
-	
-	<!-- users management-->
+	<definition name="auth/conceptsearch" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Search" />
+		<put-attribute name="content" value="/WEB-INF/views/conceptsearch.jsp" />
+	</definition>
+
+
+
+	<!-- users management -->
 	<definition name="auth/user/list" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
-		<put-attribute name="header" value="/WEB-INF/views/auth/user/list-header.jsp" />
-		<put-attribute name="content"
-			value="/WEB-INF/views/auth/user/list.jsp" />
+		<put-attribute name="header"
+			value="/WEB-INF/views/auth/user/list-header.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/auth/user/list.jsp" />
 	</definition>
 	<definition name="auth/user/notfound" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
@@ -47,5 +51,7 @@
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/user/edit.jsp" />
 	</definition>
+
+
 
 </tiles-definitions>

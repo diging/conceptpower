@@ -13,8 +13,8 @@
 <p>This is Conceptpower, the concept management site for Quadriga.</p>
 
 <form
-	action="/conceptpower/auth/searchitems"
-	method="get">
+	action="${pageContext.servletContext.contextPath}/auth/conceptsearch"
+	method='post'>
 	<table>
 		<tr>
 			<td>Word:</td>
