@@ -2,13 +2,16 @@ package edu.asu.conceptpower.db4o;
 
 import java.io.Serializable;
 
+import org.springframework.stereotype.Component;
+
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ServerConfiguration;
 
+@Component
 public class DatabaseManager implements Serializable {
-	
+
 	/**
 	 * 
 	 */
@@ -18,16 +21,17 @@ public class DatabaseManager implements Serializable {
 
 	public void init() {
 		close();
-		ServerConfiguration configuration = Db4oClientServer.newServerConfiguration();
+		ServerConfiguration configuration = Db4oClientServer
+				.newServerConfiguration();
 		configuration.file().blockSize(80);
-		server = Db4oClientServer.openServer(configuration, databasePath, 0);  
+		server = Db4oClientServer.openServer(configuration, databasePath, 0);
 	}
-	
+
 	public ObjectContainer getClient() {
 		ObjectContainer container = server.openClient();
 		return container;
 	}
-	
+
 	public String getDatabasePath() {
 		return databasePath;
 	}
@@ -36,16 +40,14 @@ public class DatabaseManager implements Serializable {
 		this.databasePath = databasePath;
 	}
 
-	
-	private void close() {   
-		if (server != null) {   
-			server.close();   
-	    }   
-	    server = null;   
+	private void close() {
+		if (server != null) {
+			server.close();
+		}
+		server = null;
 	}
-	
+
 	public void shutdown() {
 		close();
 	}
 }
-

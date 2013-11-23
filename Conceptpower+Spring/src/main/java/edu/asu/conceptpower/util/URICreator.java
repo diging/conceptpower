@@ -10,7 +10,7 @@ import edu.asu.conceptpower.xml.XMLConstants;
 
 @Service
 public class URICreator {
-	
+
 	@Autowired
 	private XMLConfig xmlConfig;
 
