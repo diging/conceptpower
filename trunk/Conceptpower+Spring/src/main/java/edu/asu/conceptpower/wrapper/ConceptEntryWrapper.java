@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.web.wrapper;
+package edu.asu.conceptpower.wrapper;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,19 +1,34 @@
-package edu.asu.conceptpower.web.wrapper;
+package edu.asu.conceptpower.wrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
-import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
-import edu.asu.conceptpower.users.impl.UsersManager;
+import edu.asu.conceptpower.db4o.TypeDatabaseClient;
+import edu.asu.conceptpower.users.UserDatabaseClient;
+import edu.asu.conceptpower.web.UserListController;
 
+@Component
 public class ConceptEntryWrapperCreator {
 
-	public List<ConceptEntryWrapper> createWrappers(ConceptEntry[] entries,
-			UsersManager usersManager, ConceptTypesManager typeManager,
-			ConceptManager dictManager) {
+	@Autowired
+	private ConceptManager conceptManager;
+
+	@Autowired
+	private UserListController userListConctoller;
+
+	@Autowired
+	private TypeDatabaseClient typeDatabaseClient;
+
+	@Autowired
+	private UserDatabaseClient userDatabaseClient;
+
+	public List<ConceptEntryWrapper> createWrappers(ConceptEntry[] entries) {
 		List<ConceptEntryWrapper> foundConcepts = new ArrayList<ConceptEntryWrapper>();
 
 		if (entries == null)
@@ -22,10 +37,11 @@ public class ConceptEntryWrapperCreator {
 		for (ConceptEntry entry : entries) {
 			ConceptEntryWrapper wrapper = new ConceptEntryWrapper(entry);
 			if (entry.getTypeId() != null && !entry.getTypeId().isEmpty())
-				wrapper.setType(typeManager.getType(entry.getTypeId()));
+				wrapper.setType(typeDatabaseClient.getType(entry.getTypeId()));
 
 			if (entry.getCreatorId() != null && !entry.getCreatorId().isEmpty())
-				wrapper.setCreator(usersManager.findUser(entry.getCreatorId()));
+				wrapper.setCreator(userDatabaseClient.findUser(entry
+						.getCreatorId()));
 
 			// if entry wraps a wordnet concepts, add it here
 			List<ConceptEntry> wordnetEntries = new ArrayList<ConceptEntry>();
@@ -37,7 +53,7 @@ public class ConceptEntryWrapperCreator {
 				if (ids != null) {
 					for (String id : ids) {
 						if (id != null && !id.trim().isEmpty()) {
-							ConceptEntry wordnetEntry = dictManager
+							ConceptEntry wordnetEntry = conceptManager
 									.getWordnetConceptEntry(id);
 							if (wordnetEntry != null)
 								wordnetEntries.add(wordnetEntry);
@@ -73,7 +89,7 @@ public class ConceptEntryWrapperCreator {
 				if (ids != null) {
 					for (String id : ids) {
 						if (id != null && !id.trim().isEmpty()) {
-							ConceptEntry synonym = dictManager
+							ConceptEntry synonym = conceptManager
 									.getConceptEntry(id);
 							if (synonym != null)
 								synonyms.add(synonym);
