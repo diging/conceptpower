@@ -36,8 +36,8 @@ public class ConceptSearchController {
 	@RequestMapping(value = "auth/conceptsearch", method = RequestMethod.POST)
 	public String search(HttpServletRequest req, ModelMap model) {
 
-		concept = "test";
-		pos = "noun";
+		concept = req.getParameter("name");
+		pos = req.getParameter("pos");
 		if (!concept.trim().isEmpty()) {
 
 			databaseManager.setDatabasePath(DBNames.USER_DB);
