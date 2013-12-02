@@ -10,7 +10,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
-import edu.asu.conceptpower.users.UserDatabaseClient;
+import edu.asu.conceptpower.users.impl.UsersManager;
 import edu.asu.conceptpower.web.UserListController;
 
 @Component
@@ -26,7 +26,7 @@ public class ConceptEntryWrapperCreator {
 	private TypeDatabaseClient typeDatabaseClient;
 
 	@Autowired
-	private UserDatabaseClient userDatabaseClient;
+	private UsersManager usersManager;
 
 	public List<ConceptEntryWrapper> createWrappers(ConceptEntry[] entries) {
 		List<ConceptEntryWrapper> foundConcepts = new ArrayList<ConceptEntryWrapper>();
@@ -40,7 +40,7 @@ public class ConceptEntryWrapperCreator {
 				wrapper.setType(typeDatabaseClient.getType(entry.getTypeId()));
 
 			if (entry.getCreatorId() != null && !entry.getCreatorId().isEmpty())
-				wrapper.setCreator(userDatabaseClient.findUser(entry
+				wrapper.setCreator(usersManager.findUser(entry
 						.getCreatorId()));
 
 			// if entry wraps a wordnet concepts, add it here
