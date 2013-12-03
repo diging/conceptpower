@@ -18,15 +18,19 @@
 	<definition name="welcome" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
 	</definition>
 	<definition name="exception" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="content" value="/WEB-INF/views/exception.jsp" />
 	</definition>
+
 	<definition name="auth/conceptsearch" extends="base.definition">
-		<put-attribute name="title" value="Welcome to Search" />
-		<put-attribute name="content" value="/WEB-INF/views/conceptsearch.jsp" />
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
 	</definition>
 
 
@@ -48,8 +52,7 @@
 	<definition name="auth/user/edit" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
-		<put-attribute name="content"
-			value="/WEB-INF/views/auth/user/edit.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/auth/user/edit.jsp" />
 	</definition>
 
 

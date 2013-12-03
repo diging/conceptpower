@@ -51,7 +51,6 @@
 <c:if test="${not empty result}">
 	<table cellpadding="0" cellspacing="0" class="display dataTable"
 		id="conceptSearch">
-
 		<thead>
 			<tr>
 				<th>Term</th>
@@ -61,14 +60,11 @@
 				<th>Concept List</th>
 				<th>Description</th>
 				<th>Type</th>
-
 			</tr>
 		</thead>
 		<tbody>
-
 			<c:forEach var="concept" items="${result}">
 				<tr class="gradeX">
-
 					<td align="justify"><font size="2"><c:out
 								value="${concept.entry.word}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
@@ -77,27 +73,22 @@
 								value="${concept.entry.wordnetId}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.entry.pos}"></c:out></font></td>
-					<td  align="justify"><font size="2"><c:out
+					<td align="justify"><font size="2"><c:out
 								value="${concept.entry.conceptList}"></c:out></font></td>
-					<td  align="justify"><font size="2"><c:out
+					<td align="justify"><font size="2"><c:out
 								value="${concept.description}"></c:out></font></td>
-					<td  align="justify"><font size="2"><c:out
+					<td align="justify"><font size="2"><c:out
 								value="${concept.type.typeName}"></c:out></font></td>
-
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
 
 </c:if>
-
 <br />
-
-
 <sec:authorize access="isAnonymous()">
 	<form name='f' action="<c:url value='j_spring_security_check' />"
 		method='post'>
-
 		<table>
 			<tr>
 				<td>Username:</td>
@@ -112,8 +103,6 @@
 		<p>
 			<input name="submit" type="submit" value="Login" class="button" />
 		</p>
-
-
 	</form>
 </sec:authorize>
 
