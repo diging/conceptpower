@@ -8,21 +8,34 @@
 
 <title><tiles:insertAttribute name="title" /></title>
 <link rel="stylesheet"
-		href="${pageContext.servletContext.contextPath}/resources/css/style.css" />
-<link rel="stylesheet"	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery-ui.css" />
-<link rel="stylesheet"	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery.dataTables_themeroller.css" />
-<link rel="stylesheet"	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/demo_table_jui.css" />
-<link	href="http://fonts.googleapis.com/css?family=Open+Sans:400,700|Open+Sans+Condensed:700"	rel="stylesheet" />
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-1.9.1.min.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/config.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel.min.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel-ui.min.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jit.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex1.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex2.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-ui.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-alert.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.dataTables.js"></script>
+	href="${pageContext.servletContext.contextPath}/resources/css/style.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery-ui.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery.dataTables_themeroller.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/demo_table_jui.css" />
+<link
+	href="http://fonts.googleapis.com/css?family=Open+Sans:400,700|Open+Sans+Condensed:700"
+	rel="stylesheet" />
+<script
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-1.9.1.min.js"></script>
+<script
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel.min.js"></script>
+<script
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel-ui.min.js"></script>
+<script
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jit.js"></script>
+<script
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex1.js"></script>
+<script
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex2.js"></script>
+<script
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-ui.js"></script>
+<script
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-alert.js"></script>
+<script
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.dataTables.js"></script>
 <script
 	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.quick.pagination.min.js"></script>
 <noscript>
@@ -32,7 +45,7 @@
 		href="${pageContext.servletContext.contextPath}/resources/css/style.css" />
 	<link rel="stylesheet"
 		href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-desktop.css" />
-		</noscript>
+</noscript>
 <tiles:insertAttribute name="header" />
 </head>
 <body>
@@ -57,26 +70,31 @@
 
 
 		<div id="content_header"></div>
+
 		<div id="site_content">
-			<div class="sidebar">
+
+			<div id="content" style="width: 75%; float: left;">
+				<tiles:insertAttribute name="content" />
+			</div>
+
+			<div class="sidebar" style="width: 20%; float: right;">
 				<tiles:insertAttribute name="sidebar" />
 				<h2></h2>
 			</div>
 
-			<div id="content">
-				<tiles:insertAttribute name="content" />
-			</div>
 
-			<div id="content_footer"></div>
-			<div id="footer">
-				Copyright &#169; simplestyle_1 | <a
-					href="http://validator.w3.org/check?uri=referer">HTML5</a> | <a
-					href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> | <a
-					href="http://www.html5webtemplates.co.uk">design from
-					HTML5webtemplates.co.uk</a> | <a href="http://salleedesign.com">icons
-					by Jeremy Sallee</a>
-			</div>
 		</div>
+
+		<div id="content_footer"></div>
+		<div id="footer">
+			Copyright &#169; simplestyle_1 | <a
+				href="http://validator.w3.org/check?uri=referer">HTML5</a> | <a
+				href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> | <a
+				href="http://www.html5webtemplates.co.uk">design from
+				HTML5webtemplates.co.uk</a> | <a href="http://salleedesign.com">icons
+				by Jeremy Sallee</a>
+		</div>
+
 	</div>
 </body>
 </html>
