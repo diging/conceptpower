@@ -21,9 +21,6 @@ import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 public class ConceptSearchController {
 
 	@Autowired
-	private DatabaseManager databaseManager;
-
-	@Autowired
 	private ConceptManager conceptManager;
 
 	@Autowired
@@ -33,14 +30,12 @@ public class ConceptSearchController {
 	private List<ConceptEntryWrapper> foundConcepts;
 	private String pos;
 
-	@RequestMapping(value = "auth/conceptsearch", method = RequestMethod.POST)
+	@RequestMapping(value = "/conceptsearch", method = RequestMethod.POST)
 	public String search(HttpServletRequest req, ModelMap model) {
 
 		concept = req.getParameter("name");
 		pos = req.getParameter("pos");
 		if (!concept.trim().isEmpty()) {
-
-			databaseManager.setDatabasePath(DBNames.USER_DB);
 
 			ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(
 					concept, pos);
@@ -48,10 +43,9 @@ public class ConceptSearchController {
 			foundConcepts = wrapperCreator.createWrappers(found);
 
 			model.addAttribute("result", foundConcepts);
-			databaseManager.shutdown();
 
 		}
 
-		return "auth/conceptsearch";
+		return "conceptsearch";
 	}
 }
