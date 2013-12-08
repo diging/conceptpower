@@ -24,7 +24,7 @@
 <p>This is Conceptpower, the concept management site for Quadriga.</p>
 
 <form
-	action="${pageContext.servletContext.contextPath}/auth/conceptsearch"
+	action="${pageContext.servletContext.contextPath}/conceptsearch"
 	method='post'>
 	<table>
 		<tr>
