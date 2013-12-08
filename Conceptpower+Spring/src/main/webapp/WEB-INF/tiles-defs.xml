@@ -26,14 +26,45 @@
 		<put-attribute name="content" value="/WEB-INF/views/exception.jsp" />
 	</definition>
 
-	<definition name="auth/conceptsearch" extends="base.definition">
+	<definition name="conceptsearch" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
 	</definition>
 
+	<definition name="/auth/concepts/ConceptAddView" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ConceptAddView.jsp" />
+	</definition>
 
+	<definition name="/auth/concepts/ListAddView" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ListAddView.jsp" />
+	</definition>
+
+	<definition name="/auth/concepts/TypeAddView" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/TypeAddView.jsp" />
+	</definition>
+
+
+	<definition name="/auth/concepts/ConceptList" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ConceptListView.jsp" />
+	</definition>
 
 	<!-- users management -->
 	<definition name="auth/user/list" extends="base.definition">

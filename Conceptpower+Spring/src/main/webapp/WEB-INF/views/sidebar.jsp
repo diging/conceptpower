@@ -8,18 +8,26 @@
 
 <h2>You can</h2>
 <form>
-	<a href="conceptLists">Manage Concept Lists</a>
+	<a
+		href="${pageContext.servletContext.contextPath}/auth/concepts/ConceptList">Manage
+		Concept Lists</a>
 	<ul>
-		<li class="first"><a href="">Add New Concept List</a></li>
-		<li><a href="">Add New Concept</a></li>
+		<li class="first"><a
+			href="${pageContext.servletContext.contextPath}/auth/concepts/ListAddView">Add
+				New Concept List</a></li>
+		<li><a
+			href="${pageContext.servletContext.contextPath}/auth/concepts/ConceptAddView">Add
+				New Concept</a></li>
 		<li><a href="">Add New Wordnet Concept Wrapper</a></li>
 		<li><a href="">Add New VIAF concept</a></li>
 	</ul>
-	<a href="conceptLists">Manage Concept Types</a>
+	<a href="">Manage Concept Types</a>
 	<ul>
-		<li class="first"><a href="">Add New Type</a></li>
+		<li class="first"><a
+			href="${pageContext.servletContext.contextPath}/auth/concepts/TypeAddView">Add
+				New Type</a></li>
 	</ul>
-	<a href="conceptLists">Manage Users</a>
+	<a href="">Manage Users</a>
 	<ul>
 		<li class="first"><a href="">Add New User</a></li>
 	</ul>
