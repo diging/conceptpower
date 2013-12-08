@@ -48,6 +48,6 @@ public class AddConceptTypeView {
 		type.setSupertypeId(req.getParameter("types"));
 
 		conceptTypesManager.addConceptType(type);
-		return "welcome";
+		return "/auth/concepts/ConceptTypes";
 	}
 }

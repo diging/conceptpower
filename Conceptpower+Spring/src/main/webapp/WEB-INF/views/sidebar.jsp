@@ -21,7 +21,9 @@
 		<li><a href="">Add New Wordnet Concept Wrapper</a></li>
 		<li><a href="">Add New VIAF concept</a></li>
 	</ul>
-	<a href="">Manage Concept Types</a>
+	<a
+		href="${pageContext.servletContext.contextPath}/auth/concepts/ConceptTypes">Manage
+		Concept Types</a>
 	<ul>
 		<li class="first"><a
 			href="${pageContext.servletContext.contextPath}/auth/concepts/TypeAddView">Add
