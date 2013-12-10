@@ -23,6 +23,9 @@ public class AddConceptTypeView {
 	private ConceptTypesManager conceptTypesManager;
 
 	@Autowired
+	private TypesView typesView;
+	
+	@Autowired
 	private LoginController loginController;
 
 	@RequestMapping(value = "auth/concepts/TypeAddView")
@@ -48,6 +51,7 @@ public class AddConceptTypeView {
 		type.setSupertypeId(req.getParameter("types"));
 
 		conceptTypesManager.addConceptType(type);
+		typesView.showConceptTypes(req, model);
 		return "/auth/concepts/ConceptTypes";
 	}
 }
