@@ -29,7 +29,7 @@
 		<tr>
 			<td>Concept List</td>
 
-			<td><form:select path="lists">
+			<td><form:select path="lists" name="lists">
 					<form:option value="" label="Select concept list" />
 					<form:options items="${lists}" />
 				</form:select></td>
@@ -46,7 +46,7 @@
 		</tr>
 		<tr>
 			<td>Concept Type</td>
-			<td><form:select path="types">
+			<td><form:select path="types" name="types">
 					<form:option value="" label="Select one" />
 					<form:options items="${types}" />
 				</form:select></td>

@@ -74,6 +74,7 @@ public class ConceptAddViewController {
 			conceptEntry.setDescription(req.getParameter("description"));
 			conceptEntry.setEqualTo(req.getParameter("equals"));
 			conceptEntry.setSimilarTo(req.getParameter("similar"));
+			conceptEntry.setTypeId(req.getParameter("types"));
 			conceptManager.addConceptListEntry(conceptEntry);
 
 		} catch (DictionaryDoesNotExistException e) {
