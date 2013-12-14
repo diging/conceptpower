@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
@@ -87,13 +89,25 @@ public class ConceptAddViewController {
 			return "failed";
 		}
 
-		List<ConceptEntry> found = conceptManager.getConceptListEntries(req
+		List<ConceptEntry> founds = conceptManager.getConceptListEntries(req
 				.getParameter("lists"));
 
 		List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-				.createWrappers((ConceptEntry[]) found.toArray());
+				.createWrappers(founds != null ? founds
+						.toArray(new ConceptEntry[founds.size()])
+						: new ConceptEntry[0]);
 
 		model.addAttribute("result", foundConcepts);
 		return "/auth/concepts/ConceptListView";
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "synonymView")
+	public String searchConcept(ModelMap model,
+			@RequestParam("synonymname") String synonymname) {
+		ConceptEntry[] entries = conceptManager
+				.getConceptListEntriesForWord(synonymname.trim());
+		model.addAttribute("synonyms", entries);
+
+		return "/synonymView";
 	}
 }
