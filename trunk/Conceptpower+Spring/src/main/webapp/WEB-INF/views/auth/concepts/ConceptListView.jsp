@@ -5,9 +5,20 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#conceptList').dataTable({
+			"bJQueryUI" : true,
+			"sPaginationType" : "full_numbers",
+			"bAutoWidth" : false
+		});
+
+	});
+</script>
+
 <c:if test="${not empty result}">
 	<table cellpadding="0" cellspacing="0" class="display dataTable"
-		id="conceptSearch">
+		id="conceptList">
 		<thead>
 			<tr>
 				<th>Term</th>
