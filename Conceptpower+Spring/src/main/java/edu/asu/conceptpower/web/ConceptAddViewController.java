@@ -12,7 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
@@ -102,12 +102,11 @@ public class ConceptAddViewController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "synonymView")
-	public String searchConcept(ModelMap model,
+	public @ResponseBody
+	ConceptEntry[] searchConcept(ModelMap model,
 			@RequestParam("synonymname") String synonymname) {
 		ConceptEntry[] entries = conceptManager
 				.getConceptListEntriesForWord(synonymname.trim());
-		model.addAttribute("synonyms", entries);
-
-		return "/synonymView";
+		return entries;
 	}
 }
