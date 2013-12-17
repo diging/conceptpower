@@ -12,7 +12,6 @@
 			"sPaginationType" : "full_numbers",
 			"bAutoWidth" : false
 		});
-
 	});
 </script>
 
@@ -31,8 +30,8 @@
 		<tbody>
 			<c:forEach var="list" items="${result}">
 				<tr class="gradeX">
-					<td align="justify"><font size="2"><c:out
-								value="${list.conceptListName}"></c:out></font></td>
+					<td align="justify"><font size="2"><a
+							href="${pageContext.servletContext.contextPath}/auth/concepts/conceptsview/${list.conceptListName}">${list.conceptListName}</a></font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${list.description}"></c:out></font></td>
 				</tr>

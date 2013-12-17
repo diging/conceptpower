@@ -5,6 +5,94 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 
+<script>
+	$(function() {
+		$("#addsynonym").click(function() {
+			$("#dialog").dialog();
+		});
+
+	});
+
+	$(document).ready(function() {
+		$("#synonymstable").dataTable({
+			"bJQueryUI" : true,
+			"sPaginationType" : "full_numbers",
+			"bAutoWidth" : false
+		});
+
+	});
+
+	function getTransactionTypeValues() {
+		$
+				.getJSON(
+						"/SecureBankingSystem/sales/transaction/new/transactionTypeValues",
+						{
+							transaction : $("#transaction :selected").text()
+						}, function(data) {
+							var html = '<option value="">Select</option>';
+							var len = data.length;
+							for (var i = 0; i < len; i++) {
+								html += '<option value="' + data[i] + '">'
+										+ data[i] + '</option>';
+							}
+							html += '</option>';
+							$('#transactionType').html(html);
+						});
+	}
+
+	$(function() {
+		$("#synonymsearch")
+				.click(
+						function() {
+							var synonymname = $("#synonymname").val();
+							$
+									.ajax({
+										type : "GET",
+										url : "${pageContext.servletContext.contextPath}/synonymView",
+										data : {
+											synonymname : synonymname
+										},
+										success : function(response) {
+
+											var html = '<table cellpadding="0" cellspacing="0" class="display dataTable" id="synonymstable"><thead><tr><th>Term</th><th>POS</th><th>Description</th></tr></thead><tbody><tbody>';
+											var len = response.length;
+											for (var i = 0; i < len; i++) {
+												html += '<tr class="gradeX"><td align="justify"><font size="2">'
+														+ response[i].word
+														+ '</font></td>';
+												html += '<td align="justify"><font size="2">'
+														+ response[i].pos
+														+ '</font></td>';
+												html += '<td align="justify"><font size="2">'
+														+ response[i].description
+														+ '</font></td></tr>';
+											}
+											html += '</tbody></table>';
+											$("#synonymViewDiv").html(html);
+
+											$("#synonymstable")
+													.dataTable(
+															{
+																"bJQueryUI" : true,
+																"sPaginationType" : "full_numbers",
+																"bAutoWidth" : false
+															});
+
+										}
+									});
+						});
+	});
+
+	$(document).ready(function() {
+		$('#synonyms').dataTable({
+			"bJQueryUI" : true,
+			"sPaginationType" : "full_numbers",
+			"bAutoWidth" : false
+		});
+
+	});
+</script>
+
 <h1>Add new concept</h1>
 <p>Add a new concept here.</p>
 
@@ -42,7 +130,8 @@
 		<tr>
 			<td>Synonyms</td>
 			<td></td>
-			<td><input type="submit" value="Search"></td>
+			<td><input type="button" name="synonym" id="addsynonym"
+				value="Add Synonym"></td>
 		</tr>
 		<tr>
 			<td>Concept Type</td>
@@ -63,4 +152,21 @@
 			<td colspan="2"><input type="submit" value="Add Concept"></td>
 		</tr>
 	</table>
+
 </form>
+<form>
+	<div id="dialog" title="Search synonym">
+
+		<table>
+			<tr>
+				<td><input type="text" name="synonymname" id="synonymname"></td>
+				<td><input type="button" name="synsearch" id="synonymsearch"
+					value="Search"></td>
+			</tr>
+		</table>
+		<div id="synonymViewDiv"
+			style="max-width: 1000px; max-height: 500px; width: 100%;"></div>
+
+	</div>
+</form>
+

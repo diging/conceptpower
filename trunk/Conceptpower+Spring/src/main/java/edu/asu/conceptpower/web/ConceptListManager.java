@@ -7,10 +7,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
+import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
+import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
 @Controller
 public class ConceptListManager {
@@ -19,6 +24,9 @@ public class ConceptListManager {
 	private ConceptManager conceptManager;
 	private List<ConceptList> conceptLists;
 
+	@Autowired
+	ConceptEntryWrapperCreator wrapperCreator;
+
 	@RequestMapping(value = "auth/concepts/ConceptList")
 	public String showConceptList(HttpServletRequest req, ModelMap model) {
 
@@ -26,5 +34,20 @@ public class ConceptListManager {
 		model.addAttribute("result", conceptLists);
 
 		return "/auth/concepts/ConceptList";
+	}
+
+	@RequestMapping(value = "auth/concepts/conceptsview/{projectid}", method = RequestMethod.GET)
+	public String conceptsList(@PathVariable("projectid") String list,
+			HttpServletRequest req, ModelMap model) {
+
+		List<ConceptEntry> founds = conceptManager.getConceptListEntries(list);
+
+		List<ConceptEntryWrapper> foundConcepts = wrapperCreator
+				.createWrappers(founds != null ? founds
+						.toArray(new ConceptEntry[founds.size()])
+						: new ConceptEntry[0]);
+
+		model.addAttribute("result", foundConcepts);
+		return "/auth/concepts/ConceptListView";
 	}
 }

@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.asu</groupId>
-	<artifactId>quadriga</artifactId>
-	<name>Quadriga</name>
+	<artifactId>conceptpower</artifactId>
+	<name>ConceptPower</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
@@ -130,8 +130,12 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- <dependency> <groupId>javax.servlet.jsp</groupId> <artifactId>jsp-api</artifactId> 
-			<version>2.1</version> <scope>provided</scope> </dependency> -->
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -262,7 +266,7 @@
 			<artifactId>cglib</artifactId>
 			<version>3.0</version>
 		</dependency>
-		
+
 		<!-- db4o -->
 		<dependency>
 			<groupId>com.db4o</groupId>
@@ -280,15 +284,22 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.1</version>
 		</dependency>
+
+		<!-- Jackson JSON Mapper -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.10</version>
+		</dependency>
 	</dependencies>
-	
+
 	<!-- Repositories -->
 	<repositories>
-	    <repository>
-	        <id>db4o-repository</id>
-	        <name>Db4o Repository</name>
-	        <url>https://source.db4o.com/maven/</url>
-    	</repository>
+		<repository>
+			<id>db4o-repository</id>
+			<name>Db4o Repository</name>
+			<url>https://source.db4o.com/maven/</url>
+		</repository>
 	</repositories>
 
 
