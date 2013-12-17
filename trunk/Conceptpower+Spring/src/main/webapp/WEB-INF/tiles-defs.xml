@@ -82,10 +82,6 @@
 			value="/WEB-INF/views/auth/concepts/ConceptListView.jsp" />
 	</definition>
 
-	<definition name="/synonymView" extends="base.definition">
-		<put-attribute name="content" value="/WEB-INF/views/synonymView.jsp" />
-	</definition>
-
 	<!-- users management -->
 	<definition name="auth/user/list" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
