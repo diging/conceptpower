@@ -16,11 +16,18 @@
 	});
 </script>
 
+<h1>Concept list</h1>
+<p>Here you find all stored concept list in the selected concept
+	list.</p>
+
+<h2>Concepts</h2>
 <c:if test="${not empty result}">
 	<table cellpadding="0" cellspacing="0" class="display dataTable"
 		id="conceptList">
 		<thead>
 			<tr>
+				<th></th>
+				<th></th>
 				<th>Term</th>
 				<th>ID</th>
 				<th>Wordnet ID</th>
@@ -28,6 +35,8 @@
 				<th>Concept List</th>
 				<th>Description</th>
 				<th>Type</th>
+				<th>Synonyms</th>
+				<th>Created By</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -35,6 +44,13 @@
 				<tr class="gradeX">
 					<td align="justify"><font size="2"><c:out
 								value="${concept.entry.word}"></c:out></font></td>
+					<td align="justify"><font size="2"><c:out
+								value="${concept.entry.word}"></c:out></font></td>
+					<td align="justify"><a
+						href="${pageContext.servletContext.contextPath}/auth/concepts/deleteconcept/${concept.entry.id}"><input
+							type="image"
+							src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a>
+					</td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.entry.id}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
@@ -47,6 +63,10 @@
 								value="${concept.description}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.type.typeName}"></c:out></font></td>
+					<td align="justify"><font size="2"><c:out
+								value="${concept.synonyms}"></c:out></font></td>
+					<td align="justify"><font size="2"><c:out
+								value="${concept.creator.user}"></c:out></font></td>
 				</tr>
 			</c:forEach>
 		</tbody>
