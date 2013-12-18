@@ -1,6 +1,6 @@
 <c:if test="${not empty synonyms}">
 	<table cellpadding="0" cellspacing="0" class="display dataTable"
-		id="synonyms">
+		id="synonymstable">
 		<thead>
 			<tr>
 				<th>Term</th>
