@@ -22,24 +22,6 @@
 
 	});
 
-	function getTransactionTypeValues() {
-		$
-				.getJSON(
-						"/SecureBankingSystem/sales/transaction/new/transactionTypeValues",
-						{
-							transaction : $("#transaction :selected").text()
-						}, function(data) {
-							var html = '<option value="">Select</option>';
-							var len = data.length;
-							for (var i = 0; i < len; i++) {
-								html += '<option value="' + data[i] + '">'
-										+ data[i] + '</option>';
-							}
-							html += '</option>';
-							$('#transactionType').html(html);
-						});
-	}
-
 	$(function() {
 		$("#synonymsearch")
 				.click(
