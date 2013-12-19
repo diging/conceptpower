@@ -28,6 +28,7 @@
 			<tr>
 				<th></th>
 				<th></th>
+				<th></th>
 				<th>Term</th>
 				<th>ID</th>
 				<th>Wordnet ID</th>
@@ -43,14 +44,19 @@
 			<c:forEach var="concept" items="${result}">
 				<tr class="gradeX">
 					<td align="justify"><font size="2"><c:out
-								value="${concept.entry.word}"></c:out></font></td>
-					<td align="justify"><font size="2"><c:out
-								value="${concept.entry.word}"></c:out></font></td>
+								value="Details"></c:out></font></td>
 					<td align="justify"><a
 						href="${pageContext.servletContext.contextPath}/auth/concepts/deleteconcept/${concept.entry.id}"><input
 							type="image"
 							src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a>
 					</td>
+					<td align="justify"><a
+						href="${pageContext.servletContext.contextPath}/auth/concepts/editconcept/${concept.entry.id}"><input
+							type="image"
+							src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
+					</td>
+					<td align="justify"><font size="2"><c:out
+								value="${concept.entry.word}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.entry.id}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
