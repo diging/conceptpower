@@ -96,6 +96,14 @@
 			value="/WEB-INF/views/auth/concepts/ConceptEditView.jsp" />
 	</definition>
 
+	<definition name="/auth/concepts/edittype" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/TypeEdit.jsp" />
+	</definition>
+
+
 	<!-- users management -->
 	<definition name="auth/user/list" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
@@ -114,6 +122,11 @@
 		<put-attribute name="title" value="User Management" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/auth/user/edit.jsp" />
+	</definition>
+	<definition name="auth/user/add" extends="base.definition">
+		<put-attribute name="title" value="User Management" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/auth/user/add.jsp" />
 	</definition>
 
 

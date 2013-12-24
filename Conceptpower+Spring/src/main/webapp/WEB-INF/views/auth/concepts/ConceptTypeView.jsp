@@ -25,6 +25,7 @@
 		id="conceptTypes">
 		<thead>
 			<tr>
+				<th></th>
 				<th>Name</th>
 				<th>Type URI</th>
 				<th>Description</th>
@@ -37,6 +38,11 @@
 		<tbody>
 			<c:forEach var="types" items="${result}">
 				<tr class="gradeX">
+					<td align="justify"><a
+						href="${pageContext.servletContext.contextPath}/auth/concepts/edittype/${types.typeId}"><input
+							type="image"
+							src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
+					</td>
 					<td align="justify"><font size="2"><c:out
 								value="${types.typeName}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
