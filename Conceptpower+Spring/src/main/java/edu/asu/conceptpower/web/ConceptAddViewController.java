@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.web;
 
+import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,8 @@ public class ConceptAddViewController {
 	}
 
 	@RequestMapping(value = "auth/concepts/createconcept", method = RequestMethod.POST)
-	public String createConcept(HttpServletRequest req, ModelMap model) {
+	public String createConcept(HttpServletRequest req, ModelMap model,
+			Principal principal) {
 
 		try {
 			conceptEntry = new ConceptEntry();
@@ -77,6 +79,8 @@ public class ConceptAddViewController {
 			conceptEntry.setEqualTo(req.getParameter("equals"));
 			conceptEntry.setSimilarTo(req.getParameter("similar"));
 			conceptEntry.setTypeId(req.getParameter("types"));
+			conceptEntry.setCreatorId(principal.getName());
+
 			conceptManager.addConceptListEntry(conceptEntry);
 
 		} catch (DictionaryDoesNotExistException e) {

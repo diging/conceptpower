@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.web;
 
+import java.security.Principal;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +20,7 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
-import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
-import edu.asu.conceptpower.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.users.impl.UsersManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
@@ -28,6 +29,9 @@ public class ConceptEditView {
 
 	@Autowired
 	ConceptManager conceptManager;
+
+	@Autowired
+	private UsersManager usersManager;
 
 	@Autowired
 	private ConceptTypesManager conceptTypesManager;
@@ -95,7 +99,7 @@ public class ConceptEditView {
 	}
 
 	@RequestMapping(value = "auth/concepts/canceledit/{conceptList}", method = RequestMethod.GET)
-	public String cancelDelete(@PathVariable("conceptList") String conceptList,
+	public String cancelEdit(@PathVariable("conceptList") String conceptList,
 			HttpServletRequest req, ModelMap model) {
 		List<ConceptEntry> founds = conceptManager
 				.getConceptListEntries(conceptList);
@@ -110,8 +114,8 @@ public class ConceptEditView {
 	}
 
 	@RequestMapping(value = "auth/concepts/editconceptconfirm/{id}", method = RequestMethod.POST)
-	public String confirmlDelete(@PathVariable("id") String id,
-			HttpServletRequest req, ModelMap model) {
+	public String confirmlEdit(@PathVariable("id") String id,
+			HttpServletRequest req, Principal principal, ModelMap model) {
 
 		ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
 		conceptEntry.setWord(req.getParameter("name"));
@@ -122,7 +126,14 @@ public class ConceptEditView {
 		conceptEntry.setSimilarTo(req.getParameter("similar"));
 		conceptEntry.setTypeId(req.getParameter("types"));
 
-		// set modified and user details
+		String userId = usersManager.findUser(principal.getName()).getUser();
+		String modified = conceptEntry.getModified() != null ? conceptEntry
+				.getModified() : "";
+		if (!modified.trim().isEmpty())
+			modified += ", ";
+		conceptEntry.setModified(modified + userId + "@"
+				+ (new Date()).toString());
+
 		conceptManager.storeModifiedConcept(conceptEntry);
 
 		List<ConceptEntry> founds = conceptManager

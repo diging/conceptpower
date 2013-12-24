@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.web;
 
+import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class AddConceptTypeView {
 
 	@Autowired
 	private TypesView typesView;
-	
+
 	@Autowired
 	private LoginController loginController;
 
@@ -42,13 +43,15 @@ public class AddConceptTypeView {
 	}
 
 	@RequestMapping(value = "auth/concepts/createconcepttype", method = RequestMethod.POST)
-	public String createConceptType(HttpServletRequest req, ModelMap model) {
+	public String createConceptType(HttpServletRequest req, ModelMap model,
+			Principal principal) {
 
 		type = new ConceptType();
 		type.setTypeName(req.getParameter("name"));
 		type.setDescription(req.getParameter("description"));
 		type.setMatches(req.getParameter("match"));
 		type.setSupertypeId(req.getParameter("types"));
+		type.setCreatorId(principal.getName());
 
 		conceptTypesManager.addConceptType(type);
 		typesView.showConceptTypes(req, model);
