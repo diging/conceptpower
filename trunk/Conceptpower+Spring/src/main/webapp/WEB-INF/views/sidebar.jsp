@@ -29,9 +29,12 @@
 			href="${pageContext.servletContext.contextPath}/auth/concepts/TypeAddView">Add
 				New Type</a></li>
 	</ul>
-	<a href="">Manage Users</a>
+	<a href="${pageContext.servletContext.contextPath}/auth/user/list">Manage
+		Users</a>
 	<ul>
-		<li class="first"><a href="">Add New User</a></li>
+		<li class="first"><a
+			href="${pageContext.servletContext.contextPath}/auth/user/add">Add
+				New User</a></li>
 	</ul>
 </form>
 
