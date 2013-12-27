@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
+import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -43,6 +45,7 @@ public class ConceptAddViewController {
 	private List<ConceptList> allLists;
 	private ConceptType[] allTypes;
 	private ConceptEntry conceptEntry;
+	private List<ConceptEntry> synonyms;
 
 	@RequestMapping(value = "auth/concepts/ConceptAddView")
 	public String conceptAddView(HttpServletRequest req, ModelMap model) {
@@ -63,6 +66,10 @@ public class ConceptAddViewController {
 		}
 		model.addAttribute("lists", lists);
 
+		if (synonyms != null) {
+			synonyms.clear();
+		}
+
 		return "/auth/concepts/ConceptAddView";
 	}
 
@@ -72,6 +79,13 @@ public class ConceptAddViewController {
 
 		try {
 			conceptEntry = new ConceptEntry();
+
+			StringBuffer sb = new StringBuffer();
+			for (ConceptEntry synonym : synonyms)
+				sb.append(synonym.getId() + Constants.SYNONYM_SEPARATOR);
+
+			conceptEntry.setSynonymIds(sb.toString());
+
 			conceptEntry.setWord(req.getParameter("name"));
 			conceptEntry.setConceptList(req.getParameter("lists"));
 			conceptEntry.setPos(req.getParameter("pos"));
@@ -80,7 +94,6 @@ public class ConceptAddViewController {
 			conceptEntry.setSimilarTo(req.getParameter("similar"));
 			conceptEntry.setTypeId(req.getParameter("types"));
 			conceptEntry.setCreatorId(principal.getName());
-
 			conceptManager.addConceptListEntry(conceptEntry);
 
 		} catch (DictionaryDoesNotExistException e) {
@@ -112,5 +125,41 @@ public class ConceptAddViewController {
 		ConceptEntry[] entries = conceptManager
 				.getConceptListEntriesForWord(synonymname.trim());
 		return entries;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "addSynonym")
+	public @ResponseBody
+	ConceptEntry[] addSynonym(ModelMap model,
+			@RequestParam("synonymid") String synonymid) {
+		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid.trim());
+		if (synonyms == null) {
+			synonyms = new ArrayList<ConceptEntry>();
+		}
+		synonyms.add(synonym);
+		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
+		int i = 0;
+		for (ConceptEntry syn : synonyms) {
+			arraySynonyms[i++] = syn;
+		}
+		return arraySynonyms;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "removeSynonym")
+	public @ResponseBody
+	ConceptEntry[] removeSynonym(ModelMap model,
+			@RequestParam("synonymid") String synonymid) {
+		if (synonyms != null) {
+			for (int i = 0; i < synonyms.size(); i++) {
+				if (synonyms.get(i).getId().equals(synonymid)) {
+					synonyms.remove(i);
+				}
+			}
+		}
+		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
+		int i = 0;
+		for (ConceptEntry syn : synonyms) {
+			arraySynonyms[i++] = syn;
+		}
+		return arraySynonyms;
 	}
 }
