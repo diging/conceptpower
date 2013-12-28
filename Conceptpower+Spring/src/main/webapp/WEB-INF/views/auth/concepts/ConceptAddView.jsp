@@ -9,18 +9,12 @@
 	$(function() {
 		$("#addsynonym").click(function() {
 			$("#dialog").dialog();
+			$("#synonymsDialogTable").show();
 		});
 
 	});
 
-	$(document).ready(function() {
-		$("#synonymstable").dataTable({
-			"bJQueryUI" : true,
-			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false
-		});
 
-	});
 
 	$(function() {
 		$("#synonymsearch")
@@ -30,7 +24,7 @@
 							$
 									.ajax({
 										type : "GET",
-										url : "${pageContext.servletContext.contextPath}/synonymView",
+										url : "${pageContext.servletContext.contextPath}/conceptAddSynonymView",
 										data : {
 											synonymname : synonymname
 										},
@@ -72,11 +66,11 @@
 
 	var synonymAdd = function(synonymid) {
 		$("#dialog").dialog("close");
+		$("#synonymsDialogTable").hide();
 		$
-
 				.ajax({
 					type : "GET",
-					url : "${pageContext.servletContext.contextPath}/addSynonym",
+					url : "${pageContext.servletContext.contextPath}/conceptAddAddSynonym",
 					data : {
 						synonymid : synonymid
 					},
@@ -107,7 +101,7 @@
 
 				.ajax({
 					type : "GET",
-					url : "${pageContext.servletContext.contextPath}/removeSynonym",
+					url : "${pageContext.servletContext.contextPath}/conceptAddRemoveSynonym",
 					data : {
 						synonymid : synonymid
 					},
@@ -139,7 +133,6 @@
 			"sPaginationType" : "full_numbers",
 			"bAutoWidth" : false
 		});
-
 	});
 </script>
 
@@ -207,15 +200,14 @@
 <form>
 	<div id="dialog" title="Search synonym">
 
-		<table>
+		<table id="synonymsDialogTable" hidden="true">
 			<tr>
 				<td><input type="text" name="synonymname" id="synonymname"></td>
 				<td><input type="button" name="synsearch" id="synonymsearch"
 					value="Search"></td>
 			</tr>
 		</table>
-		<div id="synonymViewDiv"
-			style="max-width: 1000px; max-height: 500px; width: 100%;"></div>
+		<div id="synonymViewDiv" style="max-width: 1000px; max-height: 500px;"></div>
 
 	</div>
 

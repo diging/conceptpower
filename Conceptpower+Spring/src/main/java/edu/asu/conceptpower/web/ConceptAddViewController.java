@@ -118,7 +118,7 @@ public class ConceptAddViewController {
 		return "/auth/concepts/ConceptListView";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "synonymView")
+	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")
 	public @ResponseBody
 	ConceptEntry[] searchConcept(ModelMap model,
 			@RequestParam("synonymname") String synonymname) {
@@ -127,7 +127,7 @@ public class ConceptAddViewController {
 		return entries;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "addSynonym")
+	@RequestMapping(method = RequestMethod.GET, value = "conceptAddAddSynonym")
 	public @ResponseBody
 	ConceptEntry[] addSynonym(ModelMap model,
 			@RequestParam("synonymid") String synonymid) {
@@ -144,7 +144,7 @@ public class ConceptAddViewController {
 		return arraySynonyms;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "removeSynonym")
+	@RequestMapping(method = RequestMethod.GET, value = "conceptAddRemoveSynonym")
 	public @ResponseBody
 	ConceptEntry[] removeSynonym(ModelMap model,
 			@RequestParam("synonymid") String synonymid) {

@@ -1,7 +1,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 
@@ -69,8 +69,10 @@
 								value="${concept.description}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.type.typeName}"></c:out></font></td>
-					<td align="justify"><font size="2"><c:out
-								value="${concept.synonyms}"></c:out></font></td>
+					<td align="justify"><font size="2"><c:forEach var="syn"
+								items="${concept.synonyms}">
+								<c:out value="-> ${syn.word}"></c:out>
+							</c:forEach></font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.creator.user}"></c:out></font></td>
 				</tr>
