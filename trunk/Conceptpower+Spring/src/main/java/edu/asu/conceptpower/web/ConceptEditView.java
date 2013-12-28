@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,12 +15,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
+import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.users.impl.UsersManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
@@ -41,6 +45,7 @@ public class ConceptEditView {
 
 	private List<ConceptList> allLists;
 	private ConceptType[] allTypes;
+	private List<ConceptEntry> synonyms;
 
 	@RequestMapping(value = "auth/concepts/editconcept/{conceptid}", method = RequestMethod.GET)
 	public String editConcept(@PathVariable("conceptid") String conceptid,
@@ -59,6 +64,21 @@ public class ConceptEditView {
 		for (ConceptList conceptList : allLists) {
 			lists.put(conceptList.getConceptListName(),
 					conceptList.getConceptListName());
+		}
+
+		synonyms = new ArrayList<ConceptEntry>();
+		String synonymIds = concept.getSynonymIds();
+		if (synonymIds != null) {
+			String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
+			if (ids != null) {
+				for (String id : ids) {
+					if (id == null || id.isEmpty())
+						continue;
+					ConceptEntry synonym = conceptManager.getConceptEntry(id);
+					if (synonym != null)
+						synonyms.add(synonym);
+				}
+			}
 		}
 
 		// set poss values and seleted pos
@@ -126,6 +146,12 @@ public class ConceptEditView {
 		conceptEntry.setSimilarTo(req.getParameter("similar"));
 		conceptEntry.setTypeId(req.getParameter("types"));
 
+		StringBuffer sb = new StringBuffer();
+		for (ConceptEntry synonym : synonyms)
+			sb.append(synonym.getId() + Constants.SYNONYM_SEPARATOR);
+
+		conceptEntry.setSynonymIds(sb.toString());
+
 		String userId = usersManager.findUser(principal.getName()).getUser();
 		String modified = conceptEntry.getModified() != null ? conceptEntry
 				.getModified() : "";
@@ -146,6 +172,63 @@ public class ConceptEditView {
 
 		model.addAttribute("result", foundConcepts);
 		return "/auth/concepts/ConceptListView";
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
+	public @ResponseBody
+	ConceptEntry[] searchConcept(ModelMap model,
+			@RequestParam("synonymname") String synonymname) {
+		ConceptEntry[] entries = conceptManager
+				.getConceptListEntriesForWord(synonymname.trim());
+		return entries;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "conceptEditAddSynonym")
+	public @ResponseBody
+	ConceptEntry[] addSynonym(ModelMap model,
+			@RequestParam("synonymid") String synonymid) {
+		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid.trim());
+		if (synonyms == null) {
+			synonyms = new ArrayList<ConceptEntry>();
+		}
+		synonyms.add(synonym);
+		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
+		int i = 0;
+		for (ConceptEntry syn : synonyms) {
+			arraySynonyms[i++] = syn;
+		}
+		return arraySynonyms;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "conceptEditRemoveSynonym")
+	public @ResponseBody
+	ConceptEntry[] removeSynonym(ModelMap model,
+			@RequestParam("synonymid") String synonymid) {
+		if (synonyms != null) {
+			for (int i = 0; i < synonyms.size(); i++) {
+				if (synonyms.get(i).getId().equals(synonymid)) {
+					synonyms.remove(i);
+				}
+			}
+		}
+		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
+		int i = 0;
+		for (ConceptEntry syn : synonyms) {
+			arraySynonyms[i++] = syn;
+		}
+		return arraySynonyms;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
+	public @ResponseBody
+	ConceptEntry[] getSynonyms(ModelMap model) {
+
+		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
+		int i = 0;
+		for (ConceptEntry syn : synonyms) {
+			arraySynonyms[i++] = syn;
+		}
+		return arraySynonyms;
 	}
 
 }
