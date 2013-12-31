@@ -24,9 +24,6 @@ public class AddConceptTypeView {
 	private ConceptTypesManager conceptTypesManager;
 
 	@Autowired
-	private TypesView typesView;
-
-	@Autowired
 	private LoginController loginController;
 
 	@RequestMapping(value = "auth/concepts/TypeAddView")
@@ -54,7 +51,6 @@ public class AddConceptTypeView {
 		type.setCreatorId(principal.getName());
 
 		conceptTypesManager.addConceptType(type);
-		typesView.showConceptTypes(req, model);
-		return "/auth/concepts/ConceptTypes";
+		return "redirect:/auth/concepts/ConceptTypes";
 	}
 }
