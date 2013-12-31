@@ -20,6 +20,7 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
+		<put-attribute name="currentPage" value="home" />
 	</definition>
 	<definition name="exception" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
@@ -31,6 +32,7 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
+		<put-attribute name="currentPage" value="home" />
 	</definition>
 
 	<definition name="/auth/concepts/ConceptAddView" extends="base.definition">
@@ -39,6 +41,7 @@
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptAddView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
 	<definition name="/auth/concepts/ListAddView" extends="base.definition">
@@ -47,6 +50,7 @@
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ListAddView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
 	<definition name="/auth/concepts/TypeAddView" extends="base.definition">
@@ -55,6 +59,7 @@
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/TypeAddView.jsp" />
+		<put-attribute name="currentPage" value="concepttypes" />
 	</definition>
 
 
@@ -64,6 +69,7 @@
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptTypeView.jsp" />
+		<put-attribute name="currentPage" value="concepttypes" />
 	</definition>
 
 	<definition name="/auth/concepts/ConceptList" extends="base.definition">
@@ -72,6 +78,7 @@
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptLists.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
 	<definition name="/auth/concepts/ConceptListView" extends="base.definition">
@@ -79,6 +86,7 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptListView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
 	<definition name="/auth/concepts/deleteconcept" extends="base.definition">
@@ -86,6 +94,7 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptDeleteView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
 
@@ -94,6 +103,7 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptEditView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
 	<definition name="/auth/concepts/edittype" extends="base.definition">
@@ -101,6 +111,7 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/TypeEdit.jsp" />
+		<put-attribute name="currentPage" value="concepttypes" />
 	</definition>
 
 
@@ -111,22 +122,26 @@
 		<put-attribute name="header"
 			value="/WEB-INF/views/auth/user/list-header.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/auth/user/list.jsp" />
+		<put-attribute name="currentPage" value="users" />
 	</definition>
 	<definition name="auth/user/notfound" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/user/notfound.jsp" />
+		<put-attribute name="currentPage" value="users" />
 	</definition>
 	<definition name="auth/user/edit" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/auth/user/edit.jsp" />
+		<put-attribute name="currentPage" value="users" />
 	</definition>
 	<definition name="auth/user/add" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/auth/user/add.jsp" />
+		<put-attribute name="currentPage" value="users" />
 	</definition>
 
 
