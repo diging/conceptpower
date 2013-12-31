@@ -24,10 +24,12 @@ public class TypesView {
 
 		// to show super type name instead of type id in type list view
 		for (ConceptType type : types) {
-			if (type.getSupertypeId() != null) {
+			if (type.getSupertypeId() != null
+					&& !type.getSupertypeId().equals("")) {
 				ConceptType supertype = conceptTypesManager.getType(type
 						.getSupertypeId());
-				type.setSupertypeId(supertype.getTypeName());
+				if (supertype != null)
+					type.setSupertypeId(supertype.getTypeName());
 			}
 		}
 		model.addAttribute("result", types);
