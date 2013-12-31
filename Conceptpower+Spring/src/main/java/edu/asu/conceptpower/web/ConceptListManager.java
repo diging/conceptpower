@@ -29,17 +29,17 @@ public class ConceptListManager {
 	@Autowired
 	ConceptEntryWrapperCreator wrapperCreator;
 
-	@RequestMapping(value = "auth/concepts/ConceptList")
+	@RequestMapping(value = "auth/conceptlist")
 	public String showConceptList(HttpServletRequest req, ModelMap model) {
 
 		conceptLists = conceptManager.getAllConceptLists();
 		model.addAttribute("result", conceptLists);
 
-		return "/auth/concepts/ConceptList";
+		return "/auth/conceptlist";
 	}
 
-	@RequestMapping(value = "auth/concepts/conceptsview/{projectid}", method = RequestMethod.GET)
-	public String conceptsList(@PathVariable("projectid") String list,
+	@RequestMapping(value = "auth/{listid}/concepts", method = RequestMethod.GET)
+	public String conceptsList(@PathVariable("listid") String list,
 			HttpServletRequest req, ModelMap model) {
 
 		List<ConceptEntry> founds = conceptManager.getConceptListEntries(list);
@@ -50,7 +50,7 @@ public class ConceptListManager {
 						: new ConceptEntry[0]);
 
 		model.addAttribute("result", foundConcepts);
-		return "/auth/concepts/ConceptListView";
+		return "/auth/conceptlist/concepts";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "conceptDetail")

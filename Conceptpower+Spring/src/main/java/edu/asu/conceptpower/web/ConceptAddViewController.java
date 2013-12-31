@@ -24,7 +24,6 @@ import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
-import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
 @Controller
@@ -47,8 +46,8 @@ public class ConceptAddViewController {
 	private ConceptEntry conceptEntry;
 	private List<ConceptEntry> synonyms;
 
-	@RequestMapping(value = "auth/concepts/ConceptAddView")
-	public String conceptAddView(HttpServletRequest req, ModelMap model) {
+	@RequestMapping(value = "auth/conceptlist/addconcept")
+	public String prepateConceptAdd(HttpServletRequest req, ModelMap model) {
 
 		allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
@@ -70,19 +69,21 @@ public class ConceptAddViewController {
 			synonyms.clear();
 		}
 
-		return "/auth/concepts/ConceptAddView";
+		return "/auth/conceptlist/addconcept";
 	}
 
-	@RequestMapping(value = "auth/concepts/createconcept", method = RequestMethod.POST)
-	public String createConcept(HttpServletRequest req, ModelMap model,
+	@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
+	public String addConcept(HttpServletRequest req, ModelMap model,
 			Principal principal) {
 
 		try {
 			conceptEntry = new ConceptEntry();
 
 			StringBuffer sb = new StringBuffer();
-			for (ConceptEntry synonym : synonyms)
-				sb.append(synonym.getId() + Constants.SYNONYM_SEPARATOR);
+
+			if (synonyms != null)
+				for (ConceptEntry synonym : synonyms)
+					sb.append(synonym.getId() + Constants.SYNONYM_SEPARATOR);
 
 			conceptEntry.setSynonymIds(sb.toString());
 
@@ -106,16 +107,8 @@ public class ConceptAddViewController {
 			return "failed";
 		}
 
-		List<ConceptEntry> founds = conceptManager.getConceptListEntries(req
-				.getParameter("lists"));
-
-		List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-				.createWrappers(founds != null ? founds
-						.toArray(new ConceptEntry[founds.size()])
-						: new ConceptEntry[0]);
-
-		model.addAttribute("result", foundConcepts);
-		return "/auth/concepts/ConceptListView";
+		return "redirect:/auth/" + req.getParameter("lists")
+				+ "/concepts";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")

@@ -30,7 +30,7 @@ public class TypeEdit {
 	@Autowired
 	private UsersManager usersManager;
 
-	@RequestMapping(value = "auth/concepts/edittype/{typeid}", method = RequestMethod.GET)
+	@RequestMapping(value = "auth/concepttype/edittype/{typeid}", method = RequestMethod.GET)
 	public String prepateEditType(@PathVariable("typeid") String typeid,
 			HttpServletRequest req, ModelMap model) {
 
@@ -52,10 +52,10 @@ public class TypeEdit {
 		types.remove(typeid);
 		model.addAttribute("supertypes", types);
 
-		return "/auth/concepts/edittype";
+		return "/auth/concepttype/edittype";
 	}
 
-	@RequestMapping(value = "auth/concepts/storeedittype/{typeid}", method = RequestMethod.POST)
+	@RequestMapping(value = "auth/concepttype/storeedittype/{typeid}", method = RequestMethod.POST)
 	public String editType(@PathVariable("typeid") String typeid,
 			HttpServletRequest req, ModelMap model, Principal principal) {
 
@@ -72,7 +72,7 @@ public class TypeEdit {
 		type.setModified(modified + userId + "@" + (new Date()).toString());
 
 		typeManager.storeModifiedConceptType(type);
-		return "redirect:/auth/concepts/ConceptTypes";
+		return "redirect:/auth/concepttype";
 	}
 
 }

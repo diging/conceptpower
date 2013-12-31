@@ -47,8 +47,9 @@ public class ConceptEditView {
 	private ConceptType[] allTypes;
 	private List<ConceptEntry> synonyms;
 
-	@RequestMapping(value = "auth/concepts/editconcept/{conceptid}", method = RequestMethod.GET)
-	public String editConcept(@PathVariable("conceptid") String conceptid,
+	@RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
+	public String prepateEditConcept(
+			@PathVariable("conceptid") String conceptid,
 			HttpServletRequest req, ModelMap model) {
 
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
@@ -115,25 +116,16 @@ public class ConceptEditView {
 		model.addAttribute("conceptList", concept.getConceptList());
 		model.addAttribute("id", concept.getId());
 
-		return "/auth/concepts/editconcept";
+		return "/auth/conceptlist/editconcept";
 	}
 
 	@RequestMapping(value = "auth/concepts/canceledit/{conceptList}", method = RequestMethod.GET)
 	public String cancelEdit(@PathVariable("conceptList") String conceptList,
 			HttpServletRequest req, ModelMap model) {
-		List<ConceptEntry> founds = conceptManager
-				.getConceptListEntries(conceptList);
-
-		List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-				.createWrappers(founds != null ? founds
-						.toArray(new ConceptEntry[founds.size()])
-						: new ConceptEntry[0]);
-
-		model.addAttribute("result", foundConcepts);
-		return "/auth/concepts/ConceptListView";
+		return "redirect:/auth/" + conceptList + "/concepts";
 	}
 
-	@RequestMapping(value = "auth/concepts/editconceptconfirm/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
 	public String confirmlEdit(@PathVariable("id") String id,
 			HttpServletRequest req, Principal principal, ModelMap model) {
 
@@ -147,8 +139,9 @@ public class ConceptEditView {
 		conceptEntry.setTypeId(req.getParameter("types"));
 
 		StringBuffer sb = new StringBuffer();
-		for (ConceptEntry synonym : synonyms)
-			sb.append(synonym.getId() + Constants.SYNONYM_SEPARATOR);
+		if (synonyms != null)
+			for (ConceptEntry synonym : synonyms)
+				sb.append(synonym.getId() + Constants.SYNONYM_SEPARATOR);
 
 		conceptEntry.setSynonymIds(sb.toString());
 
@@ -162,16 +155,7 @@ public class ConceptEditView {
 
 		conceptManager.storeModifiedConcept(conceptEntry);
 
-		List<ConceptEntry> founds = conceptManager
-				.getConceptListEntries(conceptEntry.getConceptList());
-
-		List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-				.createWrappers(founds != null ? founds
-						.toArray(new ConceptEntry[founds.size()])
-						: new ConceptEntry[0]);
-
-		model.addAttribute("result", foundConcepts);
-		return "/auth/concepts/ConceptListView";
+		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")

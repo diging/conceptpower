@@ -17,7 +17,7 @@ public class TypesView {
 	private ConceptTypesManager conceptTypesManager;
 	private ConceptType[] types;
 
-	@RequestMapping(value = "auth/concepts/ConceptTypes")
+	@RequestMapping(value = "auth/concepttype")
 	public String showConceptTypes(HttpServletRequest req, ModelMap model) {
 
 		types = conceptTypesManager.getAllTypes();
@@ -34,6 +34,6 @@ public class TypesView {
 		}
 		model.addAttribute("result", types);
 
-		return "/auth/concepts/ConceptTypes";
+		return "/auth/concepttype";
 	}
 }

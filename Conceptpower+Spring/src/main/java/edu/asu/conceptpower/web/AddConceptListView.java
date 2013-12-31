@@ -22,9 +22,9 @@ public class AddConceptListView {
 	private String name;
 	private String description;
 
-	@RequestMapping(value = "auth/concepts/ListAddView")
+	@RequestMapping(value = "auth/conceptlist/addconceptlist")
 	public String listAddView(HttpServletRequest req, ModelMap model) {
-		return "/auth/concepts/ListAddView";
+		return "/auth/conceptlist/addconceptlist";
 	}
 
 	@RequestMapping(value = "auth/concepts/createconceptlist")
@@ -40,7 +40,7 @@ public class AddConceptListView {
 		}
 		conceptListManager.showConceptList(req, model);
 
-		return "/auth/concepts/ConceptList";
+		return "redirect:/auth/conceptlist";
 	}
 
 }
