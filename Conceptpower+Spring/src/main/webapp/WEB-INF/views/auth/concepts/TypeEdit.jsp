@@ -10,7 +10,7 @@
 <p>Edit concept type here.</p>
 
 <form
-	action="${pageContext.servletContext.contextPath}/auth/concepts/storeedittype/${typeid}"
+	action="${pageContext.servletContext.contextPath}/auth/concepttype/storeedittype/${typeid}"
 	method='post'>
 	<table>
 		<tr>

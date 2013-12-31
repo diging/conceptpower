@@ -15,10 +15,10 @@
 
 	<sec:authorize access="isAuthenticated()">
 		<li ${currentPage == "conceptlists" ? "class=\"selected\"" : ""}><a
-			href="${pageContext.servletContext.contextPath}/auth/concepts/ConceptList">Concept
+			href="${pageContext.servletContext.contextPath}/auth/conceptlist">Concept
 				Lists</a></li>
 		<li ${currentPage == "concepttypes" ? "class=\"selected\"" : ""}><a
-			href="${pageContext.servletContext.contextPath}/auth/concepts/ConceptTypes">Concept
+			href="${pageContext.servletContext.contextPath}/auth/concepttype">Concept
 				Types</a></li>
 		<sec:authorize access="hasRole('ROLE_CP_ADMIN')">
 			<li ${currentPage == "users" ? "class=\"selected\"" : ""}><a

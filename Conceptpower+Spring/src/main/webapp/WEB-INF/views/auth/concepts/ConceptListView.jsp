@@ -71,12 +71,12 @@
 					<td align="justify"><font size="2"><a
 							onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 					<td align="justify"><a
-						href="${pageContext.servletContext.contextPath}/auth/concepts/deleteconcept/${concept.entry.id}"><input
+						href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcept/${concept.entry.id}"><input
 							type="image"
 							src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a>
 					</td>
 					<td align="justify"><a
-						href="${pageContext.servletContext.contextPath}/auth/concepts/editconcept/${concept.entry.id}"><input
+						href="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/${concept.entry.id}"><input
 							type="image"
 							src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
 					</td>

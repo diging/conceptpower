@@ -39,7 +39,7 @@
 			<c:forEach var="types" items="${result}">
 				<tr class="gradeX">
 					<td align="justify"><a
-						href="${pageContext.servletContext.contextPath}/auth/concepts/edittype/${types.typeId}"><input
+						href="${pageContext.servletContext.contextPath}/auth/concepttype/edittype/${types.typeId}"><input
 							type="image"
 							src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
 					</td>

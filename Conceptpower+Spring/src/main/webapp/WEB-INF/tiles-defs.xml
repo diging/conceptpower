@@ -35,7 +35,7 @@
 		<put-attribute name="currentPage" value="home" />
 	</definition>
 
-	<definition name="/auth/concepts/ConceptAddView" extends="base.definition">
+	<definition name="/auth/conceptlist/addconcept" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
@@ -44,7 +44,7 @@
 		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
-	<definition name="/auth/concepts/ListAddView" extends="base.definition">
+	<definition name="/auth/conceptlist/addconceptlist" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
@@ -53,7 +53,7 @@
 		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
-	<definition name="/auth/concepts/TypeAddView" extends="base.definition">
+	<definition name="/auth/concepttype/addtype" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
@@ -63,7 +63,7 @@
 	</definition>
 
 
-	<definition name="/auth/concepts/ConceptTypes" extends="base.definition">
+	<definition name="/auth/concepttype" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
@@ -72,7 +72,7 @@
 		<put-attribute name="currentPage" value="concepttypes" />
 	</definition>
 
-	<definition name="/auth/concepts/ConceptList" extends="base.definition">
+	<definition name="/auth/conceptlist" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
@@ -81,7 +81,7 @@
 		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
-	<definition name="/auth/concepts/ConceptListView" extends="base.definition">
+	<definition name="/auth/conceptlist/concepts" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
@@ -89,7 +89,7 @@
 		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
-	<definition name="/auth/concepts/deleteconcept" extends="base.definition">
+	<definition name="/auth/conceptlist/deleteconcept" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
@@ -98,7 +98,7 @@
 	</definition>
 
 
-	<definition name="/auth/concepts/editconcept" extends="base.definition">
+	<definition name="/auth/conceptlist/editconcept" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
@@ -106,7 +106,7 @@
 		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
-	<definition name="/auth/concepts/edittype" extends="base.definition">
+	<definition name="/auth/concepttype/edittype" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"

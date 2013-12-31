@@ -173,7 +173,7 @@
 
 
 <form
-	action="${pageContext.servletContext.contextPath}/auth/concepts/editconceptconfirm/${id}"
+	action="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/edit/${id}"
 	method='post'>
 
 	<h1>Delete concept</h1>
