@@ -25,7 +25,7 @@ public class ConceptDeleteView {
 	@Autowired
 	ConceptEntryWrapperCreator wrapperCreator;
 
-	@RequestMapping(value = "auth/concepts/deleteconcept/{conceptid}", method = RequestMethod.GET)
+	@RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
 	public String deleteConcept(@PathVariable("conceptid") String conceptid,
 			HttpServletRequest req, ModelMap model) {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
@@ -41,7 +41,7 @@ public class ConceptDeleteView {
 		model.addAttribute("user", concept.getModified());
 		model.addAttribute("modified", concept.getModified());
 
-		return "/auth/concepts/deleteconcept";
+		return "/auth/conceptlist/deleteconcept";
 	}
 
 	@RequestMapping(value = "auth/concepts/canceldelete/{conceptList}", method = RequestMethod.GET)
@@ -56,10 +56,10 @@ public class ConceptDeleteView {
 						: new ConceptEntry[0]);
 
 		model.addAttribute("result", foundConcepts);
-		return "/auth/concepts/ConceptListView";
+		return "/auth/conceptlist/concepts";
 	}
 
-	@RequestMapping(value = "auth/concepts/deleteconceptconfirm/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
 	public String confirmlDelete(@PathVariable("id") String id,
 			HttpServletRequest req, ModelMap model) {
 		ConceptEntry concept = conceptManager.getConceptEntry(id);
@@ -77,7 +77,7 @@ public class ConceptDeleteView {
 						: new ConceptEntry[0]);
 
 		model.addAttribute("result", foundConcepts);
-		return "/auth/concepts/ConceptListView";
+		return "/auth/conceptlist/concepts";
 	}
 
 }

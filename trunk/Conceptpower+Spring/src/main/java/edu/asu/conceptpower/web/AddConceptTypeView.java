@@ -26,7 +26,7 @@ public class AddConceptTypeView {
 	@Autowired
 	private LoginController loginController;
 
-	@RequestMapping(value = "auth/concepts/TypeAddView")
+	@RequestMapping(value = "auth/concepttype/addtype")
 	public String typeAddView(HttpServletRequest req, ModelMap model) {
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 
@@ -36,7 +36,7 @@ public class AddConceptTypeView {
 		}
 
 		model.addAttribute("types", types);
-		return "/auth/concepts/TypeAddView";
+		return "/auth/concepttype/addtype";
 	}
 
 	@RequestMapping(value = "auth/concepts/createconcepttype", method = RequestMethod.POST)
@@ -51,6 +51,6 @@ public class AddConceptTypeView {
 		type.setCreatorId(principal.getName());
 
 		conceptTypesManager.addConceptType(type);
-		return "redirect:/auth/concepts/ConceptTypes";
+		return "redirect:/auth/concepttype";
 	}
 }
