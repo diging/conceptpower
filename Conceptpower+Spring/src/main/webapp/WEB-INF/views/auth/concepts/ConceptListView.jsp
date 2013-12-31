@@ -14,6 +14,31 @@
 		});
 
 	});
+
+	function detailsView(concept) {
+		var conceptid = concept.id;
+		$.ajax({
+			type : "GET",
+			url : "${pageContext.servletContext.contextPath}/conceptDetail",
+			data : {
+				conceptid : conceptid
+			},
+			success : function(concept) {
+				$("#detailsid").text(concept.id);
+				$("#detailsuri").text(concept.id);
+				$("#detailswordnetid").text(concept.wordnetId);
+				$("#detailspos").text(concept.pos);
+				$("#detailsconceptlist").text(concept.conceptList);
+				$("#detailstypeid").text(concept.typeId);
+				$("#detailsequalto").text(concept.equalTo);
+				$("#detailssimilarto").text(concept.similarTo);
+				$("#detailscreator").text(concept.creatorId);
+
+				$("#detailsdiv").dialog();
+				$("#detailstable").show();
+			}
+		});
+	}
 </script>
 
 <h1>Concept list</h1>
@@ -43,8 +68,8 @@
 		<tbody>
 			<c:forEach var="concept" items="${result}">
 				<tr class="gradeX">
-					<td align="justify"><font size="2"><c:out
-								value="Details"></c:out></font></td>
+					<td align="justify"><font size="2"><a
+							onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 					<td align="justify"><a
 						href="${pageContext.servletContext.contextPath}/auth/concepts/deleteconcept/${concept.entry.id}"><input
 							type="image"
@@ -81,3 +106,46 @@
 	</table>
 
 </c:if>
+
+
+<div id="detailsdiv" style="max-width: 600px; max-height: 500px;">
+	<table id="detailstable" class="greyContent" hidden="true">
+		<tr>
+			<td>Id:</td>
+			<td id="detailsid"></td>
+		</tr>
+		<tr>
+			<td>URI:</td>
+			<td id="detailsuri"></td>
+		</tr>
+		<tr>
+			<td>Wordnet Id:</td>
+			<td id="detailswordnetid"></td>
+		</tr>
+		<tr>
+			<td>POS:</td>
+			<td id="detailspos"></td>
+		</tr>
+		<tr>
+			<td>Concept List:</td>
+			<td id="detailsconceptlist"></td>
+		</tr>
+		<tr>
+			<td>Type:</td>
+			<td id="detailstypeid"></td>
+		</tr>
+		<tr>
+			<td>Equal to:</td>
+			<td id="detailsequalto"></td>
+		</tr>
+		<tr>
+			<td>Similar to:</td>
+			<td id="detailssimilarto"></td>
+		</tr>
+		<tr>
+			<td>Creator:</td>
+			<td id="detailscreator"></td>
+		</tr>
+	</table>
+</div>
+
