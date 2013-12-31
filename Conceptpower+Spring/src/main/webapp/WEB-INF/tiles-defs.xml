@@ -68,7 +68,7 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content"
-			value="/WEB-INF/views/auth/concepts/ConceptTypeView.jsp" />
+			value="/WEB-INF/views/auth/concepts/ConceptTypesView.jsp" />
 		<put-attribute name="currentPage" value="concepttypes" />
 	</definition>
 
@@ -77,7 +77,7 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content"
-			value="/WEB-INF/views/auth/concepts/ConceptLists.jsp" />
+			value="/WEB-INF/views/auth/concepts/ConceptListsView.jsp" />
 		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
@@ -85,7 +85,7 @@
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
-			value="/WEB-INF/views/auth/concepts/ConceptListView.jsp" />
+			value="/WEB-INF/views/auth/concepts/ConceptListConceptsView.jsp" />
 		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
@@ -110,7 +110,7 @@
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
-			value="/WEB-INF/views/auth/concepts/TypeEdit.jsp" />
+			value="/WEB-INF/views/auth/concepts/TypeEditView.jsp" />
 		<put-attribute name="currentPage" value="concepttypes" />
 	</definition>
 
