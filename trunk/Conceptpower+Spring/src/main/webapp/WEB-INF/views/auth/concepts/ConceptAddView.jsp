@@ -140,7 +140,7 @@
 <p>Add a new concept here.</p>
 
 <form
-	action="${pageContext.servletContext.contextPath}/auth/concepts/createconcept"
+	action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept/add"
 	method='post'>
 	<table>
 		<tr>

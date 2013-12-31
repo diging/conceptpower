@@ -63,7 +63,7 @@
 <table>
 	<tr>
 		<td><a
-			href="${pageContext.servletContext.contextPath}/auth/concepts/deleteconceptconfirm/${id}"><input
+			href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${id}"><input
 				type="button" name="delete" id="delete" value="Yes, delete concept!"></a></td>
 
 		<td><a
