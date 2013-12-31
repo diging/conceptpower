@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
-import edu.asu.conceptpower.db4o.DBNames;
-import edu.asu.conceptpower.db4o.DatabaseManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
