@@ -47,7 +47,7 @@ public class ConceptAddController {
 	private List<ConceptEntry> synonyms;
 
 	@RequestMapping(value = "auth/conceptlist/addconcept")
-	public String prepateConceptAdd(HttpServletRequest req, ModelMap model) {
+	public String prepareConceptAdd(HttpServletRequest req, ModelMap model) {
 
 		allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
@@ -107,8 +107,7 @@ public class ConceptAddController {
 			return "failed";
 		}
 
-		return "redirect:/auth/" + req.getParameter("lists")
-				+ "/concepts";
+		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")

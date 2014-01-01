@@ -1,6 +1,8 @@
 package edu.asu.conceptpower.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
+import edu.asu.conceptpower.db4o.TypeDatabaseClient;
+import edu.asu.conceptpower.util.URICreator;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
@@ -24,7 +28,14 @@ public class ConceptListController {
 
 	@Autowired
 	private ConceptManager conceptManager;
+
 	private List<ConceptList> conceptLists;
+
+	@Autowired
+	private TypeDatabaseClient typeDatabaseClient;
+
+	@Autowired
+	URICreator URICreator;
 
 	@Autowired
 	ConceptEntryWrapperCreator wrapperCreator;
@@ -55,10 +66,34 @@ public class ConceptListController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "conceptDetail")
 	public @ResponseBody
-	ConceptEntry getConceptDetails(ModelMap model,
+	Map<String, String> getConceptDetails(ModelMap model,
 			@RequestParam("conceptid") String conceptid) {
-		ConceptEntry conceptEntry = conceptManager.getConceptEntry(conceptid);
-		return conceptEntry;
-	}
+		ConceptEntryWrapper conceptEntry = new ConceptEntryWrapper(
+				conceptManager.getConceptEntry(conceptid));
+		Map<String, String> details = new HashMap<String, String>();
 
+		details.put("id", conceptEntry.getEntry().getId());
+		details.put("uri", URICreator.getURI(conceptEntry.getEntry()));
+		details.put("wordnetid", conceptEntry.getEntry().getWordnetId());
+		details.put("pos", conceptEntry.getEntry().getPos());
+		details.put("conceptlist", conceptEntry.getEntry().getConceptList());
+
+		details.put(
+				"type",
+				conceptEntry.getEntry().getTypeId() == null ? ""
+						: typeDatabaseClient.getType(
+								conceptEntry.getEntry().getTypeId())
+								.getTypeName());
+		details.put("equalto",
+				conceptEntry.getEntry().getEqualTo() == null ? ""
+						: conceptEntry.getEntry().getEqualTo());
+		details.put("similarto",
+				conceptEntry.getEntry().getSimilarTo() == null ? ""
+						: conceptEntry.getEntry().getSimilarTo());
+		details.put("creator",
+				conceptEntry.getEntry().getCreatorId() == null ? ""
+						: conceptEntry.getEntry().getCreatorId());
+
+		return details;
+	}
 }
