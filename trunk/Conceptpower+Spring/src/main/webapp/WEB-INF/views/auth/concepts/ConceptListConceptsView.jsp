@@ -23,16 +23,16 @@
 			data : {
 				conceptid : conceptid
 			},
-			success : function(concept) {
-				$("#detailsid").text(concept.id);
-				$("#detailsuri").text(concept.id);
-				$("#detailswordnetid").text(concept.wordnetId);
-				$("#detailspos").text(concept.pos);
-				$("#detailsconceptlist").text(concept.conceptList);
-				$("#detailstypeid").text(concept.typeId);
-				$("#detailsequalto").text(concept.equalTo);
-				$("#detailssimilarto").text(concept.similarTo);
-				$("#detailscreator").text(concept.creatorId);
+			success : function(details) {
+				$("#detailsid").text(details.id);
+				$("#detailsuri").text(details.uri);
+				$("#detailswordnetid").text(details.wordnetId);
+				$("#detailspos").text(details.pos);
+				$("#detailsconceptlist").text(details.conceptlist);
+				$("#detailstypeid").text(details.type);
+				$("#detailsequalto").text(details.equalto);
+				$("#detailssimilarto").text(details.similarto);
+				$("#detailscreator").text(details.creator);
 
 				$("#detailsdiv").dialog();
 				$("#detailstable").show();

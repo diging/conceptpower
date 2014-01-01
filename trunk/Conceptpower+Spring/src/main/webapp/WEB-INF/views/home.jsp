@@ -13,6 +13,31 @@
 		});
 
 	});
+
+	function detailsView(concept) {
+		var conceptid = concept.id;
+		$.ajax({
+			type : "GET",
+			url : "${pageContext.servletContext.contextPath}/conceptDetail",
+			data : {
+				conceptid : conceptid
+			},
+			success : function(details) {
+				$("#detailsid").text(details.id);
+				$("#detailsuri").text(details.uri);
+				$("#detailswordnetid").text(details.wordnetId);
+				$("#detailspos").text(details.pos);
+				$("#detailsconceptlist").text(details.conceptlist);
+				$("#detailstypeid").text(details.type);
+				$("#detailsequalto").text(details.equalto);
+				$("#detailssimilarto").text(details.similarto);
+				$("#detailscreator").text(details.creator);
+
+				$("#detailsdiv").dialog();
+				$("#detailstable").show();
+			}
+		});
+	}
 </script>
 
 
@@ -23,8 +48,7 @@
 
 <p>This is Conceptpower, the concept management site for Quadriga.</p>
 
-<form
-	action="${pageContext.servletContext.contextPath}/conceptsearch"
+<form action="${pageContext.servletContext.contextPath}/conceptsearch"
 	method='post'>
 	<table>
 		<tr>
@@ -53,6 +77,7 @@
 		id="conceptSearch">
 		<thead>
 			<tr>
+				<th></th>
 				<th>Term</th>
 				<th>ID</th>
 				<th>Wordnet ID</th>
@@ -65,6 +90,8 @@
 		<tbody>
 			<c:forEach var="concept" items="${result}">
 				<tr class="gradeX">
+					<td align="justify"><font size="2"><a
+							onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.entry.word}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
@@ -105,4 +132,47 @@
 		</p>
 	</form>
 </sec:authorize>
+
+
+<div id="detailsdiv" style="max-width: 600px; max-height: 500px;">
+	<table id="detailstable" class="greyContent" hidden="true">
+		<tr>
+			<td>Id:</td>
+			<td id="detailsid"></td>
+		</tr>
+		<tr>
+			<td>URI:</td>
+			<td id="detailsuri"></td>
+		</tr>
+		<tr>
+			<td>Wordnet Id:</td>
+			<td id="detailswordnetid"></td>
+		</tr>
+		<tr>
+			<td>POS:</td>
+			<td id="detailspos"></td>
+		</tr>
+		<tr>
+			<td>Concept List:</td>
+			<td id="detailsconceptlist"></td>
+		</tr>
+		<tr>
+			<td>Type:</td>
+			<td id="detailstypeid"></td>
+		</tr>
+		<tr>
+			<td>Equal to:</td>
+			<td id="detailsequalto"></td>
+		</tr>
+		<tr>
+			<td>Similar to:</td>
+			<td id="detailssimilarto"></td>
+		</tr>
+		<tr>
+			<td>Creator:</td>
+			<td id="detailscreator"></td>
+		</tr>
+	</table>
+</div>
+
 
