@@ -11,15 +11,45 @@
 			$("#dialog").dialog();
 			$("#synonymsDialogTable").show();
 		});
-
 	});
 
+	$(document).ready(definedatatable);
 
+	function definedatatable() {
+		$('#synonymstable').dataTable(
+				{
+					"bJQueryUI" : true,
+					"sPaginationType" : "full_numbers",
+					"bAutoWidth" : false,
+					"bStateSave" : true,
+					"aoColumns" : [ {
+						"sTitle" : "Term",
+						"mDataProp" : "word",
+					}, {
+						"sTitle" : "POS",
+						"mDataProp" : "pos",
+					}, {
+						"sTitle" : "Description",
+						"mDataProp" : "description",
+					}, {
+						"sTitle" : "Add",
+						"mDataProp" : "id"
+					} ],
+					"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
+						$('td:eq(3)', nRow).html(
+								'<a onclick="synonymAdd(\'' + aData.id
+										+ '\')">Add</a>');
+						return nRow;
+					}
+				});
+	};
 
 	$(function() {
 		$("#synonymsearch")
 				.click(
 						function() {
+							$("#synonymViewDiv").show();
+							$("#synonymstable").show();
 							var synonymname = $("#synonymname").val();
 							$
 									.ajax({
@@ -29,36 +59,8 @@
 											synonymname : synonymname
 										},
 										success : function(response) {
-
-											var html = '<table cellpadding="0" cellspacing="0" class="display dataTable" id="synonymstable"><thead><tr><th>Term</th><th>POS</th><th>Description</th><th><th/></tr></thead><tbody>';
-											var len = response.length;
-											for (var i = 0; i < len; i++) {
-												html += '<tr class="gradeX"><td align="justify"><font size="2">'
-														+ response[i].word
-														+ '</font></td>';
-												html += '<td align="justify"><font size="2">'
-														+ response[i].pos
-														+ '</font></td>';
-												html += '<td align="justify"><font size="2">'
-														+ response[i].description
-														+ '</font></td>';
-												html += '<td align="justify"><font size="2">'
-														+ '<a onclick="synonymAdd(\''
-														+ response[i].id
-														+ '\')">Add</a>'
-														+ '</font></td></tr>';
-											}
-											html += '</tbody></table>';
-											$("#synonymViewDiv").html(html);
-
-											$("#synonymstable")
-													.dataTable(
-															{
-																"bJQueryUI" : true,
-																"sPaginationType" : "full_numbers",
-																"bAutoWidth" : false
-															});
-
+											$('#synonymstable').dataTable()
+													.fnAddData(response);
 										}
 									});
 						});
@@ -91,7 +93,6 @@
 						}
 						html += '</tbody></table>';
 						$("#addedSynonyms").html(html);
-
 					}
 				});
 	};
@@ -106,8 +107,8 @@
 						synonymid : synonymid
 					},
 					success : function(response) {
-
-						var html = '<table border="1" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
+						var border = response.length > 0 ? 1 : 0;
+						var html = '<table border="'+ border +'" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
 						var len = response.length;
 						for (var i = 0; i < len; i++) {
 							html += '<tr><td align="justify"><font size="2">'
@@ -127,13 +128,6 @@
 				});
 	};
 
-	$(document).ready(function() {
-		$('#synonyms').dataTable({
-			"bJQueryUI" : true,
-			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false
-		});
-	});
 </script>
 
 <h1>Add new concept</h1>
@@ -207,7 +201,17 @@
 					value="Search"></td>
 			</tr>
 		</table>
-		<div id="synonymViewDiv" style="max-width: 1000px; max-height: 500px;"></div>
+
+		<div id="synonymViewDiv" style="max-width: 1000px; max-height: 500px;"
+			hidden="true">
+
+			<table cellpadding="0" cellspacing="0" class="display dataTable"
+				id="synonymstable" hidden="true">
+				<tbody>
+				</tbody>
+			</table>
+
+		</div>
 
 	</div>
 
