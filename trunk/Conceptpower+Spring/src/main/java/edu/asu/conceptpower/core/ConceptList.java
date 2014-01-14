@@ -2,6 +2,14 @@ package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
 
+/**
+ * This class describes a concept list in Conceptpower. 
+ * A concept list groups concept entries for organization
+ * purposes.
+ * 
+ * @author Julia Damerow
+ *
+ */
 public class ConceptList implements Serializable {
 
 	/**
@@ -15,6 +23,10 @@ public class ConceptList implements Serializable {
 	
 	private String id;
 	
+	/**
+	 * Return the name of a concept list.
+	 * @return
+	 */
 	public String getConceptListName() {
 		return conceptListName;
 	}
@@ -23,6 +35,10 @@ public class ConceptList implements Serializable {
 		this.conceptListName = conceptName;
 	}
 
+	/**
+	 * Returns a description of a concept list.
+	 * @return
+	 */
 	public String getDescription() {
 		return description;
 	}
@@ -35,6 +51,9 @@ public class ConceptList implements Serializable {
 		this.id = id;
 	}
 
+	/**
+	 * Returns the id of a concept list.
+	 */
 	public String getId() {
 		return id;
 	}
