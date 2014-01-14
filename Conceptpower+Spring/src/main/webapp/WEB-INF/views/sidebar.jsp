@@ -8,8 +8,7 @@
 
 <h2>You can</h2>
 <form>
-	<a
-		href="${pageContext.servletContext.contextPath}/auth/conceptlist">Manage
+	<a href="${pageContext.servletContext.contextPath}/auth/conceptlist">Manage
 		Concept Lists</a>
 	<ul>
 		<li class="first"><a
@@ -18,11 +17,12 @@
 		<li><a
 			href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept">Add
 				New Concept</a></li>
-		<li><a href="">Add New Wordnet Concept Wrapper</a></li>
+		<li><a
+			href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper">Add
+				New Wordnet Concept Wrapper</a></li>
 		<li><a href="">Add New VIAF concept</a></li>
 	</ul>
-	<a
-		href="${pageContext.servletContext.contextPath}/auth/concepttype">Manage
+	<a href="${pageContext.servletContext.contextPath}/auth/concepttype">Manage
 		Concept Types</a>
 	<ul>
 		<li class="first"><a
