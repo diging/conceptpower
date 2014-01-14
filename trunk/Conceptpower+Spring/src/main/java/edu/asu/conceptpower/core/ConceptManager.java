@@ -120,6 +120,18 @@ public class ConceptManager {
 				.size()]);
 	}
 
+	/**
+	 * If a concept entry does not wrap a concept from Wordnet
+	 * then this method does nothing. If a concept does wrap
+	 * concepts from Wordnet (id and wordnet id are not the same)
+	 * then this method copies the synonym ids of the wrapped 
+	 * wordnet concepts into the synonym ids field of the wrapping
+	 * concept entry.
+	 * 
+	 * @param entry 
+	 * 			The concept entry that should be filled with 
+	 *			the synonym ids of wrapped wordnet concepts.
+	 */
 	protected void fillConceptEntry(ConceptEntry entry) {
 		if (entry.getId() != null && entry.getWordnetId() != null
 				&& !entry.getId().equals(entry.getWordnetId())) {
@@ -129,17 +141,15 @@ public class ConceptManager {
 			if (entry.getSynonymIds() != null) {
 				String wordnetIds = (entry.getWordnetId() != null ? entry
 						.getWordnetId() : "");
-				if (wordnetIds != null) {
-					String[] ids = wordnetIds.trim().split(
+				String[] ids = wordnetIds.trim().split(
 							Constants.CONCEPT_SEPARATOR);
-					if (ids != null) {
-						for (String id : ids) {
-							if (id != null && !id.trim().isEmpty()) {
-								ConceptEntry wordnetEntry = wordnetManager
-										.getConcept(id);
-								if (wordnetEntry != null) {
-									sb.append(wordnetEntry.getSynonymIds());
-								}
+				if (ids != null) {
+					for (String id : ids) {
+						if (id != null && !id.trim().isEmpty()) {
+							ConceptEntry wordnetEntry = wordnetManager
+									.getConcept(id);
+							if (wordnetEntry != null) {
+								sb.append(wordnetEntry.getSynonymIds());
 							}
 						}
 					}
@@ -230,6 +240,17 @@ public class ConceptManager {
 		return results.toArray(new ConceptEntry[results.size()]);
 	}
 
+	/**
+	 * Given a concept id this method returns an array of concepts
+	 * that are listed as synonyms for the concept with the given id.
+	 * 
+	 * @param id 
+	 * 			The id of the concept that synonyms should be retrieved for.
+	 * @return
+	 * 			An array of concept entries that are synonyms for the concept
+	 * 			with the given id. This method will never return null only filled
+	 * 			or empty arrays.
+	 */
 	public ConceptEntry[] getSynonymsForConcept(String id) {
 
 		ConceptEntry concept = getConceptEntry(id);
@@ -267,6 +288,17 @@ public class ConceptManager {
 		return allEntries.toArray(new ConceptEntry[allEntries.size()]);
 	}
 
+	/**
+	 * This method returns an array of concept entries that have words
+	 * that contain the given word. E.g. if the given word is "horse"
+	 * this method would return concepts such as "horse" or "horseback riding".
+	 * 
+	 * @param word
+	 * 			The word that should be contained in the word field of a concept.
+	 * @return
+	 * 			An array list with matching concepts. This method never returns null
+	 * 			only empty or filled arrays. 
+	 */
 	public ConceptEntry[] getConceptListEntriesForWord(String word) {
 		ConceptEntry[] entries = client.getEntriesForWord(word);
 
