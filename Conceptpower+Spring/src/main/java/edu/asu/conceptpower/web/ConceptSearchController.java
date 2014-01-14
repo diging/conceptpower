@@ -28,7 +28,7 @@ public class ConceptSearchController {
 	private List<ConceptEntryWrapper> foundConcepts;
 	private String pos;
 
-	@RequestMapping(value = "/conceptsearch", method = RequestMethod.POST)
+	@RequestMapping(value = "/home/conceptsearch", method = RequestMethod.POST)
 	public String search(HttpServletRequest req, ModelMap model) {
 
 		concept = req.getParameter("name");
