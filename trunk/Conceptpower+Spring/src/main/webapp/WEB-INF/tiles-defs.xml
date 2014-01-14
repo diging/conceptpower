@@ -44,6 +44,16 @@
 		<put-attribute name="currentPage" value="conceptlists" />
 	</definition>
 
+
+	<definition name="/auth/conceptlist/addconceptwrapper"
+		extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ConceptWrapperAddView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
+	</definition>
+
 	<definition name="/auth/conceptlist/addconceptlist" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
