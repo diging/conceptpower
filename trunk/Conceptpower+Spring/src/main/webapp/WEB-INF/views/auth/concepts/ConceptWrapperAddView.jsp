@@ -12,29 +12,57 @@ div.dataTables_wrapper {
 </style>
 
 <script type="text/javascript">
-	$(document).ready(function() {
+$(document).ready(function() {
 
-		oTable = $('#conceptSearch').dataTable({
-			"bJQueryUI" : true,
-			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false,
-		});
-
-		$('#conceptSearch tr').click(function() {
-			var aData = oTable.fnGetData(this); // get datarow
-			if (null != aData) // null if we clicked on title row
-			{
-				var conceptID = aData[2];
-				var wordnetID = aData[3];
-				if (conceptID === wordnetID) {
-					$(this).toggleClass('row_selected');
-				}
-			}
-
-		});
+	oTable = $('#conceptSearch').dataTable({
+		"bJQueryUI" : true,
+		"sPaginationType" : "full_numbers",
+		"bAutoWidth" : false,
 	});
+
+	$('#conceptSearch tr').click(function() {
+		var aData = oTable.fnGetData(this); // get datarow
+		if (null != aData) // null if we clicked on title row
+		{
+			var conceptID = aData[2];
+			var wordnetID = aData[3];
+			if (conceptID === wordnetID) {
+				
+					$
+					.ajax({
+						type : "GET",
+						url : "${pageContext.servletContext.contextPath}/addorremoveconcepttowrapper",
+						data : {
+							conceptid : conceptID,
+							add : !$(this).hasClass('row_selected') // add = true to add and add = false to remove
+						},
+						success : function(response) {
+						alert("come1");
+							var html = "";
+							var len = response.length;
+							for (var i = 0; i < len; i++) {
+								html += '<h5>'
+										+ response[i].word + ' [' + response[i].wordnetId + ']'
+										+ '</h5>';
+								html += '<p>'
+										+ response[i].description
+										+ '</p>';
+							}
+							html += '</p>';
+							$("#selectedconcepts").html(html);
+							alert(html);						
+						}
+					});
+				
+					$(this).toggleClass('row_selected');
+			}
+		}
+
+	});
+});	
 </script>
 
+<div style="height: auto">
 
 <h1>Add new Wordnet concept wrapper</h1>
 <p>Add a wrapper for a concept in Wordnet. Do that if you for
@@ -71,47 +99,50 @@ div.dataTables_wrapper {
 Remember, you can only create a wrapper for concepts in Wordnet!
 <p></p>
 
-<c:if test="${not empty result}">
-	<table cellpadding="0" cellspacing="0" class="display dataTable"
-		id="conceptSearch">
-		<thead>
-			<tr>
-				<th></th>
-				<th>Term</th>
-				<th>ID</th>
-				<th>Wordnet ID</th>
-				<th>POS</th>
-				<th>Concept List</th>
-				<th>Description</th>
-				<th>Type</th>
-				<th>Synonyms</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach var="concept" items="${result}">
-				<tr class="gradeX">
-					<td align="justify"><font size="2"><a
-							onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
-					<td align="justify"><font size="2"><c:out
-								value="${concept.entry.word}"></c:out></font></td>
-					<td align="justify"><c:out value="${concept.entry.id}"></c:out></td>
-					<td align="justify"><c:out value="${concept.entry.wordnetId}"></c:out></td>
-					<td align="justify"><font size="2"><c:out
-								value="${concept.entry.pos}"></c:out></font></td>
-					<td align="justify"><font size="2"><c:out
-								value="${concept.entry.conceptList}"></c:out></font></td>
-					<td align="justify"><font size="2"><c:out
-								value="${concept.description}"></c:out></font></td>
-					<td align="justify"><font size="2"><c:out
-								value="${concept.type.typeName}"></c:out></font></td>
-					<td align="justify"><font size="2"><c:forEach var="syn"
-								items="${concept.synonyms}">
-								<c:out value="-> ${syn.word}"></c:out>
-							</c:forEach></font></td>
+	<c:if test="${not empty result}">
+		<table cellpadding="0" cellspacing="0" class="display dataTable"
+			id="conceptSearch">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Term</th>
+					<th>ID</th>
+					<th>Wordnet ID</th>
+					<th>POS</th>
+					<th>Concept List</th>
+					<th>Description</th>
+					<th>Type</th>
+					<th>Synonyms</th>
 				</tr>
-			</c:forEach>
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				<c:forEach var="concept" items="${result}">
+					<tr class="gradeX">
+						<td align="justify"><font size="2"><a
+								onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
+						<td align="justify"><font size="2"><c:out
+									value="${concept.entry.word}"></c:out></font></td>
+						<td align="justify"><c:out value="${concept.entry.id}"></c:out></td>
+						<td align="justify"><c:out value="${concept.entry.wordnetId}"></c:out></td>
+						<td align="justify"><font size="2"><c:out
+									value="${concept.entry.pos}"></c:out></font></td>
+						<td align="justify"><font size="2"><c:out
+									value="${concept.entry.conceptList}"></c:out></font></td>
+						<td align="justify"><font size="2"><c:out
+									value="${concept.description}"></c:out></font></td>
+						<td align="justify"><font size="2"><c:out
+									value="${concept.type.typeName}"></c:out></font></td>
+						<td align="justify"><font size="2"><c:forEach
+									var="syn" items="${concept.synonyms}">
+									<c:out value="-> ${syn.word}"></c:out>
+								</c:forEach></font></td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
 
-</c:if>
+	</c:if>
+</div>
+
+<div id="selectedconcepts"></div>
 
