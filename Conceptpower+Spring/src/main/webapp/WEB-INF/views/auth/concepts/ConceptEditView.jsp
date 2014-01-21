@@ -204,8 +204,8 @@
 		</tr>
 		<tr>
 			<td>Description</td>
-			<td><input type="text" name="description" id="description"
-				value="${description}"></td>
+			<td><textarea rows="7" cols="50" name="description"
+					id="description"> ${description}</textarea></td>
 		</tr>
 		<tr>
 			<td>Synonyms</td>
