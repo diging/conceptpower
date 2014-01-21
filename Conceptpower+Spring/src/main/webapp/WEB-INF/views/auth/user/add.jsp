@@ -8,16 +8,16 @@
 	<table>
 		<tr>
 			<td>UserName:</td>
-			<td><input type="text" name="username" id="name"></td>
+			<td><input type="text" name="username" id="username"></td>
 		</tr>
 
 		<tr>
 			<td>Full Name:</td>
-			<td><input type="text" name="fullname" id="name"></td>
+			<td><input type="text" name="fullname" id="fullname"></td>
 		</tr>
 		<tr>
 			<td>Password:</td>
-			<td><input type="text" name="password" id="name"></td>
+			<td><input type="text" name="password" id="password"></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit" value="Create user"></td>
