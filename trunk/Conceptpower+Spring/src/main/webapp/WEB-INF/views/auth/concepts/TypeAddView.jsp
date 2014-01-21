@@ -19,7 +19,8 @@
 
 		<tr>
 			<td>Type Description</td>
-			<td><input type="text" name="description" id="description"></td>
+			<td><textarea rows="7" cols="50" name="description"
+					id="description"></textarea></td>
 		</tr>
 
 		<tr>
