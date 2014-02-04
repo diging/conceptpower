@@ -11,6 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
@@ -27,8 +28,12 @@ public class ConceptLookup {
 	@Autowired
 	private TypeDatabaseClient typeManager;
 
-	@RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET)
-	public String getWordNetEntry(@PathVariable("word") String word,
+	@Autowired
+	private XMLConceptMessage returnMsg;
+
+	@RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/xml")
+	public @ResponseBody
+	String getWordNetEntry(@PathVariable("word") String word,
 			@PathVariable("pos") String pos, HttpServletRequest req,
 			ModelMap model) {
 
@@ -45,7 +50,6 @@ public class ConceptLookup {
 			entryMap.put(entry, type);
 		}
 
-		XMLConceptMessage returnMsg = new XMLConceptMessage();
 		if (entries != null) {
 			returnMsg.appendEntries(entryMap);
 		}
