@@ -6,6 +6,7 @@
 
 
 <sec:authorize access="isAnonymous()">
+	<p />
 	<form name='f'
 		action="<c:url value='${pageContext.servletContext.contextPath}/j_spring_security_check' />"
 		method='post'>
@@ -19,10 +20,14 @@
 				<td><input type='password' name='j_password' /></td>
 			</tr>
 			<tr>
+				<td></td>
+				<td>
+					<p>
+						<input name="submit" type="submit" value="Login" class="button" />
+					</p>
+				</td>
+			</tr>
 		</table>
-		<p>
-			<input name="submit" type="submit" value="Login" class="button" />
-		</p>
 	</form>
 </sec:authorize>
 
