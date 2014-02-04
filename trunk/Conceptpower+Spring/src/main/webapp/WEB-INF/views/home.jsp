@@ -103,8 +103,9 @@
 								value="${concept.entry.pos}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.entry.conceptList}"></c:out></font></td>
-					<td align="justify"><font size="2"><c:out
-								value="${concept.description}"></c:out></font></td>
+					<td align="justify"><font size="2"> <c:out
+								value="${concept.description}"></c:out>
+					</font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.type.typeName}"></c:out></font></td>
 				</tr>
