@@ -5,9 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
@@ -27,8 +27,8 @@ public class ConceptIDLookup {
 	@Autowired
 	private XMLConceptMessage msg;
 
-	@RequestMapping(value = "rest/Concept?id={id}", method = RequestMethod.GET)
-	public String getConceptById(@PathVariable("id") String id,
+	@RequestMapping(value = "rest/Concept", method = RequestMethod.GET)
+	public String getConceptById(@RequestParam("id") String id,
 			HttpServletRequest req, ModelMap model) {
 
 		String[] pathParts = id.split("/");
@@ -38,7 +38,7 @@ public class ConceptIDLookup {
 			wordnetId = pathParts[lastIndex];
 
 		if (wordnetId == null) {
-			return "no word net id";
+			return null;
 		}
 
 		ConceptEntry entry = dictManager.getConceptEntry(wordnetId);
