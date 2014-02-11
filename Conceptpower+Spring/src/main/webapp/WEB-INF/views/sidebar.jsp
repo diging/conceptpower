@@ -33,7 +33,7 @@
 
 
 <sec:authorize access="isAuthenticated()">
-	<p>My the conceptpower be with you!</p>
+	<p>May the conceptpower be with you!</p>
 
 	<h2>You can</h2>
 	<form>
