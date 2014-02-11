@@ -2,12 +2,14 @@ package edu.asu.conceptpower.xml;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.util.URICreator;
 
+@Controller
 public class XMLTypeMessage extends AXMLMessage {
-	
+
 	@Autowired
 	private URICreator uriCreator;
 
