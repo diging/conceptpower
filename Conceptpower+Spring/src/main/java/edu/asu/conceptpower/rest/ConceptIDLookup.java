@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
@@ -27,10 +27,11 @@ public class ConceptIDLookup {
 	@Autowired
 	private XMLConceptMessage msg;
 
-	@RequestMapping(value = "rest/Concept", method = RequestMethod.GET)
-	public String getConceptById(@RequestParam("id") String id,
-			HttpServletRequest req, ModelMap model) {
+	@RequestMapping(value = "rest/Concept", method = RequestMethod.GET, produces = "application/xml")
+	public @ResponseBody
+	String getConceptById(HttpServletRequest req, ModelMap model) {
 
+		String id = req.getParameter("id");
 		String[] pathParts = id.split("/");
 		int lastIndex = pathParts.length - 1;
 		String wordnetId = null;
