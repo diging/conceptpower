@@ -68,6 +68,13 @@
 			</select></td>
 		</tr>
 		<tr>
+			<td>Search:</td>
+			<td><select name="searchengine">
+					<option value="wordnet">WordNet</option>
+					<option value="viaf">Viaf</option>
+			</select></td>
+		</tr>
+		<tr>
 			<td colspan="2"><input type="submit" value="Search"></td>
 		</tr>
 	</table>
