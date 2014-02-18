@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+
+	<!-- Base definitions -->
+	<definition name="base.definition" template="/WEB-INF/tiles/skeleton.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="navigation" value="" />
+		<put-attribute name="sidebar" value="" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="header" value="" />
+		<put-attribute name="currentPage" value="home" />
+	</definition>
+
+	<!-- welcome etc -->
+	<definition name="welcome" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
+		<put-attribute name="currentPage" value="home" />
+	</definition>
+	<definition name="exception" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="content" value="/WEB-INF/views/exception.jsp" />
+	</definition>
+
+	<definition name="conceptsearch" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
+		<put-attribute name="currentPage" value="home" />
+	</definition>
+
+	<definition name="/auth/conceptlist/addconcept" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ConceptAddView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
+	</definition>
+
+
+	<definition name="/auth/conceptlist/addconceptwrapper"
+		extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ConceptWrapperAddView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
+	</definition>
+
+	<definition name="/auth/conceptlist/addconceptlist" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ListAddView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
+	</definition>
+
+	<definition name="/auth/concepttype/addtype" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/TypeAddView.jsp" />
+		<put-attribute name="currentPage" value="concepttypes" />
+	</definition>
+
+
+	<definition name="/auth/concepttype" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ConceptTypesView.jsp" />
+		<put-attribute name="currentPage" value="concepttypes" />
+	</definition>
+
+	<definition name="/auth/conceptlist" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ConceptListsView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
+	</definition>
+
+	<definition name="/auth/conceptlist/concepts" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ConceptListConceptsView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
+	</definition>
+
+	<definition name="/auth/conceptlist/deleteconcept" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ConceptDeleteView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
+	</definition>
+
+
+	<definition name="/auth/conceptlist/editconcept" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/ConceptEditView.jsp" />
+		<put-attribute name="currentPage" value="conceptlists" />
+	</definition>
+
+	<definition name="/auth/concepttype/edittype" extends="base.definition">
+		<put-attribute name="title" value="Welcome to Conceptpower" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/concepts/TypeEditView.jsp" />
+		<put-attribute name="currentPage" value="concepttypes" />
+	</definition>
+
+
+	<!-- users management -->
+	<definition name="auth/user/list" extends="base.definition">
+		<put-attribute name="title" value="User Management" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="header"
+			value="/WEB-INF/views/auth/user/list-header.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/auth/user/list.jsp" />
+		<put-attribute name="currentPage" value="users" />
+	</definition>
+	<definition name="auth/user/notfound" extends="base.definition">
+		<put-attribute name="title" value="User Management" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/user/notfound.jsp" />
+		<put-attribute name="currentPage" value="users" />
+	</definition>
+	<definition name="auth/user/edit" extends="base.definition">
+		<put-attribute name="title" value="User Management" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/auth/user/edit.jsp" />
+		<put-attribute name="currentPage" value="users" />
+	</definition>
+	<definition name="auth/user/add" extends="base.definition">
+		<put-attribute name="title" value="User Management" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/auth/user/add.jsp" />
+		<put-attribute name="currentPage" value="users" />
+	</definition>
+
+
+</tiles-definitions>
