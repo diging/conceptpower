@@ -30,14 +30,15 @@
 	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex1.js"></script>
 <script
 	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex2.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-ui.js"></script>
+
 <script
 	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-alert.js"></script>
 <script
 	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.dataTables.js"></script>
 <script
 	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.quick.pagination.min.js"></script>
+<script
+	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-ui.js"></script>
 <noscript>
 	<link rel="stylesheet"
 		href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/skel-noscript.css" />
