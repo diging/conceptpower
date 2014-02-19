@@ -12,51 +12,6 @@
 		classes with the @XMLRootElement tag -->
 
 
-	<bean id="qStoreURL" class="java.lang.String">
-		<constructor-arg>
-			<value>http://diging.asu.edu:8080/QStore4S</value>
-		</constructor-arg>
-	</bean>
-	<bean id="qStoreURL_Add" class="java.lang.String">
-		<constructor-arg>
-			<value>/add</value>
-		</constructor-arg>
-	</bean>
-	<bean id="qStoreURL_Get" class="java.lang.String">
-		<constructor-arg>
-			<value>/get?id=</value>
-		</constructor-arg>
-	</bean>
-	<bean id="qStoreURL_Get_POST" class="java.lang.String">
-		<constructor-arg>
-			<value>/get</value>
-		</constructor-arg>
-	</bean>
-
-	<bean id="wordPowerURL" class="java.lang.String">
-		<constructor-arg>
-			<value>http://digitalhps-develop.asu.edu:8080/wordpower</value>
-		</constructor-arg>
-	</bean>
-
-	<bean id="searchWordPowerURLPath" class="java.lang.String">
-		<constructor-arg>
-			<value>/rest/WordLookup/</value>
-		</constructor-arg>
-	</bean>
-
-	<bean id="conceptPowerURL" class="java.lang.String">
-		<constructor-arg>
-			<value>http://chps.asu.edu/conceptpower</value>
-		</constructor-arg>
-	</bean>
-
-	<bean id="searchConceptPowerURLPath" class="java.lang.String">
-		<constructor-arg>
-			<value>/rest/ConceptLookup/</value>
-		</constructor-arg>
-	</bean>
-
 	<bean id="viafURL" class="java.lang.String">
 		<constructor-arg>
 			<value>http://viaf.org/viaf/search</value>
@@ -83,18 +38,6 @@
 			<value>
 				&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml
 			</value>
-		</constructor-arg>
-	</bean>
-
-	<bean id="updateFromWordPowerURLPath" class="java.lang.String">
-		<constructor-arg>
-			<value>/rest/Word/</value>
-		</constructor-arg>
-	</bean>
-
-	<bean id="updateConceptPowerURLPath" class="java.lang.String">
-		<constructor-arg>
-			<value>/rest/Concept?id=</value>
 		</constructor-arg>
 	</bean>
 
