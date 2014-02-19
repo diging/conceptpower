@@ -6,7 +6,13 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#conceptSearch').dataTable({
+		$('#conceptSearchResult').dataTable({
+			"bJQueryUI" : true,
+			"sPaginationType" : "full_numbers",
+			"bAutoWidth" : false
+		});
+
+		$('#viafSearchResult').dataTable({
 			"bJQueryUI" : true,
 			"sPaginationType" : "full_numbers",
 			"bAutoWidth" : false
@@ -38,6 +44,14 @@
 			}
 		});
 	}
+
+	function toggleSearchEngine() {
+		var row = document.getElementById("searchEnginePOS");
+		if (row.style.display == '')
+			row.style.display = 'none';
+		else
+			row.style.display = '';
+	}
 </script>
 
 
@@ -57,7 +71,7 @@
 			<td><input type="text" name="name" id="name"
 				placeholder="enter a word"></td>
 		</tr>
-		<tr>
+		<tr id="searchEnginePOS">
 			<td>POS:</td>
 			<td><select name="pos">
 					<option value="noun">Nouns</option>
@@ -68,14 +82,21 @@
 			</select></td>
 		</tr>
 		<tr>
+			<td>Search:</td>
+			<td><select name="searchengine" onchange="toggleSearchEngine()">
+					<option value="wordnet">WordNet</option>
+					<option value="viaf">Viaf</option>
+			</select></td>
+		</tr>
+		<tr>
 			<td colspan="2"><input type="submit" value="Search"></td>
 		</tr>
 	</table>
 </form>
 
-<c:if test="${not empty result}">
+<c:if test="${not empty conceptsresult}">
 	<table cellpadding="0" cellspacing="0" class="display dataTable"
-		id="conceptSearch">
+		id="conceptSearchResult">
 		<thead>
 			<tr>
 				<th></th>
@@ -89,7 +110,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="concept" items="${result}">
+			<c:forEach var="concept" items="${conceptsresult}">
 				<tr class="gradeX">
 					<td align="justify"><font size="2"><a
 							onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
@@ -108,6 +129,34 @@
 					</font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.type.typeName}"></c:out></font></td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+
+</c:if>
+
+
+<c:if test="${not empty viafresult}">
+	<table cellpadding="0" cellspacing="0" class="display dataTable"
+		id="viafSearchResult">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>URL</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="viaf" items="${viafresult}">
+				<tr class="gradeX">
+					<td align="justify"><font size="2"><c:out
+								value="${viaf.name}"></c:out></font></td>
+					<td align="justify"><font size="2"><c:out
+								value="${viaf.id}"></c:out></font></td>
+					<td align="justify"><font size="2"><c:out
+								value="${viaf.description}">
+							</c:out></font></td>
 				</tr>
 			</c:forEach>
 		</tbody>
