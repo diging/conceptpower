@@ -41,16 +41,23 @@ public class ConceptSearchController {
 		pos = req.getParameter("pos");
 		searchengine = req.getParameter("searchengine");
 
-		List<ISearchResult> viafResult = viafService.search(concept);
-
 		if (!concept.trim().isEmpty()) {
 
-			ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(
-					concept, pos);
+			if (searchengine.equals("wordnet")) {
 
-			foundConcepts = wrapperCreator.createWrappers(found);
+				ConceptEntry[] found = conceptManager
+						.getConceptListEntriesForWord(concept, pos);
 
-			model.addAttribute("result", foundConcepts);
+				foundConcepts = wrapperCreator.createWrappers(found);
+
+				model.addAttribute("conceptsresult", foundConcepts);
+
+			} else if (searchengine.equals("viaf")) {
+
+				List<ISearchResult> viafResult = viafService.search(concept);
+
+				model.addAttribute("viafresult", viafResult);
+			}
 
 		}
 
