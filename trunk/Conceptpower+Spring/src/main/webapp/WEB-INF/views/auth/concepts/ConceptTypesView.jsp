@@ -26,6 +26,7 @@
 		<thead>
 			<tr>
 				<th></th>
+				<th></th>
 				<th>Name</th>
 				<th>Type URI</th>
 				<th>Description</th>
@@ -38,6 +39,11 @@
 		<tbody>
 			<c:forEach var="types" items="${result}">
 				<tr class="gradeX">
+					<td align="justify"><a
+						href="${pageContext.servletContext.contextPath}/auth/concepttype/deletetype/${types.typeId}"><input
+							type="image"
+							src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a>
+					</td>
 					<td align="justify"><a
 						href="${pageContext.servletContext.contextPath}/auth/concepttype/edittype/${types.typeId}"><input
 							type="image"
