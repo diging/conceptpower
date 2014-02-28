@@ -30,14 +30,14 @@
 
 		<tr>
 			<td>Super Type</td>
-			<td><form:select path="types">
+			<td><form:select path="types" name="types">
 					<form:option value="" label="" />
 					<form:options items="${types}" />
 				</form:select></td>
 		</tr>
 
 		<tr>
-			<td colspan="2"><input type="submit" value="Create List"></td>
+			<td colspan="2"><input type="submit" value="Create Type"></td>
 		</tr>
 	</table>
 </form>
