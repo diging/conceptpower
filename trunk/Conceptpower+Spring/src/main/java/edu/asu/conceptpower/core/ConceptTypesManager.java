@@ -39,5 +39,9 @@ public class ConceptTypesManager {
 	public ConceptType getType(String id) {
 		return client.getType(id);
 	}
+	
+	public void deleteType(String id){
+		client.deleteType(id);
+	}
 
 }
