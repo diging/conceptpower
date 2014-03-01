@@ -34,7 +34,10 @@
 				$("#detailssimilarto").text(details.similarto);
 				$("#detailscreator").text(details.creator);
 
-				$("#detailsdiv").dialog();
+				$("#detailsdiv").dialog({
+					title : details.name,
+					width : 'auto'
+				});
 				$("#detailstable").show();
 			}
 		});

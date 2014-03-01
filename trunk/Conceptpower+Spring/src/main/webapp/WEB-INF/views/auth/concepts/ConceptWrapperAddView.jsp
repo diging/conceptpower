@@ -86,7 +86,9 @@
 
 	$(function() {
 		$("#addsynonym").click(function() {
-			$("#dialog").dialog();
+			$("#dialog").dialog({
+				width : "auto"
+			});
 			$("#synonymsDialogTable").show();
 		});
 	});
