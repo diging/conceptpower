@@ -197,6 +197,12 @@ public class ConceptWrapperAddController {
 		return arraywrappedConcepts;
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "getSelectedConceptsFroWrapping")
+	public @ResponseBody
+	ConceptEntry[] getSelectedConceptsForWrappers(ModelMap model) {
+		return arraywrappedConcepts;
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
 	public @ResponseBody
 	ConceptEntry[] searchConcept(ModelMap model,
