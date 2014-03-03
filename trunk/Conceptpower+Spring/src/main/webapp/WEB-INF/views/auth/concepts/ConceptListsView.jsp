@@ -23,6 +23,8 @@
 		id="conceptList">
 		<thead>
 			<tr>
+				<th></th>
+				<th></th>
 				<th>Name</th>
 				<th>Description</th>
 			</tr>
@@ -30,6 +32,16 @@
 		<tbody>
 			<c:forEach var="list" items="${result}">
 				<tr class="gradeX">
+					<td align="justify"><a
+						href="${pageContext.servletContext.contextPath}/auth/conceptlist/deletelist/${list.conceptListName}"><input
+							type="image"
+							src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a>
+					</td>
+					<td align="justify"><a
+						href="${pageContext.servletContext.contextPath}/auth/conceptlist/editlist/${list.conceptListName}"><input
+							type="image"
+							src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
+					</td>
 					<td align="justify"><font size="2"><a
 							href="${pageContext.servletContext.contextPath}/auth/${list.conceptListName}/concepts">${list.conceptListName}</a></font></td>
 					<td align="justify"><font size="2"><c:out
