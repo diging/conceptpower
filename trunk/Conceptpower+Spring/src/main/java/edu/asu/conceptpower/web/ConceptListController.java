@@ -72,6 +72,7 @@ public class ConceptListController {
 				conceptManager.getConceptEntry(conceptid));
 		Map<String, String> details = new HashMap<String, String>();
 
+		details.put("name", conceptEntry.getEntry().getWord());
 		details.put("id", conceptEntry.getEntry().getId());
 		details.put("uri", URICreator.getURI(conceptEntry.getEntry()));
 		details.put("wordnetid", conceptEntry.getEntry().getWordnetId());
