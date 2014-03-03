@@ -29,21 +29,19 @@ import edu.asu.conceptpower.wordnet.WordNetManager;
  */
 @Service
 public class ConceptManager {
-	
-	
+
 	@Autowired
 	private WordNetManager wordnetManager;
 
 	@Autowired
 	private DatabaseClient client;
-	
+
 	public static final int CONCEPT_ENTRY = 0;
 	public static final int CONCEPT_LIST = 1;
 
 	protected String CONCEPT_PREFIX = "CON";
 	protected String LIST_PREFIX = "LIST";
 
-	
 	/**
 	 * Return entry given its ID. First the additional concepts are queried,
 	 * then WordNet.
@@ -121,16 +119,15 @@ public class ConceptManager {
 	}
 
 	/**
-	 * If a concept entry does not wrap a concept from Wordnet
-	 * then this method does nothing. If a concept does wrap
-	 * concepts from Wordnet (id and wordnet id are not the same)
-	 * then this method copies the synonym ids of the wrapped 
-	 * wordnet concepts into the synonym ids field of the wrapping
+	 * If a concept entry does not wrap a concept from Wordnet then this method
+	 * does nothing. If a concept does wrap concepts from Wordnet (id and
+	 * wordnet id are not the same) then this method copies the synonym ids of
+	 * the wrapped wordnet concepts into the synonym ids field of the wrapping
 	 * concept entry.
 	 * 
-	 * @param entry 
-	 * 			The concept entry that should be filled with 
-	 *			the synonym ids of wrapped wordnet concepts.
+	 * @param entry
+	 *            The concept entry that should be filled with the synonym ids
+	 *            of wrapped wordnet concepts.
 	 */
 	protected void fillConceptEntry(ConceptEntry entry) {
 		if (entry.getId() != null && entry.getWordnetId() != null
@@ -142,7 +139,7 @@ public class ConceptManager {
 				String wordnetIds = (entry.getWordnetId() != null ? entry
 						.getWordnetId() : "");
 				String[] ids = wordnetIds.trim().split(
-							Constants.CONCEPT_SEPARATOR);
+						Constants.CONCEPT_SEPARATOR);
 				if (ids != null) {
 					for (String id : ids) {
 						if (id != null && !id.trim().isEmpty()) {
@@ -157,7 +154,7 @@ public class ConceptManager {
 			}
 
 			entry.setSynonymIds(sb.toString());
-			//entry.setSynsetIds(entry.getSynsetIds());
+			// entry.setSynsetIds(entry.getSynsetIds());
 		}
 	}
 
@@ -241,15 +238,14 @@ public class ConceptManager {
 	}
 
 	/**
-	 * Given a concept id this method returns an array of concepts
-	 * that are listed as synonyms for the concept with the given id.
+	 * Given a concept id this method returns an array of concepts that are
+	 * listed as synonyms for the concept with the given id.
 	 * 
-	 * @param id 
-	 * 			The id of the concept that synonyms should be retrieved for.
-	 * @return
-	 * 			An array of concept entries that are synonyms for the concept
-	 * 			with the given id. This method will never return null only filled
-	 * 			or empty arrays.
+	 * @param id
+	 *            The id of the concept that synonyms should be retrieved for.
+	 * @return An array of concept entries that are synonyms for the concept
+	 *         with the given id. This method will never return null only filled
+	 *         or empty arrays.
 	 */
 	public ConceptEntry[] getSynonymsForConcept(String id) {
 
@@ -289,15 +285,15 @@ public class ConceptManager {
 	}
 
 	/**
-	 * This method returns an array of concept entries that have words
-	 * that contain the given word. E.g. if the given word is "horse"
-	 * this method would return concepts such as "horse" or "horseback riding".
+	 * This method returns an array of concept entries that have words that
+	 * contain the given word. E.g. if the given word is "horse" this method
+	 * would return concepts such as "horse" or "horseback riding".
 	 * 
 	 * @param word
-	 * 			The word that should be contained in the word field of a concept.
-	 * @return
-	 * 			An array list with matching concepts. This method never returns null
-	 * 			only empty or filled arrays. 
+	 *            The word that should be contained in the word field of a
+	 *            concept.
+	 * @return An array list with matching concepts. This method never returns
+	 *         null only empty or filled arrays.
 	 */
 	public ConceptEntry[] getConceptListEntriesForWord(String word) {
 		ConceptEntry[] entries = client.getEntriesForWord(word);
@@ -409,6 +405,10 @@ public class ConceptManager {
 		client.update(entry, DBNames.DICTIONARY_DB);
 	}
 
+	public void storeModifiedConceptList(ConceptList list, String listname) {
+		client.update(list, listname, DBNames.DICTIONARY_DB);
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<ConceptList> getAllConceptLists() {
 		List<?> results = client.getAllElementsOfType(ConceptList.class);
@@ -437,5 +437,9 @@ public class ConceptManager {
 			// try other id
 			id = prefix + UUID.randomUUID().toString();
 		}
+	}
+
+	public void deleteConceptList(String name) {
+		client.deleteConceptList(name);
 	}
 }
