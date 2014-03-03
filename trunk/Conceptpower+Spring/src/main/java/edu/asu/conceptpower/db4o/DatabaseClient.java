@@ -23,15 +23,15 @@ public class DatabaseClient {
 
 	ObjectContainer wordnetCacheClient;
 	ObjectContainer dictionaryClient;
-	
+
 	@Autowired
 	@Qualifier("wordnetCacheDatabaseManager")
 	private DatabaseManager wordnetCache;
-	
+
 	@Autowired
 	@Qualifier("conceptDatabaseManager")
 	private DatabaseManager dictionary;
-	
+
 	@PostConstruct
 	public void init() {
 		this.wordnetCacheClient = wordnetCache.getClient();
@@ -45,7 +45,8 @@ public class DatabaseClient {
 		exampleEntry.setId(null);
 		exampleEntry.setWordnetId(id);
 
-		ConceptEntry[] dictionaryResults = getEntriesByFieldContains("wordnetid", id);
+		ConceptEntry[] dictionaryResults = getEntriesByFieldContains(
+				"wordnetid", id);
 		// ObjectSet<ConceptEntry> results = dictionaryClient
 		// .queryByExample(exampleEntry);
 
@@ -282,6 +283,27 @@ public class DatabaseClient {
 			toBeUpdated.setWordnetId(entry.getWordnetId());
 			toBeUpdated.setDeleted(entry.isDeleted());
 			dictionaryClient.store(toBeUpdated);
+			dictionaryClient.commit();
+		}
+	}
+
+	public void deleteConceptList(String name) {
+		ConceptList list = new ConceptList();
+		list.setConceptListName(name);
+
+		ObjectSet<ConceptList> results = dictionaryClient.queryByExample(list);
+		for (ConceptList res : results) {
+			dictionaryClient.delete(res);
+			dictionaryClient.commit();
+		}
+	}
+
+	public void update(ConceptList list, String listname, String databasename) {
+		if (databasename.equals(DBNames.DICTIONARY_DB)) {
+			ConceptList toBeUpdated = getConceptList(listname);
+			toBeUpdated.setConceptListName(list.getConceptListName());
+			toBeUpdated.setDescription(list.getDescription());
+			dictionaryClient.store(list);
 			dictionaryClient.commit();
 		}
 	}
