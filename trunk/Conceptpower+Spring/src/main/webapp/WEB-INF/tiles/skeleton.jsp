@@ -57,7 +57,8 @@
 				<div id="logo_text">
 					<!-- class="logo_colour", allows you to change the colour of the text -->
 					<h1>
-						<a href="index.html">Concept<span class="logo_colour">power</span></a>
+						<a href="${pageContext.servletContext.contextPath}/">Concept<span
+							class="logo_colour">power</span></a>
 					</h1>
 					<h2>dHPS</h2>
 				</div>
