@@ -10,11 +10,54 @@
 			.ready(
 					function() {
 
-						oTable = $('#conceptSearch').dataTable({
-							"bJQueryUI" : true,
-							"sPaginationType" : "full_numbers",
-							"bAutoWidth" : false,
-						});
+						oTable = $('#conceptSearch')
+								.dataTable(
+										{
+											"bJQueryUI" : true,
+											"sPaginationType" : "full_numbers",
+											"bAutoWidth" : false,
+
+											"aoColumnDefs" : [ {
+												"aTargets" : [ 6 ],
+												"sType" : "html",
+												"fnRender" : function(o, val) {
+													return $("<div/>").html(
+															o.aData[6]).text();
+												}
+											} ],
+
+											//set row class to gradeX even if the row is selectable
+											"fnRowCallback" : function(nRow,
+													aData, iDisplayIndex,
+													iDisplayIndexFull) {
+												if (aData[2] == aData[3])
+													$(nRow).addClass(
+															'gradeX even');
+												else
+													$(nRow).addClass(
+															'gradeX odd');
+
+												// ajax call to set already concepts as selected 
+												$
+														.ajax({
+															type : "GET",
+															url : "${pageContext.servletContext.contextPath}/getSelectedConceptsFroWrapping",
+															success : function(
+																	response) {
+
+																var len = response.length;
+
+																for (var i = 0; i < len; i++) {
+																	if (aData[2] == response[i].id)
+																		$(nRow)
+																				.addClass(
+																						'row_selected');
+																}
+
+															}
+														});// ajax ends
+											}
+										});
 
 						//ajax call to get already selected concepts for wrapping 
 						$
@@ -301,7 +344,7 @@
 			</thead>
 			<tbody>
 				<c:forEach var="concept" items="${result}">
-					<tr class="gradeX">
+					<tr>
 						<td align="justify"><font size="2"><a
 								onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 						<td align="justify"><font size="2"><c:out

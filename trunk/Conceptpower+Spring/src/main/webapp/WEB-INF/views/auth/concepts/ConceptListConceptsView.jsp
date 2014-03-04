@@ -10,7 +10,14 @@
 		$('#conceptList').dataTable({
 			"bJQueryUI" : true,
 			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false
+			"bAutoWidth" : false,
+			"aoColumnDefs" : [ {
+				"aTargets" : [ 8 ],
+				"sType" : "html",
+				"fnRender" : function(o, val) {
+					return $("<div/>").html(o.aData[8]).text();
+				}
+			} ],
 		});
 
 	});
