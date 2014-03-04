@@ -54,6 +54,7 @@ public class ConceptWrapperAddController {
 			ModelMap model) {
 
 		wrappedConcepts = new ArrayList<ConceptEntry>();
+		arraywrappedConcepts = null;
 
 		allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
