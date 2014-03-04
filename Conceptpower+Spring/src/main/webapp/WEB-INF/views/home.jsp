@@ -9,13 +9,27 @@
 		$('#conceptSearchResult').dataTable({
 			"bJQueryUI" : true,
 			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false
+			"bAutoWidth" : false,
+			"aoColumnDefs" : [ {
+				"aTargets" : [ 6 ],
+				"sType" : "html",
+				"fnRender" : function(o, val) {
+					return $("<div/>").html(o.aData[6]).text();
+				}
+			} ],
 		});
 
 		$('#viafSearchResult').dataTable({
 			"bJQueryUI" : true,
 			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false
+			"bAutoWidth" : false,
+			"aoColumnDefs" : [ {
+				"aTargets" : [ 2 ],
+				"sType" : "html",
+				"fnRender" : function(o, val) {
+					return $("<div/>").html(o.aData[2]).text();
+				}
+			} ],
 		});
 
 	});
