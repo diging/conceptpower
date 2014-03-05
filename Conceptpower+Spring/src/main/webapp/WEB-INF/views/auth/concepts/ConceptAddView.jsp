@@ -7,12 +7,44 @@
 
 <script>
 	$(function() {
+
 		$("#addsynonym").click(function() {
 			$("#dialog").dialog({
 				width : 'auto'
 			});
 			$("#synonymsDialogTable").show();
 		});
+
+		$("#name")
+				.on(
+						"change paste",
+						function() {
+							$
+									.ajax({
+										type : "GET",
+										url : "${pageContext.servletContext.contextPath}/getExistingConcepts",
+										data : {
+											conceptname : $(this).val()
+										},
+										success : function(response) {
+											if (response.length > 0) {
+												var text = "Following concepts have the same name : \n";
+												var len = response.length;
+												for (var i = 0; i < len; i++) {
+													text += (response[i].word
+															+ " - "
+															+ response[i].id + "\n");
+												}
+												$("#warning").show();
+												$('#warning').prop('title',
+														text);
+											} else {
+												$("#warning").hide();
+												$('#warning').prop('title', '');
+											}
+										}
+									});
+						});
 	});
 
 	$(document).ready(definedatatable);
@@ -125,7 +157,6 @@
 						}
 						html += '</tbody></table>';
 						$("#addedSynonyms").html(html);
-
 					}
 				});
 	};
@@ -140,7 +171,11 @@
 	<table>
 		<tr>
 			<td>Concept</td>
-			<td><input type="text" name="name" id="name"></td>
+
+			<td><input type="text" name="name" id="name"><b> </b><img
+				alt=""
+				src="${pageContext.servletContext.contextPath}/resources/img/warning.png"
+				class="none" name="warning" id="warning" hidden="true"></td>
 		</tr>
 		<tr>
 			<td>POS</td>
