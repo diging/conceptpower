@@ -112,10 +112,21 @@ public class ConceptAddController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")
 	public @ResponseBody
-	ConceptEntry[] searchConcept(ModelMap model,
+	ConceptEntry[] getSynonyms(ModelMap model,
 			@RequestParam("synonymname") String synonymname) {
 		ConceptEntry[] entries = conceptManager
 				.getConceptListEntriesForWord(synonymname.trim());
+		return entries;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "getExistingConcepts")
+	public @ResponseBody
+	ConceptEntry[] getExistingProjects(ModelMap model,
+			@RequestParam("conceptname") String conceptname) {
+		if (conceptname.isEmpty())
+			return null;
+		ConceptEntry[] entries = conceptManager
+				.getConceptListEntriesForWord(conceptname.trim());
 		return entries;
 	}
 
