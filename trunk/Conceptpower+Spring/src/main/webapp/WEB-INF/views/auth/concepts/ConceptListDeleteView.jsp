@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 
-<h1>Delete Type</h1>
+<h1>Delete List</h1>
 <p>Do you really want to delete the following List?</p>
 
 <table class="greyContent">
