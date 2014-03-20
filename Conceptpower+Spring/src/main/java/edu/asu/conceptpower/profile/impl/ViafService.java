@@ -15,18 +15,9 @@ import edu.asu.conceptpower.jaxb.viaf.Item;
 import edu.asu.conceptpower.profile.ISearchResult;
 import edu.asu.conceptpower.profile.ISearchResultFactory;
 import edu.asu.conceptpower.profile.IService;
-import edu.asu.conceptpower.profile.IViafManager;
-import edu.asu.conceptpower.profile.impl.ViafReply;
 
 @Service
 public class ViafService implements IService {
-
-	@Autowired
-	private IViafManager viafmanager;
-
-	/*
-	 * @Autowired private ViafManager1 viafmanager;
-	 */
 
 	@Autowired
 	private ISearchResult searchResult;
