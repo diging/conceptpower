@@ -227,7 +227,7 @@
 		</tr>
 		<tr>
 			<td>Equals</td>
-			<td><input type="text" name="equal" id="equal" value="${equal}"></td>
+			<td><textarea rows="5" cols="25" name="equal" id="equal">${equal}</textarea></td>
 		</tr>
 		<tr>
 			<td>Similar</td>
