@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.web;
 
 import java.util.Locale;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.profile.IServiceRegistry;
-import edu.asu.conceptpower.profile.impl.ServiceBackBean;
-import edu.asu.conceptpower.web.profile.impl.SearchResultBackBeanForm;
 
 /**
  * Handles requests for the application home page.
@@ -32,13 +29,6 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-
-		model.addAttribute("ServiceBackBean", new ServiceBackBean());
-		Map<String, String> serviceNameIdMap = serviceRegistry
-				.getServiceNameIdMap();
-		model.addAttribute("serviceNameIdMap", serviceNameIdMap);
-		model.addAttribute("SearchResultBackBeanForm",
-				new SearchResultBackBeanForm());
 
 		return "welcome";
 	}
