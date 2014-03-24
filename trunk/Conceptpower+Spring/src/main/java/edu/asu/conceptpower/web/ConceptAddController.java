@@ -24,6 +24,9 @@ import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.profile.impl.ServiceBackBean;
+import edu.asu.conceptpower.profile.impl.ServiceRegistry;
+import edu.asu.conceptpower.web.profile.impl.SearchResultBackBeanForm;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
 @Controller
@@ -41,6 +44,9 @@ public class ConceptAddController {
 	@Autowired
 	private ConceptTypesManager conceptTypesManager;
 
+	@Autowired
+	private ServiceRegistry serviceRegistry;
+
 	private List<ConceptList> allLists;
 	private ConceptType[] allTypes;
 	private ConceptEntry conceptEntry;
@@ -48,6 +54,13 @@ public class ConceptAddController {
 
 	@RequestMapping(value = "auth/conceptlist/addconcept")
 	public String prepareConceptAdd(HttpServletRequest req, ModelMap model) {
+
+		model.addAttribute("ServiceBackBean", new ServiceBackBean());
+		Map<String, String> serviceNameIdMap = serviceRegistry
+				.getServiceNameIdMap();
+		model.addAttribute("serviceNameIdMap", serviceNameIdMap);
+		model.addAttribute("SearchResultBackBeanForm",
+				new SearchResultBackBeanForm());
 
 		allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
