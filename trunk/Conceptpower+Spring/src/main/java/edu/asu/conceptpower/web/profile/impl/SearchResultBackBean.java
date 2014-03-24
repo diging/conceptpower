@@ -1,5 +1,8 @@
 package edu.asu.conceptpower.web.profile.impl;
 
+import edu.asu.conceptpower.reflect.SearchField;
+import edu.asu.conceptpower.rest.SearchFieldNames;
+
 /**
  * this class is used as a backing bean for the search results retrieved through
  * various services like viaf, conceptpower in the user profile page
@@ -10,11 +13,16 @@ package edu.asu.conceptpower.web.profile.impl;
 
 public class SearchResultBackBean {
 
+	@SearchField(fieldName = SearchFieldNames.WORD)
 	private String word;
 
+	@SearchField(fieldName = SearchFieldNames.ID)
 	private String id;
+
+	@SearchField(fieldName = SearchFieldNames.DESCRIPTION)
 	private String description;
 
+	@SearchField(fieldName = SearchFieldNames.ISCHECKED)
 	private boolean isChecked = false;
 
 	public boolean getIsChecked() {
