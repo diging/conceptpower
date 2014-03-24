@@ -2,6 +2,7 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ page session="false"%>
 
 <script type="text/javascript">
@@ -61,14 +62,6 @@
 			}
 		});
 	}
-
-	function toggleSearchEngine() {
-		var row = document.getElementById("searchEnginePOS");
-		if (row.style.display == '')
-			row.style.display = 'none';
-		else
-			row.style.display = '';
-	}
 </script>
 
 
@@ -96,13 +89,6 @@
 					<option value="adverb">Adverb</option>
 					<option value="adjective">Adjective</option>
 					<option value="other">Other</option>
-			</select></td>
-		</tr>
-		<tr>
-			<td>Search:</td>
-			<td><select name="searchengine" onchange="toggleSearchEngine()">
-					<option value="wordnet">WordNet</option>
-					<option value="viaf">Viaf</option>
 			</select></td>
 		</tr>
 		<tr>
