@@ -1,6 +1,5 @@
 package edu.asu.conceptpower.web;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -8,17 +7,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
-import edu.asu.conceptpower.profile.ISearchResult;
 import edu.asu.conceptpower.profile.IServiceRegistry;
-import edu.asu.conceptpower.profile.impl.ServiceBackBean;
 import edu.asu.conceptpower.profile.impl.ViafService;
 import edu.asu.conceptpower.web.profile.impl.SearchResultBackBean;
 import edu.asu.conceptpower.web.profile.impl.SearchResultBackBeanForm;
@@ -41,7 +38,6 @@ public class ConceptSearchController {
 	private String concept;
 	private List<ConceptEntryWrapper> foundConcepts;
 	private String pos;
-	private String searchengine;
 
 	@Autowired
 	private IServiceRegistry serviceRegistry;
@@ -52,8 +48,6 @@ public class ConceptSearchController {
 	@Autowired
 	private SearchResultBackBeanFormManager backBeanFormManager;
 
-	private Map<String, String> serviceNameIdMap;
-
 	private String serviceId;
 	private String term;
 
@@ -62,13 +56,6 @@ public class ConceptSearchController {
 
 		concept = req.getParameter("name");
 		pos = req.getParameter("pos");
-
-		model.addAttribute("ServiceBackBean", new ServiceBackBean());
-		Map<String, String> serviceNameIdMap = serviceRegistry
-				.getServiceNameIdMap();
-		model.addAttribute("serviceNameIdMap", serviceNameIdMap);
-		model.addAttribute("SearchResultBackBeanForm",
-				new SearchResultBackBeanForm());
 
 		if (!concept.trim().isEmpty()) {
 
@@ -84,33 +71,20 @@ public class ConceptSearchController {
 		return "conceptsearch";
 	}
 
-	@RequestMapping(value = "home/service/search", method = RequestMethod.GET)
-	public String search(Model model, Principal principal,
-			@ModelAttribute("ServiceBackBean") ServiceBackBean serviceBackBean) {
+	@RequestMapping(method = RequestMethod.GET, value = "serviceSearch")
+	public @ResponseBody
+	SearchResultBackBean[] serviceSearchForConcept(ModelMap model,
+			@RequestParam("serviceterm") String serviceterm,
+			@RequestParam("serviceid") String serviceid) {
 
-		serviceId = serviceBackBean.getId();
-		model.addAttribute("serviceid", serviceId);
-		String term = serviceBackBean.getTerm();
-
-		model.addAttribute("term", term);
-
-		serviceNameIdMap = serviceRegistry.getServiceNameIdMap();
-
-		model.addAttribute("serviceNameIdMap", serviceNameIdMap);
+		serviceId = serviceid;
+		term = serviceterm;
 
 		List<SearchResultBackBean> searchResultList = backBeanFormManager
 				.getsearchResultBackBeanList(serviceId, term);
-
-		if (!searchResultList.isEmpty()) {
-
-			searchResultBackBeanForm.setSearchResultList(searchResultList);
-			model.addAttribute("SearchResultBackBeanForm",
-					searchResultBackBeanForm);
-			model.addAttribute("searchResultList", searchResultList);
-			model.addAttribute("success", 1);
-		}
-
-		return "auth/home/profile";
+		SearchResultBackBean[] result = new SearchResultBackBean[searchResultList
+				.size()];
+		return searchResultList.toArray(result);
 	}
 
 }
