@@ -8,7 +8,9 @@ public interface IUserManager {
 
 	/**
 	 * Find a user by its user id.
-	 * @param name user id
+	 * 
+	 * @param name
+	 *            user id
 	 * @return user or null
 	 */
 	public abstract User findUser(String name);
@@ -22,5 +24,7 @@ public interface IUserManager {
 	public abstract void deleteUser(String username);
 
 	public abstract void storeModifiedUser(User user);
+
+	public abstract void storeModifiedPassword(User user);
 
 }
