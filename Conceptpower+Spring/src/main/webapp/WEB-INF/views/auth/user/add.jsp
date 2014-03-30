@@ -20,7 +20,7 @@
 			<td><input type="text" name="password" id="password"></td>
 		</tr>
 		<tr>
-			<td colspan="2"><input type="submit" value="Create user"></td>
+			<td colspan="2"><input type="submit" value="Create user" class="button"></td>
 		</tr>
 	</table>
 
