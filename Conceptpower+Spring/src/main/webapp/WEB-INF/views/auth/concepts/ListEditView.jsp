@@ -26,7 +26,10 @@
 		</tr>
 
 		<tr>
-			<td colspan="2"><input type="submit" value="Edit list"></td>
+			<td><input type="submit" value="Edit list" class="button"></td>
+			<td><a
+				href="${pageContext.servletContext.contextPath}/auth/conceptlist/editlist/canceledit"><input
+					type="button" name="cancel" value="No, cancel!" class="button"></a></td>
 		</tr>
 	</table>
 </form>
