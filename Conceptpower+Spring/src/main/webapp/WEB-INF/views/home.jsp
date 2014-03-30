@@ -92,7 +92,7 @@
 			</select></td>
 		</tr>
 		<tr>
-			<td colspan="2"><input type="submit" value="Search"></td>
+			<td colspan="2"><input type="submit" value="Search" class="button"></td>
 		</tr>
 	</table>
 </form>
