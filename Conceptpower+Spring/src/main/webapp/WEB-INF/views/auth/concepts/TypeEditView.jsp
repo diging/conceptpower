@@ -41,7 +41,7 @@
 		</tr>
 
 		<tr>
-			<td colspan="2"><input type="submit" value="Edit type"></td>
+			<td colspan="2"><input type="submit" value="Edit type" class="button"></td>
 		</tr>
 	</table>
 </form>

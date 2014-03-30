@@ -37,15 +37,16 @@
 		<c:if test="${enabledelete}">
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptlistconfirm/${listName}"><input
-					type="button" name="delete" id="delete" value="Yes, delete list"></a></td>
+					type="button" name="delete" id="delete" value="Yes, delete list"
+					class="button"></a></td>
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/conceptlist/canceldelete/"><input
-					type="button" name="cancel" value="No, cancel!"></a></td>
+					type="button" name="cancel" value="No, cancel!" class="button"></a></td>
 		</c:if>
 		<c:if test="${not enabledelete}">
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/conceptlist/canceldelete/"><input
-					type="button" name="cancel" value="Cancel!"></a></td>
+					type="button" name="cancel" value="Cancel!" class="button"></a></td>
 		</c:if>
 
 	</tr>
