@@ -19,7 +19,7 @@ import edu.asu.conceptpower.users.UserDatabaseClient;
  * Managing class for user management.
  * 
  * @author Julia Damerow
- *
+ * 
  */
 @Service
 public class UsersManager implements IUserManager {
@@ -27,23 +27,28 @@ public class UsersManager implements IUserManager {
 	@Autowired
 	private UserDatabaseClient client;
 	private Map<String, String> admins;
-	
+
 	@PostConstruct
 	public void init() {
 		admins = new HashMap<String, String>();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see edu.asu.conceptpower.users.IUserManager#setAdmins(java.util.Map)
 	 */
 	@Override
 	public void setAdmins(Map<String, String> admins) {
 		if (admins != null)
 			this.admins = admins;
-		else admins = new HashMap<String, String>();
+		else
+			admins = new HashMap<String, String>();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see edu.asu.conceptpower.users.IUserManager#findUser(java.lang.String)
 	 */
 	@Override
@@ -53,17 +58,20 @@ public class UsersManager implements IUserManager {
 			User admin = new User(name, storedPW);
 			return admin;
 		}
-		
+
 		User user = client.findUser(name);
 		return user;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.users.IUserManager#getUser(java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.conceptpower.users.IUserManager#getUser(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public User getUser(String name, String pw) {
-		
+
 		if (admins.containsKey(name)) {
 			String storedPW = admins.get(name);
 			if (storedPW.equals(pw))
@@ -72,8 +80,10 @@ public class UsersManager implements IUserManager {
 		User user = client.getUser(name, pw);
 		return user;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see edu.asu.conceptpower.users.IUserManager#getAllUsers()
 	 */
 	@Override
@@ -89,9 +99,13 @@ public class UsersManager implements IUserManager {
 		}
 		return userNames.toArray(new User[userNames.size()]);
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.users.IUserManager#addUser(edu.asu.conceptpower.users.User)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.asu.conceptpower.users.IUserManager#addUser(edu.asu.conceptpower.
+	 * users.User)
 	 */
 	@Override
 	public User addUser(User user) {
@@ -99,25 +113,42 @@ public class UsersManager implements IUserManager {
 		client.addUser(user);
 		return user;
 	}
-	
+
 	private void encryptPassword(User user) {
 		user.setPw(BCrypt.hashpw(user.getPw(), BCrypt.gensalt()));
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see edu.asu.conceptpower.users.IUserManager#deleteUser(java.lang.String)
 	 */
 	@Override
 	public void deleteUser(String username) {
 		client.deleteUser(username);
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.users.IUserManager#storeModifiedUser(edu.asu.conceptpower.users.User)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.conceptpower.users.IUserManager#storeModifiedUser(edu.asu.
+	 * conceptpower.users.User)
 	 */
 	@Override
 	public void storeModifiedUser(User user) {
 		client.update(user);
 	}
-	
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.conceptpower.users.IUserManager#storeModifiedPassword(edu.asu.
+	 *      conceptpower.users.User)
+	 */
+	@Override
+	public void storeModifiedPassword(User user) {
+		encryptPassword(user);
+		client.update(user);
+	}
+
 }
