@@ -298,7 +298,7 @@
 						<td>Synonyms</td>
 						<td><div id="addedSynonyms"></div></td>
 						<td><input type="button" name="synonym" id="addsynonym"
-							value="Add Synonym"></td>
+							value="Add Synonym" class="button"></td>
 					</tr>
 					<tr>
 						<td>Concept Type</td>
@@ -316,7 +316,8 @@
 						<td><input type="text" name="similar" id="similar"></td>
 					</tr>
 					<tr>
-						<td colspan="2"><input type="submit" value="Add Concept"></td>
+						<td colspan="2"><input type="submit" value="Add Concept"
+							class="button"></td>
 					</tr>
 				</table>
 
@@ -333,7 +334,8 @@
 						</form:select></td>
 					<td>Term</td>
 					<td><input type="text" name="serviceterm" id="serviceterm"></td>
-					<td><input type="submit" id="serviceSearch" value="search" /></td>
+					<td><input type="submit" id="serviceSearch" value="search"
+						class="button" /></td>
 				</tr>
 				<tr>
 					<td colspan="5" align="center"><div id="showServiceResult"
@@ -369,7 +371,7 @@
 			<tr>
 				<td><input type="text" name="synonymname" id="synonymname"></td>
 				<td><input type="button" name="synsearch" id="synonymsearch"
-					value="Search"></td>
+					value="Search" class="button"></td>
 			</tr>
 		</table>
 

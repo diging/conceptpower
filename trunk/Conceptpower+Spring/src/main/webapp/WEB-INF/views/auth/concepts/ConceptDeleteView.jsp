@@ -64,10 +64,10 @@
 	<tr>
 		<td><a
 			href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${id}"><input
-				type="button" name="delete" id="delete" value="Yes, delete concept!"></a></td>
+				type="button" name="delete" id="delete" value="Yes, delete concept!" class="button"></a></td>
 
 		<td><a
 			href="${pageContext.servletContext.contextPath}/auth/concepts/canceldelete/${conceptList}"><input
-				type="button" name="cancel" value="No, cancel!"></a></td>
+				type="button" name="cancel" value="No, cancel!" class="button"></a></td>
 	</tr>
 </table>

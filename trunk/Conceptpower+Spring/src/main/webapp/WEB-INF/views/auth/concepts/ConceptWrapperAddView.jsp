@@ -314,7 +314,7 @@
 			</select></td>
 		</tr>
 	</table>
-	<input type="submit" value="Search">
+	<input type="submit" value="Search" class="button">
 </form>
 
 <form
@@ -397,7 +397,7 @@
 			<td>Synonyms</td>
 			<td><div id="addedSynonyms"></div></td>
 			<td><input type="button" name="synonym" id="addsynonym"
-				value="Add Synonym"></td>
+				value="Add Synonym" class="button"></td>
 		</tr>
 		<tr>
 			<td>Concept Type</td>
@@ -420,7 +420,7 @@
 
 	</table>
 	<br /> <input type="submit" disabled="disabled" id="createwrapper"
-		value="Create Wordnet concept wrapper">
+		value="Create Wordnet concept wrapper" class="button">
 </form>
 
 <form>
@@ -430,7 +430,7 @@
 			<tr>
 				<td><input type="text" name="synonymname" id="synonymname"></td>
 				<td><input type="button" name="synsearch" id="synonymsearch"
-					value="Search"></td>
+					value="Search" class="button"></td>
 			</tr>
 		</table>
 

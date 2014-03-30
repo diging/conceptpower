@@ -23,7 +23,7 @@
 		</tr>
 
 		<tr>
-			<td colspan="2"><input type="submit" value="Create List"></td>
+			<td colspan="2"><input type="submit" value="Create List" class="button"></td>
 		</tr>
 	</table>
 </form>

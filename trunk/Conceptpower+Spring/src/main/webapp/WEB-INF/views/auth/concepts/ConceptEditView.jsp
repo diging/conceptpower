@@ -213,7 +213,7 @@
 			<td>Synonyms</td>
 			<td><div id="addedSynonyms"></div></td>
 			<td><input type="button" name="synonym" id="addsynonym"
-				value="Add Synonym"></td>
+				value="Add Synonym" class="button"></td>
 		</tr>
 
 		<tr>
@@ -240,11 +240,11 @@
 	<table>
 		<tr>
 			<td><input type="submit" name="edit" id="edit"
-				value="Store modified concept"></td>
+				value="Store modified concept" class="button"></td>
 
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/concepts/canceledit/${conceptList}"><input
-					type="button" name="cancel" value="Cancel!"></a></td>
+					type="button" name="cancel" value="Cancel!" class="button"></a></td>
 		</tr>
 	</table>
 </form>
@@ -256,7 +256,7 @@
 			<tr>
 				<td><input type="text" name="synonymname" id="synonymname"></td>
 				<td><input type="button" name="synsearch" id="synonymsearch"
-					value="Search"></td>
+					value="Search" class="button"></td>
 			</tr>
 		</table>
 
