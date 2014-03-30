@@ -61,4 +61,9 @@ public class ConceptListEditController {
 		return "redirect:/auth/conceptlist";
 	}
 
+	@RequestMapping(value = "auth/conceptlist/editlist/canceledit", method = RequestMethod.GET)
+	public String cancelDelete(HttpServletRequest req, ModelMap model) {
+		return "redirect:/auth/conceptlist";
+	}
+
 }
