@@ -20,7 +20,7 @@ public class UserEditController {
 
 	User user;
 
-	@RequestMapping(value = "auth/user/edit/{id}")
+	@RequestMapping(value = "auth/user/edituser/{id:.+}")
 	public String prepareEditUser(ModelMap map, @PathVariable String id) {
 		user = userManager.findUser(id);
 
@@ -30,22 +30,47 @@ public class UserEditController {
 		map.addAttribute("fullname", user.getName());
 		map.addAttribute("username", user.getUser());
 		map.addAttribute("isadmin", user.getIsAdmin());
-		map.addAttribute("password", user.getPw());
-		map.addAttribute("repassword", user.getPw());
-		return "auth/user/edit";
+		return "auth/user/edituser";
 	}
 
-	@RequestMapping(value = "auth/user/edit/store", method = RequestMethod.POST)
-	public String storeChanges(HttpServletRequest req, ModelMap model) {
+	@RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
+	public String storeUserChanges(HttpServletRequest req, ModelMap model) {
 
 		if (user == null)
 			return "auth/user/notfound";
 
 		user.setIsAdmin(req.getParameter("isadmin") != null ? true : false);
 		user.setName(req.getParameter("fullname"));
-		user.setPw(req.getParameter("password"));
 
 		userManager.storeModifiedUser(user);
+		return "redirect:/auth/user/list";
+	}
+
+	@RequestMapping(value = "auth/user/editpassword/{id:.+}")
+	public String prepareEditPassword(ModelMap map, @PathVariable String id) {
+		user = userManager.findUser(id);
+
+		if (user == null)
+			return "auth/user/notfound";
+
+		map.addAttribute("username", user.getUser());
+		return "auth/user/editpassword";
+	}
+
+	@RequestMapping(value = "auth/user/editpassword/store", method = RequestMethod.POST)
+	public String storePasswordChanges(HttpServletRequest req, ModelMap model) {
+
+		if (user == null)
+			return "auth/user/notfound";
+
+		user.setPw(req.getParameter("password"));
+
+		userManager.storeModifiedPassword(user);
+		return "redirect:/auth/user/list";
+	}
+
+	@RequestMapping(value = "auth/user/canceledit", method = RequestMethod.GET)
+	public String cancelEdit(HttpServletRequest req, ModelMap model) {
 		return "redirect:/auth/user/list";
 	}
 }
