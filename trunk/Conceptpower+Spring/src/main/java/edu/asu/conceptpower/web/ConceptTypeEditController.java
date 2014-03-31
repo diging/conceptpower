@@ -18,6 +18,12 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.users.impl.UsersManager;
 
+/**
+ * This class provides all the methods for editing a type
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class ConceptTypeEditController {
 
@@ -27,9 +33,18 @@ public class ConceptTypeEditController {
 	@Autowired
 	private UsersManager usersManager;
 
+	/**
+	 * This method provides a type information which to edit type page
+	 * 
+	 * @param typeid
+	 *            Represents a type which has to be edited
+	 * @param model
+	 *            Generic model holder for servlet
+	 * @return Returns a string value to redirect user to type edit page
+	 */
 	@RequestMapping(value = "auth/concepttype/edittype/{typeid}", method = RequestMethod.GET)
-	public String prepateEditType(@PathVariable("typeid") String typeid,
-			HttpServletRequest req, ModelMap model) {
+	public String prepareEditType(@PathVariable("typeid") String typeid,
+			ModelMap model) {
 
 		ConceptType type = typeManager.getType(typeid);
 		model.addAttribute("typeid", type.getTypeId());
@@ -52,9 +67,19 @@ public class ConceptTypeEditController {
 		return "/auth/concepttype/edittype";
 	}
 
+	/**
+	 * This method stores the updated information of a type
+	 * 
+	 * @param typeid
+	 * @param req
+	 *            holds HTTP request information
+	 * @param principal
+	 *            holds logged in user information
+	 * @return Returns a string value to redirect user to type list page
+	 */
 	@RequestMapping(value = "auth/concepttype/storeedittype/{typeid}", method = RequestMethod.POST)
 	public String editType(@PathVariable("typeid") String typeid,
-			HttpServletRequest req, ModelMap model, Principal principal) {
+			HttpServletRequest req, Principal principal) {
 
 		ConceptType type = typeManager.getType(typeid);
 		type.setTypeName(req.getParameter("name"));
@@ -72,8 +97,14 @@ public class ConceptTypeEditController {
 		return "redirect:/auth/concepttype";
 	}
 
+	/**
+	 * This method returns the control to user list when user cancels type edit
+	 * operation
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "auth/concepttype/edittype/canceledit", method = RequestMethod.GET)
-	public String cancelDelete(HttpServletRequest req, ModelMap model) {
+	public String cancelDelete() {
 		return "redirect:/auth/concepttype";
 	}
 }
