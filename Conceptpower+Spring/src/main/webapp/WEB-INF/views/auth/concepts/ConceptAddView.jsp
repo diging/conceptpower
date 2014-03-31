@@ -255,6 +255,44 @@
 <p>Add a new concept here.</p>
 
 <table>
+
+	<tr>
+		<td style="vertical-align: top;">
+
+			<table>
+				<tr>
+					<td>Service</td>
+					<td><form:select path="serviceNameIdMap"
+							name="serviceNameIdMap" id="serviceNameIdMap">
+							<form:options items="${serviceNameIdMap}" />
+						</form:select></td>
+					<td>Term</td>
+					<td><input type="text" name="serviceterm" id="serviceterm"></td>
+					<td><input type="submit" id="serviceSearch" value="search"
+						class="button" /></td>
+				</tr>
+			</table>
+		</td>
+
+	</tr>
+</table>
+
+<div style="padding: 15px;" id="showServiceResult" hidden="true">
+	<a>Show Results</a>
+</div>
+<div id="serviceResult"
+	style="max-width: 1000px; max-height: 500px; padding: 15px;"
+	hidden="true">
+
+	<table cellpadding="0" cellspacing="0" class="display dataTable"
+		id="serviceResultTable" hidden="true">
+		<tbody>
+		</tbody>
+	</table>
+
+</div>
+
+<table>
 	<tr>
 		<td><form
 				action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept/add"
@@ -323,42 +361,6 @@
 
 			</form></td>
 
-		<td style="vertical-align: top;">
-
-			<table>
-				<tr>
-					<td>Service</td>
-					<td><form:select path="serviceNameIdMap"
-							name="serviceNameIdMap" id="serviceNameIdMap">
-							<form:options items="${serviceNameIdMap}" />
-						</form:select></td>
-					<td>Term</td>
-					<td><input type="text" name="serviceterm" id="serviceterm"></td>
-					<td><input type="submit" id="serviceSearch" value="search"
-						class="button" /></td>
-				</tr>
-				<tr>
-					<td colspan="5" align="center"><div id="showServiceResult"
-							hidden="true">
-							<a>Show Results</a>
-						</div></td>
-				</tr>
-				<tr>
-					<td colspan="5">
-						<div id="serviceResult"
-							style="max-width: 1000px; max-height: 500px;" hidden="true">
-
-							<table cellpadding="0" cellspacing="0" class="display dataTable"
-								id="serviceResultTable" hidden="true">
-								<tbody>
-								</tbody>
-							</table>
-
-						</div>
-					</td>
-				</tr>
-			</table>
-		</td>
 	</tr>
 
 </table>
