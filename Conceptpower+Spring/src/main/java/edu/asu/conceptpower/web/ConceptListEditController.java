@@ -17,6 +17,12 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.users.impl.UsersManager;
 
+/**
+ * This class provides all the methods required for editing a concept list
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class ConceptListEditController {
 
@@ -26,9 +32,18 @@ public class ConceptListEditController {
 	@Autowired
 	private UsersManager usersManager;
 
+	/**
+	 * This method provides list name and description of a list to be edited
+	 * 
+	 * @param listName
+	 *            Represents list which has to be edited
+	 * @param model
+	 *            Generic model holder for servlet
+	 * @return Returns a string value to redirect user to edit list page
+	 */
 	@RequestMapping(value = "auth/conceptlist/editlist/{listname}", method = RequestMethod.GET)
 	public String prepareEditList(@PathVariable("listname") String listName,
-			HttpServletRequest req, ModelMap model) {
+			ModelMap model) {
 
 		ConceptList list = conceptManager.getConceptList(listName);
 		model.addAttribute("newlistname", list.getConceptListName());
@@ -37,9 +52,18 @@ public class ConceptListEditController {
 		return "/auth/conceptlist/editlist";
 	}
 
+	/**
+	 * This method updates edited list information
+	 * 
+	 * @param listName
+	 *            Represents list whose data has to be updated
+	 * @param req
+	 *            holds HTTP request information
+	 * @return Returns a string value to redirect user to concept list page
+	 */
 	@RequestMapping(value = "auth/conceptlist/storeeditlist/{listname}", method = RequestMethod.POST)
-	public String editType(@PathVariable("listname") String listName,
-			HttpServletRequest req, ModelMap model) {
+	public String editList(@PathVariable("listname") String listName,
+			HttpServletRequest req) {
 
 		ConceptList list = conceptManager.getConceptList(listName);
 		list.setConceptListName(req.getParameter("newlistname"));
@@ -61,8 +85,14 @@ public class ConceptListEditController {
 		return "redirect:/auth/conceptlist";
 	}
 
+	/**
+	 * Returns a string value to redirect user to concept list page when the
+	 * user cancels list edit operation
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "auth/conceptlist/editlist/canceledit", method = RequestMethod.GET)
-	public String cancelDelete(HttpServletRequest req, ModelMap model) {
+	public String cancelEdit() {
 		return "redirect:/auth/conceptlist";
 	}
 

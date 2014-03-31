@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 
+/**
+ * This class provides all the required method for editing a user
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class UserEditController {
 
@@ -20,21 +26,37 @@ public class UserEditController {
 
 	User user;
 
+	/**
+	 * This method provides user information to user editing page
+	 * 
+	 * @param model
+	 *            Generic model holder for servlet
+	 * @param id
+	 *            Represents id of a use to be edited
+	 * @return Returns a string value to redirect user to edit user page
+	 */
 	@RequestMapping(value = "auth/user/edituser/{id:.+}")
-	public String prepareEditUser(ModelMap map, @PathVariable String id) {
+	public String prepareEditUser(ModelMap model, @PathVariable String id) {
 		user = userManager.findUser(id);
 
 		if (user == null)
 			return "auth/user/notfound";
 
-		map.addAttribute("fullname", user.getName());
-		map.addAttribute("username", user.getUser());
-		map.addAttribute("isadmin", user.getIsAdmin());
+		model.addAttribute("fullname", user.getName());
+		model.addAttribute("username", user.getUser());
+		model.addAttribute("isadmin", user.getIsAdmin());
 		return "auth/user/edituser";
 	}
 
+	/**
+	 * This method stores updated user changes
+	 * 
+	 * @param req
+	 *            holds HTTP request information
+	 * @return Returns a string value to redirect user to user list page
+	 */
 	@RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
-	public String storeUserChanges(HttpServletRequest req, ModelMap model) {
+	public String storeUserChanges(HttpServletRequest req) {
 
 		if (user == null)
 			return "auth/user/notfound";
@@ -46,19 +68,35 @@ public class UserEditController {
 		return "redirect:/auth/user/list";
 	}
 
+	/**
+	 * This method provides user information to password edit page
+	 * 
+	 * @param model
+	 *            Generic model holder for servlet
+	 * @param id
+	 *            Represents user id
+	 * @return Returns a string value to redirect user to edit password page
+	 */
 	@RequestMapping(value = "auth/user/editpassword/{id:.+}")
-	public String prepareEditPassword(ModelMap map, @PathVariable String id) {
+	public String prepareEditPassword(ModelMap model, @PathVariable String id) {
 		user = userManager.findUser(id);
 
 		if (user == null)
 			return "auth/user/notfound";
 
-		map.addAttribute("username", user.getUser());
+		model.addAttribute("username", user.getUser());
 		return "auth/user/editpassword";
 	}
 
+	/**
+	 * This method stores the updated user password information
+	 * 
+	 * @param req
+	 *            holds HTTP request information
+	 * @return Returns a string value to redirect user to user list page
+	 */
 	@RequestMapping(value = "auth/user/editpassword/store", method = RequestMethod.POST)
-	public String storePasswordChanges(HttpServletRequest req, ModelMap model) {
+	public String storePasswordChanges(HttpServletRequest req) {
 
 		if (user == null)
 			return "auth/user/notfound";
@@ -69,8 +107,14 @@ public class UserEditController {
 		return "redirect:/auth/user/list";
 	}
 
+	/**
+	 * This method returns the control to user list when user cancels user edit
+	 * or password edit operation
+	 * 
+	 * @return Returns a string value to redirect user to user list page
+	 */
 	@RequestMapping(value = "auth/user/canceledit", method = RequestMethod.GET)
-	public String cancelEdit(HttpServletRequest req, ModelMap model) {
+	public String cancelEdit() {
 		return "redirect:/auth/user/list";
 	}
 }
