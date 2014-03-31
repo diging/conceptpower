@@ -72,4 +72,8 @@ public class ConceptTypeEditController {
 		return "redirect:/auth/concepttype";
 	}
 
+	@RequestMapping(value = "auth/concepttype/edittype/canceledit", method = RequestMethod.GET)
+	public String cancelDelete(HttpServletRequest req, ModelMap model) {
+		return "redirect:/auth/concepttype";
+	}
 }
