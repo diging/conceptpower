@@ -16,6 +16,13 @@ import edu.asu.conceptpower.profile.ISearchResult;
 import edu.asu.conceptpower.profile.ISearchResultFactory;
 import edu.asu.conceptpower.profile.IService;
 
+/**
+ * this class contains methods which connects quadriga to viaf authority service
+ * and searches the required term in it.
+ * 
+ * @author rohit pendbhaje
+ */
+
 @Service
 public class ViafService implements IService {
 
@@ -72,6 +79,19 @@ public class ViafService implements IService {
 		return "Viaf";
 	}
 
+	/**
+	 * searches results in the viaf authority service and gives back results to
+	 * quadriga
+	 * 
+	 * @param item
+	 *            term entered by user
+	 * @param startindex
+	 *            index of the start of the search result viaf service
+	 * 
+	 * @return list of searchresults retrieved from viaf service
+	 * @author rohit pendbhaje
+	 * 
+	 */
 	@Override
 	public List<ISearchResult> search(String word) {
 
@@ -89,15 +109,16 @@ public class ViafService implements IService {
 		items = rep.getChannel().getItems();
 
 		List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
-		for (Item i : items) {
-			ISearchResult searchResult = searchResultFactory
-					.getSearchResultObject();
-			searchResult.setDescription(i.getPubDate());
-			searchResult.setId(i.getLink());
-			searchResult.setName(i.getTitle());
-			searchResults.add(searchResult);
+		if (items != null) {
+			for (Item i : items) {
+				ISearchResult searchResult = searchResultFactory
+						.getSearchResultObject();
+				searchResult.setDescription(i.getPubDate());
+				searchResult.setId(i.getLink());
+				searchResult.setName(i.getTitle());
+				searchResults.add(searchResult);
+			}
 		}
-
 		return searchResults;
 
 	}
