@@ -41,7 +41,10 @@
 		</tr>
 
 		<tr>
-			<td colspan="2"><input type="submit" value="Edit type" class="button"></td>
+			<td><input type="submit" value="Edit type" class="button"></td>
+			<td><a
+				href="${pageContext.servletContext.contextPath}/auth/concepttype/edittype/canceledit"><input
+					type="button" name="cancel" value="No, cancel!" class="button"></a></td>
 		</tr>
 	</table>
 </form>
