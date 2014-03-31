@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.web;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,6 +22,12 @@ import edu.asu.conceptpower.web.profile.impl.SearchResultBackBeanFormManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
+/**
+ * This class provides all the methods for concept search functionality
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class ConceptSearchController {
 
@@ -36,7 +41,11 @@ public class ConceptSearchController {
 	ViafService viafService;
 
 	private String concept;
+
+	// Holds the concept search result
 	private List<ConceptEntryWrapper> foundConcepts;
+
+	// Holds the pos selected
 	private String pos;
 
 	@Autowired
@@ -48,9 +57,15 @@ public class ConceptSearchController {
 	@Autowired
 	private SearchResultBackBeanFormManager backBeanFormManager;
 
-	private String serviceId;
-	private String term;
-
+	/**
+	 * This method is used to search for a concept for a specific term and pos
+	 * 
+	 * @param req
+	 *            Holds the HTTP request information
+	 * @param model
+	 *            Generic model holder for servlet
+	 * @return Returns a string value to redirect user to concept search page
+	 */
 	@RequestMapping(value = "/home/conceptsearch", method = RequestMethod.POST)
 	public String search(HttpServletRequest req, ModelMap model) {
 
@@ -71,17 +86,25 @@ public class ConceptSearchController {
 		return "conceptsearch";
 	}
 
+	/**
+	 * This method searches a specific service for term
+	 * 
+	 * @param serviceterm
+	 *            holds a string value for which we need to service search
+	 * @param serviceid
+	 *            holds service ID string which represents a specific service
+	 *            selected by user
+	 * @return Returns array of SearchResultBackBean objects which represent
+	 *         service search results for specific servicterm and serviceid
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "serviceSearch")
 	public @ResponseBody
-	SearchResultBackBean[] serviceSearchForConcept(ModelMap model,
+	SearchResultBackBean[] serviceSearchForConcept(
 			@RequestParam("serviceterm") String serviceterm,
 			@RequestParam("serviceid") String serviceid) {
 
-		serviceId = serviceid;
-		term = serviceterm;
-
 		List<SearchResultBackBean> searchResultList = backBeanFormManager
-				.getsearchResultBackBeanList(serviceId, term);
+				.getsearchResultBackBeanList(serviceid, serviceterm);
 		SearchResultBackBean[] result = new SearchResultBackBean[searchResultList
 				.size()];
 		return searchResultList.toArray(result);

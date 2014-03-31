@@ -29,6 +29,12 @@ import edu.asu.conceptpower.profile.impl.ServiceRegistry;
 import edu.asu.conceptpower.web.profile.impl.SearchResultBackBeanForm;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
+/**
+ * This class provides all the method mappings for new concept creation
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class ConceptAddController {
 
@@ -52,8 +58,15 @@ public class ConceptAddController {
 	private ConceptEntry conceptEntry;
 	private List<ConceptEntry> synonyms;
 
+	/**
+	 * This method provides initial types and list model elements
+	 * 
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return returns string which redirects to concept creation page
+	 */
 	@RequestMapping(value = "auth/conceptlist/addconcept")
-	public String prepareConceptAdd(HttpServletRequest req, ModelMap model) {
+	public String prepareConceptAdd(ModelMap model) {
 
 		model.addAttribute("ServiceBackBean", new ServiceBackBean());
 		Map<String, String> serviceNameIdMap = serviceRegistry
@@ -85,9 +98,17 @@ public class ConceptAddController {
 		return "/auth/conceptlist/addconcept";
 	}
 
+	/**
+	 * This method prepares a new concept and stores it using concept manager
+	 * 
+	 * @param req
+	 *            Holds http request object information
+	 * @param principal
+	 *            holds log in information
+	 * @return returns string which redirects to concept list page
+	 */
 	@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
-	public String addConcept(HttpServletRequest req, ModelMap model,
-			Principal principal) {
+	public String addConcept(HttpServletRequest req, Principal principal) {
 
 		try {
 			conceptEntry = new ConceptEntry();
@@ -123,18 +144,31 @@ public class ConceptAddController {
 		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
 	}
 
+	/**
+	 * This method provides array of concepts for a given string
+	 * 
+	 * @param synonymname
+	 *            A synonym string for which we need to find existing concepts
+	 * @return Returns array of concepts found for synonym name
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")
 	public @ResponseBody
-	ConceptEntry[] getSynonyms(ModelMap model,
-			@RequestParam("synonymname") String synonymname) {
+	ConceptEntry[] getSynonyms(@RequestParam("synonymname") String synonymname) {
 		ConceptEntry[] entries = conceptManager
 				.getConceptListEntriesForWord(synonymname.trim());
 		return entries;
 	}
 
+	/**
+	 * This method provides array of existing concepts for a given string
+	 * 
+	 * @param conceptname
+	 *            A string value for which we need to find existing concepts
+	 * @return Returns existing concepts which contain conceptname
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "getExistingConcepts")
 	public @ResponseBody
-	ConceptEntry[] getExistingProjects(ModelMap model,
+	ConceptEntry[] getExistingConcepts(
 			@RequestParam("conceptname") String conceptname) {
 		if (conceptname.isEmpty())
 			return null;
@@ -143,10 +177,16 @@ public class ConceptAddController {
 		return entries;
 	}
 
+	/**
+	 * This method adds a synonym for a concept
+	 * 
+	 * @param synonymid
+	 *            Synonym ID which should be added for a concept
+	 * @return Returns array of synonyms added
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddAddSynonym")
 	public @ResponseBody
-	ConceptEntry[] addSynonym(ModelMap model,
-			@RequestParam("synonymid") String synonymid) {
+	ConceptEntry[] addSynonym(@RequestParam("synonymid") String synonymid) {
 		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid.trim());
 		if (synonyms == null) {
 			synonyms = new ArrayList<ConceptEntry>();
@@ -160,10 +200,16 @@ public class ConceptAddController {
 		return arraySynonyms;
 	}
 
+	/**
+	 * This method removes the synonym from synonyms list for id synonymid
+	 * 
+	 * @param synonymid
+	 *            A synoym which has to removed for a concept
+	 * @return Returns updated array of synonyms
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddRemoveSynonym")
 	public @ResponseBody
-	ConceptEntry[] removeSynonym(ModelMap model,
-			@RequestParam("synonymid") String synonymid) {
+	ConceptEntry[] removeSynonym(@RequestParam("synonymid") String synonymid) {
 		if (synonyms != null) {
 			for (int i = 0; i < synonyms.size(); i++) {
 				if (synonyms.get(i).getId().equals(synonymid)) {
