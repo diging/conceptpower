@@ -104,7 +104,7 @@ public class ConceptTypeEditController {
 	 * @return Returns a string value to redirect user to concept type list page
 	 */
 	@RequestMapping(value = "auth/concepttype/edittype/canceledit", method = RequestMethod.GET)
-	public String cancelDelete() {
+	public String cancelEdit() {
 		return "redirect:/auth/concepttype";
 	}
 }
