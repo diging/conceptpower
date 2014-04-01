@@ -12,7 +12,7 @@
 								&& $("#repassword").val() === "") {
 							$("#pwerror")
 									.html(
-											'<p  style="color:red">Passwords can not be empty. Please re-enter the passwords or cancel !!<p/>');
+											'Passwords can not be empty. Please re-enter the passwords or cancel !!');
 							return false;
 						} else if ($("#password").val() === $("#repassword")
 								.val()) {
@@ -20,7 +20,7 @@
 						} else {
 							$("#pwerror")
 									.html(
-											'<p  style="color:red">Passwords does not match. Please re-enter the passwords !!<p/>');
+											'Passwords does not match. Please re-enter the passwords !!');
 							return false;
 						}
 
@@ -49,7 +49,7 @@
 			<td>Re-type new password:</td>
 			<td><input type="password" name="repassword" id="repassword"
 				value="${repassword}"></td>
-			<td><div id="pwerror"></div></td>
+			<td><div id="pwerror" style="color: red;"></div></td>
 		</tr>
 		<tr>
 			<td><input type="submit" value="Store changes" name="submit"
