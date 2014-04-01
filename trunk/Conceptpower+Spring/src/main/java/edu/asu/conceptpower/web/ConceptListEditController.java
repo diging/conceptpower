@@ -89,7 +89,7 @@ public class ConceptListEditController {
 	 * Returns a string value to redirect user to concept list page when the
 	 * user cancels list edit operation
 	 * 
-	 * @return
+	 * @return Returns a string value to redirect user to concept list page
 	 */
 	@RequestMapping(value = "auth/conceptlist/editlist/canceledit", method = RequestMethod.GET)
 	public String cancelEdit() {
