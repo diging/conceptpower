@@ -101,7 +101,7 @@ public class ConceptTypeEditController {
 	 * This method returns the control to user list when user cancels type edit
 	 * operation
 	 * 
-	 * @return
+	 * @return Returns a string value to redirect user to concept type list page
 	 */
 	@RequestMapping(value = "auth/concepttype/edittype/canceledit", method = RequestMethod.GET)
 	public String cancelDelete() {
