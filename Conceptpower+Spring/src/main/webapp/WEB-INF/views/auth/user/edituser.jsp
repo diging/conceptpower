@@ -3,21 +3,15 @@
 
 <script>
 	var form = $('#edituserform');
-	$(document)
-			.on(
-					'submit',
-					'form',
-					function() {
+	$(document).on('submit', 'form', function() {
 
-						if ($("#fullname").val() === "") {
-							$("#fnerror")
-									.html(
-											'<p  style="color:red">Name can not be empty !!<p/>');
-							return false;
-						}
+		if ($("#fullname").val() === "") {
+			$("#fnerror").html('Name can not be empty !!');
+			return false;
+		}
 
-						return true;
-					});
+		return true;
+	});
 </script>
 
 <h2>Edit user: ${fullname}</h2>
@@ -36,7 +30,7 @@
 			<td>Name :</td>
 			<td><input type="text" name="fullname" id="fullname"
 				value="${fullname}"></td>
-			<td><div id="fnerror"></div></td>
+			<td><div id="fnerror" style="color: red;"></div></td>
 		</tr>
 		<tr>
 			<td>Is Administrator:</td>

@@ -256,6 +256,32 @@
 
 		$('#equals').val(equals);
 	};
+
+	var form = $('#createconceptform');
+	$(document).on('submit', 'form', function() {
+
+		var ret = true;
+		if ($("#name").val() === "") {
+			$("#nameerror").html('Please enter a name for concept !');
+			ret = false;
+		} else {
+			$("#nameerror").html('');
+		}
+		if ($("#lists option:selected").text() === "") {
+			$("#listerror").html('Please select a concpet list !');
+			ret = false;
+		} else {
+			$("#listerror").html('');
+		}
+		if ($("#types option:selected").text() === "") {
+			$("#typeerror").html('Please select a concept type !');
+			ret = false;
+		} else {
+			$("#typeerror").html('');
+		}
+
+		return ret;
+	});
 </script>
 
 <h1>Add new concept</h1>
@@ -303,7 +329,7 @@
 	<tr>
 		<td><form
 				action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept/add"
-				method='post'>
+				method='post' id="createconceptform">
 				<table>
 					<tr>
 						<td>Concept &nbsp &nbsp &nbsp &nbsp</td>
@@ -312,9 +338,9 @@
 						</b><img alt=""
 							src="${pageContext.servletContext.contextPath}/resources/img/warning.png"
 							class="none" name="warning" id="warning" hidden="true"></td>
-
-						<td></td>
+						<td><div id="nameerror" style="color: red"></div></td>
 					</tr>
+
 					<tr>
 						<td>POS</td>
 						<td><select name="pos">
@@ -328,11 +354,10 @@
 					<tr>
 						<td>Concept List</td>
 
-						<td><form:select path="lists" name="lists">
-								<form:option value="" label="Select concept list" />
+						<td><form:select path="lists" name="lists" id="lists">
 								<form:options items="${lists}" />
 							</form:select></td>
-
+						<td><div id="listerror" style="color: red"></div></td>
 					</tr>
 					<tr>
 						<td>Description</td>
@@ -347,10 +372,10 @@
 					</tr>
 					<tr>
 						<td>Concept Type</td>
-						<td><form:select path="types" name="types">
-								<form:option value="" label="Select one" />
+						<td><form:select path="types" name="types" id="types">
 								<form:options items="${types}" />
 							</form:select></td>
+						<td><div id="typeerror" style="color: red"></div></td>
 					</tr>
 					<tr>
 						<td>Equals</td>
