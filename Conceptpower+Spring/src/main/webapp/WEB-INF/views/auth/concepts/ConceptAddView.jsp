@@ -179,13 +179,20 @@
 											serviceid : serviceid
 										},
 										success : function(response) {
-											$('#serviceResultTable')
-													.dataTable().fnClearTable();
-											$('#serviceResultTable')
-													.dataTable().fnAddData(
-															response);
-											$('#showServiceResult').show();
-
+											if (response.length > 0) {
+												$('#serviceResultTable')
+														.dataTable()
+														.fnClearTable();
+												$('#serviceResultTable')
+														.dataTable().fnAddData(
+																response);
+												$('#showServiceResult').show();
+											} else {
+												$('#serviceResultTable')
+														.dataTable()
+														.fnClearTable();
+												$('#showServiceResult').show();
+											}
 										}
 									});
 						});
