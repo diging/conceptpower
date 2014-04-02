@@ -208,6 +208,7 @@
 	$(document).ready(defineServicedatatable);
 
 	function defineServicedatatable() {
+
 		$('#serviceResultTable')
 				.dataTable(
 						{
@@ -282,13 +283,33 @@
 
 		return ret;
 	});
+
+	$(document).ready(showProcessing);
+
+	function showProcessing() {
+		var $loading = $('#loadingDiv').hide();
+		$(document).ajaxStart(function() {
+			$loading.show();
+		}).ajaxStop(function() {
+			$loading.hide();
+		});
+	}
 </script>
 
-<h1>Add new concept</h1>
-<p>Add a new concept here.</p>
+<table style="padding: 0px;">
+	<tr>
+		<td><h1>Add new concept</h1></td>
+	</tr>
+	<tr>
+		<td><div>
+				Add a new concept here. <img alt="" id="loadingDiv"
+					src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.png"
+					class="none">
+			</div></td>
+	</tr>
+</table>
 
 <table>
-
 	<tr>
 		<td style="vertical-align: top;">
 
