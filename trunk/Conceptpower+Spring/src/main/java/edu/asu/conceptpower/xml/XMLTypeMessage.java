@@ -1,5 +1,8 @@
 package edu.asu.conceptpower.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +16,9 @@ public class XMLTypeMessage extends AXMLMessage {
 	@Autowired
 	private URICreator uriCreator;
 
-	public void appendEntry(ConceptType type, ConceptType supertype) {
+	public List<String> appendEntry(ConceptType type, ConceptType supertype) {
+
+		List<String> xmlEntries = new ArrayList<String>();
 		StringBuffer sb = new StringBuffer();
 
 		// start entry
@@ -86,6 +91,8 @@ public class XMLTypeMessage extends AXMLMessage {
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.TYPE_ENTRY + ">");
 
-		this.addEntry(sb.toString());
+		xmlEntries.add(sb.toString());
+
+		return xmlEntries;
 	}
 }
