@@ -30,7 +30,7 @@ import edu.asu.conceptpower.web.profile.impl.SearchResultBackBeanForm;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
 /**
- * This class provides all the method mappings for new concept creation
+ * This class provides all the methods required for new concept creation
  * 
  * @author Chetan
  * 

@@ -13,7 +13,7 @@ import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 
 /**
- * This class provides all the required method for editing a user
+ * This class provides all the required methods for editing a user
  * 
  * @author Chetan
  * 
