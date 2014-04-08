@@ -1,10 +1,14 @@
 package edu.asu.conceptpower.rest;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +19,13 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.xml.XMLConceptMessage;
 
+/**
+ * This class provides method for rest interface of the form
+ * "http://[server.url]/conceptpower/rest/SynonymSearch?id={URI or ID of concept you want synonyms for}"
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class SynonymSearch {
 
@@ -27,9 +38,17 @@ public class SynonymSearch {
 	@Autowired
 	XMLConceptMessage msg;
 
+	/**
+	 * This method provides information of synonyms of a word for a rest
+	 * interface of the form
+	 * "http://[server.url]/conceptpower/rest/SynonymSearch?id={URI or ID of concept you want synonyms for}"
+	 * 
+	 * @param req
+	 * @return
+	 */
 	@RequestMapping(value = "rest/SynonymSearch", method = RequestMethod.GET, produces = "application/xml")
 	public @ResponseBody
-	String getSynonymsForId(HttpServletRequest req, ModelMap model) {
+	String getSynonymsForId(HttpServletRequest req) {
 
 		// construct the URL to the Wordnet dictionary directory
 		String id = req.getParameter("id");
@@ -45,6 +64,8 @@ public class SynonymSearch {
 
 		// context.log("Finding entry for " + wordnetId);
 		ConceptEntry[] synonyms = dictManager.getSynonymsForConcept(wordnetId);
+		List<String> xmlEntries = new ArrayList<String>();
+		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
 		for (ConceptEntry entry : synonyms) {
 			ConceptType type = null;
@@ -52,9 +73,10 @@ public class SynonymSearch {
 					&& !entry.getTypeId().trim().isEmpty()) {
 				type = typeManager.getType(entry.getTypeId());
 			}
-			msg.appendEntry(entry, type);
+			entryMap.put(entry, type);
+			xmlEntries = msg.appendEntries(entryMap);
 		}
 
-		return msg.getXML();
+		return msg.getXML(xmlEntries);
 	}
 }
