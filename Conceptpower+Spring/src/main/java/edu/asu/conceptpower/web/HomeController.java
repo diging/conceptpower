@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.profile.IServiceRegistry;
 
 /**
- * Handles requests for the application home page.
+ * This class handles requests for the application home page.
  */
 @Controller
 public class HomeController {
@@ -25,7 +25,7 @@ public class HomeController {
 			.getLogger(HomeController.class);
 
 	/**
-	 * Simply selects the home view to render by returning its name.
+	 * This method simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {

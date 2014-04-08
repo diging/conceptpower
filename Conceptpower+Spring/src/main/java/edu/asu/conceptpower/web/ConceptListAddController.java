@@ -19,18 +19,30 @@ public class ConceptListAddController {
 	@Autowired
 	private ConceptListController conceptListManager;
 
-	private String name;
-	private String description;
-
+	/**
+	 * This method provides a string value to redirect user to add concept list
+	 * page
+	 * 
+	 * @return string value to redirect user to add concept list page
+	 */
 	@RequestMapping(value = "auth/conceptlist/addconceptlist")
-	public String listAddView(HttpServletRequest req, ModelMap model) {
+	public String listAddView() {
 		return "/auth/conceptlist/addconceptlist";
 	}
 
+	/**
+	 * This method creates and stores a new concept list
+	 * 
+	 * @param req
+	 *            Holds HTTP request information
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return String value to redirect user to a concept list page
+	 */
 	@RequestMapping(value = "auth/concepts/createconceptlist")
 	public String createConceptList(HttpServletRequest req, ModelMap model) {
-		name = req.getParameter("name");
-		description = req.getParameter("description");
+		String name = req.getParameter("name");
+		String description = req.getParameter("description");
 
 		try {
 			conceptManager.addConceptList(name, description);

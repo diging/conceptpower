@@ -2,8 +2,6 @@ package edu.asu.conceptpower.web;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,6 +14,12 @@ import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
+/**
+ * This class provides all the required methods for deleting a concept
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class ConceptDeleteController {
 
@@ -25,9 +29,19 @@ public class ConceptDeleteController {
 	@Autowired
 	ConceptEntryWrapperCreator wrapperCreator;
 
+	/**
+	 * This method provides details of a concept to be deleted for concept
+	 * delete page
+	 * 
+	 * @param conceptid
+	 *            ID of a concept to be deleted
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return String value to redirect user to concept delete page
+	 */
 	@RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
-	public String deleteConcept(@PathVariable("conceptid") String conceptid,
-			HttpServletRequest req, ModelMap model) {
+	public String prepareDeleteConcept(
+			@PathVariable("conceptid") String conceptid, ModelMap model) {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		model.addAttribute("word", concept.getWord());
 		model.addAttribute("description", concept.getDescription());
@@ -44,9 +58,19 @@ public class ConceptDeleteController {
 		return "/auth/conceptlist/deleteconcept";
 	}
 
+	/**
+	 * This method returns user to a particular concept list page after the user
+	 * cancels concept delete operation
+	 * 
+	 * @param conceptList
+	 *            concept list name where user has to redirected
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return String value to redirect user to a particular concept list
+	 */
 	@RequestMapping(value = "auth/concepts/canceldelete/{conceptList}", method = RequestMethod.GET)
 	public String cancelDelete(@PathVariable("conceptList") String conceptList,
-			HttpServletRequest req, ModelMap model) {
+			ModelMap model) {
 		List<ConceptEntry> founds = conceptManager
 				.getConceptListEntries(conceptList);
 
@@ -59,9 +83,17 @@ public class ConceptDeleteController {
 		return "/auth/conceptlist/concepts";
 	}
 
+	/**
+	 * This method deletes a concept
+	 * 
+	 * @param id
+	 *            Concept ID to be deleted
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return String value to redirect user to a particular concept list page
+	 */
 	@RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
-	public String confirmlDelete(@PathVariable("id") String id,
-			HttpServletRequest req, ModelMap model) {
+	public String confirmlDelete(@PathVariable("id") String id, ModelMap model) {
 		ConceptEntry concept = conceptManager.getConceptEntry(id);
 
 		concept.setDeleted(true);
