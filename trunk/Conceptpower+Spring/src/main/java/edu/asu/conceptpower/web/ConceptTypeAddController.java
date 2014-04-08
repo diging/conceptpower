@@ -15,10 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
 
+/**
+ * This class provides required methods for concept type creation
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
-public class ConceptTypeViewController {
-
-	private ConceptType type;
+public class ConceptTypeAddController {
 
 	@Autowired
 	private ConceptTypesManager conceptTypesManager;
@@ -26,8 +30,15 @@ public class ConceptTypeViewController {
 	@Autowired
 	private LoginController loginController;
 
+	/**
+	 * This method provides types information required for concept type creation
+	 * 
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return String value to redirect use to concept type add page
+	 */
 	@RequestMapping(value = "auth/concepttype/addtype")
-	public String typeAddView(HttpServletRequest req, ModelMap model) {
+	public String prepareTypeAddView(ModelMap model) {
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 
 		Map<String, String> types = new LinkedHashMap<String, String>();
@@ -39,11 +50,19 @@ public class ConceptTypeViewController {
 		return "/auth/concepttype/addtype";
 	}
 
+	/**
+	 * This method stores the newly created concept type
+	 * 
+	 * @param req
+	 *            Holds HTTP request information
+	 * @param principal
+	 *            Holds information of a logged in user
+	 * @return String value to redirect user to concept type list page
+	 */
 	@RequestMapping(value = "auth/concepts/createconcepttype", method = RequestMethod.POST)
-	public String createConceptType(HttpServletRequest req, ModelMap model,
-			Principal principal) {
+	public String createConceptType(HttpServletRequest req, Principal principal) {
 
-		type = new ConceptType();
+		ConceptType type = new ConceptType();
 		type.setTypeName(req.getParameter("name"));
 		type.setDescription(req.getParameter("description"));
 		type.setMatches(req.getParameter("match"));

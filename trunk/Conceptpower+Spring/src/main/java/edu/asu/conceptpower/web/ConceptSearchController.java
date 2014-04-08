@@ -23,7 +23,7 @@ import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
 /**
- * This class provides all the methods for concept search functionality
+ * This class provides concept search methods
  * 
  * @author Chetan
  * 
@@ -40,14 +40,6 @@ public class ConceptSearchController {
 	@Autowired
 	ViafService viafService;
 
-	private String concept;
-
-	// Holds the concept search result
-	private List<ConceptEntryWrapper> foundConcepts;
-
-	// Holds the pos selected
-	private String pos;
-
 	@Autowired
 	private IServiceRegistry serviceRegistry;
 
@@ -58,7 +50,7 @@ public class ConceptSearchController {
 	private SearchResultBackBeanFormManager backBeanFormManager;
 
 	/**
-	 * This method is used to search for a concept for a specific term and pos
+	 * This method is searches concepts a specific term and pos
 	 * 
 	 * @param req
 	 *            Holds the HTTP request information
@@ -69,15 +61,16 @@ public class ConceptSearchController {
 	@RequestMapping(value = "/home/conceptsearch", method = RequestMethod.POST)
 	public String search(HttpServletRequest req, ModelMap model) {
 
-		concept = req.getParameter("name");
-		pos = req.getParameter("pos");
+		String concept = req.getParameter("name");
+		String pos = req.getParameter("pos");
 
 		if (!concept.trim().isEmpty()) {
 
 			ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(
 					concept, pos);
 
-			foundConcepts = wrapperCreator.createWrappers(found);
+			List<ConceptEntryWrapper> foundConcepts = wrapperCreator
+					.createWrappers(found);
 
 			model.addAttribute("conceptsresult", foundConcepts);
 
@@ -87,7 +80,7 @@ public class ConceptSearchController {
 	}
 
 	/**
-	 * This method searches a specific service for term
+	 * This method searches a specific service for given term
 	 * 
 	 * @param serviceterm
 	 *            holds a string value for which we need to service search

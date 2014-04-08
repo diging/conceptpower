@@ -34,7 +34,7 @@ public class ConceptTypeEditController {
 	private UsersManager usersManager;
 
 	/**
-	 * This method provides a type information which to edit type page
+	 * This method provides a type information to edit type page
 	 * 
 	 * @param typeid
 	 *            Represents a type which has to be edited
@@ -98,8 +98,8 @@ public class ConceptTypeEditController {
 	}
 
 	/**
-	 * This method returns the control to user list when user cancels type edit
-	 * operation
+	 * This method returns the string to redirect user to type list page when
+	 * user cancels type edit operation
 	 * 
 	 * @return Returns a string value to redirect user to concept type list page
 	 */

@@ -2,8 +2,6 @@ package edu.asu.conceptpower.web;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,6 +16,12 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.users.impl.UsersManager;
 
+/**
+ * This class provides methods for concept type deletion
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class ConcepTypeDeleteController {
 
@@ -31,15 +35,18 @@ public class ConcepTypeDeleteController {
 	private ConceptManager conceptManager;
 
 	/**
+	 * This method provides information of a type to be deleted to concept type
+	 * deletion page
 	 * 
 	 * @param typeid
-	 * @param req
+	 *            ID of a type to be deleted
 	 * @param model
-	 * @return
+	 *            A generic model holder for Servlet
+	 * @return String value to redirect user to concept type delete page
 	 */
 	@RequestMapping(value = "auth/concepttype/deletetype/{typeid}", method = RequestMethod.GET)
 	public String prepareDeleteType(@PathVariable("typeid") String typeid,
-			HttpServletRequest req, ModelMap model) {
+			ModelMap model) {
 
 		ConceptType type = typeManager.getType(typeid);
 		model.addAttribute("typeid", type.getTypeId());
@@ -67,15 +74,14 @@ public class ConcepTypeDeleteController {
 	}
 
 	/**
+	 * This method deletes a specified concept type by ID
 	 * 
 	 * @param typeid
-	 * @param req
-	 * @param model
-	 * @return
+	 *            ID of a type to be deleted
+	 * @return String value which redirects user to cocept type list page
 	 */
 	@RequestMapping(value = "auth/concepttype/deleteconcepttypeconfirm/{typeid}", method = RequestMethod.GET)
-	public String deleteType(@PathVariable("typeid") String typeid,
-			HttpServletRequest req, ModelMap model) {
+	public String deleteType(@PathVariable("typeid") String typeid) {
 
 		typeManager.deleteType(typeid);
 
@@ -83,13 +89,13 @@ public class ConcepTypeDeleteController {
 	}
 
 	/**
+	 * This method provides a string value to redirect user to concept type list
+	 * page when the user cancels the concept type delete operation
 	 * 
-	 * @param req
-	 * @param model
-	 * @return
+	 * @return string value to redirect user to concept type list
 	 */
 	@RequestMapping(value = "auth/concepttype/canceldelete/", method = RequestMethod.GET)
-	public String cancelDelete(HttpServletRequest req, ModelMap model) {
+	public String cancelDelete() {
 		return "redirect:/auth/concepttype";
 	}
 

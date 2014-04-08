@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -40,8 +38,16 @@ public class ConceptListController {
 	@Autowired
 	ConceptEntryWrapperCreator wrapperCreator;
 
+	/**
+	 * This method provides information of all the existing concept lists for
+	 * showing concept list page
+	 * 
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return String value to redirect user to all concpet list page
+	 */
 	@RequestMapping(value = "auth/conceptlist")
-	public String showConceptList(HttpServletRequest req, ModelMap model) {
+	public String prepareShowConceptList(ModelMap model) {
 
 		conceptLists = conceptManager.getAllConceptLists();
 		model.addAttribute("result", conceptLists);
@@ -49,9 +55,18 @@ public class ConceptListController {
 		return "/auth/conceptlist";
 	}
 
+	/**
+	 * This method provides infomaiton of concepts for a given concept list
+	 * 
+	 * @param list
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return Return sting value to redirect user to a particular concept list
+	 *         page
+	 */
 	@RequestMapping(value = "auth/{listid}/concepts", method = RequestMethod.GET)
-	public String conceptsList(@PathVariable("listid") String list,
-			HttpServletRequest req, ModelMap model) {
+	public String getConceptsOfConceptList(@PathVariable("listid") String list,
+			ModelMap model) {
 
 		List<ConceptEntry> founds = conceptManager.getConceptListEntries(list);
 
@@ -64,9 +79,16 @@ public class ConceptListController {
 		return "/auth/conceptlist/concepts";
 	}
 
+	/**
+	 * This method provides details of a concept for given concept ID
+	 * 
+	 * @param conceptid
+	 *            ID of a concept
+	 * @return Map containing concept details
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptDetail")
 	public @ResponseBody
-	Map<String, String> getConceptDetails(ModelMap model,
+	Map<String, String> getConceptDetails(
 			@RequestParam("conceptid") String conceptid) {
 		ConceptEntryWrapper conceptEntry = new ConceptEntryWrapper(
 				conceptManager.getConceptEntry(conceptid));

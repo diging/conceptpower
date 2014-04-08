@@ -27,6 +27,12 @@ import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.users.impl.UsersManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
+/**
+ * This method provides all the required methods for editing a concept
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class ConceptEditController {
 
@@ -46,10 +52,19 @@ public class ConceptEditController {
 	private ConceptType[] allTypes;
 	private List<ConceptEntry> synonyms;
 
+	/**
+	 * This method provides information of a concept to be edited for concept
+	 * edit page
+	 * 
+	 * @param conceptid
+	 *            ID of a concept to be edited
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return String value to redirect user to concept edit page
+	 */
 	@RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
-	public String prepateEditConcept(
-			@PathVariable("conceptid") String conceptid,
-			HttpServletRequest req, ModelMap model) {
+	public String prepareEditConcept(
+			@PathVariable("conceptid") String conceptid, ModelMap model) {
 
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 
@@ -118,15 +133,35 @@ public class ConceptEditController {
 		return "/auth/conceptlist/editconcept";
 	}
 
+	/**
+	 * This method redirects user to a particular concept list page when the
+	 * user cancels concept edit operation
+	 * 
+	 * @param conceptList
+	 *            Concept list where user has to be redirected
+	 * @return String value which redirect user to a particular concept list
+	 *         page
+	 */
 	@RequestMapping(value = "auth/concepts/canceledit/{conceptList}", method = RequestMethod.GET)
-	public String cancelEdit(@PathVariable("conceptList") String conceptList,
-			HttpServletRequest req, ModelMap model) {
+	public String cancelEdit(@PathVariable("conceptList") String conceptList) {
 		return "redirect:/auth/" + conceptList + "/concepts";
 	}
 
+	/**
+	 * This method stores the updated information of a concept
+	 * 
+	 * @param id
+	 *            ID of a concept to be edited
+	 * @param req
+	 *            Holds HTTP request information
+	 * @param principal
+	 *            Holds logged in user information
+	 * @return String value which redirects user to a particular concept list
+	 *         page
+	 */
 	@RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
 	public String confirmlEdit(@PathVariable("id") String id,
-			HttpServletRequest req, Principal principal, ModelMap model) {
+			HttpServletRequest req, Principal principal) {
 
 		ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
 		conceptEntry.setWord(req.getParameter("name"));
@@ -159,8 +194,7 @@ public class ConceptEditController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
 	public @ResponseBody
-	ConceptEntry[] searchConcept(ModelMap model,
-			@RequestParam("synonymname") String synonymname) {
+	ConceptEntry[] searchConcept(@RequestParam("synonymname") String synonymname) {
 		ConceptEntry[] entries = conceptManager
 				.getConceptListEntriesForWord(synonymname.trim());
 		return entries;
@@ -168,8 +202,7 @@ public class ConceptEditController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "conceptEditAddSynonym")
 	public @ResponseBody
-	ConceptEntry[] addSynonym(ModelMap model,
-			@RequestParam("synonymid") String synonymid) {
+	ConceptEntry[] addSynonym(@RequestParam("synonymid") String synonymid) {
 		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid.trim());
 		if (synonyms == null) {
 			synonyms = new ArrayList<ConceptEntry>();

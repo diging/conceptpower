@@ -1,7 +1,5 @@
 package edu.asu.conceptpower.web;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,17 +8,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
 
+/**
+ * This class provides methods for viewing concepts of a particular type
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class ConceptTypesController {
 
 	@Autowired
 	private ConceptTypesManager conceptTypesManager;
-	private ConceptType[] types;
 
+	/**
+	 * This method provides information about all the types for concept type
+	 * view page
+	 * 
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return String value to redirect user to concept type list page
+	 */
 	@RequestMapping(value = "auth/concepttype")
-	public String showConceptTypes(HttpServletRequest req, ModelMap model) {
+	public String prepateShowConceptTypes(ModelMap model) {
 
-		types = conceptTypesManager.getAllTypes();
+		ConceptType[] types = conceptTypesManager.getAllTypes();
 
 		// to show super type name instead of type id in type list view
 		for (ConceptType type : types) {
