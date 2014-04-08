@@ -1,10 +1,11 @@
 package edu.asu.conceptpower.rest;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,6 +15,13 @@ import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.xml.XMLConstants;
 import edu.asu.conceptpower.xml.XMLTypeMessage;
 
+/**
+ * This class provides method for rest interface of the form
+ * "http://[server.url]/conceptpower/rest/Type?id={URI or ID of concept}"
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class TypeIdLookup {
 
@@ -23,9 +31,18 @@ public class TypeIdLookup {
 	@Autowired
 	XMLTypeMessage msg;
 
+	/**
+	 * This method provides information of a type for a rest interface of the
+	 * form
+	 * "http://[server.url]/conceptpower/rest/Type?id={URI or ID of concept}"
+	 * 
+	 * @param req
+	 *            Holds HTTP request information
+	 * @return
+	 */
 	@RequestMapping(value = "rest/Type", method = RequestMethod.GET, produces = "application/xml")
 	public @ResponseBody
-	String getTypeById(HttpServletRequest req, ModelMap model) {
+	String getTypeById(HttpServletRequest req) {
 
 		// get type id if URI is given
 		String id = req.getParameter("id");
@@ -45,14 +62,15 @@ public class TypeIdLookup {
 
 		ConceptType type = typeManager.getType(typeId);
 
+		List<String> xmlEntry = null;
 		if (type != null) {
 			ConceptType superType = null;
 			if (type.getSupertypeId() != null
 					&& !type.getSupertypeId().trim().isEmpty())
 				superType = typeManager.getType(type.getSupertypeId().trim());
-			msg.appendEntry(type, superType);
+			xmlEntry = msg.appendEntry(type, superType);
 		}
 
-		return msg.getXML();
+		return msg.getXML(xmlEntry);
 	}
 }
