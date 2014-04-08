@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<bean id="userDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
+		<property name="databasePath" value="I:\Eclipse Chetan\workspcae\cp db\users.db" />
+	</bean>
+	
+	<bean id="conceptDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
+		<property name="databasePath" value="I:\Eclipse Chetan\workspcae\cp db\conceptLists.db" />
+	</bean>
+	
+	<bean id="wordnetCacheDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
+		<property name="databasePath" value="I:\Eclipse Chetan\workspcae\cp db\wordnetCache.db" />
+	</bean>
+	
+	<bean id="typesDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
+		<property name="databasePath" value="I:\Eclipse Chetan\workspcae\cp db\conceptTypes.db" />
+	</bean>
+		
+</beans>
