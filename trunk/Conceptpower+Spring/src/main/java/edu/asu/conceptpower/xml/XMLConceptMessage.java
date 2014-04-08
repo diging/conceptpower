@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.xml;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +19,15 @@ public class XMLConceptMessage extends AXMLMessage {
 	@Autowired
 	URICreator URICreator;
 
-	public XMLConceptMessage() {
-	}
-
-	public void appendEntries(Map<ConceptEntry, ConceptType> entries) {
+	public List<String> appendEntries(Map<ConceptEntry, ConceptType> entries) {
+		List<String> xmlEntries = new ArrayList<String>();
 		for (ConceptEntry entry : entries.keySet())
-			appendEntry(entry, entries.get(entry));
+			xmlEntries.add(getEntry(entry, entries.get(entry)));
+
+		return xmlEntries;
 	}
 
-	public void appendEntry(ConceptEntry entry, ConceptType type) {
+	public String getEntry(ConceptEntry entry, ConceptType type) {
 		StringBuffer sb = new StringBuffer();
 
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
@@ -144,7 +145,7 @@ public class XMLConceptMessage extends AXMLMessage {
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.CONCEPT_ENTRY + ">");
 
-		this.addEntry(sb.toString());
+		return sb.toString();
 	}
 
 	public void appendDictionaries(List<ConceptList> lists)
