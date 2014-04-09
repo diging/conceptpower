@@ -62,6 +62,16 @@
 			}
 		});
 	}
+
+	$(document).ready(hideFormProcessing);
+
+	function hideFormProcessing() {
+		$('#loadingDiv').hide();
+	}
+
+	function showFormProcessing() {
+		$('#loadingDiv').show();
+	}
 </script>
 
 
@@ -92,7 +102,12 @@
 			</select></td>
 		</tr>
 		<tr>
-			<td colspan="2"><input type="submit" value="Search" class="button"></td>
+			<td colspan="2"><input type="submit" value="Search"
+				class="button" onclick="showFormProcessing()"
+				onsubmit="hideFormProcessing()"><img alt="" id="loadingDiv"
+				width="16px" height="16px"
+				src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
+				class="none" style="padding-left: 10px;"></td>
 		</tr>
 	</table>
 </form>
