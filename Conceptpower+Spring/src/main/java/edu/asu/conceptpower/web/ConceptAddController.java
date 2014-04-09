@@ -53,9 +53,6 @@ public class ConceptAddController {
 	@Autowired
 	private ServiceRegistry serviceRegistry;
 
-	private List<ConceptList> allLists;
-	private ConceptType[] allTypes;
-	private ConceptEntry conceptEntry;
 	private List<ConceptEntry> synonyms;
 
 	/**
@@ -75,7 +72,7 @@ public class ConceptAddController {
 		model.addAttribute("SearchResultBackBeanForm",
 				new SearchResultBackBeanForm());
 
-		allTypes = conceptTypesManager.getAllTypes();
+		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
 		for (ConceptType conceptType : allTypes) {
 			types.put(conceptType.getTypeId(), conceptType.getTypeName());
@@ -83,7 +80,7 @@ public class ConceptAddController {
 
 		model.addAttribute("types", types);
 
-		allLists = conceptManager.getAllConceptLists();
+		List<ConceptList> allLists = conceptManager.getAllConceptLists();
 		Map<String, String> lists = new LinkedHashMap<String, String>();
 		for (ConceptList conceptList : allLists) {
 			lists.put(conceptList.getConceptListName(),
@@ -111,7 +108,7 @@ public class ConceptAddController {
 	public String addConcept(HttpServletRequest req, Principal principal) {
 
 		try {
-			conceptEntry = new ConceptEntry();
+			ConceptEntry conceptEntry = new ConceptEntry();
 
 			StringBuffer sb = new StringBuffer();
 
@@ -198,13 +195,13 @@ public class ConceptAddController {
 			arraySynonyms[i++] = syn;
 		}
 		return arraySynonyms;
-	}
+	}	
 
 	/**
 	 * This method removes the synonym from synonyms list for id synonymid
 	 * 
 	 * @param synonymid
-	 *            A synoym which has to removed for a concept
+	 *            A synonym which has to removed for a concept
 	 * @return Returns updated array of synonyms
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddRemoveSynonym")
