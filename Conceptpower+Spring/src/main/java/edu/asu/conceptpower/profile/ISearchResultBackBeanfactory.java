@@ -1,6 +1,6 @@
 package edu.asu.conceptpower.profile;
 
-import edu.asu.conceptpower.web.profile.impl.SearchResultBackBean;
+import edu.asu.conceptpower.web.backing.SearchResultBackBean;
 
 /**
  * this interface has method which is used for creating new object of
