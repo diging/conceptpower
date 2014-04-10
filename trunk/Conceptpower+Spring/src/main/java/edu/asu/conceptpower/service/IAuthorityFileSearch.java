@@ -1,8 +1,8 @@
-package edu.asu.conceptpower.service.profile;
+package edu.asu.conceptpower.service;
 
 import java.util.List;
 
-import edu.asu.conceptpower.web.profile.impl.SearchResultBackBean;
+import edu.asu.conceptpower.profile.ISearchResult;
 
 /**
  * the interface has methods which are used to copy all the contents from
@@ -11,7 +11,7 @@ import edu.asu.conceptpower.web.profile.impl.SearchResultBackBean;
  * @author rohit pendbhaje
  * 
  */
-public interface ISearchResultBackBeanFormManager {
+public interface IAuthorityFileSearch {
 
 	/**
 	 * this method copies all the content of ISearchResult object to
@@ -23,7 +23,7 @@ public interface ISearchResultBackBeanFormManager {
 	 *            the term for which the searchresults need to be retrieved
 	 * @return List of SearchResultBackBean objects
 	 */
-	public abstract List<SearchResultBackBean> getsearchResultBackBeanList(
+	public abstract List<ISearchResult> getSearchResultBackBeanList(
 			String serviceId, String term);
 
 }
