@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.profile.ISearchResult;
 import edu.asu.conceptpower.service.impl.AuthorityFileSearch;
-import edu.asu.conceptpower.web.back.SearchResultBackBean;
+import edu.asu.conceptpower.web.backing.SearchResultBackBean;
 
 /**
  * This controller answer requests to other authority files
