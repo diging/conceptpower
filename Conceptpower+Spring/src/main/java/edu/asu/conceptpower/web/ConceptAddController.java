@@ -26,7 +26,7 @@ import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.profile.impl.ServiceBackBean;
 import edu.asu.conceptpower.profile.impl.ServiceRegistry;
-import edu.asu.conceptpower.web.profile.impl.SearchResultBackBeanForm;
+import edu.asu.conceptpower.web.back.SearchResultBackBeanForm;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
 /**
