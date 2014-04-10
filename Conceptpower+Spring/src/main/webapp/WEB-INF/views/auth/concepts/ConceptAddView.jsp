@@ -298,10 +298,7 @@
 	</tr>
 	<tr>
 		<td><div>
-				Add a new concept here. <img alt="" id="loadingDiv" width="16px"
-					height="16px"
-					src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
-					class="none">
+				Add a new concept here.
 			</div></td>
 	</tr>
 </table>
@@ -320,7 +317,10 @@
 					<td>Term</td>
 					<td><input type="text" name="serviceterm" id="serviceterm"></td>
 					<td><input type="submit" id="serviceSearch" value="search"
-						class="button" /></td>
+						class="button" /> <img alt="" id="loadingDiv" width="16px"
+					height="16px"
+					src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
+					class="none"></td>
 				</tr>
 			</table>
 		</td>
