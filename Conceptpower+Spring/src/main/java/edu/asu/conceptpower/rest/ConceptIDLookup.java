@@ -18,12 +18,14 @@ import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.xml.XMLConceptMessage;
+import edu.asu.conceptpower.xml.XMLMessageFactory;
 
 /**
- * This class provides method for rest interface of the form
+ * This class provides a method to query concepts by their id.
+ * It answers requests of the form:
  * "http://[server.url]/conceptpower/rest/Concept?id={URI or ID of concept}"
  * 
- * @author Chetan
+ * @author Chetan, Julia Damerow
  * 
  */
 @Controller
@@ -34,9 +36,9 @@ public class ConceptIDLookup {
 
 	@Autowired
 	private TypeDatabaseClient typeManager;
-
+	
 	@Autowired
-	private XMLConceptMessage msg;
+	private XMLMessageFactory messageFactory;
 
 	/**
 	 * This method provides concept information for the rest interface of the
@@ -66,6 +68,8 @@ public class ConceptIDLookup {
 		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 		List<String> xmlEntries = new ArrayList<String>();
 
+		XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
+		
 		if (entry != null) {
 
 			ConceptType type = null;

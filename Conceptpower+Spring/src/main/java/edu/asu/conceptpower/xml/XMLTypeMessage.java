@@ -4,17 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.util.URICreator;
 
-@Controller
+/**
+ * This class is used to create XML responses for
+ * type queries.
+ * 
+ * @author Julia Damerow
+ *
+ */
 public class XMLTypeMessage extends AXMLMessage {
 
-	@Autowired
 	private URICreator uriCreator;
+	
+	public XMLTypeMessage(URICreator uriCreator) {
+		this.uriCreator = uriCreator;
+	}
 
 	public List<String> appendEntry(ConceptType type, ConceptType supertype) {
 

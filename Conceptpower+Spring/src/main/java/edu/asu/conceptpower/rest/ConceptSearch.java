@@ -18,12 +18,14 @@ import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.xml.XMLConceptMessage;
+import edu.asu.conceptpower.xml.XMLMessageFactory;
 
 /**
- * This class provides method for rest interface of the form
+ * This class provides a method to search concepts.
+ * It answers requests to:
  * "http://[server.url]/conceptpower/rest/ConceptSearch?{list of fieldname=value}{operator=and/or}"
  * 
- * @author Chetan
+ * @author Chetan, Julia Damerow
  * 
  */
 @Controller
@@ -36,7 +38,7 @@ public class ConceptSearch {
 	private TypeDatabaseClient typeManager;
 
 	@Autowired
-	XMLConceptMessage msg;
+	private XMLMessageFactory messageFactory;
 
 	/**
 	 * This method provides information of a concept for a rest interface of the
@@ -75,6 +77,7 @@ public class ConceptSearch {
 		List<String> xmlEntries = new ArrayList<String>();
 		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
+		XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
 		for (ConceptEntry entry : searchResults) {
 			ConceptType type = null;
 			if (typeManager != null && entry.getTypeId() != null
