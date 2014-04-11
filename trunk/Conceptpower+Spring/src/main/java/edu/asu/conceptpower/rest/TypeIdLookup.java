@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.xml.XMLConstants;
+import edu.asu.conceptpower.xml.XMLMessageFactory;
 import edu.asu.conceptpower.xml.XMLTypeMessage;
 
 /**
- * This class provides method for rest interface of the form
+ * This class provides a method to query types by their ids. It 
+ * answers requests to:
  * "http://[server.url]/conceptpower/rest/Type?id={URI or ID of concept}"
  * 
- * @author Chetan
+ * @author Julia Damerow, Chetan
  * 
  */
 @Controller
@@ -29,7 +31,7 @@ public class TypeIdLookup {
 	private TypeDatabaseClient typeManager;
 
 	@Autowired
-	XMLTypeMessage msg;
+	private XMLMessageFactory messageFactory;
 
 	/**
 	 * This method provides information of a type for a rest interface of the
@@ -62,6 +64,7 @@ public class TypeIdLookup {
 
 		ConceptType type = typeManager.getType(typeId);
 
+		XMLTypeMessage msg = messageFactory.createXMLTypeMessage();
 		List<String> xmlEntry = null;
 		if (type != null) {
 			ConceptType superType = null;

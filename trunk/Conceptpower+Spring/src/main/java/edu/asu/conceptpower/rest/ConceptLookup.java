@@ -17,12 +17,14 @@ import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.xml.XMLConceptMessage;
+import edu.asu.conceptpower.xml.XMLMessageFactory;
 
 /**
- * This class provides method for rest interface of the form
+ * This class provides a method to retrieve all concepts
+ * for a given word and part of speech. It answers requests of the form:
  * "http://[server.url]/conceptpower/rest/ConceptLookup/{word}/{pos}"
  * 
- * @author Chetan
+ * @author Chetan, Julia Damerow
  * 
  */
 @Controller
@@ -35,7 +37,7 @@ public class ConceptLookup {
 	private TypeDatabaseClient typeManager;
 
 	@Autowired
-	private XMLConceptMessage returnMsg;
+	private XMLMessageFactory messageFactory;
 
 	/**
 	 * This method provides information of a concept for a rest interface of the
@@ -65,6 +67,7 @@ public class ConceptLookup {
 			entryMap.put(entry, type);
 		}
 
+		XMLConceptMessage returnMsg = messageFactory.createXMLConceptMessage();
 		List<String> xmlEntries = new ArrayList<String>();
 		if (entries != null) {
 			xmlEntries = returnMsg.appendEntries(entryMap);

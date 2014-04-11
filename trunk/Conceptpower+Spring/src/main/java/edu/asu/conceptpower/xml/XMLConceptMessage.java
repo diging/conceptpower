@@ -5,19 +5,28 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.util.URICreator;
 
-@Service
+/**
+ * This class is used to build XML messages that are sent
+ * back as responses to the client. The classes collections 
+ * concepts and transforms them into XML.
+ * 
+ * @author Julia Damerow
+ *
+ */
 public class XMLConceptMessage extends AXMLMessage {
 
-	@Autowired
-	URICreator URICreator;
+	
+	private URICreator uriCreator;
+	
+	public XMLConceptMessage(URICreator uriCreator) {
+		this.uriCreator = uriCreator;
+	}
 
 	public List<String> appendEntries(Map<ConceptEntry, ConceptType> entries) {
 		List<String> xmlEntries = new ArrayList<String>();
@@ -37,10 +46,10 @@ public class XMLConceptMessage extends AXMLMessage {
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID
 				+ " ");
 		sb.append(XMLConstants.CONCEPT_ID + "=\"" + entry.getId() + "\" ");
-		sb.append(XMLConstants.CONCEPT_URI + "=\"" + URICreator.getURI(entry)
+		sb.append(XMLConstants.CONCEPT_URI + "=\"" + uriCreator.getURI(entry)
 				+ "\"");
 		sb.append(">");
-		sb.append(URICreator.getURI(entry));
+		sb.append(uriCreator.getURI(entry));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID
 				+ ">");
 
@@ -119,7 +128,7 @@ public class XMLConceptMessage extends AXMLMessage {
 			sb.append(XMLConstants.TYPE_ID_ATTR + "=\"" + type.getTypeId()
 					+ "\" ");
 			sb.append(XMLConstants.TYPE_URI_ATTR + "=\""
-					+ URICreator.getTypeURI(type) + "\"");
+					+ uriCreator.getTypeURI(type) + "\"");
 		}
 		sb.append(">");
 		if (type != null)

@@ -18,12 +18,15 @@ import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.xml.XMLConceptMessage;
+import edu.asu.conceptpower.xml.XMLMessageFactory;
 
 /**
- * This class provides method for rest interface of the form
+ * This class provides a method to retrieve all synonyms for a given concept
+ * identified by its id.
+ * It answers requests to:
  * "http://[server.url]/conceptpower/rest/SynonymSearch?id={URI or ID of concept you want synonyms for}"
  * 
- * @author Chetan
+ * @author Julia Damero, Chetan
  * 
  */
 @Controller
@@ -36,7 +39,7 @@ public class SynonymSearch {
 	private TypeDatabaseClient typeManager;
 
 	@Autowired
-	XMLConceptMessage msg;
+	private XMLMessageFactory messageFactory;
 
 	/**
 	 * This method provides information of synonyms of a word for a rest
@@ -62,11 +65,12 @@ public class SynonymSearch {
 			return "no word net id";
 		}
 
-		// context.log("Finding entry for " + wordnetId);
+		
 		ConceptEntry[] synonyms = dictManager.getSynonymsForConcept(wordnetId);
 		List<String> xmlEntries = new ArrayList<String>();
 		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
+		XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
 		for (ConceptEntry entry : synonyms) {
 			ConceptType type = null;
 			if (typeManager != null && entry.getTypeId() != null

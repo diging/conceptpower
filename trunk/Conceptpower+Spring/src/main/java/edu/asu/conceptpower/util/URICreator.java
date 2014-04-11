@@ -8,6 +8,10 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.xml.XMLConfig;
 import edu.asu.conceptpower.xml.XMLConstants;
 
+/**
+ * This class creates URIs for concepts and types based on the 
+ * in xml-config.xml configured URI prefixes.
+ */
 @Service
 public class URICreator {
 
