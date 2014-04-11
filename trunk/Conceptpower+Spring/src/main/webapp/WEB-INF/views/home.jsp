@@ -84,7 +84,7 @@
 
 <form
 	action="${pageContext.servletContext.contextPath}/home/conceptsearch"
-	method='post'>
+	method='get'>
 	<table>
 		<tr>
 			<td>Word:</td>
@@ -153,35 +153,6 @@
 	</table>
 
 </c:if>
-
-
-<c:if test="${not empty viafresult}">
-	<table cellpadding="0" cellspacing="0" class="display dataTable"
-		id="viafSearchResult">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>URL</th>
-				<th>Description</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach var="viaf" items="${viafresult}">
-				<tr class="gradeX">
-					<td align="justify"><font size="2"><c:out
-								value="${viaf.name}"></c:out></font></td>
-					<td align="justify"><font size="2"><c:out
-								value="${viaf.id}"></c:out></font></td>
-					<td align="justify"><font size="2"><c:out
-								value="${viaf.description}">
-							</c:out></font></td>
-				</tr>
-			</c:forEach>
-		</tbody>
-	</table>
-
-</c:if>
-<br />
 
 <div id="detailsdiv" style="max-width: 600px; max-height: 500px;">
 	<table id="detailstable" class="greyContent" hidden="true">
