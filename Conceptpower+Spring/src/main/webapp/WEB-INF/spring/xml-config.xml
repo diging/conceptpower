@@ -5,7 +5,7 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
-	<bean id="wordNetConfiguration" class="edu.asu.conceptpower.xml.XMLConfig">
+	<bean id="xmlConfiguration" class="edu.asu.conceptpower.xml.XMLConfig">
 		<property name="uriPrefix" value="http://www.digitalhps.org/concepts/" />
 		<property name="xmlNamespace" value="http://www.digitalhps.org/" />
 	</bean>
