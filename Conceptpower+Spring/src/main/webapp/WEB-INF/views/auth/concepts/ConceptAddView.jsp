@@ -97,7 +97,10 @@
 										},
 										success : function(response) {
 											$('#synonymstable').dataTable()
+													.fnClearTable();
+											$('#synonymstable').dataTable()
 													.fnAddData(response);
+
 										}
 									});
 						});
@@ -121,7 +124,7 @@
 
 			x.appendChild(new_row);
 		} else {
-			var html = '<table border="1" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
+			var html = '<table border="1" width="400" id="addedSynonymsTable"><thead></thead>';
 
 			html += '<tr><td align="justify"><font size="2">'
 					+ '<a onclick="synonymRemove(\'' + 0 + '\')">Remove</a>'
@@ -130,14 +133,19 @@
 					+ '</font></td>';
 			html += '<td align="justify"><font size="2">' + description
 					+ '</font></td>';
-			html += '<td align="justify" hidden="true"><font size="2">' + id
-					+ '</font></td></tr>';
+			html += '<td align="justify" hidden="true">' + id + '</td></tr>';
 
-			html += '</tbody></table>';
+			html += '</table>';
 			$("#addedSynonyms").html(html);
 
 		}
 
+		var synonyms = " ";
+		var table = document.getElementById('addedSynonymsTable');
+		for (var r = 0, n = table.rows.length; r < n; r++) {
+			synonyms += table.rows[r].cells[3].innerHTML + ',';
+		}
+		$("#synonymsids").val(synonyms);
 	};
 
 	var synonymRemove = function(row) {
@@ -145,6 +153,12 @@
 		x.deleteRow(row);
 		if (!(x.rows.length > 0))
 			x.parentNode.removeChild(x);
+		var synonyms = " ";
+		var table = document.getElementById('addedSynonymsTable');
+		for (var r = 0, n = table.rows.length; r < n; r++) {
+			synonyms += table.rows[r].cells[3].innerHTML + ',';
+		}
+		$("#synonymsids").val(synonyms);
 	};
 
 	//service 
@@ -402,6 +416,10 @@
 					<tr>
 						<td>Similar to</td>
 						<td><input type="text" name="similar" id="similar"></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="synonymsids" id="synonymsids"
+							hidden="true"></td>
 					</tr>
 					<tr>
 						<td colspan="2"><input type="submit" value="Add Concept"
