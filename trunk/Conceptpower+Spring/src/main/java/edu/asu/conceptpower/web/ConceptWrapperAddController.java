@@ -21,7 +21,6 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
-import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -30,14 +29,7 @@ import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 @Controller
 public class ConceptWrapperAddController {
 
-	private String concept;
-	private List<ConceptEntryWrapper> foundConcepts;
-	private String pos;
 	private ArrayList<ConceptEntry> wrappedConcepts;
-	private List<ConceptList> allLists;
-	private ConceptType[] allTypes;
-	private List<ConceptEntry> synonyms;
-	private ConceptEntry conceptEntry;
 	private ConceptEntry[] arraywrappedConcepts;
 
 	@Autowired
@@ -56,7 +48,7 @@ public class ConceptWrapperAddController {
 		wrappedConcepts = new ArrayList<ConceptEntry>();
 		arraywrappedConcepts = null;
 
-		allTypes = conceptTypesManager.getAllTypes();
+		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
 		for (ConceptType conceptType : allTypes) {
 			types.put(conceptType.getTypeId(), conceptType.getTypeName());
@@ -64,17 +56,13 @@ public class ConceptWrapperAddController {
 
 		model.addAttribute("types", types);
 
-		allLists = conceptManager.getAllConceptLists();
+		List<ConceptList> allLists = conceptManager.getAllConceptLists();
 		Map<String, String> lists = new LinkedHashMap<String, String>();
 		for (ConceptList conceptList : allLists) {
 			lists.put(conceptList.getConceptListName(),
 					conceptList.getConceptListName());
 		}
 		model.addAttribute("lists", lists);
-
-		if (synonyms != null) {
-			synonyms.clear();
-		}
 
 		return "/auth/conceptlist/addconceptwrapper";
 	}
@@ -84,15 +72,9 @@ public class ConceptWrapperAddController {
 			Principal principal) {
 
 		try {
-			conceptEntry = new ConceptEntry();
+			ConceptEntry conceptEntry = new ConceptEntry();
 
-			StringBuffer sb = new StringBuffer();
-
-			if (synonyms != null)
-				for (ConceptEntry synonym : synonyms)
-					sb.append(synonym.getId() + Constants.SYNONYM_SEPARATOR);
-
-			conceptEntry.setSynonymIds(sb.toString());
+			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
 
 			if (arraywrappedConcepts != null && arraywrappedConcepts[0] != null) {
 				conceptEntry.setWord(arraywrappedConcepts[0].getWord());
@@ -132,17 +114,18 @@ public class ConceptWrapperAddController {
 	@RequestMapping(value = "/auth/conceptlist/addconceptwrapper/conceptsearch", method = RequestMethod.POST)
 	public String search(HttpServletRequest req, ModelMap model) {
 
-		concept = req.getParameter("name");
-		pos = req.getParameter("pos");
+		String concept = req.getParameter("name");
+		String pos = req.getParameter("pos");
 		if (!concept.trim().isEmpty()) {
 
 			ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(
 					concept, pos);
-			foundConcepts = wrapperCreator.createWrappers(found);
+			List<ConceptEntryWrapper> foundConcepts = wrapperCreator
+					.createWrappers(found);
 			model.addAttribute("result", foundConcepts);
 		}
 
-		allTypes = conceptTypesManager.getAllTypes();
+		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
 		for (ConceptType conceptType : allTypes) {
 			types.put(conceptType.getTypeId(), conceptType.getTypeName());
@@ -150,7 +133,7 @@ public class ConceptWrapperAddController {
 
 		model.addAttribute("types", types);
 
-		allLists = conceptManager.getAllConceptLists();
+		List<ConceptList> allLists = conceptManager.getAllConceptLists();
 		Map<String, String> lists = new LinkedHashMap<String, String>();
 		for (ConceptList conceptList : allLists) {
 			lists.put(conceptList.getConceptListName(),
@@ -213,39 +196,4 @@ public class ConceptWrapperAddController {
 		return entries;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddAddSynonym")
-	public @ResponseBody
-	ConceptEntry[] addSynonym(ModelMap model,
-			@RequestParam("synonymid") String synonymid) {
-		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid.trim());
-		if (synonyms == null) {
-			synonyms = new ArrayList<ConceptEntry>();
-		}
-		synonyms.add(synonym);
-		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
-		int i = 0;
-		for (ConceptEntry syn : synonyms) {
-			arraySynonyms[i++] = syn;
-		}
-		return arraySynonyms;
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddRemoveSynonym")
-	public @ResponseBody
-	ConceptEntry[] removeSynonym(ModelMap model,
-			@RequestParam("synonymid") String synonymid) {
-		if (synonyms != null) {
-			for (int i = 0; i < synonyms.size(); i++) {
-				if (synonyms.get(i).getId().equals(synonymid)) {
-					synonyms.remove(i);
-				}
-			}
-		}
-		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
-		int i = 0;
-		for (ConceptEntry syn : synonyms) {
-			arraySynonyms[i++] = syn;
-		}
-		return arraySynonyms;
-	}
 }
