@@ -80,7 +80,7 @@
 <sec:authorize access="isAuthenticated()">You're logged in!
 </sec:authorize>
 
-<p>This is Conceptpower, the concept management site for Quadriga.</p>
+<p>This is Conceptpower, a concept management site.</p>
 
 <form
 	action="${pageContext.servletContext.contextPath}/home/conceptsearch"
