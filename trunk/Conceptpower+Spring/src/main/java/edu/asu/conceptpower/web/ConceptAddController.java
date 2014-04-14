@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
-import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.profile.impl.ServiceBackBean;
@@ -45,15 +43,13 @@ public class ConceptAddController {
 	private ConceptListController conceptListManager;
 
 	@Autowired
-	ConceptEntryWrapperCreator wrapperCreator;
+	private ConceptEntryWrapperCreator wrapperCreator;
 
 	@Autowired
 	private ConceptTypesManager conceptTypesManager;
 
 	@Autowired
 	private ServiceRegistry serviceRegistry;
-
-	private List<ConceptEntry> synonyms;
 
 	/**
 	 * This method provides initial types and list model elements
@@ -88,10 +84,6 @@ public class ConceptAddController {
 		}
 		model.addAttribute("lists", lists);
 
-		if (synonyms != null) {
-			synonyms.clear();
-		}
-
 		return "/auth/conceptlist/addconcept";
 	}
 
@@ -110,14 +102,7 @@ public class ConceptAddController {
 		try {
 			ConceptEntry conceptEntry = new ConceptEntry();
 
-			StringBuffer sb = new StringBuffer();
-
-			if (synonyms != null)
-				for (ConceptEntry synonym : synonyms)
-					sb.append(synonym.getId() + Constants.SYNONYM_SEPARATOR);
-
-			conceptEntry.setSynonymIds(sb.toString());
-
+			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
 			conceptEntry.setWord(req.getParameter("name"));
 			conceptEntry.setConceptList(req.getParameter("lists"));
 			conceptEntry.setPos(req.getParameter("pos"));
@@ -174,51 +159,4 @@ public class ConceptAddController {
 		return entries;
 	}
 
-	/**
-	 * This method adds a synonym for a concept
-	 * 
-	 * @param synonymid
-	 *            Synonym ID which should be added for a concept
-	 * @return Returns array of synonyms added
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "conceptAddAddSynonym")
-	public @ResponseBody
-	ConceptEntry[] addSynonym(@RequestParam("synonymid") String synonymid) {
-		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid.trim());
-		if (synonyms == null) {
-			synonyms = new ArrayList<ConceptEntry>();
-		}
-		synonyms.add(synonym);
-		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
-		int i = 0;
-		for (ConceptEntry syn : synonyms) {
-			arraySynonyms[i++] = syn;
-		}
-		return arraySynonyms;
-	}	
-
-	/**
-	 * This method removes the synonym from synonyms list for id synonymid
-	 * 
-	 * @param synonymid
-	 *            A synonym which has to removed for a concept
-	 * @return Returns updated array of synonyms
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "conceptAddRemoveSynonym")
-	public @ResponseBody
-	ConceptEntry[] removeSynonym(@RequestParam("synonymid") String synonymid) {
-		if (synonyms != null) {
-			for (int i = 0; i < synonyms.size(); i++) {
-				if (synonyms.get(i).getId().equals(synonymid)) {
-					synonyms.remove(i);
-				}
-			}
-		}
-		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
-		int i = 0;
-		for (ConceptEntry syn : synonyms) {
-			arraySynonyms[i++] = syn;
-		}
-		return arraySynonyms;
-	}
 }
