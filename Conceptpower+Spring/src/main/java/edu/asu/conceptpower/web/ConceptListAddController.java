@@ -16,9 +16,6 @@ public class ConceptListAddController {
 	@Autowired
 	private ConceptManager conceptManager;
 
-	@Autowired
-	private ConceptListController conceptListManager;
-
 	/**
 	 * This method provides a string value to redirect user to add concept list
 	 * page
@@ -50,7 +47,6 @@ public class ConceptListAddController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		conceptListManager.showConceptList(req, model);
 
 		return "redirect:/auth/conceptlist";
 	}
