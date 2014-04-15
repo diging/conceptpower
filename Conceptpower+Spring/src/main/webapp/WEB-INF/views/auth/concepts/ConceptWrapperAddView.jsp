@@ -113,7 +113,6 @@
 														wrapperids += (conceptID + ',');
 														$("#wrapperids").val(
 																wrapperids);
-														alert(wrapperids);
 
 														var html = '<div id="'+ wordnetID +'">';
 														html += '<h5>' + word
@@ -123,8 +122,6 @@
 														html += '<p>'
 																+ description
 																+ '</p></div>';
-
-														alert(html);
 
 														$("#selectedconcepts")
 																.append(html);
