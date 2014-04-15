@@ -94,62 +94,69 @@
 						$('#conceptSearch tr')
 								.click(
 										function() {
+
 											var aData = oTable.fnGetData(this); // get datarow
 											if (null != aData) // null if we clicked on title row
 											{
+												var word = aData[1];
 												var conceptID = aData[2];
 												var wordnetID = aData[3];
+												var description = aData[6];
 												if (conceptID === wordnetID) {
 
-													$
-															.ajax({
-																type : "GET",
-																url : "${pageContext.servletContext.contextPath}/addorremoveconcepttowrapper",
-																data : {
-																	conceptid : conceptID,
-																	add : !$(
-																			this)
-																			.hasClass(
-																					'row_selected')
-																// add = true to add and add = false to remove
-																},
-																success : function(
-																		response) {
+													var wrapperids = '';
+													if (!$(this).hasClass(
+															'row_selected')) {
+														wrapperids = $(
+																"#wrapperids")
+																.val();
+														wrapperids += (conceptID + ',');
+														$("#wrapperids").val(
+																wrapperids);
+														alert(wrapperids);
 
-																	var html = "";
-																	var len = response.length;
+														var html = '<div id="'+ wordnetID +'">';
+														html += '<h5>' + word
+																+ ' ['
+																+ wordnetID
+																+ ']' + '</h5>';
+														html += '<p>'
+																+ description
+																+ '</p></div>';
 
-																	if (len > 0)
-																		$(
-																				'#createwrapper')
-																				.prop(
-																						'disabled',
-																						false);
-																	else
-																		$(
-																				'#createwrapper')
-																				.prop(
-																						'disabled',
-																						true);
+														alert(html);
 
-																	for (var i = 0; i < len; i++) {
-																		html += '<h5>'
-																				+ response[i].word
-																				+ ' ['
-																				+ response[i].wordnetId
-																				+ ']'
-																				+ '</h5>';
-																		html += '<p>'
-																				+ response[i].description
-																				+ '</p>';
-																	}
-																	html += '</p>';
-																	$(
-																			"#selectedconcepts")
-																			.html(
-																					html);
-																}
-															});
+														$("#selectedconcepts")
+																.append(html);
+													} else {
+														wrapperids = $(
+																"#wrapperids")
+																.val();
+														wrapperids = wrapperids
+																.replace(
+																		wordnetID
+																				+ ',',
+																		'');
+														$("#wrapperids").val(
+																wrapperids);
+														alert(wrapperids);
+
+													}
+
+													var wrapperconcepts = wrapperids
+															.split(',');
+													var len = wrapperconcepts.length;
+
+													if (len > 0)
+														$('#createwrapper')
+																.prop(
+																		'disabled',
+																		false);
+													else
+														$('#createwrapper')
+																.prop(
+																		'disabled',
+																		true);
 
 													$(this).toggleClass(
 															'row_selected');
@@ -417,6 +424,9 @@
 		</tr>
 		<tr hidden="true">
 			<td><input type="text" name="synonymsids" id="synonymsids"></td>
+		</tr>
+		<tr hidden="true">
+			<td><input type="text" name="wrapperids" id="wrapperids"></td>
 		</tr>
 
 	</table>
