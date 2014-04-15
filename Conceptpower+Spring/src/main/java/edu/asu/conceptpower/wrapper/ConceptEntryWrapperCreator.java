@@ -40,8 +40,7 @@ public class ConceptEntryWrapperCreator {
 				wrapper.setType(typeDatabaseClient.getType(entry.getTypeId()));
 
 			if (entry.getCreatorId() != null && !entry.getCreatorId().isEmpty())
-				wrapper.setCreator(usersManager.findUser(entry
-						.getCreatorId()));
+				wrapper.setCreator(usersManager.findUser(entry.getCreatorId()));
 
 			// if entry wraps a wordnet concepts, add it here
 			List<ConceptEntry> wordnetEntries = new ArrayList<ConceptEntry>();
@@ -67,13 +66,11 @@ public class ConceptEntryWrapperCreator {
 			// build description considering all the wordnet entries wrappe
 			StringBuffer sb = new StringBuffer();
 			if (wordnetEntries.size() > 0) {
-				sb.append("Wordnet description:<br/>");
 				for (ConceptEntry wordnetConcept : wordnetEntries) {
-					sb.append("<br></br>");
 					if (wordnetConcept.getDescription() != null) {
-						sb.append("<i>" + wordnetConcept.getWord()
-								+ "</i><br/>");
-						sb.append(wordnetConcept.getDescription());
+						sb.append("<br/><i>" + wordnetConcept.getWord()
+								+ "</i>");
+						sb.append("<br/>" + wordnetConcept.getDescription());
 					}
 				}
 			}
