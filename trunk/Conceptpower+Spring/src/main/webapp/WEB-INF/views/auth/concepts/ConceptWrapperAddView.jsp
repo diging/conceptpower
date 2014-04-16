@@ -37,25 +37,17 @@
 													$(nRow).addClass(
 															'gradeX odd');
 
-												// ajax call to set already concepts as selected 
-												$
-														.ajax({
-															type : "GET",
-															url : "${pageContext.servletContext.contextPath}/getSelectedConceptsFroWrapping",
-															success : function(
-																	response) {
+												var wrapperconcepts = $(
+														"#wrapperids").val()
+														.split(',');
+												var len = wrapperconcepts.length;
 
-																var len = response.length;
+												for (var i = 0; i < len; i++) {
+													if (aData[2] == wrapperconcepts[i].id)
+														$(nRow).addClass(
+																'row_selected');
+												}
 
-																for (var i = 0; i < len; i++) {
-																	if (aData[2] == response[i].id)
-																		$(nRow)
-																				.addClass(
-																						'row_selected');
-																}
-
-															}
-														});// ajax ends
 											}
 										});
 
@@ -136,7 +128,7 @@
 																		'');
 														$("#wrapperids").val(
 																wrapperids);
-														alert(wrapperids);
+														//alert(wrapperids);
 
 													}
 
@@ -285,9 +277,6 @@
 		$("#synonymsids").val(synonyms);
 	};
 </script>
-
-
-
 
 
 <h1>Add new Wordnet concept wrapper</h1>
