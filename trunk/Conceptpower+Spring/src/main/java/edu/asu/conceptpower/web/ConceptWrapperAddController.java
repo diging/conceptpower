@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
@@ -29,9 +26,6 @@ import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 @Controller
 public class ConceptWrapperAddController {
 
-	private ArrayList<ConceptEntry> wrappedConcepts;
-	private ConceptEntry[] arraywrappedConcepts;
-
 	@Autowired
 	ConceptEntryWrapperCreator wrapperCreator;
 
@@ -44,9 +38,6 @@ public class ConceptWrapperAddController {
 	@RequestMapping(value = "auth/conceptlist/addconceptwrapper")
 	public String prepareConceptWrapperAdd(HttpServletRequest req,
 			ModelMap model) {
-
-		wrappedConcepts = new ArrayList<ConceptEntry>();
-		arraywrappedConcepts = null;
 
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
@@ -75,21 +66,7 @@ public class ConceptWrapperAddController {
 			ConceptEntry conceptEntry = new ConceptEntry();
 
 			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-
-			if (arraywrappedConcepts != null && arraywrappedConcepts[0] != null) {
-				conceptEntry.setWord(arraywrappedConcepts[0].getWord());
-				conceptEntry.setPos(arraywrappedConcepts[0].getPos());
-
-				String wordnetID = "";
-
-				for (int i = 0; i < arraywrappedConcepts.length; i++) {
-					wordnetID += (arraywrappedConcepts[i].getWordnetId() + ",");
-				}
-				conceptEntry.setWordnetId(wordnetID);
-			} else {
-				return "failed";
-			}
-
+			conceptEntry.setWordnetId(req.getParameter("wrapperids"));
 			conceptEntry.setConceptList(req.getParameter("lists"));
 			conceptEntry.setDescription(req.getParameter("description"));
 			conceptEntry.setEqualTo(req.getParameter("equals"));
@@ -142,58 +119,6 @@ public class ConceptWrapperAddController {
 		model.addAttribute("lists", lists);
 
 		return "/auth/conceptlist/addconceptwrapper";
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "addorremoveconcepttowrapper")
-	public @ResponseBody
-	ConceptEntry[] addorRemoveConceptForWrapping(ModelMap model,
-			@RequestParam("conceptid") String conceptid,
-			@RequestParam("add") boolean add) {
-
-		if (add) {
-			ConceptEntry concept = conceptManager.getConceptEntry(conceptid
-					.trim());
-
-			wrappedConcepts.add(concept);
-			arraywrappedConcepts = new ConceptEntry[wrappedConcepts.size()];
-			int i = 0;
-			for (ConceptEntry syn : wrappedConcepts) {
-				arraywrappedConcepts[i++] = syn;
-			}
-
-		} else {
-
-			ConceptEntry entry = null;
-			for (ConceptEntry e : wrappedConcepts) {
-				if (e.getId().endsWith(conceptid.trim()))
-					entry = e;
-			}
-			wrappedConcepts.remove(entry);
-
-			arraywrappedConcepts = new ConceptEntry[wrappedConcepts.size()];
-			int i = 0;
-			for (ConceptEntry syn : wrappedConcepts) {
-				arraywrappedConcepts[i++] = syn;
-			}
-
-		}
-
-		return arraywrappedConcepts;
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "getSelectedConceptsFroWrapping")
-	public @ResponseBody
-	ConceptEntry[] getSelectedConceptsForWrappers(ModelMap model) {
-		return arraywrappedConcepts;
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
-	public @ResponseBody
-	ConceptEntry[] searchConcept(ModelMap model,
-			@RequestParam("synonymname") String synonymname) {
-		ConceptEntry[] entries = conceptManager
-				.getConceptListEntriesForWord(synonymname.trim());
-		return entries;
 	}
 
 }
