@@ -10,11 +10,15 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.util.URICreator;
 
+/**
+ * This class describes the concept entry wrapper in concept power. It provides
+ * properties which are not available for the concept entries to be wrapped
+ * 
+ * @author Julia Damerow
+ * 
+ */
 public class ConceptEntryWrapper implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4261304897583134670L;
 	private ConceptEntry entry;
 	private List<ConceptEntry> synonyms;
