@@ -13,6 +13,12 @@ import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.users.impl.UsersManager;
 import edu.asu.conceptpower.web.UserListController;
 
+/**
+ * This class provides methods required for creation concept wrappers
+ * 
+ * @author Chetan, Julia Damerow
+ * 
+ */
 @Component
 public class ConceptEntryWrapperCreator {
 
@@ -28,6 +34,13 @@ public class ConceptEntryWrapperCreator {
 	@Autowired
 	private UsersManager usersManager;
 
+	/**
+	 * This method creates wrappers for the concept entries passed as parameter
+	 * 
+	 * @param entries
+	 *            Holds the concept entries to be wrapped
+	 * @return
+	 */
 	public List<ConceptEntryWrapper> createWrappers(ConceptEntry[] entries) {
 		List<ConceptEntryWrapper> foundConcepts = new ArrayList<ConceptEntryWrapper>();
 
