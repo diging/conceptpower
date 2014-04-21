@@ -23,6 +23,12 @@ import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 
+/**
+ * This class provides methods required for creating concept wrappers
+ * 
+ * @author Chetan
+ * 
+ */
 @Controller
 public class ConceptWrapperAddController {
 
@@ -35,9 +41,16 @@ public class ConceptWrapperAddController {
 	@Autowired
 	private ConceptTypesManager conceptTypesManager;
 
+	/**
+	 * This method provides required information for concept wrapper creation
+	 * 
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return String value which redirects user to creating concept wrappers
+	 *         page
+	 */
 	@RequestMapping(value = "auth/conceptlist/addconceptwrapper")
-	public String prepareConceptWrapperAdd(HttpServletRequest req,
-			ModelMap model) {
+	public String prepareConceptWrapperAdd(ModelMap model) {
 
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
@@ -58,9 +71,18 @@ public class ConceptWrapperAddController {
 		return "/auth/conceptlist/addconceptwrapper";
 	}
 
+	/**
+	 * This method creates a concept wrapper for the selected concept entries
+	 * 
+	 * @param req
+	 *            Holds the HTTP request information
+	 * @param principal
+	 *            Holds logged in user information
+	 * @return String value which redirects user to a particular concept list
+	 *         page
+	 */
 	@RequestMapping(value = "auth/conceptlist/addconceptwrapper/add", method = RequestMethod.POST)
-	public String addConcept(HttpServletRequest req, ModelMap model,
-			Principal principal) {
+	public String addConcept(HttpServletRequest req, Principal principal) {
 
 		try {
 			ConceptEntry conceptEntry = new ConceptEntry();
@@ -88,6 +110,16 @@ public class ConceptWrapperAddController {
 		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
 	}
 
+	/**
+	 * This method provides search result for a particular concept search query
+	 * 
+	 * @param req
+	 *            Holds HTTP request information
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return String value which redirects user to concept wrapper creation
+	 *         page
+	 */
 	@RequestMapping(value = "/auth/conceptlist/addconceptwrapper/conceptsearch", method = RequestMethod.POST)
 	public String search(HttpServletRequest req, ModelMap model) {
 
