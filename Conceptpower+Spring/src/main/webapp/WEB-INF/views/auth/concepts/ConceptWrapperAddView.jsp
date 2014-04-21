@@ -30,13 +30,19 @@
 											"fnRowCallback" : function(nRow,
 													aData, iDisplayIndex,
 													iDisplayIndexFull) {
-												if (aData[2] == aData[3])
+												if (aData[2] == aData[3]) {
+													$(nRow).removeClass('odd');
+													$(nRow).removeClass('even');
 													$(nRow).addClass(
 															'gradeX even');
-												else
+												} else {
+													$(nRow).removeClass('odd');
+													$(nRow).removeClass('even');
 													$(nRow).addClass(
 															'gradeX odd');
+												}
 
+												//alert($("#wrapperids").val());
 												var wrapperconcepts = $(
 														"#wrapperids").val()
 														.split(',');
@@ -83,8 +89,10 @@
 								});
 
 						//ajax call to add the concept selected for wrappping
-						$('#conceptSearch tr')
-								.click(
+						$('body')
+								.delegate(
+										'#conceptSearch tbody tr',
+										"click",
 										function() {
 
 											var aData = oTable.fnGetData(this); // get datarow
@@ -106,7 +114,7 @@
 														$("#wrapperids").val(
 																wrapperids);
 
-														var html = '<div id="'+ wordnetID +'">';
+														var html = '<div id="'+ wordnetID +'div">';
 														html += '<h5>' + word
 																+ ' ['
 																+ wordnetID
@@ -128,7 +136,13 @@
 																		'');
 														$("#wrapperids").val(
 																wrapperids);
-														//alert(wrapperids);
+
+														// remove the div element 
+														var x = document
+																.getElementById(wordnetID
+																		+ 'div');
+														x.parentNode
+																.removeChild(x);
 
 													}
 
