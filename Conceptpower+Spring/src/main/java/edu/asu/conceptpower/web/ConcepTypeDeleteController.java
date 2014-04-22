@@ -26,7 +26,7 @@ import edu.asu.conceptpower.users.impl.UsersManager;
 public class ConcepTypeDeleteController {
 
 	@Autowired
-	ConceptTypesManager typeManager;
+	private ConceptTypesManager typeManager;
 
 	@Autowired
 	private UsersManager usersManager;

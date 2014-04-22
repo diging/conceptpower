@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
-import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
+import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
+import edu.asu.conceptpower.wrapper.impl.ConceptEntryWrapperCreator;
 
 /**
  * This class provides concept search methods
@@ -28,7 +29,7 @@ public class ConceptSearchController {
 	private ConceptManager conceptManager;
 
 	@Autowired
-	private ConceptEntryWrapperCreator wrapperCreator;
+	private IConceptWrapperCreator wrapperCreator;
 
 	
 	/**

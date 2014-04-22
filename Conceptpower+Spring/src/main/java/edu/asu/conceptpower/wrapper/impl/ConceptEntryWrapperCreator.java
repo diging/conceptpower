@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.wrapper;
+package edu.asu.conceptpower.wrapper.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,11 @@ import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
+import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
-import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.users.impl.UsersManager;
-import edu.asu.conceptpower.web.UserListController;
+import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
+import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
 /**
  * This class provides methods required for creation concept wrappers
@@ -20,16 +21,13 @@ import edu.asu.conceptpower.web.UserListController;
  * 
  */
 @Component
-public class ConceptEntryWrapperCreator {
+public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
 	@Autowired
 	private ConceptManager conceptManager;
 
 	@Autowired
-	private UserListController userListConctoller;
-
-	@Autowired
-	private TypeDatabaseClient typeDatabaseClient;
+	private ConceptTypesManager typesManager;
 
 	@Autowired
 	private UsersManager usersManager;
@@ -41,6 +39,7 @@ public class ConceptEntryWrapperCreator {
 	 *            Holds the concept entries to be wrapped
 	 * @return
 	 */
+	@Override
 	public List<ConceptEntryWrapper> createWrappers(ConceptEntry[] entries) {
 		List<ConceptEntryWrapper> foundConcepts = new ArrayList<ConceptEntryWrapper>();
 
@@ -50,7 +49,7 @@ public class ConceptEntryWrapperCreator {
 		for (ConceptEntry entry : entries) {
 			ConceptEntryWrapper wrapper = new ConceptEntryWrapper(entry);
 			if (entry.getTypeId() != null && !entry.getTypeId().isEmpty())
-				wrapper.setType(typeDatabaseClient.getType(entry.getTypeId()));
+				wrapper.setType(typesManager.getType(entry.getTypeId()));
 
 			if (entry.getCreatorId() != null && !entry.getCreatorId().isEmpty())
 				wrapper.setCreator(usersManager.findUser(entry.getCreatorId()));

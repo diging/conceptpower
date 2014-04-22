@@ -79,7 +79,7 @@ public class UserDatabaseClient {
 		User toBeUpdated = findUser(user.getUser());
 		toBeUpdated.setIsAdmin(user.getIsAdmin());
 		toBeUpdated.setName(user.getName());
-		toBeUpdated.setPw(user.getPw());
+		//toBeUpdated.setPw(user.getPw());
 		
 		client.store(toBeUpdated);
 		client.commit();			

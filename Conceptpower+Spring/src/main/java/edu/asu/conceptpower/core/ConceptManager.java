@@ -39,8 +39,8 @@ public class ConceptManager {
 	public static final int CONCEPT_ENTRY = 0;
 	public static final int CONCEPT_LIST = 1;
 
-	protected String CONCEPT_PREFIX = "CON";
-	protected String LIST_PREFIX = "LIST";
+	protected final String CONCEPT_PREFIX = "CON";
+	protected final String LIST_PREFIX = "LIST";
 
 	/**
 	 * Return entry given its ID. First the additional concepts are queried,

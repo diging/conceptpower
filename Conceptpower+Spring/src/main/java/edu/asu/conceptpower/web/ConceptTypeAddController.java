@@ -27,8 +27,6 @@ public class ConceptTypeAddController {
 	@Autowired
 	private ConceptTypesManager conceptTypesManager;
 
-	@Autowired
-	private LoginController loginController;
 
 	/**
 	 * This method provides types information required for concept type creation

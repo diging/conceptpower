@@ -24,7 +24,7 @@ import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
-import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
+import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
 /**
  * This class provides methods required for creating concept wrappers
@@ -36,7 +36,7 @@ import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 public class ConceptWrapperAddController {
 
 	@Autowired
-	ConceptEntryWrapperCreator wrapperCreator;
+	private IConceptWrapperCreator wrapperCreator;
 
 	@Autowired
 	private ConceptManager conceptManager;

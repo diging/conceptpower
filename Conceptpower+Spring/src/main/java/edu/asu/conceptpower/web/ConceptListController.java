@@ -19,7 +19,7 @@ import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.util.URICreator;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
-import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
+import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
 @Controller
 public class ConceptListController {
@@ -33,10 +33,10 @@ public class ConceptListController {
 	private TypeDatabaseClient typeDatabaseClient;
 
 	@Autowired
-	URICreator URICreator;
+	private URICreator URICreator;
 
 	@Autowired
-	ConceptEntryWrapperCreator wrapperCreator;
+	private IConceptWrapperCreator wrapperCreator;
 
 	/**
 	 * This method provides information of all the existing concept lists for
