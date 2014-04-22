@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.web;
 
+import java.security.Principal;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.web.backing.UserBacking;
 
 /**
  * This class provides required methods for editing a user
@@ -24,8 +27,6 @@ public class UserEditController {
 	@Autowired
 	private IUserManager userManager;
 
-	User user;
-
 	/**
 	 * This method provides user information to user editing page
 	 * 
@@ -37,14 +38,15 @@ public class UserEditController {
 	 */
 	@RequestMapping(value = "auth/user/edituser/{id:.+}")
 	public String prepareEditUser(ModelMap model, @PathVariable String id) {
-		user = userManager.findUser(id);
-
+		User user = userManager.findUser(id);	
+	
+		
 		if (user == null)
 			return "auth/user/notfound";
+		
+		UserBacking userBacking = new UserBacking(user.getUser(), user.getName());
 
-		model.addAttribute("fullname", user.getName());
-		model.addAttribute("username", user.getUser());
-		model.addAttribute("isadmin", user.getIsAdmin());
+		model.addAttribute("user", userBacking);
 		return "auth/user/edituser";
 	}
 
@@ -56,15 +58,17 @@ public class UserEditController {
 	 * @return Returns a string value to redirect user to user list page
 	 */
 	@RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
-	public String storeUserChanges(HttpServletRequest req) {
+	public String storeUserChanges(UserBacking user, Principal principal) {
+		
+		User uUser = userManager.findUser(user.getUsername());
 
-		if (user == null)
+		if (uUser == null)
 			return "auth/user/notfound";
-
-		user.setIsAdmin(req.getParameter("isadmin") != null ? true : false);
-		user.setName(req.getParameter("fullname"));
-
-		userManager.storeModifiedUser(user);
+		
+		uUser.setIsAdmin(user.getIsAdmin());
+		uUser.setName(user.getName());
+		
+		userManager.storeModifiedUser(uUser);
 		return "redirect:/auth/user/list";
 	}
 
@@ -79,12 +83,14 @@ public class UserEditController {
 	 */
 	@RequestMapping(value = "auth/user/editpassword/{id:.+}")
 	public String prepareEditPassword(ModelMap model, @PathVariable String id) {
-		user = userManager.findUser(id);
+		User user = userManager.findUser(id);
 
 		if (user == null)
 			return "auth/user/notfound";
 
 		model.addAttribute("username", user.getUser());
+		model.addAttribute("user", user);
+		
 		return "auth/user/editpassword";
 	}
 
@@ -96,12 +102,10 @@ public class UserEditController {
 	 * @return Returns a string value to redirect user to user list page
 	 */
 	@RequestMapping(value = "auth/user/editpassword/store", method = RequestMethod.POST)
-	public String storePasswordChanges(HttpServletRequest req) {
+	public String storePasswordChanges(HttpServletRequest req, Principal principal, User user) {
 
 		if (user == null)
 			return "auth/user/notfound";
-
-		user.setPw(req.getParameter("password"));
 
 		userManager.storeModifiedPassword(user);
 		return "redirect:/auth/user/list";

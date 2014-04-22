@@ -25,7 +25,7 @@ import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.profile.impl.ServiceBackBean;
 import edu.asu.conceptpower.profile.impl.ServiceRegistry;
 import edu.asu.conceptpower.web.backing.SearchResultBackBeanForm;
-import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
+import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
 /**
  * This class provides all the methods required for new concept creation
@@ -43,7 +43,7 @@ public class ConceptAddController {
 	private ConceptListController conceptListManager;
 
 	@Autowired
-	private ConceptEntryWrapperCreator wrapperCreator;
+	private IConceptWrapperCreator wrapperCreator;
 
 	@Autowired
 	private ConceptTypesManager conceptTypesManager;

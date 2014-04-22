@@ -27,7 +27,7 @@ import edu.asu.conceptpower.users.impl.UsersManager;
 public class ConceptListEditController {
 
 	@Autowired
-	ConceptManager conceptManager;
+	private ConceptManager conceptManager;
 
 	@Autowired
 	private UsersManager usersManager;

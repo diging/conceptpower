@@ -25,7 +25,7 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.users.impl.UsersManager;
-import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
+import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
 /**
  * This method provides all the required methods for editing a concept
@@ -46,7 +46,7 @@ public class ConceptEditController {
 	private ConceptTypesManager conceptTypesManager;
 
 	@Autowired
-	ConceptEntryWrapperCreator wrapperCreator;
+	IConceptWrapperCreator wrapperCreator;
 
 	private List<ConceptList> allLists;
 	private ConceptType[] allTypes;

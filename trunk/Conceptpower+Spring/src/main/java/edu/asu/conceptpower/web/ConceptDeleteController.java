@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
-import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
+import edu.asu.conceptpower.wrapper.impl.ConceptEntryWrapperCreator;
 
 /**
  * This class provides all the required methods for deleting a concept
@@ -24,10 +24,10 @@ import edu.asu.conceptpower.wrapper.ConceptEntryWrapperCreator;
 public class ConceptDeleteController {
 
 	@Autowired
-	ConceptManager conceptManager;
+	private ConceptManager conceptManager;
 
 	@Autowired
-	ConceptEntryWrapperCreator wrapperCreator;
+	private ConceptEntryWrapperCreator wrapperCreator;
 
 	/**
 	 * This method provides details of a concept to be deleted for concept
