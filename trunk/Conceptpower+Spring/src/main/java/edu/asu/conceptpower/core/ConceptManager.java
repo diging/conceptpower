@@ -153,8 +153,8 @@ public class ConceptManager {
 				}
 			}
 
-			entry.setSynonymIds(sb.toString());
-			// entry.setSynsetIds(entry.getSynsetIds());
+			entry.setSynonymIds(entry.getSynonymIds()
+					+ Constants.CONCEPT_SEPARATOR + sb.toString());
 		}
 	}
 
@@ -320,7 +320,15 @@ public class ConceptManager {
 		Collections.sort(entries, new Comparator<ConceptEntry>() {
 
 			public int compare(ConceptEntry o1, ConceptEntry o2) {
-				return o1.getWord().compareToIgnoreCase(o2.getWord());
+				if (o1.getWord() == o2.getWord()) {
+					return 0;
+				} else if (o1.getWord() == null) {
+					return -1;
+				} else if (o2.getWord() == null) {
+					return 1;
+				} else {
+					return o1.getWord().compareToIgnoreCase(o2.getWord());
+				}
 			}
 
 		});
