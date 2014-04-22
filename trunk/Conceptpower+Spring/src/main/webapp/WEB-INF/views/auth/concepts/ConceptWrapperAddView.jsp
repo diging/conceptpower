@@ -150,7 +150,7 @@
 															.split(',');
 													var len = wrapperconcepts.length;
 
-													if (len > 0)
+													if (len > 1)
 														$('#createwrapper')
 																.prop(
 																		'disabled',
