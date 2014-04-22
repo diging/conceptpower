@@ -16,26 +16,25 @@
 
 <h2>Edit user: ${fullname}</h2>
 
-<form
+<form:form commandName="user"
 	action="${pageContext.servletContext.contextPath}/auth/user/edituser/store"
 	method='post' id="edituserform">
 
 	<table>
 		<tr>
 			<td>Username :</td>
-			<td>${username}</td>
+			
+			<td><form:hidden path="username"/>${user.username}</td>
 			<td></td>
 		</tr>
 		<tr>
 			<td>Name :</td>
-			<td><input type="text" name="fullname" id="fullname"
-				value="${fullname}"></td>
+			<td><form:input type="text" id="name" path="name" /></td>
 			<td><div id="fnerror" style="color: red;"></div></td>
 		</tr>
 		<tr>
 			<td>Is Administrator:</td>
-			<td><input type="checkbox" name="isadmin" id="isadmin"
-				<c:if test="${isadmin}">checked="checked"</c:if>>Yes</td>
+			<td><form:checkbox  path="isAdmin" id="isadmin" /> Yes</td>
 			<td></td>
 		</tr>
 		<tr>
@@ -47,4 +46,4 @@
 		</tr>
 	</table>
 
-</form>
+</form:form>

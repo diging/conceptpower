@@ -127,7 +127,7 @@
 			var html = '<table border="1" width="400" id="addedSynonymsTable"><thead></thead>';
 
 			html += '<tr><td align="justify"><font size="2">'
-					+ '<a onclick="synonymRemove(\'' + 0 + '\')">Remove</a>'
+					+ '<a onclick="synonymRemove(\'0\')">Remove</a>'
 					+ '</font></td>';
 			html += '<td align="justify"><font size="2">' + term
 					+ '</font></td>';
@@ -136,6 +136,7 @@
 			html += '<td align="justify" hidden="true">' + id + '</td></tr>';
 
 			html += '</table>';
+			html += '<input type="hidden" name="syns" />';
 			$("#addedSynonyms").html(html);
 
 		}
