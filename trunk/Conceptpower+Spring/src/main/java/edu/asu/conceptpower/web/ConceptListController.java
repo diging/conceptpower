@@ -27,8 +27,6 @@ public class ConceptListController {
 	@Autowired
 	private ConceptManager conceptManager;
 
-	private List<ConceptList> conceptLists;
-
 	@Autowired
 	private TypeDatabaseClient typeDatabaseClient;
 
@@ -49,7 +47,7 @@ public class ConceptListController {
 	@RequestMapping(value = "auth/conceptlist")
 	public String prepareShowConceptList(ModelMap model) {
 
-		conceptLists = conceptManager.getAllConceptLists();
+		List<ConceptList> conceptLists = conceptManager.getAllConceptLists();
 		model.addAttribute("result", conceptLists);
 
 		return "/auth/conceptlist";
