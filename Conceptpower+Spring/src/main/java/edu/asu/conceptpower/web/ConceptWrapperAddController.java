@@ -12,12 +12,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
+import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -85,18 +88,24 @@ public class ConceptWrapperAddController {
 	public String addConcept(HttpServletRequest req, Principal principal) {
 
 		try {
-			ConceptEntry conceptEntry = new ConceptEntry();
-
-			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-			conceptEntry.setWordnetId(req.getParameter("wrapperids"));
-			conceptEntry.setConceptList(req.getParameter("lists"));
-			conceptEntry.setDescription(req.getParameter("description"));
-			conceptEntry.setEqualTo(req.getParameter("equals"));
-			conceptEntry.setSimilarTo(req.getParameter("similar"));
-			conceptEntry.setTypeId(req.getParameter("types"));
-			conceptEntry.setCreatorId(principal.getName());
-			conceptManager.addConceptListEntry(conceptEntry);
-
+			String[] wrappers = req.getParameter("wrapperids").split(
+					Constants.CONCEPT_SEPARATOR);
+			if (wrappers.length > 0) {
+				ConceptEntry conceptEntry = new ConceptEntry();
+				conceptEntry.setWord(conceptManager
+						.getConceptEntry(wrappers[0]).getWord());
+				conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0])
+						.getPos());
+				conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
+				conceptEntry.setWordnetId(req.getParameter("wrapperids"));
+				conceptEntry.setConceptList(req.getParameter("lists"));
+				conceptEntry.setDescription(req.getParameter("description"));
+				conceptEntry.setEqualTo(req.getParameter("equals"));
+				conceptEntry.setSimilarTo(req.getParameter("similar"));
+				conceptEntry.setTypeId(req.getParameter("types"));
+				conceptEntry.setCreatorId(principal.getName());
+				conceptManager.addConceptListEntry(conceptEntry);
+			}
 		} catch (DictionaryDoesNotExistException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -151,6 +160,21 @@ public class ConceptWrapperAddController {
 		model.addAttribute("lists", lists);
 
 		return "/auth/conceptlist/addconceptwrapper";
+	}
+
+	/**
+	 * This method provides array of concepts for a given string
+	 * 
+	 * @param synonymname
+	 *            A synonym string for which we need to find existing concepts
+	 * @return Returns array of concepts found for synonym name
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
+	public @ResponseBody
+	ConceptEntry[] getSynonyms(@RequestParam("synonymname") String synonymname) {
+		ConceptEntry[] entries = conceptManager
+				.getConceptListEntriesForWord(synonymname.trim());
+		return entries;
 	}
 
 }
