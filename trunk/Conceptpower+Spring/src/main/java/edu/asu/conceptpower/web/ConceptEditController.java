@@ -167,6 +167,14 @@ public class ConceptEditController {
 		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
 	}
 
+	/**
+	 * This method provides the existing concept words for a given synonym
+	 * 
+	 * @param synonymname
+	 *            Synonym concept name for which the existing concepts has to be
+	 *            fetched
+	 * @return The list of existing concepts
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
 	public @ResponseBody
 	ConceptEntry[] searchConcept(@RequestParam("synonymname") String synonymname) {
@@ -175,6 +183,15 @@ public class ConceptEditController {
 		return entries;
 	}
 
+	/**
+	 * This method provides the list of existing synonyms for a concept
+	 * 
+	 * @param conceptid
+	 *            Holds the ID of a concept
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return List of existing synonyms
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
 	public @ResponseBody
 	ConceptEntry[] getSynonyms(@RequestParam("conceptid") String conceptid,
