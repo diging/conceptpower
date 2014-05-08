@@ -38,13 +38,14 @@ public class UserEditController {
 	 */
 	@RequestMapping(value = "auth/user/edituser/{id:.+}")
 	public String prepareEditUser(ModelMap model, @PathVariable String id) {
-		User user = userManager.findUser(id);	
-	
-		
+		User user = userManager.findUser(id);
+
 		if (user == null)
 			return "auth/user/notfound";
-		
-		UserBacking userBacking = new UserBacking(user.getUser(), user.getName());
+
+		UserBacking userBacking = new UserBacking(user.getUser(),
+				user.getName());
+		userBacking.setIsAdmin(user.getIsAdmin());
 
 		model.addAttribute("user", userBacking);
 		return "auth/user/edituser";
@@ -59,15 +60,15 @@ public class UserEditController {
 	 */
 	@RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
 	public String storeUserChanges(UserBacking user, Principal principal) {
-		
+
 		User uUser = userManager.findUser(user.getUsername());
 
 		if (uUser == null)
 			return "auth/user/notfound";
-		
+
 		uUser.setIsAdmin(user.getIsAdmin());
 		uUser.setName(user.getName());
-		
+
 		userManager.storeModifiedUser(uUser);
 		return "redirect:/auth/user/list";
 	}
@@ -88,9 +89,11 @@ public class UserEditController {
 		if (user == null)
 			return "auth/user/notfound";
 
+		UserBacking userBaking = new UserBacking();
+
 		model.addAttribute("username", user.getUser());
-		model.addAttribute("user", user);
-		
+		model.addAttribute("userbacking", userBaking);
+
 		return "auth/user/editpassword";
 	}
 
@@ -102,12 +105,19 @@ public class UserEditController {
 	 * @return Returns a string value to redirect user to user list page
 	 */
 	@RequestMapping(value = "auth/user/editpassword/store", method = RequestMethod.POST)
-	public String storePasswordChanges(HttpServletRequest req, Principal principal, User user) {
+	public String storePasswordChanges(HttpServletRequest req,
+			Principal principal, UserBacking user) {
 
-		if (user == null)
+		User uUser = userManager.findUser(req.getParameter("synonymsids"));
+
+		if (uUser == null)
 			return "auth/user/notfound";
 
-		userManager.storeModifiedPassword(user);
+		uUser.setIsAdmin(user.getIsAdmin());
+		uUser.setName(user.getName());
+		uUser.setPw(user.getPassword());
+
+		userManager.storeModifiedPassword(uUser);
 		return "redirect:/auth/user/list";
 	}
 
