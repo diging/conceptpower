@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * This class provides methods for login ,logout and login error operation
  * 
- * @author Chetan
+ * @author Chetan and Julia Damerow
  * 
  */
 @Controller

@@ -18,7 +18,7 @@ import edu.asu.conceptpower.web.backing.UserBacking;
 /**
  * This class provides required methods for editing a user
  * 
- * @author Chetan
+ * @author Chetan and Julia Damerow
  * 
  */
 @Controller

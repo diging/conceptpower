@@ -12,7 +12,7 @@ import edu.asu.conceptpower.users.impl.UsersManager;
 /**
  * This class provides methods for creating a user
  * 
- * @author Chetan
+ * @author Chetan and Julia Damerow
  * 
  */
 @Controller
