@@ -14,7 +14,6 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
-import edu.asu.conceptpower.wrapper.impl.ConceptEntryWrapperCreator;
 
 /**
  * This class provides concept search methods
