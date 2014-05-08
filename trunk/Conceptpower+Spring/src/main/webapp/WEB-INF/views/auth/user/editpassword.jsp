@@ -29,29 +29,27 @@
 
 <h2>Edit user: ${fullname}</h2>
 
-<form:form
-	command="userBacking"
+<form:form commandName="userbacking"
 	action="${pageContext.servletContext.contextPath}/auth/user/editpassword/store"
 	method='post' id="editpasswordform">
 
 	<table style="vertical-align: top">
 		<tr>
 			<td>Username :</td>
-			<form:hidden path="username"/>
+			<form:hidden path="username" />
 			<td>${username}</td>
 			<td></td>
 		</tr>
 		<tr>
 			<td>New password:</td>
 			<td><form:input type="password" name="password" id="password"
-				path="password" /></td>
+					path="password" /></td>
 			<td></td>
 		</tr>
 		<tr>
 			<td>Re-type new password:</td>
-			<td>
-			<form:input type="password" name="password" id="password"
-				path="retypedPassword" /></td>
+			<td><form:input type="password" name="password" id="repassword"
+					path="retypedPassword" /></td>
 			<td><div id="pwerror" style="color: red;"></div></td>
 		</tr>
 		<tr>

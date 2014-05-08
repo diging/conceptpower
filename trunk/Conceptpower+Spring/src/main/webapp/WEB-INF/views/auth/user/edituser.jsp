@@ -14,7 +14,7 @@
 	});
 </script>
 
-<h2>Edit user: ${fullname}</h2>
+<h2>Edit user:</h2>
 
 <form:form commandName="user"
 	action="${pageContext.servletContext.contextPath}/auth/user/edituser/store"
@@ -23,18 +23,19 @@
 	<table>
 		<tr>
 			<td>Username :</td>
-			
-			<td><form:hidden path="username"/>${user.username}</td>
+
+			<td><form:hidden path="username" />${user.username}</td>
 			<td></td>
 		</tr>
 		<tr>
 			<td>Name :</td>
-			<td><form:input type="text" id="name" path="name" /></td>
+			<td><form:input type="text" id="fullname" path="name" /></td>
 			<td><div id="fnerror" style="color: red;"></div></td>
 		</tr>
 		<tr>
 			<td>Is Administrator:</td>
-			<td><form:checkbox  path="isAdmin" id="isadmin" /> Yes</td>
+			<td><form:checkbox path="isAdmin" id="isadmin"
+					checked="${user.isAdmin == true ? 'checked' : ''}" /> Yes</td>
 			<td></td>
 		</tr>
 		<tr>
