@@ -138,11 +138,14 @@
 							"sPaginationType" : "full_numbers",
 							"bAutoWidth" : false
 						});
-
+						var conceptid = $('#conceptid').val();
 						$
 								.ajax({
 									type : "GET",
 									url : "${pageContext.servletContext.contextPath}/getConceptEditSynonyms",
+									data : {
+										conceptid : conceptid
+									},
 									success : function(response) {
 										var border = response.length > 0 ? 1
 												: 0;
@@ -233,6 +236,14 @@
 			<td>Similar</td>
 			<td><input type="text" name="similar" id="similar"
 				value="${similar}"></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="synonymsids" id="synonymsids"
+				hidden="true"></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="conceptid" id="conceptid"
+				hidden="true" value="${id}"></td>
 		</tr>
 
 	</table>
