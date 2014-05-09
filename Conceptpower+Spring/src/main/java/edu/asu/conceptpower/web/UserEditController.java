@@ -131,4 +131,36 @@ public class UserEditController {
 	public String cancelEdit() {
 		return "redirect:/auth/user/list";
 	}
+
+	@RequestMapping(value = "auth/user/deleteuser/{id:.+}")
+	public String prepareDeleteUser(ModelMap model, @PathVariable String id) {
+		User user = userManager.findUser(id);
+
+		if (user == null)
+			return "auth/user/notfound";
+
+		UserBacking userBacking = new UserBacking(user.getUser(),
+				user.getName());
+		userBacking.setIsAdmin(user.getIsAdmin());
+
+		model.addAttribute("user", userBacking);
+		return "auth/user/deleteuser";
+	}
+
+	@RequestMapping(value = "auth/user/confirmdeleteuser/", method = RequestMethod.POST)
+	public String confirmDeleteUser(UserBacking user, Principal principal) {
+
+		User uUser = userManager.findUser(user.getUsername());
+
+		if (uUser == null)
+			return "auth/user/notfound";
+
+		userManager.deleteUser(uUser.getUser());
+		return "redirect:/auth/user/list";
+	}
+
+	@RequestMapping(value = "auth/user/canceldelete", method = RequestMethod.GET)
+	public String cancelDelete() {
+		return "redirect:/auth/user/list";
+	}
 }
