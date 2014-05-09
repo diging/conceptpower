@@ -158,6 +158,7 @@
 			value="/WEB-INF/views/auth/user/list-header.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/auth/user/list.jsp" />
 		<put-attribute name="currentPage" value="users" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 	</definition>
 	<definition name="auth/user/notfound" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
@@ -172,6 +173,15 @@
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/user/edituser.jsp" />
 		<put-attribute name="currentPage" value="users" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+	</definition>
+	<definition name="auth/user/deleteuser" extends="base.definition">
+		<put-attribute name="title" value="User Management" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/auth/user/deleteuser.jsp" />
+		<put-attribute name="currentPage" value="users" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 	</definition>
 	<definition name="auth/user/editpassword" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
@@ -179,12 +189,14 @@
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/user/editpassword.jsp" />
 		<put-attribute name="currentPage" value="users" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 	</definition>
 	<definition name="auth/user/add" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/auth/user/add.jsp" />
 		<put-attribute name="currentPage" value="users" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 	</definition>
 
 
