@@ -237,26 +237,46 @@
 											o.aData["id"]) != -1) {
 										check = 'checked=\'checked\'';
 									}
-									return '<input type="checkbox" id="isChecked" '
+									var word = encodeURI(o.aData["word"]);
+									return '<input type="checkbox" id="'
+											+ o.aData["id"]
+											+ '" '
 											+ check
 											+ ' name="isChecked" onclick="serviceConceptAdd(\''
-											+ o.aData["id"] + '\')"></input>';
+											+ o.aData["id"] + '\',\''
+											+ word.replace(/'/g, '%39')
+											+ '\')"></input>';
 								},
 							} ]
 						});
 	};
 
-	var serviceConceptAdd = function(serviceConceptID) {
-		var equals = $('#equals').val();
-		if (equals == "")
-			equals = serviceConceptID;
-		else if (equals.indexOf(serviceConceptID) != -1) {
-			equals = equals.replace(serviceConceptID + ',', '');
-			equals = equals.replace(serviceConceptID, '');
-		} else
-			equals = equals + "," + serviceConceptID;
+	var serviceConceptAdd = function(serviceConceptID, name) {
 
-		$('#equals').val(equals);
+		var check = false;
+		if (document.getElementById(serviceConceptID).checked) {
+			$('#equals').val(serviceConceptID);
+			document.getElementById("name").value = decodeURI(name);
+			check = true;
+		} else if (!(document.getElementById(serviceConceptID).checked)) {
+			$('#equals').val('');
+			document.getElementById("name").value = '';
+			check = false;
+		}
+
+		var checkboxes = new Array();
+		checkboxes = document.getElementsByTagName('input');
+
+		for (var i = 0; i < checkboxes.length; i++) {
+			if (checkboxes[i].type == 'checkbox') {
+				checkboxes[i].checked = false;
+			}
+		}
+
+		if (check)
+			document.getElementById(serviceConceptID).checked = true;
+		else
+			document.getElementById(serviceConceptID).checked = false;
 	};
 
 	var form = $('#createconceptform');
@@ -312,9 +332,7 @@
 		<td><h1>Add new concept</h1></td>
 	</tr>
 	<tr>
-		<td><div>
-				Add a new concept here.
-			</div></td>
+		<td><div>Add a new concept here.</div></td>
 	</tr>
 </table>
 
@@ -333,9 +351,9 @@
 					<td><input type="text" name="serviceterm" id="serviceterm"></td>
 					<td><input type="submit" id="serviceSearch" value="search"
 						class="button" /> <img alt="" id="loadingDiv" width="16px"
-					height="16px"
-					src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
-					class="none"></td>
+						height="16px"
+						src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
+						class="none"></td>
 				</tr>
 			</table>
 		</td>
@@ -346,8 +364,7 @@
 <div style="padding: 15px;" id="showServiceResult" hidden="true">
 	<a>Show Results</a>
 </div>
-<div id="serviceResult"
-	style="max-width: 1000px; max-height: 500px; padding: 15px;"
+<div id="serviceResult" style="max-width: 1000px; padding: 15px;"
 	hidden="true">
 
 	<table cellpadding="0" cellspacing="0" class="display dataTable"
