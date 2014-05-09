@@ -6,6 +6,7 @@
 	class="display dataTable" width="100%">
 	<thead>
 		<tr>
+			<th>Delete User</th>
 			<th>Edit User</th>
 			<th>Edit Password</th>
 			<th>Username</th>
@@ -16,6 +17,9 @@
 	<tbody>
 		<c:forEach var="user" items="${users}">
 			<tr>
+				<td><a
+					href="${pageContext.servletContext.contextPath}/auth/user/deleteuser/${user.user}"><img
+						src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png" /></a></td>
 				<td><a
 					href="${pageContext.servletContext.contextPath}/auth/user/edituser/${user.user}"><img
 						src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png" /></a></td>
