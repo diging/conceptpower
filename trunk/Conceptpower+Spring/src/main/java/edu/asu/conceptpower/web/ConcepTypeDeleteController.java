@@ -62,7 +62,8 @@ public class ConcepTypeDeleteController {
 			List<ConceptEntry> conceptEntries = conceptManager
 					.getConceptListEntries(conceptList.getConceptListName());
 			for (ConceptEntry conceptEntry : conceptEntries) {
-				if ((conceptEntry.getTypeId()).equals(typeid)) {
+				if ((conceptEntry.getTypeId() != null)
+						&& (conceptEntry.getTypeId()).equals(typeid)) {
 					enableDelete = false;
 				}
 			}
