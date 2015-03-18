@@ -57,6 +57,7 @@
 				href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype">Add
 					New Type</a></li>
 		</ul>
+		<sec:authorize access="hasRole('ROLE_CP_ADMIN')">
 		<a href="${pageContext.servletContext.contextPath}/auth/user/list">Manage
 			Users</a>
 		<ul>
@@ -64,6 +65,7 @@
 				href="${pageContext.servletContext.contextPath}/auth/user/add">Add
 					New User</a></li>
 		</ul>
+		</sec:authorize>
 	</form>
 </sec:authorize>
 

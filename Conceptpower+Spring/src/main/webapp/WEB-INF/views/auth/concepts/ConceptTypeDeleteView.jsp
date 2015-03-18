@@ -35,10 +35,8 @@
 </c:if>
 
 <c:if test="${not enabledelete}">
-	<h4>You can not delete this type since some of the existing
-		concepts are using this type !!</h4>
-	<h4>Delete all the existing Concepts which are using this type to
-		enable delete !!</h4>
+	<h4>You cannot delete this type since some concepts are using this type.</h4>
+	<h4>Delete all existing concepts that use this type to enable delete.</h4>
 </c:if>
 <br />
 

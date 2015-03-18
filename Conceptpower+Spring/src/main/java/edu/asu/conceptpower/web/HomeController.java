@@ -21,5 +21,10 @@ public class HomeController {
 
 		return "welcome";
 	}
+	
+	@RequestMapping(value = "/forbidden", method = RequestMethod.GET)
+	public String forbidden(Model model) {
+		return "forbidden";
+	}
 
 }
