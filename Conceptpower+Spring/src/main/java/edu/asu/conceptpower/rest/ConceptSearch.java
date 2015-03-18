@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,8 +52,7 @@ public class ConceptSearch {
 	 * @return
 	 */
 	@RequestMapping(value = "rest/ConceptSearch", method = RequestMethod.GET, produces = "application/xml")
-	public @ResponseBody
-	String searchConcept(HttpServletRequest req) {
+	public @ResponseBody ResponseEntity<String> searchConcept(HttpServletRequest req) {
 		Map<String, String[]> queryParams = req.getParameterMap();
 		Map<String, String> searchFields = new HashMap<String, String>();
 
@@ -88,6 +89,6 @@ public class ConceptSearch {
 			xmlEntries = msg.appendEntries(entryMap);
 		}
 
-		return msg.getXML(xmlEntries);
+		return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
 	}
 }

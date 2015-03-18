@@ -297,6 +297,8 @@
 <p>Add a wrapper for a concept in Wordnet. Do that if you for
 	example want to attach an "equals to" URI a concept that already exists
 	in Wordnet.</p>
+	
+<c:if test="${not empty errormsg}"><p style="text-color: red;">${errormsg}</p></c:if>
 
 <h2>1. Search for Wordnet concept</h2>
 
@@ -305,7 +307,7 @@
 	method='post'>
 	<table class="greyContent">
 		<tr>
-			<td>Create wrappper for wordnet concept:</td>
+			<td>Create wrapper for wordnet concept:</td>
 			<td><input type="text" name="name" id="name"></td>
 		</tr>
 		<tr>

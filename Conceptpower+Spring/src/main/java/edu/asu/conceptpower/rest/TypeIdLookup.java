@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,11 +45,14 @@ public class TypeIdLookup {
 	 * @return
 	 */
 	@RequestMapping(value = "rest/Type", method = RequestMethod.GET, produces = "application/xml")
-	public @ResponseBody
-	String getTypeById(HttpServletRequest req) {
+	public @ResponseBody ResponseEntity<String> getTypeById(HttpServletRequest req) {
 
-		// get type id if URI is given
 		String id = req.getParameter("id");
+		if (id == null) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		// get type id if URI is given
+		
 		String[] pathParts = id.split("/");
 		int lastIndex = pathParts.length - 1;
 		String typeId = null;
@@ -55,7 +60,7 @@ public class TypeIdLookup {
 			typeId = pathParts[lastIndex];
 
 		if (typeId == null) {
-			return "no type id";
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 
 		if (typeId.startsWith(XMLConstants.TYPE_PREFIX)) {
@@ -73,7 +78,11 @@ public class TypeIdLookup {
 				superType = typeManager.getType(type.getSupertypeId().trim());
 			xmlEntry = msg.appendEntry(type, superType);
 		}
+		else {
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
+		
 
-		return msg.getXML(xmlEntry);
+		return new ResponseEntity<String>(msg.getXML(xmlEntry), HttpStatus.OK);
 	}
 }

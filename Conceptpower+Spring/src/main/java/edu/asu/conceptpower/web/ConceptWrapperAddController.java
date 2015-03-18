@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +30,7 @@ import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 /**
  * This class provides methods required for creating concept wrappers
  * 
- * @author Chetan
+ * @author Chetan Ambi
  * 
  */
 @Controller
@@ -55,6 +56,9 @@ public class ConceptWrapperAddController {
 	@RequestMapping(value = "auth/conceptlist/addconceptwrapper")
 	public String prepareConceptWrapperAdd(ModelMap model) {
 
+		if (model.get("errormsg") != null)
+			model.addAttribute("errormsg", "You have to select a concept list.");
+		
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
 		for (ConceptType conceptType : allTypes) {
@@ -83,37 +87,34 @@ public class ConceptWrapperAddController {
 	 *            Holds logged in user information
 	 * @return String value which redirects user to a particular concept list
 	 *         page
+	 * @throws DictionaryModifyException 
+	 * @throws DictionaryDoesNotExistException 
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconceptwrapper/add", method = RequestMethod.POST)
-	public String addConcept(HttpServletRequest req, Principal principal) {
+	public String addConcept(HttpServletRequest req, Principal principal, Model model) throws DictionaryDoesNotExistException, DictionaryModifyException {
 
-		try {
-			String[] wrappers = req.getParameter("wrapperids").split(
-					Constants.CONCEPT_SEPARATOR);
-			if (wrappers.length > 0) {
-				ConceptEntry conceptEntry = new ConceptEntry();
-				conceptEntry.setWord(conceptManager
-						.getConceptEntry(wrappers[0]).getWord());
-				conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0])
-						.getPos());
-				conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-				conceptEntry.setWordnetId(req.getParameter("wrapperids"));
-				conceptEntry.setConceptList(req.getParameter("lists"));
-				conceptEntry.setDescription(req.getParameter("description"));
-				conceptEntry.setEqualTo(req.getParameter("equals"));
-				conceptEntry.setSimilarTo(req.getParameter("similar"));
-				conceptEntry.setTypeId(req.getParameter("types"));
-				conceptEntry.setCreatorId(principal.getName());
-				conceptManager.addConceptListEntry(conceptEntry);
-			}
-		} catch (DictionaryDoesNotExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "failed";
-		} catch (DictionaryModifyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "failed";
+		if (req.getParameter("lists") == null || req.getParameter("lists").trim().isEmpty()) {
+			model.addAttribute("errormsg", "You have to select a concept list.");
+			return "redirect:/auth/conceptlist/addconceptwrapper";
+		}
+		String[] wrappers = req.getParameter("wrapperids").split(
+				Constants.CONCEPT_SEPARATOR);
+		
+		if (wrappers.length > 0) {
+			ConceptEntry conceptEntry = new ConceptEntry();
+			conceptEntry.setWord(conceptManager
+					.getConceptEntry(wrappers[0]).getWord());
+			conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0])
+					.getPos());
+			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
+			conceptEntry.setWordnetId(req.getParameter("wrapperids"));
+			conceptEntry.setConceptList(req.getParameter("lists"));
+			conceptEntry.setDescription(req.getParameter("description"));
+			conceptEntry.setEqualTo(req.getParameter("equals"));
+			conceptEntry.setSimilarTo(req.getParameter("similar"));
+			conceptEntry.setTypeId(req.getParameter("types"));
+			conceptEntry.setCreatorId(principal.getName()); 
+			conceptManager.addConceptListEntry(conceptEntry);	
 		}
 
 		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";

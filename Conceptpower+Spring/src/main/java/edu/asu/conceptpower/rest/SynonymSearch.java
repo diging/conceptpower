@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,11 +52,14 @@ public class SynonymSearch {
 	 * @return
 	 */
 	@RequestMapping(value = "rest/SynonymSearch", method = RequestMethod.GET, produces = "application/xml")
-	public @ResponseBody
-	String getSynonymsForId(HttpServletRequest req) {
+	public @ResponseBody ResponseEntity<String> getSynonymsForId(HttpServletRequest req) {
 
 		// construct the URL to the Wordnet dictionary directory
 		String id = req.getParameter("id");
+		if (id == null || id.trim().isEmpty()) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		
 		String[] pathParts = id.split("/");
 		int lastIndex = pathParts.length - 1;
 		String wordnetId = null;
@@ -62,7 +67,7 @@ public class SynonymSearch {
 			wordnetId = pathParts[lastIndex];
 
 		if (wordnetId == null) {
-			return "no word net id";
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 
 		
@@ -81,6 +86,6 @@ public class SynonymSearch {
 			xmlEntries = msg.appendEntries(entryMap);
 		}
 
-		return msg.getXML(xmlEntries);
+		return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
 	}
 }
