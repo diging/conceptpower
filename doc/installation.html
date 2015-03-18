@@ -62,10 +62,18 @@
       	<li>A servlet container such as Apache Tomcat (<a href="http://tomcat.apache.org/" target="_blank">http://tomcat.apache.org/</a>). Conceptpower was developed and tested on Apache Tomcat 6.0.</li>
       	<li>WordNet has to be installed (<a href="http://wordnet.princeton.edu/" target="_blank">http://wordnet.princeton.edu/</a>). 
       	<br><i>Note:</i> if you're migrating an existing Conceptpower installation, make sure to use the same version of Wordnet on both servers.<br>
-      	<i>OS X Mountain Lion or Mavericks:</i> If you try to install WordNet on Mac OSX 10.8 or 10.9 you might get the following error: <br><code>
-      	In file included from tkAppInit.c:16: <br>
-      	/usr/include/tk.h:78:23: error: X11/Xlib.h: No such file or directory". </code><br>
-      	You can find a description of how to solve that problem <a href="http://stackoverflow.com/questions/15119477/wordnet-3-0-wont-install-on-os-x-mountain-lion-10-8">here</a>.
+      	<i>OS X Mountain Lion or later:</i> 
+            <ul>
+                <li>Make sure that <a href="http://xquartz.macosforge.org/landing/">XQuartz</a> is installed.</li>
+                <li>If you try to install WordNet on Mac OSX 10.8 or 10.9 you might get the following error: <br>
+        When you run <code>./configure</code> it aborts with <code>checking for Tcl configuration... configure: WARNING: Can't find Tcl configuration definitions</code> and if you try to run <code>make</code> afterwards, you get the error <code>make: *** No targets specified and no makefile found.  Stop.</code> If this happens, make sure that you have the XCode Command Line Tools installed. If you already have XCode installed, run <code>xcode-select --install</code>. A description of the problem is described <a href="https://trac.macports.org/wiki/ProblemHotlist#tclConfig">here</a>.</li>
+                <li>Another error you might encounter is:<br>
+                <code>
+                In file included from tkAppInit.c:16: <br>
+                /usr/include/tk.h:78:23: error: X11/Xlib.h: No such file or directory". </code><br>
+                You can find a description of how to solve that problem <a href="http://stackoverflow.com/questions/15119477/wordnet-3-0-wont-install-on-os-x-mountain-lion-10-8">here</a>.</li>
+            </ul>
+
       	</li>
       	</ul>
 
