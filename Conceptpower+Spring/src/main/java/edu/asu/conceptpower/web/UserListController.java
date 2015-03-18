@@ -9,7 +9,7 @@ import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 
 /**
- * This class provides methods required for user list operation
+ * This class provides methods required for user list operations.
  * 
  * @author Chetan Ambi
  * 
