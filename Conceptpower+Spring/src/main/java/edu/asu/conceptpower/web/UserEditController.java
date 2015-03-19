@@ -108,13 +108,11 @@ public class UserEditController {
 	public String storePasswordChanges(HttpServletRequest req,
 			Principal principal, UserBacking user) {
 
-		User uUser = userManager.findUser(req.getParameter("synonymsids"));
+		User uUser = userManager.findUser(user.getUsername());
 
 		if (uUser == null)
 			return "auth/user/notfound";
 
-		uUser.setIsAdmin(user.getIsAdmin());
-		uUser.setName(user.getName());
 		uUser.setPw(user.getPassword());
 
 		userManager.storeModifiedPassword(uUser);

@@ -36,7 +36,7 @@
 	<table style="vertical-align: top">
 		<tr>
 			<td>Username :</td>
-			<form:hidden path="username" />
+			<form:hidden path="username" value="${username}" />
 			<td>${username}</td>
 			<td></td>
 		</tr>

@@ -76,12 +76,7 @@ public class UserDatabaseClient {
 	}
 	
 	public void update(User user) {
-		User toBeUpdated = findUser(user.getUser());
-		toBeUpdated.setIsAdmin(user.getIsAdmin());
-		toBeUpdated.setName(user.getName());
-		//toBeUpdated.setPw(user.getPw());
-		
-		client.store(toBeUpdated);
+		client.store(user);
 		client.commit();			
 	}
 	

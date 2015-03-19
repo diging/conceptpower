@@ -33,7 +33,9 @@
 
 
 <sec:authorize access="isAuthenticated()">
-	<p>May the conceptpower be with you!</p>
+<sec:authentication var="user" property="principal.name" />
+	<p>Hi ${user}!</p>
+	<p>May the conceptpower be with you.</p>
 
 	<h2>You can</h2>
 	<form>
