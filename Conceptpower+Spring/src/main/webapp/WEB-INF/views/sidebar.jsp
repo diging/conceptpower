@@ -29,6 +29,10 @@
 			</tr>
 		</table>
 	</form>
+	
+	<p>
+	<a href="${pageContext.servletContext.contextPath}/forgot">Forgot password?</a>
+	</p>
 </sec:authorize>
 
 

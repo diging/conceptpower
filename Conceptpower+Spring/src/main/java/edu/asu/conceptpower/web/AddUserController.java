@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
-import edu.asu.conceptpower.users.impl.UsersManager;
 
 /**
  * This class provides methods for creating a user
@@ -19,7 +19,7 @@ import edu.asu.conceptpower.users.impl.UsersManager;
 public class AddUserController {
 
 	@Autowired
-	UsersManager usersManager;
+	IUserManager usersManager;
 
 	/**
 	 * This method creates a new user for given user information

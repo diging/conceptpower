@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
-import edu.asu.conceptpower.users.impl.UsersManager;
+import edu.asu.conceptpower.users.IUserManager;
 
 @Controller
 public class ConceptListDeleteController {
 
 	@Autowired
-	private UsersManager usersManager;
+	private IUserManager usersManager;
 
 	@Autowired
 	private ConceptManager conceptManager;

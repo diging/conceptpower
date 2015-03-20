@@ -1,9 +1,11 @@
 package edu.asu.conceptpower.users.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.users.IUserManager;
+import edu.asu.conceptpower.users.Token;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.users.UserDatabaseClient;
 
@@ -151,4 +154,20 @@ public class UsersManager implements IUserManager {
 		client.update(user);
 	}
 
+	@Override
+	public Token createToken() {
+		Token token = new Token(UUID.randomUUID().toString(), new Date());
+		client.storeRecoveryToken(token);
+		return token;
+	}
+	
+	@Override
+	public Token findToken(String token) {
+		return client.getToken(token);
+	}
+	
+	@Override
+	public Token deleteToken(String token) {
+		return client.deleteToken(token);
+	}
 }

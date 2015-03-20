@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
-import edu.asu.conceptpower.users.impl.UsersManager;
+import edu.asu.conceptpower.users.IUserManager;
 
 /**
  * This class provides all the methods for editing a type
@@ -31,7 +31,7 @@ public class ConceptTypeEditController {
 	private ConceptTypesManager typeManager;
 
 	@Autowired
-	private UsersManager usersManager;
+	private IUserManager usersManager;
 
 	/**
 	 * This method provides a type information to edit type page

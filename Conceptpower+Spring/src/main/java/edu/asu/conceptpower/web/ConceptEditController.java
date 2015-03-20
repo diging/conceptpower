@@ -24,7 +24,7 @@ import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
-import edu.asu.conceptpower.users.impl.UsersManager;
+import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
 /**
@@ -40,7 +40,7 @@ public class ConceptEditController {
 	ConceptManager conceptManager;
 
 	@Autowired
-	private UsersManager usersManager;
+	private IUserManager usersManager;
 
 	@Autowired
 	private ConceptTypesManager conceptTypesManager;

@@ -30,6 +30,14 @@
 		<put-attribute name="title" value="Access Denied" />
 		<put-attribute name="content" value="/WEB-INF/views/forbidden.jsp" />
 	</definition>
+	<definition name="forgot" extends="base.definition">
+		<put-attribute name="title" value="Forgotten Password" />
+		<put-attribute name="content" value="/WEB-INF/views/forgot.jsp" />
+	</definition>
+	<definition name="emailSent" extends="base.definition">
+		<put-attribute name="title" value="Password Recovery Email Sent" />
+		<put-attribute name="content" value="/WEB-INF/views/emailSent.jsp" />
+	</definition>
 
 	<definition name="conceptsearch" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
