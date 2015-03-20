@@ -36,9 +36,9 @@
      
     <!-- You can have some pre-configured messagess also which are ready to send -->
     <bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
-        <property name="from" value="no-reply@chps.asu.edu"></property>
+        <property name="from" value="diging.momo@gmail.com"></property>
     </bean>
 
-    <util:properties id="uiMessages"
+    <util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />
 </beans>

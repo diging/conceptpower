@@ -34,6 +34,7 @@ public class AddUserController {
 		User user = new User(req.getParameter("username"),
 				req.getParameter("password"));
 		user.setName(req.getParameter("fullname"));
+		user.setEmail(req.getParameter("email"));
 		usersManager.addUser(user);
 		return "redirect:/auth/user/list";
 	}

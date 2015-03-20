@@ -13,6 +13,7 @@ public class User implements Serializable {
 	private String pw;
 	private String name;
 	private boolean isAdmin;
+	private String email;
 	
 	public User() {}
 	
@@ -58,6 +59,14 @@ public class User implements Serializable {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	

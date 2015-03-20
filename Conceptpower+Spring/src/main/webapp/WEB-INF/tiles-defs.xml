@@ -30,6 +30,8 @@
 		<put-attribute name="title" value="Access Denied" />
 		<put-attribute name="content" value="/WEB-INF/views/forbidden.jsp" />
 	</definition>
+	
+	<!--  reset password  -->
 	<definition name="forgot" extends="base.definition">
 		<put-attribute name="title" value="Forgotten Password" />
 		<put-attribute name="content" value="/WEB-INF/views/forgot.jsp" />
@@ -37,6 +39,22 @@
 	<definition name="emailSent" extends="base.definition">
 		<put-attribute name="title" value="Password Recovery Email Sent" />
 		<put-attribute name="content" value="/WEB-INF/views/emailSent.jsp" />
+	</definition>
+	<definition name="beginReset" extends="base.definition">
+	    <put-attribute name="title" value="Reset your Password"></put-attribute>
+	    <put-attribute name="content" value="/WEB-INF/views/startReset.jsp" />
+	</definition>
+	<definition name="resetError" extends="base.definition">
+	    <put-attribute name="title" value="Error"></put-attribute>
+	    <put-attribute name="content" value="/WEB-INF/views/resetError.jsp" />
+	</definition>
+	<definition name="reset" extends="base.definition">
+	    <put-attribute name="title" value="Enter new password"></put-attribute>
+	    <put-attribute name="content" value="/WEB-INF/views/resetPassword.jsp" />
+	</definition>
+	<definition name="resetComplete" extends="base.definition">
+	    <put-attribute name="title" value="Reset process complete"></put-attribute>
+	    <put-attribute name="content" value="/WEB-INF/views/resetComplete.jsp" />
 	</definition>
 
 	<definition name="conceptsearch" extends="base.definition">

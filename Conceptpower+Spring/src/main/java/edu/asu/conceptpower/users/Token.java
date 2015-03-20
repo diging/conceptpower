@@ -11,6 +11,7 @@ public class Token {
 
 	private String token;
 	private Date creationDate;
+	private User user;
 	
 	public Token(String token, Date creationDate) {
 		super();
@@ -33,6 +34,14 @@ public class Token {
 	}
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	

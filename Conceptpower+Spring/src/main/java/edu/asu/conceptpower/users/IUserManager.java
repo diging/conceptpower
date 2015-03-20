@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.users;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,6 +34,8 @@ public interface IUserManager {
 
 	public abstract Token findToken(String token);
 
-	public abstract Token createToken();
+	public abstract Token createToken(User user);
+
+	public abstract User findUserByEmail(String email);
 
 }

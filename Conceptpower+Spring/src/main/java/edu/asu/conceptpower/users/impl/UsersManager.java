@@ -83,6 +83,17 @@ public class UsersManager implements IUserManager {
 		User user = client.getUser(name, pw);
 		return user;
 	}
+	
+	@Override
+	public User findUserByEmail(String email) {
+		User user = new User();
+		user.setEmail(email);
+		
+		List<User> users = client.findUsers(user);
+		if (users.size() > 0)
+			return users.get(0);
+		return null;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -97,6 +108,7 @@ public class UsersManager implements IUserManager {
 			User user = new User();
 			user.setUser(u.getUser());
 			user.setName(u.getName());
+			user.setEmail(u.getEmail());
 			user.setIsAdmin(u.getIsAdmin());
 			userNames.add(user);
 		}
@@ -155,8 +167,9 @@ public class UsersManager implements IUserManager {
 	}
 
 	@Override
-	public Token createToken() {
+	public Token createToken(User user) {
 		Token token = new Token(UUID.randomUUID().toString(), new Date());
+		token.setUser(user);
 		client.storeRecoveryToken(token);
 		return token;
 	}

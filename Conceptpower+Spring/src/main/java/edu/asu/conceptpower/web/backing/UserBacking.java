@@ -5,8 +5,10 @@ public class UserBacking {
 	private String username;
 	private String name;
 	private String password;
+	private String email;
 	private String retypedPassword;
 	private boolean isAdmin;
+	private String token;
 
 	public UserBacking(String username, String name) {
 		super();
@@ -56,6 +58,22 @@ public class UserBacking {
 
 	public void setIsAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }

@@ -68,6 +68,7 @@ public class UserEditController {
 
 		uUser.setIsAdmin(user.getIsAdmin());
 		uUser.setName(user.getName());
+		uUser.setEmail(user.getEmail());
 
 		userManager.storeModifiedUser(uUser);
 		return "redirect:/auth/user/list";

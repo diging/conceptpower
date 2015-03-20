@@ -16,6 +16,10 @@
 			<td><input type="text" name="fullname" id="fullname"></td>
 		</tr>
 		<tr>
+			<td>Email:</td>
+			<td><input type="text" name="email" id="email" /></td>
+		</tr>
+		<tr>
 			<td>Password:</td>
 			<td><input type="password" name="password" id="password"></td>
 		</tr>

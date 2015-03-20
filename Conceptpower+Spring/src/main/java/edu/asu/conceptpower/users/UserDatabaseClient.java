@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.users;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -53,6 +54,11 @@ public class UserDatabaseClient {
 			return results.get(0);	
 		
 		return null;
+	}
+	
+	public List<User> findUsers(User exampleUser) {
+		ObjectSet<User> results = client.queryByExample(exampleUser);
+		return results;
 	}
 	
 	public User[] getAllUser() {
