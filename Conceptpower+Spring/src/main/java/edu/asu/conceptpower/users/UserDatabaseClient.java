@@ -1,5 +1,8 @@
 package edu.asu.conceptpower.users;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +56,11 @@ public class UserDatabaseClient {
 		return null;
 	}
 	
+	public List<User> findUsers(User exampleUser) {
+		ObjectSet<User> results = client.queryByExample(exampleUser);
+		return results;
+	}
+	
 	public User[] getAllUser() {
 		ObjectSet<User> results = client.query(User.class);
 		return results.toArray(new User[results.size()]);		
@@ -80,4 +88,25 @@ public class UserDatabaseClient {
 		client.commit();			
 	}
 	
+	public void storeRecoveryToken(Token token) {
+		client.store(token);
+		client.commit();
+	}
+	
+	public Token getToken(String token) {
+		ObjectSet<Token> tokens = client.queryByExample(new Token(token));
+		if (tokens.size() > 0)
+			return tokens.get(0);
+		return null;
+	}
+	
+	public Token deleteToken(String token) {
+		ObjectSet<Token> tokens = client.queryByExample(new Token(token));
+		if (tokens.size() > 0) {
+			Token foundToken = (tokens.get(0));
+			client.delete(foundToken);
+			return foundToken;
+		}
+		return null;
+	}
 }

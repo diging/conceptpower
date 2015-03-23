@@ -14,7 +14,7 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
-import edu.asu.conceptpower.users.impl.UsersManager;
+import edu.asu.conceptpower.users.IUserManager;
 
 /**
  * This class provides methods for concept type deletion
@@ -29,7 +29,7 @@ public class ConcepTypeDeleteController {
 	private ConceptTypesManager typeManager;
 
 	@Autowired
-	private UsersManager usersManager;
+	private IUserManager usersManager;
 
 	@Autowired
 	private ConceptManager conceptManager;

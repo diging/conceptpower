@@ -10,7 +10,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
-import edu.asu.conceptpower.users.impl.UsersManager;
+import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
@@ -30,7 +30,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 	private ConceptTypesManager typesManager;
 
 	@Autowired
-	private UsersManager usersManager;
+	private IUserManager usersManager;
 
 	/**
 	 * This method creates wrappers for the concept entries passed as parameter

@@ -1,6 +1,9 @@
 package edu.asu.conceptpower.users;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface IUserManager {
 
@@ -26,5 +29,13 @@ public interface IUserManager {
 	public abstract void storeModifiedUser(User user);
 
 	public abstract void storeModifiedPassword(User user);
+
+	public abstract Token deleteToken(String token);
+
+	public abstract Token findToken(String token);
+
+	public abstract Token createToken(User user);
+
+	public abstract User findUserByEmail(String email);
 
 }

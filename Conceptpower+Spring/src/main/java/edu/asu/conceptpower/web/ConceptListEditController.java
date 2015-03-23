@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptManager;
-import edu.asu.conceptpower.users.impl.UsersManager;
+import edu.asu.conceptpower.users.IUserManager;
 
 /**
  * This class provides all the methods required for editing a concept list
@@ -30,7 +30,7 @@ public class ConceptListEditController {
 	private ConceptManager conceptManager;
 
 	@Autowired
-	private UsersManager usersManager;
+	private IUserManager usersManager;
 
 	/**
 	 * This method provides list name and description of a list to be edited

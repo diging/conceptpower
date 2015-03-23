@@ -11,6 +11,7 @@
 			<th>Edit Password</th>
 			<th>Username</th>
 			<th>Name</th>
+			<th>Email</th>
 			<th>User is admin</th>
 		</tr>
 	</thead>
@@ -28,6 +29,7 @@
 						src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png" /></a></td>
 				<td>${user.user}</td>
 				<td>${user.name}</td>
+				<td>${user.email}</td>
 				<td><c:if test="${user.isAdmin}">
 						<img
 							src="${pageContext.servletContext.contextPath}/resources/img/check_mark_16x16.png" />
