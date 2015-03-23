@@ -18,29 +18,31 @@
 	<import resource="rest-service.xml" />
 
 	<context:component-scan base-package="edu.asu.conceptpower" />
-	
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="smtp.gmail.com"/>
-        <property name="port" value="25"/>
-        <property name="username" value="diging.momo@gmail.com"/>
-        <property name="password" value="M0m0Em@1l"/>
-        <property name="javaMailProperties">
-            <props>
-                <prop key="mail.transport.protocol">smtp</prop>
-                <prop key="mail.smtp.auth">true</prop>
-                <prop key="mail.smtp.starttls.enable">true</prop>
-                <prop key="mail.debug">true</prop>
-            </props>
-        </property>
-    </bean>
-     
-    <!-- You can have some pre-configured messagess also which are ready to send -->
-    <bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
-        <property name="from" value="diging.momo@gmail.com"></property>
-    </bean>
 
-    <util:properties id="messages"
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="25" />
+		<property name="username" value="diging.momo@gmail.com" />
+		<property name="password" value="M0m0Em@1l" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- You can have some pre-configured messagess also which are ready to 
+		send -->
+	<bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
+		<property name="from" value="diging.momo@gmail.com"></property>
+	</bean>
+
+	<util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />
-    <util:properties id="config"
-		location="classpath:/config.properties" />
+	<util:properties id="config" location="classpath:/config.properties" />
+
+	
 </beans>

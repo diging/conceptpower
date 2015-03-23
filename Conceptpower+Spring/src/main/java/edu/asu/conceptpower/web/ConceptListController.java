@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,9 +87,8 @@ public class ConceptListController {
 	 *            ID of a concept
 	 * @return Map containing concept details
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "conceptDetail")
-	public @ResponseBody
-	Map<String, String> getConceptDetails(
+	@RequestMapping(method = RequestMethod.GET, value = "conceptDetail", produces = "application/json")
+	public @ResponseBody ResponseEntity<String> getConceptDetails(
 			@RequestParam("conceptid") String conceptid) {
 		ConceptEntryWrapper conceptEntry = new ConceptEntryWrapper(
 				conceptManager.getConceptEntry(conceptid));
@@ -115,6 +117,6 @@ public class ConceptListController {
 				conceptEntry.getEntry().getCreatorId() == null ? ""
 						: conceptEntry.getEntry().getCreatorId());
 
-		return details;
+		return new ResponseEntity<String>(new JSONObject(details).toString(), HttpStatus.OK);
 	}
 }
