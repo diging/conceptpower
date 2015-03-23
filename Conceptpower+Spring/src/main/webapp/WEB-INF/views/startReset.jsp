@@ -17,6 +17,7 @@
 	Email address: <form:input type="text" id="email" path="email" />
 	<form:hidden path="token"/>
 	<input name="submit" type="submit" value="Reset" class="button" />
+	<form:errors path="email" cssClass="error"></form:errors>
 </form:form>
 
 

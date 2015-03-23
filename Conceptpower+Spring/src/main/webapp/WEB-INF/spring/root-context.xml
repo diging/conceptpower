@@ -41,4 +41,6 @@
 
     <util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />
+    <util:properties id="config"
+		location="classpath:/config.properties" />
 </beans>

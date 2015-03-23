@@ -1,7 +1,10 @@
 package edu.asu.conceptpower.web.backing;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class EmailBackBean {
 
+	@NotEmpty(message = "Please provide your email address.")
 	private String email;
 	private String token;
 

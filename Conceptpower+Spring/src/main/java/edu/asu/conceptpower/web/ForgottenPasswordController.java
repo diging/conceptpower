@@ -1,12 +1,14 @@
 package edu.asu.conceptpower.web;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +40,8 @@ public class ForgottenPasswordController {
 	@Value("#{messages['email.forgot.body']}")
 	private String body;
 	
+	@Value("#{config['password.recovery.expiration.hours']}")
+	private int expirationHours;
 	
 	@RequestMapping(value = "/forgot", method = RequestMethod.GET)
 	public String preparePage(Model model) {
@@ -46,14 +50,21 @@ public class ForgottenPasswordController {
 	}
 	
 	@RequestMapping(value = "/emailSent", method = RequestMethod.POST)
-	public String resetPassword(Model model, EmailBackBean emailBean, HttpServletRequest request) {
+	public String resetPassword(Model model, @Valid EmailBackBean emailBean, BindingResult result, HttpServletRequest request) {
+		
+		if (result.hasErrors()) {
+			model.addAttribute("emailBackBean", emailBean);
+			return "forgot";
+		}
 		
 		String email = emailBean.getEmail();
 		User user = userManager.findUserByEmail(email);
 		
 		if (user != null) {
 			Token token = userManager.createToken(user);
-			emailService.sendMail(email, subject, body.replace("${name}", user.getName()).replace("${link}", request.getLocalName() + "/beginReset/" + token.getToken()));
+			StringBuffer requestURL = request.getRequestURL();
+			String url = requestURL.substring(0, requestURL.length() - request.getServletPath().length());
+			emailService.sendMail(email, subject, body.replace("${name}", user.getName()).replace("${link}", url + "/beginReset/" + token.getToken()));
 		}
 		
 		model.addAttribute("email", email);
@@ -70,7 +81,12 @@ public class ForgottenPasswordController {
 	}
 	
 	@RequestMapping(value = "/reset") 
-	public String doReset(Model model, EmailBackBean emailBean) {
+	public String doReset(Model model, @Valid EmailBackBean emailBean, BindingResult result) {
+		if (result.hasErrors()) {
+			model.addAttribute("emailBackBean", emailBean);
+			return "beginReset";
+		}
+		
 		Token token = userManager.findToken(emailBean.getToken());
 		
 		if (token == null) {
@@ -84,7 +100,7 @@ public class ForgottenPasswordController {
 		
 		DateTime creationDate = new DateTime(token.getCreationDate());
 		DateTime currentDate = new DateTime();
-		if (!currentDate.isAfter(creationDate) || !creationDate.plusHours(24).isAfter(currentDate)) {
+		if (!currentDate.isAfter(creationDate) || !creationDate.plusHours(expirationHours).isAfter(currentDate)) {
 			userManager.deleteToken(token.getToken());
 			model.addAttribute("errormsg", "Sorry, but your reset link has expired.");
 			return "resetError";
@@ -92,12 +108,20 @@ public class ForgottenPasswordController {
 		
 		UserBacking userBacking = new UserBacking(token.getUser().getUser(), token.getUser().getName());
 		userBacking.setToken(token.getToken());
-		model.addAttribute("userbacking", userBacking);
+		model.addAttribute("userBacking", userBacking);
 		return "reset";
 	}
 	
 	@RequestMapping(value = "/resetComplete") 
-	public String resetComplete(Model model, UserBacking user) {
+	public String resetComplete(Model model, @Valid UserBacking user, BindingResult result) {
+		
+		if (result.hasErrors()) {
+			user.setPassword("");
+			user.setRetypedPassword("");
+			model.addAttribute("userBacking", user);
+			return "reset";
+		}
+		
 		User uUser = userManager.findUser(user.getUsername());
 
 		if (uUser == null) {

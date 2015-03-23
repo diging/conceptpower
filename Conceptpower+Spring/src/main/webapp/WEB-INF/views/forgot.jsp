@@ -16,6 +16,7 @@
 	method='post'>
 	Email address: <form:input type="text" id="email" path="email" />
 	<input name="submit" type="submit" value="Submit" class="button" />
+	<form:errors path="email" cssClass="error"></form:errors>
 </form:form>
 
 
