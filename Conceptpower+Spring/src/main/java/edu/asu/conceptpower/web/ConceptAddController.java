@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.web;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -7,7 +8,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +33,7 @@ import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.profile.impl.ServiceBackBean;
 import edu.asu.conceptpower.profile.impl.ServiceRegistry;
+import edu.asu.conceptpower.util.ExceptionHandler;
 import edu.asu.conceptpower.web.backing.SearchResultBackBeanForm;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
@@ -35,6 +45,9 @@ import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
  */
 @Controller
 public class ConceptAddController {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(ConceptAddController.class);
 
 	@Autowired
 	private ConceptManager conceptManager;
@@ -134,11 +147,25 @@ public class ConceptAddController {
 	 * @return Returns array of concepts found for synonym name
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")
-	public @ResponseBody
-	ConceptEntry[] getSynonyms(@RequestParam("synonymname") String synonymname) {
+	public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname) {
 		ConceptEntry[] entries = conceptManager
 				.getConceptListEntriesForWord(synonymname.trim());
-		return entries;
+		ObjectMapper mapper=new ObjectMapper();
+		ObjectWriter writer=mapper.writer();
+		try {
+			return new ResponseEntity<String>(writer.writeValueAsString(entries), HttpStatus.OK);
+		} catch (JsonGenerationException e) {
+			logger.error("Couldn't parse results.", e);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (JsonMappingException e) {
+			logger.error("Couldn't parse results.", e);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (IOException e) {
+			logger.error("Couldn't parse results.", e);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		//return entries;
 	}
 
 	/**
@@ -149,14 +176,27 @@ public class ConceptAddController {
 	 * @return Returns existing concepts which contain conceptname
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "getExistingConcepts")
-	public @ResponseBody
-	ConceptEntry[] getExistingConcepts(
+	public @ResponseBody ResponseEntity<String> getExistingConcepts(
 			@RequestParam("conceptname") String conceptname) {
 		if (conceptname.isEmpty())
 			return null;
 		ConceptEntry[] entries = conceptManager
 				.getConceptListEntriesForWord(conceptname.trim());
-		return entries;
+		
+		ObjectMapper mapper=new ObjectMapper();
+		ObjectWriter writer=mapper.writer();
+		try {
+			return new ResponseEntity<String>(writer.writeValueAsString(entries), HttpStatus.OK);
+		} catch (JsonGenerationException e) {
+			logger.error("Couldn't parse results.", e);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (JsonMappingException e) {
+			logger.error("Couldn't parse results.", e);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (IOException e) {
+			logger.error("Couldn't parse results.", e);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }

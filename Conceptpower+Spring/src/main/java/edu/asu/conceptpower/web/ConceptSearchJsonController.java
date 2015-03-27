@@ -3,7 +3,11 @@ package edu.asu.conceptpower.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,8 +47,7 @@ public class ConceptSearchJsonController {
 	 * @author Chetan Ambi
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "serviceSearch")
-	public @ResponseBody
-	SearchResultBackBean[] serviceSearchForConcept(
+	public @ResponseBody ResponseEntity<String> serviceSearchForConcept(
 			@RequestParam("serviceterm") String serviceterm,
 			@RequestParam("serviceid") String serviceid) {
 
@@ -53,6 +56,7 @@ public class ConceptSearchJsonController {
 		
 		List<SearchResultBackBean> searchResultBackBeans = new ArrayList<SearchResultBackBean>();
 		
+		JSONArray json = new JSONArray();
 		for (ISearchResult searchResult : searchResults) {
 
 			SearchResultBackBean searchResultBackBean = new SearchResultBackBean();
@@ -60,9 +64,10 @@ public class ConceptSearchJsonController {
 			searchResultBackBean.setId(searchResult.getId());
 			searchResultBackBean.setDescription(searchResult.getDescription());
 			searchResultBackBeans.add(searchResultBackBean);
+			json.put(new JSONObject(searchResultBackBean.toMap()));
 		}
 		
-		return searchResultBackBeans.toArray(new SearchResultBackBean[searchResultBackBeans.size()]);
+		return new ResponseEntity<String>(json.toString(), HttpStatus.OK);
 	}
 
 }

@@ -27,13 +27,14 @@
 											conceptname : $(this).val()
 										},
 										success : function(response) {
-											if (response.length > 0) {
+											var data = jQuery.parseJSON(response);
+											if (data.length > 0) {
 												var text = "Following concepts have the same name : \n";
-												var len = response.length;
+												var len = data.length;
 												for (var i = 0; i < len; i++) {
-													text += (response[i].word
+													text += (data[i].word
 															+ " - "
-															+ response[i].id + "\n");
+															+ data[i].description + "\n");
 												}
 												$("#warning").show();
 												$('#warning').prop('title',
@@ -71,7 +72,7 @@
 					} ],
 					"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
 						var description = aData.description;
-						description = description.replace(/"/g, '&quot;');
+						description = description != null ? description.replace(/"/g, '&quot;') : "";
 						$('td:eq(3)', nRow).html(
 								'<a onclick="synonymAdd(\'' + aData.id
 										+ '\',\'' + aData.word + '\',\''
@@ -96,10 +97,11 @@
 											synonymname : synonymname
 										},
 										success : function(response) {
+											var data = jQuery.parseJSON(response);
 											$('#synonymstable').dataTable()
 													.fnClearTable();
 											$('#synonymstable').dataTable()
-													.fnAddData(response);
+													.fnAddData(data);
 
 										}
 									});
@@ -181,12 +183,13 @@
 										},
 										success : function(response) {
 											if (response.length > 0) {
+												var data = jQuery.parseJSON(response);
 												$('#serviceResultTable')
 														.dataTable()
 														.fnClearTable();
 												$('#serviceResultTable')
 														.dataTable().fnAddData(
-																response);
+																data);
 												$('#showServiceResult').show();
 											} else {
 												$('#serviceResultTable')

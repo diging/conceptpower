@@ -1,7 +1,7 @@
 package edu.asu.conceptpower.web.backing;
 
-import edu.asu.conceptpower.reflect.SearchField;
-import edu.asu.conceptpower.rest.SearchFieldNames;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * this class is used as a backing bean for the search results retrieved through
@@ -24,6 +24,15 @@ public class SearchResultBackBean {
 
 	//@SearchField(fieldName = SearchFieldNames.ISCHECKED)
 	private boolean isChecked = false;
+	
+	public Map<Object, Object> toMap() {
+		Map<Object, Object> map = new HashMap<Object, Object>();
+		map.put("word", word);
+		map.put("id", id);
+		map.put("description", description);
+		map.put("isChecked", isChecked);
+		return map;
+	}
 
 	public boolean getIsChecked() {
 		return isChecked;
