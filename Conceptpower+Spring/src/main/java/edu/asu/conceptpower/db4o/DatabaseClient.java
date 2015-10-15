@@ -19,7 +19,7 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.reflect.SearchField;
 
 @Component
-public class DatabaseClient {
+public class DatabaseClient implements IConceptDBManager {
 
 	ObjectContainer wordnetCacheClient;
 	ObjectContainer dictionaryClient;
@@ -38,6 +38,10 @@ public class DatabaseClient {
 		this.dictionaryClient = dictionary.getClient();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#getEntry(java.lang.String)
+	 */
+	@Override
 	public ConceptEntry getEntry(String id) {
 		ConceptEntry exampleEntry = new ConceptEntry();
 
@@ -77,6 +81,10 @@ public class DatabaseClient {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#queryByExample(java.lang.Object)
+	 */
+	@Override
 	public List<Object> queryByExample(Object example) {
 		ObjectSet<Object> results = wordnetCacheClient.queryByExample(example);
 		ObjectSet<Object> results2 = dictionaryClient.queryByExample(example);
@@ -94,6 +102,10 @@ public class DatabaseClient {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#getEntriesByFieldContains(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public ConceptEntry[] getEntriesByFieldContains(String field,
 			String containsString) {
 		if (containsString == null || field == null)
@@ -155,6 +167,10 @@ public class DatabaseClient {
 		return results.toArray(new ConceptEntry[results.size()]);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#getEntriesForWord(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public ConceptEntry[] getEntriesForWord(String word, String pos) {
 		ConceptEntry[] allConcepts = getEntriesForWord(word);
 
@@ -168,6 +184,10 @@ public class DatabaseClient {
 		return entries.toArray(new ConceptEntry[entries.size()]);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#getSynonymsPointingToId(java.lang.String)
+	 */
+	@Override
 	public ConceptEntry[] getSynonymsPointingToId(String id) {
 		List<ConceptEntry> entries = new ArrayList<ConceptEntry>();
 		final String wordId = id;
@@ -187,6 +207,10 @@ public class DatabaseClient {
 		return entries.toArray(new ConceptEntry[entries.size()]);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#getEntriesForWord(java.lang.String)
+	 */
+	@Override
 	public ConceptEntry[] getEntriesForWord(String word) {
 
 		List<ConceptEntry> entries = new ArrayList<ConceptEntry>();
@@ -209,6 +233,10 @@ public class DatabaseClient {
 		return entries.toArray(new ConceptEntry[entries.size()]);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#getConceptList(java.lang.String)
+	 */
+	@Override
 	@SuppressWarnings("serial")
 	public ConceptList getConceptList(String name) {
 		final String fName = name;
@@ -224,12 +252,10 @@ public class DatabaseClient {
 		return null;
 	}
 
-	/**
-	 * Get all objects of a certain type from both databases
-	 * 
-	 * @param clazz
-	 * @return
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#getAllElementsOfType(java.lang.Class)
 	 */
+	@Override
 	public List<?> getAllElementsOfType(Class<?> clazz) {
 		List<?> results = wordnetCacheClient.query(clazz);
 		List<?> dictResults = dictionaryClient.query(clazz);
@@ -239,6 +265,10 @@ public class DatabaseClient {
 		return allResults;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#getAllEntriesFromList(java.lang.String)
+	 */
+	@Override
 	public List<ConceptEntry> getAllEntriesFromList(String listname) {
 		ConceptEntry entry = new ConceptEntry();
 		entry.setConceptList(listname);
@@ -252,6 +282,10 @@ public class DatabaseClient {
 		return allResults;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#store(java.lang.Object, java.lang.String)
+	 */
+	@Override
 	public void store(Object element, String databasename) {
 		// FIXME no caching?
 		// if (databasename.equals(DBNames.WORDNET_CACHE)) {
@@ -265,6 +299,10 @@ public class DatabaseClient {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#update(edu.asu.conceptpower.core.ConceptEntry, java.lang.String)
+	 */
+	@Override
 	public void update(ConceptEntry entry, String databasename) {
 		if (databasename.equals(DBNames.DICTIONARY_DB)) {
 			ConceptEntry toBeUpdated = getEntry(entry.getId());
@@ -287,6 +325,10 @@ public class DatabaseClient {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#deleteConceptList(java.lang.String)
+	 */
+	@Override
 	public void deleteConceptList(String name) {
 		ConceptList list = new ConceptList();
 		list.setConceptListName(name);
@@ -298,6 +340,10 @@ public class DatabaseClient {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#update(edu.asu.conceptpower.core.ConceptList, java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void update(ConceptList list, String listname, String databasename) {
 		if (databasename.equals(DBNames.DICTIONARY_DB)) {
 			ConceptList toBeUpdated = getConceptList(listname);

@@ -2,6 +2,8 @@ package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+
 import edu.asu.conceptpower.reflect.SearchField;
 import edu.asu.conceptpower.rest.SearchFieldNames;
 
@@ -11,6 +13,7 @@ import edu.asu.conceptpower.rest.SearchFieldNames;
  * @author Julia Damerow
  * 
  */
+@Entity
 public class ConceptEntry implements Serializable {
 
 	private static final long serialVersionUID = 4569090620671054560L;

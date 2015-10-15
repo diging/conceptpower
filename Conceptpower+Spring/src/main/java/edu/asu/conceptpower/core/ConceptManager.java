@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.db4o.DBNames;
-import edu.asu.conceptpower.db4o.DatabaseClient;
+import edu.asu.conceptpower.db4o.IConceptDBManager;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.exceptions.DictionaryExistsException;
@@ -34,7 +34,7 @@ public class ConceptManager {
 	private WordNetManager wordnetManager;
 
 	@Autowired
-	private DatabaseClient client;
+	private IConceptDBManager client;
 
 	public static final int CONCEPT_ENTRY = 0;
 	public static final int CONCEPT_LIST = 1;
