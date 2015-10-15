@@ -323,8 +323,8 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>4.2.0.Final</version>
 		</dependency>
-		
-		<!--  DB4O -->
+
+		<!-- DB4O -->
 		<dependency>
 			<groupId>com.db4o</groupId>
 			<artifactId>db4o-full-java5</artifactId>
@@ -379,6 +379,13 @@
 			<groupId>ant</groupId>
 			<artifactId>ant</artifactId>
 			<version>1.7.0</version>
+		</dependency>
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1</version>
 		</dependency>
 	</dependencies>
 

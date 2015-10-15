@@ -7,14 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.asu.conceptpower.core.ConceptManager;
+import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.exceptions.DictionaryExistsException;
 
 @Controller
 public class ConceptListAddController {
 
 	@Autowired
-	private ConceptManager conceptManager;
+	private IConceptManager conceptManager;
 
 	/**
 	 * This method provides a string value to redirect user to add concept list

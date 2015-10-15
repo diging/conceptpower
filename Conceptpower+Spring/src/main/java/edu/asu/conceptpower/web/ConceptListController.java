@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.core.ConceptManager;
+import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
-import edu.asu.conceptpower.util.URICreator;
+import edu.asu.conceptpower.util.URIHelper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
@@ -28,13 +29,13 @@ import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 public class ConceptListController {
 
 	@Autowired
-	private ConceptManager conceptManager;
+	private IConceptManager conceptManager;
 
 	@Autowired
 	private TypeDatabaseClient typeDatabaseClient;
 
 	@Autowired
-	private URICreator URICreator;
+	private URIHelper URICreator;
 
 	@Autowired
 	private IConceptWrapperCreator wrapperCreator;
@@ -101,12 +102,13 @@ public class ConceptListController {
 		details.put("pos", conceptEntry.getEntry().getPos());
 		details.put("conceptlist", conceptEntry.getEntry().getConceptList());
 
+		ConceptType type = conceptEntry.getEntry().getTypeId() == null ? null
+				: typeDatabaseClient.getType(
+						conceptEntry.getEntry().getTypeId());
+		
 		details.put(
 				"type",
-				conceptEntry.getEntry().getTypeId() == null ? ""
-						: typeDatabaseClient.getType(
-								conceptEntry.getEntry().getTypeId())
-								.getTypeName());
+				type == null ? "" : type.getTypeName());
 		details.put("equalto",
 				conceptEntry.getEntry().getEqualTo() == null ? ""
 						: conceptEntry.getEntry().getEqualTo());

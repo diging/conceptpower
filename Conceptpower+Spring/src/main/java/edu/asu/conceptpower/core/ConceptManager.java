@@ -28,7 +28,7 @@ import edu.asu.conceptpower.wordnet.WordNetManager;
  * 
  */
 @Service
-public class ConceptManager {
+public class ConceptManager implements IConceptManager {
 
 	@Autowired
 	private WordNetManager wordnetManager;
@@ -36,20 +36,13 @@ public class ConceptManager {
 	@Autowired
 	private IConceptDBManager client;
 
-	public static final int CONCEPT_ENTRY = 0;
-	public static final int CONCEPT_LIST = 1;
-
 	protected final String CONCEPT_PREFIX = "CON";
 	protected final String LIST_PREFIX = "LIST";
 
-	/**
-	 * Return entry given its ID. First the additional concepts are queried,
-	 * then WordNet.
-	 * 
-	 * @param id
-	 *            of entry
-	 * @return Entry for ID or null.
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptEntry(java.lang.String)
 	 */
+	@Override
 	public ConceptEntry getConceptEntry(String id) {
 		ConceptEntry entry = client.getEntry(id);
 		if (entry != null) {
@@ -66,29 +59,19 @@ public class ConceptManager {
 		return null;
 	}
 
-	/**
-	 * Get an entry from WordNet given its WordNet ID.
-	 * 
-	 * @param wordnetId
-	 *            Id of concept in WordNet.
-	 * @return concept for ID or null
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#getWordnetConceptEntry(java.lang.String)
 	 */
+	@Override
 	public ConceptEntry getWordnetConceptEntry(String wordnetId) {
 		ConceptEntry entry = wordnetManager.getConcept(wordnetId);
 		return entry;
 	}
 
-	/**
-	 * Get all entries for a word and its POS.
-	 * 
-	 * @param word
-	 *            Word looked for. Additional concepts will be queried with
-	 *            "contains", WordNet concepts will be queried using
-	 *            "equals exactly".
-	 * @param pos
-	 *            Part of speech of word (noun, verb, adjective, adverb).
-	 * @return matching concepts
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptListEntriesForWord(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public ConceptEntry[] getConceptListEntriesForWord(String word, String pos) {
 		ConceptEntry[] entries = client.getEntriesForWord(word, pos);
 
@@ -158,14 +141,10 @@ public class ConceptManager {
 		}
 	}
 
-	/**
-	 * Searches in all additional concepts for in the given fields for the given
-	 * values. The results for each field/value pair are joined with "or".
-	 * 
-	 * @param fieldMap
-	 *            map of field/value pairs
-	 * @return matching concepts
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#searchForConceptsConnectedByOr(java.util.Map)
 	 */
+	@Override
 	public ConceptEntry[] searchForConceptsConnectedByOr(
 			Map<String, String> fieldMap) {
 
@@ -192,14 +171,10 @@ public class ConceptManager {
 		return results.toArray(new ConceptEntry[results.size()]);
 	}
 
-	/**
-	 * Searches in all additional concepts for in the given fields for the given
-	 * values. The results for each field/value pair are joined with "and".
-	 * 
-	 * @param fieldMap
-	 *            map of field/value pairs
-	 * @return matching concepts
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#searchForConceptsConnectedByAnd(java.util.Map)
 	 */
+	@Override
 	public ConceptEntry[] searchForConceptsConnectedByAnd(
 			Map<String, String> fieldMap) {
 
@@ -237,16 +212,10 @@ public class ConceptManager {
 		return results.toArray(new ConceptEntry[results.size()]);
 	}
 
-	/**
-	 * Given a concept id this method returns an array of concepts that are
-	 * listed as synonyms for the concept with the given id.
-	 * 
-	 * @param id
-	 *            The id of the concept that synonyms should be retrieved for.
-	 * @return An array of concept entries that are synonyms for the concept
-	 *         with the given id. This method will never return null only filled
-	 *         or empty arrays.
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#getSynonymsForConcept(java.lang.String)
 	 */
+	@Override
 	public ConceptEntry[] getSynonymsForConcept(String id) {
 
 		ConceptEntry concept = getConceptEntry(id);
@@ -284,17 +253,10 @@ public class ConceptManager {
 		return allEntries.toArray(new ConceptEntry[allEntries.size()]);
 	}
 
-	/**
-	 * This method returns an array of concept entries that have words that
-	 * contain the given word. E.g. if the given word is "horse" this method
-	 * would return concepts such as "horse" or "horseback riding".
-	 * 
-	 * @param word
-	 *            The word that should be contained in the word field of a
-	 *            concept.
-	 * @return An array list with matching concepts. This method never returns
-	 *         null only empty or filled arrays.
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptListEntriesForWord(java.lang.String)
 	 */
+	@Override
 	public ConceptEntry[] getConceptListEntriesForWord(String word) {
 		ConceptEntry[] entries = client.getEntriesForWord(word);
 
@@ -315,6 +277,10 @@ public class ConceptManager {
 		return allEntries.toArray(new ConceptEntry[allEntries.size()]);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptListEntries(java.lang.String)
+	 */
+	@Override
 	public List<ConceptEntry> getConceptListEntries(String conceptList) {
 		List<ConceptEntry> entries = client.getAllEntriesFromList(conceptList);
 		Collections.sort(entries, new Comparator<ConceptEntry>() {
@@ -342,10 +308,18 @@ public class ConceptManager {
 		return notDeletedEntries;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptList(java.lang.String)
+	 */
+	@Override
 	public ConceptList getConceptList(String name) {
 		return client.getConceptList(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#addConceptList(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void addConceptList(String name, String description)
 			throws DictionaryExistsException {
 		if (name.equals(Constants.WORDNET_DICTIONARY))
@@ -362,6 +336,10 @@ public class ConceptManager {
 		client.store(dict, DBNames.DICTIONARY_DB);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#addConceptListEntry(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void addConceptListEntry(String word, String pos,
 			String description, String conceptListName, String typeId,
 			String equalTo, String similarTo, String synonymIds,
@@ -394,7 +372,11 @@ public class ConceptManager {
 		client.store(entry, DBNames.DICTIONARY_DB);
 	}
 
-	public void addConceptListEntry(ConceptEntry entry)
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#addConceptListEntry(edu.asu.conceptpower.core.ConceptEntry)
+	 */
+	@Override
+	public String addConceptListEntry(ConceptEntry entry)
 			throws DictionaryDoesNotExistException, DictionaryModifyException {
 		ConceptList dict = client.getConceptList(entry.getConceptList());
 		if (dict == null)
@@ -403,20 +385,34 @@ public class ConceptManager {
 		if (entry.getConceptList().equals(Constants.WORDNET_DICTIONARY)) {
 			throw new DictionaryModifyException();
 		}
-
-		entry.setId(generateId(CONCEPT_ENTRY, CONCEPT_PREFIX));
+		
+		String id = generateId(CONCEPT_ENTRY, CONCEPT_PREFIX);
+		entry.setId(id);
 
 		client.store(entry, DBNames.DICTIONARY_DB);
+		return id;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#storeModifiedConcept(edu.asu.conceptpower.core.ConceptEntry)
+	 */
+	@Override
 	public void storeModifiedConcept(ConceptEntry entry) {
 		client.update(entry, DBNames.DICTIONARY_DB);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#storeModifiedConceptList(edu.asu.conceptpower.core.ConceptList, java.lang.String)
+	 */
+	@Override
 	public void storeModifiedConceptList(ConceptList list, String listname) {
 		client.update(list, listname, DBNames.DICTIONARY_DB);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#getAllConceptLists()
+	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<ConceptList> getAllConceptLists() {
 		List<?> results = client.getAllElementsOfType(ConceptList.class);
@@ -447,6 +443,10 @@ public class ConceptManager {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.IConceptManager#deleteConceptList(java.lang.String)
+	 */
+	@Override
 	public void deleteConceptList(String name) {
 		client.deleteConceptList(name);
 	}

@@ -10,6 +10,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.util.URIHelper;
 
 @Component
 public class TypeDatabaseClient {
@@ -20,12 +21,16 @@ public class TypeDatabaseClient {
 	@Qualifier("typesDatabaseManager")
 	private DatabaseManager typeDatabase;
 	
+	@Autowired
+	private URIHelper uriHelper;
+	
 	@PostConstruct
 	public void init() {
 		this.client = typeDatabase.getClient();
 	}
 	
-	public ConceptType getType(String id) {
+	public ConceptType getType(String uriOrId) {
+		String id = uriHelper.getTypeId(uriOrId);
 		ConceptType user = new ConceptType(id);
 		ObjectSet<ConceptType> results = client.queryByExample(user);
 		

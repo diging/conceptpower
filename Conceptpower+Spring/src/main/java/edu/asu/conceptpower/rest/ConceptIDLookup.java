@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.xml.XMLConceptMessage;
 import edu.asu.conceptpower.xml.XMLMessageFactory;
@@ -34,7 +34,7 @@ import edu.asu.conceptpower.xml.XMLMessageFactory;
 public class ConceptIDLookup {
 
 	@Autowired
-	private ConceptManager dictManager;
+	private IConceptManager dictManager;
 
 	@Autowired
 	private TypeDatabaseClient typeManager;
