@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.core;
+package edu.asu.conceptpower.core.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,11 +10,13 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.db4o.DBNames;
 import edu.asu.conceptpower.db4o.IConceptDBManager;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryEntryExistsException;
-import edu.asu.conceptpower.exceptions.DictionaryExistsException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.wordnet.Constants;
 import edu.asu.conceptpower.wordnet.WordNetManager;
@@ -37,7 +39,6 @@ public class ConceptManager implements IConceptManager {
 	private IConceptDBManager client;
 
 	protected final String CONCEPT_PREFIX = "CON";
-	protected final String LIST_PREFIX = "LIST";
 
 	/* (non-Javadoc)
 	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptEntry(java.lang.String)
@@ -118,9 +119,8 @@ public class ConceptManager implements IConceptManager {
 			// generate the synonym ids
 			StringBuffer sb = new StringBuffer();
 
-			if (entry.getSynonymIds() != null) {
-				String wordnetIds = (entry.getWordnetId() != null ? entry
-						.getWordnetId() : "");
+			if (entry.getWordnetId() != null) {
+				String wordnetIds =  entry.getWordnetId();
 				String[] ids = wordnetIds.trim().split(
 						Constants.CONCEPT_SEPARATOR);
 				if (ids != null) {
@@ -136,7 +136,7 @@ public class ConceptManager implements IConceptManager {
 				}
 			}
 
-			entry.setSynonymIds(entry.getSynonymIds()
+			entry.setSynonymIds((entry.getSynonymIds() != null ? entry.getSynonymIds() : "")
 					+ Constants.CONCEPT_SEPARATOR + sb.toString());
 		}
 	}
@@ -309,34 +309,6 @@ public class ConceptManager implements IConceptManager {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptList(java.lang.String)
-	 */
-	@Override
-	public ConceptList getConceptList(String name) {
-		return client.getConceptList(name);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.core.IConceptManager#addConceptList(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public void addConceptList(String name, String description)
-			throws DictionaryExistsException {
-		if (name.equals(Constants.WORDNET_DICTIONARY))
-			throw new DictionaryExistsException();
-
-		ConceptList dict = client.getConceptList(name);
-		if (dict != null)
-			throw new DictionaryExistsException();
-
-		dict = new ConceptList();
-		dict.setConceptListName(name);
-		dict.setDescription(description);
-		dict.setId(generateId(CONCEPT_LIST, LIST_PREFIX));
-		client.store(dict, DBNames.DICTIONARY_DB);
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.asu.conceptpower.core.IConceptManager#addConceptListEntry(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -367,7 +339,7 @@ public class ConceptManager implements IConceptManager {
 		entry.setNarrows(narrows);
 		entry.setBroadens(broadens);
 
-		entry.setId(generateId(CONCEPT_ENTRY, CONCEPT_PREFIX));
+		entry.setId(generateId(CONCEPT_PREFIX));
 
 		client.store(entry, DBNames.DICTIONARY_DB);
 	}
@@ -386,7 +358,7 @@ public class ConceptManager implements IConceptManager {
 			throw new DictionaryModifyException();
 		}
 		
-		String id = generateId(CONCEPT_ENTRY, CONCEPT_PREFIX);
+		String id = generateId(CONCEPT_PREFIX);
 		entry.setId(id);
 
 		client.store(entry, DBNames.DICTIONARY_DB);
@@ -401,38 +373,13 @@ public class ConceptManager implements IConceptManager {
 		client.update(entry, DBNames.DICTIONARY_DB);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.core.IConceptManager#storeModifiedConceptList(edu.asu.conceptpower.core.ConceptList, java.lang.String)
-	 */
-	@Override
-	public void storeModifiedConceptList(ConceptList list, String listname) {
-		client.update(list, listname, DBNames.DICTIONARY_DB);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.core.IConceptManager#getAllConceptLists()
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ConceptList> getAllConceptLists() {
-		List<?> results = client.getAllElementsOfType(ConceptList.class);
-		if (results != null)
-			return (List<ConceptList>) results;
-		return null;
-	}
-
-	protected String generateId(int type, String prefix) {
+	protected String generateId(String prefix) {
 		String id = prefix + UUID.randomUUID().toString();
 
 		while (true) {
-			Object example = null;
-			if (type == CONCEPT_ENTRY) {
-				example = new ConceptEntry();
-				((ConceptEntry) example).setId(id);
-			} else if (type == CONCEPT_LIST) {
-				example = new ConceptList();
-				((ConceptList) example).setId(id);
-			}
+			ConceptEntry example = null;
+			example = new ConceptEntry();
+			example.setId(id);
 			// if there doesn't exist an object with this id return id
 			List<Object> results = client.queryByExample(example);
 			if (results == null || results.size() == 0)
@@ -443,11 +390,5 @@ public class ConceptManager implements IConceptManager {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.core.IConceptManager#deleteConceptList(java.lang.String)
-	 */
-	@Override
-	public void deleteConceptList(String name) {
-		client.deleteConceptList(name);
-	}
+	
 }

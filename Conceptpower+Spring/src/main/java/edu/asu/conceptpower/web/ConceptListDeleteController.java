@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.users.IUserManager;
 
@@ -22,6 +23,9 @@ public class ConceptListDeleteController {
 
 	@Autowired
 	private IConceptManager conceptManager;
+	
+	@Autowired
+	private IConceptListManager conceptListManager;
 
 	/**
 	 * This method provides information of a concept list to be deleted
@@ -35,7 +39,7 @@ public class ConceptListDeleteController {
 	@RequestMapping(value = "auth/conceptlist/deletelist/{name}", method = RequestMethod.GET)
 	public String prepareDeleteConceptList(@PathVariable("name") String name,
 			ModelMap model) {
-		ConceptList list = conceptManager.getConceptList(name);
+		ConceptList list = conceptListManager.getConceptList(name);
 		model.addAttribute("listName", list.getConceptListName());
 		model.addAttribute("description", list.getDescription());
 
@@ -62,7 +66,7 @@ public class ConceptListDeleteController {
 	@RequestMapping(value = "auth/conceptlist/deleteconceptlistconfirm/{listname}", method = RequestMethod.GET)
 	public String deleteConceptList(@PathVariable("listname") String listName) {
 
-		conceptManager.deleteConceptList(listName);
+		conceptListManager.deleteConceptList(listName);
 
 		return "redirect:/auth/conceptlist";
 	}

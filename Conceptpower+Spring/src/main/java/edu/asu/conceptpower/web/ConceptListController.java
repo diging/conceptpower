@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.util.URIHelper;
@@ -30,6 +31,9 @@ public class ConceptListController {
 
 	@Autowired
 	private IConceptManager conceptManager;
+	
+	@Autowired
+	private IConceptListManager conceptListManager;
 
 	@Autowired
 	private TypeDatabaseClient typeDatabaseClient;
@@ -51,7 +55,7 @@ public class ConceptListController {
 	@RequestMapping(value = "auth/conceptlist")
 	public String prepareShowConceptList(ModelMap model) {
 
-		List<ConceptList> conceptLists = conceptManager.getAllConceptLists();
+		List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
 		model.addAttribute("result", conceptLists);
 
 		return "/auth/conceptlist";

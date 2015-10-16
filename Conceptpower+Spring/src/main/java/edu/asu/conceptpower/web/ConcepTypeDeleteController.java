@@ -13,6 +13,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
+import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.users.IUserManager;
 
@@ -33,6 +34,9 @@ public class ConcepTypeDeleteController {
 
 	@Autowired
 	private IConceptManager conceptManager;
+	
+	@Autowired
+	private IConceptListManager conceptListManager;
 
 	/**
 	 * This method provides information of a type to be deleted to concept type
@@ -57,7 +61,7 @@ public class ConcepTypeDeleteController {
 
 		// condition to check enable whether to delete the concepttype
 		boolean enableDelete = true;
-		List<ConceptList> conceptLists = conceptManager.getAllConceptLists();
+		List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
 		for (ConceptList conceptList : conceptLists) {
 			List<ConceptEntry> conceptEntries = conceptManager
 					.getConceptListEntries(conceptList.getConceptListName());

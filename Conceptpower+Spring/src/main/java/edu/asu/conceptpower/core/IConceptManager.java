@@ -5,13 +5,9 @@ import java.util.Map;
 
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryEntryExistsException;
-import edu.asu.conceptpower.exceptions.DictionaryExistsException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 
 public interface IConceptManager {
-
-	public static final int CONCEPT_ENTRY = 0;
-	public static final int CONCEPT_LIST = 1;
 
 	/**
 	 * Return entry given its ID. First the additional concepts are queried,
@@ -95,11 +91,6 @@ public interface IConceptManager {
 
 	public abstract List<ConceptEntry> getConceptListEntries(String conceptList);
 
-	public abstract ConceptList getConceptList(String name);
-
-	public abstract void addConceptList(String name, String description)
-			throws DictionaryExistsException;
-
 	public abstract void addConceptListEntry(String word, String pos,
 			String description, String conceptListName, String typeId,
 			String equalTo, String similarTo, String synonymIds,
@@ -111,12 +102,5 @@ public interface IConceptManager {
 			throws DictionaryDoesNotExistException, DictionaryModifyException;
 
 	public abstract void storeModifiedConcept(ConceptEntry entry);
-
-	public abstract void storeModifiedConceptList(ConceptList list,
-			String listname);
-
-	public abstract List<ConceptList> getAllConceptLists();
-
-	public abstract void deleteConceptList(String name);
 
 }
