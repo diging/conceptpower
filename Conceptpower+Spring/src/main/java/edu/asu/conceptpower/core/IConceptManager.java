@@ -98,6 +98,16 @@ public interface IConceptManager {
 			throws DictionaryDoesNotExistException, DictionaryModifyException,
 			DictionaryEntryExistsException;
 
+	/**
+	 * Stores the given entry in the database and return the new id
+	 * that was generated for the entry.
+	 * @param entry the {@link ConceptEntry} to be stored.
+	 * @return Id of stored entry.
+	 * @throws DictionaryDoesNotExistException If the entry has a concept list 
+	 * specified that doesn't exist.
+	 * @throws DictionaryModifyException If the specified concept list in the
+	 * concept is the Wordnet list. 
+	 */
 	public abstract String addConceptListEntry(ConceptEntry entry)
 			throws DictionaryDoesNotExistException, DictionaryModifyException;
 

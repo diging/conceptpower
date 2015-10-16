@@ -4,7 +4,6 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runners.JUnit4;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -12,6 +11,9 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.core.impl.ConceptManager;
 import edu.asu.conceptpower.db4o.IConceptDBManager;
+import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
+import edu.asu.conceptpower.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.wordnet.Constants;
 import edu.asu.conceptpower.wordnet.WordNetManager;
 
 public class ConceptManagerTest {
@@ -29,6 +31,8 @@ public class ConceptManagerTest {
 
 	private ConceptEntry wordnetConcept1;
 	private ConceptEntry wordnetConcept2;
+
+	private ConceptList list1;
 	
 	@Before
 	public void init() {
@@ -68,6 +72,16 @@ public class ConceptManagerTest {
 		
 		Mockito.when(wordNetManager.getConcept("WID-1")).thenReturn(wordnetConcept1);
 		Mockito.when(wordNetManager.getConcept("WID-2")).thenReturn(wordnetConcept2);
+		
+		list1 = new ConceptList();
+		list1.setConceptListName("list1");
+		list1.setDescription("test test");
+		Mockito.when(dbManager.getConceptList("list1")).thenReturn(list1);
+		
+		ConceptList wordnet = new ConceptList();
+		wordnet.setConceptListName(Constants.WORDNET_DICTIONARY);
+		wordnet.setDescription("WordNet list");
+		Mockito.when(dbManager.getConceptList(Constants.WORDNET_DICTIONARY)).thenReturn(wordnet);
 	}
 	
 	@Test
@@ -88,5 +102,59 @@ public class ConceptManagerTest {
 	public void testGetConceptEntryNoExisting() {
 		ConceptEntry entry = managerToTest.getConceptEntry("id-non");
 		Assert.assertNull(entry);
+	}
+	
+	@Test 
+	public void testAddConceptListEntry() throws DictionaryDoesNotExistException, DictionaryModifyException {
+		ConceptEntry newConcept = new ConceptEntry();
+		newConcept.setConceptList("list1");
+		newConcept.setCreatorId("testuser");
+		newConcept.setDescription("description");
+		newConcept.setPos("noun");
+		newConcept.setWord("test new");
+		newConcept.setWordnetId("WID-1");
+		
+		String id = managerToTest.addConceptListEntry(newConcept);
+		Assert.assertNotNull(id);
+	}
+	
+	@Test
+	public void testAddConceptListEntryWrongDict() throws DictionaryModifyException {
+		ConceptEntry newConcept = new ConceptEntry();
+		newConcept.setConceptList("list-not-exist");
+		newConcept.setCreatorId("testuser");
+		newConcept.setDescription("description");
+		newConcept.setPos("noun");
+		newConcept.setWord("test new");
+		newConcept.setWordnetId("WID-1");
+		
+		String id = null;
+		try {
+			id = managerToTest.addConceptListEntry(newConcept);
+		} catch (DictionaryDoesNotExistException e) {
+			// test passes
+		} 
+		
+		Assert.assertNull(id);
+	}
+	
+	@Test
+	public void testAddConceptListEntryToWordnet() throws DictionaryDoesNotExistException {
+		ConceptEntry newConcept = new ConceptEntry();
+		newConcept.setConceptList(Constants.WORDNET_DICTIONARY);
+		newConcept.setCreatorId("testuser");
+		newConcept.setDescription("description");
+		newConcept.setPos("noun");
+		newConcept.setWord("test new");
+		newConcept.setWordnetId("WID-1");
+		
+		String id = null;
+		try {
+			id = managerToTest.addConceptListEntry(newConcept);
+		} catch (DictionaryModifyException e) {
+			// test passes
+		}
+		
+		Assert.assertNull(id);		
 	}
 }
