@@ -6,19 +6,19 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
 	<bean id="userDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
-		<property name="databasePath" value="/Users/jdamerow/Software/Conceptpower/db_files/users.db" />
+		<property name="databasePath" value="${db.path}/users.db" />
 	</bean>
 	
 	<bean id="conceptDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
-		<property name="databasePath" value="/Users/jdamerow/Software/Conceptpower/db_files/conceptLists.db" />
+		<property name="databasePath" value="${db.path}/conceptLists.db" />
 	</bean>
 	
 	<bean id="wordnetCacheDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
-		<property name="databasePath" value="/Users/jdamerow/Software/Conceptpower/db_files/wordnetCache.db" />
+		<property name="databasePath" value="${db.path}/wordnetCache.db" />
 	</bean>
 	
 	<bean id="typesDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
-		<property name="databasePath" value="/Users/jdamerow/Software/Conceptpower/db_files/conceptTypes.db" />
+		<property name="databasePath" value="${db.path}/conceptTypes.db" />
 	</bean>
 		
 </beans>

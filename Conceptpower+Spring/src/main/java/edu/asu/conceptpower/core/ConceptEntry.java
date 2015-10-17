@@ -3,6 +3,7 @@ package edu.asu.conceptpower.core;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import edu.asu.conceptpower.reflect.SearchField;
 import edu.asu.conceptpower.rest.SearchFieldNames;
@@ -18,7 +19,7 @@ public class ConceptEntry implements Serializable {
 
 	private static final long serialVersionUID = 4569090620671054560L;
 
-	
+	@Id
 	private String id;
 	
 	@SearchField(fieldName = SearchFieldNames.WORDNETID)
