@@ -13,6 +13,7 @@
 		<org.aspectj-version>1.7.3</org.aspectj-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
 		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
+		<tomcat.deploy.path.test>http://localhost:8081/manager/text</tomcat.deploy.path.test>
 		<deploy.path.test>conceptpower-test</deploy.path.test>
 		<deploy.path.dev>conceptpower</deploy.path.dev>
 		<deploy.path.prod>conceptpower</deploy.path.prod>
@@ -58,7 +59,7 @@
 			<properties>
 				<db.path>${db.files.path}</db.path>
 				<deploy.path>${deploy.path.test}</deploy.path>
-				<tomcat.path>${tomcat.deploy.path}</tomcat.path>
+				<tomcat.path>${tomcat.deploy.path.test}</tomcat.path>
 				<email.user>${email.username}</email.user>
 				<email.pw>${email.password}</email.pw>
 				<email.port>${email.server.port}</email.port>
@@ -520,7 +521,7 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<url>${tomcat.deploy.path}</url>
+					<url>${tomcat.path}</url>
 					<server>TomcatServer</server>
 					<path>/${deploy.path}</path>
 				</configuration>
