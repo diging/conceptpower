@@ -59,7 +59,7 @@
 			<properties>
 				<db.path>${db.files.path}</db.path>
 				<deploy.path>${deploy.path.test}</deploy.path>
-				<tomcat.path>${tomcat.deploy.path.test}</tomcat.path>
+				<tomcat.path>http://localhost:8081/manager/text</tomcat.path>
 				<email.user>${email.username}</email.user>
 				<email.pw>${email.password}</email.pw>
 				<email.port>${email.server.port}</email.port>
