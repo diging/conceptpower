@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.users.User;
-import edu.asu.conceptpower.util.URICreator;
+import edu.asu.conceptpower.util.URIHelper;
 
 /**
  * This class describes the concept entry wrapper in concept power. It provides
@@ -28,7 +28,7 @@ public class ConceptEntryWrapper implements Serializable {
 	private String description;
 
 	@Autowired
-	URICreator URICreator;
+	URIHelper URICreator;
 
 	public ConceptEntryWrapper(ConceptEntry entry) {
 		this.entry = entry;

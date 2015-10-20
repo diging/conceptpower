@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
+import edu.asu.conceptpower.core.IConceptListManager;
+import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -40,7 +41,10 @@ public class ConceptWrapperAddController {
 	private IConceptWrapperCreator wrapperCreator;
 
 	@Autowired
-	private ConceptManager conceptManager;
+	private IConceptManager conceptManager;
+	
+	@Autowired
+	private IConceptListManager conceptListManager;
 
 	@Autowired
 	private ConceptTypesManager conceptTypesManager;
@@ -67,7 +71,7 @@ public class ConceptWrapperAddController {
 
 		model.addAttribute("types", types);
 
-		List<ConceptList> allLists = conceptManager.getAllConceptLists();
+		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
 		Map<String, String> lists = new LinkedHashMap<String, String>();
 		for (ConceptList conceptList : allLists) {
 			lists.put(conceptList.getConceptListName(),
@@ -152,7 +156,7 @@ public class ConceptWrapperAddController {
 
 		model.addAttribute("types", types);
 
-		List<ConceptList> allLists = conceptManager.getAllConceptLists();
+		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
 		Map<String, String> lists = new LinkedHashMap<String, String>();
 		for (ConceptList conceptList : allLists) {
 			lists.put(conceptList.getConceptListName(),

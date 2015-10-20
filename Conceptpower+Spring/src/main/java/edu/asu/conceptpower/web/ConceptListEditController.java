@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.core.ConceptManager;
+import edu.asu.conceptpower.core.IConceptListManager;
+import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.users.IUserManager;
 
 /**
@@ -27,10 +28,13 @@ import edu.asu.conceptpower.users.IUserManager;
 public class ConceptListEditController {
 
 	@Autowired
-	private ConceptManager conceptManager;
+	private IConceptManager conceptManager;
 
 	@Autowired
 	private IUserManager usersManager;
+	
+	@Autowired
+	private IConceptListManager conceptListManager;
 
 	/**
 	 * This method provides list name and description of a list to be edited
@@ -45,7 +49,7 @@ public class ConceptListEditController {
 	public String prepareEditList(@PathVariable("listname") String listName,
 			ModelMap model) {
 
-		ConceptList list = conceptManager.getConceptList(listName);
+		ConceptList list = conceptListManager.getConceptList(listName);
 		model.addAttribute("newlistname", list.getConceptListName());
 		model.addAttribute("description", list.getDescription());
 
@@ -65,11 +69,11 @@ public class ConceptListEditController {
 	public String editList(@PathVariable("listname") String listName,
 			HttpServletRequest req) {
 
-		ConceptList list = conceptManager.getConceptList(listName);
+		ConceptList list = conceptListManager.getConceptList(listName);
 		list.setConceptListName(req.getParameter("newlistname"));
 		list.setDescription(req.getParameter("description"));
 
-		conceptManager.storeModifiedConceptList(list, listName);
+		conceptListManager.storeModifiedConceptList(list, listName);
 
 		// modify the name for all the existing concepts under this concept list
 		List<ConceptEntry> entries = conceptManager

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptManager;
+import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.impl.ConceptEntryWrapperCreator;
 
@@ -24,7 +24,7 @@ import edu.asu.conceptpower.wrapper.impl.ConceptEntryWrapperCreator;
 public class ConceptDeleteController {
 
 	@Autowired
-	private ConceptManager conceptManager;
+	private IConceptManager conceptManager;
 
 	@Autowired
 	private ConceptEntryWrapperCreator wrapperCreator;

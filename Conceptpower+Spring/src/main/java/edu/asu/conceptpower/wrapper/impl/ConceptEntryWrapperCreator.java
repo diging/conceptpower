@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
+import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
@@ -24,7 +24,7 @@ import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
 	@Autowired
-	private ConceptManager conceptManager;
+	private IConceptManager conceptManager;
 
 	@Autowired
 	private ConceptTypesManager typesManager;
