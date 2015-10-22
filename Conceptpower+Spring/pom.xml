@@ -23,7 +23,7 @@
 		<admin.username>admin</admin.username>
 		<admin.password>admin</admin.password>
 		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
-		<spring-security-version>4.0.2.RELEASE</spring-security-version>
+		<spring-security-version>3.2.8.RELEASE</spring-security-version>
 	</properties>
 
 	<repositories>
