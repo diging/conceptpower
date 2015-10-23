@@ -6,7 +6,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.core.ConceptTypesManager;
+import edu.asu.conceptpower.core.IConceptTypeManger;
 
 /**
  * This class provides methods for viewing concepts of a particular type
@@ -18,7 +18,7 @@ import edu.asu.conceptpower.core.ConceptTypesManager;
 public class ConceptTypesController {
 
 	@Autowired
-	private ConceptTypesManager conceptTypesManager;
+	private IConceptTypeManger conceptTypesManager;
 
 	/**
 	 * This method provides information about all the types for concept type

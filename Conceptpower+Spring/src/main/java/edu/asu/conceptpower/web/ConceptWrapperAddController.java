@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -47,7 +47,7 @@ public class ConceptWrapperAddController {
 	private IConceptListManager conceptListManager;
 
 	@Autowired
-	private ConceptTypesManager conceptTypesManager;
+	private IConceptTypeManger conceptTypesManager;
 
 	/**
 	 * This method provides required information for concept wrapper creation

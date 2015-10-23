@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.core.ConceptTypesManager;
+import edu.asu.conceptpower.core.IConceptTypeManger;
 
 /**
  * This class provides required methods for concept type creation
@@ -25,7 +25,7 @@ import edu.asu.conceptpower.core.ConceptTypesManager;
 public class ConceptTypeAddController {
 
 	@Autowired
-	private ConceptTypesManager conceptTypesManager;
+	private IConceptTypeManger conceptTypesManager;
 
 
 	/**

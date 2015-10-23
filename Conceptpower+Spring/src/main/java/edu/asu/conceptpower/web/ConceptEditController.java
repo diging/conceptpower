@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
@@ -47,7 +47,7 @@ public class ConceptEditController {
 	private IUserManager usersManager;
 
 	@Autowired
-	private ConceptTypesManager conceptTypesManager;
+	private IConceptTypeManger conceptTypesManager;
 
 	@Autowired
 	IConceptWrapperCreator wrapperCreator;
