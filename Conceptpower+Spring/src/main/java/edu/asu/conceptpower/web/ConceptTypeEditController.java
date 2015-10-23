@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.core.ConceptTypesManager;
+import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.users.IUserManager;
 
 /**
@@ -28,7 +28,7 @@ import edu.asu.conceptpower.users.IUserManager;
 public class ConceptTypeEditController {
 
 	@Autowired
-	private ConceptTypesManager typeManager;
+	private IConceptTypeManger typeManager;
 
 	@Autowired
 	private IUserManager usersManager;

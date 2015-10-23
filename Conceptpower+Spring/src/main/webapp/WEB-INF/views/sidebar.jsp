@@ -3,12 +3,13 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page session="false"%>
+<%@ page isELIgnored ="false" %>
 
 
 <sec:authorize access="isAnonymous()">
 	<p />
 	<form name='f'
-		action="<c:url value='${pageContext.servletContext.contextPath}/j_spring_security_check' />"
+		action="<c:url value='j_spring_security_check' />"
 		method='post'>
 		<table>
 			<tr>

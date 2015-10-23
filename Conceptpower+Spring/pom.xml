@@ -8,11 +8,83 @@
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
-		<java-version>1.6</java-version>
-		<org.springframework-version>4.1.5.RELEASE</org.springframework-version>
+		<java-version>1.8</java-version>
+		<org.springframework-version>4.1.6.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.7.3</org.aspectj-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
+		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
+		<deploy.path.dev>conceptpower</deploy.path.dev>
+		<deploy.path.prod>conceptpower</deploy.path.prod>
+		<db.files.path>/Users/jdamerow/Software/Conceptpower/db_files</db.files.path>
+		<email.username></email.username>
+		<email.password></email.password>
+		<email.server.port>25</email.server.port>
+		<email.server.host>http://example.net/</email.server.host>
+		<admin.username>admin</admin.username>
+		<admin.password>admin</admin.password>
+		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
+		<spring-security-version>3.2.8.RELEASE</spring-security-version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>objectdb</id>
+			<name>ObjectDB Repository</name>
+			<url>http://m2.objectdb.com</url>
+		</repository>
+	</repositories>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<!-- Dev Env. Properties -->
+			<properties>
+				<db.path>${db.files.path}</db.path>
+				<deploy.path>${deploy.path.dev}</deploy.path>
+				<tomcat.path>${tomcat.deploy.path}</tomcat.path>
+				<email.user>${email.username}</email.user>
+				<email.pw>${email.password}</email.pw>
+				<email.port>${email.server.port}</email.port>
+				<email.host>${email.server.host}</email.host>
+				<admin.user>${admin.username}</admin.user>
+				<admin.pw>${admin.password}</admin.pw>
+				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<!-- Test Env. Properties -->
+			<properties>
+				<db.path>${db.files.path}</db.path>
+				<deploy.path>conceptpower-test</deploy.path>
+				<tomcat.path>http://localhost:8081/manager/text</tomcat.path>
+				<email.user>${email.username}</email.user>
+				<email.pw>${email.password}</email.pw>
+				<email.port>${email.server.port}</email.port>
+				<email.host>${email.server.host}</email.host>
+				<admin.user>${admin.username}</admin.user>
+				<admin.pw>${admin.password}</admin.pw>
+				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<!-- Prod Env. Properties -->
+			<properties>
+				<db.path>${db.files.path}</db.path>
+				<deploy.path>${deploy.path.prod}</deploy.path>
+				<tomcat.path>${tomcat.deploy.path}</tomcat.path>
+				<email.user>${email.username}</email.user>
+				<email.pw>${email.password}</email.pw>
+				<email.port>${email.server.port}</email.port>
+				<email.host>${email.server.host}</email.host>
+				<admin.user>${admin.username}</admin.user>
+				<admin.pw>${admin.password}</admin.pw>
+				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
+			</properties>
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<!-- Spring -->
 		<dependency>
@@ -159,28 +231,23 @@
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>3.1.4.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>3.1.4.RELEASE</version>
+			<version>${spring-security-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>3.1.4.RELEASE</version>
+			<version>${spring-security-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
-			<version>3.1.4.RELEASE</version>
+			<version>${spring-security-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-ldap</artifactId>
-			<version>3.1.4.RELEASE</version>
+			<version>${spring-security-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-httpclient</groupId>
@@ -262,12 +329,6 @@
 			<version>3.0</version>
 		</dependency>
 
-		<!-- db4o -->
-		<dependency>
-			<groupId>com.db4o</groupId>
-			<artifactId>db4o-full-java5</artifactId>
-			<version>8.1-SNAPSHOT</version>
-		</dependency>
 
 		<dependency>
 			<groupId>edu.mit</groupId>
@@ -320,16 +381,85 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>4.2.0.Final</version>
 		</dependency>
-	</dependencies>
 
-	<!-- Repositories -->
-	<repositories>
-		<repository>
-			<id>db4o-repository</id>
-			<name>Db4o Repository</name>
-			<url>https://source.db4o.com/maven/</url>
-		</repository>
-	</repositories>
+		<!-- DB4O -->
+		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>db4o-full-java5</artifactId>
+			<version>8.0</version>
+		</dependency>
+
+		<!-- Object DB -->
+		<dependency>
+			<groupId>com.objectdb</groupId>
+			<artifactId>objectdb</artifactId>
+			<version>2.6.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>javax.persistence</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>aopalliance</groupId>
+			<artifactId>aopalliance</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.6.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<!-- Mockito -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.9.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring-security-version}</version>
+		</dependency>
+	</dependencies>
+	
+	
 
 	<build>
 		<plugins>
@@ -350,15 +480,32 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.3</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <filtering>true</filtering>
+                            <directory>src/main/webapp</directory>
+                            <includes>
+                                <include>**/*</include>
+                                <!-- include any other file types you want to filter -->
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -369,14 +516,15 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat6-maven-plugin</artifactId>
-				<version>2.3-SNAPSHOT</version>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
 				<configuration>
-					<url>http://localhost:8080/manager</url>
+					<url>${tomcat.path}</url>
 					<server>TomcatServer</server>
-					<path>/conceptpower</path>
+					<path>/${deploy.path}</path>
 				</configuration>
 			</plugin>
 		</plugins>
+		
 	</build>
 </project>

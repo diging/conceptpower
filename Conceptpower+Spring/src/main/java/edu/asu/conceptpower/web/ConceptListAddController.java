@@ -7,14 +7,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.asu.conceptpower.core.ConceptManager;
+import edu.asu.conceptpower.core.IConceptListManager;
+import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.exceptions.DictionaryExistsException;
 
 @Controller
 public class ConceptListAddController {
 
 	@Autowired
-	private ConceptManager conceptManager;
+	private IConceptManager conceptManager;
+	
+	@Autowired
+	private IConceptListManager conceptListManager;
 
 	/**
 	 * This method provides a string value to redirect user to add concept list
@@ -42,7 +46,7 @@ public class ConceptListAddController {
 		String description = req.getParameter("description");
 
 		try {
-			conceptManager.addConceptList(name, description);
+			conceptListManager.addConceptList(name, description);
 		} catch (DictionaryExistsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

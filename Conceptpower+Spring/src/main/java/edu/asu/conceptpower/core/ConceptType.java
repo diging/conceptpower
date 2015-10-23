@@ -50,16 +50,33 @@ public class ConceptType implements Serializable {
 		this.matches = matches;
 	}
 
-	@Override
-	public boolean equals(Object arg0) {
-		if (!(arg0 instanceof ConceptType))
-			return false;
-		
-		return ((ConceptType)arg0).getTypeId().equals(getTypeId());
-	}
-
 	public void setCreatorId(String creatorId) {
 		this.creatorId = creatorId;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((typeId == null) ? 0 : typeId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ConceptType other = (ConceptType) obj;
+		if (typeId == null) {
+			if (other.typeId != null)
+				return false;
+		} else if (!typeId.equals(other.typeId))
+			return false;
+		return true;
 	}
 
 	public String getCreatorId() {

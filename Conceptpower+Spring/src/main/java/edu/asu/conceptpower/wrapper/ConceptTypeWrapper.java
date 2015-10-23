@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.util.URICreator;
+import edu.asu.conceptpower.util.URIHelper;
 
 /**
  * 
@@ -23,7 +23,7 @@ public class ConceptTypeWrapper implements Serializable {
 	private ConceptType supertype;
 
 	@Autowired
-	URICreator URICreator;
+	URIHelper URICreator;
 
 	public void setType(ConceptType type) {
 		this.type = type;

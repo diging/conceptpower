@@ -20,10 +20,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
+import edu.asu.conceptpower.core.IConceptListManager;
+import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
@@ -37,13 +38,16 @@ import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 public class ConceptEditController {
 
 	@Autowired
-	ConceptManager conceptManager;
+	private IConceptManager conceptManager;
+	
+	@Autowired
+	private IConceptListManager conceptListManager;
 
 	@Autowired
 	private IUserManager usersManager;
 
 	@Autowired
-	private ConceptTypesManager conceptTypesManager;
+	private IConceptTypeManger conceptTypesManager;
 
 	@Autowired
 	IConceptWrapperCreator wrapperCreator;
@@ -70,7 +74,7 @@ public class ConceptEditController {
 			types.put(conceptType.getTypeId(), conceptType.getTypeName());
 		}
 
-		List<ConceptList> allLists = conceptManager.getAllConceptLists();
+		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
 		Map<String, String> lists = new LinkedHashMap<String, String>();
 		for (ConceptList conceptList : allLists) {
 			lists.put(conceptList.getConceptListName(),
