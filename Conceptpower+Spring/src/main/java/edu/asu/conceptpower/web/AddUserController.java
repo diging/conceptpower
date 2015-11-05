@@ -28,6 +28,10 @@ public class AddUserController {
 	 * 
 	 * @param req
 	 *            Holds HTTP request information
+	 * @param model
+	 * 			  Holds generic information about the model
+	 * @param user
+	 * 			  Holds the User bean values retrieved from the add page
 	 * @return String to redirect user to user list page
 	 */
 	@RequestMapping(value = "auth/user/createuser")
