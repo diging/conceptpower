@@ -47,6 +47,7 @@ public class UserEditController {
 				user.getName());
 		userBacking.setIsAdmin(user.getIsAdmin());
 		userBacking.setEmail(user.getEmail());
+		
 		model.addAttribute("user", userBacking);
 		return "auth/user/edituser";
 	}
