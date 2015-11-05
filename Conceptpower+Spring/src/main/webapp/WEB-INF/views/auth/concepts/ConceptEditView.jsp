@@ -149,32 +149,40 @@
 									success : function(response) {
 										var border = response.length > 0 ? 1
 												: 0;
+										
+										alert(response.length);
+										
+										//var entryObject = JSON.parse(reponse);
+										//alert(entryObject);
+										
+										for (var i =0; i<response.length; i++) {
+											//var entryObject = JSON.parse(reponse[i]);
+											//var entryObject = JSON.stringify(reponse, null, 3);
+											//alert(reponse);
+											//alert(entryObject);
+											//alert(response[i]);
+									          //  alert(errMsg);
+										}
 										var html = '<table border="'+ border +'" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
 										var len = response.length;
-										for (var i = 0; i < len; i++) {
-											html += '<tr><td align="justify"><font size="2">'
-													+ '<a onclick="synonymRemove(\''
-													+ response[i].id
-													+ '\')">Remove</a>'
-													+ '</font></td>';
-											html += '<td align="justify"><font size="2">'
-													+ response[i].word
-													+ '</font></td>';
-											html += '<td align="justify"><font size="2">'
-													+ response[i].description
-													+ '</font></td></tr>';
-										}
-										html += '</tbody></table>';
-										$("#addedSynonyms").html(html);
-
+										alert(len);
+										//parseData(response);										
 									}
 								});
 					});
+	
+	function parseData(synonyms){
+		alert(synonyms);
+		
+		
+	}
+	
+	
 </script>
 
 
 <form
-	action="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/edit/${id}"
+	action="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/edit/${conceptId}"
 	method='post'>
 
 	<h1>Delete concept</h1>
@@ -185,7 +193,7 @@
 	<p>${description}</p>
 	<br /> <br />
 	<table>
-
+	
 		<tr>
 			<td>Concept</td>
 			<td><input type="text" name="name" id="name" value="${word}"></td>
@@ -243,9 +251,8 @@
 		</tr>
 		<tr>
 			<td><input type="text" name="conceptid" id="conceptid"
-				hidden="true" value="${id}"></td>
+				type="hidden" value="${conceptId}"></td>
 		</tr>
-
 	</table>
 
 	<table>
