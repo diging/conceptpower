@@ -2,26 +2,27 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <h1>Add new user</h1>
 <p>Add a new user here.</p>
-<form
+<form:form commandName="user"
 	action="${pageContext.servletContext.contextPath}/auth/user/createuser"
 	method='post'>
 	<table>
 		<tr>
 			<td>UserName:</td>
-			<td><input type="text" name="username" id="username"></td>
+			<td><form:input type="text" name="username" id="username" path="user"></form:input></td>
+			<td>${errUserName}</td>
 		</tr>
 
 		<tr>
 			<td>Full Name:</td>
-			<td><input type="text" name="fullname" id="fullname"></td>
+			<td><form:input type="text" name="fullname" id="fullname" path="name"></form:input></td>
 		</tr>
 		<tr>
 			<td>Email:</td>
-			<td><input type="text" name="email" id="email" /></td>
+			<td><form:input type="text" name="email" id="email" path="email"></form:input></td>
 		</tr>
 		<tr>
 			<td>Password:</td>
-			<td><input type="password" name="password" id="password"></td>
+			<td><form:input type="password" name="password" id="password" path="pw"></form:input></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit" value="Create user"
@@ -29,4 +30,4 @@
 		</tr>
 	</table>
 
-</form>
+</form:form>
