@@ -106,7 +106,7 @@ public class ForgottenPasswordController {
 			return "resetError";
 		}
 		
-		UserBacking userBacking = new UserBacking(token.getUser().getUser(), token.getUser().getName());
+		UserBacking userBacking = new UserBacking(token.getUser().getUsername(), token.getUser().getName());
 		userBacking.setToken(token.getToken());
 		model.addAttribute("userBacking", userBacking);
 		return "reset";

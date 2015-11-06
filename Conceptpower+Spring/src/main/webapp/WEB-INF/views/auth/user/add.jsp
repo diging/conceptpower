@@ -9,23 +9,26 @@
 		<tr>
 			<td>UserName:</td>
 			<td><form:input type="text" name="username" id="username"
-					path="user"></form:input></td>
-			<td><form:errors path="user"></form:errors></td>
+					path="username"></form:input></td>
+			<td><form:errors path="username"></form:errors></td>
 		</tr>
 
 		<tr>
 			<td>Full Name:</td>
 			<td><form:input type="text" name="fullname" id="fullname"
 					path="name"></form:input></td>
+			<td><form:errors path="name"></form:errors></td>
 		</tr>
 		<tr>
 			<td>Email:</td>
 			<td><form:input type="text" name="email" id="email" path="email"></form:input></td>
+			<td><form:errors path="email"></form:errors></td>
 		</tr>
 		<tr>
 			<td>Password:</td>
 			<td><form:input type="password" name="password" id="password"
 					path="pw"></form:input></td>
+			<td><form:errors path="pw"></form:errors></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit" value="Create user"
