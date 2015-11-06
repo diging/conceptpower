@@ -30,7 +30,7 @@ public class UserValidator implements Validator {
         // Validator for username - reject if empty or if contains special
         // characters.
         if (username == null || !username.matches("^[a-z0-9_-]{3,16}$")) {
-            System.out.println("In User Validator");
+            
             err.rejectValue("username", "required.username");
         }
 
