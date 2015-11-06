@@ -8,13 +8,15 @@
 	<table>
 		<tr>
 			<td>UserName:</td>
-			<td><form:input type="text" name="username" id="username" path="user"></form:input></td>
-			<td>${errUserName}</td>
+			<td><form:input type="text" name="username" id="username"
+					path="user"></form:input></td>
+			<td><form:errors path="user"></form:errors></td>
 		</tr>
 
 		<tr>
 			<td>Full Name:</td>
-			<td><form:input type="text" name="fullname" id="fullname" path="name"></form:input></td>
+			<td><form:input type="text" name="fullname" id="fullname"
+					path="name"></form:input></td>
 		</tr>
 		<tr>
 			<td>Email:</td>
@@ -22,7 +24,8 @@
 		</tr>
 		<tr>
 			<td>Password:</td>
-			<td><form:input type="password" name="password" id="password" path="pw"></form:input></td>
+			<td><form:input type="password" name="password" id="password"
+					path="pw"></form:input></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit" value="Create user"
