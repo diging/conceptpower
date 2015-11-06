@@ -50,7 +50,7 @@ public class UserValidator implements Validator {
             err.rejectValue("pw", "required.password");
         }
         // Validator for password - reject if too short
-        if (pw.length() < 4) {
+        if (!pw.isEmpty() && pw.length() < 4) {
             err.rejectValue("pw", "password.short");
         }
         // Validator for email - reject if not proper
