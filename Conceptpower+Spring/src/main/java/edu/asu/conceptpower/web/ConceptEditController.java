@@ -209,6 +209,7 @@ public class ConceptEditController {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
 		String synonymIds = concept.getSynonymIds();
+		
 		if (synonymIds != null) {
 			String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
 			if (ids != null) {
