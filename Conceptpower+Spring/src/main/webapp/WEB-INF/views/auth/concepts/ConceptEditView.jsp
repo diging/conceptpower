@@ -6,172 +6,180 @@
 <%@ page session="false"%>
 
 <script>
-    $(function() {
-        $("#addsynonym").click(function() {
-            $("#dialog").dialog({
-                width : 'auto'
-            });
-            $("#synonymsDialogTable").show();
-        });
-    });
+	$(function() {
+		$("#addsynonym").click(function() {
+			$("#dialog").dialog({
+				width : 'auto'
+			});
+			$("#synonymsDialogTable").show();
+		});
+	});
 
-    $(document).ready(definedatatable);
+	$(document).ready(definedatatable);
 
-    function definedatatable() {
-        $('#synonymstable').dataTable(
-                {
-                    "bJQueryUI" : true,
-                    "sPaginationType" : "full_numbers",
-                    "bAutoWidth" : false,
-                    "bStateSave" : true,
-                    "aoColumns" : [ {
-                        "sTitle" : "Term",
-                        "mDataProp" : "word",
-                    }, {
-                        "sTitle" : "POS",
-                        "mDataProp" : "pos",
-                    }, {
-                        "sTitle" : "Description",
-                        "mDataProp" : "description",
-                    }, {
-                        "sTitle" : "Add",
-                        "mDataProp" : "id"
-                    } ],
-                    "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
-                        $('td:eq(3)', nRow).html(
-                                '<a onclick="synonymAdd(\'' + aData.id
-                                        + '\')">Add</a>');
-                        return nRow;
-                    }
-                });
-    };
+	function definedatatable() {
+		$('#synonymstable').dataTable(
+				{
+					"bJQueryUI" : true,
+					"sPaginationType" : "full_numbers",
+					"bAutoWidth" : false,
+					"bStateSave" : true,
+					"aoColumns" : [ {
+						"sTitle" : "Term",
+						"mDataProp" : "word",
+					}, {
+						"sTitle" : "POS",
+						"mDataProp" : "pos",
+					}, {
+						"sTitle" : "Description",
+						"mDataProp" : "description",
+					}, {
+						"sTitle" : "Add",
+						"mDataProp" : "id"
+					} ],
+					"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
+						$('td:eq(3)', nRow).html(
+								'<a onclick="synonymAdd(\'' + aData.id
+										+ '\')">Add</a>');
+						return nRow;
+					}
+				});
+	};
 
-    $(function() {
-        $("#synonymsearch")
-                .click(
-                        function() {
-                            $("#synonymViewDiv").show();
-                            $("#synonymstable").show();
-                            var synonymname = $("#synonymname").val();
-                            $
-                                    .ajax({
-                                        type : "GET",
-                                        url : "${pageContext.servletContext.contextPath}/conceptEditSynonymView",
-                                        data : {
-                                            synonymname : synonymname
-                                        },
-                                        success : function(response) {
-                                            $('#synonymstable').dataTable()
-                                                    .fnAddData(response);
-                                        }
-                                    });
-                        });
-    });
+	$(function() {
+		$("#synonymsearch")
+				.click(
+						function() {
+							$("#synonymViewDiv").show();
+							$("#synonymstable").show();
+							var synonymname = $("#synonymname").val();
+							$
+									.ajax({
+										type : "GET",
+										url : "${pageContext.servletContext.contextPath}/conceptEditSynonymView",
+										data : {
+											synonymname : synonymname
+										},
+										success : function(response) {
+											$('#synonymstable').dataTable()
+													.fnAddData(response);
+										}
+									});
+						});
+	});
 
-    var synonymAdd = function(synonymid) {
-        $("#dialog").dialog("close");
-        $("#synonymsDialogTable").hide();
-        $
-                .ajax({
-                    type : "GET",
-                    url : "${pageContext.servletContext.contextPath}/conceptEditAddSynonym",
-                    data : {
-                        synonymid : synonymid
-                    },
-                    success : function(response) {
+	var synonymAdd = function(synonymid) {
+		$("#dialog").dialog("close");
+		$("#synonymsDialogTable").hide();
+		$
+				.ajax({
+					type : "GET",
+					url : "${pageContext.servletContext.contextPath}/conceptEditAddSynonym",
+					data : {
+						synonymid : synonymid
+					},
+					success : function(response) {
 
-                        var html = '<table border="1" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
-                        var len = response.length;
-                        for (var i = 0; i < len; i++) {
-                            html += '<tr><td align="justify"><font size="2">'
-                                    + '<a onclick="synonymRemove(\''
-                                    + response[i].id + '\')">Remove</a>'
-                                    + '</font></td>';
-                            html += '<td align="justify"><font size="2">'
-                                    + response[i].word + '</font></td>';
-                            html += '<td align="justify"><font size="2">'
-                                    + response[i].description
-                                    + '</font></td></tr>';
-                        }
-                        html += '</tbody></table>';
-                        $("#addedSynonyms").html(html);
-                    }
-                });
-    };
+						var html = '<table border="1" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
+						var len = response.length;
+						for (var i = 0; i < len; i++) {
+							html += '<tr><td align="justify"><font size="2">'
+									+ '<a onclick="synonymRemove(\''
+									+ response[i].id + '\')">Remove</a>'
+									+ '</font></td>';
+							html += '<td align="justify"><font size="2">'
+									+ response[i].word + '</font></td>';
+							html += '<td align="justify"><font size="2">'
+									+ response[i].description
+									+ '</font></td></tr>';
+						}
+						html += '</tbody></table>';
+						$("#addedSynonyms").html(html);
+					}
+				});
+	};
 
-    var synonymRemove = function(synonymid) {
-        $
+	var synonymRemove = function(synonymid) {
+		$
 
-                .ajax({
-                    type : "GET",
-                    url : "${pageContext.servletContext.contextPath}/conceptEditRemoveSynonym",
-                    data : {
-                        synonymid : synonymid
-                    },
-                    success : function(response) {
-                        var border = response.length > 0 ? 1 : 0;
-                        var html = '<table border="'+ border +'" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
-                        var len = response.length;
-                        for (var i = 0; i < len; i++) {
-                            html += '<tr><td align="justify"><font size="2">'
-                                    + '<a onclick="synonymRemove(\''
-                                    + response[i].id + '\')">Remove</a>'
-                                    + '</font></td>';
-                            html += '<td align="justify"><font size="2">'
-                                    + response[i].word + '</font></td>';
-                            html += '<td align="justify"><font size="2">'
-                                    + response[i].description
-                                    + '</font></td></tr>';
-                        }
-                        html += '</tbody></table>';
-                        $("#addedSynonyms").html(html);
+				.ajax({
+					type : "GET",
+					url : "${pageContext.servletContext.contextPath}/conceptEditRemoveSynonym",
+					data : {
+						synonymid : synonymid
+					},
+					success : function(response) {
+						var border = response.length > 0 ? 1 : 0;
+						var html = '<table border="'+ border +'" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
+						var len = response.length;
+						for (var i = 0; i < len; i++) {
+							html += '<tr><td align="justify"><font size="2">'
+									+ '<a onclick="synonymRemove(\''
+									+ response[i].id + '\')">Remove</a>'
+									+ '</font></td>';
+							html += '<td align="justify"><font size="2">'
+									+ response[i].word + '</font></td>';
+							html += '<td align="justify"><font size="2">'
+									+ response[i].description
+									+ '</font></td></tr>';
+						}
+						html += '</tbody></table>';
+						$("#addedSynonyms").html(html);
 
-                    }
-                });
-    };
+					}
+				});
+	};
 
-    $(document)
-            .ready(
-                    function() {
-                        $('#synonyms').dataTable({
-                            "bJQueryUI" : true,
-                            "sPaginationType" : "full_numbers",
-                            "bAutoWidth" : false
-                        });
-                        var conceptid = $('#conceptid').val();
-                        $
-                                .ajax({
-                                    type : "GET",
-                                    url : "${pageContext.servletContext.contextPath}/getConceptEditSynonyms",
-                                    data : {
-                                        conceptid : conceptid
-                                    },
-                                    success : function(response) {
-                                        var border = response.length > 0 ? 1
-                                                : 0;
-                                        var html = '<table border="'+ border +'" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
-                                        alert(html);
-                                        var synonym = JSON.parse(response);
-                                        var total = synonym.Total;
-                                        for (var i = 0; i < total; i++) {
-                                            var eachSynonym = synonym.synonyms[i];
-                                            html += '<tr id='+eachSynonym.Id+'><td align="justify"><font size="2">'
-                                                    + '<a onclick="synonymRemove(\''
-                                                    + eachSynonym.Id
-                                                    + '\')">Remove</a>'
-                                                    + '</font></td>';
-                                            html += '<td align="justify"><font size="2">'
-                                                    + eachSynonym.Word
-                                                    + '</font></td>';
-                                            html += '<td align="justify"><font size="2">'
-                                                    + eachSynonym.Description
-                                                    + '</font></td></tr>';
-                                        }
-                                        html += '</tbody></table>';
-                                        $("#addedSynonyms").html(html);
-                                    }
-                                });
-                    });
+	$(document)
+			.ready(
+					function() {
+						$('#synonyms').dataTable({
+							"bJQueryUI" : true,
+							"sPaginationType" : "full_numbers",
+							"bAutoWidth" : false
+						});
+						var conceptid = $('#conceptid').val();
+						$
+								.ajax({
+									type : "GET",
+									url : "${pageContext.servletContext.contextPath}/getConceptEditSynonyms",
+									data : {
+										conceptid : conceptid
+									},
+									success : function(response) {
+										var border = response.length > 0 ? 1
+												: 0;
+										var html = '<table border="'+ border +'" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
+										var synonym = JSON.parse(response);
+										var total = synonym.Total;
+										for (var i = 0; i < total; i++) {
+											var eachSynonym = synonym.synonyms[i];
+											$('#synonymsids').val($('#synonymsids').val() + eachSynonym.Id);
+											html += '<tr id='+eachSynonym.Id+'><td align="justify"><font size="2">'
+													+ '<a onclick="synonymTemporaryRemove(\''
+													+ eachSynonym.Id
+													+ '\')">Remove</a>'
+													+ '</font></td>';
+											html += '<td align="justify"><font size="2">'
+													+ eachSynonym.Word
+													+ '</font></td>';
+											html += '<td align="justify"><font size="2">'
+													+ eachSynonym.Description
+													+ '</font></td></tr>';
+										}
+										html += '</tbody></table>';
+										$("#addedSynonyms").html(html);
+									}
+								});
+					});
+
+	var synonymTemporaryRemove = function(synonymid) {
+	    var count = $('#addedSynonymsTable tr').length;
+	        $('#'+synonymid).remove();
+	        if(count==1){
+	        $('#addedSynonymsTable').remove();
+	        }
+	};
 </script>
 
 
