@@ -200,12 +200,11 @@ public class ConceptEditController {
 	 * @param model
 	 *            A generic model holder for Servlet
 	 * @return List of existing synonyms
-	 * @throws JSONException 
+	 * @throws JSONException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
-	public @ResponseBody
-	ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid,
-			ModelMap model) throws JSONException {
+	public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model)
+			throws JSONException {
 
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
@@ -222,21 +221,34 @@ public class ConceptEditController {
 				}
 			}
 		}
-		JSONArray jsonArray = new JSONArray();
-		JSONObject json  = new JSONObject();
 		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
 		int i = 0;
+		StringBuffer jsonStringBuilder = new StringBuffer("{");
+		jsonStringBuilder.append("\"Total\"");
+		jsonStringBuilder.append(":");
+		jsonStringBuilder.append(synonyms.size());
+		jsonStringBuilder.append(",");
+		jsonStringBuilder.append("\"synonyms\":");
+		jsonStringBuilder.append("[");
 		for (ConceptEntry syn : synonyms) {
 			arraySynonyms[i++] = syn;
-			jsonArray.add(syn.getId());
-			jsonArray.add(syn.getWord());
-			jsonArray.add(syn.getDescription());
-			jsonArray.add(syn);
-			//jsonArray.put("arraySynonyms", arraySynonyms[i++].getId()+" "+arraySynonyms[i++].getWord()+" "+arraySynonyms[i++].getDescription());
+			// Appending for next element in JSON
+			if (i != 1) {
+				jsonStringBuilder.append(",");
+			}
+			jsonStringBuilder.append("{");
+			jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
+			jsonStringBuilder.append(",");
+			jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
+			jsonStringBuilder.append(",");
+			String description = syn.getDescription().replaceAll("\"", "'");
+			jsonStringBuilder.append("\"Description\":\"" + description + "\"");
+			jsonStringBuilder.append("}");
 		}
-		json.put("synonyms",jsonArray);
-		//json.put("arraySynonym", arraySynonyms);
-		return new ResponseEntity<String>(json.toString(), HttpStatus.OK);
+		jsonStringBuilder.append("]");
+		jsonStringBuilder.append("}");
+		System.out.println(jsonStringBuilder.toString());
+		return new ResponseEntity<String>(jsonStringBuilder.toString(), HttpStatus.OK);
 	}
 
 }
