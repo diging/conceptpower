@@ -19,15 +19,15 @@
 		<c:forEach var="user" items="${users}">
 			<tr>
 				<td><a
-					href="${pageContext.servletContext.contextPath}/auth/user/deleteuser/${user.user}"><img
+					href="${pageContext.servletContext.contextPath}/auth/user/deleteuser/${user.username}"><img
 						src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png" /></a></td>
 				<td><a
-					href="${pageContext.servletContext.contextPath}/auth/user/edituser/${user.user}"><img
+					href="${pageContext.servletContext.contextPath}/auth/user/edituser/${user.username}"><img
 						src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png" /></a></td>
 				<td><a
-					href="${pageContext.servletContext.contextPath}/auth/user/editpassword/${user.user}"><img
+					href="${pageContext.servletContext.contextPath}/auth/user/editpassword/${user.username}"><img
 						src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png" /></a></td>
-				<td>${user.user}</td>
+				<td>${user.username}</td>
 				<td>${user.name}</td>
 				<td>${user.email}</td>
 				<td><c:if test="${user.isAdmin}">

@@ -9,7 +9,7 @@ public class User implements Serializable {
 	 */
 	private static final long serialVersionUID = 1019105087386557957L;
 	
-	private String user;
+	private String username;
 	private String pw;
 	private String name;
 	private boolean isAdmin;
@@ -18,23 +18,23 @@ public class User implements Serializable {
 	public User() {}
 	
 	public User(String user, String passwd) {
-		this.user = user;
+		this.username = user;
 		this.pw = passwd;
 		isAdmin = false;
 	}
 	
 	public User(String user, String passwd, boolean isAdmin) {
-		this.user = user;
+		this.username = user;
 		this.pw = passwd;
 		this.isAdmin = isAdmin;
 	}
 
-	public String getUser() {
-		return user;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setUsername(String user) {
+		this.username = user;
 	}
 
 	public String getPw() {

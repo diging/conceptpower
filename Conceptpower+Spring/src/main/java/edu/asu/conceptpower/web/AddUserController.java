@@ -44,7 +44,10 @@ public class AddUserController {
      *            Holds generic information about the model
      * @param user
      *            Holds the User bean values retrieved from the add page
+     * @param result
+     *            Binding Result Object for binding errors if any
      * @return String to redirect user to user list page
+     * 
      */
     @RequestMapping(value = "auth/user/createuser")
     public String createUser(HttpServletRequest req, ModelMap model, @ModelAttribute("user") @Validated User user,
@@ -52,15 +55,8 @@ public class AddUserController {
         if (result.hasErrors()) {
             return "auth/user/add";
         }
-        User newUser = new User(user.getUser(), user.getPw());
-        newUser.setName(user.getName());
-        newUser.setEmail(user.getEmail());
-        if (usersManager.findUser(newUser.getUser()) == null)
-            usersManager.addUser(user);
-        else {
 
-            return "auth/user/add";
-        }
+        usersManager.addUser(user);
         return "redirect:/auth/user/list";
     }
 
