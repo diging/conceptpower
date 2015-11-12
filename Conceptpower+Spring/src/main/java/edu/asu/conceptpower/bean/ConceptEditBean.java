@@ -28,6 +28,7 @@ public class ConceptEditBean {
 	private String selectedTypeName;
 	private ConceptType[] types;
 	private String conceptId;
+	private List conceptEntryList;
 
 	public String getConcept() {
 		return concept;
@@ -169,6 +170,14 @@ public class ConceptEditBean {
 
 	public void setSynonymsids(String synonymsids) {
 		this.synonymsids = synonymsids;
+	}
+
+	public List getConceptEntryList() {
+		return conceptEntryList;
+	}
+
+	public void setConceptEntryList(List conceptEntryList) {
+		this.conceptEntryList = conceptEntryList;
 	}
 
 }

@@ -149,8 +149,7 @@ public class ConceptManager implements IConceptManager {
 				uniqueSynonym.append(Constants.CONCEPT_SEPARATOR);
 				}
 			}
-			entry.setSynonymIds(uniqueSynonym.toString());
-			
+			entry.setSynonymIds(uniqueSynonym.toString());			
 		}
 	}
 
@@ -236,7 +235,7 @@ public class ConceptManager implements IConceptManager {
 		if (concept == null)
 			return allEntries.toArray(new ConceptEntry[allEntries.size()]);
 
-		fillConceptEntry(concept);
+		//fillConceptEntry(concept);
 
 		List<String> ids = new ArrayList<String>();
 
