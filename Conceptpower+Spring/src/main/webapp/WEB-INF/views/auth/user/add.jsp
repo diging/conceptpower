@@ -16,8 +16,8 @@
 		<tr>
 			<td>Full Name:</td>
 			<td><form:input type="text" name="fullname" id="fullname"
-					path="name"></form:input></td>
-			<td><form:errors path="name"></form:errors></td>
+					path="fullname"></form:input></td>
+			<td><form:errors path="fullname"></form:errors></td>
 		</tr>
 		<tr>
 			<td>Email:</td>

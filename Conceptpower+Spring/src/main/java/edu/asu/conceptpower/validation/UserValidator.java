@@ -11,37 +11,52 @@ import edu.asu.conceptpower.users.User;
 @Component
 public class UserValidator implements Validator {
     @Autowired
-    IUserManager usersManager;
+    private IUserManager usersManager;
 
     @Override
     public boolean supports(Class<?> arg0) {
         return User.class.isAssignableFrom(arg0);
     }
 
+    /**
+     * Validates the User Object for proper specification
+     * 
+     * @param err
+     *      Error object for binding all the validation errors
+     * @param arg0
+     *      Generic Object to hold the details of the user from the UI
+     */
     @Override
     public void validate(Object arg0, Errors err) {
 
         User user = (User) arg0;
         String username = user.getUsername();
-        String fullName = user.getName();
+        String fullName = user.getFullName();
         String emailid = user.getEmail();
         String pw = user.getPw();
 
         // Validator for username - reject if empty or if contains special
         // characters.
-        if (username == null || !username.matches("^[a-z0-9_-]{3,16}$")) {
-            
+        if (username.isEmpty()) {
             err.rejectValue("username", "required.username");
+        }
+
+        if (!username.isEmpty() && !username.matches("^[a-z0-9_-]{3,16}$")) {
+            err.rejectValue("username", "proper.username");
         }
 
         // Validator for Name - reject if empty or if contains numbers or
         // special characters.
-        if (fullName == null || !fullName.matches("^[a-zA-Z ]{3,25}$")) {
-            err.rejectValue("name", "required.name");
+        if (fullName.isEmpty()) {
+            err.rejectValue("fullname", "required.name");
+        }
+
+        if (!fullName.isEmpty() && !fullName.matches("^[a-zA-Z ]{3,25}$")) {
+            err.rejectValue("fullname", "proper.name");
         }
 
         // Validator for emailid - reject if empty
-        if (emailid == null) {
+        if (emailid.isEmpty()) {
             err.rejectValue("email", "required.email");
         }
 
@@ -54,9 +69,9 @@ public class UserValidator implements Validator {
             err.rejectValue("pw", "password.short");
         }
         // Validator for email - reject if not proper
-        if (!emailid.matches(
+        if (!emailid.isEmpty() && !emailid.matches(
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
-            err.rejectValue("email", "email.proper");
+            err.rejectValue("email", "proper.email");
 
         }
         // Validator for username - reject if already exists

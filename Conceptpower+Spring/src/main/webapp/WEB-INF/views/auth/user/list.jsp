@@ -28,7 +28,7 @@
 					href="${pageContext.servletContext.contextPath}/auth/user/editpassword/${user.username}"><img
 						src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png" /></a></td>
 				<td>${user.username}</td>
-				<td>${user.name}</td>
+				<td>${user.fullname}</td>
 				<td>${user.email}</td>
 				<td><c:if test="${user.isAdmin}">
 						<img

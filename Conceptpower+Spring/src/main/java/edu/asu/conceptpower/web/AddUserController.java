@@ -26,9 +26,9 @@ import edu.asu.conceptpower.validation.UserValidator;
 public class AddUserController {
 
     @Autowired
-    IUserManager usersManager;
+    private IUserManager usersManager;
     @Autowired
-    UserValidator uValidator;
+    private UserValidator uValidator;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {

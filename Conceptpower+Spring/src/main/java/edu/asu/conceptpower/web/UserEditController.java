@@ -44,7 +44,7 @@ public class UserEditController {
 			return "auth/user/notfound";
 
 		UserBacking userBacking = new UserBacking(user.getUsername(),
-				user.getName());
+				user.getFullName());
 		userBacking.setIsAdmin(user.getIsAdmin());
 		userBacking.setEmail(user.getEmail());
 		
@@ -68,7 +68,7 @@ public class UserEditController {
 			return "auth/user/notfound";
 
 		uUser.setIsAdmin(user.getIsAdmin());
-		uUser.setName(user.getName());
+		uUser.setFullName(user.getFullname());
 		uUser.setEmail(user.getEmail());
 
 		userManager.storeModifiedUser(uUser);
@@ -91,10 +91,10 @@ public class UserEditController {
 		if (user == null)
 			return "auth/user/notfound";
 
-		UserBacking userBaking = new UserBacking();
+		UserBacking userBacking = new UserBacking();
 
 		model.addAttribute("username", user.getUsername());
-		model.addAttribute("userbacking", userBaking);
+		model.addAttribute("userbacking", userBacking);
 
 		return "auth/user/editpassword";
 	}
@@ -140,7 +140,7 @@ public class UserEditController {
 			return "auth/user/notfound";
 
 		UserBacking userBacking = new UserBacking(user.getUsername(),
-				user.getName());
+				user.getFullName());
 		userBacking.setIsAdmin(user.getIsAdmin());
 
 		model.addAttribute("user", userBacking);
