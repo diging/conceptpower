@@ -14,6 +14,7 @@
 		<org.slf4j-version>1.7.5</org.slf4j-version>
 		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
 		<deploy.path.dev>conceptpower</deploy.path.dev>
+		<deploy.path.test>conceptpower-test</deploy.path.test>
 		<deploy.path.prod>conceptpower</deploy.path.prod>
 		<db.files.path>/Users/jdamerow/Software/Conceptpower/db_files</db.files.path>
 		<email.username></email.username>
@@ -56,8 +57,8 @@
 			<!-- Test Env. Properties -->
 			<properties>
 				<db.path>${db.files.path}</db.path>
-				<deploy.path>conceptpower-test</deploy.path>
-				<tomcat.path>http://localhost:8081/manager/text</tomcat.path>
+				<deploy.path>${deploy.path.test}</deploy.path>
+				<tomcat.path>${tomcat.deploy.path}</tomcat.path>
 				<email.user>${email.username}</email.user>
 				<email.pw>${email.password}</email.pw>
 				<email.port>${email.server.port}</email.port>
