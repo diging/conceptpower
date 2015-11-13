@@ -106,8 +106,8 @@ public class UsersManager implements IUserManager {
 		List<User> userNames = new ArrayList<User>();
 		for (User u : users) {
 			User user = new User();
-			user.setUser(u.getUser());
-			user.setName(u.getName());
+			user.setUsername(u.getUsername());
+			user.setFullName(u.getFullName());
 			user.setEmail(u.getEmail());
 			user.setIsAdmin(u.getIsAdmin());
 			userNames.add(user);
