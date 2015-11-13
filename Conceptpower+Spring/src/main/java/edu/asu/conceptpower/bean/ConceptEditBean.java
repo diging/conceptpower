@@ -7,11 +7,12 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.core.POS;
 
 @Component
-public class ConceptEditBean {
+public class ConceptEditBean implements POS {
 
-	private Map<String, String> possMap = new LinkedHashMap<String, String>();
+	private Map<String, String> posMap = new LinkedHashMap<String, String>();
 	private String word;
 	private String concept;
 	private String selectedPosValue;
@@ -94,15 +95,6 @@ public class ConceptEditBean {
 		this.selectedPosValue = selectedPosValue;
 	}
 
-	public Map<String, String> getPossMap() {
-		possMap.put("noun", "Nouns");
-		possMap.put("verb", "Verbs");
-		possMap.put("adverb", "Adverb");
-		possMap.put("adjective", "Adjective");
-		possMap.put("other", "Other");
-		return possMap;
-	}
-
 	public String getSelectedListName() {
 		return selectedListName;
 	}
@@ -110,7 +102,6 @@ public class ConceptEditBean {
 	public void setSelectedListName(String selectedListName) {
 		this.selectedListName = selectedListName;
 	}
-
 
 	public String getSelectedTypeId() {
 		return selectedTypeId;
@@ -152,10 +143,6 @@ public class ConceptEditBean {
 		this.conceptList = conceptList;
 	}
 
-	public void setPossMap(Map<String, String> possMap) {
-		this.possMap = possMap;
-	}
-
 	public ConceptType[] getTypes() {
 		return types;
 	}
@@ -178,6 +165,18 @@ public class ConceptEditBean {
 
 	public void setConceptEntryList(List conceptEntryList) {
 		this.conceptEntryList = conceptEntryList;
+	}
+
+	public Map<String, String> getPosMap() {
+		posMap.put(edu.asu.conceptpower.core.POS.NOUN, POS.NOUN);
+		posMap.put(edu.asu.conceptpower.core.POS.VERB, POS.VERB);
+		posMap.put(edu.asu.conceptpower.core.POS.ADVERB, POS.ADVERB);
+		posMap.put(edu.asu.conceptpower.core.POS.ADJECTIVE, POS.ADJECTIVE);
+		return posMap;
+	}
+
+	public void setPosMap(Map<String, String> posMap) {
+		this.posMap = posMap;
 	}
 
 }

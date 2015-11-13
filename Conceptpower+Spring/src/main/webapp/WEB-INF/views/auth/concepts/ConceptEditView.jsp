@@ -92,11 +92,7 @@
 
                         //Adding synonymId to the existing list
                         var list = document.getElementById("synonymsids").value;
-
-                        alert(list);
                         list += eachSynonym.Id + ',';
-                        alert("New List");
-                        alert(list);
                         $("#synonymsids").val(list);
 
                         var htmlValue = '<tr id='+eachSynonym.Id+'><td align="justify"><font size="2">'
@@ -154,7 +150,6 @@
 
                                         }
                                         // document.getElementById("conceptEntryList").value = arr;
-                                        // alert(arr.length);
                                         html += '</tbody></table>';
                                         $("#addedSynonyms").html(html);
                                     }
@@ -204,7 +199,7 @@
 			<td>POS</td>
 			<td><form:select path="selectedPosValue">
 					<form:option value="" />
-					<form:options items="${conceptEditBean.possMap}" />
+					<form:options items="${conceptEditBean.posMap}" />
 				</form:select></td>
 		</tr>
 		<tr>
@@ -245,8 +240,7 @@
 			<td><form:input path="similar" /></td>
 		</tr>
 		<tr>
-			<td><form:hidden path="synonymsids" /> <form:hidden
-					path="conceptEntryList" /></td>
+			<td> <form:hidden path="conceptEntryList"/></td>
 		</tr>
 		<tr>
 			<td><input type="text" name="conceptid" id="conceptid"

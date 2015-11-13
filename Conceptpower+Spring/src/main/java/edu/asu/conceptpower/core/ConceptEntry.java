@@ -72,11 +72,9 @@ public class ConceptEntry implements Serializable {
 
 	private boolean isDeleted;
 
-	public ConceptEntry(){
-		
-	}
+	public ConceptEntry(){}
 	
-	public ConceptEntry(String id,String word,String description){
+	public ConceptEntry(String id, String word, String description){
 		this.id = id;
 		this.word = word;
 		this.description = description;
