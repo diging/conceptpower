@@ -29,7 +29,6 @@ import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.users.IUserManager;
-import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
 /**
  * This method provides all the required methods for editing a concept
@@ -51,9 +50,6 @@ public class ConceptEditController {
 
 	@Autowired
 	private IConceptTypeManger conceptTypesManager;
-
-	@Autowired
-	IConceptWrapperCreator wrapperCreator;
 
 	/**
 	 * This method provides information of a concept to be edited for concept
@@ -79,7 +75,6 @@ public class ConceptEditController {
 		conceptEditBean.setConceptList(allLists);
 		conceptEditBean.setDescription(concept.getDescription().trim());
 		conceptEditBean.setSynonymsids(concept.getSynonymIds());
-		System.out.println("Synonyms Ids"+concept.getSynonymIds());
 		conceptEditBean.setSelectedTypeId(concept.getTypeId());
 		conceptEditBean.setTypes(allTypes);
 		conceptEditBean.setSelectedTypeId(concept.getTypeId());
@@ -118,7 +113,8 @@ public class ConceptEditController {
 	 *         page
 	 */
 	@RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
-	public String confirmlEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,@ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean) {
+	public String confirmlEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
+			@ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean) {
 
 		ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
 		conceptEntry.setWord(conceptEditBean.getWord());
@@ -152,8 +148,7 @@ public class ConceptEditController {
 	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
 	public @ResponseBody ResponseEntity<String> searchConcept(@RequestParam("synonymname") String synonymname) {
 		ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
-		
-		
+
 		StringBuffer jsonStringBuilder = new StringBuffer("{");
 		jsonStringBuilder.append("\"Total\":");
 		jsonStringBuilder.append(entries.length);
@@ -162,27 +157,27 @@ public class ConceptEditController {
 		int i = 0;
 		jsonStringBuilder.append("[");
 		for (ConceptEntry syn : entries) {
-			
+
 			jsonStringBuilder.append("{");
 			jsonStringBuilder.append("\"id\":\"" + syn.getId() + "\"");
 			jsonStringBuilder.append(",");
 			jsonStringBuilder.append("\"word\":\"" + syn.getWord() + "\"");
 			jsonStringBuilder.append(",");
+			jsonStringBuilder.append("\"description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
+			jsonStringBuilder.append(",");
 			String pos = syn.getPos().replaceAll("\"", "'");
 			jsonStringBuilder.append("\"pos\":\"" + pos + "\"");
 			jsonStringBuilder.append("}");
-			if (i != entries.length-1) {
-				//For last value not appending ,
+			if (i != entries.length - 1) {
+				// For last value not appending ,
 				jsonStringBuilder.append(",");
 			}
 			i++;
 		}
-		
+
 		jsonStringBuilder.append("]");
 		jsonStringBuilder.append("}");
-		
-		System.out.println(jsonStringBuilder.toString());
-		
+
 		return new ResponseEntity<String>(jsonStringBuilder.toString(), HttpStatus.OK);
 	}
 
@@ -203,8 +198,9 @@ public class ConceptEditController {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
 		String synonymIds = concept.getSynonymIds();
-		
-		//Inside getConceptEntry . In fillConceptEntry the below logic is performed
+
+		// Inside getConceptEntry . In fillConceptEntry the below logic is
+		// performed
 		if (synonymIds != null) {
 			String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
 			if (ids != null) {
@@ -218,7 +214,7 @@ public class ConceptEditController {
 			}
 		}
 		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
-		
+
 		int i = 0;
 		StringBuffer jsonStringBuilder = new StringBuffer("{");
 		jsonStringBuilder.append("\"Total\"");
@@ -246,7 +242,40 @@ public class ConceptEditController {
 		}
 		jsonStringBuilder.append("]");
 		jsonStringBuilder.append("}");
-		System.out.println(jsonStringBuilder.toString());
+		return new ResponseEntity<String>(jsonStringBuilder.toString(), HttpStatus.OK);
+	}
+
+	/**
+	 * This method fetches the synonym details based on the synonym id selected
+	 * in the Add synonym table.
+	 * 
+	 * @param synonymid
+	 *            Holds the ID of a synonym
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return synonym details
+	 * @throws JSONException
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "getConceptAddSynonyms")
+	public @ResponseBody ResponseEntity<String> getSynonymRows(@RequestParam("synonymid") String synonymid,
+			ModelMap model) throws JSONException {
+
+		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid);
+		StringBuffer jsonStringBuilder = new StringBuffer("{");
+		jsonStringBuilder.append("\"synonyms\":");
+		jsonStringBuilder.append("[");
+		jsonStringBuilder.append("{");
+		jsonStringBuilder.append("\"Id\":\"" + synonym.getId() + "\"");
+		jsonStringBuilder.append(",");
+		jsonStringBuilder.append("\"Word\":\"" + synonym.getWord() + "\"");
+		jsonStringBuilder.append(",");
+		String description = synonym.getDescription().replaceAll("\"", "'");
+		jsonStringBuilder.append("\"Description\":\"" + description + "\"");
+		jsonStringBuilder.append(",");
+		jsonStringBuilder.append("\"SynonymObject\":\"" + synonym + "\"");
+		jsonStringBuilder.append("}");
+		jsonStringBuilder.append("]");
+		jsonStringBuilder.append("}");
 		return new ResponseEntity<String>(jsonStringBuilder.toString(), HttpStatus.OK);
 	}
 
