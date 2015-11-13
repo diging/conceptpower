@@ -31,7 +31,7 @@ public class UserValidator implements Validator {
 
         User user = (User) arg0;
         String username = user.getUsername();
-        String fullName = user.getFullName();
+        String fullName = user.getFullname();
         String emailid = user.getEmail();
         String pw = user.getPw();
 
