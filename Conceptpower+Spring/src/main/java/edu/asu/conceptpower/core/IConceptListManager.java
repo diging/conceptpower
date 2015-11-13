@@ -12,8 +12,7 @@ public interface IConceptListManager {
 	 * @param description Description of the new concept list.
 	 * @throws DictionaryExistsException
 	 */
-	public abstract void addConceptList(String name, String description)
-			throws DictionaryExistsException;
+	public abstract void addConceptList(String name, String description);
 
 	/**
 	 * Deletes the dictionary with the given name from the database.
@@ -42,5 +41,10 @@ public interface IConceptListManager {
 	 */
 	public abstract void storeModifiedConceptList(ConceptList list,
 			String listname);
+	/**
+	 * Check if the conceptList exists with the same name.
+	 * @return boolean true if conceptListName exists.
+	 */
+	public abstract boolean checkExistingConceptList(String name);
 
 }
