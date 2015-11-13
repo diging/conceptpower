@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
 		if (user.getIsAdmin())
 			roles.add(new ConceptpowerGrantedAuthority(ConceptpowerGrantedAuthority.ROLE_ADMIN));
 		
-		UserDetails details = new CPUserDetails(user.getUser(), user.getName(), user.getPw(), roles, user.getEmail());
+		UserDetails details = new CPUserDetails(user.getUsername(), user.getFullName(), user.getPw(), roles, user.getEmail());
 		return details;
 	}
 }

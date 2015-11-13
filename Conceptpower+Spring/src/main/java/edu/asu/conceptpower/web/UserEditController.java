@@ -43,8 +43,8 @@ public class UserEditController {
 		if (user == null)
 			return "auth/user/notfound";
 
-		UserBacking userBacking = new UserBacking(user.getUser(),
-				user.getName());
+		UserBacking userBacking = new UserBacking(user.getUsername(),
+				user.getFullName());
 		userBacking.setIsAdmin(user.getIsAdmin());
 		userBacking.setEmail(user.getEmail());
 		
@@ -68,7 +68,7 @@ public class UserEditController {
 			return "auth/user/notfound";
 
 		uUser.setIsAdmin(user.getIsAdmin());
-		uUser.setName(user.getName());
+		uUser.setFullName(user.getFullname());
 		uUser.setEmail(user.getEmail());
 
 		userManager.storeModifiedUser(uUser);
@@ -91,10 +91,10 @@ public class UserEditController {
 		if (user == null)
 			return "auth/user/notfound";
 
-		UserBacking userBaking = new UserBacking();
+		UserBacking userBacking = new UserBacking();
 
-		model.addAttribute("username", user.getUser());
-		model.addAttribute("userbacking", userBaking);
+		model.addAttribute("username", user.getUsername());
+		model.addAttribute("userbacking", userBacking);
 
 		return "auth/user/editpassword";
 	}
@@ -139,8 +139,8 @@ public class UserEditController {
 		if (user == null)
 			return "auth/user/notfound";
 
-		UserBacking userBacking = new UserBacking(user.getUser(),
-				user.getName());
+		UserBacking userBacking = new UserBacking(user.getUsername(),
+				user.getFullName());
 		userBacking.setIsAdmin(user.getIsAdmin());
 
 		model.addAttribute("user", userBacking);
@@ -155,7 +155,7 @@ public class UserEditController {
 		if (uUser == null)
 			return "auth/user/notfound";
 
-		userManager.deleteUser(uUser.getUser());
+		userManager.deleteUser(uUser.getUsername());
 		return "redirect:/auth/user/list";
 	}
 
