@@ -34,14 +34,7 @@ public class User implements Serializable {
         return username;
     }
 
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-    
+        
     public void setUsername(String user) {
         this.username = user;
     }
@@ -62,11 +55,11 @@ public class User implements Serializable {
         return isAdmin;
     }
 
-    public void setFullName(String name) {
+    public void setFullname(String name) {
         this.fullname = name;
     }
 
-    public String getFullName() {
+    public String getFullname() {
         return fullname;
     }
 
