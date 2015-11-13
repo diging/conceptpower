@@ -41,8 +41,10 @@ public interface IConceptListManager {
 	 */
 	public abstract void storeModifiedConceptList(ConceptList list,
 			String listname);
+
 	/**
 	 * Check if the conceptList exists with the same name.
+	 * 
 	 * @return boolean true if conceptListName exists.
 	 */
 	public abstract boolean checkExistingConceptList(String name);

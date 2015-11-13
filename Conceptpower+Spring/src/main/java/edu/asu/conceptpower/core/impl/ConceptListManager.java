@@ -30,8 +30,12 @@ public class ConceptListManager implements IConceptListManager {
 	@Autowired
 	private IConceptDBManager client;
 
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#addConceptList(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.asu.conceptpower.core.impl.IConceptListManager#addConceptList(java.
+	 * lang.String, java.lang.String)
 	 */
 	@Override
 	public void addConceptList(String name, String description) {
@@ -103,11 +107,17 @@ public class ConceptListManager implements IConceptListManager {
 			id = prefix + UUID.randomUUID().toString();
 		}
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#
+	 * checkExistingConceptList(java. lang.String, java.lang.String)
+	 */
 	@Override
 	public boolean checkExistingConceptList(String name) {
 		ConceptList dict = client.getConceptList(name);
-		if (dict != null){
+		if (dict != null) {
 			return true;
 		}
 		return false;

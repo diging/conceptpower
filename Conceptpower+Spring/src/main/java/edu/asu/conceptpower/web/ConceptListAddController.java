@@ -20,13 +20,12 @@ public class ConceptListAddController {
 
 	@Autowired
 	private IConceptListManager conceptListManager;
-	
+
 	@Autowired
 	private ConceptListAddValidator validator;
-	
+
 	@InitBinder
-	protected void initBinder (WebDataBinder validateBinder)
-	{
+	protected void initBinder(WebDataBinder validateBinder) {
 		validateBinder.setValidator(validator);
 	}
 
@@ -37,8 +36,9 @@ public class ConceptListAddController {
 	 * @return string value to redirect user to add concept list page
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconceptlist")
-	public ModelMap listAddView(@ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm) throws Exception{
-		return new ModelMap("/auth/conceptlist/addconceptlist");
+	public String listAddView(@ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm)
+			throws Exception {
+		return "/auth/conceptlist/addconceptlist";
 	}
 
 	/**
@@ -52,9 +52,10 @@ public class ConceptListAddController {
 	 */
 	@RequestMapping(value = "auth/concepts/createconceptlist")
 	public String createConceptList(HttpServletRequest req, ModelMap model,
-			@Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,BindingResult result) {
-		
-		if(result.hasErrors()){
+			@Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
+			BindingResult result) {
+
+		if (result.hasErrors()) {
 			return "/auth/conceptlist/addconceptlist";
 		}
 		conceptListManager.addConceptList(conceptListAddForm.getListName(), conceptListAddForm.getDescription());
