@@ -138,6 +138,18 @@ public class ConceptManager implements IConceptManager {
 
 			entry.setSynonymIds((entry.getSynonymIds() != null ? entry.getSynonymIds() : "")
 					+ Constants.CONCEPT_SEPARATOR + sb.toString());
+			
+			//Since synonymId contains duplicates placing a check to remove duplicates from synonymId
+			String synonymIds = entry.getSynonymIds();
+			String[] synonyms = synonymIds.split(Constants.CONCEPT_SEPARATOR);
+			StringBuilder uniqueSynonym = new StringBuilder("");
+			for(String synonym:synonyms){
+				if(!uniqueSynonym.toString().contains(synonym)){
+				uniqueSynonym.append(synonym);
+				uniqueSynonym.append(Constants.CONCEPT_SEPARATOR);
+				}
+			}
+			entry.setSynonymIds(uniqueSynonym.toString());			
 		}
 	}
 
@@ -223,7 +235,7 @@ public class ConceptManager implements IConceptManager {
 		if (concept == null)
 			return allEntries.toArray(new ConceptEntry[allEntries.size()]);
 
-		fillConceptEntry(concept);
+		//fillConceptEntry(concept);
 
 		List<String> ids = new ArrayList<String>();
 

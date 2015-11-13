@@ -72,6 +72,16 @@ public class ConceptEntry implements Serializable {
 
 	private boolean isDeleted;
 
+	public ConceptEntry(){
+		
+	}
+	
+	public ConceptEntry(String id,String word,String description){
+		this.id = id;
+		this.word = word;
+		this.description = description;
+	}
+	
 	/**
 	 * A string containing the id of the user who created
 	 * an entry.
