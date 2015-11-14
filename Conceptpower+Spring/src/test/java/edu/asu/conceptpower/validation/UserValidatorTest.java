@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.core;
+package edu.asu.conceptpower.validation;
 
 import static org.junit.Assert.*;
 
@@ -24,21 +24,18 @@ public class UserValidatorTest {
     private IUserManager uManager;
     @InjectMocks
     private UserValidator uValidator;
-    @Mock
-    private Errors errors;
-
-    User validUser;
-
-    User invalidUser;
-
-    User existingUser;
     
-    User emptyUser;
+    private User validUser;
+
+    private User invalidUser;
+
+    private User existingUser;
+    
+    private User emptyUser;
 
     @Before
     public void init() {
         uManager = Mockito.mock(IUserManager.class);
-
         MockitoAnnotations.initMocks(this);
 
         validUser = new User();
@@ -71,7 +68,7 @@ public class UserValidatorTest {
     @Test
     public void testValidUserInput() {
 
-        errors = new BindException(validUser, "user");     
+        Errors errors = new BindException(validUser, "user");     
         ValidationUtils.invokeValidator(uValidator, validUser, errors);
         Assert.assertFalse(errors.hasErrors());
         Assert.assertNull(errors.getFieldError("username"));
@@ -83,36 +80,34 @@ public class UserValidatorTest {
     @Test
     public void testInvalidUserInput() {
 
-        errors = new BindException(invalidUser, "user");
+        Errors errors = new BindException(invalidUser, "user");
         ValidationUtils.invokeValidator(uValidator, invalidUser, errors);
         Assert.assertEquals(4, errors.getFieldErrorCount());
-        Assert.assertTrue(errors.hasErrors());
-        Assert.assertNotNull(errors.getFieldError("username"));
-        Assert.assertNotNull(errors.getFieldError("email"));
-        Assert.assertNotNull(errors.getFieldError("pw"));
-        Assert.assertNotNull(errors.getFieldError("fullname"));
+        Assert.assertEquals(errors.getFieldError("username").getCode(),"proper.username");
+        Assert.assertEquals(errors.getFieldError("email").getCode(),"proper.email");
+        Assert.assertEquals(errors.getFieldError("pw").getCode(),"password.short");
+        Assert.assertEquals(errors.getFieldError("fullname").getCode(),"proper.name");
 
     }
 
     @Test
     public void testEmptyUser() {
-        errors = new BindException(emptyUser, "user");
+        Errors errors = new BindException(emptyUser, "user");
         ValidationUtils.invokeValidator(uValidator, emptyUser, errors);
-        Assert.assertEquals(4, errors.getFieldErrorCount());
-        Assert.assertTrue(errors.hasErrors());        
-        Assert.assertNotNull(errors.getFieldError("username"));
-        Assert.assertNotNull(errors.getFieldError("email"));
-        Assert.assertNotNull(errors.getFieldError("pw"));
-        Assert.assertNotNull(errors.getFieldError("fullname"));
+        Assert.assertEquals(4, errors.getFieldErrorCount());        
+        Assert.assertEquals(errors.getFieldError("username").getCode(),"required.username");
+        Assert.assertEquals(errors.getFieldError("email").getCode(),"required.email");
+        Assert.assertEquals(errors.getFieldError("pw").getCode(),"required.password");
+        Assert.assertEquals(errors.getFieldError("fullname").getCode(),"required.name");
+     
     }
     
     @Test
     public void testUserExists() {
-        errors = new BindException(existingUser, "user");
+        Errors errors = new BindException(existingUser, "user");
         ValidationUtils.invokeValidator(uValidator, existingUser, errors);
         Assert.assertEquals(1, errors.getFieldErrorCount());
-        Assert.assertTrue(errors.hasErrors());
-        Assert.assertNotNull(errors.getFieldError("username"));
+        Assert.assertEquals(errors.getFieldError("username").getCode(),"exists.username");
         Assert.assertNull(errors.getFieldError("email"));
         Assert.assertNull(errors.getFieldError("pw"));
         Assert.assertNull(errors.getFieldError("fullname"));

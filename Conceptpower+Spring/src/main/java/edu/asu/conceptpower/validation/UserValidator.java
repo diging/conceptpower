@@ -76,7 +76,7 @@ public class UserValidator implements Validator {
         }
         // Validator for username - reject if already exists
         if (usersManager.findUser(username) != null) {
-            err.rejectValue("username", "username.exists");
+            err.rejectValue("username", "exists.username");
         }
 
     }
