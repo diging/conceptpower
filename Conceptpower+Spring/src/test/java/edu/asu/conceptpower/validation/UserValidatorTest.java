@@ -19,18 +19,18 @@ import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.validation.UserValidator;
 import junit.framework.Assert;
 
+
+
+
 public class UserValidatorTest {
     @Mock
     private IUserManager uManager;
     @InjectMocks
     private UserValidator uValidator;
-    
+
     private User validUser;
-
     private User invalidUser;
-
     private User existingUser;
-    
     private User emptyUser;
 
     @Before
@@ -55,7 +55,7 @@ public class UserValidatorTest {
         emptyUser.setEmail("");
         emptyUser.setPw("");
         emptyUser.setFullname("");
-        
+
         existingUser = new User();
         existingUser.setUsername("username");
         existingUser.setEmail("test@abc.xyz");
@@ -68,11 +68,11 @@ public class UserValidatorTest {
     @Test
     public void testValidUserInput() {
 
-        Errors errors = new BindException(validUser, "user");     
+        Errors errors = new BindException(validUser, "user");
         ValidationUtils.invokeValidator(uValidator, validUser, errors);
         Assert.assertFalse(errors.hasErrors());
         Assert.assertNull(errors.getFieldError("username"));
-        Assert.assertNull(errors.getFieldError("email")); 
+        Assert.assertNull(errors.getFieldError("email"));
         Assert.assertNull(errors.getFieldError("pw"));
         Assert.assertNull(errors.getFieldError("fullname"));
     }
@@ -83,10 +83,10 @@ public class UserValidatorTest {
         Errors errors = new BindException(invalidUser, "user");
         ValidationUtils.invokeValidator(uValidator, invalidUser, errors);
         Assert.assertEquals(4, errors.getFieldErrorCount());
-        Assert.assertEquals(errors.getFieldError("username").getCode(),"proper.username");
-        Assert.assertEquals(errors.getFieldError("email").getCode(),"proper.email");
-        Assert.assertEquals(errors.getFieldError("pw").getCode(),"password.short");
-        Assert.assertEquals(errors.getFieldError("fullname").getCode(),"proper.name");
+        Assert.assertEquals(errors.getFieldError("username").getCode(), "proper.username");
+        Assert.assertEquals(errors.getFieldError("email").getCode(), "proper.email");
+        Assert.assertEquals(errors.getFieldError("pw").getCode(), "password.short");
+        Assert.assertEquals(errors.getFieldError("fullname").getCode(), "proper.name");
 
     }
 
@@ -94,20 +94,20 @@ public class UserValidatorTest {
     public void testEmptyUser() {
         Errors errors = new BindException(emptyUser, "user");
         ValidationUtils.invokeValidator(uValidator, emptyUser, errors);
-        Assert.assertEquals(4, errors.getFieldErrorCount());        
-        Assert.assertEquals(errors.getFieldError("username").getCode(),"required.username");
-        Assert.assertEquals(errors.getFieldError("email").getCode(),"required.email");
-        Assert.assertEquals(errors.getFieldError("pw").getCode(),"required.password");
-        Assert.assertEquals(errors.getFieldError("fullname").getCode(),"required.name");
-     
+        Assert.assertEquals(4, errors.getFieldErrorCount());
+        Assert.assertEquals(errors.getFieldError("username").getCode(), "required.username");
+        Assert.assertEquals(errors.getFieldError("email").getCode(), "required.email");
+        Assert.assertEquals(errors.getFieldError("pw").getCode(), "required.password");
+        Assert.assertEquals(errors.getFieldError("fullname").getCode(), "required.name");
+
     }
-    
+
     @Test
     public void testUserExists() {
         Errors errors = new BindException(existingUser, "user");
         ValidationUtils.invokeValidator(uValidator, existingUser, errors);
         Assert.assertEquals(1, errors.getFieldErrorCount());
-        Assert.assertEquals(errors.getFieldError("username").getCode(),"exists.username");
+        Assert.assertEquals(errors.getFieldError("username").getCode(), "exists.username");
         Assert.assertNull(errors.getFieldError("email"));
         Assert.assertNull(errors.getFieldError("pw"));
         Assert.assertNull(errors.getFieldError("fullname"));

@@ -22,9 +22,9 @@ public class UserValidator implements Validator {
      * Validates the User Object for proper specification
      * 
      * @param err
-     *      Error object for binding all the validation errors
+     *            Error object for binding all the validation errors
      * @param arg0
-     *      Generic Object to hold the details of the user from the UI
+     *            Generic Object to hold the details of the user from the UI
      */
     @Override
     public void validate(Object arg0, Errors err) {
