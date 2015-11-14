@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,11 +48,12 @@ public class ConceptListEditController {
 	 */
 	@RequestMapping(value = "auth/conceptlist/editlist/{listname}", method = RequestMethod.GET)
 	public String prepareEditList(@PathVariable("listname") String listName,
-			ModelMap model) {
+			ModelMap model,@ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm) {
 
 		ConceptList list = conceptListManager.getConceptList(listName);
-		model.addAttribute("newlistname", list.getConceptListName());
-		model.addAttribute("description", list.getDescription());
+		conceptListAddForm.setListName(list.getConceptListName());
+		conceptListAddForm.setDescription(list.getDescription());
+		conceptListAddForm.setOldListName(list.getConceptListName());
 
 		return "/auth/conceptlist/editlist";
 	}
@@ -67,7 +69,7 @@ public class ConceptListEditController {
 	 */
 	@RequestMapping(value = "auth/conceptlist/storeeditlist/{listname}", method = RequestMethod.POST)
 	public String editList(@PathVariable("listname") String listName,
-			HttpServletRequest req) {
+			HttpServletRequest req,@ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm) {
 
 		ConceptList list = conceptListManager.getConceptList(listName);
 		list.setConceptListName(req.getParameter("newlistname"));
