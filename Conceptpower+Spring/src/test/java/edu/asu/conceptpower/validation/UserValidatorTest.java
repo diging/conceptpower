@@ -17,6 +17,7 @@ import org.springframework.validation.ValidationUtils;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.validation.UserValidator;
+import edu.asu.conceptpower.web.backing.UserBacking;
 import junit.framework.Assert;
 
 
@@ -28,8 +29,8 @@ public class UserValidatorTest {
     @InjectMocks
     private UserValidator uValidator;
 
-    private User validUser;
-    private User invalidUser;
+    private UserBacking validUser;
+    private UserBacking invalidUser;
     private User existingUser;
     private User emptyUser;
 
@@ -38,16 +39,18 @@ public class UserValidatorTest {
         uManager = Mockito.mock(IUserManager.class);
         MockitoAnnotations.initMocks(this);
 
-        validUser = new User();
+        validUser = new UserBacking();
         validUser.setUsername("validuser");
         validUser.setEmail("test@abc.xyz");
-        validUser.setPw("password");
+        validUser.setPassword("password");
+        validUser.setRetypedPassword("password");
         validUser.setFullname("Valid User");
 
-        invalidUser = new User();
+        invalidUser = new UserBacking();
         invalidUser.setUsername("Invalid User");
         invalidUser.setEmail("test@abc");
-        invalidUser.setPw("pas");
+        invalidUser.setPassword("pas");
+        validUser.setRetypedPassword("password");
         invalidUser.setFullname("Valid9User");
 
         emptyUser = new User();
@@ -104,8 +107,14 @@ public class UserValidatorTest {
 
     @Test
     public void testUserExists() {
-        Errors errors = new BindException(existingUser, "user");
-        ValidationUtils.invokeValidator(uValidator, existingUser, errors);
+        
+        UserBacking eUser = new UserBacking();
+        eUser.setUsername(existingUser.getUsername());
+        eUser.setPassword(existingUser.getPw());
+        eUser.setEmail(existingUser.getEmail());
+        eUser.setFullname(existingUser.getFullname());
+        Errors errors = new BindException(eUser, "user");
+        ValidationUtils.invokeValidator(uValidator, eUser, errors);
         Assert.assertEquals(1, errors.getFieldErrorCount());
         Assert.assertEquals(errors.getFieldError("username").getCode(), "exists.username");
         Assert.assertNull(errors.getFieldError("email"));
@@ -114,3 +123,4 @@ public class UserValidatorTest {
     }
 
 }
+

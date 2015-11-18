@@ -50,15 +50,10 @@ public class UserEditController {
      * @return Returns a string value to redirect user to edit user page
      */
     @RequestMapping(value = "auth/user/edituser/{id:.+}")
-    public String prepareEditUser(ModelMap model, @PathVariable String id,
-            @ModelAttribute("user") @Validated User gUser, BindingResult result) {
+    public String prepareEditUser(ModelMap model, @PathVariable String id, @ModelAttribute("user") UserBacking gUser,
+            BindingResult result) {
 
-        if (result.hasErrors()) {
-            return "auth/user/edituser/{id:.+}";
-        }
-
-        
-        User user = userManager.findUser(gUser.getUsername());
+        User user = userManager.findUser(id);
 
         if (user == null)
             return "auth/user/notfound";

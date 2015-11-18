@@ -7,7 +7,7 @@ import org.springframework.validation.Validator;
 
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
-
+import edu.asu.conceptpower.web.backing.UserBacking;
 @Component
 public class UserValidator implements Validator {
     @Autowired
@@ -15,7 +15,7 @@ public class UserValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> arg0) {
-        return User.class.isAssignableFrom(arg0);
+        return UserBacking.class.isAssignableFrom(arg0);
     }
 
     /**
@@ -29,11 +29,12 @@ public class UserValidator implements Validator {
     @Override
     public void validate(Object arg0, Errors err) {
 
-        User user = (User) arg0;
+        UserBacking user = (UserBacking) arg0;
         String username = user.getUsername();
         String fullName = user.getFullname();
         String emailid = user.getEmail();
-        String pw = user.getPw();
+        String password = user.getPassword();
+        String retypePassword = user.getRetypedPassword();
 
         // Validator for username - reject if empty or if contains special
         // characters.
@@ -61,13 +62,22 @@ public class UserValidator implements Validator {
         }
 
         // Validator for password - reject if empty
-        if (pw.isEmpty()) {
-            err.rejectValue("pw", "required.password");
+        if (password.isEmpty()) {
+            err.rejectValue("password", "required.password");
         }
         // Validator for password - reject if too short
-        if (!pw.isEmpty() && pw.length() < 4) {
-            err.rejectValue("pw", "password.short");
+        if (!password.isEmpty() && password.length() < 4) {
+            err.rejectValue("password", "short.password");
         }
+        
+        if (retypePassword.isEmpty()) {
+            err.rejectValue("retypedPassword", "required.password");
+        }
+        
+        if(!retypePassword.isEmpty() && !password.equals(retypePassword)){
+            err.rejectValue("retypedPassword", "match.passwords");
+        }
+        
         // Validator for email - reject if not proper
         if (!emailid.isEmpty() && !emailid.matches(
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {

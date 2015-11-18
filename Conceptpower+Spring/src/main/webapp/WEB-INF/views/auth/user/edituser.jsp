@@ -1,19 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<script>
-	var form = $('#edituserform');
-	$(document).on('submit', 'form', function() {
-
-		if ($("#fullname").val() === "") {
-			$("#fnerror").html('Name can not be empty !!');
-			return false;
-		}
-
-		return true;
-	});
-</script>
-
 <h2>Edit user:</h2>
 
 <form:form commandName="user"
