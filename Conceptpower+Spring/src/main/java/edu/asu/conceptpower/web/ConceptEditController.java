@@ -257,14 +257,14 @@ public class ConceptEditController {
 	
 	private void buildJSONWithoutSynonymObject(StringBuffer jsonStringBuilder, ConceptEntry syn) {
 		jsonStringBuilder.append("{");
-		jsonStringBuilder.append("\"id\":\"" + syn.getId() + "\"");
+		jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
 		jsonStringBuilder.append(",");
-		jsonStringBuilder.append("\"word\":\"" + syn.getWord() + "\"");
+		jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
 		jsonStringBuilder.append(",");
-		jsonStringBuilder.append("\"description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
+		jsonStringBuilder.append("\"Description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
 		jsonStringBuilder.append(",");
 		String pos = syn.getPos().replaceAll("\"", "'");
-		jsonStringBuilder.append("\"pos\":\"" + pos + "\"");
+		jsonStringBuilder.append("\"Pos\":\"" + pos + "\"");
 		jsonStringBuilder.append("}");
 	}
 	

@@ -27,16 +27,16 @@
                     "bStateSave" : true,
                     "aoColumns" : [ {
                         "sTitle" : "Term",
-                        "mDataProp" : "word",
+                        "mDataProp" : "Word",
                     }, {
                         "sTitle" : "POS",
-                        "mDataProp" : "pos",
+                        "mDataProp" : "Pos",
                     }, {
                         "sTitle" : "Description",
-                        "mDataProp" : "description",
+                        "mDataProp" : "Description",
                     }, {
                         "sTitle" : "Add",
-                        "mDataProp" : "id"
+                        "mDataProp" : "Id"
                     } ],
                     "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
                         $('td:eq(3)', nRow).html(
