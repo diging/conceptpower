@@ -6,7 +6,6 @@ public class ConceptListAddForm {
 	private String description;
 	private String oldListName;
 
-
 	public String getDescription() {
 		return description;
 	}
@@ -30,5 +29,4 @@ public class ConceptListAddForm {
 	public void setOldListName(String oldListName) {
 		this.oldListName = oldListName;
 	}
-
 }

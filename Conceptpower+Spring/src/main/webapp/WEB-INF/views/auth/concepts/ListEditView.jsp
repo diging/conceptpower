@@ -10,18 +10,20 @@
 <p>Edit concept list here.</p>
 
 <form:form
-	action="${pageContext.servletContext.contextPath}/auth/conceptlist/storeeditlist/${listname}"
+	action="${pageContext.servletContext.contextPath}/auth/conceptlist/storeeditlist"
 	method='post' commandName="conceptListAddForm">
 	<table>
 		<tr>
 			<td>List Name</td>
-			<td><form:input path="listName" /> <form:hidden
-					path="oldListName" /></td>
+			<td><form:input path="listName" />
+				<form:hidden path="oldListName" /></td>
+			<td><form:errors path="listName" class="ui-state-error-text"></form:errors></td>
 		</tr>
 
 		<tr>
 			<td>List Description</td>
 			<td><form:textarea rows="7" cols="50" path="description"></form:textarea></td>
+			<td><form:errors path="description" class="ui-state-error-text"></form:errors></td>
 		</tr>
 
 		<tr>
