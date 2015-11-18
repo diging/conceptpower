@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:se="http://www.springframework.org/schema/security"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:se="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
@@ -13,7 +12,7 @@
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 
-	
+
 	<import resource="wordnet-config.xml" />
 	<import resource="db4o-config.xml" />
 	<import resource="xml-config.xml" />
@@ -45,7 +44,13 @@
 
 	<util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames" value="validatormessages">
+
+		</property>
+	</bean>
 	<util:properties id="config" location="classpath:/config.properties" />
 
-	
+
 </beans>

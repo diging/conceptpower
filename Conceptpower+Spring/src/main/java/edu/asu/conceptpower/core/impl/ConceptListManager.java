@@ -30,20 +30,17 @@ public class ConceptListManager implements IConceptListManager {
 	@Autowired
 	private IConceptDBManager client;
 
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#addConceptList(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.asu.conceptpower.core.impl.IConceptListManager#addConceptList(java.
+	 * lang.String, java.lang.String)
 	 */
 	@Override
-	public void addConceptList(String name, String description)
-			throws DictionaryExistsException {
-		if (name.equals(Constants.WORDNET_DICTIONARY))
-			throw new DictionaryExistsException();
+	public void addConceptList(String name, String description) {
 
-		ConceptList dict = client.getConceptList(name);
-		if (dict != null)
-			throw new DictionaryExistsException();
-
-		dict = new ConceptList();
+		ConceptList dict = new ConceptList();
 		dict.setConceptListName(name);
 		dict.setDescription(description);
 		dict.setId(generateId(LIST_PREFIX));
@@ -109,5 +106,20 @@ public class ConceptListManager implements IConceptListManager {
 			// try other id
 			id = prefix + UUID.randomUUID().toString();
 		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#
+	 * checkExistingConceptList(java. lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean checkExistingConceptList(String name) {
+		ConceptList dict = client.getConceptList(name);
+		if (dict != null) {
+			return true;
+		}
+		return false;
 	}
 }

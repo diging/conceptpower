@@ -8,6 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +21,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
-import edu.asu.conceptpower.users.IUserManager;
+import edu.asu.conceptpower.validation.ConceptListAddValidator;
 
 /**
  * This class provides all the methods required for editing a concept list
@@ -31,10 +36,15 @@ public class ConceptListEditController {
 	private IConceptManager conceptManager;
 
 	@Autowired
-	private IUserManager usersManager;
-	
-	@Autowired
 	private IConceptListManager conceptListManager;
+
+	@Autowired
+	private ConceptListAddValidator validator;
+
+	@InitBinder
+	protected void initBinder(WebDataBinder validateBinder) {
+		validateBinder.setValidator(validator);
+	}
 
 	/**
 	 * This method provides list name and description of a list to be edited
@@ -46,13 +56,13 @@ public class ConceptListEditController {
 	 * @return Returns a string value to redirect user to edit list page
 	 */
 	@RequestMapping(value = "auth/conceptlist/editlist/{listname}", method = RequestMethod.GET)
-	public String prepareEditList(@PathVariable("listname") String listName,
-			ModelMap model) {
+	public String prepareEditList(@PathVariable("listname") String listName, ModelMap model,
+			@ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm) {
 
 		ConceptList list = conceptListManager.getConceptList(listName);
-		model.addAttribute("newlistname", list.getConceptListName());
-		model.addAttribute("description", list.getDescription());
-
+		conceptListAddForm.setListName(list.getConceptListName());
+		conceptListAddForm.setDescription(list.getDescription());
+		conceptListAddForm.setOldListName(listName);
 		return "/auth/conceptlist/editlist";
 	}
 
@@ -65,19 +75,23 @@ public class ConceptListEditController {
 	 *            holds HTTP request information
 	 * @return Returns a string value to redirect user to concept list page
 	 */
-	@RequestMapping(value = "auth/conceptlist/storeeditlist/{listname}", method = RequestMethod.POST)
-	public String editList(@PathVariable("listname") String listName,
-			HttpServletRequest req) {
+	@RequestMapping(value = "auth/conceptlist/storeeditlist", method = RequestMethod.POST)
+	public String editList(HttpServletRequest req,
+			@Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
+			BindingResult result, ModelMap model) {
 
-		ConceptList list = conceptListManager.getConceptList(listName);
-		list.setConceptListName(req.getParameter("newlistname"));
-		list.setDescription(req.getParameter("description"));
+		if (result.hasErrors()) {
+			return "/auth/conceptlist/editlist";
+		}
 
-		conceptListManager.storeModifiedConceptList(list, listName);
+		ConceptList list = conceptListManager.getConceptList(conceptListAddForm.getOldListName());
+		list.setConceptListName(conceptListAddForm.getListName());
+		list.setDescription(conceptListAddForm.getDescription());
+
+		conceptListManager.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
 
 		// modify the name for all the existing concepts under this concept list
-		List<ConceptEntry> entries = conceptManager
-				.getConceptListEntries(listName);
+		List<ConceptEntry> entries = conceptManager.getConceptListEntries(conceptListAddForm.getOldListName());
 		Iterator<ConceptEntry> entriesIterator = entries.iterator();
 
 		while (entriesIterator.hasNext()) {
