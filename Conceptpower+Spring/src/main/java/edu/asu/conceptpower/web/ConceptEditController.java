@@ -2,6 +2,7 @@ package edu.asu.conceptpower.web;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.bean.ConceptEditBean;
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -148,28 +148,8 @@ public class ConceptEditController {
 	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
 	public ResponseEntity<String> searchConcept(@RequestParam("synonymname") String synonymname) {
 		ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
-
-		StringBuffer jsonStringBuilder = new StringBuffer("{");
-		jsonStringBuilder.append("\"Total\":");
-		jsonStringBuilder.append(entries.length);
-		jsonStringBuilder.append(",");
-		jsonStringBuilder.append("\"synonyms\":");
-		int i = 0;
-		jsonStringBuilder.append("[");
-		for (ConceptEntry syn : entries) {
-
-			buildJSONWithoutSynonymObject(jsonStringBuilder, syn);
-			if (i != entries.length - 1) {
-				// For last value not appending ,
-				jsonStringBuilder.append(",");
-			}
-			i++;
-		}
-
-		jsonStringBuilder.append("]");
-		jsonStringBuilder.append("}");
-
-		return new ResponseEntity<String>(jsonStringBuilder.toString(), HttpStatus.OK);
+		List<ConceptEntry> synonyms =  Arrays.asList(entries);
+		return new ResponseEntity<String>(buildJSON(synonyms,true,false), HttpStatus.OK);
 	}
 
 	
@@ -206,27 +186,8 @@ public class ConceptEditController {
 				}
 			}
 		}
-		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
-
-		int i = 0;
-		StringBuffer jsonStringBuilder = new StringBuffer("{");
-		jsonStringBuilder.append("\"Total\"");
-		jsonStringBuilder.append(":");
-		jsonStringBuilder.append(synonyms.size());
-		jsonStringBuilder.append(",");
-		jsonStringBuilder.append("\"synonyms\":");
-		jsonStringBuilder.append("[");
-		for (ConceptEntry syn : synonyms) {
-			arraySynonyms[i++] = syn;
-			// Appending for next element in JSON
-			if (i != 1) {
-				jsonStringBuilder.append(",");
-			}
-			buildJSONWithSynonymObject(syn, jsonStringBuilder);
-		}
-		jsonStringBuilder.append("]");
-		jsonStringBuilder.append("}");
-		return new ResponseEntity<String>(jsonStringBuilder.toString(), HttpStatus.OK);
+		String jsonValue = buildJSON(synonyms,false,true);
+		return new ResponseEntity<String>(jsonValue, HttpStatus.OK);
 	}
 
 	/**
@@ -245,40 +206,54 @@ public class ConceptEditController {
 			ModelMap model) throws JSONException {
 
 		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid);
+		
+		List<ConceptEntry> synonymList = new ArrayList<ConceptEntry>();
+		synonymList.add(synonym);
+		return new ResponseEntity<String>(buildJSON(synonymList,false, true), HttpStatus.OK);
+	}
+	
+	
+	private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired,
+			boolean synonymRequired) {
+
+		int i = 0;
 		StringBuffer jsonStringBuilder = new StringBuffer("{");
+		jsonStringBuilder.append("\"Total\"");
+		jsonStringBuilder.append(":");
+		jsonStringBuilder.append(synonyms.size());
+		jsonStringBuilder.append(",");
 		jsonStringBuilder.append("\"synonyms\":");
 		jsonStringBuilder.append("[");
-		buildJSONWithSynonymObject(synonym, jsonStringBuilder);
+		for (ConceptEntry syn : synonyms) {
+			// Appending for next element in JSON
+			if (i != 0) {
+				jsonStringBuilder.append(",");
+			}
+
+			jsonStringBuilder.append("{");
+			jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
+			jsonStringBuilder.append(",");
+			jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
+			jsonStringBuilder.append(",");
+			jsonStringBuilder.append("\"Description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
+
+			if (posRequired == true) {
+				jsonStringBuilder.append(",");
+				String pos = syn.getPos().replaceAll("\"", "'");
+				jsonStringBuilder.append("\"Pos\":\"" + pos + "\"");
+			}
+
+			if (synonymRequired == true) {
+				jsonStringBuilder.append(",");
+				jsonStringBuilder.append("\"SynonymObject\":\"" + syn + "\"");
+			}
+
+			jsonStringBuilder.append("}");
+			i++;
+		}
 		jsonStringBuilder.append("]");
 		jsonStringBuilder.append("}");
-		return new ResponseEntity<String>(jsonStringBuilder.toString(), HttpStatus.OK);
-	}
-	
-	
-	private void buildJSONWithoutSynonymObject(StringBuffer jsonStringBuilder, ConceptEntry syn) {
-		jsonStringBuilder.append("{");
-		jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
-		jsonStringBuilder.append(",");
-		jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
-		jsonStringBuilder.append(",");
-		jsonStringBuilder.append("\"Description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
-		jsonStringBuilder.append(",");
-		String pos = syn.getPos().replaceAll("\"", "'");
-		jsonStringBuilder.append("\"Pos\":\"" + pos + "\"");
-		jsonStringBuilder.append("}");
-	}
-	
-	private void buildJSONWithSynonymObject(ConceptEntry synonym, StringBuffer jsonStringBuilder) {
-		jsonStringBuilder.append("{");
-		jsonStringBuilder.append("\"Id\":\"" + synonym.getId() + "\"");
-		jsonStringBuilder.append(",");
-		jsonStringBuilder.append("\"Word\":\"" + synonym.getWord() + "\"");
-		jsonStringBuilder.append(",");
-		String description = synonym.getDescription().replaceAll("\"", "'");
-		jsonStringBuilder.append("\"Description\":\"" + description + "\"");
-		jsonStringBuilder.append(",");
-		jsonStringBuilder.append("\"SynonymObject\":\"" + synonym + "\"");
-		jsonStringBuilder.append("}");
+		return jsonStringBuilder.toString();
 	}
 
 }

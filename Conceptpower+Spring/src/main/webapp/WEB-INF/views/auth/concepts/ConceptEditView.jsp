@@ -40,7 +40,7 @@
                     } ],
                     "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
                         $('td:eq(3)', nRow).html(
-                                '<a onclick="synonymAdd(\'' + aData.id
+                                '<a onclick="synonymAdd(\'' + aData.Id
                                         + '\')">Add</a>');
                         return nRow;
                     }
