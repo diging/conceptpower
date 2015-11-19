@@ -16,7 +16,7 @@
 <table class="greyContent">
 	<tr>
 		<td>Id:</td>
-		<td>${id}</td>
+		<td>${conceptId}</td>
 	</tr>
 	<tr>
 		<td>Wordnet Id:</td>
@@ -63,7 +63,7 @@
 <table>
 	<tr>
 		<td><a
-			href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${id}"><input
+			href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${conceptId}"><input
 				type="button" name="delete" id="delete" value="Yes, delete concept!" class="button"></a></td>
 
 		<td><a

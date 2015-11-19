@@ -45,7 +45,7 @@ public class ConceptDeleteController {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		model.addAttribute("word", concept.getWord());
 		model.addAttribute("description", concept.getDescription());
-		model.addAttribute("id", concept.getId());
+		model.addAttribute("conceptId", concept.getId());
 		model.addAttribute("wordnetId", concept.getWordnetId());
 		model.addAttribute("pos", concept.getPos());
 		model.addAttribute("conceptList", concept.getConceptList());
