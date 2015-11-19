@@ -148,11 +148,9 @@ public class ConceptEditController {
 	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
 	public ResponseEntity<String> searchConcept(@RequestParam("synonymname") String synonymname) {
 		ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
-		List<ConceptEntry> synonyms =  Arrays.asList(entries);
-		return new ResponseEntity<String>(buildJSON(synonyms,true,false), HttpStatus.OK);
+		List<ConceptEntry> synonyms = Arrays.asList(entries);
+		return new ResponseEntity<String>(buildJSON(synonyms, true, false), HttpStatus.OK);
 	}
-
-	
 
 	/**
 	 * This method provides the list of existing synonyms for a concept
@@ -186,8 +184,7 @@ public class ConceptEditController {
 				}
 			}
 		}
-		String jsonValue = buildJSON(synonyms,false,true);
-		return new ResponseEntity<String>(jsonValue, HttpStatus.OK);
+		return new ResponseEntity<String>(buildJSON(synonyms, false, true), HttpStatus.OK);
 	}
 
 	/**
@@ -202,19 +199,17 @@ public class ConceptEditController {
 	 * @throws JSONException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "getConceptAddSynonyms")
-	public ResponseEntity<String> getSynonymRows(@RequestParam("synonymid") String synonymid,
-			ModelMap model) throws JSONException {
+	public ResponseEntity<String> getSynonymRows(@RequestParam("synonymid") String synonymid, ModelMap model)
+			throws JSONException {
 
 		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid);
-		
+
 		List<ConceptEntry> synonymList = new ArrayList<ConceptEntry>();
 		synonymList.add(synonym);
-		return new ResponseEntity<String>(buildJSON(synonymList,false, true), HttpStatus.OK);
+		return new ResponseEntity<String>(buildJSON(synonymList, false, true), HttpStatus.OK);
 	}
-	
-	
-	private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired,
-			boolean synonymRequired) {
+
+	private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired, boolean synonymRequired) {
 
 		int i = 0;
 		StringBuffer jsonStringBuilder = new StringBuffer("{");
