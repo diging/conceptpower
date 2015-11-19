@@ -158,7 +158,7 @@ public class ConceptEditController {
 		conceptEntry.setTypeId(req.getParameter("types"));
 		conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
 
-		String userId = usersManager.findUser(principal.getName()).getUser();
+		String userId = usersManager.findUser(principal.getName()).getUsername();
 		String modified = conceptEntry.getModified() != null ? conceptEntry
 				.getModified() : "";
 		if (!modified.trim().isEmpty())

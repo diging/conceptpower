@@ -18,7 +18,8 @@
 
 		</tr>
 		<tr>
-			<td><form:hidden id="fullname" path="name" />Name :${user.name}</td>
+			<td><form:hidden id="fullname" path="fullname" />Name
+				:${user.fullname}</td>
 		</tr>
 		<tr>
 			<td>Is Administrator: <form:checkbox path="isAdmin" id="isadmin"
