@@ -74,8 +74,12 @@ public class UserEditController {
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
-    public String storeUserChanges(UserBacking user, Principal principal) {
+    public String storeUserChanges(UserBacking user, Principal principal, BindingResult result) {
 
+        if(result.hasErrors()){
+            return "auth/user/edituser/{id:.+}";
+        }
+        
         User uUser = userManager.findUser(user.getUsername());
 
         if (uUser == null)

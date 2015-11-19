@@ -1,5 +1,9 @@
 package edu.asu.conceptpower.web.backing;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import edu.asu.conceptpower.validation.ValuesMatch;
@@ -12,6 +16,7 @@ public class UserBacking {
 
     @NotEmpty(message = "Please enter a password.")
     private String password;
+    
     private String email;
 
     @NotEmpty(message = "Please retype your password.")
@@ -86,3 +91,4 @@ public class UserBacking {
     }
 
 }
+

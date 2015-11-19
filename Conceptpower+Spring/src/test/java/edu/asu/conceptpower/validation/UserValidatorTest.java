@@ -20,9 +20,6 @@ import edu.asu.conceptpower.validation.UserValidator;
 import edu.asu.conceptpower.web.backing.UserBacking;
 import junit.framework.Assert;
 
-
-
-
 public class UserValidatorTest {
     @Mock
     private IUserManager uManager;
@@ -32,7 +29,7 @@ public class UserValidatorTest {
     private UserBacking validUser;
     private UserBacking invalidUser;
     private User existingUser;
-    private User emptyUser;
+    private UserBacking emptyUser;
 
     @Before
     public void init() {
@@ -50,13 +47,14 @@ public class UserValidatorTest {
         invalidUser.setUsername("Invalid User");
         invalidUser.setEmail("test@abc");
         invalidUser.setPassword("pas");
-        validUser.setRetypedPassword("password");
+        invalidUser.setRetypedPassword("password");
         invalidUser.setFullname("Valid9User");
 
-        emptyUser = new User();
+        emptyUser = new UserBacking();
         emptyUser.setUsername("");
         emptyUser.setEmail("");
-        emptyUser.setPw("");
+        emptyUser.setPassword("");
+        emptyUser.setRetypedPassword("");
         emptyUser.setFullname("");
 
         existingUser = new User();
@@ -76,8 +74,9 @@ public class UserValidatorTest {
         Assert.assertFalse(errors.hasErrors());
         Assert.assertNull(errors.getFieldError("username"));
         Assert.assertNull(errors.getFieldError("email"));
-        Assert.assertNull(errors.getFieldError("pw"));
+        Assert.assertNull(errors.getFieldError("password"));
         Assert.assertNull(errors.getFieldError("fullname"));
+        Assert.assertNull(errors.getFieldError("retypedPassword"));
     }
 
     @Test
@@ -85,11 +84,12 @@ public class UserValidatorTest {
 
         Errors errors = new BindException(invalidUser, "user");
         ValidationUtils.invokeValidator(uValidator, invalidUser, errors);
-        Assert.assertEquals(4, errors.getFieldErrorCount());
+        Assert.assertEquals(5, errors.getFieldErrorCount());
         Assert.assertEquals(errors.getFieldError("username").getCode(), "proper.username");
         Assert.assertEquals(errors.getFieldError("email").getCode(), "proper.email");
-        Assert.assertEquals(errors.getFieldError("pw").getCode(), "password.short");
+        Assert.assertEquals(errors.getFieldError("password").getCode(), "short.password");
         Assert.assertEquals(errors.getFieldError("fullname").getCode(), "proper.name");
+        Assert.assertEquals(errors.getFieldError("retypedPassword").getCode(), "match.passwords");
 
     }
 
@@ -97,30 +97,31 @@ public class UserValidatorTest {
     public void testEmptyUser() {
         Errors errors = new BindException(emptyUser, "user");
         ValidationUtils.invokeValidator(uValidator, emptyUser, errors);
-        Assert.assertEquals(4, errors.getFieldErrorCount());
+        Assert.assertEquals(5, errors.getFieldErrorCount());
         Assert.assertEquals(errors.getFieldError("username").getCode(), "required.username");
         Assert.assertEquals(errors.getFieldError("email").getCode(), "required.email");
-        Assert.assertEquals(errors.getFieldError("pw").getCode(), "required.password");
+        Assert.assertEquals(errors.getFieldError("password").getCode(), "required.password");
+        Assert.assertEquals(errors.getFieldError("retypedPassword").getCode(), "required.password");
         Assert.assertEquals(errors.getFieldError("fullname").getCode(), "required.name");
 
     }
 
     @Test
     public void testUserExists() {
-        
+
         UserBacking eUser = new UserBacking();
         eUser.setUsername(existingUser.getUsername());
         eUser.setPassword(existingUser.getPw());
         eUser.setEmail(existingUser.getEmail());
         eUser.setFullname(existingUser.getFullname());
+        eUser.setRetypedPassword("password");
         Errors errors = new BindException(eUser, "user");
         ValidationUtils.invokeValidator(uValidator, eUser, errors);
         Assert.assertEquals(1, errors.getFieldErrorCount());
         Assert.assertEquals(errors.getFieldError("username").getCode(), "exists.username");
         Assert.assertNull(errors.getFieldError("email"));
-        Assert.assertNull(errors.getFieldError("pw"));
+        Assert.assertNull(errors.getFieldError("password"));
         Assert.assertNull(errors.getFieldError("fullname"));
     }
 
 }
-
