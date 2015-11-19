@@ -87,7 +87,7 @@ public class ConceptTypeEditController {
 		type.setMatches(req.getParameter("match"));
 		type.setSupertypeId(req.getParameter("supertypes"));
 
-		String userId = usersManager.findUser(principal.getName()).getUser();
+		String userId = usersManager.findUser(principal.getName()).getUsername();
 		String modified = type.getModified() != null ? type.getModified() : "";
 		if (!modified.trim().isEmpty())
 			modified += ", ";

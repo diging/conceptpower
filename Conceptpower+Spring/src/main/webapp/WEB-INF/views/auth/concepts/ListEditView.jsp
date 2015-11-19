@@ -9,20 +9,21 @@
 <h1>Edit concept list</h1>
 <p>Edit concept list here.</p>
 
-<form
-	action="${pageContext.servletContext.contextPath}/auth/conceptlist/storeeditlist/${listname}"
-	method='post'>
+<form:form
+	action="${pageContext.servletContext.contextPath}/auth/conceptlist/storeeditlist"
+	method='post' commandName="conceptListAddForm">
 	<table>
 		<tr>
 			<td>List Name</td>
-			<td><input type="text" name="newlistname" id="newlistname"
-				value="${newlistname}"></td>
+			<td><form:input path="listName" />
+				<form:hidden path="oldListName" /></td>
+			<td><form:errors path="listName" class="ui-state-error-text"></form:errors></td>
 		</tr>
 
 		<tr>
 			<td>List Description</td>
-			<td><textarea rows="7" cols="50" name="description"
-					id="description"> ${description}</textarea></td>
+			<td><form:textarea rows="7" cols="50" path="description"></form:textarea></td>
+			<td><form:errors path="description" class="ui-state-error-text"></form:errors></td>
 		</tr>
 
 		<tr>
@@ -32,4 +33,4 @@
 					type="button" name="cancel" value="No, cancel!" class="button"></a></td>
 		</tr>
 	</table>
-</form>
+</form:form>
