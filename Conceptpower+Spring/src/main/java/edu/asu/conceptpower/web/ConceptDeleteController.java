@@ -40,8 +40,7 @@ public class ConceptDeleteController {
 	 * @return String value to redirect user to concept delete page
 	 */
 	@RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
-	public String prepareDeleteConcept(
-			@PathVariable("conceptid") String conceptid, ModelMap model) {
+	public String prepareDeleteConcept(@PathVariable("conceptid") String conceptid, ModelMap model) {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		model.addAttribute("word", concept.getWord());
 		model.addAttribute("description", concept.getDescription());
