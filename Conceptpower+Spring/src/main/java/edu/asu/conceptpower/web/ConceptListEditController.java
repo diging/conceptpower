@@ -32,86 +32,86 @@ import edu.asu.conceptpower.validation.ConceptListAddValidator;
 @Controller
 public class ConceptListEditController {
 
-	@Autowired
-	private IConceptManager conceptManager;
+    @Autowired
+    private IConceptManager conceptManager;
 
-	@Autowired
-	private IConceptListManager conceptListManager;
+    @Autowired
+    private IConceptListManager conceptListManager;
 
-	@Autowired
-	private ConceptListAddValidator validator;
+    @Autowired
+    private ConceptListAddValidator validator;
 
-	@InitBinder
-	protected void initBinder(WebDataBinder validateBinder) {
-		validateBinder.setValidator(validator);
-	}
+    @InitBinder
+    protected void initBinder(WebDataBinder validateBinder) {
+        validateBinder.setValidator(validator);
+    }
 
-	/**
-	 * This method provides list name and description of a list to be edited
-	 * 
-	 * @param listName
-	 *            Represents list which has to be edited
-	 * @param model
-	 *            Generic model holder for servlet
-	 * @return Returns a string value to redirect user to edit list page
-	 */
-	@RequestMapping(value = "auth/conceptlist/editlist/{listname}", method = RequestMethod.GET)
-	public String prepareEditList(@PathVariable("listname") String listName, ModelMap model,
-			@ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm) {
+    /**
+     * This method provides list name and description of a list to be edited
+     * 
+     * @param listName
+     *            Represents list which has to be edited
+     * @param model
+     *            Generic model holder for servlet
+     * @return Returns a string value to redirect user to edit list page
+     */
+    @RequestMapping(value = "auth/conceptlist/editlist/{listname}", method = RequestMethod.GET)
+    public String prepareEditList(@PathVariable("listname") String listName, ModelMap model,
+            @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm) {
 
-		ConceptList list = conceptListManager.getConceptList(listName);
-		conceptListAddForm.setListName(list.getConceptListName());
-		conceptListAddForm.setDescription(list.getDescription());
-		conceptListAddForm.setOldListName(listName);
-		return "/auth/conceptlist/editlist";
-	}
+        ConceptList list = conceptListManager.getConceptList(listName);
+        conceptListAddForm.setListName(list.getConceptListName());
+        conceptListAddForm.setDescription(list.getDescription());
+        conceptListAddForm.setOldListName(listName);
+        return "/auth/conceptlist/editlist";
+    }
 
-	/**
-	 * This method updates edited list information
-	 * 
-	 * @param listName
-	 *            Represents list whose data has to be updated
-	 * @param req
-	 *            holds HTTP request information
-	 * @return Returns a string value to redirect user to concept list page
-	 */
-	@RequestMapping(value = "auth/conceptlist/storeeditlist", method = RequestMethod.POST)
-	public String editList(HttpServletRequest req,
-			@Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
-			BindingResult result, ModelMap model) {
+    /**
+     * This method updates edited list information
+     * 
+     * @param listName
+     *            Represents list whose data has to be updated
+     * @param req
+     *            holds HTTP request information
+     * @return Returns a string value to redirect user to concept list page
+     */
+    @RequestMapping(value = "auth/conceptlist/storeeditlist", method = RequestMethod.POST)
+    public String editList(HttpServletRequest req,
+            @Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
+            BindingResult result, ModelMap model) {
 
-		if (result.hasErrors()) {
-			return "/auth/conceptlist/editlist";
-		}
+        if (result.hasErrors()) {
+            return "/auth/conceptlist/editlist";
+        }
 
-		ConceptList list = conceptListManager.getConceptList(conceptListAddForm.getOldListName());
-		list.setConceptListName(conceptListAddForm.getListName());
-		list.setDescription(conceptListAddForm.getDescription());
+        ConceptList list = conceptListManager.getConceptList(conceptListAddForm.getOldListName());
+        list.setConceptListName(conceptListAddForm.getListName());
+        list.setDescription(conceptListAddForm.getDescription());
 
-		conceptListManager.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
+        conceptListManager.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
 
-		// modify the name for all the existing concepts under this concept list
-		List<ConceptEntry> entries = conceptManager.getConceptListEntries(conceptListAddForm.getOldListName());
-		Iterator<ConceptEntry> entriesIterator = entries.iterator();
+        // modify the name for all the existing concepts under this concept list
+        List<ConceptEntry> entries = conceptManager.getConceptListEntries(conceptListAddForm.getOldListName());
+        Iterator<ConceptEntry> entriesIterator = entries.iterator();
 
-		while (entriesIterator.hasNext()) {
-			ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
-			conceptEntry.setConceptList(list.getConceptListName());
-			conceptManager.storeModifiedConcept(conceptEntry);
-		}
+        while (entriesIterator.hasNext()) {
+            ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
+            conceptEntry.setConceptList(list.getConceptListName());
+            conceptManager.storeModifiedConcept(conceptEntry);
+        }
 
-		return "redirect:/auth/conceptlist";
-	}
+        return "redirect:/auth/conceptlist";
+    }
 
-	/**
-	 * Returns a string value to redirect user to concept list page when the
-	 * user cancels list edit operation
-	 * 
-	 * @return Returns a string value to redirect user to concept list page
-	 */
-	@RequestMapping(value = "auth/conceptlist/editlist/canceledit", method = RequestMethod.GET)
-	public String cancelEdit() {
-		return "redirect:/auth/conceptlist";
-	}
+    /**
+     * Returns a string value to redirect user to concept list page when the
+     * user cancels list edit operation
+     * 
+     * @return Returns a string value to redirect user to concept list page
+     */
+    @RequestMapping(value = "auth/conceptlist/editlist/canceledit", method = RequestMethod.GET)
+    public String cancelEdit() {
+        return "redirect:/auth/conceptlist";
+    }
 
 }
