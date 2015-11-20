@@ -209,46 +209,39 @@ public class ConceptEditController {
 		return new ResponseEntity<String>(buildJSON(synonymList, false, true), HttpStatus.OK);
 	}
 
-	private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired, boolean synonymRequired) {
+    private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired, boolean synonymRequired) {
 
-		int i = 0;
-		StringBuffer jsonStringBuilder = new StringBuffer("{");
-		jsonStringBuilder.append("\"Total\"");
-		jsonStringBuilder.append(":");
-		jsonStringBuilder.append(synonyms.size());
-		jsonStringBuilder.append(",");
-		jsonStringBuilder.append("\"synonyms\":");
-		jsonStringBuilder.append("[");
-		for (ConceptEntry syn : synonyms) {
-			// Appending for next element in JSON
-			if (i != 0) {
-				jsonStringBuilder.append(",");
-			}
+        int i = 0;
+        StringBuffer jsonStringBuilder = new StringBuffer("{");
+        jsonStringBuilder.append("\"Total\"");
+        jsonStringBuilder.append(":");
+        jsonStringBuilder.append(synonyms.size());
+        jsonStringBuilder.append(",");
+        jsonStringBuilder.append("\"synonyms\":");
+        jsonStringBuilder.append("[");
+        for (ConceptEntry syn : synonyms) {
+            // Appending for next element in JSON
+            if (i != 0) {
+                jsonStringBuilder.append(",");
+            }
 
-			jsonStringBuilder.append("{");
-			jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
-			jsonStringBuilder.append(",");
-			jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
-			jsonStringBuilder.append(",");
-			jsonStringBuilder.append("\"Description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
-
-			if (posRequired == true) {
-				jsonStringBuilder.append(",");
-				String pos = syn.getPos().replaceAll("\"", "'");
-				jsonStringBuilder.append("\"Pos\":\"" + pos + "\"");
-			}
-
-			if (synonymRequired == true) {
-				jsonStringBuilder.append(",");
-				jsonStringBuilder.append("\"SynonymObject\":\"" + syn + "\"");
-			}
-
-			jsonStringBuilder.append("}");
-			i++;
-		}
-		jsonStringBuilder.append("]");
-		jsonStringBuilder.append("}");
-		return jsonStringBuilder.toString();
-	}
+            jsonStringBuilder.append("{");
+            jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
+            jsonStringBuilder.append(",");
+            jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
+            jsonStringBuilder.append(",");
+            jsonStringBuilder.append("\"Description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
+            jsonStringBuilder.append(",");
+            String pos = syn.getPos().replaceAll("\"", "'");
+            jsonStringBuilder.append("\"Pos\":\"" + pos + "\"");
+            jsonStringBuilder.append(",");
+            jsonStringBuilder.append("\"SynonymObject\":\"" + syn + "\"");
+            jsonStringBuilder.append("}");
+            i++;
+        }
+        jsonStringBuilder.append("]");
+        jsonStringBuilder.append("}");
+        return jsonStringBuilder.toString();
+    }
 
 }
