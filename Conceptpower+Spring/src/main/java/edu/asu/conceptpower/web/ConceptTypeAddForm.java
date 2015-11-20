@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 public class ConceptTypeAddForm {
 
 	private String typeName;
-	private String oldTypeName="";
+	// Blank value has been added to prevent null pointer exception in validator
+	// while adding type
+	private String oldTypeName = "";
 	private String typeDescription;
 	private String matches;
 	private Map<String, String> types;

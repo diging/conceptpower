@@ -32,7 +32,7 @@ public class ConceptTypeAddValidator implements Validator {
 			if (!conceptTypeAddForm.getOldTypeName().equalsIgnoreCase(conceptTypeAddForm.getTypeName())) {
 				// To Check if its existing name
 				if (client.findType(conceptTypeAddForm.getTypeName()) != null) {
-					 errors.rejectValue("typeName", "required.unique.type_name");
+					errors.rejectValue("typeName", "required.unique.type_name");
 				}
 			}
 		}
