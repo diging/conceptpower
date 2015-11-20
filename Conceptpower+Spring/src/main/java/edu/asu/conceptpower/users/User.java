@@ -4,70 +4,78 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1019105087386557957L;
-	
-	private String user;
-	private String pw;
-	private String name;
-	private boolean isAdmin;
-	private String email;
-	
-	public User() {}
-	
-	public User(String user, String passwd) {
-		this.user = user;
-		this.pw = passwd;
-		isAdmin = false;
-	}
-	
-	public User(String user, String passwd, boolean isAdmin) {
-		this.user = user;
-		this.pw = passwd;
-		this.isAdmin = isAdmin;
-	}
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1019105087386557957L;
 
-	public String getUser() {
-		return user;
-	}
+    private String username;
+    private String pw;
+    private String fullname;
+    private boolean isAdmin;
+    private String email;
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public User() {
+    }
 
-	public String getPw() {
-		return pw;
-	}
+    public User(String user, String passwd) {
+        this.username = user;
+        this.pw = passwd;
+        isAdmin = false;
+    }
 
-	public void setPw(String pw) {
-		this.pw = pw;
-	}
+    public User(String user, String passwd, boolean isAdmin) {
+        this.username = user;
+        this.pw = passwd;
+        this.isAdmin = isAdmin;
+    }
 
-	public void setIsAdmin(boolean isAdmin) {
-		this.isAdmin = isAdmin;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public boolean getIsAdmin() {
-		return isAdmin;
-	}
+    public String getFullname() {
+        return fullname;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+    
+    public void setUsername(String user) {
+        this.username = user;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getPw() {
+        return pw;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setPw(String pw) {
+        this.pw = pw;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setFullName(String name) {
+        this.fullname = name;
+    }
+
+    public String getFullName() {
+        return fullname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 }

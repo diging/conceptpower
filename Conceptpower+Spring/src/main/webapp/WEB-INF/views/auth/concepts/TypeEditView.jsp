@@ -10,12 +10,14 @@
 <p>Edit concept type here.</p>
 
 <form:form
-	action="${pageContext.servletContext.contextPath}/auth/concepttype/storeedittype/${typeid}"
+	action="${pageContext.servletContext.contextPath}/auth/concepttype/storeedittype"
 	commandName="conceptTypeAddForm" method='post'>
 	<table>
 		<tr>
 			<td>Type Name</td>
-			<td><form:input path="typeName" /></td>
+			<td><form:input path="typeName" />
+			<form:hidden path="typeid" />
+			</td>
 		</tr>
 
 		<tr>

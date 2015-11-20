@@ -12,7 +12,8 @@ public class ConceptTypeAddForm {
 	private String matches;
 	private Map<String, String> types;
 	private String selectedType;
-
+	private String typeid;
+	
 	public String getTypeName() {
 		return typeName;
 	}
@@ -51,6 +52,14 @@ public class ConceptTypeAddForm {
 
 	public void setSelectedType(String selectedType) {
 		this.selectedType = selectedType;
+	}
+
+	public String getTypeid() {
+		return typeid;
+	}
+
+	public void setTypeid(String typeid) {
+		this.typeid = typeid;
 	}
 
 }

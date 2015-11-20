@@ -78,7 +78,7 @@ public class ConceptTypeEditController {
 			types.remove(typeid);
 			//model.addAttribute("supertypes", types);
 			conceptTypeAddForm.setTypes(types);
-
+			conceptTypeAddForm.setTypeid(typeid);
 			return "/auth/concepttype/edittype";
 	}
 
@@ -92,20 +92,21 @@ public class ConceptTypeEditController {
 	 *            holds logged in user information
 	 * @return Returns a string value to redirect user to type list page
 	 */
-	@RequestMapping(value = "auth/concepttype/storeedittype/{typeid}", method = RequestMethod.POST)
-	public String editType(@PathVariable("typeid") String typeid, HttpServletRequest req, Principal principal,
+	@RequestMapping(value = "auth/concepttype/storeedittype", method = RequestMethod.POST)
+	public String editType(HttpServletRequest req, Principal principal,
 			@ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm,BindingResult results) {
 		
 		if(results.hasErrors()){
 			return "/auth/concepttype/edittype";
 		}
+		String typeid = conceptTypeAddForm.getTypeid();
 		ConceptType type = typeManager.getType(typeid);
 		type.setTypeName(conceptTypeAddForm.getTypeName());
 		type.setDescription(conceptTypeAddForm.getTypeDescription());
 		type.setMatches(conceptTypeAddForm.getMatches());
 		type.setSupertypeId(conceptTypeAddForm.getSelectedType());
 
-		String userId = usersManager.findUser(principal.getName()).getUser();
+		String userId = usersManager.findUser(principal.getName()).getUsername();
 		String modified = type.getModified() != null ? type.getModified() : "";
 		if (!modified.trim().isEmpty())
 			modified += ", ";
