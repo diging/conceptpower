@@ -15,8 +15,7 @@
 	<table>
 		<tr>
 			<td>Type Name</td>
-			<td><form:input path="typeName" />
-			<form:hidden path="typeid" />
+			<td><form:input path="typeName" /> <form:hidden path="typeid" />
 			</td>
 		</tr>
 

@@ -13,7 +13,7 @@ public class ConceptTypeAddForm {
 	private Map<String, String> types;
 	private String selectedType;
 	private String typeid;
-	
+
 	public String getTypeName() {
 		return typeName;
 	}

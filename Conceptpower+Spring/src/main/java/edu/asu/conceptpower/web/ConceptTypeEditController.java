@@ -59,28 +59,27 @@ public class ConceptTypeEditController {
 	@RequestMapping(value = "auth/concepttype/edittype/{typeid}", method = RequestMethod.GET)
 	public String prepareEditType(@PathVariable("typeid") String typeid, ModelMap model,
 			@ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm) {
-		
-			ConceptType type = typeManager.getType(typeid);
-			
-			
-			conceptTypeAddForm.setTypeName(type.getTypeName());
-			conceptTypeAddForm.setTypeDescription(type.getDescription());
-			conceptTypeAddForm.setMatches(type.getMatches());
-			conceptTypeAddForm.setSelectedType(type.getSupertypeId().trim());
-			model.addAttribute("typeid", type.getTypeId());
 
-			ConceptType[] allTypes = typeManager.getAllTypes();
+		ConceptType type = typeManager.getType(typeid);
 
-			Map<String, String> types = new LinkedHashMap<String, String>();
-			for (ConceptType conceptType : allTypes) {
-				types.put(conceptType.getTypeId(), conceptType.getTypeName());
-			}
+		conceptTypeAddForm.setTypeName(type.getTypeName());
+		conceptTypeAddForm.setTypeDescription(type.getDescription());
+		conceptTypeAddForm.setMatches(type.getMatches());
+		conceptTypeAddForm.setSelectedType(type.getSupertypeId().trim());
+		model.addAttribute("typeid", type.getTypeId());
 
-			types.remove(typeid);
-			//model.addAttribute("supertypes", types);
-			conceptTypeAddForm.setTypes(types);
-			conceptTypeAddForm.setTypeid(typeid);
-			return "/auth/concepttype/edittype";
+		ConceptType[] allTypes = typeManager.getAllTypes();
+
+		Map<String, String> types = new LinkedHashMap<String, String>();
+		for (ConceptType conceptType : allTypes) {
+			types.put(conceptType.getTypeId(), conceptType.getTypeName());
+		}
+
+		types.remove(typeid);
+		// model.addAttribute("supertypes", types);
+		conceptTypeAddForm.setTypes(types);
+		conceptTypeAddForm.setTypeid(typeid);
+		return "/auth/concepttype/edittype";
 	}
 
 	/**
@@ -95,9 +94,10 @@ public class ConceptTypeEditController {
 	 */
 	@RequestMapping(value = "auth/concepttype/storeedittype", method = RequestMethod.POST)
 	public String editType(HttpServletRequest req, Principal principal,
-			@Validated @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm,BindingResult results) {
-		
-		if(results.hasErrors()){
+			@Validated @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm,
+			BindingResult results) {
+
+		if (results.hasErrors()) {
 			return "/auth/concepttype/edittype";
 		}
 		String typeid = conceptTypeAddForm.getTypeid();

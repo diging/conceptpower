@@ -8,7 +8,7 @@ import org.springframework.validation.Validator;
 import edu.asu.conceptpower.web.ConceptTypeAddForm;
 
 @Component
-public class ConceptTypeAddValidator implements Validator{
+public class ConceptTypeAddValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {
