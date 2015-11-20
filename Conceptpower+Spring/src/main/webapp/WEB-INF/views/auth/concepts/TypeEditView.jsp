@@ -16,12 +16,15 @@
 		<tr>
 			<td>Type Name</td>
 			<td><form:input path="typeName" /> <form:hidden path="typeid" />
-			</td>
+				<form:hidden path="oldTypeName" /></td>
+			<td><form:errors path="typeName" class="ui-state-error-text" /></td>
 		</tr>
 
 		<tr>
 			<td>Type Description</td>
 			<td><form:textarea rows="7" cols="50" path="typeDescription"></form:textarea></td>
+			<td><form:errors path="typeDescription"
+					class="ui-state-error-text" /></td>
 		</tr>
 
 		<tr>

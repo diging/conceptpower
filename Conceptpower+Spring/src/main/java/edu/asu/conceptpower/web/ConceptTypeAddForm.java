@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class ConceptTypeAddForm {
 
 	private String typeName;
+	private String oldTypeName="";
 	private String typeDescription;
 	private String matches;
 	private Map<String, String> types;
@@ -60,6 +61,14 @@ public class ConceptTypeAddForm {
 
 	public void setTypeid(String typeid) {
 		this.typeid = typeid;
+	}
+
+	public String getOldTypeName() {
+		return oldTypeName;
+	}
+
+	public void setOldTypeName(String oldTypeName) {
+		this.oldTypeName = oldTypeName;
 	}
 
 }

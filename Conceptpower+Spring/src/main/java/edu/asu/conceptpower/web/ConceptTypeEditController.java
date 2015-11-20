@@ -63,6 +63,7 @@ public class ConceptTypeEditController {
 		ConceptType type = typeManager.getType(typeid);
 
 		conceptTypeAddForm.setTypeName(type.getTypeName());
+		conceptTypeAddForm.setOldTypeName(type.getTypeName());
 		conceptTypeAddForm.setTypeDescription(type.getDescription());
 		conceptTypeAddForm.setMatches(type.getMatches());
 		conceptTypeAddForm.setSelectedType(type.getSupertypeId().trim());
