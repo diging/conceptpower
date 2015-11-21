@@ -27,6 +27,8 @@ public class ValuesMatchValidator implements
 			final Object firstObj = BeanUtils.getProperty(arg0, firstFieldName);
 			final Object secondObj = BeanUtils.getProperty(arg0, secondFieldName);
 
+			arg1.buildConstraintViolationWithTemplate( "Error Dude!!!!" ).addNode("password").addConstraintViolation();
+
 			return firstObj == null && secondObj == null || firstObj != null
 					&& firstObj.equals(secondObj);
 		} catch (final Exception ignore) {

@@ -3,6 +3,7 @@ package edu.asu.conceptpower.web;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
@@ -32,13 +34,6 @@ public class UserEditController {
 
     @Autowired
     private IUserManager userManager;
-    @Autowired
-    private UserValidator uValidator;
-
-    @InitBinder
-    private void initBinder(WebDataBinder binder) {
-        binder.setValidator(uValidator);
-    }
 
     /**
      * This method provides user information to user editing page
@@ -50,8 +45,7 @@ public class UserEditController {
      * @return Returns a string value to redirect user to edit user page
      */
     @RequestMapping(value = "auth/user/edituser/{id:.+}")
-    public String prepareEditUser(ModelMap model, @PathVariable String id, @ModelAttribute("user") UserBacking gUser,
-            BindingResult result) {
+    public String prepareEditUser(ModelMap model, @PathVariable String id) {
 
         User user = userManager.findUser(id);
 
@@ -62,7 +56,9 @@ public class UserEditController {
         userBacking.setIsAdmin(user.getIsAdmin());
         userBacking.setEmail(user.getEmail());
 
-        model.addAttribute("user", userBacking);
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", userBacking);
+        }
         return "auth/user/edituser";
     }
 
@@ -74,12 +70,15 @@ public class UserEditController {
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
-    public String storeUserChanges(UserBacking user, Principal principal, BindingResult result) {
+    public String storeUserChanges(@ModelAttribute("user") @Valid UserBacking user, BindingResult result,
+            RedirectAttributes reattr, Principal principal) {
 
-        if(result.hasErrors()){
-            return "auth/user/edituser/{id:.+}";
+        if (result.hasErrors()) {
+            reattr.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
+            reattr.addFlashAttribute("user", user);
+            return "redirect:/auth/user/edituser/" + user.getUsername();
         }
-        
+
         User uUser = userManager.findUser(user.getUsername());
 
         if (uUser == null)
@@ -108,12 +107,10 @@ public class UserEditController {
 
         if (user == null)
             return "auth/user/notfound";
-
-        UserBacking userBacking = new UserBacking();
-
         model.addAttribute("username", user.getUsername());
-        model.addAttribute("userbacking", userBacking);
-
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", new UserBacking());
+        }
         return "auth/user/editpassword";
     }
 
@@ -125,12 +122,20 @@ public class UserEditController {
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/editpassword/store", method = RequestMethod.POST)
-    public String storePasswordChanges(HttpServletRequest req, Principal principal, UserBacking user) {
+    public String storePasswordChanges(HttpServletRequest req, Principal principal,
+            @Valid UserBacking user, BindingResult result, RedirectAttributes reattr) {
 
         User uUser = userManager.findUser(user.getUsername());
 
         if (uUser == null)
             return "auth/user/notfound";
+
+        if (result.hasErrors()) {
+
+            reattr.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
+            reattr.addFlashAttribute("user", user);
+            return "redirect:/auth/user/editpassword/" + user.getUsername();
+        }
 
         uUser.setPw(user.getPassword());
 
