@@ -19,9 +19,7 @@
 				}
 			} ],
 		});
-
 	});
-
 	function detailsView(concept) {
 		var conceptid = concept.id;
 		$.ajax({
@@ -40,7 +38,6 @@
 				$("#detailsequalto").text(details.equalto);
 				$("#detailssimilarto").text(details.similarto);
 				$("#detailscreator").text(details.creator);
-
 				$("#detailsdiv").dialog({
 					title : details.name,
 					width : 'auto'
@@ -158,4 +155,3 @@
 		</tr>
 	</table>
 </div>
-

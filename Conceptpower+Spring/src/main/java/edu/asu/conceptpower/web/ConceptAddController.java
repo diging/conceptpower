@@ -150,9 +150,10 @@ public class ConceptAddController {
 	 * @return Returns array of concepts found for synonym name
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")
-	public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname) {
+	public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname,@RequestParam("addedsynonym")String addedSynonnym) {
 		ConceptEntry[] entries = conceptManager
 				.getConceptListEntriesForWord(synonymname.trim());
+		System.out.println(addedSynonnym);
 		ObjectMapper mapper=new ObjectMapper();
 		ObjectWriter writer=mapper.writer();
 		try {
