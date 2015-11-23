@@ -2,12 +2,14 @@ package edu.asu.conceptpower.web;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -150,27 +152,35 @@ public class ConceptAddController {
 	 * @return Returns array of concepts found for synonym name
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")
-	public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname,@RequestParam("addedsynonym")String addedSynonnym) {
-		ConceptEntry[] entries = conceptManager
-				.getConceptListEntriesForWord(synonymname.trim());
-		System.out.println(addedSynonnym);
-		ObjectMapper mapper=new ObjectMapper();
-		ObjectWriter writer=mapper.writer();
-		try {
-			return new ResponseEntity<String>(writer.writeValueAsString(entries), HttpStatus.OK);
-		} catch (JsonGenerationException e) {
-			logger.error("Couldn't parse results.", e);
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (JsonMappingException e) {
-			logger.error("Couldn't parse results.", e);
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (IOException e) {
-			logger.error("Couldn't parse results.", e);
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		
-		//return entries;
-	}
+    public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname,
+            @RequestParam("addedsynonym") String addedSynonnym) {
+        ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        List<String> addedSynonymList = Arrays.asList(addedSynonnym.replaceAll("\\s", "").split(","));
+        // Removing existing synonym from the entries.
+        int i = 0;
+        for (ConceptEntry concept : entries) {
+            if (addedSynonymList.contains(concept.getWordnetId())) {
+                entries = (ConceptEntry[]) ArrayUtils.remove(entries, i);
+            }
+            i++;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectWriter writer = mapper.writer();
+        try {
+            return new ResponseEntity<String>(writer.writeValueAsString(entries), HttpStatus.OK);
+        } catch (JsonGenerationException e) {
+            logger.error("Couldn't parse results.", e);
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (JsonMappingException e) {
+            logger.error("Couldn't parse results.", e);
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IOException e) {
+            logger.error("Couldn't parse results.", e);
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        // return entries;
+    }
 
 	/**
 	 * This method provides array of existing concepts for a given string
