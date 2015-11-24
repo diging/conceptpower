@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -160,11 +159,9 @@ public class ConceptEditController {
 	 * @param model
 	 *            A generic model holder for Servlet
 	 * @return List of existing synonyms
-	 * @throws JSONException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
-	public ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model)
-			throws JSONException {
+	public ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model) {
 
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
@@ -196,11 +193,9 @@ public class ConceptEditController {
 	 * @param model
 	 *            A generic model holder for Servlet
 	 * @return synonym details
-	 * @throws JSONException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "getConceptAddSynonyms")
-	public ResponseEntity<String> getSynonymRows(@RequestParam("synonymid") String synonymid, ModelMap model)
-			throws JSONException {
+	public ResponseEntity<String> getSynonymRows(@RequestParam("synonymid") String synonymid, ModelMap model) {
 
 		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid);
 
@@ -209,39 +204,39 @@ public class ConceptEditController {
 		return new ResponseEntity<String>(buildJSON(synonymList, false, true), HttpStatus.OK);
 	}
 
-    private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired, boolean synonymRequired) {
+	private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired, boolean synonymRequired) {
 
-        int i = 0;
-        StringBuffer jsonStringBuilder = new StringBuffer("{");
-        jsonStringBuilder.append("\"Total\"");
-        jsonStringBuilder.append(":");
-        jsonStringBuilder.append(synonyms.size());
-        jsonStringBuilder.append(",");
-        jsonStringBuilder.append("\"synonyms\":");
-        jsonStringBuilder.append("[");
-        for (ConceptEntry syn : synonyms) {
-            // Appending for next element in JSON
-            if (i != 0) {
-                jsonStringBuilder.append(",");
-            }
+		int i = 0;
+		StringBuffer jsonStringBuilder = new StringBuffer("{");
+		jsonStringBuilder.append("\"Total\"");
+		jsonStringBuilder.append(":");
+		jsonStringBuilder.append(synonyms.size());
+		jsonStringBuilder.append(",");
+		jsonStringBuilder.append("\"synonyms\":");
+		jsonStringBuilder.append("[");
+		for (ConceptEntry syn : synonyms) {
+			// Appending for next element in JSON
+			if (i != 0) {
+				jsonStringBuilder.append(",");
+			}
 
-            jsonStringBuilder.append("{");
-            jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
-            jsonStringBuilder.append(",");
-            jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
-            jsonStringBuilder.append(",");
-            jsonStringBuilder.append("\"Description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
-            jsonStringBuilder.append(",");
-            String pos = syn.getPos().replaceAll("\"", "'");
-            jsonStringBuilder.append("\"Pos\":\"" + pos + "\"");
-            jsonStringBuilder.append(",");
-            jsonStringBuilder.append("\"SynonymObject\":\"" + syn + "\"");
-            jsonStringBuilder.append("}");
-            i++;
-        }
-        jsonStringBuilder.append("]");
-        jsonStringBuilder.append("}");
-        return jsonStringBuilder.toString();
-    }
+			jsonStringBuilder.append("{");
+			jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
+			jsonStringBuilder.append(",");
+			jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
+			jsonStringBuilder.append(",");
+			jsonStringBuilder.append("\"Description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
+			jsonStringBuilder.append(",");
+			String pos = syn.getPos().replaceAll("\"", "'");
+			jsonStringBuilder.append("\"Pos\":\"" + pos + "\"");
+			jsonStringBuilder.append(",");
+			jsonStringBuilder.append("\"SynonymObject\":\"" + syn + "\"");
+			jsonStringBuilder.append("}");
+			i++;
+		}
+		jsonStringBuilder.append("]");
+		jsonStringBuilder.append("}");
+		return jsonStringBuilder.toString();
+	}
 
 }
