@@ -46,7 +46,7 @@ public class UserDatabaseClient {
 	 */
 	public User findUser(String name) {
 		User user = new User();
-		user.setUser(name);
+		user.setUsername(name);
 		
 		ObjectSet<User> results = client.queryByExample(user);
 		// there should only be exactly one object with this id
@@ -74,7 +74,7 @@ public class UserDatabaseClient {
 	
 	public void deleteUser(String name) {
 		User user = new User();
-		user.setUser(name);
+		user.setUsername(name);
 		
 		ObjectSet<User> results = client.queryByExample(user);
 		for (User res : results) {

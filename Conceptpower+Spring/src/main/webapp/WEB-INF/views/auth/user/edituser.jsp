@@ -29,13 +29,13 @@
 		</tr>
 		<tr>
 			<td>Name:</td>
-			<td><form:input type="text" id="fullname" path="name" /></td>
+			<td><form:input type="text" id="fullname" path="fullname" /></td>
 			<td><div id="fnerror" style="color: red;"></div></td>
 		</tr>
 		<tr>
 			<td>Email:</td>
 			<td><form:input type="email" id="email" path="email" /></td>
-			<td><div id="emailError" style="color: red;" ></div></td>
+			<td><div id="emailError" style="color: red;"></div></td>
 		</tr>
 		<tr>
 			<td>Is Administrator:</td>
