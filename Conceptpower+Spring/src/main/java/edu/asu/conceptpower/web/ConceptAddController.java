@@ -161,6 +161,7 @@ public class ConceptAddController {
         for (ConceptEntry concept : entries) {
             if (addedSynonymList.contains(concept.getWordnetId())) {
                 entries = (ConceptEntry[]) ArrayUtils.remove(entries, i);
+                i--;
             }
             i++;
         }
