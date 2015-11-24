@@ -165,7 +165,6 @@
 	};
 
 	var synonymRemove = function(row) {
-		alert('Inside');
 		$('#addedSynonnym').val('');
 		var x = document.getElementById('addedSynonymsTable');
 		x.deleteRow(row);
@@ -177,7 +176,6 @@
 			synonyms += table.rows[r].cells[3].innerHTML + ',';
 		}
 		$("#synonymsids").val(synonyms);
-		alert(synonyms);
 		$('#addedSynonnym').val(synonyms);
 
 	};
