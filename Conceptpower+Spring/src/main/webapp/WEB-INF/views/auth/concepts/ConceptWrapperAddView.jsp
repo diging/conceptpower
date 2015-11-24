@@ -226,14 +226,21 @@
 										data : {
 											synonymname : synonymname
 										},
+
 										success : function(response) {
 											alert('Inside');
-											var data = jQuery.parseJSON(response);
-											alert(data.Total);
 											$('#synonymstable').dataTable()
 													.fnClearTable();
-											$('#synonymstable').dataTable()
-													.fnAddData(data);
+
+											var synonym = JSON.parse(response);
+											var len = synonym.Total;
+											for (var i = 0; i < len; i++) {
+												$('#synonymstable')
+														.dataTable()
+														.fnAddData(
+																synonym.synonyms[i]);
+											}
+
 										}
 									});
 						});
@@ -300,8 +307,10 @@
 <p>Add a wrapper for a concept in Wordnet. Do that if you for
 	example want to attach an "equals to" URI a concept that already exists
 	in Wordnet.</p>
-	
-<c:if test="${not empty errormsg}"><p style="text-color: red;">${errormsg}</p></c:if>
+
+<c:if test="${not empty errormsg}">
+	<p style="text-color: red;">${errormsg}</p>
+</c:if>
 
 <h2>1. Search for Wordnet concept</h2>
 
