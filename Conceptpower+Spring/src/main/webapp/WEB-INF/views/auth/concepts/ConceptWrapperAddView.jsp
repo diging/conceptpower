@@ -227,10 +227,13 @@
 											synonymname : synonymname
 										},
 										success : function(response) {
+											alert('Inside');
+											var data = jQuery.parseJSON(response);
+											alert(data.Total);
 											$('#synonymstable').dataTable()
 													.fnClearTable();
 											$('#synonymstable').dataTable()
-													.fnAddData(response);
+													.fnAddData(data);
 										}
 									});
 						});

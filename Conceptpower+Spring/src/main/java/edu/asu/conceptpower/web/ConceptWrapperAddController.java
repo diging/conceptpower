@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -174,12 +177,43 @@ public class ConceptWrapperAddController {
 	 *            A synonym string for which we need to find existing concepts
 	 * @return Returns array of concepts found for synonym name
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
-	public @ResponseBody
-	ConceptEntry[] getSynonyms(@RequestParam("synonymname") String synonymname) {
-		ConceptEntry[] entries = conceptManager
-				.getConceptListEntriesForWord(synonymname.trim());
-		return entries;
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
+    public ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname) {
+        ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        return new ResponseEntity<String>(buildJSON(Arrays.asList(entries)), HttpStatus.OK);
+    }
+
+    private String buildJSON(List<ConceptEntry> synonyms) {
+
+        int i = 0;
+        StringBuffer jsonStringBuilder = new StringBuffer("{");
+        jsonStringBuilder.append("\"Total\"");
+        jsonStringBuilder.append(":");
+        jsonStringBuilder.append(synonyms.size());
+        jsonStringBuilder.append(",");
+        jsonStringBuilder.append("\"synonyms\":");
+        jsonStringBuilder.append("[");
+        for (ConceptEntry syn : synonyms) {
+            // Appending for next element in JSON
+            if (i != 0) {
+                jsonStringBuilder.append(",");
+            }
+
+            jsonStringBuilder.append("{");
+            jsonStringBuilder.append("\"id\":\"" + syn.getId() + "\"");
+            jsonStringBuilder.append(",");
+            jsonStringBuilder.append("\"word\":\"" + syn.getWord() + "\"");
+            jsonStringBuilder.append(",");
+            jsonStringBuilder.append("\"description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
+            jsonStringBuilder.append(",");
+            String pos = syn.getPos().replaceAll("\"", "'");
+            jsonStringBuilder.append("\"pos\":\"" + pos + "\"");
+            jsonStringBuilder.append("}");
+            i++;
+        }
+        jsonStringBuilder.append("]");
+        jsonStringBuilder.append("}");
+        return jsonStringBuilder.toString();
+    }
 
 }
