@@ -119,11 +119,17 @@ public class UserEditController {
      * 
      * @param req
      *            holds HTTP request information
+     * @param user
+     *            holds the user entered values in the backing bean
+     * @param reattr
+     *            variable to bind error messages on redirect
+     * 
+     *           
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/editpassword/store", method = RequestMethod.POST)
-    public String storePasswordChanges(HttpServletRequest req, Principal principal,
-            @Valid UserBacking user, BindingResult result, RedirectAttributes reattr) {
+    public String storePasswordChanges(HttpServletRequest req, Principal principal, @Valid UserBacking user,
+            BindingResult result, RedirectAttributes reattr) {
 
         User uUser = userManager.findUser(user.getUsername());
 
@@ -185,3 +191,4 @@ public class UserEditController {
         return "redirect:/auth/user/list";
     }
 }
+

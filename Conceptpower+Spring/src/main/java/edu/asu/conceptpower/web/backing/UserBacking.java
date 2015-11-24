@@ -1,26 +1,22 @@
 package edu.asu.conceptpower.web.backing;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import edu.asu.conceptpower.validation.ValuesMatch;
 
-@ValuesMatch(first = "password", second = "retypedPassword", message="Hello!!!")
+@ValuesMatch(first = "password", second = "retypedPassword")
 public class UserBacking {
 
     private String username;
-    
-    @Pattern(regexp="^[a-zA-Z ]{3,25}$", message = "Please Enter a Proper Name for the User. Alphabets, numbers and spaces allowed")
+
+    @Pattern(regexp = "^[a-zA-Z ]{3,25}$", message = "Please Enter a Proper Name for the User. Alphabets, numbers and spaces allowed")
     private String fullname;
 
-    
     private String password;
-    
-    @Pattern(regexp="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",message = "Please Enter a Proper Email id")
+
+    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please Enter a Proper Email id")
     private String email;
-    
+
     private String retypedPassword;
     private boolean isAdmin;
     private String token;
@@ -92,4 +88,3 @@ public class UserBacking {
     }
 
 }
-

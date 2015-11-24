@@ -9,32 +9,50 @@ import org.apache.commons.beanutils.BeanUtils;
  * Taken from 
  * http://stackoverflow.com/questions/1972933/cross-field-validation-with-hibernate-validator-jsr-303
  */
-public class ValuesMatchValidator implements
-		ConstraintValidator<ValuesMatch, Object> {
+public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Object> {
 
-	private String firstFieldName;
-	private String secondFieldName;
+    private String firstFieldName;
+    private String secondFieldName;
 
-	@Override
-	public void initialize(ValuesMatch arg0) {
-		firstFieldName = arg0.first();
-		secondFieldName = arg0.second();
-	}
+    @Override
+    public void initialize(ValuesMatch arg0) {
+        firstFieldName = arg0.first();
+        secondFieldName = arg0.second();
+    }
 
-	@Override
-	public boolean isValid(Object arg0, ConstraintValidatorContext arg1) {
-		try {
-			final Object firstObj = BeanUtils.getProperty(arg0, firstFieldName);
-			final Object secondObj = BeanUtils.getProperty(arg0, secondFieldName);
+    @Override
+    public boolean isValid(Object arg0, ConstraintValidatorContext context) {
+        try {
+            final Object firstObj = BeanUtils.getProperty(arg0, firstFieldName);
+            final Object secondObj = BeanUtils.getProperty(arg0, secondFieldName);
 
-			arg1.buildConstraintViolationWithTemplate( "Error Dude!!!!" ).addNode("password").addConstraintViolation();
+            if (firstObj.equals("") || firstObj == null) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate("This field cannot be empty").addNode(firstFieldName)
+                        .addConstraintViolation();
+                return false;
+            }
 
-			return firstObj == null && secondObj == null || firstObj != null
-					&& firstObj.equals(secondObj);
-		} catch (final Exception ignore) {
-			ignore.printStackTrace();
-		}
-		return true;
-	}
+            if (secondObj.equals("") || secondObj == null) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate("This field cannot be empty").addNode(secondFieldName)
+                        .addConstraintViolation();
+                return false;
+            }
+
+            boolean matches = firstObj == null && secondObj == null || firstObj != null && firstObj.equals(secondObj);
+
+            if (!matches) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate("Passwords do not match").addNode(secondFieldName)
+                        .addConstraintViolation();
+            }
+
+            return matches;
+        } catch (final Exception ignore) {
+            ignore.printStackTrace();
+        }
+        return true;
+    }
 
 }

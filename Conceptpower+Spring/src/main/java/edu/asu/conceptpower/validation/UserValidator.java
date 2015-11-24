@@ -8,6 +8,7 @@ import org.springframework.validation.Validator;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.web.backing.UserBacking;
+
 @Component
 public class UserValidator implements Validator {
     @Autowired
@@ -69,15 +70,15 @@ public class UserValidator implements Validator {
         if (!password.isEmpty() && password.length() < 4) {
             err.rejectValue("password", "short.password");
         }
-        
+
         if (retypePassword.isEmpty()) {
             err.rejectValue("retypedPassword", "required.password");
         }
-        
-        if(!retypePassword.isEmpty() && !password.equals(retypePassword)){
+
+        if (!retypePassword.isEmpty() && !password.equals(retypePassword)) {
             err.rejectValue("retypedPassword", "match.passwords");
         }
-        
+
         // Validator for email - reject if not proper
         if (!emailid.isEmpty() && !emailid.matches(
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
