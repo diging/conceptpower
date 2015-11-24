@@ -9,6 +9,8 @@
 	$(function() {
 
 		$("#addsynonym").click(function() {
+			var addedSynonymsTable = $('#addedSynonyms');
+			$('#synonymstable').dataTable().fnClearTable();
 			$("#dialog").dialog({
 				width : 'auto'
 			});
@@ -27,7 +29,8 @@
 											conceptname : $(this).val()
 										},
 										success : function(response) {
-											var data = jQuery.parseJSON(response);
+											var data = jQuery
+													.parseJSON(response);
 											if (data.length > 0) {
 												var text = "Following concepts have the same name : \n";
 												var len = data.length;
@@ -72,7 +75,8 @@
 					} ],
 					"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
 						var description = aData.description;
-						description = description != null ? description.replace(/"/g, '&quot;') : "";
+						description = description != null ? description
+								.replace(/"/g, '&quot;') : "";
 						$('td:eq(3)', nRow).html(
 								'<a onclick="synonymAdd(\'' + aData.id
 										+ '\',\'' + aData.word + '\',\''
@@ -88,16 +92,19 @@
 						function() {
 							$("#synonymViewDiv").show();
 							$("#synonymstable").show();
+							var addedsynonym = $('#addedSynonnym').val();
 							var synonymname = $("#synonymname").val();
 							$
 									.ajax({
 										type : "GET",
 										url : "${pageContext.servletContext.contextPath}/conceptAddSynonymView",
 										data : {
-											synonymname : synonymname
+											synonymname : synonymname,
+											addedsynonym : addedsynonym
 										},
 										success : function(response) {
-											var data = jQuery.parseJSON(response);
+											var data = jQuery
+													.parseJSON(response);
 											$('#synonymstable').dataTable()
 													.fnClearTable();
 											$('#synonymstable').dataTable()
@@ -113,9 +120,9 @@
 		$("#synonymsDialogTable").hide();
 
 		var x = document.getElementById('addedSynonymsTable');
+		var addedsynonym = $('#addedSynonnym').val();
 
 		if (x != null) {
-
 			var new_row = x.rows[0].cloneNode(true);
 			new_row.cells[0].innerHTML = '<a onclick="synonymRemove(\''
 					+ x.rows.length + '\')">Remove</a>' + '</font></td>'
@@ -125,6 +132,10 @@
 			new_row.cells[3].hidden = true;
 
 			x.appendChild(new_row);
+
+			addedsynonym += ','
+			addedsynonym += id;
+			$('#addedSynonnym').val(addedsynonym);
 		} else {
 			var html = '<table border="1" width="400" id="addedSynonymsTable"><thead></thead>';
 
@@ -139,6 +150,8 @@
 
 			html += '</table>';
 			html += '<input type="hidden" name="syns" />';
+			addedsynonym += id;
+			$('#addedSynonnym').val(addedsynonym);
 			$("#addedSynonyms").html(html);
 
 		}
@@ -152,6 +165,8 @@
 	};
 
 	var synonymRemove = function(row) {
+		alert('Inside');
+		$('#addedSynonnym').val('');
 		var x = document.getElementById('addedSynonymsTable');
 		x.deleteRow(row);
 		if (!(x.rows.length > 0))
@@ -162,6 +177,9 @@
 			synonyms += table.rows[r].cells[3].innerHTML + ',';
 		}
 		$("#synonymsids").val(synonyms);
+		alert(synonyms);
+		$('#addedSynonnym').val(synonyms);
+
 	};
 
 	//service 
@@ -183,7 +201,8 @@
 										},
 										success : function(response) {
 											if (response.length > 0) {
-												var data = jQuery.parseJSON(response);
+												var data = jQuery
+														.parseJSON(response);
 												$('#serviceResultTable')
 														.dataTable()
 														.fnClearTable();
@@ -462,6 +481,8 @@
 		<table id="synonymsDialogTable" hidden="true">
 			<tr>
 				<td><input type="text" name="synonymname" id="synonymname"></td>
+				<td><input type="hidden" name="addedSynonnym"
+					id="addedSynonnym" /></td>
 				<td><input type="button" name="synsearch" id="synonymsearch"
 					value="Search" class="button"></td>
 			</tr>
