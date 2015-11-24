@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
+<%@ page import="edu.asu.conceptpower.core.ConceptEntry"%>
 
 <script>
     $(function() {
@@ -16,6 +17,7 @@
     });
 
     $(document).ready(definedatatable);
+    $(document).ready(definedatatableForSynonymAdd);
 
     function definedatatable() {
         $('#synonymstable').dataTable(
@@ -26,20 +28,20 @@
                     "bStateSave" : true,
                     "aoColumns" : [ {
                         "sTitle" : "Term",
-                        "mDataProp" : "word",
+                        "mDataProp" : "Word",
                     }, {
                         "sTitle" : "POS",
-                        "mDataProp" : "pos",
+                        "mDataProp" : "Pos",
                     }, {
                         "sTitle" : "Description",
-                        "mDataProp" : "description",
+                        "mDataProp" : "Description",
                     }, {
                         "sTitle" : "Add",
-                        "mDataProp" : "id"
+                        "mDataProp" : "Id"
                     } ],
                     "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
                         $('td:eq(3)', nRow).html(
-                                '<a onclick="synonymAdd(\'' + aData.id
+                                '<a onclick="synonymAdd(\'' + aData.Id
                                         + '\')">Add</a>');
                         return nRow;
                     }
@@ -61,8 +63,15 @@
                                             synonymname : synonymname
                                         },
                                         success : function(response) {
-                                            $('#synonymstable').dataTable()
-                                                    .fnAddData(response);
+                                            var synonym = JSON.parse(response);
+                                            var len = synonym.Total;
+                                            for (var i = 0; i < len; i++) {
+                                                $('#synonymstable')
+                                                        .dataTable()
+                                                        .fnAddData(
+                                                                synonym.synonyms[i]);
+                                            }
+
                                         }
                                     });
                         });
@@ -74,62 +83,61 @@
         $
                 .ajax({
                     type : "GET",
-                    url : "${pageContext.servletContext.contextPath}/conceptEditAddSynonym",
+                    url : "${pageContext.servletContext.contextPath}/getConceptAddSynonyms",
                     data : {
                         synonymid : synonymid
                     },
                     success : function(response) {
+                        var synonym = JSON.parse(response);
+                        var eachSynonym = synonym.synonyms[0];
 
-                        var html = '<table border="1" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
-                        var len = response.length;
-                        for (var i = 0; i < len; i++) {
-                            html += '<tr><td align="justify"><font size="2">'
-                                    + '<a onclick="synonymRemove(\''
-                                    + response[i].id + '\')">Remove</a>'
-                                    + '</font></td>';
-                            html += '<td align="justify"><font size="2">'
-                                    + response[i].word + '</font></td>';
-                            html += '<td align="justify"><font size="2">'
-                                    + response[i].description
-                                    + '</font></td></tr>';
-                        }
-                        html += '</tbody></table>';
-                        $("#addedSynonyms").html(html);
+                        //Adding synonymId to the existing list
+                        var list = document.getElementById("synonymsids").value;
+                        list += eachSynonym.Id + ',';
+                        $("#synonymsids").val(list);
+
+                        $('#addedSynonymsTable')
+                        .dataTable()
+                        .fnAddData(
+                        		eachSynonym);
                     }
                 });
     };
-
-    var synonymRemove = function(synonymid) {
-        $
-
-                .ajax({
-                    type : "GET",
-                    url : "${pageContext.servletContext.contextPath}/conceptEditRemoveSynonym",
-                    data : {
-                        synonymid : synonymid
+	
+    
+    
+    function definedatatableForSynonymAdd() {
+        $('#addedSynonymsTable').dataTable(
+                {
+                    "bJQueryUI" : true,
+                    "bAutoWidth" : false,
+                    "bStateSave" : true,
+                    "aoColumns" : [ {
+                    	"sTitle" : "Remove",
+                        "mDataProp" : "Id"
+                    }, {
+                    	"sTitle" : "Word",
+                        "mDataProp" : "Word",
+                    }, {
+                    	"sTitle" : "Description",
+                        "mDataProp" : "Description",
+                    }
+                    ],
+                    "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
+                        $('td:eq(0)', nRow).html(
+                           '<a onclick="synonymTemporaryRemove(\'' + aData.Id
+                           + '\')">Remove</a>');
+                        return nRow;
                     },
-                    success : function(response) {
-                        var border = response.length > 0 ? 1 : 0;
-                        var html = '<table border="'+ border +'" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
-                        var len = response.length;
-                        for (var i = 0; i < len; i++) {
-                            html += '<tr><td align="justify"><font size="2">'
-                                    + '<a onclick="synonymRemove(\''
-                                    + response[i].id + '\')">Remove</a>'
-                                    + '</font></td>';
-                            html += '<td align="justify"><font size="2">'
-                                    + response[i].word + '</font></td>';
-                            html += '<td align="justify"><font size="2">'
-                                    + response[i].description
-                                    + '</font></td></tr>';
-                        }
-                        html += '</tbody></table>';
-                        $("#addedSynonyms").html(html);
-
+                    "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                        $(nRow).attr('id', aData.Id);
+                        $(nRow).attr('class', '');
                     }
                 });
     };
-
+    
+    
+    
     $(document)
             .ready(
                     function() {
@@ -139,6 +147,8 @@
                             "bAutoWidth" : false
                         });
                         var conceptid = $('#conceptid').val();
+                        $("#addedSynonyms").show();
+                        $("#addedSynonymsTable").show();
                         $
                                 .ajax({
                                     type : "GET",
@@ -149,25 +159,16 @@
                                     success : function(response) {
                                         var border = response.length > 0 ? 1
                                                 : 0;
-                                        var html = '<table border="'+ border +'" width="400" id="addedSynonymsTable"><thead></thead><tbody>';
                                         var synonym = JSON.parse(response);
                                         var total = synonym.Total;
+                                        // var arr = new Array();
                                         for (var i = 0; i < total; i++) {
-                                            var eachSynonym = synonym.synonyms[i];
-                                            html += '<tr id='+eachSynonym.Id+'><td align="justify"><font size="2">'
-                                                    + '<a onclick="synonymTemporaryRemove(\''
-                                                    + eachSynonym.Id
-                                                    + '\')">Remove</a>'
-                                                    + '</font></td>';
-                                            html += '<td align="justify"><font size="2">'
-                                                    + eachSynonym.Word
-                                                    + '</font></td>';
-                                            html += '<td align="justify"><font size="2">'
-                                                    + eachSynonym.Description
-                                                    + '</font></td></tr>';
+                                            
+                                            $('#addedSynonymsTable')
+                                            .dataTable()
+                                            .fnAddData(
+                                            		synonym.synonyms[i]);
                                         }
-                                        html += '</tbody></table>';
-                                        $("#addedSynonyms").html(html);
                                     }
                                 });
                     });
@@ -175,9 +176,22 @@
     var synonymTemporaryRemove = function(synonymid) {
         var count = $('#addedSynonymsTable tr').length;
         $('#' + synonymid).remove();
-        if (count == 1) {
-            $('#addedSynonymsTable').remove();
+        //Removing synonymId from existing list
+        var list = document.getElementById("synonymsids").value;
+        document.getElementById("synonymsids").value = removeList(list,
+                synonymid, ',');
+    };
+
+    var removeList = function(list, synonymid, separator) {
+        separator = separator || ",";
+        var values = list.split(separator);
+        for (var i = 0; i < values.length; i++) {
+            if (values[i] == synonymid) {
+                values.splice(i, 1);
+                return values.join(separator);
+            }
         }
+        return list;
     };
 </script>
 
@@ -186,9 +200,7 @@
 	action="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/edit/${conceptId}"
 	method='post' modelAttribute="conceptEditBean">
 
-	<h1>Delete concept</h1>
-	<p>Do you really want to delete the following concept?</p>
-
+	<h1>Edit concept</h1>
 
 	<h2>${word}</h2>
 	<p>${conceptEditBean.description}</p>
@@ -198,16 +210,14 @@
 
 		<tr>
 			<td>Concept</td>
-			<td><form:input path="word"/></td>
+			<td><form:input path="word" /></td>
 		</tr>
 		<tr>
 			<td>POS</td>
 			<td><form:select path="selectedPosValue">
 					<form:option value="" />
-					<form:options items="${conceptEditBean.possMap}" />
+					<form:options items="${conceptEditBean.posMap}" />
 				</form:select></td>
-
-
 		</tr>
 		<tr>
 			<td>Concept List</td>
@@ -223,9 +233,20 @@
 		</tr>
 		<tr>
 			<td>Synonyms</td>
-			<td><div id="addedSynonyms"></div></td>
-			<td><input type="button" name="synonym" id="addsynonym"
-				value="Add Synonym" class="button"></td>
+			<td>
+				<div id="addedSynonyms" hidden="true">
+					<table border="1" width="400" id="addedSynonymsTable"
+						hidden="true">
+						<tbody>
+						</tbody>
+					</table>
+
+				</div>
+
+			</td>
+			<td><form:hidden path="synonymsids"></form:hidden> <input
+				type="button" name="synonym" id="addsynonym" value="Add Synonym"
+				class="button"></td>
 		</tr>
 
 		<tr>
@@ -246,9 +267,7 @@
 			<td><form:input path="similar" /></td>
 		</tr>
 		<tr>
-			<td>
-			<form:hidden path="synonymsids"/>
-			</td>
+			<td> <form:hidden path="conceptEntryList"/></td>
 		</tr>
 		<tr>
 			<td><input type="text" name="conceptid" id="conceptid"
@@ -262,7 +281,7 @@
 				value="Store modified concept" class="button"></td>
 
 			<td><a
-				href="${pageContext.servletContext.contextPath}/auth/concepts/canceledit/${conceptList}"><input
+				href="${pageContext.servletContext.contextPath}/auth/conceptlist"><input
 					type="button" name="cancel" value="Cancel!" class="button"></a></td>
 		</tr>
 	</table>
@@ -289,7 +308,5 @@
 			</table>
 
 		</div>
-
 	</div>
-
 </form>
