@@ -9,6 +9,12 @@ import org.springframework.validation.Validator;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
 import edu.asu.conceptpower.web.ConceptTypeAddForm;
 
+/**
+ * This class provides methods for validating name, description for concept Types
+ * 
+ * @author Karthikeyan
+ * 
+ */
 @Component
 public class ConceptTypeAddValidator implements Validator {
 
