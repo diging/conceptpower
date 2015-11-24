@@ -290,6 +290,34 @@
 		}
 		$("#synonymsids").val(synonyms);
 	};
+
+	function detailsView(concept) {
+		var conceptid = concept.id;
+		$.ajax({
+			type : "GET",
+			url : "${pageContext.servletContext.contextPath}/conceptDetail",
+			data : {
+				conceptid : conceptid
+			},
+			success : function(details) {
+				$("#detailsid").text(details.id);
+				$("#detailsuri").text(details.uri);
+				$("#detailswordnetid").text(details.wordnetid);
+				$("#detailspos").text(details.pos);
+				$("#detailsconceptlist").text(details.conceptlist);
+				$("#detailstypeid").text(details.type);
+				$("#detailsequalto").text(details.equalto);
+				$("#detailssimilarto").text(details.similarto);
+				$("#detailscreator").text(details.creator);
+
+				$("#detailsdiv").dialog({
+					title : details.name,
+					width : 'auto'
+				});
+				$("#detailstable").show();
+			}
+		});
+	}
 </script>
 
 
@@ -297,8 +325,10 @@
 <p>Add a wrapper for a concept in Wordnet. Do that if you for
 	example want to attach an "equals to" URI a concept that already exists
 	in Wordnet.</p>
-	
-<c:if test="${not empty errormsg}"><p style="text-color: red;">${errormsg}</p></c:if>
+
+<c:if test="${not empty errormsg}">
+	<p style="text-color: red;">${errormsg}</p>
+</c:if>
 
 <h2>1. Search for Wordnet concept</h2>
 
@@ -458,6 +488,47 @@
 
 		</div>
 
+	</div>
+
+	<div id="detailsdiv" style="max-width: 600px; max-height: 500px;">
+		<table id="detailstable" class="greyContent" hidden="true">
+			<tr>
+				<td>Id:</td>
+				<td id="detailsid"></td>
+			</tr>
+			<tr>
+				<td>URI:</td>
+				<td id="detailsuri"></td>
+			</tr>
+			<tr>
+				<td>Wordnet Id:</td>
+				<td id="detailswordnetid"></td>
+			</tr>
+			<tr>
+				<td>POS:</td>
+				<td id="detailspos"></td>
+			</tr>
+			<tr>
+				<td>Concept List:</td>
+				<td id="detailsconceptlist"></td>
+			</tr>
+			<tr>
+				<td>Type:</td>
+				<td id="detailstypeid"></td>
+			</tr>
+			<tr>
+				<td>Equal to:</td>
+				<td id="detailsequalto"></td>
+			</tr>
+			<tr>
+				<td>Similar to:</td>
+				<td id="detailssimilarto"></td>
+			</tr>
+			<tr>
+				<td>Creator:</td>
+				<td id="detailscreator"></td>
+			</tr>
+		</table>
 	</div>
 
 </form>
