@@ -9,6 +9,45 @@
 <h1>Edit concept type</h1>
 <p>Edit concept type here.</p>
 
+<script>
+	$(function() {
+
+		$("#editButton").prop("disabled", "disabled");
+
+		$("#typeName").on("keypress", function() {
+			if ($(this).val() != "") {
+				$("#editButton").prop("disabled", false);
+			} else {
+				$("#editButton").prop("disabled", "disabled");
+			}
+		});
+
+		$("#typeDescription").on("keypress", function() {
+			if ($(this).val() != "") {
+				$("#editButton").prop("disabled", false);
+			} else {
+				$("#editButton").prop("disabled", "disabled");
+			}
+		});
+
+		$("#matches").on("keypress", function() {
+			if ($(this).val() != "") {
+				$("#editButton").prop("disabled", false);
+			} else {
+				$("#editButton").prop("disabled", "disabled");
+			}
+		});
+
+		$("#selectedType").on("change", function() {
+			if ($(this).val() != "") {
+				$("#editButton").prop("disabled", false);
+			} else {
+				$("#editButton").prop("disabled", "disabled");
+			}
+		});
+	});
+</script>
+
 <form:form
 	action="${pageContext.servletContext.contextPath}/auth/concepttype/storeedittype"
 	commandName="conceptTypeAddForm" method='post'>
@@ -43,7 +82,8 @@
 		</tr>
 
 		<tr>
-			<td><input type="submit" value="Edit type" class="button"></td>
+			<td><input type="submit" value="Edit type" id="editButton"
+				name="editButton" class="button" disabled="disabled"></td>
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/concepttype/edittype/canceledit"><input
 					type="button" name="cancel" value="No, cancel!" class="button"></a></td>
