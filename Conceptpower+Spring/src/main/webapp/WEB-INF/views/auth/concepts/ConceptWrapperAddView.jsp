@@ -228,7 +228,6 @@
 										},
 
 										success : function(response) {
-											alert('Inside');
 											$('#synonymstable').dataTable()
 													.fnClearTable();
 
