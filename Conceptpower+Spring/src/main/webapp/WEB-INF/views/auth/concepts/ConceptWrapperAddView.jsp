@@ -226,11 +226,20 @@
 										data : {
 											synonymname : synonymname
 										},
+
 										success : function(response) {
 											$('#synonymstable').dataTable()
 													.fnClearTable();
-											$('#synonymstable').dataTable()
-													.fnAddData(response);
+
+											var synonym = JSON.parse(response);
+											var len = synonym.Total;
+											for (var i = 0; i < len; i++) {
+												$('#synonymstable')
+														.dataTable()
+														.fnAddData(
+																synonym.synonyms[i]);
+											}
+
 										}
 									});
 						});
