@@ -67,6 +67,13 @@ public class UserEditController {
      * 
      * @param req
      *            holds HTTP request information
+     * @param user
+     *            holds the user entered values in the backing bean
+     * @param reattr
+     *            variable to bind error messages on redirect
+     * @param result
+     *            variable to bind the error values to the page
+     * 
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
@@ -123,8 +130,9 @@ public class UserEditController {
      *            holds the user entered values in the backing bean
      * @param reattr
      *            variable to bind error messages on redirect
+     * @param result
+     *            variable to bind the error values to the page
      * 
-     *           
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/editpassword/store", method = RequestMethod.POST)
@@ -191,4 +199,3 @@ public class UserEditController {
         return "redirect:/auth/user/list";
     }
 }
-
