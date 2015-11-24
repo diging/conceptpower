@@ -10,19 +10,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.jettison.json.JSONException;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.bean.ConceptEditBean;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
@@ -44,7 +44,7 @@ public class ConceptEditController {
 
 	@Autowired
 	private IConceptManager conceptManager;
-	
+
 	@Autowired
 	private IConceptListManager conceptListManager;
 
@@ -68,58 +68,26 @@ public class ConceptEditController {
 	 * @return String value to redirect user to concept edit page
 	 */
 	@RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
-	public String prepareEditConcept(
-			@PathVariable("conceptid") String conceptid, ModelMap model) {
-
+	public String prepareEditConcept(@PathVariable("conceptid") String conceptid,
+			@ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model) {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-		Map<String, String> types = new LinkedHashMap<String, String>();
-		for (ConceptType conceptType : allTypes) {
-			types.put(conceptType.getTypeId(), conceptType.getTypeName());
-		}
-
 		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
-		Map<String, String> lists = new LinkedHashMap<String, String>();
-		for (ConceptList conceptList : allLists) {
-			lists.put(conceptList.getConceptListName(),
-					conceptList.getConceptListName());
-		}
-
-		// set poss values and seleted pos
-		Map<String, String> poss = new LinkedHashMap<String, String>();
-		poss.put("noun", "Nouns");
-		poss.put("verb", "Verbs");
-		poss.put("adverb", "Adverb");
-		poss.put("adjective", "Adjective");
-		poss.put("other", "Other");
-
-		model.addAttribute("word", concept.getWord());
-
-		model.addAttribute("selectedposvalue", poss.get(concept.getPos()));
-		model.addAttribute("selectedposname", concept.getPos());
-		poss.remove(concept.getPos());
-		model.addAttribute("poss", poss);
-
-		model.addAttribute("selectedlistname", concept.getConceptList());
-		lists.remove(concept.getConceptList());
-		model.addAttribute("lists", lists);
-
-		model.addAttribute("description", concept.getDescription());
-
-		model.addAttribute("synonyms", concept.getSynonymIds());
-
-		model.addAttribute("selectedtypeid", concept.getTypeId());
-		model.addAttribute("selectedtypename", types.get(concept.getTypeId()));
-		types.remove(concept.getTypeId());
-		model.addAttribute("types", types);
-
-		model.addAttribute("equal", concept.getEqualTo());
-		model.addAttribute("similar", concept.getSimilarTo());
-
-		model.addAttribute("conceptList", concept.getConceptList());
+		conceptEditBean.setWord(concept.getWord());
+		conceptEditBean.setSelectedPosValue(conceptEditBean.getPossMap().get(concept.getPos()));
+		conceptEditBean.setSelectedPosValue(concept.getPos());
+		conceptEditBean.setConceptListValue(concept.getConceptList());
+		conceptEditBean.setSelectedListName(concept.getConceptList());
+		conceptEditBean.setConceptList(allLists);
+		conceptEditBean.setDescription(concept.getDescription().trim());
+		conceptEditBean.setSynonymsids(concept.getSynonymIds());
+		conceptEditBean.setSelectedTypeId(concept.getTypeId());
+		conceptEditBean.setTypes(allTypes);
+		conceptEditBean.setSelectedTypeId(concept.getTypeId());
+		conceptEditBean.setEquals(concept.getEqualTo());
+		conceptEditBean.setSimilar(concept.getSimilarTo());
+		conceptEditBean.setConceptId(concept.getId());
 		model.addAttribute("conceptId", concept.getId());
-
 		return "/auth/conceptlist/editconcept";
 	}
 
@@ -150,26 +118,24 @@ public class ConceptEditController {
 	 *         page
 	 */
 	@RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
-	public String confirmlEdit(@PathVariable("id") String id,
-			HttpServletRequest req, Principal principal) {
+	public String confirmlEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,@ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean) {
 
 		ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
-		conceptEntry.setWord(req.getParameter("name"));
-		conceptEntry.setConceptList(req.getParameter("lists"));
-		conceptEntry.setPos(req.getParameter("poss"));
-		conceptEntry.setDescription(req.getParameter("description"));
-		conceptEntry.setEqualTo(req.getParameter("equal"));
-		conceptEntry.setSimilarTo(req.getParameter("similar"));
-		conceptEntry.setTypeId(req.getParameter("types"));
-		conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
+		conceptEntry.setWord(conceptEditBean.getWord());
+		conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
+		conceptEntry.setPos(conceptEditBean.getSelectedPosValue());
+		conceptEntry.setDescription(conceptEditBean.getDescription());
+		conceptEntry.setEqualTo(conceptEditBean.getEquals());
+		conceptEntry.setSimilarTo(conceptEditBean.getSimilar());
+		conceptEntry.setTypeId(conceptEditBean.getSelectedTypeId());
+		conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
 
 		String userId = usersManager.findUser(principal.getName()).getUsername();
 		String modified = conceptEntry.getModified() != null ? conceptEntry
 				.getModified() : "";
 		if (!modified.trim().isEmpty())
 			modified += ", ";
-		conceptEntry.setModified(modified + userId + "@"
-				+ (new Date()).toString());
+		conceptEntry.setModified(modified + userId + "@" + (new Date()).toString());
 
 		conceptManager.storeModifiedConcept(conceptEntry);
 
@@ -185,10 +151,8 @@ public class ConceptEditController {
 	 * @return The list of existing concepts
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
-	public @ResponseBody
-	ConceptEntry[] searchConcept(@RequestParam("synonymname") String synonymname) {
-		ConceptEntry[] entries = conceptManager
-				.getConceptListEntriesForWord(synonymname.trim());
+	public @ResponseBody ConceptEntry[] searchConcept(@RequestParam("synonymname") String synonymname) {
+		ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
 		return entries;
 	}
 
@@ -209,7 +173,7 @@ public class ConceptEditController {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
 		String synonymIds = concept.getSynonymIds();
-		
+
 		if (synonymIds != null) {
 			String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
 			if (ids != null) {
