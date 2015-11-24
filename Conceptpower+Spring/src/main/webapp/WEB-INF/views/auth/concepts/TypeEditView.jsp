@@ -9,34 +9,36 @@
 <h1>Edit concept type</h1>
 <p>Edit concept type here.</p>
 
-<form
-	action="${pageContext.servletContext.contextPath}/auth/concepttype/storeedittype/${typeid}"
-	method='post'>
+<form:form
+	action="${pageContext.servletContext.contextPath}/auth/concepttype/storeedittype"
+	commandName="conceptTypeAddForm" method='post'>
 	<table>
 		<tr>
 			<td>Type Name</td>
-			<td><input type="text" name="name" id="name" value="${typeName}"></td>
+			<td><form:input path="typeName" /> <form:hidden path="typeid" />
+				<form:hidden path="oldTypeName" /></td>
+			<td><form:errors path="typeName" class="ui-state-error-text" /></td>
 		</tr>
 
 		<tr>
 			<td>Type Description</td>
-			<td><textarea rows="7" cols="50" name="description"
-					id="description"> ${description}</textarea></td>
+			<td><form:textarea rows="7" cols="50" path="typeDescription"></form:textarea></td>
+			<td><form:errors path="typeDescription"
+					class="ui-state-error-text" /></td>
 		</tr>
 
 		<tr>
 			<td>Matches</td>
-			<td><input type="text" name="match" id="match"
-				value="${matches}"></td>
+			<td><form:input path="matches" /></td>
 		</tr>
 
 		<tr>
 			<td>Super Type</td>
-			<td><form:select path="supertypes" name="supertypes">
+			<td><form:select path="selectedType">
 					<form:option value="" label="Select one" />
-					<form:option value="${selectedtypeid}" label="${selectedtypename}"
-						selected="selected" />
-					<form:options items="${supertypes}" />
+					<c:forEach items="${conceptTypeAddForm.types}" var="typesDropDown">
+						<form:option value="${typesDropDown.value}">${typesDropDown.value}</form:option>
+					</c:forEach>
 				</form:select></td>
 		</tr>
 
@@ -47,4 +49,4 @@
 					type="button" name="cancel" value="No, cancel!" class="button"></a></td>
 		</tr>
 	</table>
-</form>
+</form:form>
