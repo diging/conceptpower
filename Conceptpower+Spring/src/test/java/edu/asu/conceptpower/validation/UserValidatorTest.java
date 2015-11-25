@@ -1,19 +1,14 @@
 package edu.asu.conceptpower.validation;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
-
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.validation.UserValidator;
@@ -29,6 +24,7 @@ public class UserValidatorTest {
     private UserBacking validUser;
     private UserBacking invalidUser;
     private User existingUser;
+    private User existsEmailUser;
     private UserBacking emptyUser;
 
     @Before
@@ -38,7 +34,7 @@ public class UserValidatorTest {
 
         validUser = new UserBacking();
         validUser.setUsername("validuser");
-        validUser.setEmail("test@abc.xyz");
+        validUser.setEmail("abcde@abc.xyz");
         validUser.setPassword("password");
         validUser.setRetypedPassword("password");
         validUser.setFullname("Valid User");
@@ -63,6 +59,13 @@ public class UserValidatorTest {
         existingUser.setPw("password");
         existingUser.setFullname("Valid User");
         Mockito.when(uManager.findUser("username")).thenReturn(existingUser);
+
+        existsEmailUser = new User();
+        existsEmailUser.setUsername("newusername");
+        existsEmailUser.setEmail("abc@abc.xyz");
+        existsEmailUser.setPw("password");
+        existsEmailUser.setFullname("Valid User");
+        Mockito.when(uManager.findUserByEmail("abc@abc.xyz")).thenReturn(existsEmailUser);
 
     }
 
@@ -120,6 +123,24 @@ public class UserValidatorTest {
         Assert.assertEquals(1, errors.getFieldErrorCount());
         Assert.assertEquals(errors.getFieldError("username").getCode(), "exists.username");
         Assert.assertNull(errors.getFieldError("email"));
+        Assert.assertNull(errors.getFieldError("password"));
+        Assert.assertNull(errors.getFieldError("fullname"));
+    }
+
+    @Test
+    public void testEmailExists() {
+
+        UserBacking eUser = new UserBacking();
+        eUser.setUsername(existsEmailUser.getUsername());
+        eUser.setPassword(existsEmailUser.getPw());
+        eUser.setEmail(existsEmailUser.getEmail());
+        eUser.setFullname(existsEmailUser.getFullname());
+        eUser.setRetypedPassword("password");
+        Errors errors = new BindException(eUser, "user");
+        ValidationUtils.invokeValidator(uValidator, eUser, errors);
+        Assert.assertEquals(1, errors.getFieldErrorCount());
+        Assert.assertNull(errors.getFieldError("username"));
+        Assert.assertEquals(errors.getFieldError("email").getCode(), "exists.email");
         Assert.assertNull(errors.getFieldError("password"));
         Assert.assertNull(errors.getFieldError("fullname"));
     }

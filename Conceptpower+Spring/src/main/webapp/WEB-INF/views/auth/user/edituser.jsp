@@ -1,4 +1,4 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+ <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <h2>Edit user:</h2>
@@ -17,12 +17,12 @@
 		<tr>
 			<td>Name:</td>
 			<td><form:input type="text" id="fullname" path="fullname" /></td>
-			<td><div id="fnerror" style="color: red;"></div></td>
+			<td><form:errors type="text" id="fullname" path="fullname" /></td>
 		</tr>
 		<tr>
 			<td>Email:</td>
 			<td><form:input type="email" id="email" path="email" /></td>
-			<td><div id="emailError" style="color: red;"></div></td>
+			<td><form:errors type="email" id="email" path="email" /></td>
 		</tr>
 		<tr>
 			<td>Is Administrator:</td>

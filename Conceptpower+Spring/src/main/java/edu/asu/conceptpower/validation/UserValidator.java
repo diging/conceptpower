@@ -90,6 +90,10 @@ public class UserValidator implements Validator {
             err.rejectValue("username", "exists.username");
         }
 
+        if (usersManager.findUserByEmail(emailid) != null) {
+            err.rejectValue("email", "exists.email");
+        }
+
     }
 
 }

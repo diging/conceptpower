@@ -3,18 +3,18 @@ package edu.asu.conceptpower.web.backing;
 import javax.validation.constraints.Pattern;
 import edu.asu.conceptpower.validation.ValuesMatch;
 
-@ValuesMatch(first = "password", second = "retypedPassword")
+//@ValuesMatch(first = "password", second = "retypedPassword")
 public class UserBacking {
 
     private String username;
 
-    @Pattern(regexp = "^[a-zA-Z ]{3,25}$", message = "Please Enter a Proper Name for the User. Alphabets, numbers and spaces allowed")
+    @Pattern(regexp = "^[a-zA-Z ]{3,25}$", message = "Please enter a proper name for the user. Alphabets, numbers and spaces allowed.")
     private String fullname;
 
     private String password;
 
     @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please Enter a Proper Email id")
+            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please enter a proper email address")
     private String email;
 
     private String retypedPassword;

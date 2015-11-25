@@ -77,13 +77,13 @@ public class UserEditController {
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
-    public String storeUserChanges(@ModelAttribute("user") @Valid UserBacking user, BindingResult result,
-            RedirectAttributes reattr, Principal principal) {
+    public String storeUserChanges(ModelMap model, @ModelAttribute("user") @Valid UserBacking user,
+            BindingResult result, RedirectAttributes reattr, Principal principal) {
 
         if (result.hasErrors()) {
-            reattr.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
-            reattr.addFlashAttribute("user", user);
-            return "redirect:/auth/user/edituser/" + user.getUsername();
+            model.addAttribute("org.springframework.validation.BindingResult.user", result);
+            model.addAttribute("user", user);
+            return "auth/user/edituser";
         }
 
         User uUser = userManager.findUser(user.getUsername());
@@ -136,8 +136,8 @@ public class UserEditController {
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/editpassword/store", method = RequestMethod.POST)
-    public String storePasswordChanges(HttpServletRequest req, Principal principal, @Valid UserBacking user,
-            BindingResult result, RedirectAttributes reattr) {
+    public String storePasswordChanges(ModelMap model, HttpServletRequest req, Principal principal,
+            @Valid UserBacking user, BindingResult result) {
 
         User uUser = userManager.findUser(user.getUsername());
 
@@ -146,9 +146,9 @@ public class UserEditController {
 
         if (result.hasErrors()) {
 
-            reattr.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
-            reattr.addFlashAttribute("user", user);
-            return "redirect:/auth/user/editpassword/" + user.getUsername();
+            model.addAttribute("org.springframework.validation.BindingResult.user", result);
+            model.addAttribute("user", user);
+            return "/auth/user/editpassword";
         }
 
         uUser.setPw(user.getPassword());
