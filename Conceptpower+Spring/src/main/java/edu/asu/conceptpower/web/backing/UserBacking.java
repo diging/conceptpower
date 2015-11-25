@@ -3,7 +3,7 @@ package edu.asu.conceptpower.web.backing;
 import javax.validation.constraints.Pattern;
 import edu.asu.conceptpower.validation.ValuesMatch;
 
-//@ValuesMatch(first = "password", second = "retypedPassword")
+@ValuesMatch(first = "password", second = "retypedPassword")
 public class UserBacking {
 
     private String username;

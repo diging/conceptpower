@@ -114,7 +114,9 @@ public class UserEditController {
 
         if (user == null)
             return "auth/user/notfound";
+
         model.addAttribute("username", user.getUsername());
+
         if (!model.containsAttribute("user")) {
             model.addAttribute("user", new UserBacking());
         }
@@ -146,9 +148,11 @@ public class UserEditController {
 
         if (result.hasErrors()) {
 
+            model.addAttribute("username", user.getUsername());
             model.addAttribute("org.springframework.validation.BindingResult.user", result);
             model.addAttribute("user", user);
-            return "/auth/user/editpassword";
+            
+            return "auth/user/editpassword";
         }
 
         uUser.setPw(user.getPassword());
