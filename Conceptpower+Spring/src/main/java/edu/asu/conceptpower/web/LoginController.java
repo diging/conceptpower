@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class LoginController {
 
-	/**
-	 * This method redirects user to home page for use login
-	 * 
-	 */
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(@ModelAttribute("conceptSearchBean")ConceptSearchBean conceptSearchBean) {
+    /**
+     * This method redirects user to home page for use login
+     * 
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(@ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean) {
 
-		return "welcome";
+        return "welcome";
 
-	}
+    }
 
 	/**
 	 * This method sets error message in home page when there are any errros
