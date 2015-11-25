@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.validation.EmailValidator;
 import edu.asu.conceptpower.validation.UserValidator;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
@@ -34,6 +35,15 @@ public class UserEditController {
 
     @Autowired
     private IUserManager userManager;
+    
+    @Autowired
+    private EmailValidator eValidator;
+
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.setValidator(eValidator);
+    }
+    
 
     /**
      * This method provides user information to user editing page
