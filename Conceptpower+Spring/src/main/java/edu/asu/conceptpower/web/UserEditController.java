@@ -1,26 +1,18 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
-import edu.asu.conceptpower.validation.UserValidator;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 /**
@@ -63,22 +55,19 @@ public class UserEditController {
     }
 
     /**
-     * This method stores updated user changes
-     * 
-     * @param req
-     *            holds HTTP request information
+     * @param model
+     *            Generic model holder for servlet
      * @param user
      *            holds the user entered values in the backing bean
-     * @param reattr
-     *            variable to bind error messages on redirect
      * @param result
      *            variable to bind the error values to the page
-     * 
+     * @param principal
+     *            Security principal object that stores session info
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
     public String storeUserChanges(ModelMap model, @ModelAttribute("user") @Valid UserBacking user,
-            BindingResult result, RedirectAttributes reattr, Principal principal) {
+            BindingResult result, Principal principal) {
 
         if (result.hasErrors()) {
             model.addAttribute("org.springframework.validation.BindingResult.user", result);
@@ -130,8 +119,8 @@ public class UserEditController {
      *            holds HTTP request information
      * @param user
      *            holds the user entered values in the backing bean
-     * @param reattr
-     *            variable to bind error messages on redirect
+     * @param model
+     *            Generic model holder for servlet
      * @param result
      *            variable to bind the error values to the page
      * 
@@ -151,7 +140,7 @@ public class UserEditController {
             model.addAttribute("username", user.getUsername());
             model.addAttribute("org.springframework.validation.BindingResult.user", result);
             model.addAttribute("user", user);
-            
+
             return "auth/user/editpassword";
         }
 
