@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.users.IUserManager;
+import edu.asu.conceptpower.validation.ConceptTypeAddValidator;
 
 /**
  * This class provides all the methods for editing a type
@@ -27,84 +33,98 @@ import edu.asu.conceptpower.users.IUserManager;
 @Controller
 public class ConceptTypeEditController {
 
-	@Autowired
-	private IConceptTypeManger typeManager;
+    @Autowired
+    private IConceptTypeManger typeManager;
 
-	@Autowired
-	private IUserManager usersManager;
+    @Autowired
+    private IUserManager usersManager;
 
-	/**
-	 * This method provides a type information to edit type page
-	 * 
-	 * @param typeid
-	 *            Represents a type which has to be edited
-	 * @param model
-	 *            Generic model holder for servlet
-	 * @return Returns a string value to redirect user to type edit page
-	 */
-	@RequestMapping(value = "auth/concepttype/edittype/{typeid}", method = RequestMethod.GET)
-	public String prepareEditType(@PathVariable("typeid") String typeid,
-			ModelMap model) {
+    @Autowired
+    private ConceptTypeAddValidator validator;
 
-		ConceptType type = typeManager.getType(typeid);
-		model.addAttribute("typeid", type.getTypeId());
-		model.addAttribute("typeName", type.getTypeName());
-		model.addAttribute("description", type.getDescription());
-		model.addAttribute("matches", type.getMatches());
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(validator);
+    }
 
-		ConceptType[] allTypes = typeManager.getAllTypes();
+    /**
+     * This method provides a type information to edit type page
+     * 
+     * @param typeid
+     *            Represents a type which has to be edited
+     * @param model
+     *            Generic model holder for servlet
+     * @return Returns a string value to redirect user to type edit page
+     */
+    @RequestMapping(value = "auth/concepttype/edittype/{typeid}", method = RequestMethod.GET)
+    public String prepareEditType(@PathVariable("typeid") String typeid, ModelMap model,
+            @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm) {
 
-		Map<String, String> types = new LinkedHashMap<String, String>();
-		for (ConceptType conceptType : allTypes) {
-			types.put(conceptType.getTypeId(), conceptType.getTypeName());
-		}
+        ConceptType type = typeManager.getType(typeid);
 
-		model.addAttribute("selectedtypeid", typeid);
-		model.addAttribute("selectedtypename", types.get(typeid));
-		types.remove(typeid);
-		model.addAttribute("supertypes", types);
+        conceptTypeAddForm.setTypeName(type.getTypeName());
+        conceptTypeAddForm.setOldTypeName(type.getTypeName());
+        conceptTypeAddForm.setTypeDescription(type.getDescription());
+        conceptTypeAddForm.setMatches(type.getMatches());
+        conceptTypeAddForm.setSelectedType(type.getSupertypeId().trim());
+        conceptTypeAddForm.setTypeid(type.getTypeId());
 
-		return "/auth/concepttype/edittype";
-	}
+        ConceptType[] allTypes = typeManager.getAllTypes();
 
-	/**
-	 * This method stores the updated information of a type
-	 * 
-	 * @param typeid
-	 * @param req
-	 *            holds HTTP request information
-	 * @param principal
-	 *            holds logged in user information
-	 * @return Returns a string value to redirect user to type list page
-	 */
-	@RequestMapping(value = "auth/concepttype/storeedittype/{typeid}", method = RequestMethod.POST)
-	public String editType(@PathVariable("typeid") String typeid,
-			HttpServletRequest req, Principal principal) {
+        Map<String, String> types = new LinkedHashMap<String, String>();
+        for (ConceptType conceptType : allTypes) {
+            types.put(conceptType.getTypeId(), conceptType.getTypeName());
+        }
 
-		ConceptType type = typeManager.getType(typeid);
-		type.setTypeName(req.getParameter("name"));
-		type.setDescription(req.getParameter("description"));
-		type.setMatches(req.getParameter("match"));
-		type.setSupertypeId(req.getParameter("supertypes"));
+        types.remove(typeid);
+        // model.addAttribute("supertypes", types);
+        conceptTypeAddForm.setTypes(types);
+        conceptTypeAddForm.setTypeid(typeid);
+        return "/auth/concepttype/edittype";
+    }
 
-		String userId = usersManager.findUser(principal.getName()).getUsername();
-		String modified = type.getModified() != null ? type.getModified() : "";
-		if (!modified.trim().isEmpty())
-			modified += ", ";
-		type.setModified(modified + userId + "@" + (new Date()).toString());
+    /**
+     * This method stores the updated information of a type
+     * 
+     * @param typeid
+     * @param req
+     *            holds HTTP request information
+     * @param principal
+     *            holds logged in user information
+     * @return Returns a string value to redirect user to type list page
+     */
+    @RequestMapping(value = "auth/concepttype/storeedittype", method = RequestMethod.POST)
+    public String editType(HttpServletRequest req, Principal principal,
+            @Validated @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm,
+            BindingResult results) {
 
-		typeManager.storeModifiedConceptType(type);
-		return "redirect:/auth/concepttype";
-	}
+        if (results.hasErrors()) {
+            return "/auth/concepttype/edittype";
+        }
+        ConceptType type = typeManager.getType(conceptTypeAddForm.getTypeid());
+        type.setTypeName(conceptTypeAddForm.getTypeName());
+        type.setDescription(conceptTypeAddForm.getTypeDescription());
+        type.setMatches(conceptTypeAddForm.getMatches());
+        type.setSupertypeId(conceptTypeAddForm.getSelectedType());
 
-	/**
-	 * This method returns the string to redirect user to type list page when
-	 * user cancels type edit operation
-	 * 
-	 * @return Returns a string value to redirect user to concept type list page
-	 */
-	@RequestMapping(value = "auth/concepttype/edittype/canceledit", method = RequestMethod.GET)
-	public String cancelEdit() {
-		return "redirect:/auth/concepttype";
-	}
+        String userId = usersManager.findUser(principal.getName()).getUsername();
+        String modified = type.getModified() != null ? type.getModified() : "";
+        if (!modified.trim().isEmpty())
+            modified += ", ";
+        type.setModified(modified + userId + "@" + (new Date()).toString());
+
+        typeManager.storeModifiedConceptType(type);
+        return "redirect:/auth/concepttype";
+    }
+
+    /**
+     * This method returns the string to redirect user to type list page when
+     * user cancels type edit operation
+     * 
+     * @return Returns a string value to redirect user to concept type list page
+     */
+    @RequestMapping(value = "auth/concepttype/edittype/canceledit", method = RequestMethod.GET)
+    public String cancelEdit() {
+        return "redirect:/auth/concepttype";
+    }
 }
