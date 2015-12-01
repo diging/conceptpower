@@ -89,7 +89,9 @@
 
 		<div id="content_footer"></div>
 		<div id="footer">
-			<p class="legal">Pull Request: ${pullrequest}</p>
+			<c:if test="${not empty pullrequest}">
+				<p class="legal">Pull Request: ${pullrequest}</p>
+			</c:if>
 			<p class="legal">Version: ${buildNumber}</p>
 			Copyright &#169; simplestyle_1 | <a
 				href="http://validator.w3.org/check?uri=referer">HTML5</a> | <a
