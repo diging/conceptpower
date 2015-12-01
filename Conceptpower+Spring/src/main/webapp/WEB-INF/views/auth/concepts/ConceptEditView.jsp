@@ -93,6 +93,7 @@
 
                         //Adding synonymId to the existing list
                         var list = document.getElementById("synonymsids").value;
+                        alert(list);
                         list += eachSynonym.Id + ',';
                         $("#synonymsids").val(list);
 
@@ -175,9 +176,11 @@
 
     var synonymTemporaryRemove = function(synonymid) {
         var count = $('#addedSynonymsTable tr').length;
+        alert(count);
         $('#' + synonymid).remove();
         //Removing synonymId from existing list
         var list = document.getElementById("synonymsids").value;
+        alert(list);
         document.getElementById("synonymsids").value = removeList(list,
                 synonymid, ',');
     };
