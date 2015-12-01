@@ -176,8 +176,6 @@
 
     var synonymTemporaryRemove = function(synonymid) {
         var count = $('#addedSynonymsTable tr').length;
-        alert(synonymid);
-        //$('#' + synonymid).remove().draw( false );
         var synonymTable = $("#addedSynonymsTable").dataTable();
         var tableRow = $('#' + synonymid);
         synonymTable.fnDeleteRow(synonymTable.fnGetPosition(tableRow.find('td')[0])[0]);
