@@ -45,6 +45,12 @@
 
 	<util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames" value="validatormessages">
+
+		</property>
+	</bean>
 	<util:properties id="config" location="classpath:/config.properties" />
 
 	
