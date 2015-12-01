@@ -180,10 +180,8 @@ public class ConceptEditController {
 	 * @return The list of existing concepts
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
-	public @ResponseBody
-	ConceptEntry[] searchConcept(@RequestParam("synonymname") String synonymname) {
-		ConceptEntry[] entries = conceptManager
-				.getConceptListEntriesForWord(synonymname.trim());
+	public @ResponseBody ConceptEntry[] searchConcept(@RequestParam("synonymname") String synonymname) {
+		ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
 		return entries;
 	}
 
@@ -197,9 +195,7 @@ public class ConceptEditController {
 	 * @return List of existing synonyms
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
-	public @ResponseBody
-	ConceptEntry[] getSynonyms(@RequestParam("conceptid") String conceptid,
-			ModelMap model) {
+	public @ResponseBody ConceptEntry[] getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model) {
 
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
@@ -224,5 +220,4 @@ public class ConceptEditController {
 		}
 		return arraySynonyms;
 	}
-
 }
