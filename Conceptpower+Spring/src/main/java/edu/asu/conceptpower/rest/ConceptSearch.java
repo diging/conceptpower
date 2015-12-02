@@ -19,6 +19,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
+import edu.asu.conceptpower.util.URIHelper;
 import edu.asu.conceptpower.xml.XMLConceptMessage;
 import edu.asu.conceptpower.xml.XMLMessageFactory;
 
@@ -41,6 +42,9 @@ public class ConceptSearch {
 
 	@Autowired
 	private XMLMessageFactory messageFactory;
+	
+	@Autowired
+	private URIHelper uriHelper;
 
 	/**
 	 * This method provides information of a concept for a rest interface of the
@@ -56,15 +60,19 @@ public class ConceptSearch {
 		Map<String, String[]> queryParams = req.getParameterMap();
 		Map<String, String> searchFields = new HashMap<String, String>();
 
-		String operator = SearchParamters.OP_OR;
-		for (String key : queryParams.keySet()) {
-			if (key.trim().equals(SearchParamters.OPERATOR)
-					&& !queryParams.get(key)[0].trim().isEmpty())
-				operator = queryParams.get(key)[0].trim();
-			else {
-				searchFields.put(key.trim(), queryParams.get(key)[0]);
-			}
-		}
+        String operator = SearchParamters.OP_OR;
+        for (String key : queryParams.keySet()) {
+            if (key.trim().equals(SearchParamters.OPERATOR) && !queryParams.get(key)[0].trim().isEmpty())
+                operator = queryParams.get(key)[0].trim();
+            else {
+                // If the value is typeURI trim and add it to typeId
+                if (key.trim().equalsIgnoreCase(SearchFieldNames.TYPE_URI)) {
+                    searchFields.put("type_id", uriHelper.getTypeId(queryParams.get(key)[0]));
+                } else {
+                    searchFields.put(key.trim(), queryParams.get(key)[0]);
+                }
+            }
+        }
 		ConceptEntry[] searchResults = null;
 
 		if (operator.equals(SearchParamters.OP_AND))
