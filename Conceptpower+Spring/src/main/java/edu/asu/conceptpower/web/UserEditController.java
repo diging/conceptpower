@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.validation.EmailValidator;
+//import edu.asu.conceptpower.validation.EmailValidator;
 import edu.asu.conceptpower.validation.UserValidator;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
@@ -87,7 +88,7 @@ public class UserEditController {
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
-    public String storeUserChanges(ModelMap model, @ModelAttribute("user") @Valid UserBacking user,
+    public String storeUserChanges(ModelMap model, @ModelAttribute("user") @Validated UserBacking user,
             BindingResult result, RedirectAttributes reattr, Principal principal) {
 
         if (result.hasErrors()) {
@@ -109,67 +110,6 @@ public class UserEditController {
         return "redirect:/auth/user/list";
     }
 
-    /**
-     * This method provides user information to password edit page
-     * 
-     * @param model
-     *            Generic model holder for servlet
-     * @param id
-     *            Represents user id
-     * @return Returns a string value to redirect user to edit password page
-     */
-    @RequestMapping(value = "auth/user/editpassword/{id:.+}")
-    public String prepareEditPassword(ModelMap model, @PathVariable String id) {
-        User user = userManager.findUser(id);
-
-        if (user == null)
-            return "auth/user/notfound";
-
-        model.addAttribute("username", user.getUsername());
-
-        if (!model.containsAttribute("user")) {
-            model.addAttribute("user", new UserBacking());
-        }
-        return "auth/user/editpassword";
-    }
-
-    /**
-     * This method stores the updated user password information
-     * 
-     * @param req
-     *            holds HTTP request information
-     * @param user
-     *            holds the user entered values in the backing bean
-     * @param reattr
-     *            variable to bind error messages on redirect
-     * @param result
-     *            variable to bind the error values to the page
-     * 
-     * @return Returns a string value to redirect user to user list page
-     */
-    @RequestMapping(value = "auth/user/editpassword/store", method = RequestMethod.POST)
-    public String storePasswordChanges(ModelMap model, HttpServletRequest req, Principal principal,
-            @Valid UserBacking user, BindingResult result) {
-
-        User uUser = userManager.findUser(user.getUsername());
-
-        if (uUser == null)
-            return "auth/user/notfound";
-
-        if (result.hasErrors()) {
-
-            model.addAttribute("username", user.getUsername());
-            model.addAttribute("org.springframework.validation.BindingResult.user", result);
-            model.addAttribute("user", user);
-            
-            return "auth/user/editpassword";
-        }
-
-        uUser.setPw(user.getPassword());
-
-        userManager.storeModifiedPassword(uUser);
-        return "redirect:/auth/user/list";
-    }
 
     /**
      * This method returns the control to user list when user cancels user edit
