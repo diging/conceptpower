@@ -1,10 +1,8 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,17 +10,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 @Controller
 public class PasswordEditController {
-    
-    
+
     @Autowired
     private IUserManager userManager;
+
     /**
      * This method provides user information to password edit page
      * 
@@ -75,7 +72,6 @@ public class PasswordEditController {
             model.addAttribute("username", user.getUsername());
             model.addAttribute("org.springframework.validation.BindingResult.user", result);
             model.addAttribute("user", user);
-            
             return "auth/user/editpassword";
         }
 

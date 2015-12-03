@@ -20,62 +20,16 @@ import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 @Component
-public class EmailValidator implements Validator, InitializingBean, ApplicationContextAware, ConstraintValidatorFactory {
+public class EmailValidator implements Validator {
 
     @Autowired
     private IUserManager usersManager;
-    private javax.validation.Validator validator;
 
     @Override
     public boolean supports(Class<?> arg0) {
         return UserBacking.class.isAssignableFrom(arg0);
     }
 
-    private ApplicationContext applicationContext;
-    
-     
-    
-        public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    
-            this.applicationContext = applicationContext;
-    
-        }
-
-        public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
-            
-             
-            
-                    Map beansByNames = applicationContext.getBeansOfType(key);
-            
-                    if (beansByNames.isEmpty()) {
-            
-                        try {
-            
-                            return key.newInstance();
-            
-                        } catch (InstantiationException e) {
-            
-                            throw new RuntimeException("Could not instantiate constraint validator class '" + key.getName() + "'", e);
-            
-                        } catch (IllegalAccessException e) {
-            
-                            throw new RuntimeException("Could not instantiate constraint validator class '" + key.getName() + "'", e);
-            
-                        }
-            
-                    }
-            
-                    if (beansByNames.size() > 1) {
-            
-                        throw new RuntimeException("Only one bean of type '" + key.getName() + "' is allowed in the application context");
-            
-                    }
-            
-                    return (T) beansByNames.values().iterator().next();
-            
-                }
-
-    
     /**
      * Validates the User Object for proper specification
      * 
@@ -89,7 +43,18 @@ public class EmailValidator implements Validator, InitializingBean, ApplicationC
 
         UserBacking user = (UserBacking) arg0;
         String emailid = user.getEmail();
-        
+        String fullName = user.getFullname();
+
+        // Validator for Name - reject if empty or if contains numbers or
+        // special characters.
+        if (fullName.isEmpty()) {
+            err.rejectValue("fullname", "required.name");
+        }
+
+        if (!fullName.isEmpty() && !fullName.matches("^[a-zA-Z ]{3,25}$")) {
+            err.rejectValue("fullname", "proper.name");
+        }
+
         if (emailid.isEmpty()) {
             err.rejectValue("email", "required.email");
 
@@ -106,15 +71,6 @@ public class EmailValidator implements Validator, InitializingBean, ApplicationC
             err.rejectValue("email", "exists.email");
         }
 
-    }
-
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-                validator = validatorFactory.usingContext().getValidator();
-
-        
     }
 
 }

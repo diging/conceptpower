@@ -20,9 +20,12 @@ public class UserDeleteController {
     private IUserManager userManager;
 
     /**
-     * @param model
+     * @param model 
+     *          Model object to hold model information
      * @param id
+     *          Request Parameter to get user details based on Username.
      * @return
+     *          Returns a string value to redirect user to delete user page.
      */
     @RequestMapping(value = "auth/user/deleteuser/{id:.+}")
     public String prepareDeleteUser(ModelMap model, @PathVariable String id) {
@@ -40,8 +43,11 @@ public class UserDeleteController {
 
     /**
      * @param user
+     *          UserBacking Object to bind the user details from the jsp.
      * @param principal
+     *          Security Principal Object
      * @return
+     *          Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/confirmdeleteuser/", method = RequestMethod.POST)
     public String confirmDeleteUser(UserBacking user, Principal principal) {
@@ -55,6 +61,10 @@ public class UserDeleteController {
         return "redirect:/auth/user/list";
     }
 
+    /**
+     * @return
+     *          Returns a string value to redirect user to user list page
+     */
     @RequestMapping(value = "auth/user/canceldelete", method = RequestMethod.GET)
     public String cancelDelete() {
         return "redirect:/auth/user/list";
