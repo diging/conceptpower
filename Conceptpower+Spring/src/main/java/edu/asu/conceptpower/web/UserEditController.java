@@ -36,7 +36,7 @@ public class UserEditController {
 
     @Autowired
     private IUserManager userManager;
-    
+
     @Autowired
     private EmailValidator eValidator;
 
@@ -44,7 +44,6 @@ public class UserEditController {
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(eValidator);
     }
-    
 
     /**
      * This method provides user information to user editing page
@@ -110,7 +109,6 @@ public class UserEditController {
         return "redirect:/auth/user/list";
     }
 
-
     /**
      * This method returns the control to user list when user cancels user edit
      * or password edit operation
@@ -119,37 +117,6 @@ public class UserEditController {
      */
     @RequestMapping(value = "auth/user/canceledit", method = RequestMethod.GET)
     public String cancelEdit() {
-        return "redirect:/auth/user/list";
-    }
-
-    @RequestMapping(value = "auth/user/deleteuser/{id:.+}")
-    public String prepareDeleteUser(ModelMap model, @PathVariable String id) {
-        User user = userManager.findUser(id);
-
-        if (user == null)
-            return "auth/user/notfound";
-
-        UserBacking userBacking = new UserBacking(user.getUsername(), user.getFullname());
-        userBacking.setIsAdmin(user.getIsAdmin());
-
-        model.addAttribute("user", userBacking);
-        return "auth/user/deleteuser";
-    }
-
-    @RequestMapping(value = "auth/user/confirmdeleteuser/", method = RequestMethod.POST)
-    public String confirmDeleteUser(UserBacking user, Principal principal) {
-
-        User uUser = userManager.findUser(user.getUsername());
-
-        if (uUser == null)
-            return "auth/user/notfound";
-
-        userManager.deleteUser(uUser.getUsername());
-        return "redirect:/auth/user/list";
-    }
-
-    @RequestMapping(value = "auth/user/canceldelete", method = RequestMethod.GET)
-    public String cancelDelete() {
         return "redirect:/auth/user/list";
     }
 }

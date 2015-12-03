@@ -32,6 +32,13 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
                         .addConstraintViolation();
                 return false;
             }
+            
+            if (firstObj.toString().length() < 4 && !(firstObj == null)) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate("Password should be at least 4 characters long.").addNode(firstFieldName)
+                        .addConstraintViolation();
+                return false;
+            }
 
             if (secondObj.equals("") || secondObj == null) {
                 context.disableDefaultConstraintViolation();
