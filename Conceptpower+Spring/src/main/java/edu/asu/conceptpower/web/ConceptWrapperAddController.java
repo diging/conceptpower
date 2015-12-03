@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
@@ -204,7 +204,7 @@ public class ConceptWrapperAddController {
             jsonStringBuilder.append(",");
             jsonStringBuilder.append("\"word\":\"" + syn.getWord() + "\"");
             jsonStringBuilder.append(",");
-            jsonStringBuilder.append("\"description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
+            jsonStringBuilder.append("\"description\":\"" + StringEscapeUtils.escapeHtml(syn.getDescription()) + "\"");
             jsonStringBuilder.append(",");
             String pos = syn.getPos().replaceAll("\"", "'");
             jsonStringBuilder.append("\"pos\":\"" + pos + "\"");

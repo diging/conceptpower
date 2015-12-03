@@ -202,7 +202,8 @@
 					} ],
 					"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
 						var description = aData.description;
-						description = escape(description);
+						//This functionality has been moved to Controller. 
+						//description = escape(description);
 						$('td:eq(3)', nRow).html(
 								'<a onclick="synonymAdd(\'' + aData.id
 										+ '\',\'' + aData.word + '\',\''
@@ -248,7 +249,7 @@
 	var synonymAdd = function(id, term, description) {
 		$("#dialog").dialog("close");
 		$("#synonymsDialogTable").hide();
-		var decodedDescriotion = unescape(description);
+		var decodedDescription = unescape(description);
 		var x = document.getElementById('addedSynonymsTable');
 
 		if (x != null) {
@@ -257,7 +258,7 @@
 			new_row.cells[0].innerHTML = '<a onclick="synonymRemove(\''
 					+ x.rows.length + '\')">Remove</a>' + '</font></td>'
 			new_row.cells[1].innerHTML = term;
-			new_row.cells[2].innerHTML = decodedDescriotion;
+			new_row.cells[2].innerHTML = decodedDescription;
 			new_row.cells[3].innerHTML = id;
 			new_row.cells[3].hidden = true;
 
@@ -270,7 +271,7 @@
 					+ '</font></td>';
 			html += '<td align="justify"><font size="2">' + term
 					+ '</font></td>';
-			html += '<td align="justify"><font size="2">' + decodedDescriotion
+			html += '<td align="justify"><font size="2">' + decodedDescription
 					+ '</font></td>';
 			html += '<td align="justify" hidden="true">' + id + '</td></tr>';
 
