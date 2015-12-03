@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
 import edu.asu.conceptpower.users.IUserManager;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.web.backing.UserBacking;
 
 @Component
 public class UserValidator implements Validator {
@@ -15,25 +14,26 @@ public class UserValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> arg0) {
-        return User.class.isAssignableFrom(arg0);
+        return UserBacking.class.isAssignableFrom(arg0);
     }
 
     /**
      * Validates the User Object for proper specification
      * 
      * @param err
-     *      Error object for binding all the validation errors
+     *            Error object for binding all the validation errors
      * @param arg0
-     *      Generic Object to hold the details of the user from the UI
+     *            Generic Object to hold the details of the user from the UI
      */
     @Override
     public void validate(Object arg0, Errors err) {
 
-        User user = (User) arg0;
+        UserBacking user = (UserBacking) arg0;
         String username = user.getUsername();
         String fullName = user.getFullname();
         String emailid = user.getEmail();
-        String pw = user.getPw();
+        String password = user.getPassword();
+        String retypePassword = user.getRetypedPassword();
 
         // Validator for username - reject if empty or if contains special
         // characters.
@@ -61,13 +61,22 @@ public class UserValidator implements Validator {
         }
 
         // Validator for password - reject if empty
-        if (pw.isEmpty()) {
-            err.rejectValue("pw", "required.password");
+        if (password.isEmpty()) {
+            err.rejectValue("password", "required.password");
         }
         // Validator for password - reject if too short
-        if (!pw.isEmpty() && pw.length() < 4) {
-            err.rejectValue("pw", "password.short");
+        if (!password.isEmpty() && password.length() < 4) {
+            err.rejectValue("password", "short.password");
         }
+
+        if (retypePassword.isEmpty()) {
+            err.rejectValue("retypedPassword", "required.password");
+        }
+
+        if (!retypePassword.isEmpty() && !password.equals(retypePassword)) {
+            err.rejectValue("retypedPassword", "match.passwords");
+        }
+
         // Validator for email - reject if not proper
         if (!emailid.isEmpty() && !emailid.matches(
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
@@ -77,6 +86,11 @@ public class UserValidator implements Validator {
         // Validator for username - reject if already exists
         if (usersManager.findUser(username) != null) {
             err.rejectValue("username", "exists.username");
+        }
+
+        if (usersManager.findUserByEmail(emailid) != null) {
+            err.rejectValue("email", "exists.email");
+
         }
 
     }
