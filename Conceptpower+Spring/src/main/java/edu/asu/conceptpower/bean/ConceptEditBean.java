@@ -10,7 +10,7 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.POS;
 
 @Component
-public class ConceptEditBean implements POS {
+public class ConceptEditBean{
 
     private Map<String, String> posMap = new LinkedHashMap<String, String>();
     private String word;
