@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.validation.EmailValidator;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 /**
@@ -26,6 +29,14 @@ public class UserEditController {
 
     @Autowired
     private IUserManager userManager;
+
+    @Autowired
+    private EmailValidator eValidator;
+
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.setValidator(eValidator);
+    }
 
     /**
      * This method provides user information to user editing page
@@ -66,8 +77,10 @@ public class UserEditController {
      * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
+
     public String storeUserChanges(ModelMap model, @ModelAttribute("user") @Valid UserBacking user,
             BindingResult result, Principal principal) {
+
 
         if (result.hasErrors()) {
             model.addAttribute("org.springframework.validation.BindingResult.user", result);
@@ -89,6 +102,7 @@ public class UserEditController {
     }
 
     /**
+<<<<<<< HEAD
      * This method provides user information to password edit page
      * 
      * @param model
@@ -158,37 +172,6 @@ public class UserEditController {
      */
     @RequestMapping(value = "auth/user/canceledit", method = RequestMethod.GET)
     public String cancelEdit() {
-        return "redirect:/auth/user/list";
-    }
-
-    @RequestMapping(value = "auth/user/deleteuser/{id:.+}")
-    public String prepareDeleteUser(ModelMap model, @PathVariable String id) {
-        User user = userManager.findUser(id);
-
-        if (user == null)
-            return "auth/user/notfound";
-
-        UserBacking userBacking = new UserBacking(user.getUsername(), user.getFullname());
-        userBacking.setIsAdmin(user.getIsAdmin());
-
-        model.addAttribute("user", userBacking);
-        return "auth/user/deleteuser";
-    }
-
-    @RequestMapping(value = "auth/user/confirmdeleteuser/", method = RequestMethod.POST)
-    public String confirmDeleteUser(UserBacking user, Principal principal) {
-
-        User uUser = userManager.findUser(user.getUsername());
-
-        if (uUser == null)
-            return "auth/user/notfound";
-
-        userManager.deleteUser(uUser.getUsername());
-        return "redirect:/auth/user/list";
-    }
-
-    @RequestMapping(value = "auth/user/canceldelete", method = RequestMethod.GET)
-    public String cancelDelete() {
         return "redirect:/auth/user/list";
     }
 }
