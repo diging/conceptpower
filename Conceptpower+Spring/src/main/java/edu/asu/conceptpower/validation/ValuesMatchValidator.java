@@ -2,7 +2,6 @@ package edu.asu.conceptpower.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
 import org.apache.commons.beanutils.BeanUtils;
 
 /*
@@ -32,11 +31,11 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
                         .addConstraintViolation();
                 return false;
             }
-            
+
             if (firstObj.toString().length() < 4 && !(firstObj == null)) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("Password should be at least 4 characters long.").addNode(firstFieldName)
-                        .addConstraintViolation();
+                context.buildConstraintViolationWithTemplate("Password should be at least 4 characters long.")
+                        .addNode(firstFieldName).addConstraintViolation();
                 return false;
             }
 

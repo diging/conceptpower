@@ -10,7 +10,6 @@
 	<table>
 		<tr>
 			<td>Username:</td>
-
 			<td><form:hidden path="username" />${user.username}</td>
 			<td></td>
 		</tr>

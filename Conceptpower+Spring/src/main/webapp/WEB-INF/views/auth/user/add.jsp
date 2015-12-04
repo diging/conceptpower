@@ -12,7 +12,6 @@
 					path="username"></form:input></td>
 			<td><form:errors path="username"></form:errors></td>
 		</tr>
-
 		<tr>
 			<td>Full Name:</td>
 			<td><form:input type="text" name="fullname" id="fullname"

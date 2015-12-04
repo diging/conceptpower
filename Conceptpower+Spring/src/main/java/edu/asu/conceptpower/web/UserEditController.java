@@ -1,8 +1,6 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.validation.EmailValidator;
@@ -83,7 +80,7 @@ public class UserEditController {
      */
     @RequestMapping(value = "auth/user/edituser/store", method = RequestMethod.POST)
     public String storeUserChanges(ModelMap model, @ModelAttribute("user") @Validated UserBacking user,
-            BindingResult result, RedirectAttributes reattr, Principal principal) {
+            BindingResult result, Principal principal) {
 
         if (result.hasErrors()) {
             model.addAttribute("org.springframework.validation.BindingResult.user", result);

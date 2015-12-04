@@ -1,21 +1,9 @@
 package edu.asu.conceptpower.validation;
 
-import java.util.Map;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
-
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
@@ -57,7 +45,6 @@ public class EmailValidator implements Validator {
 
         if (emailid.isEmpty()) {
             err.rejectValue("email", "required.email");
-
         }
 
         // Validator for email - reject if not proper

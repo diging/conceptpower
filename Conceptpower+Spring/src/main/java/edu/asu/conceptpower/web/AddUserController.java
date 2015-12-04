@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.web;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.validation.UserValidator;

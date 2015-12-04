@@ -1,14 +1,12 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.web.backing.UserBacking;
@@ -20,12 +18,11 @@ public class UserDeleteController {
     private IUserManager userManager;
 
     /**
-     * @param model 
-     *          Model object to hold model information
+     * @param model
+     *            Model object to hold model information
      * @param id
-     *          Request Parameter to get user details based on Username.
-     * @return
-     *          Returns a string value to redirect user to delete user page.
+     *            Request Parameter to get user details based on Username.
+     * @return Returns a string value to redirect user to delete user page.
      */
     @RequestMapping(value = "auth/user/deleteuser/{id:.+}")
     public String prepareDeleteUser(ModelMap model, @PathVariable String id) {
@@ -43,11 +40,10 @@ public class UserDeleteController {
 
     /**
      * @param user
-     *          UserBacking Object to bind the user details from the jsp.
+     *            UserBacking Object to bind the user details from the jsp.
      * @param principal
-     *          Security Principal Object
-     * @return
-     *          Returns a string value to redirect user to user list page
+     *            Security Principal Object
+     * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/confirmdeleteuser/", method = RequestMethod.POST)
     public String confirmDeleteUser(UserBacking user, Principal principal) {
@@ -62,8 +58,7 @@ public class UserDeleteController {
     }
 
     /**
-     * @return
-     *          Returns a string value to redirect user to user list page
+     * @return Returns a string value to redirect user to user list page
      */
     @RequestMapping(value = "auth/user/canceldelete", method = RequestMethod.GET)
     public String cancelDelete() {
