@@ -89,7 +89,7 @@
 
 		<div id="content_footer"></div>
 		<div id="footer">
-			<c:if test="${not empty pullrequest}">
+			<c:if test="${not empty '${pullrequest}'}">
 				<p class="legal">Pull Request: ${pullrequest}</p>
 			</c:if>
 			<p class="legal">Version: ${buildNumber}</p>
