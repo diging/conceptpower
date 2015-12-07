@@ -85,14 +85,18 @@ h5, h6
 h6
 { color: #362C20;}
 
-a, a:hover
-{ outline: none;
-  text-decoration: underline;
-  color: #A4AA04;}
+a, a:hover {
+	outline: none;
+	text-decoration: underline;
+	color: #A4AA04;
+	cursor: pointer;
+}
 
-a:hover
-{ text-decoration: none;
-  color: #5D5D5D;}
+a:hover {
+	text-decoration: none;
+	color: #5D5D5D;
+	cursor: pointer;
+}
 
 .left
 { float: left;
