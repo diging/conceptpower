@@ -8,7 +8,7 @@
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
-		<java-version>1.8</java-version>
+		<java-version>1.7</java-version>
 		<org.springframework-version>4.1.6.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.7.3</org.aspectj-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
@@ -25,6 +25,7 @@
 		<admin.password>admin</admin.password>
 		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
 		<spring-security-version>3.2.8.RELEASE</spring-security-version>
+		<pullrequest>default</pullrequest>
 	</properties>
 
 	<repositories>
@@ -459,8 +460,11 @@
 			<version>${spring-security-version}</version>
 		</dependency>
 	</dependencies>
-	
-	
+
+	<scm>
+		<connection>scm:svn:http://none</connection>
+		<url>scm:svn:https://none</url>
+	</scm>
 
 	<build>
 		<plugins>
@@ -483,30 +487,30 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.7</source>
+					<target>1.7</target>
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
 			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <filtering>true</filtering>
-                            <directory>src/main/webapp</directory>
-                            <includes>
-                                <include>**/*</include>
-                                <!-- include any other file types you want to filter -->
-                            </includes>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<webResources>
+						<resource>
+							<filtering>true</filtering>
+							<directory>src/main/webapp</directory>
+							<includes>
+								<include>**/*</include>
+								<!-- include any other file types you want to filter -->
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -525,7 +529,30 @@
 					<path>/${deploy.path}</path>
 				</configuration>
 			</plugin>
+			<!-- Displaying build number -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+					<revisionOnScmFailure></revisionOnScmFailure>
+					<items>
+						<item>buildNumber\d*</item>
+						<item>timestamp</item>
+					</items>
+					<format>#{0} ({1,date,yyyy-MM-dd HH:mm:ss})</format>
+				</configuration>
+			</plugin>
 		</plugins>
-		
+
 	</build>
 </project>
