@@ -8,7 +8,8 @@ import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 @Component
-public class UserValidator implements Validator {
+public class EmailValidator implements Validator {
+
     @Autowired
     private IUserManager usersManager;
 
@@ -29,21 +30,8 @@ public class UserValidator implements Validator {
     public void validate(Object arg0, Errors err) {
 
         UserBacking user = (UserBacking) arg0;
-        String username = user.getUsername();
-        String fullName = user.getFullname();
         String emailid = user.getEmail();
-        String password = user.getPassword();
-        String retypePassword = user.getRetypedPassword();
-
-        // Validator for username - reject if empty or if contains special
-        // characters.
-        if (username.isEmpty()) {
-            err.rejectValue("username", "required.username");
-        }
-
-        if (!username.isEmpty() && !username.matches("^[a-z0-9_-]{3,16}$")) {
-            err.rejectValue("username", "proper.username");
-        }
+        String fullName = user.getFullname();
 
         // Validator for Name - reject if empty or if contains numbers or
         // special characters.
@@ -55,26 +43,8 @@ public class UserValidator implements Validator {
             err.rejectValue("fullname", "proper.name");
         }
 
-        // Validator for emailid - reject if empty
         if (emailid.isEmpty()) {
             err.rejectValue("email", "required.email");
-        }
-
-        // Validator for password - reject if empty
-        if (password.isEmpty()) {
-            err.rejectValue("password", "required.password");
-        }
-        // Validator for password - reject if too short
-        if (!password.isEmpty() && password.length() < 4) {
-            err.rejectValue("password", "short.password");
-        }
-
-        if (retypePassword.isEmpty()) {
-            err.rejectValue("retypedPassword", "required.password");
-        }
-
-        if (!retypePassword.isEmpty() && !password.equals(retypePassword)) {
-            err.rejectValue("retypedPassword", "match.passwords");
         }
 
         // Validator for email - reject if not proper
@@ -83,14 +53,9 @@ public class UserValidator implements Validator {
             err.rejectValue("email", "proper.email");
 
         }
-        // Validator for username - reject if already exists
-        if (usersManager.findUser(username) != null) {
-            err.rejectValue("username", "exists.username");
-        }
 
-        if (usersManager.findUserByEmail(emailid) != null) {
+        if (!emailid.isEmpty() && usersManager.findUserByEmail(emailid) != null) {
             err.rejectValue("email", "exists.email");
-
         }
 
     }

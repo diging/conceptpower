@@ -12,7 +12,6 @@
 					path="username"></form:input></td>
 			<td><form:errors path="username"></form:errors></td>
 		</tr>
-
 		<tr>
 			<td>Full Name:</td>
 			<td><form:input type="text" name="fullname" id="fullname"
@@ -27,8 +26,14 @@
 		<tr>
 			<td>Password:</td>
 			<td><form:input type="password" name="password" id="password"
-					path="pw"></form:input></td>
-			<td><form:errors path="pw"></form:errors></td>
+					path="password"></form:input></td>
+			<td><form:errors path="password"></form:errors></td>
+		</tr>
+		<tr>
+			<td>Retype Password:</td>
+			<td><form:input type="password" name="repassword" id="password"
+					path="retypedPassword"></form:input></td>
+			<td><form:errors path="retypedPassword"></form:errors></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit" value="Create user"
