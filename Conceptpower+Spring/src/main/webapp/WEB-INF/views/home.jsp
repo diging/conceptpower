@@ -97,8 +97,7 @@
 
 			<td><form:select path="pos" name="pos">
 					<form:options items="${conceptSearchBean.posMap}" />
-				</form:select>
-			</td>
+				</form:select></td>
 			<td>
 			<td><form:errors path="pos" class="ui-state-error-text"></form:errors>
 			</td>
@@ -115,7 +114,11 @@
 				src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
 				class="none" style="padding-left: 10px;"></td>
 		</tr>
+<<<<<<< HEAD
 	</table>	
+=======
+	</table>
+>>>>>>> branch 'story/CCP-118' of https://github.com/diging/conceptpower.git
 </form:form>
 
 <c:if test="${not empty conceptSearchBean.foundConcepts}">

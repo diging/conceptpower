@@ -21,10 +21,9 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(@ModelAttribute("conceptSearchBean")ConceptSearchBean conceptSearchBean) {
+        return "welcome";
 
-		return "welcome";
-
-	}
+    }
 
 	/**
 	 * This method sets error message in home page when there are any errros
