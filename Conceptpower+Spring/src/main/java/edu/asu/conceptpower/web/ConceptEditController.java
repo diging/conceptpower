@@ -135,7 +135,7 @@ public class ConceptEditController {
 
 		conceptManager.storeModifiedConcept(conceptEntry);
 
-		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
+		return "redirect:/auth/" + conceptEditBean.getConceptListValue() + "/concepts";
 	}
 
 	/**
