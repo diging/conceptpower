@@ -38,12 +38,8 @@
 			}
 		});
 
-		$("#selectedType").on("change", function() {
-			if ($(this).val() != "") {
+		$("#superType").on("change", function() {
 				$("#editButton").prop("disabled", false);
-			} else {
-				$("#editButton").prop("disabled", "disabled");
-			}
 		});
 	});
 </script>
@@ -73,7 +69,7 @@
 
 		<tr>
 			<td>Super Type</td>
-			<td><form:select path="selectedType">
+			<td><form:select path="superType">
 					<form:option value="" label="Select one" />
 					<c:forEach items="${conceptTypeAddForm.types}" var="typesDropDown">
 						<form:option value="${typesDropDown.value}">${typesDropDown.value}</form:option>

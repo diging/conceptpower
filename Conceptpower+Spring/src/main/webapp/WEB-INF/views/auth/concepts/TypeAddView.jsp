@@ -32,7 +32,7 @@
 
 		<tr>
 			<td>Super Type</td>
-			<td><form:select path="selectedType" name="selectedType">
+			<td><form:select path="superType" name="superType">
 					<form:option value="" label="" />
 					<form:options items="${conceptTypeAddForm.types}" />
 				</form:select></td>

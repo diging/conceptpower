@@ -82,7 +82,7 @@ public class ConceptTypeAddController {
         type.setTypeName(conceptTypeAddForm.getTypeName());
         type.setDescription(conceptTypeAddForm.getTypeDescription());
         type.setMatches(conceptTypeAddForm.getMatches());
-        type.setSupertypeId(conceptTypeAddForm.getSelectedType());
+        type.setSupertypeId(conceptTypeAddForm.getSuperType());
         type.setCreatorId(principal.getName());
 
         conceptTypesManager.addConceptType(type);
