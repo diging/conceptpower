@@ -135,7 +135,7 @@
 		<tbody>
 			<c:forEach var="concept" items="${conceptsresult}">
 				<tr class="gradeX">
-				<sec:authorize access="isAuthenticated()">
+					<sec:authorize access="isAuthenticated()">
 						<td align="justify"><c:choose>
 								<c:when
 									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
@@ -146,7 +146,9 @@
 								</c:when>
 								<c:otherwise>
 									<font size="2"> <a href="#"
-										title="Cannot Edit Word Net concepts" id="${concept.entry.id}">Edit</a></font>
+										title="Cannot Edit Word Net concepts" id="${concept.entry.id}"><input
+											type="image"
+											src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a></font>
 								</c:otherwise>
 							</c:choose></td>
 					</sec:authorize>
