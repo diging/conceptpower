@@ -1,26 +1,14 @@
 package edu.asu.conceptpower.web.backing;
 
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.Length;
-
 import edu.asu.conceptpower.validation.ValuesMatch;
 
 @ValuesMatch(first = "password", second = "retypedPassword")
 public class UserBacking {
 
     private String username;
-
-    @Pattern(regexp = "^[a-zA-Z ]{3,25}$", message = "Please enter a proper name for the user. Alphabets, numbers and spaces allowed.")
     private String fullname;
-
-    @Length(max = 4, message = "Password should be at least 4 characters long.")
     private String password;
-
-    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please enter a proper email address")
     private String email;
-
     private String retypedPassword;
     private boolean isAdmin;
     private String token;

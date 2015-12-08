@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import edu.asu.conceptpower.users.IUserManager;
+import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 @Component
@@ -32,6 +33,7 @@ public class EmailValidator implements Validator {
         UserBacking user = (UserBacking) arg0;
         String emailid = user.getEmail();
         String fullName = user.getFullname();
+        User userByEmail = usersManager.findUserByEmail(emailid);
 
         // Validator for Name - reject if empty or if contains numbers or
         // special characters.
@@ -39,7 +41,7 @@ public class EmailValidator implements Validator {
             err.rejectValue("fullname", "required.name");
         }
 
-        if (!fullName.isEmpty() && !fullName.matches("^[a-zA-Z ]{3,25}$")) {
+        if (!fullName.isEmpty() && !fullName.matches("^[a-zA-Z\\p{L} ]{2,25}$")) {
             err.rejectValue("fullname", "proper.name");
         }
 
@@ -54,7 +56,7 @@ public class EmailValidator implements Validator {
 
         }
 
-        if (!emailid.isEmpty() && usersManager.findUserByEmail(emailid) != null) {
+        if (!emailid.isEmpty() && userByEmail != null && !userByEmail.getUsername().equals(user.getUsername())) {
             err.rejectValue("email", "exists.email");
         }
 

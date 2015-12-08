@@ -51,7 +51,7 @@ public class UserValidator implements Validator {
             err.rejectValue("fullname", "required.name");
         }
 
-        if (!fullName.isEmpty() && !fullName.matches("^[a-zA-Z ]{3,25}$")) {
+        if (!fullName.isEmpty() && !fullName.matches("^[a-zA-Z\\p{L} ]{2,25}$")) {
             err.rejectValue("fullname", "proper.name");
         }
 
