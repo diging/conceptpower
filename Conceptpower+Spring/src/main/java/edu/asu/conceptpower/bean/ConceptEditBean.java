@@ -30,6 +30,7 @@ public class ConceptEditBean {
     private ConceptType[] types;
     private String conceptId;
     private List conceptEntryList;
+    private boolean fromHomeScreen;
 
     public String getConcept() {
         return concept;
@@ -178,5 +179,14 @@ public class ConceptEditBean {
     public void setPosMap(Map<String, String> posMap) {
         this.posMap = posMap;
     }
+
+    public boolean isFromHomeScreen() {
+        return fromHomeScreen;
+    }
+
+    public void setFromHomeScreen(boolean fromHomeScreen) {
+        this.fromHomeScreen = fromHomeScreen;
+    }
+
 
 }

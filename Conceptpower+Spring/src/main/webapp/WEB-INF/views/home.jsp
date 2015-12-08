@@ -140,7 +140,7 @@
 								<c:when
 									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
 									<a
-										href="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/${concept.entry.id}"><input
+										href="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/${concept.entry.id}?fromHomeScreen=true"><input
 										type="image"
 										src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
 								</c:when>

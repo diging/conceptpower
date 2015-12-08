@@ -62,8 +62,13 @@ public class ConceptEditController {
 	 * @return String value to redirect user to concept edit page
 	 */
 	@RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
-	public String prepareEditConcept(@PathVariable("conceptid") String conceptid,
+	public String prepareEditConcept(@PathVariable("conceptid") String conceptid,@RequestParam(value = "fromHomeScreen",required=false)String fromHomeScreen,
 			@ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model) {
+	    
+	    if(fromHomeScreen!=null){
+	        conceptEditBean.setFromHomeScreen(true);
+	    }
+	    
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
@@ -134,6 +139,11 @@ public class ConceptEditController {
 		conceptEntry.setModified(modified + userId + "@" + (new Date()).toString());
 
 		conceptManager.storeModifiedConcept(conceptEntry);
+		
+        if (conceptEditBean.isFromHomeScreen()) {
+            return "redirect:/home/conceptsearch?name=" + conceptEditBean.getWord() + "&pos="
+                    + conceptEditBean.getSelectedPosValue();
+        }
 
 		return "redirect:/auth/" + conceptEditBean.getConceptListValue() + "/concepts";
 	}

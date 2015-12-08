@@ -290,6 +290,7 @@
 					type="button" name="cancel" value="Cancel!" class="button"></a></td>
 		</tr>
 	</table>
+	<form:hidden path="fromHomeScreen" />
 </form:form>
 
 <form>
