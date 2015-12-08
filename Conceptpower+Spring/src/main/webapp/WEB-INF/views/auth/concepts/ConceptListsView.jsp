@@ -32,12 +32,12 @@
 		<tbody>
 			<c:forEach var="list" items="${result}">
 				<tr class="gradeX">
-					<td align="justify"><a
+					<td align="justify" width="20"><a
 						href="${pageContext.servletContext.contextPath}/auth/conceptlist/deletelist/${list.conceptListName}"><input
 							type="image"
 							src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a>
 					</td>
-					<td align="justify"><a
+					<td align="justify"  width="20"><a
 						href="${pageContext.servletContext.contextPath}/auth/conceptlist/editlist/${list.conceptListName}"><input
 							type="image"
 							src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
