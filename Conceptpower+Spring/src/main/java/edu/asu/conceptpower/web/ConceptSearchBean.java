@@ -13,7 +13,7 @@ import edu.mit.jwi.item.POS;
 public class ConceptSearchBean {
 
     private String word;
-    private String pos;
+    private POS pos;
     private Map<POS, POS> posMap;
     private List<ConceptEntryWrapper> foundConcepts;
 
@@ -46,12 +46,13 @@ public class ConceptSearchBean {
         this.posMap = posMap;
     }
 
-    public String getPos() {
+    public POS getPos() {
         return pos;
     }
 
-    public void setPos(String pos) {
+    public void setPos(POS pos) {
         this.pos = pos;
     }
+
 
 }

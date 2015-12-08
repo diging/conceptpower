@@ -64,7 +64,7 @@ public class ConceptSearchController {
         }
 
         ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
-                conceptSearchBean.getPos().toLowerCase().trim());
+                conceptSearchBean.getPos().toString().toLowerCase().trim());
         List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
         conceptSearchBean.setFoundConcepts(foundConcepts);
         if (CollectionUtils.isEmpty(foundConcepts)) {
