@@ -59,18 +59,14 @@ public class ConceptSearch {
 	public @ResponseBody ResponseEntity<String> searchConcept(HttpServletRequest req) {
 		Map<String, String[]> queryParams = req.getParameterMap();
 		Map<String, String> searchFields = new HashMap<String, String>();
-
         String operator = SearchParamters.OP_OR;
         for (String key : queryParams.keySet()) {
-            if (key.trim().equals(SearchParamters.OPERATOR) && !queryParams.get(key)[0].trim().isEmpty())
+            if (key.trim().equals(SearchParamters.OPERATOR) && !queryParams.get(key)[0].trim().isEmpty()) {
                 operator = queryParams.get(key)[0].trim();
-            else {
-                // If the value is typeURI trim and add it to typeId
-                if (key.trim().equalsIgnoreCase(SearchFieldNames.TYPE_URI)) {
-                    searchFields.put("type_id", uriHelper.getTypeId(queryParams.get(key)[0]));
-                } else {
-                    searchFields.put(key.trim(), queryParams.get(key)[0]);
-                }
+            } else if (key.trim().equalsIgnoreCase(SearchFieldNames.TYPE_URI)) {
+                searchFields.put("type_id", uriHelper.getTypeId(queryParams.get(key)[0]));
+            } else {
+                searchFields.put(key.trim(), queryParams.get(key)[0]);
             }
         }
 		ConceptEntry[] searchResults = null;
