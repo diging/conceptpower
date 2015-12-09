@@ -9,7 +9,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jettison.json.JSONException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -111,7 +116,7 @@ public class ConceptEditController {
 		model.addAttribute("similar", concept.getSimilarTo());
 
 		model.addAttribute("conceptList", concept.getConceptList());
-		model.addAttribute("id", concept.getId());
+		model.addAttribute("conceptId", concept.getId());
 
 		return "/auth/conceptlist/editconcept";
 	}
@@ -188,31 +193,42 @@ public class ConceptEditController {
 	 * @param model
 	 *            A generic model holder for Servlet
 	 * @return List of existing synonyms
+	 * @throws JSONException 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
-	public @ResponseBody ConceptEntry[] getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model) {
-
-		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-		List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
-		String synonymIds = concept.getSynonymIds();
-		if (synonymIds != null) {
-			String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
-			if (ids != null) {
-				for (String id : ids) {
-					if (id == null || id.isEmpty())
-						continue;
-					ConceptEntry synonym = conceptManager.getConceptEntry(id);
-					if (synonym != null)
-						synonyms.add(synonym);
-				}
-			}
-		}
-
-		ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
-		int i = 0;
-		for (ConceptEntry syn : synonyms) {
-			arraySynonyms[i++] = syn;
-		}
-		return arraySynonyms;
+    @RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
+    public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model)
+            throws JSONException {
+        ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
+        List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
+        String synonymIds = concept.getSynonymIds();
+        if (synonymIds != null) {
+            String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
+            if (ids != null) {
+                for (String id : ids) {
+                    if (id == null || id.isEmpty())
+                        continue;
+                    ConceptEntry synonym = conceptManager.getConceptEntry(id);
+                    if (synonym != null)
+                        synonyms.add(synonym);
+                }
+            }
+        }
+        JSONArray jsonArray = new JSONArray();
+        JSONObject json = new JSONObject();
+        ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
+        int i = 0;
+        for (ConceptEntry syn : synonyms) {
+            arraySynonyms[i++] = syn;
+            jsonArray.add(syn.getId());
+            jsonArray.add(syn.getWord());
+            jsonArray.add(syn.getDescription());
+            jsonArray.add(syn);
+            // jsonArray.put("arraySynonyms", arraySynonyms[i++].getId()+"
+            // "+arraySynonyms[i++].getWord()+"
+            // "+arraySynonyms[i++].getDescription());
+        }
+        json.put("synonyms", jsonArray);
+        // json.put("arraySynonym", arraySynonyms);
+        return new ResponseEntity<String>(json.toString(), HttpStatus.OK);
 	}
 }
