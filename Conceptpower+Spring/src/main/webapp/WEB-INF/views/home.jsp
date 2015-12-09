@@ -3,6 +3,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page session="false"%>
 
 <script type="text/javascript">
@@ -118,6 +119,9 @@
 		id="conceptSearchResult">
 		<thead>
 			<tr>
+				<sec:authorize access="isAuthenticated()">
+					<th>Delete</th>
+				</sec:authorize>
 				<th></th>
 				<th>Term</th>
 				<th>ID</th>
@@ -131,6 +135,24 @@
 		<tbody>
 			<c:forEach var="concept" items="${conceptsresult}">
 				<tr class="gradeX">
+					<sec:authorize access="isAuthenticated()">
+						<td align="justify" width="20"><c:choose>
+								<c:when
+									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
+									<font size="2"> <a
+										href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcepts/${concept.entry.id}"
+										id="${concept.entry.id}"><input type="image"
+											src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a></font>
+
+								</c:when>
+								<c:otherwise>
+									<font size="2"> <a href="#"
+										title="Cannot Delete Word Net concepts"
+										id="${concept.entry.id}"><input type="image"
+											src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a></font>
+								</c:otherwise>
+							</c:choose></td>
+					</sec:authorize>
 					<td align="justify"><font size="2"><a
 							onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 					<td align="justify"><font size="2"><c:out
