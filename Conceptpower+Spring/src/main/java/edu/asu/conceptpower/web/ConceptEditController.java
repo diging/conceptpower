@@ -215,5 +215,4 @@ public class ConceptEditController {
 		}
 		return arraySynonyms;
 	}
-
 }
