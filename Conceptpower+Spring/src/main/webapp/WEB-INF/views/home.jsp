@@ -53,18 +53,19 @@
 				$("#detailsequalto").text(details.equalto);
 				$("#detailssimilarto").text(details.similarto);
 				$("#detailscreator").text(details.creator);
-
+				
 				$("#detailsdiv").dialog({
 					title : details.name,
-					width : 'auto'
+					width : 600,
 				});
+				
 				$("#detailstable").show();
 			}
 		});
 	}
 
 	$(document).ready(hideFormProcessing);
-
+	
 	function hideFormProcessing() {
 		$('#loadingDiv').hide();
 	}
@@ -154,8 +155,8 @@
 
 </c:if>
 
-<div id="detailsdiv" style="max-width: 600px; max-height: 500px;">
-	<table id="detailstable" class="greyContent" hidden="true">
+<div id="detailsdiv" class="pageCenter">
+	<table id="detailstable" class="greyContent" hidden="true" align="center">
 		<tr>
 			<td>Id:</td>
 			<td id="detailsid"></td>
@@ -194,5 +195,3 @@
 		</tr>
 	</table>
 </div>
-
-
