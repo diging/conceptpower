@@ -3,6 +3,10 @@ package edu.asu.conceptpower.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.logging.Log;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /*
  * Taken from 
@@ -12,6 +16,9 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
 
     private String firstFieldName;
     private String secondFieldName;
+
+    @Autowired
+    Logger logger;
 
     @Override
     public void initialize(ValuesMatch arg0) {
@@ -56,7 +63,9 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
 
             return matches;
         } catch (final Exception ignore) {
-            ignore.printStackTrace();
+
+            logger.setLevel(Level.WARN);
+            logger.warn("One of the fields is empty.", ignore);
         }
         return true;
     }
