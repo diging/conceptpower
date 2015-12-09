@@ -2,10 +2,9 @@ package edu.asu.conceptpower.web;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,12 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.bean.ConceptEditBean;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
@@ -31,7 +31,6 @@ import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.users.IUserManager;
-import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
 /**
  * This method provides all the required methods for editing a concept
@@ -54,9 +53,6 @@ public class ConceptEditController {
 	@Autowired
 	private IConceptTypeManger conceptTypesManager;
 
-	@Autowired
-	IConceptWrapperCreator wrapperCreator;
-
 	/**
 	 * This method provides information of a concept to be edited for concept
 	 * edit page
@@ -68,56 +64,27 @@ public class ConceptEditController {
 	 * @return String value to redirect user to concept edit page
 	 */
 	@RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
-	public String prepareEditConcept(@PathVariable("conceptid") String conceptid, ModelMap model) {
-
+	public String prepareEditConcept(@PathVariable("conceptid") String conceptid,
+			@ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model) {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-		Map<String, String> types = new LinkedHashMap<String, String>();
-		for (ConceptType conceptType : allTypes) {
-			types.put(conceptType.getTypeId(), conceptType.getTypeName());
-		}
-
 		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
-		Map<String, String> lists = new LinkedHashMap<String, String>();
-		for (ConceptList conceptList : allLists) {
-			lists.put(conceptList.getConceptListName(), conceptList.getConceptListName());
-		}
-
-		// set poss values and seleted pos
-		Map<String, String> poss = new LinkedHashMap<String, String>();
-		poss.put("noun", "Nouns");
-		poss.put("verb", "Verbs");
-		poss.put("adverb", "Adverb");
-		poss.put("adjective", "Adjective");
-		poss.put("other", "Other");
-
-		model.addAttribute("word", concept.getWord());
-
-		model.addAttribute("selectedposvalue", poss.get(concept.getPos()));
-		model.addAttribute("selectedposname", concept.getPos());
-		poss.remove(concept.getPos());
-		model.addAttribute("poss", poss);
-
-		model.addAttribute("selectedlistname", concept.getConceptList());
-		lists.remove(concept.getConceptList());
-		model.addAttribute("lists", lists);
-
-		model.addAttribute("description", concept.getDescription());
-
-		model.addAttribute("synonyms", concept.getSynonymIds());
-
-		model.addAttribute("selectedtypeid", concept.getTypeId());
-		model.addAttribute("selectedtypename", types.get(concept.getTypeId()));
-		types.remove(concept.getTypeId());
-		model.addAttribute("types", types);
-
-		model.addAttribute("equal", concept.getEqualTo());
-		model.addAttribute("similar", concept.getSimilarTo());
-
-		model.addAttribute("conceptList", concept.getConceptList());
+		conceptEditBean.setWord(concept.getWord());
+		conceptEditBean.setSelectedPosValue(conceptEditBean.getPosMap().get(concept.getPos()));
+		conceptEditBean.setSelectedPosValue(concept.getPos());
+		conceptEditBean.setConceptListValue(concept.getConceptList());
+		conceptEditBean.setSelectedListName(concept.getConceptList());
+		conceptEditBean.setConceptList(allLists);
+		conceptEditBean.setDescription(concept.getDescription().trim());
+		conceptEditBean.setSynonymsids(concept.getSynonymIds());
+		conceptEditBean.setSelectedTypeId(concept.getTypeId());
+		conceptEditBean.setTypes(allTypes);
+		conceptEditBean.setSelectedTypeId(concept.getTypeId());
+		conceptEditBean.setEquals(concept.getEqualTo());
+		conceptEditBean.setSimilar(concept.getSimilarTo());
+		conceptEditBean.setConceptId(concept.getId());
+		conceptEditBean.setConceptEntryList(new ArrayList());
 		model.addAttribute("conceptId", concept.getId());
-
 		return "/auth/conceptlist/editconcept";
 	}
 
@@ -148,17 +115,18 @@ public class ConceptEditController {
 	 *         page
 	 */
 	@RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
-	public String confirmlEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal) {
+	public String confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
+			@ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean) {
 
 		ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
-		conceptEntry.setWord(req.getParameter("name"));
-		conceptEntry.setConceptList(req.getParameter("lists"));
-		conceptEntry.setPos(req.getParameter("poss"));
-		conceptEntry.setDescription(req.getParameter("description"));
-		conceptEntry.setEqualTo(req.getParameter("equal"));
-		conceptEntry.setSimilarTo(req.getParameter("similar"));
-		conceptEntry.setTypeId(req.getParameter("types"));
-		conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
+		conceptEntry.setWord(conceptEditBean.getWord());
+		conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
+		conceptEntry.setPos(conceptEditBean.getSelectedPosValue());
+		conceptEntry.setDescription(conceptEditBean.getDescription());
+		conceptEntry.setEqualTo(conceptEditBean.getEquals());
+		conceptEntry.setSimilarTo(conceptEditBean.getSimilar());
+		conceptEntry.setTypeId(conceptEditBean.getSelectedTypeId());
+		conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
 
 		String userId = usersManager.findUser(principal.getName()).getUsername();
 		String modified = conceptEntry.getModified() != null ? conceptEntry.getModified() : "";
@@ -168,7 +136,7 @@ public class ConceptEditController {
 
 		conceptManager.storeModifiedConcept(conceptEntry);
 
-		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
+		return "redirect:/auth/" + conceptEditBean.getConceptListValue() + "/concepts";
 	}
 
 	/**
@@ -180,9 +148,10 @@ public class ConceptEditController {
 	 * @return The list of existing concepts
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
-	public @ResponseBody ConceptEntry[] searchConcept(@RequestParam("synonymname") String synonymname) {
+	public ResponseEntity<String> searchConcept(@RequestParam("synonymname") String synonymname) {
 		ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
-		return entries;
+		List<ConceptEntry> synonyms = Arrays.asList(entries);
+		return new ResponseEntity<String>(buildJSON(synonyms, true, false), HttpStatus.OK);
 	}
 
 	/**
@@ -193,43 +162,83 @@ public class ConceptEditController {
 	 * @param model
 	 *            A generic model holder for Servlet
 	 * @return List of existing synonyms
-	 * @throws JSONException 
+	 * @throws JSONException
 	 */
-    @RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
-    public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model)
-            throws JSONException {
+	@RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
+	public ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model) {
+		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
+		List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
+		String synonymIds = concept.getSynonymIds();
 
-        ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-        List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
-        String synonymIds = concept.getSynonymIds();
-        if (synonymIds != null) {
-            String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
-            if (ids != null) {
-                for (String id : ids) {
-                    if (id == null || id.isEmpty())
-                        continue;
-                    ConceptEntry synonym = conceptManager.getConceptEntry(id);
-                    if (synonym != null)
-                        synonyms.add(synonym);
-                }
-            }
-        }
-        JSONArray jsonArray = new JSONArray();
-        JSONObject json = new JSONObject();
-        ConceptEntry[] arraySynonyms = new ConceptEntry[synonyms.size()];
-        int i = 0;
-        for (ConceptEntry syn : synonyms) {
-            arraySynonyms[i++] = syn;
-            jsonArray.add(syn.getId());
-            jsonArray.add(syn.getWord());
-            jsonArray.add(syn.getDescription());
-            jsonArray.add(syn);
-            // jsonArray.put("arraySynonyms", arraySynonyms[i++].getId()+"
-            // "+arraySynonyms[i++].getWord()+"
-            // "+arraySynonyms[i++].getDescription());
-        }
-        json.put("synonyms", jsonArray);
-        // json.put("arraySynonym", arraySynonyms);
-        return new ResponseEntity<String>(json.toString(), HttpStatus.OK);
-    }
+		// Inside getConceptEntry . In fillConceptEntry the below logic is
+		// performed
+		if (synonymIds != null) {
+			String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
+			if (ids != null) {
+				for (String id : ids) {
+					if (id == null || id.isEmpty())
+						continue;
+					ConceptEntry synonym = conceptManager.getConceptEntry(id);
+					if (synonym != null)
+						synonyms.add(synonym);
+				}
+			}
+		}
+		return new ResponseEntity<String>(buildJSON(synonyms, false, true), HttpStatus.OK);
+	}
+
+	/**
+	 * This method fetches the synonym details based on the synonym id selected
+	 * in the Add synonym table.
+	 * 
+	 * @param synonymid
+	 *            Holds the ID of a synonym
+	 * @param model
+	 *            A generic model holder for Servlet
+	 * @return synonym details
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "getConceptAddSynonyms")
+	public ResponseEntity<String> getSynonymRows(@RequestParam("synonymid") String synonymid, ModelMap model) {
+
+		ConceptEntry synonym = conceptManager.getConceptEntry(synonymid);
+
+		List<ConceptEntry> synonymList = new ArrayList<ConceptEntry>();
+		synonymList.add(synonym);
+		return new ResponseEntity<String>(buildJSON(synonymList, false, true), HttpStatus.OK);
+	}
+
+	private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired, boolean synonymRequired) {
+
+		int i = 0;
+		StringBuffer jsonStringBuilder = new StringBuffer("{");
+		jsonStringBuilder.append("\"Total\"");
+		jsonStringBuilder.append(":");
+		jsonStringBuilder.append(synonyms.size());
+		jsonStringBuilder.append(",");
+		jsonStringBuilder.append("\"synonyms\":");
+		jsonStringBuilder.append("[");
+		for (ConceptEntry syn : synonyms) {
+			// Appending for next element in JSON
+			if (i != 0) {
+				jsonStringBuilder.append(",");
+			}
+
+			jsonStringBuilder.append("{");
+			jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
+			jsonStringBuilder.append(",");
+			jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
+			jsonStringBuilder.append(",");
+			jsonStringBuilder.append("\"Description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
+			jsonStringBuilder.append(",");
+			String pos = syn.getPos().replaceAll("\"", "'");
+			jsonStringBuilder.append("\"Pos\":\"" + pos + "\"");
+			jsonStringBuilder.append(",");
+			jsonStringBuilder.append("\"SynonymObject\":\"" + syn + "\"");
+			jsonStringBuilder.append("}");
+			i++;
+		}
+		jsonStringBuilder.append("]");
+		jsonStringBuilder.append("}");
+		return jsonStringBuilder.toString();
+	}
 }
