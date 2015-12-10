@@ -4,9 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * Taken from 
@@ -17,8 +18,7 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
     private String firstFieldName;
     private String secondFieldName;
 
-    @Autowired
-    private Logger logger;
+    private static final Logger logger = LoggerFactory.getLogger(ValuesMatchValidator.class);
 
     @Override
     public void initialize(ValuesMatch arg0) {
