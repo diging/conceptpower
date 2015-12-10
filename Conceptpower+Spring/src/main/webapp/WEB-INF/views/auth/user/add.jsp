@@ -24,6 +24,12 @@
 			<td><form:errors path="email"></form:errors></td>
 		</tr>
 		<tr>
+			<td>Is Administrator:</td>
+			<td><form:checkbox path="isAdmin" id="isadmin"
+					checked="${user.isAdmin == true ? 'checked' : ''}" /> Yes</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>Password:</td>
 			<td><form:input type="password" name="password" id="password"
 					path="password"></form:input></td>
