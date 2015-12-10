@@ -30,48 +30,73 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
 
     @Override
     public boolean isValid(Object arg0, ConstraintValidatorContext context) {
+
+        Object firstObj = null;
+        Object secondObj = null;
+
         try {
-            final Object firstObj = BeanUtils.getProperty(arg0, firstFieldName);
-            final Object secondObj = BeanUtils.getProperty(arg0, secondFieldName);
-
-            if (firstObj.equals("") || firstObj == null) {
-                context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("This field cannot be empty").addNode(firstFieldName)
-                        .addConstraintViolation();
-                return false;
-            }
-
-            if (firstObj.toString().length() < 4 && !(firstObj == null)) {
-                context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("Password should be at least 4 characters long.")
-                        .addNode(firstFieldName).addConstraintViolation();
-                return false;
-            }
-
-            if (secondObj.equals("") || secondObj == null) {
-                context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("This field cannot be empty").addNode(secondFieldName)
-                        .addConstraintViolation();
-                return false;
-            }
-
-            boolean matches = firstObj == null && secondObj == null || firstObj != null && firstObj.equals(secondObj);
-
-            if (!matches) {
-                context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate("Passwords do not match").addNode(secondFieldName)
-                        .addConstraintViolation();
-            }
-
-            return matches;
-        } catch (IllegalAccessException iae) {
-            logger.error("An error has Occured", iae);
-        } catch (InvocationTargetException ite) {
-            logger.error("An error has Occured", ite);
-        } catch (NoSuchMethodException nsm) {
-            logger.error("An error has Occured", nsm);
+            firstObj = BeanUtils.getProperty(arg0, firstFieldName);
         }
-        return true;
+
+        catch (IllegalAccessException iae) {
+            logger.error("Could not retrieve the type password property from bean", iae);
+        }
+
+        catch (InvocationTargetException ite) {
+            logger.error("Could not retrieve the type password property from bean", ite);
+        }
+
+        catch (NoSuchMethodException nsme) {
+            logger.error("Could not retrieve the type password property from bean", nsme);
+        }
+
+        try {
+            secondObj = BeanUtils.getProperty(arg0, secondFieldName);
+        }
+
+        catch (IllegalAccessException iae) {
+            logger.error("Could not retrieve the retype password property from bean", iae);
+        }
+
+        catch (InvocationTargetException ite) {
+            logger.error("Could not retrieve the retype password property from bean", ite);
+        }
+
+        catch (NoSuchMethodException nsme) {
+            logger.error("Could not retrieve the retype password property from bean", nsme);
+        }
+
+        if (firstObj.equals("") || firstObj == null) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("This field cannot be empty").addNode(firstFieldName)
+                    .addConstraintViolation();
+            return false;
+        }
+
+        if (firstObj.toString().length() < 4 && !(firstObj == null)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Password should be at least 4 characters long.")
+                    .addNode(firstFieldName).addConstraintViolation();
+            return false;
+        }
+
+        if (secondObj.equals("") || secondObj == null) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("This field cannot be empty").addNode(secondFieldName)
+                    .addConstraintViolation();
+            return false;
+        }
+
+        boolean matches = firstObj == null && secondObj == null || firstObj != null && firstObj.equals(secondObj);
+
+        if (!matches) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Passwords do not match").addNode(secondFieldName)
+                    .addConstraintViolation();
+        }
+
+        return matches;
+
     }
 
 }
