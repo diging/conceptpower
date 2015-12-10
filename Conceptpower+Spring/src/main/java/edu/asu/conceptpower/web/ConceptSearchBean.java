@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.WordUtils;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -14,7 +15,7 @@ public class ConceptSearchBean {
 
     private String word;
     private POS pos;
-    private Map<POS, POS> posMap;
+    private Map<POS, String> posMap;
     private List<ConceptEntryWrapper> foundConcepts;
 
     public String getWord() {
@@ -33,19 +34,6 @@ public class ConceptSearchBean {
         this.foundConcepts = foundConcepts;
     }
 
-    public Map<POS, POS> getPosMap() {
-        posMap = new HashMap<POS, POS>();
-        posMap.put(POS.NOUN, POS.NOUN);
-        posMap.put(POS.VERB, POS.VERB);
-        posMap.put(POS.ADVERB, POS.ADVERB);
-        posMap.put(POS.ADJECTIVE, POS.ADJECTIVE);
-        return posMap;
-    }
-
-    public void setPosMap(Map<POS, POS> posMap) {
-        this.posMap = posMap;
-    }
-
     public POS getPos() {
         return pos;
     }
@@ -54,5 +42,17 @@ public class ConceptSearchBean {
         this.pos = pos;
     }
 
+    public Map<POS, String> getPosMap() {
+        posMap = new HashMap<POS, String>();
+        posMap.put(POS.NOUN, WordUtils.capitalize(POS.NOUN.toString()));
+        posMap.put(POS.VERB, WordUtils.capitalize(POS.VERB.toString()));
+        posMap.put(POS.ADVERB, WordUtils.capitalize(POS.ADVERB.toString()));
+        posMap.put(POS.ADJECTIVE, WordUtils.capitalize(POS.ADJECTIVE.toString()));
+        return posMap;
+    }
+
+    public void setPosMap(Map<POS, String> posMap) {
+        this.posMap = posMap;
+    }
 
 }
