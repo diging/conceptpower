@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.validation;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import org.apache.commons.beanutils.BeanUtils;
@@ -62,10 +64,12 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
             }
 
             return matches;
-        } catch (final Exception ignore) {
-
-            logger.setLevel(Level.WARN);
-            logger.warn("One of the fields is empty.", ignore);
+        } catch (IllegalAccessException iae) {
+            logger.error("An error has Occured", iae);
+        } catch (InvocationTargetException ite) {
+            logger.error("An error has Occured", ite);
+        } catch (NoSuchMethodException nsm) {
+            logger.error("An error has Occured", nsm);
         }
         return true;
     }
