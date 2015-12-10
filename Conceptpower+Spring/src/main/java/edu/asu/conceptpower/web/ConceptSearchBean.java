@@ -44,10 +44,10 @@ public class ConceptSearchBean {
 
     public Map<POS, String> getPosMap() {
         posMap = new HashMap<POS, String>();
-        posMap.put(POS.NOUN, WordUtils.capitalize(POS.NOUN.toString()));
-        posMap.put(POS.VERB, WordUtils.capitalize(POS.VERB.toString()));
-        posMap.put(POS.ADVERB, WordUtils.capitalize(POS.ADVERB.toString()));
-        posMap.put(POS.ADJECTIVE, WordUtils.capitalize(POS.ADJECTIVE.toString()));
+        posMap.put(POS.NOUN, "Noun");
+        posMap.put(POS.VERB, "Verb");
+        posMap.put(POS.ADVERB, "Adverb");
+        posMap.put(POS.ADJECTIVE, "Adjective");
         return posMap;
     }
 
