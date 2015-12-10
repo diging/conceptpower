@@ -130,7 +130,8 @@
 		</thead>
 		<tbody>
 			<c:forEach var="concept" items="${conceptsresult}">
-				<tr class="gradeX">
+			<c:set var="rowTitle" value='${concept.entry.uri}'></c:set>
+				<tr class="gradeX" title="${rowTitle}">
 					<td align="justify"><font size="2"><a
 							onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 					<td align="justify"><font size="2"><c:out
