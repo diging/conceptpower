@@ -36,34 +36,19 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
 
         try {
             firstObj = BeanUtils.getProperty(arg0, firstFieldName);
-        }
-
-        catch (IllegalAccessException iae) {
-            logger.error("Could not retrieve the type password property from bean", iae);
-        }
-
-        catch (InvocationTargetException ite) {
-            logger.error("Could not retrieve the type password property from bean", ite);
-        }
-
-        catch (NoSuchMethodException nsme) {
-            logger.error("Could not retrieve the type password property from bean", nsme);
-        }
-
-        try {
             secondObj = BeanUtils.getProperty(arg0, secondFieldName);
         }
 
         catch (IllegalAccessException iae) {
-            logger.error("Could not retrieve the retype password property from bean", iae);
+            logger.error("Could not retrieve the property from bean", iae);
         }
 
         catch (InvocationTargetException ite) {
-            logger.error("Could not retrieve the retype password property from bean", ite);
+            logger.error("Could not retrieve the property from bean", ite);
         }
 
         catch (NoSuchMethodException nsme) {
-            logger.error("Could not retrieve the retype password property from bean", nsme);
+            logger.error("Could not retrieve the property from bean", nsme);
         }
 
         if (firstObj.equals("") || firstObj == null) {
