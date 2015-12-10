@@ -65,7 +65,7 @@ public class ForgottenPasswordController {
             Token token = userManager.createToken(user);
             StringBuffer requestURL = request.getRequestURL();
             String url = requestURL.substring(0, requestURL.length() - request.getServletPath().length());
-            emailService.sendMail(email, subject, body.replace("${name}", user.getFullName()).replace("${link}",
+            emailService.sendMail(email, subject, body.replace("${name}", user.getFullname()).replace("${link}",
                     url + "/beginReset/" + token.getToken()));
         }
 
@@ -108,7 +108,7 @@ public class ForgottenPasswordController {
             return "resetError";
         }
 
-        UserBacking userBacking = new UserBacking(token.getUser().getUsername(), token.getUser().getFullName());
+        UserBacking userBacking = new UserBacking(token.getUser().getUsername(), token.getUser().getFullname());
         userBacking.setToken(token.getToken());
         model.addAttribute("userBacking", userBacking);
         return "reset";

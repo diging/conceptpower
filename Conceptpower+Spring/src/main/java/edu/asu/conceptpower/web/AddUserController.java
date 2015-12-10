@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.web;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,10 +10,10 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.validation.UserValidator;
+import edu.asu.conceptpower.web.backing.UserBacking;
 
 /**
  * This class provides methods for creating a user
@@ -50,13 +49,18 @@ public class AddUserController {
      * 
      */
     @RequestMapping(value = "auth/user/createuser")
-    public String createUser(HttpServletRequest req, ModelMap model, @ModelAttribute("user") @Validated User user,
-            BindingResult result) {
+    public String createUser(HttpServletRequest req, ModelMap model,
+            @ModelAttribute("user") @Validated UserBacking user, BindingResult result) {
         if (result.hasErrors()) {
             return "auth/user/add";
         }
 
-        usersManager.addUser(user);
+        User storeUser = new User();
+        storeUser.setUsername(user.getUsername());
+        storeUser.setFullname(user.getFullname());
+        storeUser.setPw(user.getPassword());
+        storeUser.setEmail(user.getEmail());
+        usersManager.addUser(storeUser);
         return "redirect:/auth/user/list";
     }
 
@@ -71,7 +75,7 @@ public class AddUserController {
      */
     @RequestMapping(value = "auth/user/add")
     public String prepareUserPage(ModelMap model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserBacking());
         return "auth/user/add";
     }
 
