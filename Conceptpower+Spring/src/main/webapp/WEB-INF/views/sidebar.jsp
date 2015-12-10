@@ -9,7 +9,7 @@
 <sec:authorize access="isAnonymous()">
 	<p />
 	<form name='f'
-		action="<c:url value='j_spring_security_check' />"
+		action="<c:url value='/j_spring_security_check' />"
 		method='post'>
 		<table>
 			<tr>
