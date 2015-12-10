@@ -18,7 +18,7 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
     private String secondFieldName;
 
     @Autowired
-    Logger logger;
+    private Logger logger;
 
     @Override
     public void initialize(ValuesMatch arg0) {
