@@ -3,6 +3,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page session="false"%>
 
 <script type="text/javascript">
@@ -121,6 +122,9 @@
 		<thead>
 			<tr>
 				<th></th>
+				<sec:authorize access="isAuthenticated()">
+				<th>Edit</th>
+				</sec:authorize>
 				<th>Term</th>
 				<th>ID</th>
 				<th>Wordnet ID</th>
@@ -133,6 +137,23 @@
 		<tbody>
 			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
 				<tr class="gradeX">
+					<sec:authorize access="isAuthenticated()">
+						<td align="justify"><c:choose>
+								<c:when
+									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
+									<a
+										href="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/${concept.entry.id}?fromHomeScreen=true"><input
+										type="image"
+										src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
+								</c:when>
+								<c:otherwise>
+									<font size="2"> <a href="#"
+										title="Cannot Edit Word Net concepts" id="${concept.entry.id}"><input
+											type="image"
+											src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a></font>
+								</c:otherwise>
+							</c:choose></td>
+					</sec:authorize>
 					<td align="justify"><font size="2"><a
 							onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 					<td align="justify"><font size="2"><c:out

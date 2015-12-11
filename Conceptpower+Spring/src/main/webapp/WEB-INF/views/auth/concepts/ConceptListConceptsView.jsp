@@ -106,7 +106,7 @@
 								<c:out value="-> ${syn.word}"></c:out>
 							</c:forEach></font></td>
 					<td align="justify"><font size="2"><c:out
-								value="${concept.creator.user}"></c:out></font></td>
+								value="${concept.creator.username}"></c:out></font></td>
 				</tr>
 			</c:forEach>
 		</tbody>
