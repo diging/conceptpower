@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.core.impl.DeleteConceptManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.impl.ConceptEntryWrapperCreator;
 
@@ -28,6 +29,9 @@ public class ConceptDeleteController {
 
 	@Autowired
 	private ConceptEntryWrapperCreator wrapperCreator;
+	
+	@Autowired
+	private DeleteConceptManager deleteConceptManager;
 
 	/**
 	 * This method provides details of a concept to be deleted for concept
@@ -110,5 +114,13 @@ public class ConceptDeleteController {
 		model.addAttribute("result", foundConcepts);
 		return "/auth/conceptlist/concepts";
 	}
-
+	
+    @RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
+    public String deleteConcept(@PathVariable("id") String id, ModelMap model) {
+        ConceptEntry concept = conceptManager.getConceptEntry(id);
+        deleteConceptManager.setDelete(concept);
+        conceptManager.storeModifiedConcept(concept);
+        return "welcome";
+    }
+	
 }
