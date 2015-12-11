@@ -91,7 +91,8 @@
 		<div id="footer">
 		
 			<p class="legal">
-			    Version: ${buildNumber}<c:if test="${not empty '${pullrequest}'}">, Pull Request: ${pullrequest}</c:if>
+			<c:set var="PR" value="${pullrequest}" />
+			    Version: ${buildNumber}<c:if test="${not empty PR}">, Pull Request: ${pullrequest}</c:if>
 			</p>
 			Copyright &#169; simplestyle_1 | <a
 				href="http://validator.w3.org/check?uri=referer">HTML5</a> | <a
