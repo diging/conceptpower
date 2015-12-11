@@ -115,7 +115,7 @@
 </c:if>
 
 
-<div id="detailsdiv" style="max-width: 600px; max-height: 500px;">
+<div id="detailsdiv" style="max-width: 600px; max-height: 500px;"  class="pageCenter">
 	<table id="detailstable" class="greyContent" hidden="true">
 		<tr>
 			<td>Id:</td>
