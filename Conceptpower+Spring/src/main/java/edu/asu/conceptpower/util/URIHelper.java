@@ -13,7 +13,7 @@ import edu.asu.conceptpower.xml.XMLConstants;
  * in xml-config.xml configured URI prefixes.
  */
 @Service
-public class URIHelper {
+public class URIHelper implements IURIHelper{
 
 	@Autowired
 	private XMLConfig xmlConfig;
