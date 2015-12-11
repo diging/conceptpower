@@ -112,5 +112,7 @@ public interface IConceptManager {
 			throws DictionaryDoesNotExistException, DictionaryModifyException;
 
 	public abstract void storeModifiedConcept(ConceptEntry entry);
+	
+	public abstract void deleteConcept(String id);
 
 }
