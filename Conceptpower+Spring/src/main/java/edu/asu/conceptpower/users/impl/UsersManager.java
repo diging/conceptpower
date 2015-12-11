@@ -34,6 +34,7 @@ public class UsersManager implements IUserManager {
 	@PostConstruct
 	public void init() {
 		admins = new HashMap<String, String>();
+		admins.put("admin","admin");
 	}
 
 	/*
