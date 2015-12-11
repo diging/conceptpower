@@ -58,6 +58,7 @@ public class AddUserController {
         User storeUser = new User();
         storeUser.setUsername(user.getUsername());
         storeUser.setFullname(user.getFullname());
+        storeUser.setIsAdmin(user.getIsAdmin());
         storeUser.setPw(user.getPassword());
         storeUser.setEmail(user.getEmail());
         usersManager.addUser(storeUser);
