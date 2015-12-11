@@ -6,34 +6,34 @@
 <%@ page session="false"%>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('#conceptSearchResult').dataTable({
-			"bJQueryUI" : true,
-			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false,
-			"aoColumnDefs" : [ {
-				"aTargets" : [ 6 ],
-				"sType" : "html",
-				"fnRender" : function(o, val) {
-					return $("<div/>").html(o.aData[6]).text();
-				}
-			} ],
-		});
+    $(document).ready(function() {
+        $('#conceptSearchResult').dataTable({
+            "bJQueryUI" : true,
+            "sPaginationType" : "full_numbers",
+            "bAutoWidth" : false,
+            "aoColumnDefs" : [ {
+                "aTargets" : [ 6 ],
+                "sType" : "html",
+                "fnRender" : function(o, val) {
+                    return $("<div/>").html(o.aData[6]).text();
+                }
+            } ],
+        });
 
-		$('#viafSearchResult').dataTable({
-			"bJQueryUI" : true,
-			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false,
-			"aoColumnDefs" : [ {
-				"aTargets" : [ 2 ],
-				"sType" : "html",
-				"fnRender" : function(o, val) {
-					return $("<div/>").html(o.aData[2]).text();
-				}
-			} ],
-		});
+        $('#viafSearchResult').dataTable({
+            "bJQueryUI" : true,
+            "sPaginationType" : "full_numbers",
+            "bAutoWidth" : false,
+            "aoColumnDefs" : [ {
+                "aTargets" : [ 2 ],
+                "sType" : "html",
+                "fnRender" : function(o, val) {
+                    return $("<div/>").html(o.aData[2]).text();
+                }
+            } ],
+        });
 
-	});
+    });
 
 	function detailsView(concept) {
 		var conceptid = concept.id;
@@ -63,16 +63,14 @@
 			}
 		});
 	}
-
 	$(document).ready(hideFormProcessing);
 	
 	function hideFormProcessing() {
 		$('#loadingDiv').hide();
 	}
-
-	function showFormProcessing() {
-		$('#loadingDiv').show();
-	}
+    function showFormProcessing() {
+        $('#loadingDiv').show();
+    }
 </script>
 
 
@@ -83,24 +81,28 @@
 
 <p>This is Conceptpower, a concept management site.</p>
 
-<form
+<form:form
 	action="${pageContext.servletContext.contextPath}/home/conceptsearch"
-	method='get'>
+	method='get' commandName='conceptSearchBean'>
 	<table>
 		<tr>
 			<td>Word:</td>
-			<td><input type="text" name="name" id="name"
-				placeholder="enter a word"></td>
+			<td><form:input path="word" placeholder="enter a word" /></td>
+			<td><form:errors path="word" class="ui-state-error-text"></form:errors></td>
 		</tr>
 		<tr id="searchEnginePOS">
 			<td>POS:</td>
-			<td><select name="pos">
-					<option value="noun">Nouns</option>
-					<option value="verb">Verb</option>
-					<option value="adverb">Adverb</option>
-					<option value="adjective">Adjective</option>
-					<option value="other">Other</option>
-			</select></td>
+
+			<td><form:select path="pos" name="pos">
+					<form:options items="${conceptSearchBean.posMap}" />
+				</form:select></td>
+			<td>
+			<td><form:errors path="pos" class="ui-state-error-text"></form:errors>
+			</td>
+		</tr>
+		<tr>
+			<td><form:errors path="foundConcepts"
+					class="ui-state-error-text"></form:errors></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit" value="Search"
@@ -111,9 +113,9 @@
 				class="none" style="padding-left: 10px;"></td>
 		</tr>
 	</table>
-</form>
+</form:form>
 
-<c:if test="${not empty conceptsresult}">
+<c:if test="${not empty conceptSearchBean.foundConcepts}">
 	<table cellpadding="0" cellspacing="0" class="display dataTable"
 		id="conceptSearchResult">
 		<thead>
@@ -129,7 +131,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="concept" items="${conceptsresult}">
+			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
 				<tr class="gradeX">
 					<td align="justify"><font size="2"><a
 							onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
