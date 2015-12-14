@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.users.User;
-import edu.asu.conceptpower.util.IURIHelper;
 
 /**
  * This class describes the concept entry wrapper in concept power. It provides
@@ -19,8 +18,6 @@ import edu.asu.conceptpower.util.IURIHelper;
  * @author Julia Damerow
  * 
  */
-@Component("conceptEntryWrapper")
-@Scope(value = "prototype")
 public class ConceptEntryWrapper implements Serializable {
 
 	private static final long serialVersionUID = -4261304897583134670L;
@@ -31,10 +28,6 @@ public class ConceptEntryWrapper implements Serializable {
 	private List<ConceptEntry> wrappedWordnetEntries;
 	private String description;
 	
-	@Autowired
-	private IURIHelper helper;
-	
-	public ConceptEntryWrapper(){}
 	
 	public ConceptEntryWrapper(ConceptEntry entry) {
 	    this.entry = entry;
@@ -88,9 +81,4 @@ public class ConceptEntryWrapper implements Serializable {
 	public void setDescription(String description) {
 		this.description = description.replace("\n", "<br/>");
 	}
-    public String getUri() {
-        if (entry == null)
-            return "";
-        return helper.getURI(entry);
-    }
 }

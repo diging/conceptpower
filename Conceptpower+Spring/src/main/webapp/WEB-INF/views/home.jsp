@@ -131,7 +131,8 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="concept" items="${conceptsresult}">
+			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
+			<c:out value="test" />
 			<c:set var="rowTitle" value='${concept.entry.uri}'></c:set>
 				<tr class="gradeX" title="${rowTitle}">
 					<td align="justify"><font size="2"><a
