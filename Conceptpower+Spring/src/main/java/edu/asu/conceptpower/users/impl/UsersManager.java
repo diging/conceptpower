@@ -1,10 +1,14 @@
 package edu.asu.conceptpower.users.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -30,11 +34,21 @@ public class UsersManager implements IUserManager {
 	@Autowired
 	private UserDatabaseClient client;
 	private Map<String, String> admins;
-
+	
+	
+	
 	@PostConstruct
-	public void init() {
+	public void init() throws IOException {
 		admins = new HashMap<String, String>();
-		admins.put("admin","admin");
+		
+		Properties prop = new Properties();
+		InputStream is = this.getClass().getResourceAsStream("/user.properties");
+		prop.load(is);
+		Set<Object> keys = prop.keySet();
+		for(Object k:keys){
+            String key = (String)k;
+            admins.put(key,prop.getProperty(key).split(",")[0].trim());
+        }
 	}
 
 	/*
@@ -75,7 +89,6 @@ public class UsersManager implements IUserManager {
 	 */
 	@Override
 	public User getUser(String name, String pw) {
-
 		if (admins.containsKey(name)) {
 			String storedPW = admins.get(name);
 			if (storedPW.equals(pw))

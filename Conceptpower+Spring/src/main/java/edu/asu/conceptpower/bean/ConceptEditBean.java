@@ -168,10 +168,11 @@ public class ConceptEditBean {
     }
 
     public Map<String, String> getPosMap() {
-        posMap.put(POS.NOUN, POS.NOUN);
-        posMap.put(POS.VERB, POS.VERB);
-        posMap.put(POS.ADVERB, POS.ADVERB);
-        posMap.put(POS.ADJECTIVE, POS.ADJECTIVE);
+        
+        posMap.put(POS.NOUN, "Noun");
+        posMap.put(POS.VERB, "Verb");
+        posMap.put(POS.ADVERB, "Adverb");
+        posMap.put(POS.ADJECTIVE, "Adjective");
         return posMap;
     }
 
