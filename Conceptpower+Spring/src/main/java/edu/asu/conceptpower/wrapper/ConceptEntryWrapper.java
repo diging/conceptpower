@@ -27,6 +27,7 @@ public class ConceptEntryWrapper implements Serializable {
 	private User creator;
 	private List<ConceptEntry> wrappedWordnetEntries;
 	private String description;
+	private String uri;
 	
 	
 	public ConceptEntryWrapper(ConceptEntry entry) {
@@ -81,4 +82,12 @@ public class ConceptEntryWrapper implements Serializable {
 	public void setDescription(String description) {
 		this.description = description.replace("\n", "<br/>");
 	}
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
 }

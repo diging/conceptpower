@@ -59,7 +59,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator,BeanFa
 		for (ConceptEntry entry : entries) {
 		    
 		    ConceptEntryWrapper wrapper = new ConceptEntryWrapper(entry);
-		    entry.setUri(helper.getURI(entry));
+		    wrapper.setUri(helper.getURI(entry));
 			if (entry.getTypeId() != null && !entry.getTypeId().isEmpty())
 				wrapper.setType(typesManager.getType(entry.getTypeId()));
 
