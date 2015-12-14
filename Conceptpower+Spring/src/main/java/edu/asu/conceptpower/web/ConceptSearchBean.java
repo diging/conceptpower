@@ -1,10 +1,9 @@
 package edu.asu.conceptpower.web;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.WordUtils;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -43,7 +42,7 @@ public class ConceptSearchBean {
     }
 
     public Map<POS, String> getPosMap() {
-        posMap = new HashMap<POS, String>();
+        posMap = new LinkedHashMap<POS, String>();
         posMap.put(POS.NOUN, "Noun");
         posMap.put(POS.VERB, "Verb");
         posMap.put(POS.ADVERB, "Adverb");
