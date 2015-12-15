@@ -114,20 +114,17 @@ public class ConceptManager implements IConceptManager {
 	 *            of wrapped wordnet concepts.
 	 */
 	protected void fillConceptEntry(ConceptEntry entry) {
-		if (entry.getId() != null && entry.getWordnetId() != null
-				&& !entry.getId().equals(entry.getWordnetId())) {
+		if (entry.getId() != null && entry.getWordnetId() != null && !entry.getId().equals(entry.getWordnetId())) {
 			// generate the synonym ids
 			StringBuffer sb = new StringBuffer();
 
 			if (entry.getWordnetId() != null) {
-				String wordnetIds =  entry.getWordnetId();
-				String[] ids = wordnetIds.trim().split(
-						Constants.CONCEPT_SEPARATOR);
+				String wordnetIds = entry.getWordnetId();
+				String[] ids = wordnetIds.trim().split(Constants.CONCEPT_SEPARATOR);
 				if (ids != null) {
 					for (String id : ids) {
 						if (id != null && !id.trim().isEmpty()) {
-							ConceptEntry wordnetEntry = wordnetManager
-									.getConcept(id);
+							ConceptEntry wordnetEntry = wordnetManager.getConcept(id);
 							if (wordnetEntry != null) {
 								sb.append(wordnetEntry.getSynonymIds());
 							}
@@ -138,6 +135,19 @@ public class ConceptManager implements IConceptManager {
 
 			entry.setSynonymIds((entry.getSynonymIds() != null ? entry.getSynonymIds() : "")
 					+ Constants.CONCEPT_SEPARATOR + sb.toString());
+
+			// Since synonymId contains duplicates placing a check to remove
+			// duplicates from synonymId
+			String synonymIds = entry.getSynonymIds();
+			String[] synonyms = synonymIds.split(Constants.CONCEPT_SEPARATOR);
+			StringBuilder uniqueSynonym = new StringBuilder("");
+			for (String synonym : synonyms) {
+				if (!uniqueSynonym.toString().contains(synonym)) {
+					uniqueSynonym.append(synonym);
+					uniqueSynonym.append(Constants.CONCEPT_SEPARATOR);
+				}
+			}
+			entry.setSynonymIds(uniqueSynonym.toString());
 		}
 	}
 
