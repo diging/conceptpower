@@ -17,8 +17,6 @@ import edu.asu.conceptpower.users.User;
  * @author Julia Damerow
  * 
  */
-@Component("conceptEntryWrapper")
-@Scope(value = "prototype")
 public class ConceptEntryWrapper implements Serializable {
 
 	private static final long serialVersionUID = -4261304897583134670L;

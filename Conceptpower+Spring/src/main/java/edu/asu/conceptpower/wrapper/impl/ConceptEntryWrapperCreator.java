@@ -3,8 +3,6 @@ package edu.asu.conceptpower.wrapper.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +23,7 @@ import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
  * 
  */
 @Component
-public class ConceptEntryWrapperCreator implements IConceptWrapperCreator,BeanFactoryAware {
+public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
 	@Autowired
 	private IConceptManager conceptManager;
@@ -38,9 +36,6 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator,BeanFa
 	
 	@Autowired
     private IURIHelper helper;
-	
-	private BeanFactory beanFactory;
-
 	
 	/**
 	 * This method creates wrappers for the concept entries passed as parameter
@@ -125,9 +120,4 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator,BeanFa
 		return foundConcepts;
 	}
 
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-        
-    }
 }
