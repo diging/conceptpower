@@ -121,6 +121,9 @@
 		id="conceptSearchResult">
 		<thead>
 			<tr>
+				<sec:authorize access="isAuthenticated()">
+					<th>Delete</th>
+				</sec:authorize>
 				<th></th>
 				<sec:authorize access="isAuthenticated()">
 				<th>Edit</th>
@@ -151,6 +154,23 @@
 										title="Cannot Edit Word Net concepts" id="${concept.entry.id}"><input
 											type="image"
 											src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a></font>
+
+								</c:otherwise>
+							</c:choose></td>
+
+						<td align="justify"><c:choose>
+								<c:when
+									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
+
+									<font size="2"> <a
+										href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcepts/${concept.entry.id}"
+										id="${concept.entry.id}">Delete</a></font>
+
+								</c:when>
+								<c:otherwise>
+									<font size="2"> <a href="#"
+										title="Cannot Delete Word Net concepts"
+										id="${concept.entry.id}">Delete</a></font>
 								</c:otherwise>
 							</c:choose></td>
 					</sec:authorize>

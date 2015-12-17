@@ -110,5 +110,13 @@ public class ConceptDeleteController {
 		model.addAttribute("result", foundConcepts);
 		return "/auth/conceptlist/concepts";
 	}
-
+	
+	@RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
+    public String deleteConcept(@PathVariable("id") String id, ModelMap model) {
+        ConceptEntry concept = conceptManager.getConceptEntry(id);
+        concept.setDeleted(true);
+        conceptManager.storeModifiedConcept(concept);
+        return "welcome";
+    }
+	
 }
