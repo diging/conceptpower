@@ -35,7 +35,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 	private IUserManager usersManager;
 	
 	@Autowired
-    private IURIHelper helper;
+        private IURIHelper helper;
 	
 	/**
 	 * This method creates wrappers for the concept entries passed as parameter
