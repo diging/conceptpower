@@ -168,18 +168,6 @@ public class ConceptEditBean {
         this.conceptEntryList = conceptEntryList;
     }
 
-    public Map<String, String> getPosMap() {
-        posMap.put(POS.NOUN, POS.NOUN);
-        posMap.put(POS.VERB, POS.VERB);
-        posMap.put(POS.ADVERB, POS.ADVERB);
-        posMap.put(POS.ADJECTIVE, POS.ADJECTIVE);
-        return posMap;
-    }
-
-    public void setPosMap(Map<String, String> posMap) {
-        this.posMap = posMap;
-    }
-
     public boolean isFromHomeScreen() {
         return fromHomeScreen;
     }
@@ -187,6 +175,18 @@ public class ConceptEditBean {
     public void setFromHomeScreen(boolean fromHomeScreen) {
         this.fromHomeScreen = fromHomeScreen;
     }
+
+	public Map<String, String> getPosMap() {
+		posMap.put(POS.NOUN, "Noun");
+        posMap.put(POS.VERB, "Verb");
+        posMap.put(POS.ADVERB, "Adverb");
+        posMap.put(POS.ADJECTIVE, "Adjective");
+        return posMap;
+	}
+
+	public void setPosMap(Map<String, String> posMap) {
+		this.posMap = posMap;
+	}
 
 
 }
