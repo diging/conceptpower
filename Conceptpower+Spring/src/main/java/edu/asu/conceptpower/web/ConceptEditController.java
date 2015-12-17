@@ -172,15 +172,10 @@ public class ConceptEditController {
 	 * @param model
 	 *            A generic model holder for Servlet
 	 * @return List of existing synonyms
-<<<<<<< Upstream, based on develop
 	 * @throws JSONException
-=======
-	 * @throws JSONException 
->>>>>>> 89918da Merge Conflicts
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
 	public ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model) {
-
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
 		String synonymIds = concept.getSynonymIds();
