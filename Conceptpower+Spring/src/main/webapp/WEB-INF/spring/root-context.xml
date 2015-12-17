@@ -53,5 +53,8 @@
 	</bean>
 	<util:properties id="config" location="classpath:/config.properties" />
 
+	<bean id="conceptWrapperCreator" class="edu.asu.conceptpower.wrapper.ConceptWrapperCreator">
+		<lookup-method name="createWrapper" bean="createWrapper" />
+	</bean>
 	
 </beans>

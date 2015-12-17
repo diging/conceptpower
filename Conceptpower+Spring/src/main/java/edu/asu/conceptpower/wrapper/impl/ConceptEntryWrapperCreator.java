@@ -3,6 +3,9 @@ package edu.asu.conceptpower.wrapper.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +24,7 @@ import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
  * 
  */
 @Component
-public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
+public class ConceptEntryWrapperCreator implements IConceptWrapperCreator,BeanFactoryAware {
 
 	@Autowired
 	private IConceptManager conceptManager;
@@ -31,7 +34,10 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
 	@Autowired
 	private IUserManager usersManager;
+	
+	private BeanFactory beanFactory;
 
+	
 	/**
 	 * This method creates wrappers for the concept entries passed as parameter
 	 * 
@@ -47,7 +53,10 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 			return foundConcepts;
 
 		for (ConceptEntry entry : entries) {
-			ConceptEntryWrapper wrapper = new ConceptEntryWrapper(entry);
+		    
+		    ConceptEntryWrapper wrapper = beanFactory.getBean("conceptEntryWrapper",ConceptEntryWrapper.class);
+		    wrapper.setEntry(entry);
+		    entry.setUri(wrapper.getUri());
 			if (entry.getTypeId() != null && !entry.getTypeId().isEmpty())
 				wrapper.setType(typesManager.getType(entry.getTypeId()));
 
@@ -112,4 +121,10 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
 		return foundConcepts;
 	}
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
+        
+    }
 }
