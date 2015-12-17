@@ -50,19 +50,11 @@ public class UsersManager implements IUserManager {
             Object source = (Object) it.next();
             if (source instanceof ResourcePropertySource) {
                 ResourcePropertySource propertySource = (ResourcePropertySource) source;
-                admins.putAll(((ResourcePropertySource) propertySource).getSource());
+                String[] names = ((ResourcePropertySource) propertySource).getPropertyNames();
+                for (String name : names) {
+                    admins.put(name, env.getProperty(name).split(" ")[0].trim());
+                }
             }
-        }
-
-        // Admins Map contain the content of the property file. But we require
-        // only password as the value and not the role details so formatting the
-        // map
-
-        Iterator it = admins.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            String newValue = pair.getValue().toString().split(",")[0].trim();
-            admins.put(pair.getKey().toString(), newValue);
         }
     }
 
