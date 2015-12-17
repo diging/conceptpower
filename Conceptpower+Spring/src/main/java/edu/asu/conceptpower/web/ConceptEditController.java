@@ -102,7 +102,7 @@ public class ConceptEditController {
 	 *         page
 	 */
     @RequestMapping(value = "auth/concepts/canceledit", method = RequestMethod.GET)
-    public String cancelEdit(@RequestParam("fromHomeScreen")String fromHomeScreen) {
+    public String cancelEdit(@RequestParam(value = "fromHomeScreen",required=false)String fromHomeScreen) {
         if (fromHomeScreen.equalsIgnoreCase("true")) {
             return "redirect:/login";
         }

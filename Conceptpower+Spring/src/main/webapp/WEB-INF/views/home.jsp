@@ -35,7 +35,7 @@
         });
 
     });
-
+    
 	function detailsView(concept) {
 		var conceptid = concept.id;
 		$.ajax({
@@ -141,7 +141,6 @@
 			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
 				<tr class="gradeX">
 					<sec:authorize access="isAuthenticated()">
-
 						<td align="justify"><c:choose>
 								<c:when
 									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
@@ -151,10 +150,9 @@
 										src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
 								</c:when>
 								<c:otherwise>
-									<font size="2"> <a href="#"
-										title="Cannot Edit Word Net concepts" id="${concept.entry.id}"><input
-											type="image"
-											src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a></font>
+									<font size="2"> <input type="image"
+										title="Cannot Edit Word Net concepts"
+										src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></font>
 
 								</c:otherwise>
 							</c:choose></td>
@@ -163,16 +161,15 @@
 								<c:when
 									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
 									<font size="2"> <a
-										href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcepts/${concept.entry.id}"
+										href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcept/${concept.entry.id}?fromHomeScreenDelete=true"
 										id="${concept.entry.id}"><input type="image"
 											src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a></font>
 
 								</c:when>
 								<c:otherwise>
-									<font size="2"> <a href="#"
-										title="Cannot Delete Word Net concepts"
-										id="${concept.entry.id}"><input type="image"
-											src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a></font>
+									<font size="2"><input type="image"
+										src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"
+										title="Cannot Delete Word Net concepts"></input></font>
 								</c:otherwise>
 							</c:choose></td>
 					</sec:authorize>
