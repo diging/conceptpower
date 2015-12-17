@@ -63,7 +63,7 @@ public class ConceptEntry implements Serializable {
 	
 	
 	private String broadens;
-
+	
 	@SearchField(fieldName = SearchFieldNames.CREATOR)
 	private String creatorId;
 
@@ -338,6 +338,5 @@ public class ConceptEntry implements Serializable {
 		return true;
 	}
 
-	
 }
 
