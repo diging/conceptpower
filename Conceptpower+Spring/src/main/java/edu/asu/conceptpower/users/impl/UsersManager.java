@@ -52,7 +52,7 @@ public class UsersManager implements IUserManager {
                 ResourcePropertySource propertySource = (ResourcePropertySource) source;
                 String[] names = ((ResourcePropertySource) propertySource).getPropertyNames();
                 for (String name : names) {
-                    admins.put(name, env.getProperty(name).split(" ")[0].trim());
+                    admins.put(name, env.getProperty(name).split(",")[0].trim());
                 }
             }
         }
