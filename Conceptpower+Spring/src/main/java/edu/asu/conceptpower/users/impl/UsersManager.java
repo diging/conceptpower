@@ -34,18 +34,17 @@ import edu.asu.conceptpower.users.UserDatabaseClient;
 @Service
 public class UsersManager implements IUserManager {
 
-	@Autowired
-	private UserDatabaseClient client;
-	private Map<String, Object> admins;
-	
-	
-	@Autowired
-    Environment env;
-	
-	
+    @Autowired
+    private UserDatabaseClient client;
+
+    private Map<String, String> admins;
+
+    @Autowired
+    private Environment env;
+
     @PostConstruct
     public void init() throws IOException {
-        admins = new HashMap<String, Object>();
+        admins = new HashMap<String, String>();
         for (Iterator it = ((AbstractEnvironment) env).getPropertySources().iterator(); it.hasNext();) {
             Object source = (Object) it.next();
             if (source instanceof ResourcePropertySource) {
@@ -64,11 +63,11 @@ public class UsersManager implements IUserManager {
 	 * @see edu.asu.conceptpower.users.IUserManager#setAdmins(java.util.Map)
 	 */
 	@Override
-	public void setAdmins(Map<String, Object> admins) {
+	public void setAdmins(Map<String, String> admins) {
 		if (admins != null)
 			this.admins = admins;
 		else
-			admins = new HashMap<String, Object>();
+			admins = new HashMap<String, String>();
 	}
 
 	/*
@@ -79,8 +78,7 @@ public class UsersManager implements IUserManager {
 	@Override
 	public User findUser(String name) {
 		if (admins.containsKey(name)) {
-			String storedPW = String.valueOf(admins.get(name));
-			User admin = new User(name, storedPW);
+			User admin = new User(name, admins.get(name));
 			return admin;
 		}
 
@@ -97,8 +95,7 @@ public class UsersManager implements IUserManager {
 	@Override
 	public User getUser(String name, String pw) {
 		if (admins.containsKey(name)) {
-			String storedPW = String.valueOf(admins.get(name));
-			if (storedPW.equals(pw))
+			if (admins.get(name).equals(pw))
 				return new User(name, pw, true);
 		}
 		User user = client.getUser(name, pw);
