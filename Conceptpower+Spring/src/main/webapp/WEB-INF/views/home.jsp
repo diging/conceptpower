@@ -136,7 +136,8 @@
 		</thead>
 		<tbody>
 			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
-				<tr class="gradeX">
+				<c:set var="rowTitle" value='${concept.uri}'></c:set>
+				<tr class="gradeX" title="${rowTitle}">
 					<sec:authorize access="isAuthenticated()">
 						<td align="justify"><c:choose>
 								<c:when

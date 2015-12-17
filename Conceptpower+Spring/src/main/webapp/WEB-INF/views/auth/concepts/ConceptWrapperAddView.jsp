@@ -391,7 +391,7 @@
 			</thead>
 			<tbody>
 				<c:forEach var="concept" items="${result}">
-					<tr>
+					<tr title="${concept.entry.uri}">
 						<td align="justify"><font size="2"><a
 								onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 						<td align="justify"><font size="2"><c:out

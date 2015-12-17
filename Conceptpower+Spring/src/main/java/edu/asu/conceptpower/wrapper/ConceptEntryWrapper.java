@@ -3,12 +3,12 @@ package edu.asu.conceptpower.wrapper;
 import java.io.Serializable;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.users.User;
-import edu.asu.conceptpower.util.URIHelper;
 
 /**
  * This class describes the concept entry wrapper in concept power. It provides
@@ -17,6 +17,8 @@ import edu.asu.conceptpower.util.URIHelper;
  * @author Julia Damerow
  * 
  */
+@Component("conceptEntryWrapper")
+@Scope(value = "prototype")
 public class ConceptEntryWrapper implements Serializable {
 
 	private static final long serialVersionUID = -4261304897583134670L;
@@ -26,12 +28,11 @@ public class ConceptEntryWrapper implements Serializable {
 	private User creator;
 	private List<ConceptEntry> wrappedWordnetEntries;
 	private String description;
-
-	@Autowired
-	URIHelper URICreator;
-
+	private String uri;
+	
+	
 	public ConceptEntryWrapper(ConceptEntry entry) {
-		this.entry = entry;
+	    this.entry = entry;
 	}
 
 	public ConceptEntry getEntry() {
@@ -83,11 +84,11 @@ public class ConceptEntryWrapper implements Serializable {
 		this.description = description.replace("\n", "<br/>");
 	}
 
-	public String getUri() {
-		if (entry == null)
-			return "";
+    public String getUri() {
+        return uri;
+    }
 
-		return URICreator.getURI(entry);
-	}
-
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
 }
