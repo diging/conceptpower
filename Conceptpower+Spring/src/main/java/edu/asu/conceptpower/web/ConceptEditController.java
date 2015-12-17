@@ -75,8 +75,7 @@ public class ConceptEditController {
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
 		conceptEditBean.setWord(concept.getWord());
-		conceptEditBean.setSelectedPosValue(conceptEditBean.getPosMap().get(concept.getPos()));
-		conceptEditBean.setSelectedPosValue(concept.getPos());
+		conceptEditBean.setSelectedPosValue(concept.getPos().toLowerCase());
 		conceptEditBean.setConceptListValue(concept.getConceptList());
 		conceptEditBean.setSelectedListName(concept.getConceptList());
 		conceptEditBean.setConceptList(allLists);
@@ -102,10 +101,13 @@ public class ConceptEditController {
 	 * @return String value which redirect user to a particular concept list
 	 *         page
 	 */
-	@RequestMapping(value = "auth/concepts/canceledit/{conceptList}", method = RequestMethod.GET)
-	public String cancelEdit(@PathVariable("conceptList") String conceptList) {
-		return "redirect:/auth/" + conceptList + "/concepts";
-	}
+    @RequestMapping(value = "auth/concepts/canceledit", method = RequestMethod.GET)
+    public String cancelEdit(@RequestParam("fromHomeScreen")String fromHomeScreen) {
+        if (fromHomeScreen.equalsIgnoreCase("true")) {
+            return "redirect:/login";
+        }
+        return "redirect:/auth/conceptlist";
+    }
 
 	/**
 	 * This method stores the updated information of a concept
@@ -142,7 +144,7 @@ public class ConceptEditController {
 		conceptManager.storeModifiedConcept(conceptEntry);
 		
         if (conceptEditBean.isFromHomeScreen()) {
-            return "redirect:/home/conceptsearch?name=" + conceptEditBean.getWord() + "&pos="
+            return "redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="
                     + conceptEditBean.getSelectedPosValue();
         }
 

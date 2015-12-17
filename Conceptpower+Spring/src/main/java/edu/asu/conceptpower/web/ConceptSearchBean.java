@@ -7,14 +7,14 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
-import edu.mit.jwi.item.POS;
+import edu.asu.conceptpower.core.POS;
 
 @Component
 public class ConceptSearchBean {
 
     private String word;
-    private POS pos;
-    private Map<POS, String> posMap;
+    private String pos;
+    private Map<String, String> posMap;
     private List<ConceptEntryWrapper> foundConcepts;
 
     public String getWord() {
@@ -33,16 +33,17 @@ public class ConceptSearchBean {
         this.foundConcepts = foundConcepts;
     }
 
-    public POS getPos() {
-        return pos;
-    }
 
-    public void setPos(POS pos) {
-        this.pos = pos;
-    }
+    public String getPos() {
+		return pos;
+	}
 
-    public Map<POS, String> getPosMap() {
-        posMap = new LinkedHashMap<POS, String>();
+	public void setPos(String pos) {
+		this.pos = pos;
+	}
+
+	public Map<String, String> getPosMap() {
+        posMap = new LinkedHashMap<String, String>();
         posMap.put(POS.NOUN, "Noun");
         posMap.put(POS.VERB, "Verb");
         posMap.put(POS.ADVERB, "Adverb");
@@ -50,7 +51,7 @@ public class ConceptSearchBean {
         return posMap;
     }
 
-    public void setPosMap(Map<POS, String> posMap) {
+    public void setPosMap(Map<String, String> posMap) {
         this.posMap = posMap;
     }
 

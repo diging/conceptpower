@@ -285,9 +285,21 @@
 			<td><input type="submit" name="edit" id="edit"
 				value="Store modified concept" class="button"></td>
 
-			<td><a
-				href="${pageContext.servletContext.contextPath}/auth/conceptlist"><input
-					type="button" name="cancel" value="Cancel!" class="button"></a></td>
+			<td>
+			
+			<c:if test="${conceptEditBean.fromHomeScreen eq true }">
+			<a
+				href="${pageContext.servletContext.contextPath}/auth/concepts/canceledit?fromHomeScreen=true"><input
+					type="button" name="cancel" value="Cancel!" class="button"></a>
+			</c:if>
+					
+			<c:if test="${conceptEditBean.fromHomeScreen eq false }">
+				<a
+				href="${pageContext.servletContext.contextPath}/auth/concepts/canceledit?fromHomeScreen=false"><input
+					type="button" name="cancel" value="Cancel!" class="button"></a>
+			</c:if>
+			</td>
+		
 		</tr>
 	</table>
 	<form:hidden path="fromHomeScreen" />

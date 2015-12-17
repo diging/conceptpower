@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +29,7 @@ public class ConceptDeleteController {
 
 	@Autowired
 	private ConceptEntryWrapperCreator wrapperCreator;
+	
 
 	/**
 	 * This method provides details of a concept to be deleted for concept
@@ -110,5 +112,11 @@ public class ConceptDeleteController {
 		model.addAttribute("result", foundConcepts);
 		return "/auth/conceptlist/concepts";
 	}
-
+	
+    @RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
+    public String deleteConcept(@PathVariable("id") String id, ModelMap model,@ModelAttribute("conceptSearchBean")ConceptSearchBean conceptSearchBean) {
+        conceptManager.deleteConcept(id);
+        return "welcome";
+    }
+	
 }
