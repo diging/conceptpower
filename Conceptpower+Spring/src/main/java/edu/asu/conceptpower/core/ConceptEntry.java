@@ -64,8 +64,6 @@ public class ConceptEntry implements Serializable {
 	
 	private String broadens;
 	
-	private String uri;
-
 	@SearchField(fieldName = SearchFieldNames.CREATOR)
 	private String creatorId;
 
@@ -340,14 +338,5 @@ public class ConceptEntry implements Serializable {
 		return true;
 	}
 
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-	
 }
 

@@ -14,6 +14,7 @@ import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.users.IUserManager;
+import edu.asu.conceptpower.util.IURIHelper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
@@ -35,6 +36,9 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator,BeanFa
 	@Autowired
 	private IUserManager usersManager;
 	
+	@Autowired
+    private IURIHelper helper;
+	
 	private BeanFactory beanFactory;
 
 	
@@ -54,9 +58,8 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator,BeanFa
 
 		for (ConceptEntry entry : entries) {
 		    
-		    ConceptEntryWrapper wrapper = beanFactory.getBean("conceptEntryWrapper",ConceptEntryWrapper.class);
-		    wrapper.setEntry(entry);
-		    entry.setUri(wrapper.getUri());
+		    ConceptEntryWrapper wrapper = new ConceptEntryWrapper(entry);
+		    wrapper.setUri(helper.getURI(entry));
 			if (entry.getTypeId() != null && !entry.getTypeId().isEmpty())
 				wrapper.setType(typesManager.getType(entry.getTypeId()));
 

@@ -56,5 +56,4 @@
 	<bean id="conceptWrapperCreator" class="edu.asu.conceptpower.wrapper.ConceptWrapperCreator">
 		<lookup-method name="createWrapper" bean="createWrapper" />
 	</bean>
-	
 </beans>
