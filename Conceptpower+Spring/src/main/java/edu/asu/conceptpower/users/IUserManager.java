@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface IUserManager {
 
-	public abstract void setAdmins(Map<String, String> admins);
+	public abstract void setAdmins(Map<String, Object> admins);
 
 	/**
 	 * Find a user by its user id.

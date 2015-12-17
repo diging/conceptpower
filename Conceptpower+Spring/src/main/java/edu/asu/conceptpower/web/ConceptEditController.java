@@ -176,7 +176,6 @@ public class ConceptEditController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
 	public ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model) {
-
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
 		String synonymIds = concept.getSynonymIds();
