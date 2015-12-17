@@ -1,19 +1,21 @@
 package edu.asu.conceptpower.users.impl;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -28,28 +30,41 @@ import edu.asu.conceptpower.users.UserDatabaseClient;
  * @author Julia Damerow
  * 
  */
+@PropertySource(value = "classpath:/user.properties")
 @Service
 public class UsersManager implements IUserManager {
 
 	@Autowired
 	private UserDatabaseClient client;
-	private Map<String, String> admins;
+	private Map<String, Object> admins;
 	
 	
+	@Autowired
+    Environment env;
 	
-	@PostConstruct
-	public void init() throws IOException {
-		admins = new HashMap<String, String>();
-		
-		Properties prop = new Properties();
-		InputStream is = this.getClass().getResourceAsStream("/user.properties");
-		prop.load(is);
-		Set<Object> keys = prop.keySet();
-		for(Object k:keys){
-            String key = (String)k;
-            admins.put(key,prop.getProperty(key).split(",")[0].trim());
+	
+    @PostConstruct
+    public void init() throws IOException {
+        admins = new HashMap<String, Object>();
+        for (Iterator it = ((AbstractEnvironment) env).getPropertySources().iterator(); it.hasNext();) {
+            Object source = (Object) it.next();
+            if (source instanceof ResourcePropertySource) {
+                ResourcePropertySource propertySource = (ResourcePropertySource) source;
+                admins.putAll(((ResourcePropertySource) propertySource).getSource());
+            }
         }
-	}
+
+        // Admins Map contain the content of the property file. But we require
+        // only password as the value and not the role details so formatting the
+        // map
+
+        Iterator it = admins.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            String newValue = pair.getValue().toString().split(",")[0].trim();
+            admins.put(pair.getKey().toString(), newValue);
+        }
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -57,11 +72,11 @@ public class UsersManager implements IUserManager {
 	 * @see edu.asu.conceptpower.users.IUserManager#setAdmins(java.util.Map)
 	 */
 	@Override
-	public void setAdmins(Map<String, String> admins) {
+	public void setAdmins(Map<String, Object> admins) {
 		if (admins != null)
 			this.admins = admins;
 		else
-			admins = new HashMap<String, String>();
+			admins = new HashMap<String, Object>();
 	}
 
 	/*
@@ -72,7 +87,7 @@ public class UsersManager implements IUserManager {
 	@Override
 	public User findUser(String name) {
 		if (admins.containsKey(name)) {
-			String storedPW = admins.get(name);
+			String storedPW = String.valueOf(admins.get(name));
 			User admin = new User(name, storedPW);
 			return admin;
 		}
@@ -90,7 +105,7 @@ public class UsersManager implements IUserManager {
 	@Override
 	public User getUser(String name, String pw) {
 		if (admins.containsKey(name)) {
-			String storedPW = admins.get(name);
+			String storedPW = String.valueOf(admins.get(name));
 			if (storedPW.equals(pw))
 				return new User(name, pw, true);
 		}
