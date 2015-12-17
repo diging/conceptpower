@@ -141,6 +141,7 @@
 			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
 				<tr class="gradeX">
 					<sec:authorize access="isAuthenticated()">
+
 						<td align="justify"><c:choose>
 								<c:when
 									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
@@ -158,19 +159,20 @@
 								</c:otherwise>
 							</c:choose></td>
 
-						<td align="justify"><c:choose>
+						<td align="justify" width="20"><c:choose>
 								<c:when
 									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
-
 									<font size="2"> <a
 										href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcepts/${concept.entry.id}"
-										id="${concept.entry.id}">Delete</a></font>
+										id="${concept.entry.id}"><input type="image"
+											src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a></font>
 
 								</c:when>
 								<c:otherwise>
 									<font size="2"> <a href="#"
 										title="Cannot Delete Word Net concepts"
-										id="${concept.entry.id}">Delete</a></font>
+										id="${concept.entry.id}"><input type="image"
+											src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a></font>
 								</c:otherwise>
 							</c:choose></td>
 					</sec:authorize>

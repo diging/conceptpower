@@ -400,5 +400,10 @@ public class ConceptManager implements IConceptManager {
 		}
 	}
 
-	
+    @Override
+    public void deleteConcept(String id) {
+        ConceptEntry concept = getConceptEntry(id);
+        concept.setDeleted(true);
+        storeModifiedConcept(concept);
+    }
 }
