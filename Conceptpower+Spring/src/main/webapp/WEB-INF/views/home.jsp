@@ -141,7 +141,7 @@
 			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
 				<tr class="gradeX">
 					<sec:authorize access="isAuthenticated()">
-						<td align="justify"><c:choose>
+						<td><c:choose>
 								<c:when
 									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
 									<a
@@ -150,14 +150,15 @@
 										src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
 								</c:when>
 								<c:otherwise>
-									<font size="2"> <input type="image"
-										title="Cannot Edit Word Net concepts"
-										src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></font>
-
+								<div id="#disabledWrapper">
+									<font size="2"> &nbsp;
+									<img id="disabledImage" title="Cannot edit Word Net concepts"
+										src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></img></font>
+								</div>
 								</c:otherwise>
 							</c:choose></td>
 
-						<td align="justify" width="20"><c:choose>
+						<td><c:choose>
 								<c:when
 									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
 									<font size="2"> <a
@@ -167,9 +168,11 @@
 
 								</c:when>
 								<c:otherwise>
-									<font size="2"><input type="image"
+								<div id="#disabledWrapper" style="text-align: justify">
+									<font size="2">&nbsp;<img id="disabledImage"
 										src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"
 										title="Cannot Delete Word Net concepts"></input></font>
+										</div>
 								</c:otherwise>
 							</c:choose></td>
 					</sec:authorize>

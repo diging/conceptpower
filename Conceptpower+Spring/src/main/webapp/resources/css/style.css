@@ -399,3 +399,18 @@ td.greyContent, table.greyContent td {
 	margin: 2px;
   color: #47433F;
 }
+
+#disabledImage {
+    opacity: 0.4;
+    filter: alpha(opacity=40); /* msie */
+}
+
+#disabledWrapper {
+    opacity: 0.3;
+    filter: alpha(opacity=40); /* msie */
+    background-color: #000;
+    height:27px;
+    width:10px;
+    border-radius: 5px;
+    padding: 1px; 
+}
