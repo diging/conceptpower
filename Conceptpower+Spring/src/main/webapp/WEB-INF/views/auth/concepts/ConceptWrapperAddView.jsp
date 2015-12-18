@@ -360,7 +360,7 @@
 			</thead>
 			<tbody>
 				<c:forEach var="concept" items="${result}">
-					<tr title="${concept.entry.uri}">
+					<tr title="${concept.uri}">
 						<td align="justify"><font size="2"><a
 								onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 						<td align="justify"><font size="2"><c:out
