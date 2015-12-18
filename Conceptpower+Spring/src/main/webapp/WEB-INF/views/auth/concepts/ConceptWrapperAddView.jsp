@@ -57,37 +57,6 @@
 											}
 										});
 
-						//ajax call to get already selected concepts for wrapping 
-						$
-								.ajax({
-									type : "GET",
-									url : "${pageContext.servletContext.contextPath}/getSelectedConceptsFroWrapping",
-									success : function(response) {
-
-										var html = "";
-										var len = response.length;
-
-										if (len > 0)
-											$('#createwrapper').prop(
-													'disabled', false);
-										else
-											$('#createwrapper').prop(
-													'disabled', true);
-
-										for (var i = 0; i < len; i++) {
-											html += '<h5>' + response[i].word
-													+ ' ['
-													+ response[i].wordnetId
-													+ ']' + '</h5>';
-											html += '<p>'
-													+ response[i].description
-													+ '</p>';
-										}
-										html += '</p>';
-										$("#selectedconcepts").html(html);
-									}
-								});
-
 						//ajax call to add the concept selected for wrappping
 						$('body')
 								.delegate(
