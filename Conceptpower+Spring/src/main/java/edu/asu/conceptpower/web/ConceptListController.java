@@ -102,7 +102,8 @@ public class ConceptListController {
 		details.put("name", conceptEntry.getEntry().getWord());
 		details.put("id", conceptEntry.getEntry().getId());
 		details.put("uri", URICreator.getURI(conceptEntry.getEntry()));
-		details.put("wordnetid", conceptEntry.getEntry().getWordnetId());
+		//This condition has been included to make sure null values are not displayed in the details dialog box
+		details.put("wordnetid", conceptEntry.getEntry().getWordnetId()==null?"":conceptEntry.getEntry().getWordnetId());
 		details.put("pos", conceptEntry.getEntry().getPos());
 		details.put("conceptlist", conceptEntry.getEntry().getConceptList());
 
