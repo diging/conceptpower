@@ -47,7 +47,7 @@
 			success : function(details) {
 				$("#detailsid").text(details.id);
 				$("#detailsuri").text(details.uri);
-				$("#detailswordnetid").text(details.wordnetId);
+				$("#detailswordnetid").text(details.wordnetid);
 				$("#detailspos").text(details.pos);
 				$("#detailsconceptlist").text(details.conceptlist);
 				$("#detailstypeid").text(details.type);

@@ -553,6 +553,14 @@
 				</configuration>
 			</plugin>
 		</plugins>
-
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 </project>

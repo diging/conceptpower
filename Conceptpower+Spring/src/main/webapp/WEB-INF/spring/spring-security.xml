@@ -44,10 +44,7 @@
 	<authentication-manager alias="authenticationManager"
 		erase-credentials="false">
 		<authentication-provider>
-			<user-service>
-				<user name="${admin.user}" password="${admin.pw}"
-					authorities="ROLE_CP_ADMIN" />
-			</user-service>
+			<user-service id="userDetailsService" properties="classpath:/user.properties"/>
 		</authentication-provider>
 		<authentication-provider ref="authProvider"></authentication-provider>
 	</authentication-manager>

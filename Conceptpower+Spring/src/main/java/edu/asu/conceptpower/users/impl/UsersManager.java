@@ -1,8 +1,10 @@
 package edu.asu.conceptpower.users.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -10,6 +12,10 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +30,32 @@ import edu.asu.conceptpower.users.UserDatabaseClient;
  * @author Julia Damerow
  * 
  */
+@PropertySource(value = "classpath:/user.properties")
 @Service
 public class UsersManager implements IUserManager {
 
-	@Autowired
-	private UserDatabaseClient client;
-	private Map<String, String> admins;
+    @Autowired
+    private UserDatabaseClient client;
 
-	@PostConstruct
-	public void init() {
-		admins = new HashMap<String, String>();
-	}
+    private Map<String, String> admins;
+
+    @Autowired
+    private Environment env;
+
+    @PostConstruct
+    public void init() throws IOException {
+        admins = new HashMap<String, String>();
+        for (Iterator it = ((AbstractEnvironment) env).getPropertySources().iterator(); it.hasNext();) {
+            Object source = (Object) it.next();
+            if (source instanceof ResourcePropertySource) {
+                ResourcePropertySource propertySource = (ResourcePropertySource) source;
+                String[] names = ((ResourcePropertySource) propertySource).getPropertyNames();
+                for (String name : names) {
+                    admins.put(name, env.getProperty(name).split(",")[0].trim());
+                }
+            }
+        }
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -57,8 +78,7 @@ public class UsersManager implements IUserManager {
 	@Override
 	public User findUser(String name) {
 		if (admins.containsKey(name)) {
-			String storedPW = admins.get(name);
-			User admin = new User(name, storedPW);
+			User admin = new User(name, admins.get(name));
 			return admin;
 		}
 
@@ -74,10 +94,8 @@ public class UsersManager implements IUserManager {
 	 */
 	@Override
 	public User getUser(String name, String pw) {
-
 		if (admins.containsKey(name)) {
-			String storedPW = admins.get(name);
-			if (storedPW.equals(pw))
+			if (admins.get(name).equals(pw))
 				return new User(name, pw, true);
 		}
 		User user = client.getUser(name, pw);
