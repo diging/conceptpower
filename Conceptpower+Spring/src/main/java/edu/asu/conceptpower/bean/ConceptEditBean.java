@@ -176,17 +176,15 @@ public class ConceptEditBean {
         this.fromHomeScreen = fromHomeScreen;
     }
 
-	public Map<String, String> getPosMap() {
-		posMap.put(POS.NOUN, "Noun");
+    public Map<String, String> getPosMap() {
+        posMap.put(POS.NOUN, "Noun");
         posMap.put(POS.VERB, "Verb");
         posMap.put(POS.ADVERB, "Adverb");
         posMap.put(POS.ADJECTIVE, "Adjective");
         return posMap;
-	}
+    }
 
-	public void setPosMap(Map<String, String> posMap) {
-		this.posMap = posMap;
-	}
-
-
+    public void setPosMap(Map<String, String> posMap) {
+        this.posMap = posMap;
+    }
 }
