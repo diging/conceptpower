@@ -121,6 +121,9 @@
 		id="conceptSearchResult">
 		<thead>
 			<tr>
+				<sec:authorize access="isAuthenticated()">
+					<th>Delete</th>
+				</sec:authorize>
 				<th></th>
 				<sec:authorize access="isAuthenticated()">
 				<th>Edit</th>
@@ -135,24 +138,22 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
-				<c:set var="rowTitle" value='${concept.uri}'></c:set>
-				<tr class="gradeX" title="${rowTitle}">
+			<c:forEach var="concept" items="${conceptsresult}">
+				<tr class="gradeX">
 					<sec:authorize access="isAuthenticated()">
 						<td align="justify"><c:choose>
 								<c:when
 									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
-									<a
-										href="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/${concept.entry.id}?fromHomeScreen=true"><input
-										type="image"
-										src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
+									<font size="2"> <a
+										href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcepts/${concept.entry.id}"
+										id="${concept.entry.id}">Delete</a></font>
+
 								</c:when>
 								<c:otherwise>
 									<font size="2"> <a href="#"
-										title="Cannot Edit Word Net concepts" id="${concept.entry.id}"><input
-											type="image"
-											src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a></font>
-								</c:otherwise>
+										title="Cannot Delete Word Net concepts"
+										id="${concept.entry.id}">Delete</a></font>
+s								</c:otherwise>
 							</c:choose></td>
 					</sec:authorize>
 					<td align="justify"><font size="2"><a
