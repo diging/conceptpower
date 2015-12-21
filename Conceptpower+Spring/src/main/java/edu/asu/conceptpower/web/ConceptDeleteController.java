@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IConceptManager;
@@ -28,6 +30,7 @@ public class ConceptDeleteController {
 
 	@Autowired
 	private ConceptEntryWrapperCreator wrapperCreator;
+	
 
 	/**
 	 * This method provides details of a concept to be deleted for concept
@@ -40,7 +43,7 @@ public class ConceptDeleteController {
 	 * @return String value to redirect user to concept delete page
 	 */
 	@RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
-	public String prepareDeleteConcept(@PathVariable("conceptid") String conceptid, ModelMap model) {
+	public String prepareDeleteConcept(@PathVariable("conceptid") String conceptid, ModelMap model,@RequestParam(value = "fromHomeScreenDelete",required=false)String fromHomeScreenDelete) {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
 		model.addAttribute("word", concept.getWord());
 		model.addAttribute("description", concept.getDescription());
@@ -53,7 +56,12 @@ public class ConceptDeleteController {
 		model.addAttribute("similar", concept.getSimilarTo());
 		model.addAttribute("user", concept.getModified());
 		model.addAttribute("modified", concept.getModified());
-
+		if(fromHomeScreenDelete!=null){
+		model.addAttribute("fromHomeScreenDelete",fromHomeScreenDelete);
+		}
+		else{
+		    model.addAttribute("fromHomeScreenDelete",false);
+		}
 		return "/auth/conceptlist/deleteconcept";
 	}
 
@@ -92,30 +100,29 @@ public class ConceptDeleteController {
 	 * @return String value to redirect user to a particular concept list page
 	 */
 	@RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
-	public String confirmlDelete(@PathVariable("id") String id, ModelMap model) {
-		ConceptEntry concept = conceptManager.getConceptEntry(id);
-
-		concept.setDeleted(true);
-		// set modified and user details
-		conceptManager.storeModifiedConcept(concept);
-
-		List<ConceptEntry> founds = conceptManager
-				.getConceptListEntries(concept.getConceptList());
-
-		List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-				.createWrappers(founds != null ? founds
-						.toArray(new ConceptEntry[founds.size()])
-						: new ConceptEntry[0]);
-
-		model.addAttribute("result", foundConcepts);
-		return "/auth/conceptlist/concepts";
-	}
-	
-	@RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
-    public String deleteConcept(@PathVariable("id") String id, ModelMap model) {
+    public String confirmlDelete(@PathVariable("id") String id,
+            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, ModelMap model) {
         ConceptEntry concept = conceptManager.getConceptEntry(id);
+
         concept.setDeleted(true);
+        // set modified and user details
         conceptManager.storeModifiedConcept(concept);
+
+        List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
+
+        List<ConceptEntryWrapper> foundConcepts = wrapperCreator
+                .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
+
+        model.addAttribute("result", foundConcepts);
+        if (fromHomeScreenDelete.equalsIgnoreCase("true")) {
+            return "redirect:/login";
+        }
+        return "/auth/conceptlist/concepts";
+    }
+	
+    @RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
+    public String deleteConcept(@PathVariable("id") String id, ModelMap model,@ModelAttribute("conceptSearchBean")ConceptSearchBean conceptSearchBean) {
+        conceptManager.deleteConcept(id);
         return "welcome";
     }
 	
