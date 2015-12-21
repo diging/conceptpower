@@ -35,7 +35,7 @@
         });
 
     });
-
+    
 	function detailsView(concept) {
 		var conceptid = concept.id;
 		$.ajax({
@@ -47,7 +47,7 @@
 			success : function(details) {
 				$("#detailsid").text(details.id);
 				$("#detailsuri").text(details.uri);
-				$("#detailswordnetid").text(details.wordnetid);
+				$("#detailswordnetid").text(details.wordnetId);
 				$("#detailspos").text(details.pos);
 				$("#detailsconceptlist").text(details.conceptlist);
 				$("#detailstypeid").text(details.type);
@@ -121,6 +121,9 @@
 		id="conceptSearchResult">
 		<thead>
 			<tr>
+				<sec:authorize access="isAuthenticated()">
+					<th>Delete</th>
+				</sec:authorize>
 				<th></th>
 				<sec:authorize access="isAuthenticated()">
 				<th>Edit</th>
@@ -136,10 +139,9 @@
 		</thead>
 		<tbody>
 			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
-				<c:set var="rowTitle" value='${concept.uri}'></c:set>
-				<tr class="gradeX" title="${rowTitle}">
+				<tr class="gradeX">
 					<sec:authorize access="isAuthenticated()">
-						<td align="justify"><c:choose>
+						<td><c:choose>
 								<c:when
 									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
 									<a
@@ -148,10 +150,29 @@
 										src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
 								</c:when>
 								<c:otherwise>
-									<font size="2"> <a href="#"
-										title="Cannot Edit Word Net concepts" id="${concept.entry.id}"><input
-											type="image"
-											src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a></font>
+								<div id="#disabledWrapper">
+									<font size="2"> &nbsp;
+									<img id="disabledImage" title="Cannot edit Word Net concepts"
+										src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></img></font>
+								</div>
+								</c:otherwise>
+							</c:choose></td>
+
+						<td><c:choose>
+								<c:when
+									test="${not fn:containsIgnoreCase(concept.entry.id, 'WID')}">
+									<font size="2"> <a
+										href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcept/${concept.entry.id}?fromHomeScreenDelete=true"
+										id="${concept.entry.id}"><input type="image"
+											src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a></font>
+
+								</c:when>
+								<c:otherwise>
+								<div id="#disabledWrapper" style="text-align: justify">
+									<font size="2">&nbsp;<img id="disabledImage"
+										src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"
+										title="Cannot Delete Word Net concepts"></input></font>
+										</div>
 								</c:otherwise>
 							</c:choose></td>
 					</sec:authorize>
