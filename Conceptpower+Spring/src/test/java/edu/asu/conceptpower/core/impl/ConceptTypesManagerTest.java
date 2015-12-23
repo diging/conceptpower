@@ -17,10 +17,6 @@ public class ConceptTypesManagerTest {
     @Mock
     private TypeDatabaseClient client = Mockito.mock(TypeDatabaseClient.class);
 
-    /*
-     * @Mock private UUID uuid = Mockito.mock(UUID.class);
-     */
-
     @InjectMocks
     private ConceptTypesManager conceptTypesManager;
 
@@ -42,7 +38,7 @@ public class ConceptTypesManagerTest {
         types[0] = type;
         types[1] = type2;
         Mockito.when(client.getAllTypes()).thenReturn(types);
-        
+
         Mockito.when(client.getType(type.getTypeId())).thenReturn(type);
         // Mockito.when(client.update(type)).thenReturn(type);
 
@@ -65,9 +61,9 @@ public class ConceptTypesManagerTest {
     public void getAllTypesTest() {
         assertNotNull(conceptTypesManager.getAllTypes());
     }
-    
+
     @Test
-    public void getTypeTest(){
+    public void getTypeTest() {
         assertNotNull(conceptTypesManager.getType("TYPE_ID"));
     }
 }

@@ -22,7 +22,6 @@ public class UserServiceTest {
 
     @Before
     public void init() {
-
         MockitoAnnotations.initMocks(this);
         User user = new User();
         user.setUsername("Test");
@@ -38,10 +37,10 @@ public class UserServiceTest {
         UserDetails details = service.loadUserByUsername("Test");
         assertNotNull(details);
     }
-    
-    @Test(expected=UsernameNotFoundException.class)
-    public void loadUserByUserNameNotAvailableTest(){
-       UserDetails details = service.loadUserByUsername("Test2");
-       assertNull(details);
+
+    @Test(expected = UsernameNotFoundException.class)
+    public void loadUserByUserNameNotAvailableTest() {
+        UserDetails details = service.loadUserByUsername("Test2");
+        assertNull(details);
     }
 }

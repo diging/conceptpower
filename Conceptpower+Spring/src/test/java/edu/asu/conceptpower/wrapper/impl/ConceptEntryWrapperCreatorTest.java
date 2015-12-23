@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.wrapper.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -10,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.config.annotation.web.configurers.AnonymousConfigurer;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
@@ -34,23 +34,22 @@ public class ConceptEntryWrapperCreatorTest {
 
     @Mock
     private IURIHelper helper = Mockito.mock(IURIHelper.class);
-    
+
     @InjectMocks
     private ConceptEntryWrapperCreator conceptEntryWrapperCreator;
-    
+
     ConceptEntry[] entries = new ConceptEntry[1];
     ConceptEntry entry = new ConceptEntry();
-    
+
     @Before
     public void init() {
-        
+
         entry.setTypeId("Type-1");
         entry.setCreatorId("Test");
         entry.setWordnetId("WNET_1");
         entry.setSynonymIds("SYN_1");
         entries[0] = entry;
-        
-        
+
         MockitoAnnotations.initMocks(this);
 
         ConceptType type = new ConceptType();
@@ -69,10 +68,10 @@ public class ConceptEntryWrapperCreatorTest {
         ConceptEntry synonymEntry = new ConceptEntry();
         entry2.setSynonymIds("SYN_1");
         Mockito.when(conceptManager.getConceptEntry("SYN_1")).thenReturn(synonymEntry);
-            
+
         String uri = "http://www.digitalhps.org/concepts/";
         Mockito.when(helper.getURI(entry)).thenReturn(uri);
-        
+
     }
 
     @Test
@@ -83,7 +82,7 @@ public class ConceptEntryWrapperCreatorTest {
         assertNotNull(conceptEntryWrapperList.get(0).getCreator());
         assertNotNull(conceptEntryWrapperList.get(0).getWrappedWordnetEntries());
         assertNotNull(conceptEntryWrapperList.get(0).getSynonyms());
-        assertEquals(conceptEntryWrapperList.get(0).getUri(),"http://www.digitalhps.org/concepts/");
+        assertEquals(conceptEntryWrapperList.get(0).getUri(), "http://www.digitalhps.org/concepts/");
 
     }
 }
