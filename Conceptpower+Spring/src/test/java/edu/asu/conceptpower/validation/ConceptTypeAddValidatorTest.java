@@ -44,24 +44,23 @@ public class ConceptTypeAddValidatorTest {
         duplicateType = new ConceptTypeAddForm();
         duplicateType.setTypeName("ExistingList");
         duplicateType.setTypeDescription("Existing Description");
-        
+
         duplicateTypeName = new ConceptType();
         duplicateTypeName.setTypeName("ExistingList");
         duplicateTypeName.setDescription("Existing Description");
         Mockito.when(client.findType("ExistingList")).thenReturn(duplicateTypeName);
     }
-    
-    
+
     @Test
-    public void testValidName(){
+    public void testValidName() {
 
         Errors errors = new BindException(emptyTypeName, "conceptListAddForm");
         ValidationUtils.invokeValidator(validator, emptyTypeName, errors);
         Assert.assertEquals(2, errors.getFieldErrorCount());
         Assert.assertEquals(errors.getFieldError("typeName").getCode(), "required.type_name");
-        Assert.assertEquals(errors.getFieldError("typeDescription").getCode(),"required.type_description");
+        Assert.assertEquals(errors.getFieldError("typeDescription").getCode(), "required.type_description");
     }
-    
+
     @Test
     public void testExistingName() {
         Errors errors = new BindException(duplicateType, "conceptListAddForm");
@@ -69,6 +68,5 @@ public class ConceptTypeAddValidatorTest {
         Assert.assertEquals(1, errors.getFieldErrorCount());
         Assert.assertEquals(errors.getFieldError("typeName").getCode(), "required.unique.type_name");
     }
-    
-    
+
 }

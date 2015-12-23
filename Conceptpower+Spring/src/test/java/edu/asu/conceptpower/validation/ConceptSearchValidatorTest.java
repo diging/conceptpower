@@ -2,9 +2,6 @@ package edu.asu.conceptpower.validation;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
@@ -16,9 +13,7 @@ import junit.framework.Assert;
 
 public class ConceptSearchValidatorTest {
 
-    
     private ConceptSearchValidator conceptSearchValidator = new ConceptSearchValidator();
-    
 
     private ConceptSearchBean testForWord;
     private ConceptSearchBean testForPos;
@@ -27,7 +22,7 @@ public class ConceptSearchValidatorTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        
+
         testForWord = new ConceptSearchBean();
         testForWord.setWord("");
 
