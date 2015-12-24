@@ -35,7 +35,6 @@ public class ConceptListManagerTest {
 
         Mockito.when(client.getAllElementsOfType(ConceptList.class)).thenReturn(list);
         Mockito.when(client.getConceptList("First List")).thenReturn(conceptList);
-        Mockito.when(client.getConceptList("Second List")).thenReturn(null);
 
     }
 
@@ -45,7 +44,7 @@ public class ConceptListManagerTest {
         assertNotNull(list);
         assertEquals(1, list.size());
     }
-
+    
     @Test
     public void getConceptListTest() {
         String listName = "First List";
@@ -54,6 +53,13 @@ public class ConceptListManagerTest {
         assertEquals(listName, conceptList.getConceptListName());
     }
 
+    @Test
+    public void getConceptListNullTest() {
+        String listName = "Second List";
+        ConceptList conceptList = conceptListManager.getConceptList(listName);
+        assertNull(conceptList);
+    }
+    
     @Test
     public void checkExistingListForTrue() {
         String listName = "First List";

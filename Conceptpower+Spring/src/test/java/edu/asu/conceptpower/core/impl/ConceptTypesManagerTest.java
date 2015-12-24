@@ -1,9 +1,11 @@
 package edu.asu.conceptpower.core.impl;
 
 import static org.junit.Assert.*;
+import junit.framework.TestCase;
+import org.junit.Test;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -21,12 +23,14 @@ public class ConceptTypesManagerTest {
     private ConceptTypesManager conceptTypesManager;
 
     private String id = "CONCEPT_ID";
+    ConceptType type = new ConceptType();
+    
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
 
-        ConceptType type = new ConceptType();
+        
         type.setTypeId("TYPE_ID");
         type.setTypeName("TYPE_NAME");
 
@@ -34,36 +38,38 @@ public class ConceptTypesManagerTest {
         type2.setTypeId("Type Id 2");
         type2.setTypeName("Type Name 2");
 
-        ConceptType[] types = new ConceptType[2];
-        types[0] = type;
-        types[1] = type2;
+        ConceptType[] types = {type, type2};
         Mockito.when(client.getAllTypes()).thenReturn(types);
 
         Mockito.when(client.getType(type.getTypeId())).thenReturn(type);
-        // Mockito.when(client.update(type)).thenReturn(type);
-
-        // Mockito.when(uuid.randomUUID().toString()).thenReturn("TYPE_ID");
+        Mockito.when(client.addType(type)).thenReturn(type);
     }
 
     @Test
     public void addConceptType() {
-
-        // Not able to mock UUID class since it is a final class.
+        conceptTypesManager.addConceptType(type);
+        verify(client).addType(type);
     }
 
     @Test
     public void storeModifiedConceptTypeTest() {
-
-        // Method returning only void and not changing the state of the object
+        conceptTypesManager.storeModifiedConceptType(type);
+        verify(client).update(type);
     }
 
     @Test
     public void getAllTypesTest() {
-        assertNotNull(conceptTypesManager.getAllTypes());
+        ConceptType[] conceptTypes = conceptTypesManager.getAllTypes();
+        assertNotNull(conceptTypes);
+        assertEquals(2, conceptTypes.length);
     }
 
     @Test
     public void getTypeTest() {
-        assertNotNull(conceptTypesManager.getType("TYPE_ID"));
+        ConceptType conceptType = conceptTypesManager.getType("TYPE_ID");
+        assertNotNull(conceptType);
+        assertEquals("TYPE_ID", conceptType.getTypeId());
+        assertEquals("TYPE_NAME",conceptType.getTypeName());
+        
     }
 }
