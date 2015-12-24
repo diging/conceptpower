@@ -30,7 +30,8 @@ public class ConceptSearchValidatorTest {
         testForPos.setWord("pony");
 
         testForPosWord = new ConceptSearchBean();
-        testForPosWord.setPos(POS.NOUN);
+        POS pos = POS.NOUN;
+        testForPosWord.setPos(pos);
         testForPosWord.setWord("pony");
 
     }
