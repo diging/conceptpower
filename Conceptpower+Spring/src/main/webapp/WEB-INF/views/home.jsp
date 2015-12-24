@@ -139,7 +139,7 @@
 		</thead>
 		<tbody>
 			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
-				<tr class="gradeX">
+				<tr class="gradeX" title="${concept.uri}">
 					<sec:authorize access="isAuthenticated()">
 						<td><c:choose>
 								<c:when
