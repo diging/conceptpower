@@ -42,7 +42,9 @@
 	<bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
 		<property name="from" value="email"></property>
 	</bean>
-
+	
+	<bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer"></bean>
+	
 	<util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />
 	<bean id="messageSource"
