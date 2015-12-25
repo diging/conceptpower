@@ -1,6 +1,8 @@
 package edu.asu.conceptpower.core.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +46,7 @@ public class ConceptListManagerTest {
         assertNotNull(list);
         assertEquals(1, list.size());
     }
-    
+
     @Test
     public void getConceptListTest() {
         String listName = "First List";
@@ -59,7 +61,7 @@ public class ConceptListManagerTest {
         ConceptList conceptList = conceptListManager.getConceptList(listName);
         assertNull(conceptList);
     }
-    
+
     @Test
     public void checkExistingListForTrue() {
         String listName = "First List";

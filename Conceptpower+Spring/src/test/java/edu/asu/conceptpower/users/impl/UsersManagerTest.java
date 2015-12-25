@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -18,30 +21,32 @@ import edu.asu.conceptpower.users.UserDatabaseClient;
 public class UsersManagerTest {
 
     @Mock
-    private UserDatabaseClient client;
+    private UserDatabaseClient client = Mockito.mock(UserDatabaseClient.class);
 
     @Mock
-    private Environment env;
+    private Environment env = Mockito.mock(Environment.class);
 
     @InjectMocks
     private UsersManager usersManager;
 
+    @Mock
+    private Map<String, String> admins = Mockito.mock(Map.class);
+
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        try {
-            this.usersManager.init();
-        } catch (Exception e) {
-            // Need to check how to load properties file through Mockito
-        }
         User user = new User();
         user.setUsername("Test");
         user.setFullname("Test Test");
+        user.setEmail("test@test.com");
         Mockito.when(client.findUser("Test")).thenReturn(user);
         Mockito.when(client.findUser("Test2")).thenReturn(null);
 
+        admins.put("admin", "admin");
+
         Mockito.when(client.getUser("Test", "Test")).thenReturn(user);
-        Mockito.when(client.getUser("Test2", "Test2")).thenReturn(null);
+        Mockito.when(admins.containsKey("admin")).thenReturn(true);
+        Mockito.when(admins.get("admin")).thenReturn("admin");
 
     }
 
@@ -49,6 +54,17 @@ public class UsersManagerTest {
     public void findUserTest() {
         User user = usersManager.findUser("Test");
         assertNotNull(user);
+        assertEquals("Test", user.getUsername());
+        assertEquals("Test Test", user.getFullname());
+        assertEquals("test@test.com", user.getEmail());
+    }
+
+    @Test
+    public void findAdminUserTest() {
+        User user = usersManager.findUser("admin");
+        assertNotNull(user);
+        assertEquals("admin", user.getUsername());
+        assertEquals("admin", user.getPw());
     }
 
     @Test
@@ -65,8 +81,22 @@ public class UsersManagerTest {
     }
 
     @Test
+    public void getAdminUserTest() {
+        User user = usersManager.getUser("admin", "admin");
+        assertNotNull(user);
+        assertEquals("admin", user.getUsername());
+        assertEquals(true, user.getIsAdmin());
+    }
+
+    @Test
     public void getUsersNotExistingTest() {
         User user = usersManager.getUser("Test2", "Test2");
+        assertNull(user);
+    }
+
+    @Test
+    public void getUsersIllegalPasswordTest() {
+        User user = usersManager.getUser("Test", "Test2");
         assertNull(user);
     }
 

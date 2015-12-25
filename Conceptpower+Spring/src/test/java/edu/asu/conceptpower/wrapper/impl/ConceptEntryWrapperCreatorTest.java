@@ -78,8 +78,9 @@ public class ConceptEntryWrapperCreatorTest {
     public void createWrappers() {
         List<ConceptEntryWrapper> conceptEntryWrapperList = conceptEntryWrapperCreator.createWrappers(entries);
         assertNotNull(conceptEntryWrapperList);
-        assertNotNull(conceptEntryWrapperList.get(0).getType());
-        assertNotNull(conceptEntryWrapperList.get(0).getCreator());
+        assertEquals("Type-1", conceptEntryWrapperList.get(0).getType().getTypeId());
+        assertEquals("Type-Name", conceptEntryWrapperList.get(0).getType().getTypeName());
+        assertEquals("Test", conceptEntryWrapperList.get(0).getCreator().getUsername());
         assertNotNull(conceptEntryWrapperList.get(0).getWrappedWordnetEntries());
         assertNotNull(conceptEntryWrapperList.get(0).getSynonyms());
         assertEquals(conceptEntryWrapperList.get(0).getUri(), "http://www.digitalhps.org/concepts/");

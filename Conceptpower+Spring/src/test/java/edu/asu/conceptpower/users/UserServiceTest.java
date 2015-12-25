@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.users;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class UserServiceTest {
 
     @Mock
-    private IUserManager userManager;
+    private IUserManager userManager = Mockito.mock(IUserManager.class);
 
     @InjectMocks
     private UserService service;
@@ -25,17 +24,19 @@ public class UserServiceTest {
         MockitoAnnotations.initMocks(this);
         User user = new User();
         user.setUsername("Test");
-        user.setFullname("Test");
+        user.setFullname("Test Test");
         user.setPw("test");
         user.setEmail("test@test.com");
         Mockito.when(userManager.findUser("Test")).thenReturn(user);
-        Mockito.when(userManager.findUser("Test2")).thenReturn(null);
     }
 
     @Test
     public void loadUserByUsernameTest() {
         UserDetails details = service.loadUserByUsername("Test");
         assertNotNull(details);
+        assertEquals("Test", details.getUsername());
+        assertEquals("test", details.getPassword());
+        // No getter for Email and Full Name
     }
 
     @Test(expected = UsernameNotFoundException.class)

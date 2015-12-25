@@ -22,10 +22,10 @@ import edu.asu.conceptpower.profile.ISearchResultFactory;
 public class ViafServiceTest {
 
     @Mock
-    private RestTemplate template;
+    private RestTemplate template = Mockito.mock(RestTemplate.class);
 
     @Mock
-    private ISearchResultFactory searchResultFactory;
+    private ISearchResultFactory searchResultFactory = Mockito.mock(ISearchResultFactory.class);
 
     @InjectMocks
     private ViafService viafService;
@@ -54,8 +54,21 @@ public class ViafServiceTest {
 
         viafReply.setChannel(channel);
 
-        Mockito.when(template.getForObject(Mockito.anyString(), Mockito.eq(ViafReply.class))).thenReturn(viafReply);
+        Mockito.when(template.getForObject(
+                "http://viaf.org/viaf/search?query=local.names all Pirckheimer+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml",
+                ViafReply.class)).thenReturn(viafReply);
         Mockito.when(searchResultFactory.getSearchResultObject()).thenReturn(new SearchResult());
+
+        ViafReply emptyViafReply = new ViafReply();
+        Channel emptyChannel = new Channel();
+        List<Item> emptyitems = null;
+        emptyChannel.setItems(emptyitems);
+
+        emptyViafReply.setChannel(emptyChannel);
+
+        Mockito.when(template.getForObject(
+                "http://viaf.org/viaf/search?query=local.names all Test for Null+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml",
+                ViafReply.class)).thenReturn(emptyViafReply);
 
     }
 
@@ -63,15 +76,20 @@ public class ViafServiceTest {
     public void testSearch() {
 
         List<ISearchResult> searchResults = viafService.search("Pirckheimer");
-        ISearchResult searchResult = new SearchResult();
-        searchResult.setDescription("Mon, 12 Jul 2015 18:51:56 GMT");
-        searchResult.setId("http://viaf.org/viaf/27173507");
-        searchResult.setName("Pirckheimer, Willibald, 1470-1530.");
 
         assertEquals(1, searchResults.size());
-        assertEquals(searchResult.getDescription(), searchResults.get(0).getDescription());
-        assertEquals(searchResult.getId(), searchResults.get(0).getId());
-        assertEquals(searchResult.getName(), searchResults.get(0).getName());
+        assertEquals("Mon, 12 Jul 2015 18:51:56 GMT", searchResults.get(0).getDescription());
+        assertEquals("http://viaf.org/viaf/27173507", searchResults.get(0).getId());
+        assertEquals("Pirckheimer, Willibald, 1470-1530.", searchResults.get(0).getName());
+    }
+
+    @Test
+    public void searchNullTest() {
+
+        List<ISearchResult> searchResults = viafService.search("Test for Null");
+        // Checked for zero size since the list is created and no result has
+        // been added
+        assertEquals(0, searchResults.size());
     }
 
 }

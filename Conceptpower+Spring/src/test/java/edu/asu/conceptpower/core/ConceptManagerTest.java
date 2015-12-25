@@ -1,7 +1,5 @@
 package edu.asu.conceptpower.core;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +13,7 @@ import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.wordnet.Constants;
 import edu.asu.conceptpower.wordnet.WordNetManager;
+import junit.framework.Assert;
 
 public class ConceptManagerTest {
 

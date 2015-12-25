@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +51,14 @@ public class AuthorityFileSearchTest {
         assertEquals("Mon, 12 Jul 2015 18:51:56 GMT", result.get(0).getDescription());
         assertEquals("http://viaf.org/viaf/27173507", result.get(0).getId());
         assertEquals("Pirckheimer, Willibald, 1470-1530.", result.get(0).getName());
+    }
+
+    @Test
+    public void getNullSearchResultBeanListTest() {
+
+        List<ISearchResult> result = authorityFileSearch.getSearchResultBackBeanList("edu.asu.viaf", "Test For Null");
+        assertEquals(0, result.size());
+
     }
 
 }

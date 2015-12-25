@@ -1,11 +1,11 @@
 package edu.asu.conceptpower.core.impl;
 
-import static org.junit.Assert.*;
-import junit.framework.TestCase;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -22,15 +22,12 @@ public class ConceptTypesManagerTest {
     @InjectMocks
     private ConceptTypesManager conceptTypesManager;
 
-    private String id = "CONCEPT_ID";
     ConceptType type = new ConceptType();
-    
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
 
-        
         type.setTypeId("TYPE_ID");
         type.setTypeName("TYPE_NAME");
 
@@ -38,7 +35,7 @@ public class ConceptTypesManagerTest {
         type2.setTypeId("Type Id 2");
         type2.setTypeName("Type Name 2");
 
-        ConceptType[] types = {type, type2};
+        ConceptType[] types = { type, type2 };
         Mockito.when(client.getAllTypes()).thenReturn(types);
 
         Mockito.when(client.getType(type.getTypeId())).thenReturn(type);
@@ -69,7 +66,7 @@ public class ConceptTypesManagerTest {
         ConceptType conceptType = conceptTypesManager.getType("TYPE_ID");
         assertNotNull(conceptType);
         assertEquals("TYPE_ID", conceptType.getTypeId());
-        assertEquals("TYPE_NAME",conceptType.getTypeName());
-        
+        assertEquals("TYPE_NAME", conceptType.getTypeName());
+
     }
 }
