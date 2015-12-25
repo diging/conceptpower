@@ -459,6 +459,36 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>${spring-security-version}</version>
 		</dependency>
+
+		<!-- Apache Lucene -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>5.4.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-queryparser</artifactId>
+			<version>5.4.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>5.4.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-demos</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<scm>
