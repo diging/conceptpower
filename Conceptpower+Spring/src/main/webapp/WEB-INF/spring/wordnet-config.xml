@@ -8,5 +8,9 @@
 		<property name="wordnetPath" value="${wordnet.install.path}" />
 		<property name="dictFolder" value="dict" />
 	</bean>
+	
+	<bean class="edu.asu.conceptpower.wordnet.WordNetManager">
+		<property name="lucenePath" value="${lucene.index}" />
+	</bean>
 		
 </beans>

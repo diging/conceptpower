@@ -3,6 +3,8 @@ package edu.asu.conceptpower.wordnet;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,9 +29,8 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.mit.jwi.Dictionary;
@@ -41,7 +42,6 @@ import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 import edu.mit.jwi.item.WordID;
 
-@Service
 public class WordNetManager {
 
     @Autowired
@@ -50,23 +50,30 @@ public class WordNetManager {
     @Autowired
     private StandardAnalyzer analyzer;
 
-    private Directory index = new RAMDirectory();
-
+    private String lucenePath;
+    
+    Directory index; 
+    
     private IDictionary dict;
 
     private Map<String, POS> posMap;
 
     @PostConstruct
     public void init() throws IOException, org.apache.lucene.queryparser.classic.ParseException {
+        
+        Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
+        index = FSDirectory.open(relativePath);
+        
         String wnhome = configuration.getWordnetPath();
         String path = wnhome + File.separator + configuration.getDictFolder();
+        
         URL url = null;
 
         url = new URL("file", null, path);
 
         dict = new Dictionary(url);
         dict.open();
-
+        
         Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
 
         for (; iterator.hasNext();) {
@@ -101,6 +108,7 @@ public class WordNetManager {
         }
 
         iterator = dict.getIndexWordIterator(POS.ADVERB);
+        
         for (; iterator.hasNext();) {
 
             IIndexWord indexWord = iterator.next();
@@ -307,7 +315,9 @@ public class WordNetManager {
             // get nouns
 
             Query q = new QueryParser("title", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
-
+            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
+            index = FSDirectory.open(relativePath);
+            
             int hitsPerPage = 10;
             IndexReader reader = DirectoryReader.open(index);
             IndexSearcher searcher = new IndexSearcher(reader);
@@ -375,7 +385,9 @@ public class WordNetManager {
         Query q;
         try {
             q = new QueryParser("title", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
-
+            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
+            index = FSDirectory.open(relativePath);
+            
             int hitsPerPage = 10;
             List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
@@ -405,4 +417,13 @@ public class WordNetManager {
     public void close() {
         dict.close();
     }
+    
+    public String getLucenePath() {
+        return lucenePath;
+    }
+
+    public void setLucenePath(String lucenePath) {
+        this.lucenePath = lucenePath;
+    }
+
 }
