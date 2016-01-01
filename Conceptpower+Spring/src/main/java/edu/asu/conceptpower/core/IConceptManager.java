@@ -114,5 +114,7 @@ public interface IConceptManager {
 	public abstract void storeModifiedConcept(ConceptEntry entry);
 	
 	public abstract void deleteConcept(String id);
+	
+	public abstract void addConcept(ConceptEntry entry);
 
 }

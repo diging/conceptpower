@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -49,6 +50,9 @@ public class WordNetManager {
 
     @Autowired
     private StandardAnalyzer analyzer;
+    
+    @Autowired
+    private WhitespaceAnalyzer  simpleAnalyzer;
 
     private String lucenePath;
     
@@ -90,7 +94,7 @@ public class WordNetManager {
                 IWord word = dict.getWord(wordId);
                 doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
                 doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
-                w.addDocument(doc);
+                
 
                 ISynset synset = word.getSynset();
                 List<IWord> synonyms = synset.getWords();
@@ -102,6 +106,7 @@ public class WordNetManager {
                 doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
 
                 System.out.println(wordId.getPOS() + " " + wordId.getLemma());
+                w.addDocument(doc);
             }
 
             w.close();
@@ -220,21 +225,33 @@ public class WordNetManager {
 
     public ConceptEntry getConcept(String id) {
 
-        IWordID wordId = null;
+        Query q;
+        ConceptEntry entry = null;
         try {
-            wordId = WordID.parseWordID(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            q = new QueryParser("word", simpleAnalyzer).parse("id:" + id);
+            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
+            index = FSDirectory.open(relativePath);
+            
+            int hitsPerPage = 10;
+            List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
+
+            IndexReader reader = DirectoryReader.open(index);
+            IndexSearcher searcher = new IndexSearcher(reader);
+            TopDocs docs = searcher.search(q, hitsPerPage);
+            ScoreDoc[] hits = docs.scoreDocs;
+
+            for (int i = 0; i < hits.length; ++i) {
+                int docId = hits[i].doc;
+                Document d = searcher.doc(docId);
+                entry = getConceptFromDocument(d);
+            }
+
+        } 
+        catch(Exception ex){
+            ex.printStackTrace();
         }
 
-        if (wordId != null) {
-            ConceptEntry entry = getConceptFromWordId(wordId);
-
-            return entry;
-        }
-
-        return null;
+        return entry;
     }
 
     public ConceptEntry[] getSynonyms(String id) {
@@ -314,7 +331,7 @@ public class WordNetManager {
             List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
             // get nouns
 
-            Query q = new QueryParser("title", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
+            Query q = new QueryParser("word", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
             Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             index = FSDirectory.open(relativePath);
             
@@ -336,7 +353,7 @@ public class WordNetManager {
 
             // get verbs
             pPOS = POS.VERB;
-            q = new QueryParser("title", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
+            q = new QueryParser("word", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
             docs = searcher.search(q, hitsPerPage);
             hits = docs.scoreDocs;
             for (int i = 0; i < hits.length; ++i) {
@@ -348,7 +365,7 @@ public class WordNetManager {
 
             // get adverbs
             pPOS = POS.ADVERB;
-            q = new QueryParser("title", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
+            q = new QueryParser("word", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
             docs = searcher.search(q, hitsPerPage);
             hits = docs.scoreDocs;
             for (int i = 0; i < hits.length; ++i) {
@@ -360,7 +377,7 @@ public class WordNetManager {
 
             // get adjectives
             pPOS = POS.ADJECTIVE;
-            q = new QueryParser("title", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
+            q = new QueryParser("word", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
             docs = searcher.search(q, hitsPerPage);
             hits = docs.scoreDocs;
             for (int i = 0; i < hits.length; ++i) {
@@ -384,7 +401,8 @@ public class WordNetManager {
 
         Query q;
         try {
-            q = new QueryParser("title", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
+            word = word.replace(" ", "");
+            q = new QueryParser("word", simpleAnalyzer).parse("word:" + word +" AND pos:" + pPOS.toString());
             Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             index = FSDirectory.open(relativePath);
             

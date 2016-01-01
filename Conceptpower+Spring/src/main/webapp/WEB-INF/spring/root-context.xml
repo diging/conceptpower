@@ -44,6 +44,7 @@
 	</bean>
 	
 	<bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer"></bean>
+	<bean id="simpleAnalyzer" class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />
 	
 	<util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />

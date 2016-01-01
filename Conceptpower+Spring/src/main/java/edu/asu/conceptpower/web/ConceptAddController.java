@@ -115,34 +115,23 @@ public class ConceptAddController {
 	 * @return returns string which redirects to concept list page
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
-	public String addConcept(HttpServletRequest req, Principal principal) {
+    public String addConcept(HttpServletRequest req, Principal principal) {
 
-		try {
-			ConceptEntry conceptEntry = new ConceptEntry();
+        ConceptEntry conceptEntry = new ConceptEntry();
+        conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
+        conceptEntry.setWord(req.getParameter("name"));
+        conceptEntry.setConceptList(req.getParameter("lists"));
+        conceptEntry.setPos(req.getParameter("pos"));
+        conceptEntry.setDescription(req.getParameter("description"));
+        conceptEntry.setEqualTo(req.getParameter("equals"));
+        conceptEntry.setSimilarTo(req.getParameter("similar"));
+        conceptEntry.setTypeId(req.getParameter("types"));
+        conceptEntry.setCreatorId(principal.getName());
 
-			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-			conceptEntry.setWord(req.getParameter("name"));
-			conceptEntry.setConceptList(req.getParameter("lists"));
-			conceptEntry.setPos(req.getParameter("pos"));
-			conceptEntry.setDescription(req.getParameter("description"));
-			conceptEntry.setEqualTo(req.getParameter("equals"));
-			conceptEntry.setSimilarTo(req.getParameter("similar"));
-			conceptEntry.setTypeId(req.getParameter("types"));
-			conceptEntry.setCreatorId(principal.getName());
-			conceptManager.addConceptListEntry(conceptEntry);
+        conceptManager.addConcept(conceptEntry);
 
-		} catch (DictionaryDoesNotExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "failed";
-		} catch (DictionaryModifyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "failed";
-		}
-
-		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
-	}
+        return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
+    }
 
 	/**
 	 * This method provides array of concepts for a given string

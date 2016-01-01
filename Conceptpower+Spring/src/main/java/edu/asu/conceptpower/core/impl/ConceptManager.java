@@ -1,5 +1,8 @@
 package edu.asu.conceptpower.core.impl;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,6 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +49,11 @@ public class ConceptManager implements IConceptManager {
 
 	@Autowired
 	private IConceptDBManager client;
-
+	
+	@Autowired
+    private StandardAnalyzer analyzer;
+	
+	
 	protected final String CONCEPT_PREFIX = "CON";
 
 	/* (non-Javadoc)
@@ -370,7 +386,6 @@ public class ConceptManager implements IConceptManager {
 		
 		String id = generateId(CONCEPT_PREFIX);
 		entry.setId(id);
-
 		client.store(entry, DBNames.DICTIONARY_DB);
 		return id;
 	}
@@ -405,5 +420,48 @@ public class ConceptManager implements IConceptManager {
         ConceptEntry concept = getConceptEntry(id);
         concept.setDeleted(true);
         storeModifiedConcept(concept);
+    }
+
+    @Override
+    public void addConcept(ConceptEntry entry) {
+        IndexWriter w = null;
+        try{
+        Path relativePath = FileSystems.getDefault().getPath("/Users/mkarthik90/Software/Conceptpower/indexFiles", "index");
+        Directory index = FSDirectory.open(relativePath);
+        
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+         w = new IndexWriter(index, config);
+        
+        String id = generateId(CONCEPT_PREFIX);
+        
+
+        Document doc = new Document();
+        doc.add(new TextField("word", entry.getWord().replace(" ", ""), Field.Store.YES));
+        doc.add(new StringField("pos", entry.getPos().toString(), Field.Store.NO));
+
+        doc.add(new StringField("description", entry.getDescription(), Field.Store.NO));
+        doc.add(new StringField("id", id, Field.Store.YES));
+        doc.add(new StringField("listName",entry.getConceptList(),Field.Store.NO));
+
+        doc.add(new StringField("synonymId", entry.getSynonymIds(), Field.Store.NO));
+        doc.add(new StringField("equalTo", entry.getEqualTo(), Field.Store.NO));
+        doc.add(new StringField("similar",entry.getSimilarTo(),Field.Store.NO));
+        doc.add(new StringField("types", entry.getTypeId(),Field.Store.NO));
+        doc.add(new StringField("creatorId", entry.getCreatorId(), Field.Store.NO));
+        
+        w.addDocument(doc);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        finally{
+            
+            try {
+                w.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 }
