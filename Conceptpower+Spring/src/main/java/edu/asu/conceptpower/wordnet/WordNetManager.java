@@ -323,6 +323,12 @@ public class WordNetManager {
         entry.setDescription(d.get("description"));
         entry.setWordnetId(d.get("id"));
         entry.setSynonymIds(d.get("synonymId"));
+        entry.setConceptList(d.get("listName"));
+        entry.setTypeId(d.get("types"));
+        entry.setEqualTo(d.get("equalTo"));
+        entry.setSimilarTo(d.get("similar"));
+        entry.setModified(d.get("creatorId"));
+        entry.setSynonymIds(d.get("synonymId"));
         return entry;
     }
 

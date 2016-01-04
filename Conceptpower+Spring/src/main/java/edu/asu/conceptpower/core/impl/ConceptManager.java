@@ -3,7 +3,9 @@ package edu.asu.conceptpower.core.impl;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -444,10 +446,14 @@ public class ConceptManager implements IConceptManager {
         doc.add(new StringField("listName",entry.getConceptList(),Field.Store.YES));
 
         doc.add(new StringField("synonymId", entry.getSynonymIds(), Field.Store.YES));
-        doc.add(new StringField("equalTo", entry.getEqualTo(), Field.Store.NO));
-        doc.add(new StringField("similar",entry.getSimilarTo(),Field.Store.NO));
-        doc.add(new StringField("types", entry.getTypeId(),Field.Store.NO));
-        doc.add(new StringField("creatorId", entry.getCreatorId(), Field.Store.NO));
+        doc.add(new StringField("equalTo", entry.getEqualTo(), Field.Store.YES));
+        doc.add(new StringField("similar",entry.getSimilarTo(),Field.Store.YES));
+        doc.add(new StringField("types", entry.getTypeId(),Field.Store.YES));
+        doc.add(new StringField("creatorId", entry.getCreatorId(), Field.Store.YES));
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+        doc.add(new StringField("modifiedTime",formatter.format(cal.getTime()),Field.Store.YES));
+        
         
         w.addDocument(doc);
         }

@@ -1,7 +1,18 @@
 package edu.asu.conceptpower.web;
 
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.List;
 
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.wordnet.WordNetManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.impl.ConceptEntryWrapperCreator;
 
@@ -31,7 +43,14 @@ public class ConceptDeleteController {
 	@Autowired
 	private ConceptEntryWrapperCreator wrapperCreator;
 	
-
+	@Autowired
+    private WhitespaceAnalyzer  whiteSpaceAnalyzer;
+	
+	@Autowired
+	private WordNetManager wordNetManager;
+	
+	Directory index;
+	
 	/**
 	 * This method provides details of a concept to be deleted for concept
 	 * delete page
@@ -45,17 +64,18 @@ public class ConceptDeleteController {
 	@RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
 	public String prepareDeleteConcept(@PathVariable("conceptid") String conceptid, ModelMap model,@RequestParam(value = "fromHomeScreenDelete",required=false)String fromHomeScreenDelete) {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-//		model.addAttribute("word", concept.getWord());
-//		model.addAttribute("description", concept.getDescription());
-//		model.addAttribute("conceptId", concept.getId());
-//		model.addAttribute("wordnetId", concept.getWordnetId());
-//		model.addAttribute("pos", concept.getPos());
-//		model.addAttribute("conceptList", concept.getConceptList());
-//		model.addAttribute("type", concept.getTypeId());
-//		model.addAttribute("equal", concept.getEqualTo());
-//		model.addAttribute("similar", concept.getSimilarTo());
-//		model.addAttribute("user", concept.getModified());
-//		model.addAttribute("modified", concept.getModified());
+		model.addAttribute("word", concept.getWord());
+		model.addAttribute("description", concept.getDescription());
+		model.addAttribute("conceptId", concept.getId());
+		model.addAttribute("wordnetId", concept.getWordnetId());
+		model.addAttribute("pos", concept.getPos());
+		model.addAttribute("conceptList", concept.getConceptList());
+		model.addAttribute("type", concept.getTypeId());
+		model.addAttribute("equal", concept.getEqualTo());
+		model.addAttribute("similar", concept.getSimilarTo());
+		model.addAttribute("user", concept.getModified());
+		model.addAttribute("modified", concept.getModified());
+		model.addAttribute("synonyms", concept.getSynonymIds());
 	    
 	    //conceptManager.deleteConcept(conceptid);
 	    
@@ -105,11 +125,30 @@ public class ConceptDeleteController {
 	@RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
     public String confirmlDelete(@PathVariable("id") String id,
             @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, ModelMap model) {
-        ConceptEntry concept = conceptManager.getConceptEntry(id);
-
-        concept.setDeleted(true);
-        // set modified and user details
-        conceptManager.storeModifiedConcept(concept);
+       
+	    
+	    ConceptEntry concept = wordNetManager.getConcept(id);
+	    IndexWriter writer = null;
+	    try{
+	    Query q = new QueryParser("word", whiteSpaceAnalyzer).parse("id:" + id);
+	    Path relativePath = FileSystems.getDefault().getPath("/Users/mkarthik90/Software/Conceptpower/indexFiles", "index");
+	    index = FSDirectory.open(relativePath);
+	    IndexWriterConfig config = new IndexWriterConfig(whiteSpaceAnalyzer);
+	    writer = new IndexWriter(index, config);
+	    writer.deleteDocuments(q);
+	    }
+	    catch(Exception ex){
+	        //TODO
+	    }
+	    finally{
+	        try{
+	            writer.close();
+	        }
+	        catch(Exception ex){
+	            //TODO
+	        }
+	    }
+	    
 
         List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
 
