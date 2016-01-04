@@ -329,6 +329,7 @@ public class WordNetManager {
         entry.setSimilarTo(d.get("similar"));
         entry.setModified(d.get("creatorId"));
         entry.setSynonymIds(d.get("synonymId"));
+        entry.setCreatorId(d.get("creatorId"));
         return entry;
     }
 

@@ -31,6 +31,7 @@ import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.users.IUserManager;
+import edu.asu.conceptpower.wordnet.WordNetManager;
 
 /**
  * This method provides all the required methods for editing a concept
@@ -52,6 +53,9 @@ public class ConceptEditController {
 
 	@Autowired
 	private IConceptTypeManger conceptTypesManager;
+	
+	@Autowired
+	private WordNetManager wordNetManger;
 
 	/**
 	 * This method provides information of a concept to be edited for concept
@@ -125,7 +129,7 @@ public class ConceptEditController {
 	public String confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
 			@ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean) {
 
-		ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
+		ConceptEntry conceptEntry = wordNetManger.getConcept(id);
 		conceptEntry.setWord(conceptEditBean.getWord());
 		conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
 		conceptEntry.setPos(conceptEditBean.getSelectedPosValue());

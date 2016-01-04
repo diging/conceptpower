@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -19,6 +20,8 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +57,9 @@ public class ConceptManager implements IConceptManager {
 	
 	@Autowired
     private StandardAnalyzer analyzer;
+	
+	@Autowired
+	private WhitespaceAnalyzer whiteSpaceAnalyzer;
 	
 	
 	protected final String CONCEPT_PREFIX = "CON";
@@ -397,7 +403,59 @@ public class ConceptManager implements IConceptManager {
 	 */
 	@Override
 	public void storeModifiedConcept(ConceptEntry entry) {
-		client.update(entry, DBNames.DICTIONARY_DB);
+		
+	    IndexWriter writer = null;
+	    IndexWriter writerForAdding = null;
+	    Directory index = null;
+	    try{
+
+            Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + entry.getId());
+            Path relativePath = FileSystems.getDefault().getPath("/Users/mkarthik90/Software/Conceptpower/indexFiles", "index");
+            index = FSDirectory.open(relativePath);
+            IndexWriterConfig configWhiteSpace = new IndexWriterConfig(whiteSpaceAnalyzer);
+            writer = new IndexWriter(index, configWhiteSpace);
+            
+	        Document doc = new Document();
+	        doc.add(new TextField("word", entry.getWord().replace(" ", ""), Field.Store.YES));
+	        doc.add(new StringField("pos", entry.getPos().toString(), Field.Store.YES));
+
+	        doc.add(new StringField("description", entry.getDescription()!=null?entry.getDescription():"", Field.Store.YES));
+	        doc.add(new StringField("id", entry.getId(), Field.Store.YES));
+	        doc.add(new StringField("listName",entry.getConceptList()!=null?entry.getConceptList():"",Field.Store.YES));
+
+	        doc.add(new StringField("synonymId", entry.getSynonymIds()!=null?entry.getSynonymIds():"", Field.Store.YES));
+	        doc.add(new StringField("equalTo", entry.getEqualTo()!=null?entry.getEqualTo():"", Field.Store.YES));
+	        doc.add(new StringField("similar",entry.getSimilarTo()!=null?entry.getSimilarTo():"",Field.Store.YES));
+	        doc.add(new StringField("types", entry.getTypeId()!=null?entry.getTypeId():"",Field.Store.YES));
+	        doc.add(new StringField("creatorId", entry.getCreatorId()!=null?entry.getCreatorId():"", Field.Store.YES));
+	        Calendar cal = Calendar.getInstance();
+	        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+	        doc.add(new StringField("modifiedTime",formatter.format(cal.getTime()),Field.Store.YES));
+	        
+	        writer.deleteDocuments(q);
+	        writer.commit();
+	        writer.close();
+	        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+	        writerForAdding = new IndexWriter(index, config);
+	        writerForAdding.addDocument(doc);
+
+	        writerForAdding.commit();
+            
+             
+	    }
+	    catch(Exception ex){
+	       //TODO
+	    }
+	    finally{
+	        try{
+	        writerForAdding.close();
+	        writer.close();
+	        }
+	        catch(Exception ex){
+	            //TODO
+	        }
+	    }
+	    
 	}
 
 	protected String generateId(String prefix) {
