@@ -45,17 +45,20 @@ public class ConceptDeleteController {
 	@RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
 	public String prepareDeleteConcept(@PathVariable("conceptid") String conceptid, ModelMap model,@RequestParam(value = "fromHomeScreenDelete",required=false)String fromHomeScreenDelete) {
 		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-		model.addAttribute("word", concept.getWord());
-		model.addAttribute("description", concept.getDescription());
-		model.addAttribute("conceptId", concept.getId());
-		model.addAttribute("wordnetId", concept.getWordnetId());
-		model.addAttribute("pos", concept.getPos());
-		model.addAttribute("conceptList", concept.getConceptList());
-		model.addAttribute("type", concept.getTypeId());
-		model.addAttribute("equal", concept.getEqualTo());
-		model.addAttribute("similar", concept.getSimilarTo());
-		model.addAttribute("user", concept.getModified());
-		model.addAttribute("modified", concept.getModified());
+//		model.addAttribute("word", concept.getWord());
+//		model.addAttribute("description", concept.getDescription());
+//		model.addAttribute("conceptId", concept.getId());
+//		model.addAttribute("wordnetId", concept.getWordnetId());
+//		model.addAttribute("pos", concept.getPos());
+//		model.addAttribute("conceptList", concept.getConceptList());
+//		model.addAttribute("type", concept.getTypeId());
+//		model.addAttribute("equal", concept.getEqualTo());
+//		model.addAttribute("similar", concept.getSimilarTo());
+//		model.addAttribute("user", concept.getModified());
+//		model.addAttribute("modified", concept.getModified());
+	    
+	    //conceptManager.deleteConcept(conceptid);
+	    
 		if(fromHomeScreenDelete!=null){
 		model.addAttribute("fromHomeScreenDelete",fromHomeScreenDelete);
 		}

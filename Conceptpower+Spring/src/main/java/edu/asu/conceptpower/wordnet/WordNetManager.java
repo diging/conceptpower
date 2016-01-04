@@ -79,141 +79,146 @@ public class WordNetManager {
         dict.open();
         
         Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
+//        int i = 0;
+//        for (; iterator.hasNext();) {
+//            IIndexWord indexWord = iterator.next();
+//            List<IWordID> wordIdds = indexWord.getWordIDs();
+//
+//            IndexWriterConfig config = new IndexWriterConfig(analyzer);
+//            IndexWriter w = new IndexWriter(index, config);
+//            i++;
+//            if(i == 1000){
+//                break;
+//            }
+//            for (IWordID wordId : wordIdds) {
+//               
+//                Document doc = new Document();
+//                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
+//                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
+//
+//                IWord word = dict.getWord(wordId);
+//                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
+//                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
+//                
+//
+//                ISynset synset = word.getSynset();
+//                List<IWord> synonyms = synset.getWords();
+//                StringBuffer sb = new StringBuffer();
+//                for (IWord syn : synonyms) {
+//                    if (!syn.getID().equals(word.getID()))
+//                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
+//                }
+//                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
+//
+//                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
+//                w.addDocument(doc);
+//            }
+//
+//            w.close();
+//        }
 
-        for (; iterator.hasNext();) {
-            IIndexWord indexWord = iterator.next();
-            List<IWordID> wordIdds = indexWord.getWordIDs();
-
-            IndexWriterConfig config = new IndexWriterConfig(analyzer);
-            IndexWriter w = new IndexWriter(index, config);
-            for (IWordID wordId : wordIdds) {
-                Document doc = new Document();
-                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
-                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
-
-                IWord word = dict.getWord(wordId);
-                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
-                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
-                
-
-                ISynset synset = word.getSynset();
-                List<IWord> synonyms = synset.getWords();
-                StringBuffer sb = new StringBuffer();
-                for (IWord syn : synonyms) {
-                    if (!syn.getID().equals(word.getID()))
-                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
-                }
-                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
-
-                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
-                w.addDocument(doc);
-            }
-
-            w.close();
-        }
-
-        iterator = dict.getIndexWordIterator(POS.ADVERB);
-        
-        for (; iterator.hasNext();) {
-
-            IIndexWord indexWord = iterator.next();
-            List<IWordID> wordIdds = indexWord.getWordIDs();
-
-            IndexWriterConfig config = new IndexWriterConfig(analyzer);
-            IndexWriter w = new IndexWriter(index, config);
-            for (IWordID wordId : wordIdds) {
-                Document doc = new Document();
-                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
-                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
-
-                IWord word = dict.getWord(wordId);
-                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
-                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
-                w.addDocument(doc);
-
-                ISynset synset = word.getSynset();
-                List<IWord> synonyms = synset.getWords();
-                StringBuffer sb = new StringBuffer();
-                for (IWord syn : synonyms) {
-                    if (!syn.getID().equals(word.getID()))
-                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
-                }
-                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
-
-                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
-            }
-
-            w.close();
-
-        }
-
-        iterator = dict.getIndexWordIterator(POS.ADJECTIVE);
-        for (; iterator.hasNext();) {
-
-            IIndexWord indexWord = iterator.next();
-            List<IWordID> wordIdds = indexWord.getWordIDs();
-
-            IndexWriterConfig config = new IndexWriterConfig(analyzer);
-            IndexWriter w = new IndexWriter(index, config);
-            for (IWordID wordId : wordIdds) {
-                Document doc = new Document();
-                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
-                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
-
-                IWord word = dict.getWord(wordId);
-                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
-                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
-                w.addDocument(doc);
-
-                ISynset synset = word.getSynset();
-                List<IWord> synonyms = synset.getWords();
-                StringBuffer sb = new StringBuffer();
-                for (IWord syn : synonyms) {
-                    if (!syn.getID().equals(word.getID()))
-                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
-                }
-                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
-
-                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
-            }
-
-            w.close();
-
-        }
-
-        iterator = dict.getIndexWordIterator(POS.VERB);
-        for (; iterator.hasNext();) {
-
-            IIndexWord indexWord = iterator.next();
-            List<IWordID> wordIdds = indexWord.getWordIDs();
-
-            IndexWriterConfig config = new IndexWriterConfig(analyzer);
-            IndexWriter w = new IndexWriter(index, config);
-            for (IWordID wordId : wordIdds) {
-                Document doc = new Document();
-                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
-                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
-
-                IWord word = dict.getWord(wordId);
-                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
-                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
-                w.addDocument(doc);
-
-                ISynset synset = word.getSynset();
-                List<IWord> synonyms = synset.getWords();
-                StringBuffer sb = new StringBuffer();
-                for (IWord syn : synonyms) {
-                    if (!syn.getID().equals(word.getID()))
-                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
-                }
-                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
-
-                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
-            }
-
-            w.close();
-
-        }
+//        iterator = dict.getIndexWordIterator(POS.ADVERB);
+//        
+//        for (; iterator.hasNext();) {
+//
+//            IIndexWord indexWord = iterator.next();
+//            List<IWordID> wordIdds = indexWord.getWordIDs();
+//
+//            IndexWriterConfig config = new IndexWriterConfig(analyzer);
+//            IndexWriter w = new IndexWriter(index, config);
+//            for (IWordID wordId : wordIdds) {
+//                Document doc = new Document();
+//                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
+//                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
+//
+//                IWord word = dict.getWord(wordId);
+//                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
+//                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
+//                w.addDocument(doc);
+//
+//                ISynset synset = word.getSynset();
+//                List<IWord> synonyms = synset.getWords();
+//                StringBuffer sb = new StringBuffer();
+//                for (IWord syn : synonyms) {
+//                    if (!syn.getID().equals(word.getID()))
+//                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
+//                }
+//                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
+//
+//                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
+//            }
+//
+//            w.close();
+//
+//        }
+//
+//        iterator = dict.getIndexWordIterator(POS.ADJECTIVE);
+//        for (; iterator.hasNext();) {
+//
+//            IIndexWord indexWord = iterator.next();
+//            List<IWordID> wordIdds = indexWord.getWordIDs();
+//
+//            IndexWriterConfig config = new IndexWriterConfig(analyzer);
+//            IndexWriter w = new IndexWriter(index, config);
+//            for (IWordID wordId : wordIdds) {
+//                Document doc = new Document();
+//                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
+//                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
+//
+//                IWord word = dict.getWord(wordId);
+//                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
+//                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
+//                w.addDocument(doc);
+//
+//                ISynset synset = word.getSynset();
+//                List<IWord> synonyms = synset.getWords();
+//                StringBuffer sb = new StringBuffer();
+//                for (IWord syn : synonyms) {
+//                    if (!syn.getID().equals(word.getID()))
+//                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
+//                }
+//                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
+//
+//                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
+//            }
+//
+//            w.close();
+//
+//        }
+//
+//        iterator = dict.getIndexWordIterator(POS.VERB);
+//        for (; iterator.hasNext();) {
+//
+//            IIndexWord indexWord = iterator.next();
+//            List<IWordID> wordIdds = indexWord.getWordIDs();
+//
+//            IndexWriterConfig config = new IndexWriterConfig(analyzer);
+//            IndexWriter w = new IndexWriter(index, config);
+//            for (IWordID wordId : wordIdds) {
+//                Document doc = new Document();
+//                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
+//                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
+//
+//                IWord word = dict.getWord(wordId);
+//                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
+//                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
+//                w.addDocument(doc);
+//
+//                ISynset synset = word.getSynset();
+//                List<IWord> synonyms = synset.getWords();
+//                StringBuffer sb = new StringBuffer();
+//                for (IWord syn : synonyms) {
+//                    if (!syn.getID().equals(word.getID()))
+//                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
+//                }
+//                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
+//
+//                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
+//            }
+//
+//            w.close();
+//
+//        }
 
         posMap = new HashMap<String, POS>();
         posMap.put(edu.asu.conceptpower.core.POS.NOUN, POS.NOUN);
@@ -402,7 +407,7 @@ public class WordNetManager {
         Query q;
         try {
             word = word.replace(" ", "");
-            q = new QueryParser("word", simpleAnalyzer).parse("word:" + word +" AND pos:" + pPOS.toString());
+            q = new QueryParser("word", analyzer).parse("word:" + word +" AND pos:" + pPOS.toString());
             Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             index = FSDirectory.open(relativePath);
             

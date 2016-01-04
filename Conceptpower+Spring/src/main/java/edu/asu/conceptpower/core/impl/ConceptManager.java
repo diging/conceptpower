@@ -437,13 +437,13 @@ public class ConceptManager implements IConceptManager {
 
         Document doc = new Document();
         doc.add(new TextField("word", entry.getWord().replace(" ", ""), Field.Store.YES));
-        doc.add(new StringField("pos", entry.getPos().toString(), Field.Store.NO));
+        doc.add(new StringField("pos", entry.getPos().toString(), Field.Store.YES));
 
-        doc.add(new StringField("description", entry.getDescription(), Field.Store.NO));
+        doc.add(new StringField("description", entry.getDescription(), Field.Store.YES));
         doc.add(new StringField("id", id, Field.Store.YES));
-        doc.add(new StringField("listName",entry.getConceptList(),Field.Store.NO));
+        doc.add(new StringField("listName",entry.getConceptList(),Field.Store.YES));
 
-        doc.add(new StringField("synonymId", entry.getSynonymIds(), Field.Store.NO));
+        doc.add(new StringField("synonymId", entry.getSynonymIds(), Field.Store.YES));
         doc.add(new StringField("equalTo", entry.getEqualTo(), Field.Store.NO));
         doc.add(new StringField("similar",entry.getSimilarTo(),Field.Store.NO));
         doc.add(new StringField("types", entry.getTypeId(),Field.Store.NO));
