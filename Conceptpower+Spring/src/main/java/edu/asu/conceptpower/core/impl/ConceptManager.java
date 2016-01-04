@@ -1,29 +1,10 @@
 package edu.asu.conceptpower.core.impl;
 
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +16,7 @@ import edu.asu.conceptpower.db4o.IConceptDBManager;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.lucene.ILuceneUtility;
 import edu.asu.conceptpower.wordnet.Constants;
 import edu.asu.conceptpower.wordnet.WordNetManager;
 
@@ -56,11 +38,7 @@ public class ConceptManager implements IConceptManager {
 	private IConceptDBManager client;
 	
 	@Autowired
-    private StandardAnalyzer analyzer;
-	
-	@Autowired
-	private WhitespaceAnalyzer whiteSpaceAnalyzer;
-	
+	private ILuceneUtility luceneUtility;
 	
 	protected final String CONCEPT_PREFIX = "CON";
 
@@ -69,18 +47,10 @@ public class ConceptManager implements IConceptManager {
 	 */
 	@Override
 	public ConceptEntry getConceptEntry(String id) {
-		ConceptEntry entry = client.getEntry(id);
+		ConceptEntry entry = wordnetManager.getConcept(id);
 		if (entry != null) {
-			fillConceptEntry(entry);
 			return entry;
 		}
-
-		entry = wordnetManager.getConcept(id);
-		if (entry != null) {
-			// client.store(entry, DBNames.WORDNET_CACHE);
-			return entry;
-		}
-
 		return null;
 	}
 
@@ -97,34 +67,9 @@ public class ConceptManager implements IConceptManager {
 	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptListEntriesForWord(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ConceptEntry[] getConceptListEntriesForWord(String word, String pos) {
-		ConceptEntry[] entries = client.getEntriesForWord(word, pos);
-
-		List<ConceptEntry> allEntries = new ArrayList<ConceptEntry>();
-		for (ConceptEntry entry : entries) {
-			fillConceptEntry(entry);
-			allEntries.add(entry);
-		}
-
-		entries = wordnetManager.getEntriesForWord(word, pos);
-		if (entries != null) {
-			for (ConceptEntry entry : entries) {
-
-				ConceptEntry foundEntry = getConceptEntry(entry.getId());
-				if (entry.getId().equals(foundEntry.getId()))
-					allEntries.add(entry);
-			}
-		}
-
-		List<ConceptEntry> entriesNotDeleted = new ArrayList<ConceptEntry>();
-		for (ConceptEntry entry : allEntries) {
-			if (!entry.isDeleted())
-				entriesNotDeleted.add(entry);
-		}
-
-		return entriesNotDeleted.toArray(new ConceptEntry[entriesNotDeleted
-				.size()]);
-	}
+    public ConceptEntry[] getConceptListEntriesForWord(String word, String pos) {
+        return wordnetManager.getEntriesForWord(word, pos);
+    }
 
 	/**
 	 * If a concept entry does not wrap a concept from Wordnet then this method
@@ -315,33 +260,12 @@ public class ConceptManager implements IConceptManager {
 	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptListEntries(java.lang.String)
 	 */
 	@Override
-	public List<ConceptEntry> getConceptListEntries(String conceptList) {
-		List<ConceptEntry> entries = client.getAllEntriesFromList(conceptList);
-		Collections.sort(entries, new Comparator<ConceptEntry>() {
-
-			public int compare(ConceptEntry o1, ConceptEntry o2) {
-				if (o1.getWord() == o2.getWord()) {
-					return 0;
-				} else if (o1.getWord() == null) {
-					return -1;
-				} else if (o2.getWord() == null) {
-					return 1;
-				} else {
-					return o1.getWord().compareToIgnoreCase(o2.getWord());
-				}
-			}
-
-		});
-		List<ConceptEntry> notDeletedEntries = new ArrayList<ConceptEntry>();
-		for (ConceptEntry entry : entries) {
-			if (!entry.isDeleted()) {
-				fillConceptEntry(entry);
-				notDeletedEntries.add(entry);
-			}
-		}
-		return notDeletedEntries;
+    public List<ConceptEntry> getConceptListEntries(String conceptList) {
+	    return luceneUtility.queryByListName(conceptList);
+	    
 	}
-
+	
+	
 	/* (non-Javadoc)
 	 * @see edu.asu.conceptpower.core.IConceptManager#addConceptListEntry(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -403,59 +327,8 @@ public class ConceptManager implements IConceptManager {
 	 */
 	@Override
 	public void storeModifiedConcept(ConceptEntry entry) {
-		
-	    IndexWriter writer = null;
-	    IndexWriter writerForAdding = null;
-	    Directory index = null;
-	    try{
-
-            Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + entry.getId());
-            Path relativePath = FileSystems.getDefault().getPath("/Users/mkarthik90/Software/Conceptpower/indexFiles", "index");
-            index = FSDirectory.open(relativePath);
-            IndexWriterConfig configWhiteSpace = new IndexWriterConfig(whiteSpaceAnalyzer);
-            writer = new IndexWriter(index, configWhiteSpace);
-            
-	        Document doc = new Document();
-	        doc.add(new TextField("word", entry.getWord().replace(" ", ""), Field.Store.YES));
-	        doc.add(new StringField("pos", entry.getPos().toString(), Field.Store.YES));
-
-	        doc.add(new StringField("description", entry.getDescription()!=null?entry.getDescription():"", Field.Store.YES));
-	        doc.add(new StringField("id", entry.getId(), Field.Store.YES));
-	        doc.add(new StringField("listName",entry.getConceptList()!=null?entry.getConceptList():"",Field.Store.YES));
-
-	        doc.add(new StringField("synonymId", entry.getSynonymIds()!=null?entry.getSynonymIds():"", Field.Store.YES));
-	        doc.add(new StringField("equalTo", entry.getEqualTo()!=null?entry.getEqualTo():"", Field.Store.YES));
-	        doc.add(new StringField("similar",entry.getSimilarTo()!=null?entry.getSimilarTo():"",Field.Store.YES));
-	        doc.add(new StringField("types", entry.getTypeId()!=null?entry.getTypeId():"",Field.Store.YES));
-	        doc.add(new StringField("creatorId", entry.getCreatorId()!=null?entry.getCreatorId():"", Field.Store.YES));
-	        Calendar cal = Calendar.getInstance();
-	        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-	        doc.add(new StringField("modifiedTime",formatter.format(cal.getTime()),Field.Store.YES));
-	        
-	        writer.deleteDocuments(q);
-	        writer.commit();
-	        writer.close();
-	        IndexWriterConfig config = new IndexWriterConfig(analyzer);
-	        writerForAdding = new IndexWriter(index, config);
-	        writerForAdding.addDocument(doc);
-
-	        writerForAdding.commit();
-            
-             
-	    }
-	    catch(Exception ex){
-	       //TODO
-	    }
-	    finally{
-	        try{
-	        writerForAdding.close();
-	        writer.close();
-	        }
-	        catch(Exception ex){
-	            //TODO
-	        }
-	    }
-	    
+	    luceneUtility.deleteById(entry.getId());
+	    luceneUtility.insertConcept(entry);
 	}
 
 	protected String generateId(String prefix) {
@@ -484,48 +357,6 @@ public class ConceptManager implements IConceptManager {
 
     @Override
     public void addConcept(ConceptEntry entry) {
-        IndexWriter w = null;
-        try{
-        Path relativePath = FileSystems.getDefault().getPath("/Users/mkarthik90/Software/Conceptpower/indexFiles", "index");
-        Directory index = FSDirectory.open(relativePath);
-        
-        IndexWriterConfig config = new IndexWriterConfig(analyzer);
-         w = new IndexWriter(index, config);
-        
-        String id = generateId(CONCEPT_PREFIX);
-        
-
-        Document doc = new Document();
-        doc.add(new TextField("word", entry.getWord().replace(" ", ""), Field.Store.YES));
-        doc.add(new StringField("pos", entry.getPos().toString(), Field.Store.YES));
-
-        doc.add(new StringField("description", entry.getDescription(), Field.Store.YES));
-        doc.add(new StringField("id", id, Field.Store.YES));
-        doc.add(new StringField("listName",entry.getConceptList(),Field.Store.YES));
-
-        doc.add(new StringField("synonymId", entry.getSynonymIds(), Field.Store.YES));
-        doc.add(new StringField("equalTo", entry.getEqualTo(), Field.Store.YES));
-        doc.add(new StringField("similar",entry.getSimilarTo(),Field.Store.YES));
-        doc.add(new StringField("types", entry.getTypeId(),Field.Store.YES));
-        doc.add(new StringField("creatorId", entry.getCreatorId(), Field.Store.YES));
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-        doc.add(new StringField("modifiedTime",formatter.format(cal.getTime()),Field.Store.YES));
-        
-        
-        w.addDocument(doc);
-        }
-        catch(Exception ex){
-            ex.printStackTrace();
-        }
-        finally{
-            
-            try {
-                w.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+        luceneUtility.insertConcept(entry);
     }
 }

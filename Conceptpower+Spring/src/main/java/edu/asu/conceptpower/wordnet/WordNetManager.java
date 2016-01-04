@@ -14,26 +14,13 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.lucene.LuceneUtility;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.item.IIndexWord;
@@ -49,10 +36,7 @@ public class WordNetManager {
     private WordNetConfiguration configuration;
 
     @Autowired
-    private StandardAnalyzer analyzer;
-    
-    @Autowired
-    private WhitespaceAnalyzer  simpleAnalyzer;
+    private LuceneUtility luceneUtility;
 
     private String lucenePath;
     
@@ -77,6 +61,8 @@ public class WordNetManager {
 
         dict = new Dictionary(url);
         dict.open();
+        
+        System.setProperty("lucenePath", lucenePath);
         
         Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
 //        int i = 0;
@@ -229,34 +215,7 @@ public class WordNetManager {
     }
 
     public ConceptEntry getConcept(String id) {
-
-        Query q;
-        ConceptEntry entry = null;
-        try {
-            q = new QueryParser("word", simpleAnalyzer).parse("id:" + id);
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            index = FSDirectory.open(relativePath);
-            
-            int hitsPerPage = 10;
-            List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
-
-            IndexReader reader = DirectoryReader.open(index);
-            IndexSearcher searcher = new IndexSearcher(reader);
-            TopDocs docs = searcher.search(q, hitsPerPage);
-            ScoreDoc[] hits = docs.scoreDocs;
-
-            for (int i = 0; i < hits.length; ++i) {
-                int docId = hits[i].doc;
-                Document d = searcher.doc(docId);
-                entry = getConceptFromDocument(d);
-            }
-
-        } 
-        catch(Exception ex){
-            ex.printStackTrace();
-        }
-
-        return entry;
+        return luceneUtility.queryById(id);
     }
 
     public ConceptEntry[] getSynonyms(String id) {
@@ -314,96 +273,9 @@ public class WordNetManager {
 
     }
 
-    protected ConceptEntry getConceptFromDocument(Document d) {
-        ConceptEntry entry = new ConceptEntry();
-        entry.setId(d.get("id"));
-        entry.setWord(d.get("word"));
-        entry.setPos(d.get("pos"));
-        entry.setConceptList(Constants.WORDNET_DICTIONARY);
-        entry.setDescription(d.get("description"));
-        entry.setWordnetId(d.get("id"));
-        entry.setSynonymIds(d.get("synonymId"));
-        entry.setConceptList(d.get("listName"));
-        entry.setTypeId(d.get("types"));
-        entry.setEqualTo(d.get("equalTo"));
-        entry.setSimilarTo(d.get("similar"));
-        entry.setModified(d.get("creatorId"));
-        entry.setSynonymIds(d.get("synonymId"));
-        entry.setCreatorId(d.get("creatorId"));
-        return entry;
-    }
-
     public ConceptEntry[] getEntriesForWord(String word) {
-        try {
-            if (word == null || word.trim().isEmpty())
-                return new ConceptEntry[0];
-
-            POS pPOS = POS.NOUN;
-
-            List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
-            // get nouns
-
-            Query q = new QueryParser("word", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            index = FSDirectory.open(relativePath);
-            
-            int hitsPerPage = 10;
-            IndexReader reader = DirectoryReader.open(index);
-            IndexSearcher searcher = new IndexSearcher(reader);
-
-            TopDocs docs = searcher.search(q, hitsPerPage);
-            ScoreDoc[] hits = docs.scoreDocs;
-
-            for (int i = 0; i < hits.length; ++i) {
-                int docId = hits[i].doc;
-                Document d = searcher.doc(docId);
-                ConceptEntry entry = getConceptFromDocument(d);
-                concepts.add(entry);
-            }
-
-            IIndexWord indexWord = dict.getIndexWord(word, pPOS);
-
-            // get verbs
-            pPOS = POS.VERB;
-            q = new QueryParser("word", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
-            docs = searcher.search(q, hitsPerPage);
-            hits = docs.scoreDocs;
-            for (int i = 0; i < hits.length; ++i) {
-                int docId = hits[i].doc;
-                Document d = searcher.doc(docId);
-                ConceptEntry entry = getConceptFromDocument(d);
-                concepts.add(entry);
-            }
-
-            // get adverbs
-            pPOS = POS.ADVERB;
-            q = new QueryParser("word", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
-            docs = searcher.search(q, hitsPerPage);
-            hits = docs.scoreDocs;
-            for (int i = 0; i < hits.length; ++i) {
-                int docId = hits[i].doc;
-                Document d = searcher.doc(docId);
-                ConceptEntry entry = getConceptFromDocument(d);
-                concepts.add(entry);
-            }
-
-            // get adjectives
-            pPOS = POS.ADJECTIVE;
-            q = new QueryParser("word", analyzer).parse("word:" + word + " AND pos:" + pPOS.toString());
-            docs = searcher.search(q, hitsPerPage);
-            hits = docs.scoreDocs;
-            for (int i = 0; i < hits.length; ++i) {
-                int docId = hits[i].doc;
-                Document d = searcher.doc(docId);
-                ConceptEntry entry = getConceptFromDocument(d);
-                concepts.add(entry);
-            }
-
-            return concepts.toArray(new ConceptEntry[concepts.size()]);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        return luceneUtility.queryByWordPos(word, null);
+    
     }
 
     public ConceptEntry[] getEntriesForWord(String word, String pos) {
@@ -411,36 +283,8 @@ public class WordNetManager {
         if (pPOS == null)
             return null;
 
-        Query q;
-        try {
-            word = word.replace(" ", "");
-            q = new QueryParser("word", analyzer).parse("word:" + word +" AND pos:" + pPOS.toString());
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            index = FSDirectory.open(relativePath);
-            
-            int hitsPerPage = 10;
-            List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
-
-            IndexReader reader = DirectoryReader.open(index);
-            IndexSearcher searcher = new IndexSearcher(reader);
-            TopDocs docs = searcher.search(q, hitsPerPage);
-            ScoreDoc[] hits = docs.scoreDocs;
-
-            for (int i = 0; i < hits.length; ++i) {
-                int docId = hits[i].doc;
-                Document d = searcher.doc(docId);
-                ConceptEntry entry = getConceptFromDocument(d);
-                concepts.add(entry);
-            }
-
-            return concepts.toArray(new ConceptEntry[concepts.size()]);
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return null;
+        word = word.replace(" ", "");
+        return luceneUtility.queryByWordPos(word, pos.toString());
     }
 
     @PreDestroy

@@ -131,7 +131,8 @@ public class ConceptDeleteController {
 	    IndexWriter writer = null;
 	    try{
 	    Query q = new QueryParser("word", whiteSpaceAnalyzer).parse("id:" + id);
-	    Path relativePath = FileSystems.getDefault().getPath("/Users/mkarthik90/Software/Conceptpower/indexFiles", "index");
+	    String lucenePath = System.getProperty("lucenePath");
+	    Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
 	    index = FSDirectory.open(relativePath);
 	    IndexWriterConfig config = new IndexWriterConfig(whiteSpaceAnalyzer);
 	    writer = new IndexWriter(index, config);
