@@ -9,4 +9,10 @@ public interface ILuceneUtility {
     public void deleteById(String id);
 
     public void insertConcept(ConceptEntry entry);
+    
+    public void deleteWordNetConcepts();
+    
+    public boolean indexLuceneDocuments();
+    
+    public void deleteUserDefinedConcepts();
 }
