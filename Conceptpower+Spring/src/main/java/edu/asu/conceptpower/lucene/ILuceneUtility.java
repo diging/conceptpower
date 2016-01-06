@@ -1,14 +1,10 @@
 package edu.asu.conceptpower.lucene;
 
-import java.util.List;
-
 import edu.asu.conceptpower.core.ConceptEntry;
 
 public interface ILuceneUtility {
 
-    public ConceptEntry queryById(String id);
-
-    public List<ConceptEntry> queryByListName(String listName);
+    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id);
 
     public void deleteById(String id);
 

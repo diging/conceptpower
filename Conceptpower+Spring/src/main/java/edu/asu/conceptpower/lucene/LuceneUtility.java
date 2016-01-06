@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -38,68 +39,6 @@ public class LuceneUtility implements ILuceneUtility {
 
     @Autowired
     private StandardAnalyzer standradAnalyzer;
-
-    public ConceptEntry queryById(String id) {
-        Query q;
-        ConceptEntry entry = null;
-        Directory index = null;
-        String lucenePath = System.getProperty("lucenePath");
-        try {
-            q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + id);
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            index = FSDirectory.open(relativePath);
-
-            int hitsPerPage = 10;
-            IndexReader reader = DirectoryReader.open(index);
-            IndexSearcher searcher = new IndexSearcher(reader);
-            TopDocs docs = searcher.search(q, hitsPerPage);
-            ScoreDoc[] hits = docs.scoreDocs;
-
-            for (int i = 0; i < hits.length; ++i) {
-                int docId = hits[i].doc;
-                Document d = searcher.doc(docId);
-                entry = getConceptFromDocument(d);
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return entry;
-    }
-
-    public List<ConceptEntry> queryByListName(String listName) {
-        IndexReader reader = null;
-        List<ConceptEntry> conceptEntryList = new ArrayList<ConceptEntry>();
-        try {
-            Query q = new QueryParser("listName", whiteSpaceAnalyzer).parse("listName:" + listName);
-            String lucenePath = System.getProperty("lucenePath");
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            Directory index = FSDirectory.open(relativePath);
-            reader = DirectoryReader.open(index);
-            IndexSearcher searcher = new IndexSearcher(reader);
-            TopDocs docs = searcher.search(q, 10);
-            ScoreDoc[] hits = docs.scoreDocs;
-
-            for (int i = 0; i < hits.length; ++i) {
-                int docId = hits[i].doc;
-                Document d = searcher.doc(docId);
-                ConceptEntry entry = getConceptFromDocument(d);
-                conceptEntryList.add(entry);
-            }
-        } catch (Exception ex) {
-            // TOOD
-        } finally {
-            try {
-                reader.close();
-            } catch (Exception ex) {
-
-            }
-        }
-
-        return conceptEntryList;
-
-    }
 
     public void deleteById(String id) {
         IndexWriter writer = null;
@@ -167,16 +106,50 @@ public class LuceneUtility implements ILuceneUtility {
 
     }
 
-    public ConceptEntry[] queryByWordPos(String word, String pos) {
+    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id) {
         IndexReader reader = null;
+        Analyzer analyzer = null;
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
         try {
             Query q = null;
-            if (pos != null) {
-                q = new QueryParser("word", standradAnalyzer).parse("word:" + word + " AND pos:" + pos);
-            } else {
-                q = new QueryParser("word", standradAnalyzer).parse("word:" + word);
+
+            StringBuffer queryString = new StringBuffer();
+            String defaultQuery = null;
+
+            if (word != null) {
+                queryString.append("word:" + word);
+                analyzer = standradAnalyzer;
+                defaultQuery = "word";
             }
+            if (pos != null) {
+                if (queryString.length() != 0)
+                    queryString.append(" AND pos:" + pos);
+                else
+                    queryString.append("pos:" + pos);
+                defaultQuery = "pos";
+            }
+
+            if (listName != null) {
+                if (queryString.length() != 0) {
+                    queryString.append(" AND listName:" + listName);
+                } else {
+                    queryString.append("listName:" + listName);
+                }
+                analyzer = whiteSpaceAnalyzer;
+                defaultQuery = "listName";
+            }
+
+            if (id != null) {
+                if (queryString.length() != 0) {
+                    queryString.append(" AND id:" + id);
+                } else {
+                    queryString.append("id:" + id);
+                }
+                analyzer = whiteSpaceAnalyzer;
+                defaultQuery = "id";
+            }
+
+            q = new QueryParser(defaultQuery, analyzer).parse(queryString.toString());
             String lucenePath = System.getProperty("lucenePath");
             Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             Directory index = FSDirectory.open(relativePath);

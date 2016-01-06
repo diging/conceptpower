@@ -14,7 +14,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -215,7 +214,10 @@ public class WordNetManager {
     }
 
     public ConceptEntry getConcept(String id) {
-        return luceneUtility.queryById(id);
+        ConceptEntry[] conceptEntry = luceneUtility.queryLuceneIndex(null, null, null, id);
+        // Returning only the first occurence because id is a unique value in
+        // the concept. So the array will contain only one record for each id
+        return conceptEntry[0];
     }
 
     public ConceptEntry[] getSynonyms(String id) {
@@ -274,7 +276,7 @@ public class WordNetManager {
     }
 
     public ConceptEntry[] getEntriesForWord(String word) {
-        return luceneUtility.queryByWordPos(word, null);
+        return luceneUtility.queryLuceneIndex(word, null, null, null);
     
     }
 
@@ -284,7 +286,7 @@ public class WordNetManager {
             return null;
 
         word = word.replace(" ", "");
-        return luceneUtility.queryByWordPos(word, pos.toString());
+        return luceneUtility.queryLuceneIndex(word, pos, null, null);
     }
 
     @PreDestroy

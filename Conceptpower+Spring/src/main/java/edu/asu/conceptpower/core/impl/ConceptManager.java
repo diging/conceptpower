@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.core.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -261,7 +262,7 @@ public class ConceptManager implements IConceptManager {
 	 */
 	@Override
     public List<ConceptEntry> getConceptListEntries(String conceptList) {
-	    return luceneUtility.queryByListName(conceptList);
+	    return Arrays.asList(luceneUtility.queryLuceneIndex(null, null, conceptList, null));
 	    
 	}
 	
