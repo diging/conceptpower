@@ -56,7 +56,7 @@ public class ConceptLookup {
 			@PathVariable("pos") String pos) {
 
 		ConceptEntry[] entries = dictManager.getConceptListEntriesForWord(word,
-				pos);
+				pos,null);
 		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
 		for (ConceptEntry entry : entries) {

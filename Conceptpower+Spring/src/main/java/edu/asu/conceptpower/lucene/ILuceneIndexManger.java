@@ -6,5 +6,5 @@ public interface ILuceneIndexManger {
 
     public boolean indexLuceneDocuments();
 
-    public void deleteUserDefinedConcepts();
+    public boolean deleteUserDefinedConcepts();
 }

@@ -19,7 +19,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.lucene.LuceneUtility;
+import edu.asu.conceptpower.lucene.ILuceneUtility;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.item.IIndexWord;
@@ -35,7 +35,7 @@ public class WordNetManager {
     private WordNetConfiguration configuration;
 
     @Autowired
-    private LuceneUtility luceneUtility;
+    private ILuceneUtility luceneUtility;
 
     private String lucenePath;
     
@@ -214,7 +214,7 @@ public class WordNetManager {
     }
 
     public ConceptEntry getConcept(String id) {
-        ConceptEntry[] conceptEntry = luceneUtility.queryLuceneIndex(null, null, null, id);
+        ConceptEntry[] conceptEntry = luceneUtility.queryLuceneIndex(null, null, null, id,null);
         // Returning only the first occurence because id is a unique value in
         // the concept. So the array will contain only one record for each id
         return conceptEntry[0];
@@ -276,17 +276,17 @@ public class WordNetManager {
     }
 
     public ConceptEntry[] getEntriesForWord(String word) {
-        return luceneUtility.queryLuceneIndex(word, null, null, null);
+        return luceneUtility.queryLuceneIndex(word, null, null, null,null);
     
     }
 
-    public ConceptEntry[] getEntriesForWord(String word, String pos) {
+    public ConceptEntry[] getEntriesForWord(String word, String pos,String conceptType) {
         POS pPOS = posMap.get(pos);
         if (pPOS == null)
             return null;
 
         word = word.replace(" ", "");
-        return luceneUtility.queryLuceneIndex(word, pos, null, null);
+        return luceneUtility.queryLuceneIndex(word, pos, null, null,conceptType);
     }
 
     @PreDestroy

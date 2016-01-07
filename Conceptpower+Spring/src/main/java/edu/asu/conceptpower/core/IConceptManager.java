@@ -40,7 +40,7 @@ public interface IConceptManager {
 	 * @return matching concepts
 	 */
 	public abstract ConceptEntry[] getConceptListEntriesForWord(String word,
-			String pos);
+			String pos,String conceptType);
 
 	/**
 	 * Searches in all additional concepts for in the given fields for the given

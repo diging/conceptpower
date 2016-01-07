@@ -4,7 +4,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 
 public interface ILuceneUtility {
 
-    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id);
+    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id,String conceptType);
 
     public void deleteById(String id);
 
@@ -14,5 +14,5 @@ public interface ILuceneUtility {
     
     public boolean indexLuceneDocuments();
     
-    public void deleteUserDefinedConcepts();
+    public boolean deleteUserDefinedConcepts();
 }

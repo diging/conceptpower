@@ -5,17 +5,24 @@
 <form:form
 	action="${pageContext.servletContext.contextPath}/auth/indexLuceneWordNet"
 	method='post' id="indexLucene">
-	<center>${message }</center>
+	<center><b>${message }</b></center>
 	<table style="vertical-align: top">
 		<tr>
 			<td><input type="submit" value="Index WordNet Wrappers"
 				name="submit" class="button" /></td>
-			<td><input type="button" value="Cancel" name="submit"
-				onclick="window.location.replace('${pageContext.servletContext.contextPath}/auth/home')"
-				class="button" /></td>
 		</tr>
 	</table>
 
 </form:form>
 
+<form:form
+	action="${pageContext.servletContext.contextPath}/auth/deleteUserDefinedConcepts"
+	method='post' id="deleteLucene">
+	<table style="vertical-align: top">
+		<tr>
+			<td><input type="submit" value="Delete User Defined Concepts"
+				name="submit" class="button" /></td>
+		</tr>
+	</table>
 
+</form:form>

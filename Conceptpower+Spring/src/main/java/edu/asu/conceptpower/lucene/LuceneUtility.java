@@ -122,7 +122,7 @@ public class LuceneUtility implements ILuceneUtility {
 
     }
 
-    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id) {
+    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id,String conceptType) {
         IndexReader reader = null;
         Analyzer analyzer = null;
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
@@ -165,6 +165,14 @@ public class LuceneUtility implements ILuceneUtility {
                 defaultQuery = "id";
             }
 
+            if(conceptType!=null){
+                if(queryString.length()!=0){
+                    queryString.append(" AND conceptType:" + conceptType);
+                }
+                else{
+                    queryString.append("conceptType:" + conceptType);
+                }
+            }
             q = new QueryParser(defaultQuery, analyzer).parse(queryString.toString());
             String lucenePath = System.getProperty("lucenePath");
             Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
@@ -222,7 +230,7 @@ public class LuceneUtility implements ILuceneUtility {
         IndexWriter deleteWriter = null;
         try {
             Directory index = FSDirectory.open(relativePath);
-            Query q = new QueryParser("conceptType", whiteSpaceAnalyzer).parse("conceptType: WordNetConcept");
+            Query q = new QueryParser("conceptType", whiteSpaceAnalyzer).parse("conceptType: wordnetconcept");
             IndexWriterConfig config = new IndexWriterConfig(whiteSpaceAnalyzer);
             deleteWriter = new IndexWriter(index, config);
             System.out.println(deleteWriter.numDocs());
@@ -313,7 +321,7 @@ public class LuceneUtility implements ILuceneUtility {
                 doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
                 // Adding this new data to delete only wordnet concepts while
                 // adding all wordnet concepts from jwi.
-                doc.add(new StringField("conceptType", "WordNetConcept", Field.Store.YES));
+                doc.add(new StringField("conceptType", "wordnetconcept", Field.Store.YES));
 
                 System.out.println(wordId.getPOS() + " " + wordId.getLemma());
                 writer.addDocument(doc);
@@ -323,7 +331,7 @@ public class LuceneUtility implements ILuceneUtility {
     }
 
     @Override
-    public void deleteUserDefinedConcepts() {
+    public boolean deleteUserDefinedConcepts() {
 
         String lucenePath = System.getProperty("lucenePath");
         Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
@@ -336,8 +344,9 @@ public class LuceneUtility implements ILuceneUtility {
             System.out.println(deleteWriter.numDocs());
             deleteWriter.deleteDocuments(q);
             deleteWriter.commit();
+            return true;
         } catch (Exception ex) {
-
+            return false;
         } finally {
             try {
                 deleteWriter.close();
@@ -345,7 +354,6 @@ public class LuceneUtility implements ILuceneUtility {
 
             }
         }
-
     }
 
 }

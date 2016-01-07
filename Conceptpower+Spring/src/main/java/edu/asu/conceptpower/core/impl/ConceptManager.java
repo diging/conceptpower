@@ -68,8 +68,8 @@ public class ConceptManager implements IConceptManager {
 	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptListEntriesForWord(java.lang.String, java.lang.String)
 	 */
 	@Override
-    public ConceptEntry[] getConceptListEntriesForWord(String word, String pos) {
-        return wordnetManager.getEntriesForWord(word, pos);
+    public ConceptEntry[] getConceptListEntriesForWord(String word, String pos,String conceptType) {
+        return wordnetManager.getEntriesForWord(word, pos,conceptType);
     }
 
 	/**
@@ -262,7 +262,7 @@ public class ConceptManager implements IConceptManager {
 	 */
 	@Override
     public List<ConceptEntry> getConceptListEntries(String conceptList) {
-	    return Arrays.asList(luceneUtility.queryLuceneIndex(null, null, conceptList, null));
+	    return Arrays.asList(luceneUtility.queryLuceneIndex(null, null, conceptList, null,null));
 	    
 	}
 	
@@ -358,6 +358,7 @@ public class ConceptManager implements IConceptManager {
 
     @Override
     public void addConcept(ConceptEntry entry) {
+        entry.setId(generateId(CONCEPT_PREFIX));
         luceneUtility.insertConcept(entry);
     }
 }

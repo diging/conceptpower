@@ -145,7 +145,7 @@ public class ConceptWrapperAddController {
 		if (!concept.trim().isEmpty()) {
 
 			ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(
-					concept, pos);
+					concept, pos,"WordNetConcept");
 			List<ConceptEntryWrapper> foundConcepts = wrapperCreator
 					.createWrappers(found);
 			model.addAttribute("result", foundConcepts);

@@ -18,8 +18,8 @@ public class LuceneIndexManager implements ILuceneIndexManger {
     }
 
     @Override
-    public void deleteUserDefinedConcepts() {
-        luceneUtility.deleteUserDefinedConcepts();
+    public boolean deleteUserDefinedConcepts() {
+        return luceneUtility.deleteUserDefinedConcepts();
 
     }
 }

@@ -37,10 +37,15 @@ public class LuceneIndexController {
         return "/auth/luceneIndex";
     }
     
-    @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST)
+    @RequestMapping(value = "auth/deleteUserDefinedConcepts", method = RequestMethod.POST)
     public String deleteUserDefinedConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
         
-        manager.deleteUserDefinedConcepts();
+        if(manager.deleteUserDefinedConcepts()){
+            model.addAttribute("message","Deletion completed successfully");
+        }
+        else{
+            model.addAttribute("message","Issues in deletion. Please try again later");
+        }
         
         return "/auth/luceneIndex";
     }
