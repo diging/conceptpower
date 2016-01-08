@@ -61,10 +61,10 @@ public class ConceptWrapperAddController {
 	 *         page
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconceptwrapper")
-	public String prepareConceptWrapperAdd(ModelMap model) {
+	public String prepareConceptWrapperAdd(HttpServletRequest req,ModelMap model) {
 
-		if (model.get("errormsg") != null)
-			model.addAttribute("errormsg", "You have to select a concept list.");
+		if (req.getAttribute("errormsg") != null)
+			model.addAttribute("errormsg", req.getAttribute("errormsg"));
 		
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
@@ -81,7 +81,6 @@ public class ConceptWrapperAddController {
 					conceptList.getConceptListName());
 		}
 		model.addAttribute("lists", lists);
-
 		return "/auth/conceptlist/addconceptwrapper";
 	}
 
@@ -101,8 +100,8 @@ public class ConceptWrapperAddController {
 	public String addConcept(HttpServletRequest req, Principal principal, Model model) throws DictionaryDoesNotExistException, DictionaryModifyException {
 
 		if (req.getParameter("lists") == null || req.getParameter("lists").trim().isEmpty()) {
-			model.addAttribute("errormsg", "You have to select a concept list.");
-			return "redirect:/auth/conceptlist/addconceptwrapper";
+		    req.setAttribute("errormsg", "You have to select a concept list.");
+			return "forward:/auth/conceptlist/addconceptwrapper";
 		}
 		String[] wrappers = req.getParameter("wrapperids").split(
 				Constants.CONCEPT_SEPARATOR);

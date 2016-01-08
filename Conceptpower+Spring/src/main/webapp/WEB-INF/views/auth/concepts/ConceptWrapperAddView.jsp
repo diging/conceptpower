@@ -306,7 +306,7 @@
 	in Wordnet.</p>
 
 <c:if test="${not empty errormsg}">
-	<p style="text-color: red;">${errormsg}</p>
+	<font color="red">${errormsg}</font>
 </c:if>
 
 <h2>1. Search for Wordnet concept</h2>
