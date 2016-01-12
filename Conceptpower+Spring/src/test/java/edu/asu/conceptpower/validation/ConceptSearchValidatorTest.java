@@ -17,6 +17,8 @@ public class ConceptSearchValidatorTest {
 
     private ConceptSearchBean testForWord;
     private ConceptSearchBean testForPos;
+    private ConceptSearchBean testForEmptyWordWithPos;
+    private ConceptSearchBean testForWordPos;
 
     @Before
     public void init() {
@@ -27,8 +29,15 @@ public class ConceptSearchValidatorTest {
 
         testForPos = new ConceptSearchBean();
         testForPos.setWord("pony");
+        
+        testForWordPos = new ConceptSearchBean();
+        testForWordPos.setWord("pony");
+        testForWordPos.setPos(POS.NOUN);
+        
+        testForEmptyWordWithPos = new ConceptSearchBean();
+        testForEmptyWordWithPos.setPos(POS.NOUN);
 
-    }
+    }   
 
     @Test
     public void testWord() {
@@ -47,6 +56,22 @@ public class ConceptSearchValidatorTest {
         Assert.assertEquals(1, errors.getFieldErrorCount());
         Assert.assertNull(errors.getFieldError("word"));
         Assert.assertEquals(errors.getFieldError("pos").getCode(), "pos.required");
+    }
+    
+    @Test
+    public void testForEmptyWordWithPos(){
+        Errors errors = new BindException(testForEmptyWordWithPos, "conceptListAddForm");
+        ValidationUtils.invokeValidator(conceptSearchValidator, testForEmptyWordWithPos, errors);
+        Assert.assertEquals(1, errors.getFieldErrorCount());
+        Assert.assertNull(errors.getFieldError("pos"));
+        Assert.assertEquals(errors.getFieldError("word").getCode(), "name.required");
+    }
+    
+    @Test
+    public void testForWordPos(){
+        Errors errors = new BindException(testForWordPos, "conceptListAddForm");
+        ValidationUtils.invokeValidator(conceptSearchValidator, testForWordPos, errors);
+        Assert.assertEquals(0, errors.getFieldErrorCount());
     }
 
 }
