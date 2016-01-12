@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.wordnet.WordNetManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.impl.ConceptEntryWrapperCreator;
@@ -125,31 +126,25 @@ public class ConceptDeleteController {
 	@RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
     public String confirmlDelete(@PathVariable("id") String id,
             @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, ModelMap model) {
-       
-	    
-	    ConceptEntry concept = wordNetManager.getConcept(id);
 	    IndexWriter writer = null;
-	    try{
-	    Query q = new QueryParser("word", whiteSpaceAnalyzer).parse("id:" + id);
-	    String lucenePath = System.getProperty("lucenePath");
-	    Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-	    index = FSDirectory.open(relativePath);
-	    IndexWriterConfig config = new IndexWriterConfig(whiteSpaceAnalyzer);
-	    writer = new IndexWriter(index, config);
-	    writer.deleteDocuments(q);
-	    }
-	    catch(Exception ex){
-	        //TODO
-	    }
-	    finally{
-	        try{
-	            writer.close();
-	        }
-	        catch(Exception ex){
-	            //TODO
-	        }
-	    }
-	    
+        try {
+            ConceptEntry concept = wordNetManager.getConcept(id);
+            Query q = new QueryParser("word", whiteSpaceAnalyzer).parse("id:" + id);
+            String lucenePath = System.getProperty("lucenePath");
+            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
+            index = FSDirectory.open(relativePath);
+            IndexWriterConfig config = new IndexWriterConfig(whiteSpaceAnalyzer);
+            writer = new IndexWriter(index, config);
+            writer.deleteDocuments(q);
+        } catch (LuceneException ex) {
+            // TODO
+        } finally {
+            try {
+                writer.close();
+            } catch (Exception ex) {
+                // TODO
+            }
+        }
 
         List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
 

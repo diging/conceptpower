@@ -1,10 +1,12 @@
 package edu.asu.conceptpower.lucene;
 
+import edu.asu.conceptpower.exceptions.LuceneException;
+
 public interface ILuceneIndexManger {
 
-    public void deleteWordNetLuceneDocuments();
+    public void deleteWordNetConcepts() throws LuceneException;
 
-    public boolean indexLuceneDocuments();
+    public void indexConcepts() throws LuceneException;
 
-    public boolean deleteUserDefinedConcepts();
+    public boolean deleteUserDefinedConcepts() throws LuceneException;
 }

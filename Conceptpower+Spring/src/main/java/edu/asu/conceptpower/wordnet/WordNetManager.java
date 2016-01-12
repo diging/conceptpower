@@ -19,6 +19,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.lucene.ILuceneUtility;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
@@ -213,7 +214,7 @@ public class WordNetManager {
 
     }
 
-    public ConceptEntry getConcept(String id) {
+    public ConceptEntry getConcept(String id) throws LuceneException {
         ConceptEntry[] conceptEntry = luceneUtility.queryLuceneIndex(null, null, null, id,null);
         // Returning only the first occurence because id is a unique value in
         // the concept. So the array will contain only one record for each id
@@ -275,12 +276,12 @@ public class WordNetManager {
 
     }
 
-    public ConceptEntry[] getEntriesForWord(String word) {
+    public ConceptEntry[] getEntriesForWord(String word) throws LuceneException {
         return luceneUtility.queryLuceneIndex(word, null, null, null,null);
     
     }
 
-    public ConceptEntry[] getEntriesForWord(String word, String pos,String conceptType) {
+    public ConceptEntry[] getEntriesForWord(String word, String pos,String conceptType) throws LuceneException {
         POS pPOS = posMap.get(pos);
         if (pPOS == null)
             return null;

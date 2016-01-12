@@ -1,8 +1,6 @@
 package edu.asu.conceptpower.lucene;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -16,6 +14,8 @@ import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -33,15 +33,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.wordnet.Constants;
-import edu.asu.conceptpower.wordnet.WordNetConfiguration;
-import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.item.IIndexWord;
 import edu.mit.jwi.item.ISynset;
 import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
-import edu.mit.jwi.item.POS;
 
 @Component
 public class LuceneUtility implements ILuceneUtility {
@@ -52,10 +50,7 @@ public class LuceneUtility implements ILuceneUtility {
     @Autowired
     private StandardAnalyzer standradAnalyzer;
 
-    @Autowired
-    private WordNetConfiguration configuration;
-
-    public void deleteById(String id) {
+    public void deleteById(String id)throws LuceneException {
         IndexWriter writer = null;
         try {
             Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + id);
@@ -66,18 +61,18 @@ public class LuceneUtility implements ILuceneUtility {
             writer = new IndexWriter(index, configWhiteSpace);
             writer.deleteDocuments(q);
         } catch (Exception ex) {
-
+            throw new LuceneException("Issues in deletion. Please retry");
         } finally {
             try {
                 writer.close();
             } catch (Exception ex) {
-
+                throw new LuceneException("Problems in closing the writer");
             }
         }
 
     }
 
-    public void insertConcept(ConceptEntry entry) {
+    public void insertConcept(ConceptEntry entry) throws LuceneException{
         IndexWriter writer = null;
         try {
             String lucenePath = System.getProperty("lucenePath");
@@ -103,6 +98,8 @@ public class LuceneUtility implements ILuceneUtility {
             doc.add(new StringField("types", entry.getTypeId() != null ? entry.getTypeId() : "", Field.Store.YES));
             doc.add(new StringField("creatorId", entry.getCreatorId() != null ? entry.getCreatorId() : "",
                     Field.Store.YES));
+            doc.add(new StringField("modifiedId", entry.getModified() != null ? entry.getModified() : "",
+                    Field.Store.YES));
             doc.add(new StringField("conceptType", "UserConcept", Field.Store.YES));
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
@@ -111,18 +108,18 @@ public class LuceneUtility implements ILuceneUtility {
             writer.addDocument(doc);
             writer.commit();
         } catch (Exception ex) {
-
+            throw new LuceneException("Cannot insert concept in lucene. Please retry");
         } finally {
             try {
                 writer.close();
             } catch (Exception ex) {
-
+                throw new LuceneException("Problems in closing the writer");
             }
         }
 
     }
 
-    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id,String conceptType) {
+    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id,String conceptType) throws LuceneException{
         IndexReader reader = null;
         Analyzer analyzer = null;
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
@@ -192,12 +189,12 @@ public class LuceneUtility implements ILuceneUtility {
                 concepts.add(entry);
             }
         } catch (Exception ex) {
-
+            throw new LuceneException("Issues in querying lucene index. Please retry");
         } finally {
             try {
                 reader.close();
             } catch (Exception ex) {
-
+                throw new LuceneException("Problems in closing the writer");
             }
         }
         return concepts.toArray(new ConceptEntry[concepts.size()]);
@@ -216,14 +213,14 @@ public class LuceneUtility implements ILuceneUtility {
         entry.setTypeId(d.get("types"));
         entry.setEqualTo(d.get("equalTo"));
         entry.setSimilarTo(d.get("similar"));
-        entry.setModified(d.get("creatorId"));
+        entry.setModified(d.get("modifiedId"));
         entry.setSynonymIds(d.get("synonymId"));
         entry.setCreatorId(d.get("creatorId"));
         return entry;
     }
 
     @Override
-    public void deleteWordNetConcepts() {
+    public void deleteWordNetConcepts() throws LuceneException{
 
         String lucenePath = System.getProperty("lucenePath");
         Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
@@ -233,69 +230,23 @@ public class LuceneUtility implements ILuceneUtility {
             Query q = new QueryParser("conceptType", whiteSpaceAnalyzer).parse("conceptType: wordnetconcept");
             IndexWriterConfig config = new IndexWriterConfig(whiteSpaceAnalyzer);
             deleteWriter = new IndexWriter(index, config);
-            System.out.println(deleteWriter.numDocs());
             deleteWriter.deleteDocuments(q);
             deleteWriter.commit();
         } catch (Exception ex) {
-
+            throw new LuceneException("Issues in deleting wordnet concepts. Please retry");
         } finally {
             try {
                 deleteWriter.close();
             } catch (Exception ex) {
-
+                throw new LuceneException("Problems in closing the writer");
             }
         }
 
     }
-
-    @Override
-    public boolean indexLuceneDocuments() {
-
-        String lucenePath = System.getProperty("lucenePath");
-        IndexWriter writer = null;
-        IndexWriterConfig config = new IndexWriterConfig(standradAnalyzer);
-
-        try {
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            Directory index = FSDirectory.open(relativePath);
-
-            String wnhome = configuration.getWordnetPath();
-            String path = wnhome + File.separator + configuration.getDictFolder();
-
-            URL url = null;
-
-            url = new URL("file", null, path);
-
-            IDictionary dict = new Dictionary(url);
-            dict.open();
-
-            // 2. Adding data into
-            writer = new IndexWriter(index, config);
-            Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
-            createDocuments(iterator, dict, writer);
-
-            iterator = dict.getIndexWordIterator(POS.ADVERB);
-            createDocuments(iterator, dict, writer);
-
-            iterator = dict.getIndexWordIterator(POS.ADJECTIVE);
-            createDocuments(iterator, dict, writer);
-
-            iterator = dict.getIndexWordIterator(POS.VERB);
-            createDocuments(iterator, dict, writer);
-            return true;
-
-        } catch (Exception ex) {
-            return false;
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception ex) {
-                // TODO
-            }
-        }
-    }
-
-    private void createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer)
+    
+    
+    @SuppressWarnings("deprecation")
+    protected void createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer)
             throws IOException {
         for (; iterator.hasNext();) {
             IIndexWord indexWord = iterator.next();
@@ -304,7 +255,7 @@ public class LuceneUtility implements ILuceneUtility {
             for (IWordID wordId : wordIdds) {
 
                 Document doc = new Document();
-                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
+                doc.add(new Field("word", wordId.getLemma(), Store.YES, Index.ANALYZED));
                 doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
 
                 IWord word = dict.getWord(wordId);
@@ -331,7 +282,7 @@ public class LuceneUtility implements ILuceneUtility {
     }
 
     @Override
-    public boolean deleteUserDefinedConcepts() {
+    public boolean deleteUserDefinedConcepts() throws LuceneException{
 
         String lucenePath = System.getProperty("lucenePath");
         Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
@@ -346,12 +297,12 @@ public class LuceneUtility implements ILuceneUtility {
             deleteWriter.commit();
             return true;
         } catch (Exception ex) {
-            return false;
+            throw new LuceneException("Issues in deleting concepts. Please retry");
         } finally {
             try {
                 deleteWriter.close();
             } catch (Exception ex) {
-
+                throw new LuceneException("Problems in closing the writer");
             }
         }
     }
