@@ -14,7 +14,7 @@
 
 		$("#editButton").prop("disabled", "disabled");
 
-		$("#typeName").on("keypress", function() {
+		$("#typeName").on("keyup", function() {
 			if ($(this).val() != "") {
 				$("#editButton").prop("disabled", false);
 			} else {
@@ -22,7 +22,7 @@
 			}
 		});
 
-		$("#typeDescription").on("keypress", function() {
+		$("#typeDescription").on("keyup", function() {
 			if ($(this).val() != "") {
 				$("#editButton").prop("disabled", false);
 			} else {
@@ -30,7 +30,7 @@
 			}
 		});
 
-		$("#matches").on("keypress", function() {
+		$("#matches").on("keyup", function() {
 			if ($(this).val() != "") {
 				$("#editButton").prop("disabled", false);
 			} else {
@@ -38,7 +38,7 @@
 			}
 		});
 
-		$("#superType").on("change", function() {
+		$("#superType").on("keyup", function() {
 				$("#editButton").prop("disabled", false);
 		});
 	});
