@@ -22,6 +22,7 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.util.URIHelper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
@@ -73,7 +74,8 @@ public class ConceptListController {
 	@RequestMapping(value = "auth/{listid}/concepts", method = RequestMethod.GET)
 	public String getConceptsOfConceptList(@PathVariable("listid") String list,
 			ModelMap model) {
-
+	    
+	    try{
 		List<ConceptEntry> founds = conceptManager.getConceptListEntries(list);
 
 		List<ConceptEntryWrapper> foundConcepts = wrapperCreator
@@ -82,6 +84,10 @@ public class ConceptListController {
 						: new ConceptEntry[0]);
 
 		model.addAttribute("result", foundConcepts);
+	    }
+        catch(LuceneException ex){
+            model.addAttribute("luceneError", ex.getMessage());
+        }
 		return "/auth/conceptlist/concepts";
 	}
 
@@ -95,8 +101,12 @@ public class ConceptListController {
 	@RequestMapping(method = RequestMethod.GET, value = "conceptDetail", produces = "application/json")
 	public @ResponseBody ResponseEntity<String> getConceptDetails(
 			@RequestParam("conceptid") String conceptid) {
-		ConceptEntryWrapper conceptEntry = new ConceptEntryWrapper(
-				conceptManager.getConceptEntry(conceptid));
+        ConceptEntryWrapper conceptEntry = null;
+        try {
+            conceptEntry = new ConceptEntryWrapper(conceptManager.getConceptEntry(conceptid));
+        } catch (LuceneException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 		Map<String, String> details = new HashMap<String, String>();
 
 		details.put("name", conceptEntry.getEntry().getWord());

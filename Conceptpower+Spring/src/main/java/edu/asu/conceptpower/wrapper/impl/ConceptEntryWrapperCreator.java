@@ -3,7 +3,6 @@ package edu.asu.conceptpower.wrapper.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +10,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.core.IConceptTypeManger;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.util.IURIHelper;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -45,7 +45,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 	 * @return
 	 */
 	@Override
-	public List<ConceptEntryWrapper> createWrappers(ConceptEntry[] entries) {
+	public List<ConceptEntryWrapper> createWrappers(ConceptEntry[] entries)throws LuceneException {
 		List<ConceptEntryWrapper> foundConcepts = new ArrayList<ConceptEntryWrapper>();
 
 		if (entries == null)

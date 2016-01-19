@@ -31,6 +31,7 @@ public class ConceptEditBean {
     private String conceptId;
     private List conceptEntryList;
     private boolean fromHomeScreen;
+    private String luceneError;
 
     public String getConcept() {
         return concept;
@@ -186,5 +187,13 @@ public class ConceptEditBean {
 
     public void setPosMap(Map<String, String> posMap) {
         this.posMap = posMap;
+    }
+
+    public String getLuceneError() {
+        return luceneError;
+    }
+
+    public void setLuceneError(String luceneError) {
+        this.luceneError = luceneError;
     }
 }

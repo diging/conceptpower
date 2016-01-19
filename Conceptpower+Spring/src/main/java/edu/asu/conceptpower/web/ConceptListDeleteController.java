@@ -13,6 +13,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.users.IUserManager;
 
 @Controller
@@ -45,8 +46,14 @@ public class ConceptListDeleteController {
 
 		// condition to check enable whether to delete the conceptlist
 		boolean enableDelete = true;
-		List<ConceptEntry> conceptEntries = conceptManager
+		List<ConceptEntry> conceptEntries = null;
+		try{
+		    conceptEntries = conceptManager
 				.getConceptListEntries(name);
+		}
+		catch(LuceneException ex){
+		    model.addAttribute("luceneError",ex.getMessage());
+		}
 
 		if (conceptEntries.size() > 0)
 			enableDelete = false;

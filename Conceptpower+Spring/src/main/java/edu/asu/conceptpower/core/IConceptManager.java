@@ -6,6 +6,7 @@ import java.util.Map;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.exceptions.LuceneException;
 
 public interface IConceptManager {
 
@@ -17,7 +18,7 @@ public interface IConceptManager {
 	 *            of entry
 	 * @return Entry for ID or null.
 	 */
-	public abstract ConceptEntry getConceptEntry(String id);
+	public abstract ConceptEntry getConceptEntry(String id)throws LuceneException;
 
 	/**
 	 * Get an entry from WordNet given its WordNet ID.
@@ -26,7 +27,7 @@ public interface IConceptManager {
 	 *            Id of concept in WordNet.
 	 * @return concept for ID or null
 	 */
-	public abstract ConceptEntry getWordnetConceptEntry(String wordnetId);
+	public abstract ConceptEntry getWordnetConceptEntry(String wordnetId)throws LuceneException;
 
 	/**
 	 * Get all entries for a word and its POS.
@@ -40,7 +41,7 @@ public interface IConceptManager {
 	 * @return matching concepts
 	 */
 	public abstract ConceptEntry[] getConceptListEntriesForWord(String word,
-			String pos,String conceptType);
+			String pos,String conceptType)throws LuceneException;
 
 	/**
 	 * Searches in all additional concepts for in the given fields for the given
@@ -51,7 +52,7 @@ public interface IConceptManager {
 	 * @return matching concepts
 	 */
 	public abstract ConceptEntry[] searchForConceptsConnectedByOr(
-			Map<String, String> fieldMap);
+			Map<String, String> fieldMap)throws LuceneException;
 
 	/**
 	 * Searches in all additional concepts for in the given fields for the given
@@ -62,7 +63,7 @@ public interface IConceptManager {
 	 * @return matching concepts
 	 */
 	public abstract ConceptEntry[] searchForConceptsConnectedByAnd(
-			Map<String, String> fieldMap);
+			Map<String, String> fieldMap)throws LuceneException;
 
 	/**
 	 * Given a concept id this method returns an array of concepts that are
@@ -74,7 +75,7 @@ public interface IConceptManager {
 	 *         with the given id. This method will never return null only filled
 	 *         or empty arrays.
 	 */
-	public abstract ConceptEntry[] getSynonymsForConcept(String id);
+	public abstract ConceptEntry[] getSynonymsForConcept(String id)throws LuceneException;
 
 	/**
 	 * This method returns an array of concept entries that have words that
@@ -87,9 +88,9 @@ public interface IConceptManager {
 	 * @return An array list with matching concepts. This method never returns
 	 *         null only empty or filled arrays.
 	 */
-	public abstract ConceptEntry[] getConceptListEntriesForWord(String word);
+	public abstract ConceptEntry[] getConceptListEntriesForWord(String word)throws LuceneException;
 
-	public abstract List<ConceptEntry> getConceptListEntries(String conceptList);
+	public abstract List<ConceptEntry> getConceptListEntries(String conceptList)throws LuceneException;
 
 	public abstract void addConceptListEntry(String word, String pos,
 			String description, String conceptListName, String typeId,
@@ -111,10 +112,10 @@ public interface IConceptManager {
 	public abstract String addConceptListEntry(ConceptEntry entry)
 			throws DictionaryDoesNotExistException, DictionaryModifyException;
 
-	public abstract void storeModifiedConcept(ConceptEntry entry);
+	public abstract void storeModifiedConcept(ConceptEntry entry)throws LuceneException;
 	
-	public abstract void deleteConcept(String id);
+	public abstract void deleteConcept(String id) throws LuceneException;
 	
-	public abstract void addConcept(ConceptEntry entry);
+	public abstract void addConcept(ConceptEntry entry)throws LuceneException;
 
 }

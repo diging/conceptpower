@@ -17,6 +17,7 @@ import edu.asu.conceptpower.db4o.IConceptDBManager;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.lucene.ILuceneUtility;
 import edu.asu.conceptpower.wordnet.Constants;
 import edu.asu.conceptpower.wordnet.WordNetManager;
@@ -47,7 +48,7 @@ public class ConceptManager implements IConceptManager {
 	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptEntry(java.lang.String)
 	 */
 	@Override
-	public ConceptEntry getConceptEntry(String id) {
+	public ConceptEntry getConceptEntry(String id) throws LuceneException{
 		ConceptEntry entry = wordnetManager.getConcept(id);
 		if (entry != null) {
 			return entry;
@@ -59,7 +60,7 @@ public class ConceptManager implements IConceptManager {
 	 * @see edu.asu.conceptpower.core.IConceptManager#getWordnetConceptEntry(java.lang.String)
 	 */
 	@Override
-	public ConceptEntry getWordnetConceptEntry(String wordnetId) {
+	public ConceptEntry getWordnetConceptEntry(String wordnetId) throws LuceneException{
 		ConceptEntry entry = wordnetManager.getConcept(wordnetId);
 		return entry;
 	}
@@ -68,7 +69,7 @@ public class ConceptManager implements IConceptManager {
 	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptListEntriesForWord(java.lang.String, java.lang.String)
 	 */
 	@Override
-    public ConceptEntry[] getConceptListEntriesForWord(String word, String pos,String conceptType) {
+    public ConceptEntry[] getConceptListEntriesForWord(String word, String pos,String conceptType) throws LuceneException{
         return wordnetManager.getEntriesForWord(word, pos,conceptType);
     }
 
@@ -83,7 +84,7 @@ public class ConceptManager implements IConceptManager {
 	 *            The concept entry that should be filled with the synonym ids
 	 *            of wrapped wordnet concepts.
 	 */
-	protected void fillConceptEntry(ConceptEntry entry) {
+	protected void fillConceptEntry(ConceptEntry entry) throws LuceneException{
 		if (entry.getId() != null && entry.getWordnetId() != null && !entry.getId().equals(entry.getWordnetId())) {
 			// generate the synonym ids
 			StringBuffer sb = new StringBuffer();
@@ -126,7 +127,7 @@ public class ConceptManager implements IConceptManager {
 	 */
 	@Override
 	public ConceptEntry[] searchForConceptsConnectedByOr(
-			Map<String, String> fieldMap) {
+			Map<String, String> fieldMap) throws LuceneException{
 
 		List<ConceptEntry> results = new ArrayList<ConceptEntry>();
 		List<String> ids = new ArrayList<String>();
@@ -156,7 +157,7 @@ public class ConceptManager implements IConceptManager {
 	 */
 	@Override
 	public ConceptEntry[] searchForConceptsConnectedByAnd(
-			Map<String, String> fieldMap) {
+			Map<String, String> fieldMap)throws LuceneException {
 
 		List<ConceptEntry> results = null;
 		List<String> ids = new ArrayList<String>();
@@ -196,7 +197,7 @@ public class ConceptManager implements IConceptManager {
 	 * @see edu.asu.conceptpower.core.IConceptManager#getSynonymsForConcept(java.lang.String)
 	 */
 	@Override
-	public ConceptEntry[] getSynonymsForConcept(String id) {
+	public ConceptEntry[] getSynonymsForConcept(String id) throws LuceneException{
 
 		ConceptEntry concept = getConceptEntry(id);
 		List<ConceptEntry> allEntries = new ArrayList<ConceptEntry>();
@@ -237,7 +238,7 @@ public class ConceptManager implements IConceptManager {
 	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptListEntriesForWord(java.lang.String)
 	 */
 	@Override
-	public ConceptEntry[] getConceptListEntriesForWord(String word) {
+	public ConceptEntry[] getConceptListEntriesForWord(String word) throws LuceneException{
 		ConceptEntry[] entries = client.getEntriesForWord(word);
 
 		List<ConceptEntry> allEntries = new ArrayList<ConceptEntry>();
@@ -261,7 +262,7 @@ public class ConceptManager implements IConceptManager {
 	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptListEntries(java.lang.String)
 	 */
 	@Override
-    public List<ConceptEntry> getConceptListEntries(String conceptList) {
+    public List<ConceptEntry> getConceptListEntries(String conceptList) throws LuceneException{
 	    return Arrays.asList(luceneUtility.queryLuceneIndex(null, null, conceptList, null,null));
 	    
 	}
@@ -327,7 +328,7 @@ public class ConceptManager implements IConceptManager {
 	 * @see edu.asu.conceptpower.core.IConceptManager#storeModifiedConcept(edu.asu.conceptpower.core.ConceptEntry)
 	 */
 	@Override
-	public void storeModifiedConcept(ConceptEntry entry) {
+	public void storeModifiedConcept(ConceptEntry entry)throws LuceneException {
 	    luceneUtility.deleteById(entry.getId());
 	    luceneUtility.insertConcept(entry);
 	}
@@ -350,14 +351,14 @@ public class ConceptManager implements IConceptManager {
 	}
 
     @Override
-    public void deleteConcept(String id) {
+    public void deleteConcept(String id) throws LuceneException {
         ConceptEntry concept = getConceptEntry(id);
         concept.setDeleted(true);
         storeModifiedConcept(concept);
     }
 
     @Override
-    public void addConcept(ConceptEntry entry) {
+    public void addConcept(ConceptEntry entry) throws LuceneException {
         entry.setId(generateId(CONCEPT_PREFIX));
         luceneUtility.insertConcept(entry);
     }

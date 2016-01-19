@@ -16,6 +16,7 @@ public class ConceptSearchBean {
     private String pos;
     private Map<String, String> posMap;
     private List<ConceptEntryWrapper> foundConcepts;
+    private String luceneError;
 
     public String getWord() {
         return word;
@@ -53,6 +54,14 @@ public class ConceptSearchBean {
 
     public void setPosMap(Map<String, String> posMap) {
         this.posMap = posMap;
+    }
+
+    public String getLuceneError() {
+        return luceneError;
+    }
+
+    public void setLuceneError(String luceneError) {
+        this.luceneError = luceneError;
     }
 
 }

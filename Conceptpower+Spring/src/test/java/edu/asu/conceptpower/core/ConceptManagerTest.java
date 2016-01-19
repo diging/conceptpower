@@ -13,6 +13,7 @@ import edu.asu.conceptpower.core.impl.ConceptManager;
 import edu.asu.conceptpower.db4o.IConceptDBManager;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.wordnet.Constants;
 import edu.asu.conceptpower.wordnet.WordNetManager;
 
@@ -35,7 +36,7 @@ public class ConceptManagerTest {
 	private ConceptList list1;
 	
 	@Before
-	public void init() {
+	public void init() throws LuceneException {
 		wordNetManager = Mockito.mock(WordNetManager.class);
 		dbManager = Mockito.mock(IConceptDBManager.class);
 		MockitoAnnotations.initMocks(this);
@@ -85,7 +86,7 @@ public class ConceptManagerTest {
 	}
 	
 	@Test
-	public void testGetConceptEntryForAddedConcept() {
+	public void testGetConceptEntryForAddedConcept() throws LuceneException{
 		ConceptEntry entry = managerToTest.getConceptEntry("id1");
 		Assert.assertEquals(addedConcept, entry);
 		
@@ -93,13 +94,13 @@ public class ConceptManagerTest {
 	}
 	
 	@Test 
-	public void testGetConceptEntryForWordnetConcept() {
+	public void testGetConceptEntryForWordnetConcept() throws LuceneException {
 		ConceptEntry entry = managerToTest.getConceptEntry("WID-2");
 		Assert.assertEquals(wordnetConcept2, entry);
 	}
 	
 	@Test
-	public void testGetConceptEntryNoExisting() {
+	public void testGetConceptEntryNoExisting() throws LuceneException{
 		ConceptEntry entry = managerToTest.getConceptEntry("id-non");
 		Assert.assertNull(entry);
 	}

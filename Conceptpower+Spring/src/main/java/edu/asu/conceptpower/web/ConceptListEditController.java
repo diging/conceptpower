@@ -21,6 +21,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.validation.ConceptListAddValidator;
 
 /**
@@ -90,16 +91,21 @@ public class ConceptListEditController {
 
         conceptListManager.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
 
-        // modify the name for all the existing concepts under this concept list
-        List<ConceptEntry> entries = conceptManager.getConceptListEntries(conceptListAddForm.getOldListName());
-        Iterator<ConceptEntry> entriesIterator = entries.iterator();
+        try {
+            // modify the name for all the existing concepts under this concept
+            // list
+            List<ConceptEntry> entries = conceptManager.getConceptListEntries(conceptListAddForm.getOldListName());
+            Iterator<ConceptEntry> entriesIterator = entries.iterator();
 
-        while (entriesIterator.hasNext()) {
-            ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
-            conceptEntry.setConceptList(list.getConceptListName());
-            conceptManager.storeModifiedConcept(conceptEntry);
+            while (entriesIterator.hasNext()) {
+                ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
+                conceptEntry.setConceptList(list.getConceptListName());
+                conceptManager.storeModifiedConcept(conceptEntry);
+            }
+        } catch (LuceneException ex) {
+            model.addAttribute("luceneError", ex.getMessage());
+            return "/auth/conceptlist/editlist";
         }
-
         return "redirect:/auth/conceptlist";
     }
 

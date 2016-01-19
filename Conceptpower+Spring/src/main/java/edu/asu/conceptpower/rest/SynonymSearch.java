@@ -19,6 +19,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.xml.XMLConceptMessage;
 import edu.asu.conceptpower.xml.XMLMessageFactory;
 
@@ -71,7 +72,12 @@ public class SynonymSearch {
 		}
 
 		
-		ConceptEntry[] synonyms = dictManager.getSynonymsForConcept(wordnetId);
+        ConceptEntry[] synonyms = null;
+        try {
+            dictManager.getSynonymsForConcept(wordnetId);
+        } catch (LuceneException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 		List<String> xmlEntries = new ArrayList<String>();
 		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 

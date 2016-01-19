@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,8 +33,7 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.core.IConceptTypeManger;
-import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
-import edu.asu.conceptpower.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.profile.impl.ServiceBackBean;
 import edu.asu.conceptpower.profile.impl.ServiceRegistry;
 import edu.asu.conceptpower.web.backing.SearchResultBackBeanForm;
@@ -115,7 +115,7 @@ public class ConceptAddController {
 	 * @return returns string which redirects to concept list page
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
-    public String addConcept(HttpServletRequest req, Principal principal) {
+    public String addConcept(HttpServletRequest req, Principal principal,ModelMap model) {
 
         ConceptEntry conceptEntry = new ConceptEntry();
         conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
@@ -127,8 +127,12 @@ public class ConceptAddController {
         conceptEntry.setSimilarTo(req.getParameter("similar"));
         conceptEntry.setTypeId(req.getParameter("types"));
         conceptEntry.setCreatorId(principal.getName());
-
-        conceptManager.addConcept(conceptEntry);
+        
+        try {
+            conceptManager.addConcept(conceptEntry);
+        } catch (LuceneException ex) {
+            model.addAttribute("luceneError", ex.getMessage());
+        }
 
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
     }
@@ -143,7 +147,12 @@ public class ConceptAddController {
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")
     public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname,
             @RequestParam("addedsynonym") String addedSynonnym) {
-        ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        ConceptEntry[] entries = null;
+        try {
+            entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        } catch (LuceneException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         List<String> addedSynonymList = Arrays.asList(addedSynonnym.replaceAll("\\s", "").split(","));
         // Removing existing synonym from the entries.
         int i = 0;
@@ -184,8 +193,12 @@ public class ConceptAddController {
 			@RequestParam("conceptname") String conceptname) {
 		if (conceptname.isEmpty())
 			return null;
-		ConceptEntry[] entries = conceptManager
-				.getConceptListEntriesForWord(conceptname.trim());
+		ConceptEntry[] entries = null;
+        try {
+            entries = conceptManager.getConceptListEntriesForWord(conceptname.trim());
+        } catch (LuceneException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 		
 		ObjectMapper mapper=new ObjectMapper();
 		ObjectWriter writer=mapper.writer();

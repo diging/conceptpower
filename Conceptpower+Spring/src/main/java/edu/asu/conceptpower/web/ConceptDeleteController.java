@@ -16,6 +16,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,31 +64,34 @@ public class ConceptDeleteController {
 	 * @return String value to redirect user to concept delete page
 	 */
 	@RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
-	public String prepareDeleteConcept(@PathVariable("conceptid") String conceptid, ModelMap model,@RequestParam(value = "fromHomeScreenDelete",required=false)String fromHomeScreenDelete) {
-		ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-		model.addAttribute("word", concept.getWord());
-		model.addAttribute("description", concept.getDescription());
-		model.addAttribute("conceptId", concept.getId());
-		model.addAttribute("wordnetId", concept.getWordnetId());
-		model.addAttribute("pos", concept.getPos());
-		model.addAttribute("conceptList", concept.getConceptList());
-		model.addAttribute("type", concept.getTypeId());
-		model.addAttribute("equal", concept.getEqualTo());
-		model.addAttribute("similar", concept.getSimilarTo());
-		model.addAttribute("user", concept.getModified());
-		model.addAttribute("modified", concept.getModified());
-		model.addAttribute("synonyms", concept.getSynonymIds());
-	    
-	    //conceptManager.deleteConcept(conceptid);
-	    
-		if(fromHomeScreenDelete!=null){
-		model.addAttribute("fromHomeScreenDelete",fromHomeScreenDelete);
-		}
-		else{
-		    model.addAttribute("fromHomeScreenDelete",false);
-		}
-		return "/auth/conceptlist/deleteconcept";
-	}
+    public String prepareDeleteConcept(@PathVariable("conceptid") String conceptid, ModelMap model,
+            @RequestParam(value = "fromHomeScreenDelete", required = false) String fromHomeScreenDelete) {
+        try {
+            ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
+            model.addAttribute("word", concept.getWord());
+            model.addAttribute("description", concept.getDescription());
+            model.addAttribute("conceptId", concept.getId());
+            model.addAttribute("wordnetId", concept.getWordnetId());
+            model.addAttribute("pos", concept.getPos());
+            model.addAttribute("conceptList", concept.getConceptList());
+            model.addAttribute("type", concept.getTypeId());
+            model.addAttribute("equal", concept.getEqualTo());
+            model.addAttribute("similar", concept.getSimilarTo());
+            model.addAttribute("user", concept.getModified());
+            model.addAttribute("modified", concept.getModified());
+            model.addAttribute("synonyms", concept.getSynonymIds());
+        } catch (LuceneException ex) {
+            model.addAttribute("luceneError", ex.getMessage());
+        }
+        // conceptManager.deleteConcept(conceptid);
+
+        if (fromHomeScreenDelete != null) {
+            model.addAttribute("fromHomeScreenDelete", fromHomeScreenDelete);
+        } else {
+            model.addAttribute("fromHomeScreenDelete", false);
+        }
+        return "/auth/conceptlist/deleteconcept";
+    }
 
 	/**
 	 * This method returns user to a particular concept list page after the user
@@ -99,20 +103,21 @@ public class ConceptDeleteController {
 	 *            A generic model holder for Servlet
 	 * @return String value to redirect user to a particular concept list
 	 */
-	@RequestMapping(value = "auth/concepts/canceldelete/{conceptList}", method = RequestMethod.GET)
-	public String cancelDelete(@PathVariable("conceptList") String conceptList,
-			ModelMap model) {
-		List<ConceptEntry> founds = conceptManager
-				.getConceptListEntries(conceptList);
+    @RequestMapping(value = "auth/concepts/canceldelete/{conceptList}", method = RequestMethod.GET)
+    public String cancelDelete(@PathVariable("conceptList") String conceptList, ModelMap model) {
+        List<ConceptEntryWrapper> foundConcepts = null;
+        try {
+            List<ConceptEntry> founds = conceptManager.getConceptListEntries(conceptList);
+            foundConcepts = wrapperCreator.createWrappers(
+                    founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
 
-		List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-				.createWrappers(founds != null ? founds
-						.toArray(new ConceptEntry[founds.size()])
-						: new ConceptEntry[0]);
+        } catch (LuceneException ex) {
+            model.addAttribute("luceneError", ex.getMessage());
+        }
 
-		model.addAttribute("result", foundConcepts);
-		return "/auth/conceptlist/concepts";
-	}
+        model.addAttribute("result", foundConcepts);
+        return "/auth/conceptlist/concepts";
+    }
 
 	/**
 	 * This method deletes a concept
@@ -125,32 +130,19 @@ public class ConceptDeleteController {
 	 */
 	@RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
     public String confirmlDelete(@PathVariable("id") String id,
-            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, ModelMap model) {
-	    IndexWriter writer = null;
-        try {
+            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, ModelMap model,BindingResult result) {
+	    List<ConceptEntryWrapper> foundConcepts = null;
+	    try {
             ConceptEntry concept = wordNetManager.getConcept(id);
-            Query q = new QueryParser("word", whiteSpaceAnalyzer).parse("id:" + id);
-            String lucenePath = System.getProperty("lucenePath");
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            index = FSDirectory.open(relativePath);
-            IndexWriterConfig config = new IndexWriterConfig(whiteSpaceAnalyzer);
-            writer = new IndexWriter(index, config);
-            writer.deleteDocuments(q);
+            conceptManager.deleteConcept(id);
+            List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
+
+            foundConcepts = wrapperCreator.createWrappers(
+                    founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
+
         } catch (LuceneException ex) {
-            // TODO
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception ex) {
-                // TODO
-            }
+            model.addAttribute("luceneError",ex.getMessage());
         }
-
-        List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
-
-        List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-                .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
-
         model.addAttribute("result", foundConcepts);
         if (fromHomeScreenDelete.equalsIgnoreCase("true")) {
             return "redirect:/login";
@@ -159,8 +151,13 @@ public class ConceptDeleteController {
     }
 	
     @RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
-    public String deleteConcept(@PathVariable("id") String id, ModelMap model,@ModelAttribute("conceptSearchBean")ConceptSearchBean conceptSearchBean) {
+    public String deleteConcept(@PathVariable("id") String id, ModelMap model,@ModelAttribute("conceptSearchBean")ConceptSearchBean conceptSearchBean,BindingResult result) {
+        try{
         conceptManager.deleteConcept(id);
+        }
+        catch(LuceneException ex){
+            result.reject("luceneError", ex.getMessage());
+        }
         return "welcome";
     }
 	

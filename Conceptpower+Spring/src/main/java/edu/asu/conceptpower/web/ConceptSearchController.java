@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.validation.ConceptSearchValidator;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
@@ -62,11 +63,15 @@ public class ConceptSearchController {
         if (results.hasErrors()) {
             return "conceptsearch";
         }
-
-        ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
-                conceptSearchBean.getPos().toString().toLowerCase().trim(),null);
-        List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
-        conceptSearchBean.setFoundConcepts(foundConcepts);
+        List<ConceptEntryWrapper> foundConcepts = null;
+        try {
+            ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
+                    conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
+            foundConcepts = wrapperCreator.createWrappers(found);
+            conceptSearchBean.setFoundConcepts(foundConcepts);
+        } catch (LuceneException ex) {
+            results.rejectValue("luceneError", ex.getMessage());
+        }
         if (CollectionUtils.isEmpty(foundConcepts)) {
             results.rejectValue("foundConcepts", "no.searchResults");
         }

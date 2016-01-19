@@ -18,6 +18,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.xml.XMLConceptMessage;
 import edu.asu.conceptpower.xml.XMLMessageFactory;
 
@@ -53,27 +54,29 @@ public class ConceptLookup {
 	 */
 	@RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/xml")
 	public @ResponseBody ResponseEntity<String> getWordNetEntry(@PathVariable("word") String word,
-			@PathVariable("pos") String pos) {
+            @PathVariable("pos") String pos) {
+        ConceptEntry[] entries = null;
+        try {
+            entries = dictManager.getConceptListEntriesForWord(word, pos, null);
+        } catch (LuceneException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
-		ConceptEntry[] entries = dictManager.getConceptListEntriesForWord(word,
-				pos,null);
-		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
+        for (ConceptEntry entry : entries) {
+            ConceptType type = null;
+            if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
+                type = typeManager.getType(entry.getTypeId());
+            }
+            entryMap.put(entry, type);
+        }
 
-		for (ConceptEntry entry : entries) {
-			ConceptType type = null;
-			if (typeManager != null && entry.getTypeId() != null
-					&& !entry.getTypeId().trim().isEmpty()) {
-				type = typeManager.getType(entry.getTypeId());
-			}
-			entryMap.put(entry, type);
-		}
+        XMLConceptMessage returnMsg = messageFactory.createXMLConceptMessage();
+        List<String> xmlEntries = new ArrayList<String>();
+        if (entries != null) {
+            xmlEntries = returnMsg.appendEntries(entryMap);
+        }
 
-		XMLConceptMessage returnMsg = messageFactory.createXMLConceptMessage();
-		List<String> xmlEntries = new ArrayList<String>();
-		if (entries != null) {
-			xmlEntries = returnMsg.appendEntries(entryMap);
-		}
-
-		return new ResponseEntity<String>(returnMsg.getXML(xmlEntries), HttpStatus.OK);
-	}
+        return new ResponseEntity<String>(returnMsg.getXML(xmlEntries), HttpStatus.OK);
+    }
 }

@@ -309,6 +309,10 @@
 	<font color="red">${errormsg}</font>
 </c:if>
 
+<c:if test="${not empty luceneError}">
+	<font color="red">${luceneError}</font>
+</c:if>
+
 <h2>1. Search for Wordnet concept</h2>
 
 <form

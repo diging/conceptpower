@@ -28,6 +28,7 @@ import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
@@ -105,7 +106,7 @@ public class ConceptWrapperAddController {
 		}
 		String[] wrappers = req.getParameter("wrapperids").split(
 				Constants.CONCEPT_SEPARATOR);
-		
+		try{
 		if (wrappers.length > 0) {
 			ConceptEntry conceptEntry = new ConceptEntry();
 			conceptEntry.setWord(conceptManager
@@ -121,6 +122,11 @@ public class ConceptWrapperAddController {
 			conceptEntry.setTypeId(req.getParameter("types"));
 			conceptEntry.setCreatorId(principal.getName()); 
 			conceptManager.addConceptListEntry(conceptEntry);	
+		}
+		}
+		catch(LuceneException ex){
+		    model.addAttribute("luceneError",ex.getMessage());
+		    return "forward:/auth/conceptlist/addconceptwrapper";
 		}
 
 		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
@@ -141,15 +147,16 @@ public class ConceptWrapperAddController {
 
 		String concept = req.getParameter("name");
 		String pos = req.getParameter("pos");
-		if (!concept.trim().isEmpty()) {
+        try {
+            if (!concept.trim().isEmpty()) {
 
-			ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(
-					concept, pos,"WordNetConcept");
-			List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-					.createWrappers(found);
-			model.addAttribute("result", foundConcepts);
-		}
-
+                ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(concept, pos, "WordNetConcept");
+                List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
+                model.addAttribute("result", foundConcepts);
+            }
+        } catch (LuceneException ex) {
+            model.addAttribute("luceneError", ex.getMessage());
+        }
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
 		for (ConceptType conceptType : allTypes) {
@@ -178,7 +185,12 @@ public class ConceptWrapperAddController {
 	 */
     @RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
     public ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname) {
-        ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        ConceptEntry[] entries = null;
+        try {
+            entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        } catch (LuceneException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<String>(buildJSON(Arrays.asList(entries)), HttpStatus.OK);
     }
 

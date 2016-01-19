@@ -19,6 +19,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.db4o.TypeDatabaseClient;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.xml.XMLConceptMessage;
 import edu.asu.conceptpower.xml.XMLMessageFactory;
 
@@ -52,41 +53,44 @@ public class ConceptIDLookup {
 	 * @return XML containing concept information
 	 */
 	@RequestMapping(value = "rest/Concept", method = RequestMethod.GET, produces = "application/xml")
-	public @ResponseBody ResponseEntity<String> getConceptById(HttpServletRequest req) {
+    public @ResponseBody ResponseEntity<String> getConceptById(HttpServletRequest req) {
 
-		String id = req.getParameter("id");
-		if (id == null || id.trim().isEmpty()) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		}
-		
-		String[] pathParts = id.split("/");
-		int lastIndex = pathParts.length - 1;
-		String wordnetId = null;
-		if (lastIndex > -1)
-			wordnetId = pathParts[lastIndex];
+        String id = req.getParameter("id");
+        if (id == null || id.trim().isEmpty()) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
 
-		if (wordnetId == null) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		}
+        String[] pathParts = id.split("/");
+        int lastIndex = pathParts.length - 1;
+        String wordnetId = null;
+        if (lastIndex > -1)
+            wordnetId = pathParts[lastIndex];
 
-		ConceptEntry entry = dictManager.getConceptEntry(wordnetId);
-		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
-		List<String> xmlEntries = new ArrayList<String>();
+        if (wordnetId == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        ConceptEntry entry = null;
+        try {
+            entry = dictManager.getConceptEntry(wordnetId);
+        } catch (LuceneException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
+        List<String> xmlEntries = new ArrayList<String>();
 
-		XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
-		
-		if (entry != null) {
+        XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
 
-			ConceptType type = null;
+        if (entry != null) {
 
-			if (typeManager != null && entry.getTypeId() != null
-					&& !entry.getTypeId().trim().isEmpty()) {
-				type = typeManager.getType(entry.getTypeId());
-			}
-			entryMap.put(entry, type);
-			xmlEntries = msg.appendEntries(entryMap);
-		}
+            ConceptType type = null;
 
-		return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
-	}
+            if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
+                type = typeManager.getType(entry.getTypeId());
+            }
+            entryMap.put(entry, type);
+            xmlEntries = msg.appendEntries(entryMap);
+        }
+
+        return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
+    }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +16,7 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.core.IConceptTypeManger;
+import edu.asu.conceptpower.exceptions.LuceneException;
 import edu.asu.conceptpower.users.IUserManager;
 
 /**
@@ -48,35 +50,35 @@ public class ConcepTypeDeleteController {
 	 *            A generic model holder for Servlet
 	 * @return String value to redirect user to concept type delete page
 	 */
-	@RequestMapping(value = "auth/concepttype/deletetype/{typeid}", method = RequestMethod.GET)
-	public String prepareDeleteType(@PathVariable("typeid") String typeid,
-			ModelMap model) {
+    @RequestMapping(value = "auth/concepttype/deletetype/{typeid}", method = RequestMethod.GET)
+    public String prepareDeleteType(@PathVariable("typeid") String typeid, ModelMap model, BindingResult result) {
 
-		ConceptType type = typeManager.getType(typeid);
-		model.addAttribute("typeid", type.getTypeId());
-		model.addAttribute("typeName", type.getTypeName());
-		model.addAttribute("description", type.getDescription());
-		model.addAttribute("matches", type.getMatches());
-		model.addAttribute("supertype", type.getSupertypeId());
+        ConceptType type = typeManager.getType(typeid);
+        model.addAttribute("typeid", type.getTypeId());
+        model.addAttribute("typeName", type.getTypeName());
+        model.addAttribute("description", type.getDescription());
+        model.addAttribute("matches", type.getMatches());
+        model.addAttribute("supertype", type.getSupertypeId());
+        // condition to check enable whether to delete the concepttype
+        boolean enableDelete = true;
+        try {
+            List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
+            for (ConceptList conceptList : conceptLists) {
+                List<ConceptEntry> conceptEntries = conceptManager
+                        .getConceptListEntries(conceptList.getConceptListName());
+                for (ConceptEntry conceptEntry : conceptEntries) {
+                    if ((conceptEntry.getTypeId() != null) && (conceptEntry.getTypeId()).equals(typeid)) {
+                        enableDelete = false;
+                    }
+                }
+            }
+        } catch (LuceneException ex) {
+            model.addAttribute("luceneError", ex.getMessage());
+        }
+        model.addAttribute("enabledelete", enableDelete);
 
-		// condition to check enable whether to delete the concepttype
-		boolean enableDelete = true;
-		List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
-		for (ConceptList conceptList : conceptLists) {
-			List<ConceptEntry> conceptEntries = conceptManager
-					.getConceptListEntries(conceptList.getConceptListName());
-			for (ConceptEntry conceptEntry : conceptEntries) {
-				if ((conceptEntry.getTypeId() != null)
-						&& (conceptEntry.getTypeId()).equals(typeid)) {
-					enableDelete = false;
-				}
-			}
-		}
-
-		model.addAttribute("enabledelete", enableDelete);
-
-		return "/auth/concepttype/deletetype";
-	}
+        return "/auth/concepttype/deletetype";
+    }
 
 	/**
 	 * This method deletes a specified concept type by ID

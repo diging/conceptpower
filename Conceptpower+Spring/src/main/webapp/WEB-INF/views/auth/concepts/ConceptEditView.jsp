@@ -206,6 +206,8 @@
 	method='post' modelAttribute="conceptEditBean">
 
 	<h1>Edit concept</h1>
+	
+	<form:errors path="luceneError" />
 
 	<h2>${word}</h2>
 	<p>${conceptEditBean.description}</p>

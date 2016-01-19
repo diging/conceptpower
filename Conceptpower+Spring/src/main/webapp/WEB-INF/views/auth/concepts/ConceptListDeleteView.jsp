@@ -8,6 +8,8 @@
 <h1>Delete List</h1>
 <p>Do you really want to delete the following List?</p>
 
+<font color="red">${luceneError}</font>
+
 <table class="greyContent">
 	<tr>
 		<td>List Name:</td>
