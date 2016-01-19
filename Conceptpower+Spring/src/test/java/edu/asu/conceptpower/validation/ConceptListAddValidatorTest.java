@@ -27,6 +27,7 @@ public class ConceptListAddValidatorTest {
     private ConceptListAddForm emptyDescription;
     private ConceptListAddForm wordNetConcepts;
     private ConceptListAddForm existingListName;
+    private ConceptListAddForm nameDescription;
 
     @Before
     public void init() {
@@ -49,6 +50,11 @@ public class ConceptListAddValidatorTest {
         existingListName.setDescription("Description");
         existingListName.setOldListName("OldExistingList");
         Mockito.when(conceptListManager.checkExistingConceptList("ExistingList")).thenReturn(true);
+        
+        nameDescription = new ConceptListAddForm();
+        nameDescription.setListName("NewListName");
+        nameDescription.setDescription("Description");
+        Mockito.when(conceptListManager.checkExistingConceptList("NewListName")).thenReturn(false);
     }
 
     @Test
@@ -86,5 +92,14 @@ public class ConceptListAddValidatorTest {
         Assert.assertEquals(1, errors.getFieldErrorCount());
         Assert.assertNull(errors.getFieldError("description"));
         Assert.assertEquals(errors.getFieldError("listName").getCode(), "concept_unique.required");
+    }
+    
+    @Test
+    public void testNameDescription() {
+        Errors errors = new BindException(nameDescription, "conceptListAddForm");
+        ValidationUtils.invokeValidator(conceptListAddValidator, nameDescription, errors);
+        Assert.assertEquals(0, errors.getFieldErrorCount());
+        Assert.assertNull(errors.getFieldError("listName"));
+        Assert.assertNull(errors.getFieldError("description"));
     }
 }
