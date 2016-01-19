@@ -1,8 +1,6 @@
 package edu.asu.conceptpower.core.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +23,13 @@ public class ConceptListManagerTest {
     @InjectMocks
     private ConceptListManager conceptListManager;
 
+    private ConceptList conceptList = new ConceptList();
+    
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
 
         List list = new ArrayList();
-        ConceptList conceptList = new ConceptList();
         conceptList.setConceptListName("First List");
         conceptList.setDescription("First List Description");
         list.add(conceptList);
@@ -50,9 +49,9 @@ public class ConceptListManagerTest {
     @Test
     public void getConceptListTest() {
         String listName = "First List";
-        ConceptList conceptList = conceptListManager.getConceptList(listName);
-        assertNotNull(conceptList);
-        assertEquals(listName, conceptList.getConceptListName());
+        ConceptList concept = conceptListManager.getConceptList(listName);
+        assertNotNull(concept);
+        assertEquals(concept, conceptList);
     }
 
     @Test
@@ -66,13 +65,13 @@ public class ConceptListManagerTest {
     public void checkExistingListForTrue() {
         String listName = "First List";
         boolean isExists = conceptListManager.checkExistingConceptList(listName);
-        assertEquals(true, isExists);
+        assertTrue(isExists);
     }
 
     @Test
     public void checkExistingListForFalse() {
         String listName = "Second List";
         boolean isExists = conceptListManager.checkExistingConceptList(listName);
-        assertEquals(false, isExists);
+        assertFalse(isExists);
     }
 }

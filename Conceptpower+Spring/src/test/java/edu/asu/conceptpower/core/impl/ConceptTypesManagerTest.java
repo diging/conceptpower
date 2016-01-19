@@ -22,7 +22,7 @@ public class ConceptTypesManagerTest {
     @InjectMocks
     private ConceptTypesManager conceptTypesManager;
 
-    ConceptType type = new ConceptType();
+    private ConceptType type = new ConceptType();
 
     @Before
     public void init() {
