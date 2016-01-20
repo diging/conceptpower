@@ -1,18 +1,9 @@
 package edu.asu.conceptpower.web;
 
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.List;
 
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IConceptManager;
@@ -129,9 +121,10 @@ public class ConceptDeleteController {
 	 * @return String value to redirect user to a particular concept list page
 	 */
 	@RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
-    public String confirmlDelete(@PathVariable("id") String id,
-            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, ModelMap model,BindingResult result) {
+    public ModelAndView confirmlDelete(@PathVariable("id") String id,
+            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete) {
 	    List<ConceptEntryWrapper> foundConcepts = null;
+	    ModelAndView model = new ModelAndView();
 	    try {
             ConceptEntry concept = conceptManager.getConceptEntry(id);
             conceptManager.deleteConcept(id);
@@ -141,13 +134,15 @@ public class ConceptDeleteController {
                     founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
 
         } catch (LuceneException ex) {
-            model.addAttribute("luceneError",ex.getMessage());
+            model.addObject("luceneError",ex.getMessage());
         }
-        model.addAttribute("result", foundConcepts);
+        model.addObject("result", foundConcepts);
         if (fromHomeScreenDelete.equalsIgnoreCase("true")) {
-            return "redirect:/login";
+            model.setViewName("redirect:/login");
+            return model;
         }
-        return "/auth/conceptlist/concepts";
+        model.setViewName("/auth/conceptlist/concepts");
+        return model;
     }
 	
     @RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)

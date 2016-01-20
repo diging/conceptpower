@@ -11,14 +11,11 @@ public class LuceneIndexManager implements ILuceneIndexManger {
     @Autowired
     private ILuceneUtility luceneUtility;
     
-    @Autowired
-    private ILuceneIndexUtility luceneIndexUtility;
-
     public void deleteIndexes() throws LuceneException {
         luceneUtility.deleteIndexes();
     }
 
     public void indexConcepts() throws LuceneException {
-        luceneIndexUtility.indexConcepts();
+        luceneUtility.indexConcepts();
     }
 }

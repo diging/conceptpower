@@ -343,7 +343,9 @@ public class ConceptManager implements IConceptManager {
 	@Override
 	public void storeModifiedConcept(ConceptEntry entry)throws LuceneException {
 	    luceneUtility.deleteById(entry.getId());
-	    luceneUtility.insertConcept(entry);
+	    if(!entry.isDeleted()){
+	        luceneUtility.insertConcept(entry);
+	    }
 	}
 
 	protected String generateId(String prefix) {
