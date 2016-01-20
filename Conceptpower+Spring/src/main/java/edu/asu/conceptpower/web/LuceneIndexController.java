@@ -31,10 +31,10 @@ public class LuceneIndexController {
     }
 
     @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST)
-    public String deleteWordNetConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+    public String indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
 
         try {
-            manager.deleteWordNetConcepts();
+            manager.deleteIndexes();
             manager.indexConcepts();
         } catch (LuceneException ex) {
             model.addAttribute("message", ex.getMessage());
@@ -42,11 +42,11 @@ public class LuceneIndexController {
         return "/auth/luceneIndex";
     }
     
-    @RequestMapping(value = "auth/deleteUserDefinedConcepts", method = RequestMethod.POST)
-    public String deleteUserDefinedConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+    @RequestMapping(value = "auth/deleteConcepts", method = RequestMethod.POST)
+    public String deleteConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
         
         try{
-            manager.deleteUserDefinedConcepts();
+            manager.deleteIndexes();
         }
         catch(LuceneException ex){
             model.addAttribute("message",ex.getMessage());

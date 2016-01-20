@@ -14,17 +14,11 @@ public class LuceneIndexManager implements ILuceneIndexManger {
     @Autowired
     private ILuceneIndexUtility luceneIndexUtility;
 
-    public void deleteWordNetConcepts() throws LuceneException {
-        luceneUtility.deleteWordNetConcepts();
+    public void deleteIndexes() throws LuceneException {
+        luceneUtility.deleteIndexes();
     }
 
     public void indexConcepts() throws LuceneException {
         luceneIndexUtility.indexConcepts();
-    }
-
-    @Override
-    public boolean deleteUserDefinedConcepts() throws LuceneException {
-        return luceneUtility.deleteUserDefinedConcepts();
-
     }
 }

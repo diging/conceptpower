@@ -11,7 +11,6 @@ public interface ILuceneUtility {
 
     public void insertConcept(ConceptEntry entry)throws LuceneException;
     
-    public void deleteWordNetConcepts() throws LuceneException;
+    public void deleteIndexes() throws LuceneException;
     
-    public boolean deleteUserDefinedConcepts() throws LuceneException;
 }

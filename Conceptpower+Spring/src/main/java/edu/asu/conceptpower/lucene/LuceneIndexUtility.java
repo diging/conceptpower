@@ -12,6 +12,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.exceptions.LuceneException;
@@ -24,18 +25,18 @@ import edu.mit.jwi.item.POS;
 @Component
 public class LuceneIndexUtility extends LuceneUtility implements ILuceneIndexUtility {
 
-    
-
     @Autowired
     private StandardAnalyzer standradAnalyzer;
 
     @Autowired
     private WordNetConfiguration configuration;
-    
+
+    @Value("${lucenePath}")
+    private String lucenePath;
+
     @Override
     public void indexConcepts() throws LuceneException {
 
-        String lucenePath = System.getProperty("lucenePath");
         IndexWriter writer = null;
         IndexWriterConfig config = new IndexWriterConfig(standradAnalyzer);
 

@@ -44,33 +44,46 @@ public class ConceptManager implements IConceptManager {
 	
 	protected final String CONCEPT_PREFIX = "CON";
 
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptEntry(java.lang.String)
-	 */
-	@Override
-	public ConceptEntry getConceptEntry(String id) throws LuceneException{
-		ConceptEntry entry = wordnetManager.getConcept(id);
-		if (entry != null) {
-			return entry;
-		}
-		return null;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.conceptpower.core.IConceptManager#getConceptEntry(java.lang.
+     * String)
+     */
+    @Override
+    public ConceptEntry getConceptEntry(String id) throws LuceneException {
+        ConceptEntry[] conceptEntry = luceneUtility.queryLuceneIndex(null, null, null, id, null);
+        // Returning only the first occurence because id is a unique value in
+        // the concept. So the array will contain only one record for each id
+        if (conceptEntry == null) {
+            return null;
+        }
+        return conceptEntry[0];
+    }
 
 	/* (non-Javadoc)
 	 * @see edu.asu.conceptpower.core.IConceptManager#getWordnetConceptEntry(java.lang.String)
 	 */
 	@Override
 	public ConceptEntry getWordnetConceptEntry(String wordnetId) throws LuceneException{
-		ConceptEntry entry = wordnetManager.getConcept(wordnetId);
+		ConceptEntry entry = getConceptEntry(wordnetId);
 		return entry;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.core.IConceptManager#getConceptListEntriesForWord(java.lang.String, java.lang.String)
-	 */
-	@Override
-    public ConceptEntry[] getConceptListEntriesForWord(String word, String pos,String conceptType) throws LuceneException{
-        return wordnetManager.getEntriesForWord(word, pos,conceptType);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.conceptpower.core.IConceptManager#getConceptListEntriesForWord(
+     * java.lang.String, java.lang.String)
+     */
+    @Override
+    public ConceptEntry[] getConceptListEntriesForWord(String word, String pos, String conceptType)
+            throws LuceneException {
+        if (pos == null)
+            return null;
+        word = word.replace(" ", "");
+        return luceneUtility.queryLuceneIndex(word, pos, null, null, conceptType);
     }
 
 	/**
@@ -95,7 +108,7 @@ public class ConceptManager implements IConceptManager {
 				if (ids != null) {
 					for (String id : ids) {
 						if (id != null && !id.trim().isEmpty()) {
-							ConceptEntry wordnetEntry = wordnetManager.getConcept(id);
+							ConceptEntry wordnetEntry = getConceptEntry(id);
 							if (wordnetEntry != null) {
 								sb.append(wordnetEntry.getSynonymIds());
 							}
@@ -247,7 +260,7 @@ public class ConceptManager implements IConceptManager {
 			allEntries.add(entry);
 		}
 
-		entries = wordnetManager.getEntriesForWord(word);
+		entries = luceneUtility.queryLuceneIndex(word, null, null, null,null);
 		if (entries != null) {
 			for (ConceptEntry entry : entries) {
 				// client.store(entry, DBNames.WORDNET_CACHE);

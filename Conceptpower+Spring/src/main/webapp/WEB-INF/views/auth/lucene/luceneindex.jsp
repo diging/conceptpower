@@ -16,11 +16,11 @@
 </form:form>
 
 <form:form
-	action="${pageContext.servletContext.contextPath}/auth/deleteUserDefinedConcepts"
+	action="${pageContext.servletContext.contextPath}/auth/deleteIndexes"
 	method='post' id="deleteLucene">
 	<table style="vertical-align: top">
 		<tr>
-			<td><input type="submit" value="Delete User Defined Concepts"
+			<td><input type="submit" value="Delete Indexes"
 				name="submit" class="button" /></td>
 		</tr>
 	</table>

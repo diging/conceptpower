@@ -134,7 +134,7 @@ public class ConceptEditController {
     public String confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, BindingResult result) {
         try {
-            ConceptEntry conceptEntry = wordNetManger.getConcept(id);
+            ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
             conceptEntry.setWord(conceptEditBean.getWord());
             conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
             conceptEntry.setPos(conceptEditBean.getSelectedPosValue());

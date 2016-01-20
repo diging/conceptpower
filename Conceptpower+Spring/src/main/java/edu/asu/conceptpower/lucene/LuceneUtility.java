@@ -30,6 +30,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -41,6 +42,7 @@ import edu.mit.jwi.item.ISynset;
 import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 
+@SuppressWarnings("deprecation")
 @Component
 public class LuceneUtility implements ILuceneUtility {
 
@@ -50,11 +52,13 @@ public class LuceneUtility implements ILuceneUtility {
     @Autowired
     private StandardAnalyzer standradAnalyzer;
 
-    public void deleteById(String id)throws LuceneException {
+    @Value("${lucenePath}")
+    private String lucenePath;
+
+    public void deleteById(String id) throws LuceneException {
         IndexWriter writer = null;
         try {
             Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + id);
-            String lucenePath = System.getProperty("lucenePath");
             Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             Directory index = FSDirectory.open(relativePath);
             IndexWriterConfig configWhiteSpace = new IndexWriterConfig(whiteSpaceAnalyzer);
@@ -72,38 +76,42 @@ public class LuceneUtility implements ILuceneUtility {
 
     }
 
-    public void insertConcept(ConceptEntry entry) throws LuceneException{
+    @SuppressWarnings("deprecation")
+    public void insertConcept(ConceptEntry entry) throws LuceneException {
         IndexWriter writer = null;
         try {
-            String lucenePath = System.getProperty("lucenePath");
             Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             Directory index = FSDirectory.open(relativePath);
             IndexWriterConfig config = new IndexWriterConfig(standradAnalyzer);
             writer = new IndexWriter(index, config);
             Document doc = new Document();
             doc.add(new TextField("word", entry.getWord().replace(" ", ""), Field.Store.YES));
+
             doc.add(new StringField("pos", entry.getPos().toString(), Field.Store.YES));
 
             doc.add(new StringField("description", entry.getDescription() != null ? entry.getDescription() : "",
                     Field.Store.YES));
             doc.add(new StringField("id", entry.getId(), Field.Store.YES));
-            doc.add(new StringField("listName", entry.getConceptList() != null ? entry.getConceptList() : "",
-                    Field.Store.YES));
 
-            doc.add(new StringField("synonymId", entry.getSynonymIds() != null ? entry.getSynonymIds() : "",
-                    Field.Store.YES));
-            doc.add(new StringField("equalTo", entry.getEqualTo() != null ? entry.getEqualTo() : "", Field.Store.YES));
-            doc.add(new StringField("similar", entry.getSimilarTo() != null ? entry.getSimilarTo() : "",
-                    Field.Store.YES));
-            doc.add(new StringField("types", entry.getTypeId() != null ? entry.getTypeId() : "", Field.Store.YES));
-            doc.add(new StringField("creatorId", entry.getCreatorId() != null ? entry.getCreatorId() : "",
-                    Field.Store.YES));
-            doc.add(new StringField("modifiedId", entry.getModified() != null ? entry.getModified() : "",
-                    Field.Store.YES));
-            doc.add(new StringField("conceptType", "UserConcept", Field.Store.YES));
+            doc.add(new Field("listName", entry.getConceptList() != null ? entry.getConceptList() : "", Field.Store.YES,
+                    Field.Index.NO));
+
+            doc.add(new Field("synonymId", entry.getSynonymIds() != null ? entry.getSynonymIds() : "", Field.Store.YES,
+                    Field.Index.NO));
+            doc.add(new Field("equalTo", entry.getEqualTo() != null ? entry.getEqualTo() : "", Field.Store.YES,
+                    Field.Index.NO));
+            doc.add(new Field("similar", entry.getSimilarTo() != null ? entry.getSimilarTo() : "", Field.Store.YES,
+                    Field.Index.NO));
+            doc.add(new Field("types", entry.getTypeId() != null ? entry.getTypeId() : "", Field.Store.YES,
+                    Field.Index.NO));
+            doc.add(new Field("creatorId", entry.getCreatorId() != null ? entry.getCreatorId() : "", Field.Store.YES,
+                    Field.Index.NO));
+            doc.add(new Field("modifiedId", entry.getModified() != null ? entry.getModified() : "", Field.Store.YES,
+                    Field.Index.NO));
+            doc.add(new Field("conceptType", "UserConcept", Field.Store.YES, Field.Index.NO));
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-            doc.add(new StringField("modifiedTime", formatter.format(cal.getTime()), Field.Store.YES));
+            doc.add(new Field("modifiedTime", formatter.format(cal.getTime()), Field.Store.YES, Field.Index.NO));
 
             writer.addDocument(doc);
             writer.commit();
@@ -119,7 +127,8 @@ public class LuceneUtility implements ILuceneUtility {
 
     }
 
-    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id,String conceptType) throws LuceneException{
+    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id, String conceptType)
+            throws LuceneException {
         IndexReader reader = null;
         Analyzer analyzer = null;
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
@@ -162,16 +171,14 @@ public class LuceneUtility implements ILuceneUtility {
                 defaultQuery = "id";
             }
 
-            if(conceptType!=null){
-                if(queryString.length()!=0){
+            if (conceptType != null) {
+                if (queryString.length() != 0) {
                     queryString.append(" AND conceptType:" + conceptType);
-                }
-                else{
+                } else {
                     queryString.append("conceptType:" + conceptType);
                 }
             }
             q = new QueryParser(defaultQuery, analyzer).parse(queryString.toString());
-            String lucenePath = System.getProperty("lucenePath");
             Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             Directory index = FSDirectory.open(relativePath);
 
@@ -220,14 +227,13 @@ public class LuceneUtility implements ILuceneUtility {
     }
 
     @Override
-    public void deleteWordNetConcepts() throws LuceneException{
+    public void deleteIndexes() throws LuceneException {
 
-        String lucenePath = System.getProperty("lucenePath");
         Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
         IndexWriter deleteWriter = null;
         try {
             Directory index = FSDirectory.open(relativePath);
-            Query q = new QueryParser("conceptType", whiteSpaceAnalyzer).parse("conceptType: wordnetconcept");
+            Query q = new QueryParser("conceptType", whiteSpaceAnalyzer).parse("*:*");
             IndexWriterConfig config = new IndexWriterConfig(whiteSpaceAnalyzer);
             deleteWriter = new IndexWriter(index, config);
             deleteWriter.deleteDocuments(q);
@@ -243,8 +249,7 @@ public class LuceneUtility implements ILuceneUtility {
         }
 
     }
-    
-    
+
     @SuppressWarnings("deprecation")
     protected void createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer)
             throws IOException {
@@ -280,31 +285,4 @@ public class LuceneUtility implements ILuceneUtility {
 
         }
     }
-
-    @Override
-    public boolean deleteUserDefinedConcepts() throws LuceneException{
-
-        String lucenePath = System.getProperty("lucenePath");
-        Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-        IndexWriter deleteWriter = null;
-        try {
-            Directory index = FSDirectory.open(relativePath);
-            Query q = new QueryParser("conceptType", whiteSpaceAnalyzer).parse("conceptType: UserConcept");
-            IndexWriterConfig config = new IndexWriterConfig(whiteSpaceAnalyzer);
-            deleteWriter = new IndexWriter(index, config);
-            System.out.println(deleteWriter.numDocs());
-            deleteWriter.deleteDocuments(q);
-            deleteWriter.commit();
-            return true;
-        } catch (Exception ex) {
-            throw new LuceneException("Issues in deleting concepts. Please retry");
-        } finally {
-            try {
-                deleteWriter.close();
-            } catch (Exception ex) {
-                throw new LuceneException("Problems in closing the writer");
-            }
-        }
-    }
-
 }

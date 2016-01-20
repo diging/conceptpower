@@ -133,7 +133,7 @@ public class ConceptDeleteController {
             @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, ModelMap model,BindingResult result) {
 	    List<ConceptEntryWrapper> foundConcepts = null;
 	    try {
-            ConceptEntry concept = wordNetManager.getConcept(id);
+            ConceptEntry concept = conceptManager.getConceptEntry(id);
             conceptManager.deleteConcept(id);
             List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
 

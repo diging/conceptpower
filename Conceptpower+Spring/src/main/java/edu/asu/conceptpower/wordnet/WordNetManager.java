@@ -17,6 +17,8 @@ import javax.annotation.PreDestroy;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.exceptions.LuceneException;
@@ -30,196 +32,37 @@ import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 import edu.mit.jwi.item.WordID;
 
+@Component
 public class WordNetManager {
 
     @Autowired
     private WordNetConfiguration configuration;
 
-    @Autowired
-    private ILuceneUtility luceneUtility;
-
-    private String lucenePath;
-    
-    Directory index; 
-    
     private IDictionary dict;
 
     private Map<String, POS> posMap;
 
     @PostConstruct
-    public void init() throws IOException, org.apache.lucene.queryparser.classic.ParseException {
-        
-        Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-        index = FSDirectory.open(relativePath);
-        
-        String wnhome = configuration.getWordnetPath();
-        String path = wnhome + File.separator + configuration.getDictFolder();
-        
-        URL url = null;
+	public void init() throws IOException, org.apache.lucene.queryparser.classic.ParseException {
 
-        url = new URL("file", null, path);
+		String wnhome = configuration.getWordnetPath();
+		String path = wnhome + File.separator + configuration.getDictFolder();
 
-        dict = new Dictionary(url);
-        dict.open();
-        
-        System.setProperty("lucenePath", lucenePath);
-        
-        Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
-//        int i = 0;
-//        for (; iterator.hasNext();) {
-//            IIndexWord indexWord = iterator.next();
-//            List<IWordID> wordIdds = indexWord.getWordIDs();
-//
-//            IndexWriterConfig config = new IndexWriterConfig(analyzer);
-//            IndexWriter w = new IndexWriter(index, config);
-//            i++;
-//            if(i == 1000){
-//                break;
-//            }
-//            for (IWordID wordId : wordIdds) {
-//               
-//                Document doc = new Document();
-//                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
-//                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
-//
-//                IWord word = dict.getWord(wordId);
-//                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
-//                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
-//                
-//
-//                ISynset synset = word.getSynset();
-//                List<IWord> synonyms = synset.getWords();
-//                StringBuffer sb = new StringBuffer();
-//                for (IWord syn : synonyms) {
-//                    if (!syn.getID().equals(word.getID()))
-//                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
-//                }
-//                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
-//
-//                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
-//                w.addDocument(doc);
-//            }
-//
-//            w.close();
-//        }
+		URL url = null;
 
-//        iterator = dict.getIndexWordIterator(POS.ADVERB);
-//        
-//        for (; iterator.hasNext();) {
-//
-//            IIndexWord indexWord = iterator.next();
-//            List<IWordID> wordIdds = indexWord.getWordIDs();
-//
-//            IndexWriterConfig config = new IndexWriterConfig(analyzer);
-//            IndexWriter w = new IndexWriter(index, config);
-//            for (IWordID wordId : wordIdds) {
-//                Document doc = new Document();
-//                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
-//                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
-//
-//                IWord word = dict.getWord(wordId);
-//                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
-//                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
-//                w.addDocument(doc);
-//
-//                ISynset synset = word.getSynset();
-//                List<IWord> synonyms = synset.getWords();
-//                StringBuffer sb = new StringBuffer();
-//                for (IWord syn : synonyms) {
-//                    if (!syn.getID().equals(word.getID()))
-//                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
-//                }
-//                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
-//
-//                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
-//            }
-//
-//            w.close();
-//
-//        }
-//
-//        iterator = dict.getIndexWordIterator(POS.ADJECTIVE);
-//        for (; iterator.hasNext();) {
-//
-//            IIndexWord indexWord = iterator.next();
-//            List<IWordID> wordIdds = indexWord.getWordIDs();
-//
-//            IndexWriterConfig config = new IndexWriterConfig(analyzer);
-//            IndexWriter w = new IndexWriter(index, config);
-//            for (IWordID wordId : wordIdds) {
-//                Document doc = new Document();
-//                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
-//                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
-//
-//                IWord word = dict.getWord(wordId);
-//                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
-//                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
-//                w.addDocument(doc);
-//
-//                ISynset synset = word.getSynset();
-//                List<IWord> synonyms = synset.getWords();
-//                StringBuffer sb = new StringBuffer();
-//                for (IWord syn : synonyms) {
-//                    if (!syn.getID().equals(word.getID()))
-//                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
-//                }
-//                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
-//
-//                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
-//            }
-//
-//            w.close();
-//
-//        }
-//
-//        iterator = dict.getIndexWordIterator(POS.VERB);
-//        for (; iterator.hasNext();) {
-//
-//            IIndexWord indexWord = iterator.next();
-//            List<IWordID> wordIdds = indexWord.getWordIDs();
-//
-//            IndexWriterConfig config = new IndexWriterConfig(analyzer);
-//            IndexWriter w = new IndexWriter(index, config);
-//            for (IWordID wordId : wordIdds) {
-//                Document doc = new Document();
-//                doc.add(new TextField("word", wordId.getLemma(), Field.Store.YES));
-//                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
-//
-//                IWord word = dict.getWord(wordId);
-//                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
-//                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
-//                w.addDocument(doc);
-//
-//                ISynset synset = word.getSynset();
-//                List<IWord> synonyms = synset.getWords();
-//                StringBuffer sb = new StringBuffer();
-//                for (IWord syn : synonyms) {
-//                    if (!syn.getID().equals(word.getID()))
-//                        sb.append(syn.getID().toString() + edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR);
-//                }
-//                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
-//
-//                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
-//            }
-//
-//            w.close();
-//
-//        }
+		url = new URL("file", null, path);
 
-        posMap = new HashMap<String, POS>();
-        posMap.put(edu.asu.conceptpower.core.POS.NOUN, POS.NOUN);
-        posMap.put(edu.asu.conceptpower.core.POS.VERB, POS.VERB);
-        posMap.put(edu.asu.conceptpower.core.POS.ADVERB, POS.ADVERB);
-        posMap.put(edu.asu.conceptpower.core.POS.ADJECTIVE, POS.ADJECTIVE);
+		dict = new Dictionary(url);
+		dict.open();
 
-    }
+		Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
+		posMap = new HashMap<String, POS>();
+		posMap.put(edu.asu.conceptpower.core.POS.NOUN, POS.NOUN);
+		posMap.put(edu.asu.conceptpower.core.POS.VERB, POS.VERB);
+		posMap.put(edu.asu.conceptpower.core.POS.ADVERB, POS.ADVERB);
+		posMap.put(edu.asu.conceptpower.core.POS.ADJECTIVE, POS.ADJECTIVE);
 
-    public ConceptEntry getConcept(String id) throws LuceneException {
-        ConceptEntry[] conceptEntry = luceneUtility.queryLuceneIndex(null, null, null, id,null);
-        // Returning only the first occurence because id is a unique value in
-        // the concept. So the array will contain only one record for each id
-        return conceptEntry[0];
-    }
+	}
 
     public ConceptEntry[] getSynonyms(String id) {
         IWordID wordId = null;
@@ -276,31 +119,9 @@ public class WordNetManager {
 
     }
 
-    public ConceptEntry[] getEntriesForWord(String word) throws LuceneException {
-        return luceneUtility.queryLuceneIndex(word, null, null, null,null);
-    
-    }
-
-    public ConceptEntry[] getEntriesForWord(String word, String pos,String conceptType) throws LuceneException {
-        POS pPOS = posMap.get(pos);
-        if (pPOS == null)
-            return null;
-
-        word = word.replace(" ", "");
-        return luceneUtility.queryLuceneIndex(word, pos, null, null,conceptType);
-    }
-
     @PreDestroy
     public void close() {
         dict.close();
-    }
-    
-    public String getLucenePath() {
-        return lucenePath;
-    }
-
-    public void setLucenePath(String lucenePath) {
-        this.lucenePath = lucenePath;
     }
 
 }

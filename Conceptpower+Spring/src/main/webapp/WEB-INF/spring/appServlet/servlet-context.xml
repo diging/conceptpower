@@ -36,6 +36,7 @@
 	</beans:bean>
 
 	<context:component-scan base-package="edu.asu.conceptpower" />
+	<context:property-placeholder location="classpath*:lucene.properties"/>
 
 
 

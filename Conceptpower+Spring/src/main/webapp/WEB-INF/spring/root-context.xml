@@ -19,7 +19,7 @@
 	<import resource="xml-config.xml" />
 	<import resource="spring-security.xml" />
 	<import resource="rest-service.xml" />
-
+	
 	<context:component-scan base-package="edu.asu.conceptpower" />
 
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
