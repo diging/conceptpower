@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.core;
 
+import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.core.impl.ConceptManager;
+import edu.asu.conceptpower.db4o.DBNames;
 import edu.asu.conceptpower.db4o.IConceptDBManager;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
@@ -28,8 +30,10 @@ public class ConceptManagerTest {
 	@InjectMocks
 	private ConceptManager managerToTest;
 
-	private ConceptEntry addedConcept;
+	@Rule
+	public ExpectedException expectedEx = ExpectedException.none();
 
+	private ConceptEntry addedConcept;
 	private ConceptEntry wordnetConcept1;
 	private ConceptEntry wordnetConcept2;
 
@@ -117,10 +121,9 @@ public class ConceptManagerTest {
 
 		String id = managerToTest.addConceptListEntry(newConcept);
 		Assert.assertNotNull(id);
-	}
+		verify(dbManager).store(newConcept, DBNames.DICTIONARY_DB);
 
-	@Rule
-	public ExpectedException expectedEx = ExpectedException.none();
+	}
 
 	@Test
 	public void testAddConceptListEntryWrongDict() throws DictionaryModifyException, DictionaryDoesNotExistException {
@@ -131,10 +134,8 @@ public class ConceptManagerTest {
 		newConcept.setPos("noun");
 		newConcept.setWord("test new");
 		newConcept.setWordnetId("WID-1");
-		String id = null;
 		expectedEx.expect(DictionaryDoesNotExistException.class);
-		id = managerToTest.addConceptListEntry(newConcept);
-		Assert.assertNull(id);
+		managerToTest.addConceptListEntry(newConcept);
 	}
 
 	@Rule
@@ -150,7 +151,6 @@ public class ConceptManagerTest {
 		newConcept.setWord("test new");
 		newConcept.setWordnetId("WID-1");
 		expectedEx.expect(DictionaryModifyException.class);
-		String id = managerToTest.addConceptListEntry(newConcept);
-		Assert.assertNull(id);
+		managerToTest.addConceptListEntry(newConcept);
 	}
 }

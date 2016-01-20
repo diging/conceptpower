@@ -49,9 +49,9 @@ public class ConceptListManagerTest {
     @Test
     public void getConceptListTest() {
         String listName = "First List";
-        ConceptList concept = conceptListManager.getConceptList(listName);
-        assertNotNull(concept);
-        assertEquals(concept, conceptList);
+        ConceptList conceptList = conceptListManager.getConceptList(listName);
+        assertNotNull(conceptList);
+        assertEquals(conceptList, conceptList);
     }
 
     @Test
