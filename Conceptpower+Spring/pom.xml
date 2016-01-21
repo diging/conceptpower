@@ -16,7 +16,7 @@
 		<deploy.path.dev>conceptpower</deploy.path.dev>
 		<deploy.path.test>conceptpower-test</deploy.path.test>
 		<deploy.path.prod>conceptpower</deploy.path.prod>
-		<db.files.path>/Users/mkarthik90/Software/Conceptpower/db_files</db.files.path>
+		<db.files.path>/Users/jdamerow/Software/Conceptpower/db_files</db.files.path>
 		<email.username></email.username>
 		<email.password></email.password>
 		<email.server.port>25</email.server.port>
@@ -469,6 +469,16 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<formats>
+						<format>xml</format>
+					</formats>
+				</configuration>
+			</plugin>
+			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
@@ -563,4 +573,20 @@
 			</resource>
 		</resources>
 	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.7</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>cobertura</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
