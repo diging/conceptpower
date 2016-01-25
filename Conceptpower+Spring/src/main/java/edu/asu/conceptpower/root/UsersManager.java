@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.users.impl;
+package edu.asu.conceptpower.root;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.Token;
 import edu.asu.conceptpower.users.User;
-import edu.asu.conceptpower.users.UserDatabaseClient;
 
 /**
  * Managing class for user management.
@@ -201,4 +200,20 @@ public class UsersManager implements IUserManager {
 	public Token deleteToken(String token) {
 		return client.deleteToken(token);
 	}
+
+    public UserDatabaseClient getClient() {
+        return client;
+    }
+
+    public void setClient(UserDatabaseClient client) {
+        this.client = client;
+    }
+
+    public Environment getEnv() {
+        return env;
+    }
+
+    public void setEnv(Environment env) {
+        this.env = env;
+    }
 }

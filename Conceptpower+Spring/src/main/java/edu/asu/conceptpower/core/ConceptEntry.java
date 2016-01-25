@@ -96,7 +96,7 @@ public class ConceptEntry implements Serializable {
 	/**
 	 * A string containing the ids of other conceptpower entries
 	 * that are synonyms for an entry. The synonym ids are speparated
-	 * by {@link edu.asu.conceptpower.core.Constants.SYNONYM_SEPARATOR}.
+	 * by {@link edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR}.
 	 */
 	public String getSynonymIds() {
 		return synonymIds;

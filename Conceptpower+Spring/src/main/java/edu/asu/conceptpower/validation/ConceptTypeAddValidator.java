@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import edu.asu.conceptpower.db4o.TypeDatabaseClient;
+import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.web.ConceptTypeAddForm;
 
 /**

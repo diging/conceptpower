@@ -1,26 +1,25 @@
-package edu.asu.conceptpower.users;
+package edu.asu.conceptpower.root;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
-import edu.asu.conceptpower.db4o.DatabaseManager;
+import edu.asu.conceptpower.users.Token;
+import edu.asu.conceptpower.users.User;
 
-@Component
+
+@Service
 public class UserDatabaseClient {
 
 	private ObjectContainer client;
 	
 	@Autowired
-	@Qualifier("userDatabaseManager")
 	private DatabaseManager userDatabase;
 	
 	@PostConstruct
@@ -109,4 +108,12 @@ public class UserDatabaseClient {
 		}
 		return null;
 	}
+
+    public DatabaseManager getUserDatabase() {
+        return userDatabase;
+    }
+
+    public void setUserDatabase(DatabaseManager userDatabase) {
+        this.userDatabase = userDatabase;
+    }
 }

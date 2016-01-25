@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.db4o;
+package edu.asu.conceptpower.root;
 
 import javax.annotation.PostConstruct;
 

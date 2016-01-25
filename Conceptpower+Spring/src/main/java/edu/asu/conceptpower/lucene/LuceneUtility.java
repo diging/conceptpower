@@ -11,6 +11,9 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -67,72 +70,63 @@ public class LuceneUtility implements ILuceneUtility {
 
     private IndexWriter writer = null;
 
-    public void deleteById(String id) throws LuceneException {
+    @PostConstruct
+    public void init() throws LuceneException {
         try {
-            Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + id);
             Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             Directory index = FSDirectory.open(relativePath);
             IndexWriterConfig configWhiteSpace = new IndexWriterConfig(whiteSpaceAnalyzer);
             writer = new IndexWriter(index, configWhiteSpace);
+        } catch (IOException ex) {
+            throw new LuceneException("Restart the application");
+        }
+    }
+
+    public void deleteById(String id) throws LuceneException {
+        try {
+            Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + id);
             writer.deleteDocuments(q);
         } catch (Exception ex) {
             throw new LuceneException("Issues in deletion. Please retry");
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception ex) {
-                throw new LuceneException("Problems in closing the writer");
-            }
         }
-
     }
 
     @SuppressWarnings("deprecation")
     public void insertConcept(ConceptEntry entry) throws LuceneException {
+        Document doc = new Document();
+        doc.add(new TextField("word", entry.getWord().replace(" ", ""), Field.Store.YES));
+
+        doc.add(new StringField("pos", entry.getPos().toString(), Field.Store.YES));
+
+        doc.add(new StringField("description", entry.getDescription() != null ? entry.getDescription() : "",
+                Field.Store.YES));
+        doc.add(new StringField("id", entry.getId(), Field.Store.YES));
+
+        doc.add(new StringField("listName", entry.getConceptList() != null ? entry.getConceptList() : "",
+                Field.Store.YES));
+
+        doc.add(new Field("synonymId", entry.getSynonymIds() != null ? entry.getSynonymIds() : "", Field.Store.YES,
+                Field.Index.NO));
+        doc.add(new Field("equalTo", entry.getEqualTo() != null ? entry.getEqualTo() : "", Field.Store.YES,
+                Field.Index.NO));
+        doc.add(new Field("similar", entry.getSimilarTo() != null ? entry.getSimilarTo() : "", Field.Store.YES,
+                Field.Index.NO));
+        doc.add(new Field("types", entry.getTypeId() != null ? entry.getTypeId() : "", Field.Store.YES,
+                Field.Index.NO));
+        doc.add(new Field("creatorId", entry.getCreatorId() != null ? entry.getCreatorId() : "", Field.Store.YES,
+                Field.Index.NO));
+        doc.add(new Field("modifiedId", entry.getModified() != null ? entry.getModified() : "", Field.Store.YES,
+                Field.Index.NO));
+        doc.add(new StringField("conceptType", "UserConcept", Field.Store.YES));
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+        doc.add(new Field("modifiedTime", formatter.format(cal.getTime()), Field.Store.YES, Field.Index.NO));
+
         try {
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            Directory index = FSDirectory.open(relativePath);
-            IndexWriterConfig config = new IndexWriterConfig(standradAnalyzer);
-            writer = new IndexWriter(index, config);
-            Document doc = new Document();
-            doc.add(new TextField("word", entry.getWord().replace(" ", ""), Field.Store.YES));
-
-            doc.add(new StringField("pos", entry.getPos().toString(), Field.Store.YES));
-
-            doc.add(new StringField("description", entry.getDescription() != null ? entry.getDescription() : "",
-                    Field.Store.YES));
-            doc.add(new StringField("id", entry.getId(), Field.Store.YES));
-
-            doc.add(new StringField("listName", entry.getConceptList() != null ? entry.getConceptList() : "",
-                    Field.Store.YES));
-
-            doc.add(new Field("synonymId", entry.getSynonymIds() != null ? entry.getSynonymIds() : "", Field.Store.YES,
-                    Field.Index.NO));
-            doc.add(new Field("equalTo", entry.getEqualTo() != null ? entry.getEqualTo() : "", Field.Store.YES,
-                    Field.Index.NO));
-            doc.add(new Field("similar", entry.getSimilarTo() != null ? entry.getSimilarTo() : "", Field.Store.YES,
-                    Field.Index.NO));
-            doc.add(new Field("types", entry.getTypeId() != null ? entry.getTypeId() : "", Field.Store.YES,
-                    Field.Index.NO));
-            doc.add(new Field("creatorId", entry.getCreatorId() != null ? entry.getCreatorId() : "", Field.Store.YES,
-                    Field.Index.NO));
-            doc.add(new Field("modifiedId", entry.getModified() != null ? entry.getModified() : "", Field.Store.YES,
-                    Field.Index.NO));
-            doc.add(new StringField("conceptType", "UserConcept", Field.Store.YES));
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-            doc.add(new Field("modifiedTime", formatter.format(cal.getTime()), Field.Store.YES, Field.Index.NO));
-
             writer.addDocument(doc);
             writer.commit();
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             throw new LuceneException("Cannot insert concept in lucene. Please retry");
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception ex) {
-                throw new LuceneException("Problems in closing the writer");
-            }
         }
 
     }
@@ -207,12 +201,6 @@ public class LuceneUtility implements ILuceneUtility {
             }
         } catch (Exception ex) {
             throw new LuceneException("Issues in querying lucene index. Please retry");
-        } finally {
-            try {
-                reader.close();
-            } catch (Exception ex) {
-                throw new LuceneException("Problems in closing the writer");
-            }
         }
         return concepts.toArray(new ConceptEntry[concepts.size()]);
     }
@@ -238,26 +226,13 @@ public class LuceneUtility implements ILuceneUtility {
 
     @Override
     public void deleteIndexes() throws LuceneException {
-
-        Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-
         try {
-            Directory index = FSDirectory.open(relativePath);
             Query q = new QueryParser("conceptType", whiteSpaceAnalyzer).parse("*:*");
-            IndexWriterConfig config = new IndexWriterConfig(whiteSpaceAnalyzer);
-            writer = new IndexWriter(index, config);
             writer.deleteDocuments(q);
             writer.commit();
         } catch (Exception ex) {
             throw new LuceneException("Issues in deleting wordnet concepts. Please retry");
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception ex) {
-                throw new LuceneException("Problems in closing the writer");
-            }
         }
-
     }
 
     @SuppressWarnings("deprecation")
@@ -297,13 +272,7 @@ public class LuceneUtility implements ILuceneUtility {
     @Override
     public void indexConcepts() throws LuceneException {
 
-        IndexWriter writer = null;
-        IndexWriterConfig config = new IndexWriterConfig(standradAnalyzer);
-
         try {
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            Directory index = FSDirectory.open(relativePath);
-
             String wnhome = configuration.getWordnetPath();
             String path = wnhome + File.separator + configuration.getDictFolder();
 
@@ -315,7 +284,6 @@ public class LuceneUtility implements ILuceneUtility {
             dict.open();
 
             // 2. Adding data into
-            writer = new IndexWriter(index, config);
             Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
             createDocuments(iterator, dict, writer);
 
@@ -330,12 +298,15 @@ public class LuceneUtility implements ILuceneUtility {
 
         } catch (Exception ex) {
             throw new LuceneException("Problem in Creating Index. Please retry");
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception ex) {
-                throw new LuceneException("Problem in Lucene writer. Please retry");
-            }
+        }
+    }
+
+    @PreDestroy
+    public void destroy() throws LuceneException {
+        try {
+            writer.close();
+        } catch (IOException ex) {
+            throw new LuceneException(ex.getMessage());
         }
     }
 }

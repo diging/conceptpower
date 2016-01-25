@@ -11,49 +11,13 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
+
+<import resource="spring-security.xml" />
+
+<context:component-scan base-package="edu.asu.conceptpower.root" />
+
 	<!-- Root Context: defines shared resources visible to all other web components -->
-
-	
-	<import resource="wordnet-config.xml" />
-	<import resource="db4o-config.xml" />
-	<import resource="xml-config.xml" />
-	<import resource="spring-security.xml" />
-	<import resource="rest-service.xml" />
-	
-	<context:component-scan base-package="edu.asu.conceptpower" />
-	<context:property-placeholder location="classpath*:lucene.properties"/>
-
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="${email.host}" />
-		<property name="port" value="${email.port}" />
-		<property name="username" value="${email.user}" />
-		<property name="password" value="${email.pw}" />
-		<property name="javaMailProperties">
-			<props>
-				<prop key="mail.transport.protocol">smtp</prop>
-				<prop key="mail.smtp.auth">true</prop>
-				<prop key="mail.smtp.starttls.enable">true</prop>
-				<prop key="mail.debug">true</prop>
-			</props>
-		</property>
-	</bean>
-
-	<!-- You can have some pre-configured messagess also which are ready to 
-		send -->
-	<bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
-		<property name="from" value="email"></property>
-	</bean>
-	
-	<bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer"></bean>
-	<bean id="simpleAnalyzer" class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />
-	
 	<util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />
-	<bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basenames" value="validatormessages">
-
-		</property>
-	</bean>
-	<util:properties id="config" location="classpath:/config.properties" />
+	<util:properties id="config" location="classpath:/config.properties" />	
 </beans>

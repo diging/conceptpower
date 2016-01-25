@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.db4o;
+package edu.asu.conceptpower.root;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -16,6 +16,8 @@ import com.db4o.query.Predicate;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.db4o.DBNames;
+import edu.asu.conceptpower.db4o.IConceptDBManager;
 import edu.asu.conceptpower.reflect.SearchField;
 
 @Component

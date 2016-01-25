@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/mvc"
-	xmlns:se="http://www.springframework.org/schema/security"
+<beans:beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:se="http://www.springframework.org/schema/security"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing 
 		infrastructure -->
 
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
+	<mvc:annotation-driven />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
-	<resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/resources/**" location="/resources/" />
 
-	<se:global-method-security pre-post-annotations="enabled"/>
-	
+	<se:global-method-security
+		pre-post-annotations="enabled" />
+
 	<beans:bean id="tilesViewResolver"
 		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<beans:property name="viewClass"
@@ -35,8 +38,48 @@
 		</beans:property>
 	</beans:bean>
 
+
+	<context:property-placeholder location="classpath*:lucene.properties" />
+
+	<beans:bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value="${email.host}" />
+		<beans:property name="port" value="${email.port}" />
+		<beans:property name="username" value="${email.user}" />
+		<beans:property name="password" value="${email.pw}" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.transport.protocol">smtp</beans:prop>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+				<beans:prop key="mail.smtp.starttls.enable">true</beans:prop>
+				<beans:prop key="mail.debug">true</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+
+	<!-- You can have some pre-configured messagess also which are ready to 
+		send -->
+	<beans:bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
+		<beans:property name="from" value="email"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="analyzer"
+		class="org.apache.lucene.analysis.standard.StandardAnalyzer"></beans:bean>
+	<beans:bean id="simpleAnalyzer"
+		class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />
+
+	<beans:bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<beans:property name="basenames" value="validatormessages">
+		</beans:property>
+	</beans:bean>
+
 	<context:component-scan base-package="edu.asu.conceptpower" />
-	<context:property-placeholder location="classpath*:lucene.properties"/>
+	<context:property-placeholder location="classpath*:lucene.properties" />
+<import resource="../wordnet-config.xml" />
+	<import resource="../db4o-config.xml" />
+	<import resource="../xml-config.xml" />
+	<import resource="../rest-service.xml" />
 
 
 

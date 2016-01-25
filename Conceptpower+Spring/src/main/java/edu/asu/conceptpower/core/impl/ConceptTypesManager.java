@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.IConceptTypeManger;
-import edu.asu.conceptpower.db4o.TypeDatabaseClient;
+import edu.asu.conceptpower.root.TypeDatabaseClient;
 
 @Service
 public class ConceptTypesManager implements IConceptTypeManger {

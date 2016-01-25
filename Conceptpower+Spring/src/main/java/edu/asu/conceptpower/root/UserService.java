@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.users;
+package edu.asu.conceptpower.root;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +9,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service("userService")
+import edu.asu.conceptpower.users.ConceptpowerGrantedAuthority;
+import edu.asu.conceptpower.users.IUserManager;
+import edu.asu.conceptpower.users.User;
+
+@Service
 public class UserService implements UserDetailsService {
 
-	@Autowired
+    @Autowired
 	private IUserManager userManager;
-	
-	@Override
+
+    @Override
 	public UserDetails loadUserByUsername(String arg0)
 			throws UsernameNotFoundException {
 		User user = userManager.findUser(arg0);
@@ -31,4 +35,13 @@ public class UserService implements UserDetailsService {
 		UserDetails details = new CPUserDetails(user.getUsername(), user.getFullname(), user.getPw(), roles, user.getEmail());
 		return details;
 	}
+    
+
+    public IUserManager getUserManager() {
+        return userManager;
+    }
+
+    public void setUserManager(IUserManager userManager) {
+        this.userManager = userManager;
+    }
 }
