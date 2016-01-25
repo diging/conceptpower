@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.core.ConceptType;
-import edu.asu.conceptpower.servlet.util.URIHelper;
 
 /**
  * This class is used to create XML responses for

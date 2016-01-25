@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:se="http://www.springframework.org/schema/security"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:se="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
@@ -11,13 +10,15 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
+	<import resource="xml-config.xml" />
+	<context:component-scan base-package="edu.asu.conceptpower.root" />
+	<import resource="db4o-config.xml" />
 
-<import resource="spring-security.xml" />
 
-<context:component-scan base-package="edu.asu.conceptpower.root" />
+	<import resource="spring-security.xml" />
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />
-	<util:properties id="config" location="classpath:/config.properties" />	
+	<util:properties id="config" location="classpath:/config.properties" />
 </beans>

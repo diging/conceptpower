@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.servlet.xml;
+package edu.asu.conceptpower.root;
 
 public class XMLConfig {
 

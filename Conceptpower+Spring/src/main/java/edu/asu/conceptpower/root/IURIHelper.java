@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.servlet.util;
+package edu.asu.conceptpower.root;
 
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptType;

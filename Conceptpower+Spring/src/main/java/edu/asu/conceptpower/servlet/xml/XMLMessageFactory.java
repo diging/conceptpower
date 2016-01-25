@@ -3,7 +3,7 @@ package edu.asu.conceptpower.servlet.xml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.servlet.util.URIHelper;
+import edu.asu.conceptpower.root.URIHelper;
 
 @Service
 public class XMLMessageFactory {

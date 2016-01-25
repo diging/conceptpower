@@ -74,11 +74,9 @@
 		</beans:property>
 	</beans:bean>
 
-	<context:component-scan base-package="edu.asu.conceptpower" />
+	<context:component-scan base-package="edu.asu.conceptpower.servlet" />
 	<context:property-placeholder location="classpath*:lucene.properties" />
-<import resource="../wordnet-config.xml" />
-	<import resource="../db4o-config.xml" />
-	<import resource="../xml-config.xml" />
+	<import resource="../wordnet-config.xml" />
 	<import resource="../rest-service.xml" />
 
 

@@ -9,7 +9,6 @@ import com.db4o.ObjectServer;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ServerConfiguration;
 
-@Component
 public class DatabaseManager implements Serializable {
 
 	/**
