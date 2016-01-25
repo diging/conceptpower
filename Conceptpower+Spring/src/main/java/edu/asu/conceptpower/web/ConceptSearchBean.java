@@ -12,10 +12,10 @@ import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 @Component
 public class ConceptSearchBean {
 
-    private String word;
-    private String pos;
-    private Map<String, String> posMap;
-    private List<ConceptEntryWrapper> foundConcepts;
+	private String word;
+	private String pos;
+	private Map<String, String> posMap;
+	private List<ConceptEntryWrapper> foundConcepts;
 
 	public String getWord() {
 		return word;
