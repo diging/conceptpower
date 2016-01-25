@@ -7,13 +7,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.core.impl.ConceptManager;
-import edu.asu.conceptpower.db4o.IConceptDBManager;
-import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
-import edu.asu.conceptpower.exceptions.DictionaryModifyException;
-import edu.asu.conceptpower.exceptions.LuceneException;
-import edu.asu.conceptpower.lucene.ILuceneUtility;
-import edu.asu.conceptpower.wordnet.Constants;
+import edu.asu.conceptpower.servlet.core.ConceptEntry;
+import edu.asu.conceptpower.servlet.core.ConceptList;
+import edu.asu.conceptpower.servlet.core.impl.ConceptManager;
+import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
+import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
+import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
+import edu.asu.conceptpower.servlet.wordnet.Constants;
 import junit.framework.Assert;
 
 public class ConceptManagerTest {

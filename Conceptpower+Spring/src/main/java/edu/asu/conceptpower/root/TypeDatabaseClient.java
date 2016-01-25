@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
-import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.util.URIHelper;
+import edu.asu.conceptpower.servlet.core.ConceptType;
+import edu.asu.conceptpower.servlet.util.URIHelper;
 
 @Component
 public class TypeDatabaseClient {

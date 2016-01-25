@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
-import edu.asu.conceptpower.users.Token;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.servlet.users.Token;
+import edu.asu.conceptpower.servlet.users.User;
 
 
 @Service

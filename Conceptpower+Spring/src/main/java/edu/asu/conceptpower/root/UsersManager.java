@@ -19,9 +19,9 @@ import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.users.IUserManager;
-import edu.asu.conceptpower.users.Token;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.servlet.users.IUserManager;
+import edu.asu.conceptpower.servlet.users.Token;
+import edu.asu.conceptpower.servlet.users.User;
 
 /**
  * Managing class for user management.
@@ -174,8 +174,7 @@ public class UsersManager implements IUserManager {
 	/**
 	 * (non-Javadoc)
 	 * 
-	 * @see edu.asu.conceptpower.users.IUserManager#storeModifiedPassword(edu.asu.
-	 *      conceptpower.users.User)
+	 * @see edu.asu.conceptpower.servlet.users.IUserManager#storeModifiedPassword(edu.asu.conceptpower.servlet.users.User)
 	 */
 	@Override
 	public void storeModifiedPassword(User user) {

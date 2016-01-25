@@ -9,9 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.users.ConceptpowerGrantedAuthority;
-import edu.asu.conceptpower.users.IUserManager;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.servlet.users.ConceptpowerGrantedAuthority;
+import edu.asu.conceptpower.servlet.users.IUserManager;
+import edu.asu.conceptpower.servlet.users.User;
 
 @Service
 public class UserService implements UserDetailsService {

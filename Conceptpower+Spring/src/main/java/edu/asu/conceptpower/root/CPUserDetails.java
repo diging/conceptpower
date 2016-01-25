@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import edu.asu.conceptpower.users.ConceptpowerGrantedAuthority;
+import edu.asu.conceptpower.servlet.users.ConceptpowerGrantedAuthority;
 
 /**
  * UserDetails implementation for Conceptpower.
