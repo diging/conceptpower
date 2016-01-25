@@ -16,7 +16,7 @@
 </form:form>
 
 <form:form
-	action="${pageContext.servletContext.contextPath}/auth/deleteIndexes"
+	action="${pageContext.servletContext.contextPath}/auth/deleteConcepts"
 	method='post' id="deleteLucene">
 	<table style="vertical-align: top">
 		<tr>

@@ -38,7 +38,9 @@ public class LuceneIndexController {
             manager.indexConcepts();
         } catch (LuceneException ex) {
             model.addAttribute("message", ex.getMessage());
+            return "/auth/luceneIndex";
         }
+        model.addAttribute("message", "Indexed Successfully");
         return "/auth/luceneIndex";
     }
     
@@ -51,6 +53,7 @@ public class LuceneIndexController {
         catch(LuceneException ex){
             model.addAttribute("message",ex.getMessage());
         }
+        model.addAttribute("message","Deleted Indexes Successfully");
         return "/auth/luceneIndex";
     }
 }

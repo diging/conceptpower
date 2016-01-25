@@ -16,16 +16,16 @@
 		<deploy.path.dev>conceptpower</deploy.path.dev>
 		<deploy.path.test>conceptpower-test</deploy.path.test>
 		<deploy.path.prod>conceptpower</deploy.path.prod>
-		<db.files.path>/Users/mkarthik90/Software/Conceptpower/db_files</db.files.path>
+		<db.files.path>/Users/karthikeyanmohan/Software/Conceptpower/db_files</db.files.path>
 		<email.username></email.username>
 		<email.password></email.password>
 		<email.server.port>25</email.server.port>
 		<email.server.host>http://example.net/</email.server.host>
 		<admin.username>admin</admin.username>
 		<admin.password>admin</admin.password>
-		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
+		<wordnet.path>/usr/local/Cellar/wordnet/3.1</wordnet.path>
 		<spring-security-version>3.2.8.RELEASE</spring-security-version>
-		<lucene.index>/Users/mkarthik90/Software/Conceptpower/indexFiles</lucene.index>
+		<lucene.index>/Users/karthikeyanmohan/Software/Conceptpower/indexFiles</lucene.index>
 		<pullrequest></pullrequest>
 	</properties>
 
@@ -52,6 +52,7 @@
 				<admin.user>${admin.username}</admin.user>
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
+				<lucene.path>${lucene.index}</lucene.path>
 			</properties>
 		</profile>
 		<profile>
@@ -68,6 +69,7 @@
 				<admin.user>${admin.username}</admin.user>
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
+				<lucene.path>${lucene.index}</lucene.path>
 			</properties>
 		</profile>
 		<profile>
@@ -84,6 +86,7 @@
 				<admin.user>${admin.username}</admin.user>
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
+				<lucene.path>${lucene.index}</lucene.path>
 			</properties>
 		</profile>
 	</profiles>

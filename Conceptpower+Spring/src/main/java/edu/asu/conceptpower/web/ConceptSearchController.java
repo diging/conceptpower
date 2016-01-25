@@ -59,7 +59,6 @@ public class ConceptSearchController {
     public String search(HttpServletRequest req, ModelMap model,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean,
             BindingResult results) {
-
         if (results.hasErrors()) {
             return "conceptsearch";
         }

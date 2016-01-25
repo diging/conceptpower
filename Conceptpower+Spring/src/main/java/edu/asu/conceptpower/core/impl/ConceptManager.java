@@ -33,8 +33,6 @@ import edu.asu.conceptpower.wordnet.WordNetManager;
 @Service
 public class ConceptManager implements IConceptManager {
 
-	@Autowired
-	private WordNetManager wordnetManager;
 
 	@Autowired
 	private IConceptDBManager client;

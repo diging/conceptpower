@@ -33,6 +33,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -49,6 +50,7 @@ import edu.mit.jwi.item.POS;
 
 @SuppressWarnings("deprecation")
 @Component
+@PropertySource("classpath:lucene.properties")
 public class LuceneUtility implements ILuceneUtility {
 
     @Autowired
@@ -286,8 +288,6 @@ public class LuceneUtility implements ILuceneUtility {
                 // Adding this new data to delete only wordnet concepts while
                 // adding all wordnet concepts from jwi.
                 doc.add(new StringField("conceptType", "wordnetconcept", Field.Store.YES));
-
-                System.out.println(wordId.getPOS() + " " + wordId.getLemma());
                 writer.addDocument(doc);
             }
 

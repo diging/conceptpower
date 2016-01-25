@@ -21,6 +21,7 @@
 	<import resource="rest-service.xml" />
 	
 	<context:component-scan base-package="edu.asu.conceptpower" />
+	<context:property-placeholder location="classpath*:lucene.properties"/>
 
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="${email.host}" />
