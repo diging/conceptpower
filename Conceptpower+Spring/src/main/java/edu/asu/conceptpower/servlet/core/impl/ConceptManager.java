@@ -20,7 +20,6 @@ import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
 import edu.asu.conceptpower.servlet.wordnet.Constants;
-import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
 
 /**
  * This class handles concepts in general. It uses a DB4O client that contains
