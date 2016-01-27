@@ -32,7 +32,7 @@ public class ConceptManagerTest {
 
 	@Rule
 	public ExpectedException expectedEx = ExpectedException.none();
-
+	
 	private ConceptEntry addedConcept;
 	private ConceptEntry wordnetConcept1;
 	private ConceptEntry wordnetConcept2;
@@ -137,9 +137,6 @@ public class ConceptManagerTest {
 		expectedEx.expect(DictionaryDoesNotExistException.class);
 		managerToTest.addConceptListEntry(newConcept);
 	}
-
-	@Rule
-	public ExpectedException expected = ExpectedException.none();
 
 	@Test
 	public void testAddConceptListEntryToWordnet() throws DictionaryDoesNotExistException, DictionaryModifyException {
