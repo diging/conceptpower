@@ -9,6 +9,8 @@
 <h1>Edit concept list</h1>
 <p>Edit concept list here.</p>
 
+<font color="red">${luceneError }</font>
+
 <form:form
 	action="${pageContext.servletContext.contextPath}/auth/conceptlist/storeeditlist"
 	method='post' commandName="conceptListAddForm">

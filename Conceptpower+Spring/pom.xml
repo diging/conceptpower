@@ -25,7 +25,7 @@
 		<admin.password>admin</admin.password>
 		<wordnet.path>C:/Program Files (x86)/WordNet/2.1</wordnet.path>
 		<spring-security-version>3.2.8.RELEASE</spring-security-version>
-		<lucene.index>/Users/mkarthik90/Software/Conceptpower/indexFiles</lucene.index>
+		<lucene.index>/Users/karthikeyanmohan/Software/Conceptpower/indexFiles</lucene.index>
 		<pullrequest></pullrequest>
 	</properties>
 
@@ -52,6 +52,7 @@
 				<admin.user>${admin.username}</admin.user>
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
+				<lucene.path>${lucene.index}</lucene.path>
 			</properties>
 		</profile>
 		<profile>
@@ -68,6 +69,7 @@
 				<admin.user>${admin.username}</admin.user>
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
+				<lucene.path>${lucene.index}</lucene.path>
 			</properties>
 		</profile>
 		<profile>
@@ -84,6 +86,7 @@
 				<admin.user>${admin.username}</admin.user>
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
+				<lucene.path>${lucene.index}</lucene.path>
 			</properties>
 		</profile>
 	</profiles>

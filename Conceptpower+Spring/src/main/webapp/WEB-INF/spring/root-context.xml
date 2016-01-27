@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:se="http://www.springframework.org/schema/security"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:se="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
@@ -11,47 +10,15 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-	<!-- Root Context: defines shared resources visible to all other web components -->
-
-	
-	<import resource="wordnet-config.xml" />
 	<import resource="db4o-config.xml" />
 	<import resource="xml-config.xml" />
+	<context:component-scan base-package="edu.asu.conceptpower.root" />
+
+
+
 	<import resource="spring-security.xml" />
-	<import resource="rest-service.xml" />
 
-	<context:component-scan base-package="edu.asu.conceptpower" />
-
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="${email.host}" />
-		<property name="port" value="${email.port}" />
-		<property name="username" value="${email.user}" />
-		<property name="password" value="${email.pw}" />
-		<property name="javaMailProperties">
-			<props>
-				<prop key="mail.transport.protocol">smtp</prop>
-				<prop key="mail.smtp.auth">true</prop>
-				<prop key="mail.smtp.starttls.enable">true</prop>
-				<prop key="mail.debug">true</prop>
-			</props>
-		</property>
-	</bean>
-
-	<!-- You can have some pre-configured messagess also which are ready to 
-		send -->
-	<bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
-		<property name="from" value="email"></property>
-	</bean>
-	
-	<bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer"></bean>
-	
 	<util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />
-	<bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basenames" value="validatormessages">
-
-		</property>
-	</bean>
 	<util:properties id="config" location="classpath:/config.properties" />
 </beans>
