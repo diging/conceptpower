@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.db4o.ObjectContainer;
@@ -20,7 +21,8 @@ public class UserDatabaseClient {
 	private ObjectContainer client;
 	
 	@Autowired
-	private DatabaseManager userDatabase;
+    @Qualifier("userDatabaseManager")
+    private DatabaseManager userDatabase;
 	
 	@PostConstruct
 	public void init() {

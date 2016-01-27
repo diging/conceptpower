@@ -86,6 +86,7 @@ public class LuceneUtility implements ILuceneUtility {
         try {
             Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + id);
             writer.deleteDocuments(q);
+            writer.commit();
         } catch (Exception ex) {
             throw new LuceneException("Issues in deletion. Please retry");
         }
@@ -295,6 +296,8 @@ public class LuceneUtility implements ILuceneUtility {
 
             iterator = dict.getIndexWordIterator(POS.VERB);
             createDocuments(iterator, dict, writer);
+            
+            writer.commit();
 
         } catch (Exception ex) {
             throw new LuceneException("Problem in Creating Index. Please retry");
