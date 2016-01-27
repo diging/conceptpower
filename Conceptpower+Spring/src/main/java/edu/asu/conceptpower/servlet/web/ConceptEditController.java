@@ -42,119 +42,112 @@ import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
 @Controller
 public class ConceptEditController {
 
-	@Autowired
-	private IConceptManager conceptManager;
+    @Autowired
+    private IConceptManager conceptManager;
 
-	@Autowired
-	private IConceptListManager conceptListManager;
+    @Autowired
+    private IConceptListManager conceptListManager;
 
-	@Autowired
-	private IUserManager usersManager;
+    @Autowired
+    private IUserManager usersManager;
 
-	@Autowired
-	private IConceptTypeManger conceptTypesManager;
-	
-	@Autowired
-	private WordNetManager wordNetManger;
+    @Autowired
+    private IConceptTypeManger conceptTypesManager;
 
-	/**
-	 * This method provides information of a concept to be edited for concept
-	 * edit page
-	 * 
-	 * @param conceptid
-	 *            ID of a concept to be edited
-	 * @param model
-	 *            A generic model holder for Servlet
-	 * @return String value to redirect user to concept edit page
-	 */
+    @Autowired
+    private WordNetManager wordNetManger;
+
+    /**
+     * This method provides information of a concept to be edited for concept
+     * edit page
+     * 
+     * @param conceptid
+     *            ID of a concept to be edited
+     * @param model
+     *            A generic model holder for Servlet
+     * @return String value to redirect user to concept edit page
+     */
     @RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
     public String prepareEditConcept(@PathVariable("conceptid") String conceptid,
             @RequestParam(value = "fromHomeScreen", required = false) String fromHomeScreen,
-            @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model, BindingResult results) {
+            @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model, BindingResult results)
+                    throws LuceneException {
 
         if (fromHomeScreen != null) {
             conceptEditBean.setFromHomeScreen(true);
         }
 
-        try {
-            ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-            ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-            List<ConceptList> allLists = conceptListManager.getAllConceptLists();
-            conceptEditBean.setWord(concept.getWord());
-            conceptEditBean.setSelectedPosValue(concept.getPos().toLowerCase());
-            conceptEditBean.setConceptListValue(concept.getConceptList());
-            conceptEditBean.setSelectedListName(concept.getConceptList());
-            conceptEditBean.setConceptList(allLists);
-            conceptEditBean.setDescription(concept.getDescription().trim());
-            conceptEditBean.setSynonymsids(concept.getSynonymIds());
-            conceptEditBean.setSelectedTypeId(concept.getTypeId());
-            conceptEditBean.setTypes(allTypes);
-            conceptEditBean.setSelectedTypeId(concept.getTypeId());
-            conceptEditBean.setEquals(concept.getEqualTo());
-            conceptEditBean.setSimilar(concept.getSimilarTo());
-            conceptEditBean.setConceptId(concept.getId());
-            conceptEditBean.setConceptEntryList(new ArrayList());
-            model.addAttribute("conceptId", concept.getId());
-        } catch (LuceneException ex) {
-            results.reject("luceneError", ex.getMessage());
-        }
+        ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
+        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+        List<ConceptList> allLists = conceptListManager.getAllConceptLists();
+        conceptEditBean.setWord(concept.getWord());
+        conceptEditBean.setSelectedPosValue(concept.getPos().toLowerCase());
+        conceptEditBean.setConceptListValue(concept.getConceptList());
+        conceptEditBean.setSelectedListName(concept.getConceptList());
+        conceptEditBean.setConceptList(allLists);
+        conceptEditBean.setDescription(concept.getDescription().trim());
+        conceptEditBean.setSynonymsids(concept.getSynonymIds());
+        conceptEditBean.setSelectedTypeId(concept.getTypeId());
+        conceptEditBean.setTypes(allTypes);
+        conceptEditBean.setSelectedTypeId(concept.getTypeId());
+        conceptEditBean.setEquals(concept.getEqualTo());
+        conceptEditBean.setSimilar(concept.getSimilarTo());
+        conceptEditBean.setConceptId(concept.getId());
+        conceptEditBean.setConceptEntryList(new ArrayList());
+        model.addAttribute("conceptId", concept.getId());
         return "/auth/conceptlist/editconcept";
     }
 
-	/**
-	 * This method redirects user to a particular concept list page when the
-	 * user cancels concept edit operation
-	 * 
-	 * @param conceptList
-	 *            Concept list where user has to be redirected
-	 * @return String value which redirect user to a particular concept list
-	 *         page
-	 */
+    /**
+     * This method redirects user to a particular concept list page when the
+     * user cancels concept edit operation
+     * 
+     * @param conceptList
+     *            Concept list where user has to be redirected
+     * @return String value which redirect user to a particular concept list
+     *         page
+     */
     @RequestMapping(value = "auth/concepts/canceledit", method = RequestMethod.GET)
-    public String cancelEdit(@RequestParam(value = "fromHomeScreen",required=false)String fromHomeScreen) {
+    public String cancelEdit(@RequestParam(value = "fromHomeScreen", required = false) String fromHomeScreen) {
         if (fromHomeScreen.equalsIgnoreCase("true")) {
             return "redirect:/login";
         }
         return "redirect:/auth/conceptlist";
     }
 
-	/**
-	 * This method stores the updated information of a concept
-	 * 
-	 * @param id
-	 *            ID of a concept to be edited
-	 * @param req
-	 *            Holds HTTP request information
-	 * @param principal
-	 *            Holds logged in user information
-	 * @return String value which redirects user to a particular concept list
-	 *         page
-	 */
+    /**
+     * This method stores the updated information of a concept
+     * 
+     * @param id
+     *            ID of a concept to be edited
+     * @param req
+     *            Holds HTTP request information
+     * @param principal
+     *            Holds logged in user information
+     * @return String value which redirects user to a particular concept list
+     *         page
+     */
     @RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
     public String confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
-            @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, BindingResult result) {
-        try {
-            ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
-            conceptEntry.setWord(conceptEditBean.getWord());
-            conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
-            conceptEntry.setPos(conceptEditBean.getSelectedPosValue());
-            conceptEntry.setDescription(conceptEditBean.getDescription());
-            conceptEntry.setEqualTo(conceptEditBean.getEquals());
-            conceptEntry.setSimilarTo(conceptEditBean.getSimilar());
-            conceptEntry.setTypeId(conceptEditBean.getSelectedTypeId());
-            conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
+            @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, BindingResult result)
+                    throws LuceneException {
+        ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
+        conceptEntry.setWord(conceptEditBean.getWord());
+        conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
+        conceptEntry.setPos(conceptEditBean.getSelectedPosValue());
+        conceptEntry.setDescription(conceptEditBean.getDescription());
+        conceptEntry.setEqualTo(conceptEditBean.getEquals());
+        conceptEntry.setSimilarTo(conceptEditBean.getSimilar());
+        conceptEntry.setTypeId(conceptEditBean.getSelectedTypeId());
+        conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
 
-            String userId = usersManager.findUser(principal.getName()).getUsername();
-            String modified = conceptEntry.getModified() != null ? conceptEntry.getModified() : "";
-            if (!modified.trim().isEmpty())
-                modified += ", ";
-            conceptEntry.setModified(modified + userId + "@" + (new Date()).toString());
+        String userId = usersManager.findUser(principal.getName()).getUsername();
+        String modified = conceptEntry.getModified() != null ? conceptEntry.getModified() : "";
+        if (!modified.trim().isEmpty())
+            modified += ", ";
+        conceptEntry.setModified(modified + userId + "@" + (new Date()).toString());
 
-            conceptManager.storeModifiedConcept(conceptEntry);
-
-        } catch (LuceneException ex) {
-            result.rejectValue("luceneError", ex.getMessage());
-        }
+        conceptManager.storeModifiedConcept(conceptEntry);
 
         if (conceptEditBean.isFromHomeScreen()) {
             return "redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="
@@ -164,119 +157,110 @@ public class ConceptEditController {
         return "redirect:/auth/" + conceptEditBean.getConceptListValue() + "/concepts";
     }
 
-	/**
-	 * This method provides the existing concept words for a given synonym
-	 * 
-	 * @param synonymname
-	 *            Synonym concept name for which the existing concepts has to be
-	 *            fetched
-	 * @return The list of existing concepts
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
-    public ResponseEntity<String> searchConcept(@RequestParam("synonymname") String synonymname) {
+    /**
+     * This method provides the existing concept words for a given synonym
+     * 
+     * @param synonymname
+     *            Synonym concept name for which the existing concepts has to be
+     *            fetched
+     * @return The list of existing concepts
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
+    public ResponseEntity<String> searchConcept(@RequestParam("synonymname") String synonymname)
+            throws LuceneException {
         ConceptEntry[] entries = null;
-        try {
-            entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
-        } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
         List<ConceptEntry> synonyms = Arrays.asList(entries);
         return new ResponseEntity<String>(buildJSON(synonyms, true, false), HttpStatus.OK);
     }
 
-	/**
-	 * This method provides the list of existing synonyms for a concept
-	 * 
-	 * @param conceptid
-	 *            Holds the ID of a concept
-	 * @param model
-	 *            A generic model holder for Servlet
-	 * @return List of existing synonyms
-	 * @throws JSONException
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
-    public ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model) {
+    /**
+     * This method provides the list of existing synonyms for a concept
+     * 
+     * @param conceptid
+     *            Holds the ID of a concept
+     * @param model
+     *            A generic model holder for Servlet
+     * @return List of existing synonyms
+     * @throws JSONException
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
+    public ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model)
+            throws LuceneException {
         List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
-        try {
-            ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-            String synonymIds = concept.getSynonymIds();
+        ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
+        String synonymIds = concept.getSynonymIds();
 
-            // Inside getConceptEntry . In fillConceptEntry the below logic is
-            // performed
-            if (synonymIds != null) {
-                String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
-                if (ids != null) {
-                    for (String id : ids) {
-                        if (id == null || id.isEmpty())
-                            continue;
-                        ConceptEntry synonym = conceptManager.getConceptEntry(id);
-                        if (synonym != null)
-                            synonyms.add(synonym);
-                    }
+        // Inside getConceptEntry . In fillConceptEntry the below logic is
+        // performed
+        if (synonymIds != null) {
+            String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
+            if (ids != null) {
+                for (String id : ids) {
+                    if (id == null || id.isEmpty())
+                        continue;
+                    ConceptEntry synonym = conceptManager.getConceptEntry(id);
+                    if (synonym != null)
+                        synonyms.add(synonym);
                 }
             }
-        } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>(buildJSON(synonyms, false, true), HttpStatus.OK);
     }
 
-	/**
-	 * This method fetches the synonym details based on the synonym id selected
-	 * in the Add synonym table.
-	 * 
-	 * @param synonymid
-	 *            Holds the ID of a synonym
-	 * @param model
-	 *            A generic model holder for Servlet
-	 * @return synonym details
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "getConceptAddSynonyms")
-    public ResponseEntity<String> getSynonymRows(@RequestParam("synonymid") String synonymid, ModelMap model) {
+    /**
+     * This method fetches the synonym details based on the synonym id selected
+     * in the Add synonym table.
+     * 
+     * @param synonymid
+     *            Holds the ID of a synonym
+     * @param model
+     *            A generic model holder for Servlet
+     * @return synonym details
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "getConceptAddSynonyms")
+    public ResponseEntity<String> getSynonymRows(@RequestParam("synonymid") String synonymid, ModelMap model)
+            throws LuceneException {
         ConceptEntry synonym = null;
-        try {
-            synonym = conceptManager.getConceptEntry(synonymid);
-        } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        synonym = conceptManager.getConceptEntry(synonymid);
 
         List<ConceptEntry> synonymList = new ArrayList<ConceptEntry>();
         synonymList.add(synonym);
         return new ResponseEntity<String>(buildJSON(synonymList, false, true), HttpStatus.OK);
     }
 
-	private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired, boolean synonymRequired) {
+    private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired, boolean synonymRequired) {
 
-		int i = 0;
-		StringBuffer jsonStringBuilder = new StringBuffer("{");
-		jsonStringBuilder.append("\"Total\"");
-		jsonStringBuilder.append(":");
-		jsonStringBuilder.append(synonyms.size());
-		jsonStringBuilder.append(",");
-		jsonStringBuilder.append("\"synonyms\":");
-		jsonStringBuilder.append("[");
-		for (ConceptEntry syn : synonyms) {
-			// Appending for next element in JSON
-			if (i != 0) {
-				jsonStringBuilder.append(",");
-			}
+        int i = 0;
+        StringBuffer jsonStringBuilder = new StringBuffer("{");
+        jsonStringBuilder.append("\"Total\"");
+        jsonStringBuilder.append(":");
+        jsonStringBuilder.append(synonyms.size());
+        jsonStringBuilder.append(",");
+        jsonStringBuilder.append("\"synonyms\":");
+        jsonStringBuilder.append("[");
+        for (ConceptEntry syn : synonyms) {
+            // Appending for next element in JSON
+            if (i != 0) {
+                jsonStringBuilder.append(",");
+            }
 
-			jsonStringBuilder.append("{");
-			jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
-			jsonStringBuilder.append(",");
-			jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
-			jsonStringBuilder.append(",");
-			jsonStringBuilder.append("\"Description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
-			jsonStringBuilder.append(",");
-			String pos = syn.getPos().replaceAll("\"", "'");
-			jsonStringBuilder.append("\"Pos\":\"" + pos + "\"");
-			jsonStringBuilder.append(",");
-			jsonStringBuilder.append("\"SynonymObject\":\"" + syn + "\"");
-			jsonStringBuilder.append("}");
-			i++;
-		}
-		jsonStringBuilder.append("]");
-		jsonStringBuilder.append("}");
-		return jsonStringBuilder.toString();
-	}
+            jsonStringBuilder.append("{");
+            jsonStringBuilder.append("\"Id\":\"" + syn.getId() + "\"");
+            jsonStringBuilder.append(",");
+            jsonStringBuilder.append("\"Word\":\"" + syn.getWord() + "\"");
+            jsonStringBuilder.append(",");
+            jsonStringBuilder.append("\"Description\":\"" + syn.getDescription().replaceAll("\"", "'") + "\"");
+            jsonStringBuilder.append(",");
+            String pos = syn.getPos().replaceAll("\"", "'");
+            jsonStringBuilder.append("\"Pos\":\"" + pos + "\"");
+            jsonStringBuilder.append(",");
+            jsonStringBuilder.append("\"SynonymObject\":\"" + syn + "\"");
+            jsonStringBuilder.append("}");
+            i++;
+        }
+        jsonStringBuilder.append("]");
+        jsonStringBuilder.append("}");
+        return jsonStringBuilder.toString();
+    }
 }

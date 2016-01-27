@@ -41,148 +41,134 @@ import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
 @Controller
 public class ConceptWrapperAddController {
 
-	@Autowired
-	private IConceptWrapperCreator wrapperCreator;
+    @Autowired
+    private IConceptWrapperCreator wrapperCreator;
 
-	@Autowired
-	private IConceptManager conceptManager;
-	
-	@Autowired
-	private IConceptListManager conceptListManager;
+    @Autowired
+    private IConceptManager conceptManager;
 
-	@Autowired
-	private IConceptTypeManger conceptTypesManager;
+    @Autowired
+    private IConceptListManager conceptListManager;
 
-	/**
-	 * This method provides required information for concept wrapper creation
-	 * 
-	 * @param model
-	 *            A generic model holder for Servlet
-	 * @return String value which redirects user to creating concept wrappers
-	 *         page
-	 */
-	@RequestMapping(value = "auth/conceptlist/addconceptwrapper")
-	public String prepareConceptWrapperAdd(HttpServletRequest req,ModelMap model) {
+    @Autowired
+    private IConceptTypeManger conceptTypesManager;
 
-		if (req.getAttribute("errormsg") != null)
-			model.addAttribute("errormsg", req.getAttribute("errormsg"));
-		
-		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-		Map<String, String> types = new LinkedHashMap<String, String>();
-		for (ConceptType conceptType : allTypes) {
-			types.put(conceptType.getTypeId(), conceptType.getTypeName());
-		}
+    /**
+     * This method provides required information for concept wrapper creation
+     * 
+     * @param model
+     *            A generic model holder for Servlet
+     * @return String value which redirects user to creating concept wrappers
+     *         page
+     */
+    @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
+    public String prepareConceptWrapperAdd(HttpServletRequest req, ModelMap model) {
 
-		model.addAttribute("types", types);
+        if (req.getAttribute("errormsg") != null)
+            model.addAttribute("errormsg", req.getAttribute("errormsg"));
 
-		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
-		Map<String, String> lists = new LinkedHashMap<String, String>();
-		for (ConceptList conceptList : allLists) {
-			lists.put(conceptList.getConceptListName(),
-					conceptList.getConceptListName());
-		}
-		model.addAttribute("lists", lists);
-		return "/auth/conceptlist/addconceptwrapper";
-	}
-
-	/**
-	 * This method creates a concept wrapper for the selected concept entries
-	 * 
-	 * @param req
-	 *            Holds the HTTP request information
-	 * @param principal
-	 *            Holds logged in user information
-	 * @return String value which redirects user to a particular concept list
-	 *         page
-	 * @throws DictionaryModifyException 
-	 * @throws DictionaryDoesNotExistException 
-	 */
-	@RequestMapping(value = "auth/conceptlist/addconceptwrapper/add", method = RequestMethod.POST)
-	public String addConcept(HttpServletRequest req, Principal principal, Model model) throws DictionaryDoesNotExistException, DictionaryModifyException {
-
-		if (req.getParameter("lists") == null || req.getParameter("lists").trim().isEmpty()) {
-		    req.setAttribute("errormsg", "You have to select a concept list.");
-			return "forward:/auth/conceptlist/addconceptwrapper";
-		}
-		String[] wrappers = req.getParameter("wrapperids").split(
-				Constants.CONCEPT_SEPARATOR);
-		try{
-		if (wrappers.length > 0) {
-			ConceptEntry conceptEntry = new ConceptEntry();
-			conceptEntry.setWord(conceptManager
-					.getConceptEntry(wrappers[0]).getWord());
-			conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0])
-					.getPos());
-			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-			conceptEntry.setWordnetId(req.getParameter("wrapperids"));
-			conceptEntry.setConceptList(req.getParameter("lists"));
-			conceptEntry.setDescription(req.getParameter("description"));
-			conceptEntry.setEqualTo(req.getParameter("equals"));
-			conceptEntry.setSimilarTo(req.getParameter("similar"));
-			conceptEntry.setTypeId(req.getParameter("types"));
-			conceptEntry.setCreatorId(principal.getName()); 
-			conceptManager.addConceptListEntry(conceptEntry);	
-		}
-		}
-		catch(LuceneException ex){
-		    model.addAttribute("luceneError",ex.getMessage());
-		    return "forward:/auth/conceptlist/addconceptwrapper";
-		}
-
-		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
-	}
-
-	/**
-	 * This method provides search result for a particular concept search query
-	 * 
-	 * @param req
-	 *            Holds HTTP request information
-	 * @param model
-	 *            A generic model holder for Servlet
-	 * @return String value which redirects user to concept wrapper creation
-	 *         page
-	 */
-	@RequestMapping(value = "/auth/conceptlist/addconceptwrapper/conceptsearch", method = RequestMethod.POST)
-	public String search(HttpServletRequest req, ModelMap model) {
-
-		String concept = req.getParameter("name");
-		String pos = req.getParameter("pos");
-        try {
-            if (!concept.trim().isEmpty()) {
-
-                ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(concept, pos, "WordNetConcept");
-                List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
-                model.addAttribute("result", foundConcepts);
-            }
-        } catch (LuceneException ex) {
-            model.addAttribute("luceneError", ex.getMessage());
+        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+        Map<String, String> types = new LinkedHashMap<String, String>();
+        for (ConceptType conceptType : allTypes) {
+            types.put(conceptType.getTypeId(), conceptType.getTypeName());
         }
-		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-		Map<String, String> types = new LinkedHashMap<String, String>();
-		for (ConceptType conceptType : allTypes) {
-			types.put(conceptType.getTypeId(), conceptType.getTypeName());
-		}
 
-		model.addAttribute("types", types);
+        model.addAttribute("types", types);
 
-		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
-		Map<String, String> lists = new LinkedHashMap<String, String>();
-		for (ConceptList conceptList : allLists) {
-			lists.put(conceptList.getConceptListName(),
-					conceptList.getConceptListName());
-		}
-		model.addAttribute("lists", lists);
+        List<ConceptList> allLists = conceptListManager.getAllConceptLists();
+        Map<String, String> lists = new LinkedHashMap<String, String>();
+        for (ConceptList conceptList : allLists) {
+            lists.put(conceptList.getConceptListName(), conceptList.getConceptListName());
+        }
+        model.addAttribute("lists", lists);
+        return "/auth/conceptlist/addconceptwrapper";
+    }
 
-		return "/auth/conceptlist/addconceptwrapper";
-	}
+    /**
+     * This method creates a concept wrapper for the selected concept entries
+     * 
+     * @param req
+     *            Holds the HTTP request information
+     * @param principal
+     *            Holds logged in user information
+     * @return String value which redirects user to a particular concept list
+     *         page
+     * @throws DictionaryModifyException
+     * @throws DictionaryDoesNotExistException
+     */
+    @RequestMapping(value = "auth/conceptlist/addconceptwrapper/add", method = RequestMethod.POST)
+    public String addConcept(HttpServletRequest req, Principal principal, Model model)
+            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException {
 
-	/**
-	 * This method provides array of concepts for a given string
-	 * 
-	 * @param synonymname
-	 *            A synonym string for which we need to find existing concepts
-	 * @return Returns array of concepts found for synonym name
-	 */
+        if (req.getParameter("lists") == null || req.getParameter("lists").trim().isEmpty()) {
+            req.setAttribute("errormsg", "You have to select a concept list.");
+            return "forward:/auth/conceptlist/addconceptwrapper";
+        }
+        String[] wrappers = req.getParameter("wrapperids").split(Constants.CONCEPT_SEPARATOR);
+        if (wrappers.length > 0) {
+            ConceptEntry conceptEntry = new ConceptEntry();
+            conceptEntry.setWord(conceptManager.getConceptEntry(wrappers[0]).getWord());
+            conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
+            conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
+            conceptEntry.setWordnetId(req.getParameter("wrapperids"));
+            conceptEntry.setConceptList(req.getParameter("lists"));
+            conceptEntry.setDescription(req.getParameter("description"));
+            conceptEntry.setEqualTo(req.getParameter("equals"));
+            conceptEntry.setSimilarTo(req.getParameter("similar"));
+            conceptEntry.setTypeId(req.getParameter("types"));
+            conceptEntry.setCreatorId(principal.getName());
+            conceptManager.addConceptListEntry(conceptEntry);
+        }
+
+        return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
+    }
+
+    /**
+     * This method provides search result for a particular concept search query
+     * 
+     * @param req
+     *            Holds HTTP request information
+     * @param model
+     *            A generic model holder for Servlet
+     * @return String value which redirects user to concept wrapper creation
+     *         page
+     */
+    @RequestMapping(value = "/auth/conceptlist/addconceptwrapper/conceptsearch", method = RequestMethod.POST)
+    public String search(HttpServletRequest req, ModelMap model) throws LuceneException {
+
+        String concept = req.getParameter("name");
+        String pos = req.getParameter("pos");
+        if (!concept.trim().isEmpty()) {
+
+            ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(concept, pos, "WordNetConcept");
+            List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
+            model.addAttribute("result", foundConcepts);
+        }
+        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+        Map<String, String> types = new LinkedHashMap<String, String>();
+        for (ConceptType conceptType : allTypes) {
+            types.put(conceptType.getTypeId(), conceptType.getTypeName());
+        }
+
+        model.addAttribute("types", types);
+
+        List<ConceptList> allLists = conceptListManager.getAllConceptLists();
+        Map<String, String> lists = new LinkedHashMap<String, String>();
+        for (ConceptList conceptList : allLists) {
+            lists.put(conceptList.getConceptListName(), conceptList.getConceptListName());
+        }
+        model.addAttribute("lists", lists);
+
+        return "/auth/conceptlist/addconceptwrapper";
+    }
+
+    /**
+     * This method provides array of concepts for a given string
+     * 
+     * @param synonymname
+     *            A synonym string for which we need to find existing concepts
+     * @return Returns array of concepts found for synonym name
+     */
     @RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
     public ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname) {
         ConceptEntry[] entries = null;

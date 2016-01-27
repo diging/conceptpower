@@ -258,7 +258,8 @@ public class LuceneUtility implements ILuceneUtility {
                 StringBuffer sb = new StringBuffer();
                 for (IWord syn : synonyms) {
                     if (!syn.getID().equals(word.getID()))
-                        sb.append(syn.getID().toString() + edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR);
+                        sb.append(
+                                syn.getID().toString() + edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR);
                 }
                 doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
                 // Adding this new data to delete only wordnet concepts while
@@ -296,7 +297,7 @@ public class LuceneUtility implements ILuceneUtility {
 
             iterator = dict.getIndexWordIterator(POS.VERB);
             createDocuments(iterator, dict, writer);
-            
+
             writer.commit();
 
         } catch (Exception ex) {

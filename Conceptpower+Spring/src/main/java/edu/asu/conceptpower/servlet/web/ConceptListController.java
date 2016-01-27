@@ -30,110 +30,94 @@ import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
 @Controller
 public class ConceptListController {
 
-	@Autowired
-	private IConceptManager conceptManager;
-	
-	@Autowired
-	private IConceptListManager conceptListManager;
+    @Autowired
+    private IConceptManager conceptManager;
 
-	@Autowired
-	private TypeDatabaseClient typeDatabaseClient;
+    @Autowired
+    private IConceptListManager conceptListManager;
 
-	@Autowired
-	private URIHelper URICreator;
+    @Autowired
+    private TypeDatabaseClient typeDatabaseClient;
 
-	@Autowired
-	private IConceptWrapperCreator wrapperCreator;
+    @Autowired
+    private URIHelper URICreator;
 
-	/**
-	 * This method provides information of all the existing concept lists for
-	 * showing concept list page
-	 * 
-	 * @param model
-	 *            A generic model holder for Servlet
-	 * @return String value to redirect user to all concpet list page
-	 */
-	@RequestMapping(value = "auth/conceptlist")
-	public String prepareShowConceptList(ModelMap model) {
+    @Autowired
+    private IConceptWrapperCreator wrapperCreator;
 
-		List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
-		model.addAttribute("result", conceptLists);
+    /**
+     * This method provides information of all the existing concept lists for
+     * showing concept list page
+     * 
+     * @param model
+     *            A generic model holder for Servlet
+     * @return String value to redirect user to all concpet list page
+     */
+    @RequestMapping(value = "auth/conceptlist")
+    public String prepareShowConceptList(ModelMap model) {
 
-		return "/auth/conceptlist";
-	}
+        List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
+        model.addAttribute("result", conceptLists);
 
-	/**
-	 * This method provides infomaiton of concepts for a given concept list
-	 * 
-	 * @param list
-	 * @param model
-	 *            A generic model holder for Servlet
-	 * @return Return sting value to redirect user to a particular concept list
-	 *         page
-	 */
-	@RequestMapping(value = "auth/{listid}/concepts", method = RequestMethod.GET)
-	public String getConceptsOfConceptList(@PathVariable("listid") String list,
-			ModelMap model) {
-	    
-	    try{
-		List<ConceptEntry> founds = conceptManager.getConceptListEntries(list);
+        return "/auth/conceptlist";
+    }
 
-		List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-				.createWrappers(founds != null ? founds
-						.toArray(new ConceptEntry[founds.size()])
-						: new ConceptEntry[0]);
+    /**
+     * This method provides infomaiton of concepts for a given concept list
+     * 
+     * @param list
+     * @param model
+     *            A generic model holder for Servlet
+     * @return Return sting value to redirect user to a particular concept list
+     *         page
+     */
+    @RequestMapping(value = "auth/{listid}/concepts", method = RequestMethod.GET)
+    public String getConceptsOfConceptList(@PathVariable("listid") String list, ModelMap model) throws LuceneException {
 
-		model.addAttribute("result", foundConcepts);
-	    }
-        catch(LuceneException ex){
-            model.addAttribute("luceneError", ex.getMessage());
-        }
-		return "/auth/conceptlist/concepts";
-	}
+        List<ConceptEntry> founds = conceptManager.getConceptListEntries(list);
 
-	/**
-	 * This method provides details of a concept for given concept ID
-	 * 
-	 * @param conceptid
-	 *            ID of a concept
-	 * @return Map containing concept details
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "conceptDetail", produces = "application/json")
-	public @ResponseBody ResponseEntity<String> getConceptDetails(
-			@RequestParam("conceptid") String conceptid) {
+        List<ConceptEntryWrapper> foundConcepts = wrapperCreator
+                .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
+
+        model.addAttribute("result", foundConcepts);
+        return "/auth/conceptlist/concepts";
+    }
+
+    /**
+     * This method provides details of a concept for given concept ID
+     * 
+     * @param conceptid
+     *            ID of a concept
+     * @return Map containing concept details
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "conceptDetail", produces = "application/json")
+    public @ResponseBody ResponseEntity<String> getConceptDetails(@RequestParam("conceptid") String conceptid)
+            throws LuceneException {
         ConceptEntryWrapper conceptEntry = null;
-        try {
-            conceptEntry = new ConceptEntryWrapper(conceptManager.getConceptEntry(conceptid));
-        } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-		Map<String, String> details = new HashMap<String, String>();
+        conceptEntry = new ConceptEntryWrapper(conceptManager.getConceptEntry(conceptid));
+        Map<String, String> details = new HashMap<String, String>();
 
-		details.put("name", conceptEntry.getEntry().getWord());
-		details.put("id", conceptEntry.getEntry().getId());
-		details.put("uri", URICreator.getURI(conceptEntry.getEntry()));
-		//This condition has been included to make sure null values are not displayed in the details dialog box
-		details.put("wordnetid", conceptEntry.getEntry().getWordnetId()==null?"":conceptEntry.getEntry().getWordnetId());
-		details.put("pos", conceptEntry.getEntry().getPos());
-		details.put("conceptlist", conceptEntry.getEntry().getConceptList());
+        details.put("name", conceptEntry.getEntry().getWord());
+        details.put("id", conceptEntry.getEntry().getId());
+        details.put("uri", URICreator.getURI(conceptEntry.getEntry()));
+        // This condition has been included to make sure null values are not
+        // displayed in the details dialog box
+        details.put("wordnetid",
+                conceptEntry.getEntry().getWordnetId() == null ? "" : conceptEntry.getEntry().getWordnetId());
+        details.put("pos", conceptEntry.getEntry().getPos());
+        details.put("conceptlist", conceptEntry.getEntry().getConceptList());
 
-		ConceptType type = conceptEntry.getEntry().getTypeId() == null ? null
-				: typeDatabaseClient.getType(
-						conceptEntry.getEntry().getTypeId());
-		
-		details.put(
-				"type",
-				type == null ? "" : type.getTypeName());
-		details.put("equalto",
-				conceptEntry.getEntry().getEqualTo() == null ? ""
-						: conceptEntry.getEntry().getEqualTo());
-		details.put("similarto",
-				conceptEntry.getEntry().getSimilarTo() == null ? ""
-						: conceptEntry.getEntry().getSimilarTo());
-		details.put("creator",
-				conceptEntry.getEntry().getCreatorId() == null ? ""
-						: conceptEntry.getEntry().getCreatorId());
+        ConceptType type = conceptEntry.getEntry().getTypeId() == null ? null
+                : typeDatabaseClient.getType(conceptEntry.getEntry().getTypeId());
 
-		return new ResponseEntity<String>(new JSONObject(details).toString(), HttpStatus.OK);
-	}
+        details.put("type", type == null ? "" : type.getTypeName());
+        details.put("equalto",
+                conceptEntry.getEntry().getEqualTo() == null ? "" : conceptEntry.getEntry().getEqualTo());
+        details.put("similarto",
+                conceptEntry.getEntry().getSimilarTo() == null ? "" : conceptEntry.getEntry().getSimilarTo());
+        details.put("creator",
+                conceptEntry.getEntry().getCreatorId() == null ? "" : conceptEntry.getEntry().getCreatorId());
+
+        return new ResponseEntity<String>(new JSONObject(details).toString(), HttpStatus.OK);
+    }
 }

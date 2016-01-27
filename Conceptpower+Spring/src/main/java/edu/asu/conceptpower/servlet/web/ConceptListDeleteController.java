@@ -19,74 +19,67 @@ import edu.asu.conceptpower.servlet.users.IUserManager;
 @Controller
 public class ConceptListDeleteController {
 
-	@Autowired
-	private IUserManager usersManager;
+    @Autowired
+    private IUserManager usersManager;
 
-	@Autowired
-	private IConceptManager conceptManager;
-	
-	@Autowired
-	private IConceptListManager conceptListManager;
+    @Autowired
+    private IConceptManager conceptManager;
 
-	/**
-	 * This method provides information of a concept list to be deleted
-	 * 
-	 * @param name
-	 *            Concept list name to be deleted
-	 * @param model
-	 *            A generic model holder for Servlet
-	 * @return String to redirect user to delete concept list page
-	 */
-	@RequestMapping(value = "auth/conceptlist/deletelist/{name}", method = RequestMethod.GET)
-	public String prepareDeleteConceptList(@PathVariable("name") String name,
-			ModelMap model) {
-		ConceptList list = conceptListManager.getConceptList(name);
-		model.addAttribute("listName", list.getConceptListName());
-		model.addAttribute("description", list.getDescription());
+    @Autowired
+    private IConceptListManager conceptListManager;
 
-		// condition to check enable whether to delete the conceptlist
-		boolean enableDelete = true;
-		List<ConceptEntry> conceptEntries = null;
-		try{
-		    conceptEntries = conceptManager
-				.getConceptListEntries(name);
-		}
-		catch(LuceneException ex){
-		    model.addAttribute("luceneError",ex.getMessage());
-		}
+    /**
+     * This method provides information of a concept list to be deleted
+     * 
+     * @param name
+     *            Concept list name to be deleted
+     * @param model
+     *            A generic model holder for Servlet
+     * @return String to redirect user to delete concept list page
+     */
+    @RequestMapping(value = "auth/conceptlist/deletelist/{name}", method = RequestMethod.GET)
+    public String prepareDeleteConceptList(@PathVariable("name") String name, ModelMap model) throws LuceneException {
+        ConceptList list = conceptListManager.getConceptList(name);
+        model.addAttribute("listName", list.getConceptListName());
+        model.addAttribute("description", list.getDescription());
 
-		if (conceptEntries.size() > 0)
-			enableDelete = false;
+        // condition to check enable whether to delete the conceptlist
+        boolean enableDelete = true;
+        List<ConceptEntry> conceptEntries = null;
+        conceptEntries = conceptManager.getConceptListEntries(name);
 
-		model.addAttribute("enabledelete", enableDelete);
+        if (conceptEntries.size() > 0)
+            enableDelete = false;
 
-		return "/auth/conceptlist/deletelist";
-	}
+        model.addAttribute("enabledelete", enableDelete);
 
-	/**
-	 * This method deletes a given concept list
-	 * 
-	 * @param listName
-	 *            Concept list name
-	 * @return String value to redirect user to concept list page
-	 */
-	@RequestMapping(value = "auth/conceptlist/deleteconceptlistconfirm/{listname}", method = RequestMethod.GET)
-	public String deleteConceptList(@PathVariable("listname") String listName) {
+        return "/auth/conceptlist/deletelist";
+    }
 
-		conceptListManager.deleteConceptList(listName);
+    /**
+     * This method deletes a given concept list
+     * 
+     * @param listName
+     *            Concept list name
+     * @return String value to redirect user to concept list page
+     */
+    @RequestMapping(value = "auth/conceptlist/deleteconceptlistconfirm/{listname}", method = RequestMethod.GET)
+    public String deleteConceptList(@PathVariable("listname") String listName) {
 
-		return "redirect:/auth/conceptlist";
-	}
+        conceptListManager.deleteConceptList(listName);
 
-	/**
-	 * This method redirects user to concept list page when user cancels concept
-	 * list delete operation
-	 * 
-	 * @return String value to redirect user to concept list page
-	 */
-	@RequestMapping(value = "auth/conceptlist/canceldelete/", method = RequestMethod.GET)
-	public String cancelConceptListDelete() {
-		return "redirect:/auth/conceptlist";
-	}
+        return "redirect:/auth/conceptlist";
+    }
+
+    /**
+     * This method redirects user to concept list page when user cancels concept
+     * list delete operation
+     * 
+     * @return String value to redirect user to concept list page
+     */
+    @RequestMapping(value = "auth/conceptlist/canceldelete/", method = RequestMethod.GET)
+    public String cancelConceptListDelete() {
+        return "redirect:/auth/conceptlist";
+    }
 
 }

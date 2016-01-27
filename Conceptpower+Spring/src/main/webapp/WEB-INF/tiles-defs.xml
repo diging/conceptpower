@@ -237,5 +237,12 @@
 			value="/WEB-INF/views/auth/lucene/luceneindex.jsp" />
 		<put-attribute name="currentPage" value="luceneIndex" />
 	</definition>
+	
+	<!-- Error pages -->
+	<definition name="auth/notImplemented" extends="base.definition">
+		<put-attribute name="title" value="ConceptPower - Lucene Error" />
+		<put-attribute name="content"
+			value="/WEB-INF/views/exceptions/notImplemented.jsp" />
+	</definition>
 
 </tiles-definitions>

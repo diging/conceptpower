@@ -113,9 +113,10 @@ public class ConceptAddController {
 	 * @param principal
 	 *            holds log in information
 	 * @return returns string which redirects to concept list page
+	 * @throws LuceneException 
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
-    public String addConcept(HttpServletRequest req, Principal principal,ModelMap model) {
+    public String addConcept(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException {
 
         ConceptEntry conceptEntry = new ConceptEntry();
         conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
@@ -127,13 +128,7 @@ public class ConceptAddController {
         conceptEntry.setSimilarTo(req.getParameter("similar"));
         conceptEntry.setTypeId(req.getParameter("types"));
         conceptEntry.setCreatorId(principal.getName());
-        
-        try {
-            conceptManager.addConcept(conceptEntry);
-        } catch (LuceneException ex) {
-            model.addAttribute("luceneError", ex.getMessage());
-        }
-
+        conceptManager.addConcept(conceptEntry);
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
     }
 
@@ -146,13 +141,9 @@ public class ConceptAddController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")
     public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname,
-            @RequestParam("addedsynonym") String addedSynonnym) {
+            @RequestParam("addedsynonym") String addedSynonnym) throws LuceneException {
         ConceptEntry[] entries = null;
-        try {
             entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
-        } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
         List<String> addedSynonymList = Arrays.asList(addedSynonnym.replaceAll("\\s", "").split(","));
         // Removing existing synonym from the entries.
         int i = 0;
@@ -181,39 +172,34 @@ public class ConceptAddController {
         // return entries;
     }
 
-	/**
-	 * This method provides array of existing concepts for a given string
-	 * 
-	 * @param conceptname
-	 *            A string value for which we need to find existing concepts
-	 * @return Returns existing concepts which contain conceptname
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "getExistingConcepts")
-	public @ResponseBody ResponseEntity<String> getExistingConcepts(
-			@RequestParam("conceptname") String conceptname) {
-		if (conceptname.isEmpty())
-			return null;
-		ConceptEntry[] entries = null;
+    /**
+     * This method provides array of existing concepts for a given string
+     * 
+     * @param conceptname
+     *            A string value for which we need to find existing concepts
+     * @return Returns existing concepts which contain conceptname
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "getExistingConcepts")
+    public @ResponseBody ResponseEntity<String> getExistingConcepts(@RequestParam("conceptname") String conceptname)
+            throws LuceneException {
+        if (conceptname.isEmpty())
+            return null;
+        ConceptEntry[] entries = null;
+        entries = conceptManager.getConceptListEntriesForWord(conceptname.trim());
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectWriter writer = mapper.writer();
         try {
-            entries = conceptManager.getConceptListEntriesForWord(conceptname.trim());
-        } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(writer.writeValueAsString(entries), HttpStatus.OK);
+        } catch (JsonGenerationException e) {
+            logger.error("Couldn't parse results.", e);
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (JsonMappingException e) {
+            logger.error("Couldn't parse results.", e);
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IOException e) {
+            logger.error("Couldn't parse results.", e);
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-		
-		ObjectMapper mapper=new ObjectMapper();
-		ObjectWriter writer=mapper.writer();
-		try {
-			return new ResponseEntity<String>(writer.writeValueAsString(entries), HttpStatus.OK);
-		} catch (JsonGenerationException e) {
-			logger.error("Couldn't parse results.", e);
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (JsonMappingException e) {
-			logger.error("Couldn't parse results.", e);
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (IOException e) {
-			logger.error("Couldn't parse results.", e);
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    }
 
 }

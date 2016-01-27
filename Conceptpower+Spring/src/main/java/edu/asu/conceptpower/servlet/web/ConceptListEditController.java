@@ -79,7 +79,7 @@ public class ConceptListEditController {
     @RequestMapping(value = "auth/conceptlist/storeeditlist", method = RequestMethod.POST)
     public String editList(HttpServletRequest req,
             @Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
-            BindingResult result, ModelMap model) {
+            BindingResult result, ModelMap model) throws LuceneException {
 
         if (result.hasErrors()) {
             return "/auth/conceptlist/editlist";
@@ -91,20 +91,15 @@ public class ConceptListEditController {
 
         conceptListManager.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
 
-        try {
-            // modify the name for all the existing concepts under this concept
-            // list
-            List<ConceptEntry> entries = conceptManager.getConceptListEntries(conceptListAddForm.getOldListName());
-            Iterator<ConceptEntry> entriesIterator = entries.iterator();
+        // modify the name for all the existing concepts under this concept
+        // list
+        List<ConceptEntry> entries = conceptManager.getConceptListEntries(conceptListAddForm.getOldListName());
+        Iterator<ConceptEntry> entriesIterator = entries.iterator();
 
-            while (entriesIterator.hasNext()) {
-                ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
-                conceptEntry.setConceptList(list.getConceptListName());
-                conceptManager.storeModifiedConcept(conceptEntry);
-            }
-        } catch (LuceneException ex) {
-            model.addAttribute("luceneError", ex.getMessage());
-            return "/auth/conceptlist/editlist";
+        while (entriesIterator.hasNext()) {
+            ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
+            conceptEntry.setConceptList(list.getConceptListName());
+            conceptManager.storeModifiedConcept(conceptEntry);
         }
         return "redirect:/auth/conceptlist";
     }

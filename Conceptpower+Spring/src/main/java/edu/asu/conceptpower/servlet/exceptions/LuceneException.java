@@ -36,5 +36,5 @@ public class LuceneException extends Exception {
     public LuceneException(String arg0, Throwable arg1) {
         super(arg0, arg1);
     }
-
+    
 }

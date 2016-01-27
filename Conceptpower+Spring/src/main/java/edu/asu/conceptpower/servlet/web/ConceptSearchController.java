@@ -57,20 +57,16 @@ public class ConceptSearchController {
      */
     @RequestMapping(value = "/home/conceptsearch", method = RequestMethod.GET)
     public String search(HttpServletRequest req, ModelMap model,
-            @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean,
-            BindingResult results) {
+            @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results)
+                    throws LuceneException {
         if (results.hasErrors()) {
             return "conceptsearch";
         }
         List<ConceptEntryWrapper> foundConcepts = null;
-        try {
-            ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
-            foundConcepts = wrapperCreator.createWrappers(found);
-            conceptSearchBean.setFoundConcepts(foundConcepts);
-        } catch (LuceneException ex) {
-            results.rejectValue("luceneError", ex.getMessage());
-        }
+        ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
+                conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
+        foundConcepts = wrapperCreator.createWrappers(found);
+        conceptSearchBean.setFoundConcepts(foundConcepts);
         if (CollectionUtils.isEmpty(foundConcepts)) {
             results.rejectValue("foundConcepts", "no.searchResults");
         }
