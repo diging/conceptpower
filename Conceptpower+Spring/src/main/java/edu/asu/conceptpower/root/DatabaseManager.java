@@ -2,8 +2,6 @@ package edu.asu.conceptpower.root;
 
 import java.io.Serializable;
 
-import org.springframework.stereotype.Component;
-
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.cs.Db4oClientServer;

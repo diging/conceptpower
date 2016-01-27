@@ -10,9 +10,10 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
+	<import resource="db4o-config.xml" />
 	<import resource="xml-config.xml" />
 	<context:component-scan base-package="edu.asu.conceptpower.root" />
-	<import resource="db4o-config.xml" />
+	
 
 
 	<import resource="spring-security.xml" />
