@@ -10,8 +10,6 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.IConceptListManager;
 import edu.asu.conceptpower.db4o.DBNames;
 import edu.asu.conceptpower.db4o.IConceptDBManager;
-import edu.asu.conceptpower.exceptions.DictionaryExistsException;
-import edu.asu.conceptpower.wordnet.Constants;
 
 /**
  * Manager class for concept lists.
