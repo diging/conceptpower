@@ -14,7 +14,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -58,9 +57,6 @@ public class LuceneUtility implements ILuceneUtility {
 
     @Autowired
     private WhitespaceAnalyzer whiteSpaceAnalyzer;
-
-    @Autowired
-    private StandardAnalyzer standradAnalyzer;
 
     @Autowired
     private WordNetConfiguration configuration;
@@ -135,7 +131,6 @@ public class LuceneUtility implements ILuceneUtility {
     public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id, String conceptType)
             throws LuceneException {
         IndexReader reader = null;
-        Analyzer analyzer = null;
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
         try {
             Query q = null;
@@ -145,7 +140,6 @@ public class LuceneUtility implements ILuceneUtility {
 
             if (word != null) {
                 queryString.append("word:" + word);
-                analyzer = standradAnalyzer;
                 defaultQuery = "word";
             }
             if (pos != null) {
@@ -162,7 +156,6 @@ public class LuceneUtility implements ILuceneUtility {
                 } else {
                     queryString.append("listName:" + listName);
                 }
-                analyzer = whiteSpaceAnalyzer;
                 defaultQuery = "listName";
             }
 
@@ -172,7 +165,6 @@ public class LuceneUtility implements ILuceneUtility {
                 } else {
                     queryString.append("id:" + id);
                 }
-                analyzer = whiteSpaceAnalyzer;
                 defaultQuery = "id";
             }
 
@@ -183,7 +175,7 @@ public class LuceneUtility implements ILuceneUtility {
                     queryString.append("conceptType:" + conceptType);
                 }
             }
-            q = new QueryParser(defaultQuery, analyzer).parse(queryString.toString());
+            q = new QueryParser(defaultQuery, whiteSpaceAnalyzer).parse(queryString.toString());
             Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             Directory index = FSDirectory.open(relativePath);
 
