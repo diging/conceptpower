@@ -27,6 +27,8 @@ public class ConceptTypeAddValidatorTest {
     private ConceptTypeAddForm emptyTypeDescripton;
     private ConceptType duplicateTypeName;
     private ConceptTypeAddForm duplicateType;
+    private ConceptTypeAddForm emptyNameWithDescription;
+    private ConceptTypeAddForm typeNameDescription;
 
     @Before
     public void init() {
@@ -44,6 +46,13 @@ public class ConceptTypeAddValidatorTest {
         duplicateType = new ConceptTypeAddForm();
         duplicateType.setTypeName("ExistingList");
         duplicateType.setTypeDescription("Existing Description");
+
+        typeNameDescription = new ConceptTypeAddForm();
+        typeNameDescription.setTypeName("New Type");
+        typeNameDescription.setTypeDescription("Type Decription");
+
+        emptyNameWithDescription = new ConceptTypeAddForm();
+        emptyNameWithDescription.setTypeDescription("Type Description");
 
         duplicateTypeName = new ConceptType();
         duplicateTypeName.setTypeName("ExistingList");
@@ -69,4 +78,26 @@ public class ConceptTypeAddValidatorTest {
         Assert.assertEquals(errors.getFieldError("typeName").getCode(), "required.unique.type_name");
     }
 
+    @Test
+    public void testNameWithoutDescription() {
+        Errors errors = new BindException(emptyTypeDescripton, "conceptListAddForm");
+        ValidationUtils.invokeValidator(validator, emptyTypeDescripton, errors);
+        Assert.assertEquals(1, errors.getFieldErrorCount());
+        Assert.assertEquals(errors.getFieldError("typeDescription").getCode(), "required.type_description");
+    }
+
+    @Test
+    public void testDescritionWithoutName() {
+        Errors errors = new BindException(emptyNameWithDescription, "conceptListAddForm");
+        ValidationUtils.invokeValidator(validator, emptyNameWithDescription, errors);
+        Assert.assertEquals(1, errors.getFieldErrorCount());
+        Assert.assertEquals(errors.getFieldError("typeName").getCode(), "required.type_name");
+    }
+
+    @Test
+    public void testNameDescription() {
+        Errors errors = new BindException(typeNameDescription, "conceptListAddForm");
+        ValidationUtils.invokeValidator(validator, typeNameDescription, errors);
+        Assert.assertEquals(0, errors.getFieldErrorCount());
+    }
 }

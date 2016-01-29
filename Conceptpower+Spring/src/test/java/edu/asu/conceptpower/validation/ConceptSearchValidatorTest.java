@@ -7,8 +7,8 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
+import edu.asu.conceptpower.core.POS;
 import edu.asu.conceptpower.web.ConceptSearchBean;
-import edu.mit.jwi.item.POS;
 import junit.framework.Assert;
 
 public class ConceptSearchValidatorTest {
@@ -17,7 +17,8 @@ public class ConceptSearchValidatorTest {
 
     private ConceptSearchBean testForWord;
     private ConceptSearchBean testForPos;
-    private ConceptSearchBean testForPosWord;
+    private ConceptSearchBean testForEmptyWordWithPos;
+    private ConceptSearchBean testForWordPos;
 
     @Before
     public void init() {
@@ -29,9 +30,12 @@ public class ConceptSearchValidatorTest {
         testForPos = new ConceptSearchBean();
         testForPos.setWord("pony");
 
-        testForPosWord = new ConceptSearchBean();
-        testForPosWord.setPos(POS.NOUN);
-        testForPosWord.setWord("pony");
+        testForWordPos = new ConceptSearchBean();
+        testForWordPos.setWord("pony");
+        testForWordPos.setPos(POS.NOUN);
+
+        testForEmptyWordWithPos = new ConceptSearchBean();
+        testForEmptyWordWithPos.setPos(POS.NOUN);
 
     }
 
@@ -55,13 +59,19 @@ public class ConceptSearchValidatorTest {
     }
 
     @Test
-    public void testSucessForWordPos() {
-        Errors errors = new BindException(testForPosWord, "conceptListAddForm");
-        ValidationUtils.invokeValidator(conceptSearchValidator, testForPosWord, errors);
-        Assert.assertEquals(0, errors.getFieldErrorCount());
-        Assert.assertNull(errors.getFieldError("word"));
+    public void testForEmptyWordWithPos() {
+        Errors errors = new BindException(testForEmptyWordWithPos, "conceptListAddForm");
+        ValidationUtils.invokeValidator(conceptSearchValidator, testForEmptyWordWithPos, errors);
+        Assert.assertEquals(1, errors.getFieldErrorCount());
         Assert.assertNull(errors.getFieldError("pos"));
+        Assert.assertEquals(errors.getFieldError("word").getCode(), "name.required");
+    }
 
+    @Test
+    public void testForWordPos() {
+        Errors errors = new BindException(testForWordPos, "conceptListAddForm");
+        ValidationUtils.invokeValidator(conceptSearchValidator, testForWordPos, errors);
+        Assert.assertEquals(0, errors.getFieldErrorCount());
     }
 
 }
