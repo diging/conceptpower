@@ -69,4 +69,10 @@ public class ConceptTypesManagerTest {
         assertEquals("TYPE_NAME", conceptType.getTypeName());
 
     }
+    
+    @Test
+    public void deleteTypeTest(){
+    	conceptTypesManager.deleteType("ID");
+    	Mockito.verify(client).deleteType(Mockito.eq("ID"));
+    }
 }

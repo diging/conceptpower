@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.wrapper.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -63,6 +62,8 @@ public class ConceptEntryWrapperCreatorTest {
 
         ConceptEntry entry2 = new ConceptEntry();
         entry2.setWordnetId("WNET_1");
+        entry2.setDescription("Concept Description");
+        entry2.setWord("Concept Word");
         Mockito.when(conceptManager.getWordnetConceptEntry("WNET_1")).thenReturn(entry2);
 
         ConceptEntry synonymEntry = new ConceptEntry();
@@ -85,5 +86,12 @@ public class ConceptEntryWrapperCreatorTest {
         assertNotNull(conceptEntryWrapperList.get(0).getSynonyms());
         assertEquals(conceptEntryWrapperList.get(0).getUri(), "http://www.digitalhps.org/concepts/");
 
+    }
+    
+    @Test
+    public void createNullWrappers(){
+    	List<ConceptEntryWrapper> conceptEntryWrapperList = conceptEntryWrapperCreator.createWrappers(null);
+    	assertNotNull(conceptEntryWrapperList);
+    	assertEquals(conceptEntryWrapperList.size(),0);
     }
 }

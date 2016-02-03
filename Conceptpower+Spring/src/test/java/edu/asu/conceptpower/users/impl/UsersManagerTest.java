@@ -99,5 +99,12 @@ public class UsersManagerTest {
         User user = usersManager.getUser("Test", "Test2");
         assertNull(user);
     }
-
+    
+    @Test
+    public void storeModifiedPassword(){
+    	User user = new User();
+    	user.setPw("Password");
+    	usersManager.storeModifiedPassword(user);
+    	Mockito.verify(client).update(user);
+    }
 }
