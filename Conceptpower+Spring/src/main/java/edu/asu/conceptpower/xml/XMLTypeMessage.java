@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.util.URICreator;
+import edu.asu.conceptpower.util.URIHelper;
 
 /**
  * This class is used to create XML responses for
@@ -17,9 +17,9 @@ import edu.asu.conceptpower.util.URICreator;
  */
 public class XMLTypeMessage extends AXMLMessage {
 
-	private URICreator uriCreator;
+	private URIHelper uriCreator;
 	
-	public XMLTypeMessage(URICreator uriCreator) {
+	public XMLTypeMessage(URIHelper uriCreator) {
 		this.uriCreator = uriCreator;
 	}
 

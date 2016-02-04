@@ -57,37 +57,6 @@
 											}
 										});
 
-						//ajax call to get already selected concepts for wrapping 
-						$
-								.ajax({
-									type : "GET",
-									url : "${pageContext.servletContext.contextPath}/getSelectedConceptsFroWrapping",
-									success : function(response) {
-
-										var html = "";
-										var len = response.length;
-
-										if (len > 0)
-											$('#createwrapper').prop(
-													'disabled', false);
-										else
-											$('#createwrapper').prop(
-													'disabled', true);
-
-										for (var i = 0; i < len; i++) {
-											html += '<h5>' + response[i].word
-													+ ' ['
-													+ response[i].wordnetId
-													+ ']' + '</h5>';
-											html += '<p>'
-													+ response[i].description
-													+ '</p>';
-										}
-										html += '</p>';
-										$("#selectedconcepts").html(html);
-									}
-								});
-
 						//ajax call to add the concept selected for wrappping
 						$('body')
 								.delegate(
@@ -202,7 +171,8 @@
 					} ],
 					"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
 						var description = aData.description;
-						description = description.replace(/"/g, '&quot;');
+						//This functionality has been moved to Controller. 
+						//description = escape(description);
 						$('td:eq(3)', nRow).html(
 								'<a onclick="synonymAdd(\'' + aData.id
 										+ '\',\'' + aData.word + '\',\''
@@ -226,11 +196,20 @@
 										data : {
 											synonymname : synonymname
 										},
+
 										success : function(response) {
 											$('#synonymstable').dataTable()
 													.fnClearTable();
-											$('#synonymstable').dataTable()
-													.fnAddData(response);
+
+											var synonym = JSON.parse(response);
+											var len = synonym.Total;
+											for (var i = 0; i < len; i++) {
+												$('#synonymstable')
+														.dataTable()
+														.fnAddData(
+																synonym.synonyms[i]);
+											}
+
 										}
 									});
 						});
@@ -239,7 +218,7 @@
 	var synonymAdd = function(id, term, description) {
 		$("#dialog").dialog("close");
 		$("#synonymsDialogTable").hide();
-
+		var decodedDescription = unescape(description);
 		var x = document.getElementById('addedSynonymsTable');
 
 		if (x != null) {
@@ -248,7 +227,7 @@
 			new_row.cells[0].innerHTML = '<a onclick="synonymRemove(\''
 					+ x.rows.length + '\')">Remove</a>' + '</font></td>'
 			new_row.cells[1].innerHTML = term;
-			new_row.cells[2].innerHTML = description;
+			new_row.cells[2].innerHTML = decodedDescription;
 			new_row.cells[3].innerHTML = id;
 			new_row.cells[3].hidden = true;
 
@@ -261,7 +240,7 @@
 					+ '</font></td>';
 			html += '<td align="justify"><font size="2">' + term
 					+ '</font></td>';
-			html += '<td align="justify"><font size="2">' + description
+			html += '<td align="justify"><font size="2">' + decodedDescription
 					+ '</font></td>';
 			html += '<td align="justify" hidden="true">' + id + '</td></tr>';
 
@@ -290,6 +269,34 @@
 		}
 		$("#synonymsids").val(synonyms);
 	};
+
+	function detailsView(concept) {
+		var conceptid = concept.id;
+		$.ajax({
+			type : "GET",
+			url : "${pageContext.servletContext.contextPath}/conceptDetail",
+			data : {
+				conceptid : conceptid
+			},
+			success : function(details) {
+				$("#detailsid").text(details.id);
+				$("#detailsuri").text(details.uri);
+				$("#detailswordnetid").text(details.wordnetid);
+				$("#detailspos").text(details.pos);
+				$("#detailsconceptlist").text(details.conceptlist);
+				$("#detailstypeid").text(details.type);
+				$("#detailsequalto").text(details.equalto);
+				$("#detailssimilarto").text(details.similarto);
+				$("#detailscreator").text(details.creator);
+
+				$("#detailsdiv").dialog({
+					title : details.name,
+					width : 'auto'
+				});
+				$("#detailstable").show();
+			}
+		});
+	}
 </script>
 
 
@@ -297,8 +304,10 @@
 <p>Add a wrapper for a concept in Wordnet. Do that if you for
 	example want to attach an "equals to" URI a concept that already exists
 	in Wordnet.</p>
-	
-<c:if test="${not empty errormsg}"><p style="text-color: red;">${errormsg}</p></c:if>
+
+<c:if test="${not empty errormsg}">
+	<p style="text-color: red;">${errormsg}</p>
+</c:if>
 
 <h2>1. Search for Wordnet concept</h2>
 
@@ -351,7 +360,7 @@
 			</thead>
 			<tbody>
 				<c:forEach var="concept" items="${result}">
-					<tr>
+					<tr title="${concept.uri}">
 						<td align="justify"><font size="2"><a
 								onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 						<td align="justify"><font size="2"><c:out
@@ -458,6 +467,47 @@
 
 		</div>
 
+	</div>
+
+	<div id="detailsdiv" style="max-width: 600px; max-height: 500px;"  class="pageCenter">
+		<table id="detailstable" class="greyContent" hidden="true">
+			<tr>
+				<td>Id:</td>
+				<td id="detailsid"></td>
+			</tr>
+			<tr>
+				<td>URI:</td>
+				<td id="detailsuri"></td>
+			</tr>
+			<tr>
+				<td>Wordnet Id:</td>
+				<td id="detailswordnetid"></td>
+			</tr>
+			<tr>
+				<td>POS:</td>
+				<td id="detailspos"></td>
+			</tr>
+			<tr>
+				<td>Concept List:</td>
+				<td id="detailsconceptlist"></td>
+			</tr>
+			<tr>
+				<td>Type:</td>
+				<td id="detailstypeid"></td>
+			</tr>
+			<tr>
+				<td>Equal to:</td>
+				<td id="detailsequalto"></td>
+			</tr>
+			<tr>
+				<td>Similar to:</td>
+				<td id="detailssimilarto"></td>
+			</tr>
+			<tr>
+				<td>Creator:</td>
+				<td id="detailscreator"></td>
+			</tr>
+		</table>
 	</div>
 
 </form>

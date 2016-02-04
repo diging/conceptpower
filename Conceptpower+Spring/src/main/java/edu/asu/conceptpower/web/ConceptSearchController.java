@@ -7,11 +7,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptManager;
+import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.validation.ConceptSearchValidator;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
@@ -24,43 +31,47 @@ import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 @Controller
 public class ConceptSearchController {
 
-	@Autowired
-	private ConceptManager conceptManager;
+    @Autowired
+    private IConceptManager conceptManager;
 
-	@Autowired
-	private IConceptWrapperCreator wrapperCreator;
+    @Autowired
+    private IConceptWrapperCreator wrapperCreator;
 
-	
-	/**
-	 * This method is searches concepts a specific term and pos
-	 * 
-	 * @param req
-	 *            Holds the HTTP request information
-	 * @param model
-	 *            Generic model holder for servlet
-	 * @return Returns a string value to redirect user to concept search page
-	 */
-	@RequestMapping(value = "/home/conceptsearch", method = RequestMethod.GET)
-	public String search(HttpServletRequest req, ModelMap model) {
+    @Autowired
+    private ConceptSearchValidator validator;
 
-		String concept = req.getParameter("name");
-		String pos = req.getParameter("pos");
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.setValidator(validator);
+    }
 
-		if (concept != null && !concept.trim().isEmpty()) {
+    /**
+     * This method is searches concepts a specific term and pos
+     * 
+     * @param req
+     *            Holds the HTTP request information
+     * @param model
+     *            Generic model holder for servlet
+     * @return Returns a string value to redirect user to concept search page
+     */
+    @RequestMapping(value = "/home/conceptsearch", method = RequestMethod.GET)
+    public String search(HttpServletRequest req, ModelMap model,
+            @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean,
+            BindingResult results) {
 
-			ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(
-					concept, pos);
+        if (results.hasErrors()) {
+            return "conceptsearch";
+        }
 
-			List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-					.createWrappers(found);
+        ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
+                conceptSearchBean.getPos().toLowerCase().trim());
+        List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
+        conceptSearchBean.setFoundConcepts(foundConcepts);
+        if (CollectionUtils.isEmpty(foundConcepts)) {
+            results.rejectValue("foundConcepts", "no.searchResults");
+        }
 
-			model.addAttribute("conceptsresult", foundConcepts);
+        return "conceptsearch";
+    }
 
-		}
-
-		return "conceptsearch";
-	}
-	
-
-	
 }

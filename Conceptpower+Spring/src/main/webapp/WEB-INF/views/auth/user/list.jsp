@@ -18,19 +18,19 @@
 	<tbody>
 		<c:forEach var="user" items="${users}">
 			<tr>
-				<td><a
-					href="${pageContext.servletContext.contextPath}/auth/user/deleteuser/${user.user}"><img
+				<td width="20"><a
+					href="${pageContext.servletContext.contextPath}/auth/user/deleteuser/${user.username}"><img
 						src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png" /></a></td>
-				<td><a
-					href="${pageContext.servletContext.contextPath}/auth/user/edituser/${user.user}"><img
+				<td width="20"><a
+					href="${pageContext.servletContext.contextPath}/auth/user/edituser/${user.username}"><img
 						src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png" /></a></td>
-				<td><a
-					href="${pageContext.servletContext.contextPath}/auth/user/editpassword/${user.user}"><img
+				<td width="20"><a
+					href="${pageContext.servletContext.contextPath}/auth/user/editpassword/${user.username}"><img
 						src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png" /></a></td>
-				<td>${user.user}</td>
-				<td>${user.name}</td>
+				<td>${user.username}</td>
+				<td>${user.fullname}</td>
 				<td>${user.email}</td>
-				<td><c:if test="${user.isAdmin}">
+				<td width="20"><c:if test="${user.isAdmin}">
 						<img
 							src="${pageContext.servletContext.contextPath}/resources/img/check_mark_16x16.png" />
 					</c:if></td>

@@ -85,14 +85,18 @@ h5, h6
 h6
 { color: #362C20;}
 
-a, a:hover
-{ outline: none;
-  text-decoration: underline;
-  color: #A4AA04;}
+a, a:hover {
+	outline: none;
+	text-decoration: underline;
+	color: #A4AA04;
+	cursor: pointer;
+}
 
-a:hover
-{ text-decoration: none;
-  color: #5D5D5D;}
+a:hover {
+	text-decoration: none;
+	color: #5D5D5D;
+	cursor: pointer;
+}
 
 .left
 { float: left;
@@ -394,4 +398,19 @@ td.greyContent, table.greyContent td {
 	padding: 6px;	
 	margin: 2px;
   color: #47433F;
+}
+
+#disabledImage {
+    opacity: 0.4;
+    filter: alpha(opacity=40); /* msie */
+}
+
+#disabledWrapper {
+    opacity: 0.3;
+    filter: alpha(opacity=40); /* msie */
+    background-color: #000;
+    height:27px;
+    width:10px;
+    border-radius: 5px;
+    padding: 1px; 
 }

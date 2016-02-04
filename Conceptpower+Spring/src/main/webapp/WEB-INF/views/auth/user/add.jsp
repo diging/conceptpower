@@ -2,26 +2,44 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <h1>Add new user</h1>
 <p>Add a new user here.</p>
-<form
+<form:form commandName="user"
 	action="${pageContext.servletContext.contextPath}/auth/user/createuser"
 	method='post'>
 	<table>
 		<tr>
 			<td>UserName:</td>
-			<td><input type="text" name="username" id="username"></td>
+			<td><form:input type="text" name="username" id="username"
+					path="username"></form:input></td>
+			<td><form:errors path="username"></form:errors></td>
 		</tr>
-
 		<tr>
 			<td>Full Name:</td>
-			<td><input type="text" name="fullname" id="fullname"></td>
+			<td><form:input type="text" name="fullname" id="fullname"
+					path="fullname"></form:input></td>
+			<td><form:errors path="fullname"></form:errors></td>
 		</tr>
 		<tr>
 			<td>Email:</td>
-			<td><input type="text" name="email" id="email" /></td>
+			<td><form:input type="text" name="email" id="email" path="email"></form:input></td>
+			<td><form:errors path="email"></form:errors></td>
+		</tr>
+		<tr>
+			<td>Is Administrator:</td>
+			<td><form:checkbox path="isAdmin" id="isadmin"
+					checked="${user.isAdmin == true ? 'checked' : ''}" /> Yes</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>Password:</td>
-			<td><input type="password" name="password" id="password"></td>
+			<td><form:input type="password" name="password" id="password"
+					path="password"></form:input></td>
+			<td><form:errors path="password"></form:errors></td>
+		</tr>
+		<tr>
+			<td>Retype Password:</td>
+			<td><form:input type="password" name="repassword" id="password"
+					path="retypedPassword"></form:input></td>
+			<td><form:errors path="retypedPassword"></form:errors></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="submit" value="Create user"
@@ -29,4 +47,4 @@
 		</tr>
 	</table>
 
-</form>
+</form:form>

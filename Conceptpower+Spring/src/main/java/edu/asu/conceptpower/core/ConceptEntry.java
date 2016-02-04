@@ -2,6 +2,9 @@ package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import edu.asu.conceptpower.reflect.SearchField;
 import edu.asu.conceptpower.rest.SearchFieldNames;
 
@@ -11,11 +14,12 @@ import edu.asu.conceptpower.rest.SearchFieldNames;
  * @author Julia Damerow
  * 
  */
+@Entity
 public class ConceptEntry implements Serializable {
 
 	private static final long serialVersionUID = 4569090620671054560L;
 
-	
+	@Id
 	private String id;
 	
 	@SearchField(fieldName = SearchFieldNames.WORDNETID)
@@ -59,7 +63,7 @@ public class ConceptEntry implements Serializable {
 	
 	
 	private String broadens;
-
+	
 	@SearchField(fieldName = SearchFieldNames.CREATOR)
 	private String creatorId;
 
@@ -68,6 +72,14 @@ public class ConceptEntry implements Serializable {
 
 	private boolean isDeleted;
 
+	public ConceptEntry(){}
+	
+	public ConceptEntry(String id, String word, String description){
+		this.id = id;
+		this.word = word;
+		this.description = description;
+	}
+	
 	/**
 	 * A string containing the id of the user who created
 	 * an entry.
@@ -262,4 +274,69 @@ public class ConceptEntry implements Serializable {
 		this.isDeleted = isDeleted;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((conceptList == null) ? 0 : conceptList.hashCode());
+		result = prime * result
+				+ ((creatorId == null) ? 0 : creatorId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((pos == null) ? 0 : pos.hashCode());
+		result = prime * result + ((typeId == null) ? 0 : typeId.hashCode());
+		result = prime * result + ((word == null) ? 0 : word.hashCode());
+		result = prime * result
+				+ ((wordnetId == null) ? 0 : wordnetId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ConceptEntry other = (ConceptEntry) obj;
+		if (conceptList == null) {
+			if (other.conceptList != null)
+				return false;
+		} else if (!conceptList.equals(other.conceptList))
+			return false;
+		if (creatorId == null) {
+			if (other.creatorId != null)
+				return false;
+		} else if (!creatorId.equals(other.creatorId))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (pos == null) {
+			if (other.pos != null)
+				return false;
+		} else if (!pos.equals(other.pos))
+			return false;
+		if (typeId == null) {
+			if (other.typeId != null)
+				return false;
+		} else if (!typeId.equals(other.typeId))
+			return false;
+		if (word == null) {
+			if (other.word != null)
+				return false;
+		} else if (!word.equals(other.word))
+			return false;
+		if (wordnetId == null) {
+			if (other.wordnetId != null)
+				return false;
+		} else if (!wordnetId.equals(other.wordnetId))
+			return false;
+		return true;
+	}
+
 }
+

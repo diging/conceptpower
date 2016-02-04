@@ -1,27 +1,31 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.core.ConceptManager;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.core.ConceptTypesManager;
 import edu.asu.conceptpower.core.Constants;
+import edu.asu.conceptpower.core.IConceptListManager;
+import edu.asu.conceptpower.core.IConceptManager;
+import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -40,10 +44,13 @@ public class ConceptWrapperAddController {
 	private IConceptWrapperCreator wrapperCreator;
 
 	@Autowired
-	private ConceptManager conceptManager;
+	private IConceptManager conceptManager;
+	
+	@Autowired
+	private IConceptListManager conceptListManager;
 
 	@Autowired
-	private ConceptTypesManager conceptTypesManager;
+	private IConceptTypeManger conceptTypesManager;
 
 	/**
 	 * This method provides required information for concept wrapper creation
@@ -67,7 +74,7 @@ public class ConceptWrapperAddController {
 
 		model.addAttribute("types", types);
 
-		List<ConceptList> allLists = conceptManager.getAllConceptLists();
+		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
 		Map<String, String> lists = new LinkedHashMap<String, String>();
 		for (ConceptList conceptList : allLists) {
 			lists.put(conceptList.getConceptListName(),
@@ -152,7 +159,7 @@ public class ConceptWrapperAddController {
 
 		model.addAttribute("types", types);
 
-		List<ConceptList> allLists = conceptManager.getAllConceptLists();
+		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
 		Map<String, String> lists = new LinkedHashMap<String, String>();
 		for (ConceptList conceptList : allLists) {
 			lists.put(conceptList.getConceptListName(),
@@ -170,12 +177,43 @@ public class ConceptWrapperAddController {
 	 *            A synonym string for which we need to find existing concepts
 	 * @return Returns array of concepts found for synonym name
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
-	public @ResponseBody
-	ConceptEntry[] getSynonyms(@RequestParam("synonymname") String synonymname) {
-		ConceptEntry[] entries = conceptManager
-				.getConceptListEntriesForWord(synonymname.trim());
-		return entries;
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
+    public ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname) {
+        ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        return new ResponseEntity<String>(buildJSON(Arrays.asList(entries)), HttpStatus.OK);
+    }
+
+    private String buildJSON(List<ConceptEntry> synonyms) {
+
+        int i = 0;
+        StringBuffer jsonStringBuilder = new StringBuffer("{");
+        jsonStringBuilder.append("\"Total\"");
+        jsonStringBuilder.append(":");
+        jsonStringBuilder.append(synonyms.size());
+        jsonStringBuilder.append(",");
+        jsonStringBuilder.append("\"synonyms\":");
+        jsonStringBuilder.append("[");
+        for (ConceptEntry syn : synonyms) {
+            // Appending for next element in JSON
+            if (i != 0) {
+                jsonStringBuilder.append(",");
+            }
+
+            jsonStringBuilder.append("{");
+            jsonStringBuilder.append("\"id\":\"" + syn.getId() + "\"");
+            jsonStringBuilder.append(",");
+            jsonStringBuilder.append("\"word\":\"" + syn.getWord() + "\"");
+            jsonStringBuilder.append(",");
+            jsonStringBuilder.append("\"description\":\"" + StringEscapeUtils.escapeHtml(syn.getDescription()) + "\"");
+            jsonStringBuilder.append(",");
+            String pos = syn.getPos().replaceAll("\"", "'");
+            jsonStringBuilder.append("\"pos\":\"" + pos + "\"");
+            jsonStringBuilder.append("}");
+            i++;
+        }
+        jsonStringBuilder.append("]");
+        jsonStringBuilder.append("}");
+        return jsonStringBuilder.toString();
+    }
 
 }

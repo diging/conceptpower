@@ -5,7 +5,7 @@
 	
 	
 	<bean class="edu.asu.conceptpower.wordnet.WordNetConfiguration">
-		<property name="wordnetPath" value="/usr/local/WordNet-3.0" />
+		<property name="wordnetPath" value="${wordnet.install.path}" />
 		<property name="dictFolder" value="dict" />
 	</bean>
 		

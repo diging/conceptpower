@@ -1,88 +1,82 @@
 package edu.asu.conceptpower.web.backing;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import edu.asu.conceptpower.validation.ValuesMatch;
 
-@ValuesMatch(first = "password", second = "retypedPassword", message = "Please make sure that you enter the exact same password when retyping your password.")
+@ValuesMatch(first = "password", second = "retypedPassword")
 public class UserBacking {
 
-	private String username;
-	private String name;
-	
-	@NotEmpty(message = "Please enter a password.")
-	private String password;
-	private String email;
-	
-	@NotEmpty(message = "Please retype your password.")
-	private String retypedPassword;
-	private boolean isAdmin;
-	private String token;
+    private String username;
+    private String fullname;
+    private String password;
+    private String email;
+    private String retypedPassword;
+    private boolean isAdmin;
+    private String token;
 
-	public UserBacking(String username, String name) {
-		super();
-		this.username = username;
-		this.name = name;
-	}
+    public UserBacking(String username, String name) {
+        super();
+        this.username = username;
+        this.setFullname(name);
+    }
 
-	public UserBacking() {
+    public UserBacking() {
 
-	}
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getRetypedPassword() {
+        return retypedPassword;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setRetypedPassword(String retypedPassword) {
+        this.retypedPassword = retypedPassword;
+    }
 
-	public String getRetypedPassword() {
-		return retypedPassword;
-	}
+    public boolean getIsAdmin() {
+        return isAdmin;
+    }
 
-	public void setRetypedPassword(String retypedPassword) {
-		this.retypedPassword = retypedPassword;
-	}
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
 
-	public boolean getIsAdmin() {
-		return isAdmin;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setIsAdmin(boolean isAdmin) {
-		this.isAdmin = isAdmin;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getToken() {
+        return token;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setToken(String token) {
+        this.token = token;
+    }
 
-	public String getToken() {
-		return token;
-	}
+    public String getFullname() {
+        return fullname;
+    }
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
 
 }

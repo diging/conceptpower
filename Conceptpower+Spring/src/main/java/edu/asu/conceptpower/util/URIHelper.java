@@ -13,7 +13,7 @@ import edu.asu.conceptpower.xml.XMLConstants;
  * in xml-config.xml configured URI prefixes.
  */
 @Service
-public class URICreator {
+public class URIHelper implements IURIHelper{
 
 	@Autowired
 	private XMLConfig xmlConfig;
@@ -33,5 +33,13 @@ public class URICreator {
 
 		return XMLConstants.TYPE_NAMESPACE + XMLConstants.TYPE_PREFIX
 				+ type.getTypeId();
+	}
+	
+	public String getTypeId(String typeUriOrId) {
+		if (!typeUriOrId.startsWith(XMLConstants.TYPE_NAMESPACE + XMLConstants.TYPE_PREFIX)) {
+			return typeUriOrId;
+		}
+		
+		return typeUriOrId.substring((XMLConstants.TYPE_NAMESPACE + XMLConstants.TYPE_PREFIX).length());
 	}
 }

@@ -16,7 +16,7 @@
 <table class="greyContent">
 	<tr>
 		<td>Id:</td>
-		<td>${id}</td>
+		<td>${conceptId}</td>
 	</tr>
 	<tr>
 		<td>Wordnet Id:</td>
@@ -63,11 +63,20 @@
 <table>
 	<tr>
 		<td><a
-			href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${id}"><input
+			href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${conceptId}?fromHomeScreenDelete=${fromHomeScreenDelete}"><input
 				type="button" name="delete" id="delete" value="Yes, delete concept!" class="button"></a></td>
-
+	
+		<c:if test="${fromHomeScreenDelete eq 'false'}">
 		<td><a
 			href="${pageContext.servletContext.contextPath}/auth/concepts/canceldelete/${conceptList}"><input
 				type="button" name="cancel" value="No, cancel!" class="button"></a></td>
+		</c:if>
+		
+		<c:if test="${fromHomeScreenDelete eq 'true'}">
+		<td><a
+			href="${pageContext.servletContext.contextPath}/login"><input
+				type="button" name="cancel" value="No, cancel!" class="button"></a></td>
+		</c:if>
+		
 	</tr>
 </table>
