@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -17,8 +18,7 @@ import javax.annotation.PreDestroy;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -41,6 +41,9 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
+import edu.asu.conceptpower.servlet.reflect.LuceneField;
+import edu.asu.conceptpower.servlet.reflect.SearchField;
+import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
 import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wordnet.WordNetConfiguration;
 import edu.mit.jwi.Dictionary;
@@ -51,7 +54,6 @@ import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 
-@SuppressWarnings("deprecation")
 @Component
 @PropertySource("classpath:lucene.properties")
 public class LuceneUtility implements ILuceneUtility {
@@ -94,36 +96,29 @@ public class LuceneUtility implements ILuceneUtility {
 
     }
 
-    @SuppressWarnings("deprecation")
     public void insertConcept(ConceptEntry entry) throws LuceneException {
         Document doc = new Document();
-        doc.add(new TextField("word", entry.getWord().replace(" ", ""), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.WORD, entry.getWord().replace(" ", ""), Field.Store.YES));
 
-        doc.add(new StringField("pos", entry.getPos().toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.POS, entry.getPos().toString(), Field.Store.YES));
 
-        doc.add(new StringField("description", entry.getDescription() != null ? entry.getDescription() : "",
-                Field.Store.YES));
-        doc.add(new StringField("id", entry.getId(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.DESCRIPTION,
+                entry.getDescription() != null ? entry.getDescription() : "", Field.Store.YES));
 
-        doc.add(new StringField("listName", entry.getConceptList() != null ? entry.getConceptList() : "",
-                Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST,
+                entry.getConceptList() != null ? entry.getConceptList() : "", Field.Store.YES));
 
-        doc.add(new Field("synonymId", entry.getSynonymIds() != null ? entry.getSynonymIds() : "", Field.Store.YES,
-                Field.Index.NO));
-        doc.add(new Field("equalTo", entry.getEqualTo() != null ? entry.getEqualTo() : "", Field.Store.YES,
-                Field.Index.NO));
-        doc.add(new Field("similar", entry.getSimilarTo() != null ? entry.getSimilarTo() : "", Field.Store.YES,
-                Field.Index.NO));
-        doc.add(new Field("types", entry.getTypeId() != null ? entry.getTypeId() : "", Field.Store.YES,
-                Field.Index.NO));
-        doc.add(new Field("creatorId", entry.getCreatorId() != null ? entry.getCreatorId() : "", Field.Store.YES,
-                Field.Index.NO));
-        doc.add(new Field("modifiedId", entry.getModified() != null ? entry.getModified() : "", Field.Store.YES,
-                Field.Index.NO));
-        doc.add(new StringField("conceptType", "UserConcept", Field.Store.YES));
+        doc.add(new StoredField(LuceneFieldNames.SYNONYMID,
+                entry.getSynonymIds() != null ? entry.getSynonymIds() : ""));
+        doc.add(new StoredField(LuceneFieldNames.EQUALS_TO, entry.getEqualTo() != null ? entry.getEqualTo() : ""));
+        doc.add(new StoredField(LuceneFieldNames.SIMILAR_TO, entry.getSimilarTo() != null ? entry.getSimilarTo() : ""));
+        doc.add(new StoredField(LuceneFieldNames.TYPE_ID, entry.getTypeId() != null ? entry.getTypeId() : ""));
+        doc.add(new StoredField(LuceneFieldNames.CREATOR, entry.getCreatorId() != null ? entry.getCreatorId() : ""));
+        doc.add(new StoredField(LuceneFieldNames.MODIFIED, entry.getModified() != null ? entry.getModified() : ""));
+        doc.add(new StoredField(LuceneFieldNames.TYPE_ID, "UserConcept"));
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-        doc.add(new Field("modifiedTime", formatter.format(cal.getTime()), Field.Store.YES, Field.Index.NO));
+        doc.add(new StoredField(LuceneFieldNames.MODIFIED_TIME, formatter.format(cal.getTime())));
 
         try {
             writer.addDocument(doc);
@@ -234,7 +229,6 @@ public class LuceneUtility implements ILuceneUtility {
         }
     }
 
-    @SuppressWarnings("deprecation")
     protected void createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer)
             throws IOException {
         for (; iterator.hasNext();) {
@@ -244,7 +238,7 @@ public class LuceneUtility implements ILuceneUtility {
             for (IWordID wordId : wordIdds) {
 
                 Document doc = new Document();
-                doc.add(new Field("word", wordId.getLemma(), Store.YES, Index.ANALYZED));
+                doc.add(new StoredField("word", wordId.getLemma()));
                 doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
 
                 IWord word = dict.getWord(wordId);
@@ -301,6 +295,54 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (IOException ex) {
             throw new LuceneException("Problem in Creating Index. Please retry", ex);
         }
+    }
+
+    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator) throws LuceneException {
+
+        StringBuffer queryString = new StringBuffer();
+        int firstEntry = 1;
+        for (String fieldName : fieldMap.keySet()) {
+            String searchString = fieldMap.get(fieldName);
+            ConceptEntry con = new ConceptEntry();
+            java.lang.reflect.Field[] fields = con.getClass().getDeclaredFields();
+            for (java.lang.reflect.Field field : fields) {
+                SearchField search = field.getAnnotation(SearchField.class);
+                LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
+                if (search != null) {
+                    if (search.fieldName().equals(fieldName)) {
+                        if (firstEntry != 1)
+                            queryString.append(" " + operator + " ");
+                        firstEntry++;
+                        queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
+                        queryString.append(searchString);
+                    }
+                }
+            }
+        }
+
+        List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
+        int hitsPerPage = 10;
+        IndexSearcher searcher = null;
+        try {
+            Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
+            searcher = new IndexSearcher(reader);
+            TopDocs docs = searcher.search(q, hitsPerPage);
+            ScoreDoc[] hits = docs.scoreDocs;
+            for (int i = 0; i < hits.length; ++i) {
+                int docId = hits[i].doc;
+                Document d = searcher.doc(docId);
+                ConceptEntry entry = getConceptFromDocument(d);
+                concepts.add(entry);
+            }
+        }
+
+        catch (IOException ex) {
+            throw new LuceneException("Issues in querying lucene index. Please retry", ex);
+        } catch (ParseException e) {
+            throw new LuceneException("Issues in framing the query", e);
+        }
+        return concepts.toArray(new ConceptEntry[concepts.size()]);
+
     }
 
     @PreDestroy

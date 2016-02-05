@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
-import edu.mit.jwi.item.IIndexWord;
 import edu.mit.jwi.item.ISynset;
 import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
@@ -48,7 +46,6 @@ public class WordNetManager {
 		dict = new Dictionary(url);
 		dict.open();
 
-		Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
 		posMap = new HashMap<String, POS>();
 		posMap.put(edu.asu.conceptpower.servlet.core.POS.NOUN, POS.NOUN);
 		posMap.put(edu.asu.conceptpower.servlet.core.POS.VERB, POS.VERB);
@@ -56,6 +53,26 @@ public class WordNetManager {
 		posMap.put(edu.asu.conceptpower.servlet.core.POS.ADJECTIVE, POS.ADJECTIVE);
 
 	}
+    
+    public ConceptEntry getConcept(String id) {
+
+        IWordID wordId = null;
+        try {
+            wordId = WordID.parseWordID(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        if (wordId != null) {
+            ConceptEntry entry = getConceptFromWordId(wordId);
+
+            return entry;
+        }
+
+        return null;
+    }
+
 
     public ConceptEntry[] getSynonyms(String id) {
         IWordID wordId = null;

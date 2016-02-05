@@ -20,6 +20,7 @@ import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.core.ISearchManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
 import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
@@ -36,7 +37,7 @@ import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
 public class ConceptSearch {
 
 	@Autowired
-	private IConceptManager dictManager;
+	private ISearchManager manager;
 
 	@Autowired
 	private TypeDatabaseClient typeManager;
@@ -73,11 +74,7 @@ public class ConceptSearch {
 		ConceptEntry[] searchResults = null;
 
         try {
-            if (operator.equals(SearchParamters.OP_AND))
-                searchResults = dictManager.searchForConceptsConnectedByAnd(searchFields);
-            else {
-                searchResults = dictManager.searchForConceptsConnectedByOr(searchFields);
-            }
+                searchResults = manager.searchForConceptsConnectedByOr(searchFields,operator);
         } catch (LuceneException ex) {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
