@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.servlet.lucene;
+package edu.asu.conceptpower.servlet.lucene.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
@@ -26,6 +25,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -40,6 +40,7 @@ import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
 import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wordnet.WordNetConfiguration;
 import edu.mit.jwi.Dictionary;
@@ -65,6 +66,7 @@ public class LuceneUtility implements ILuceneUtility {
     private String lucenePath;
 
     private IndexWriter writer = null;
+    private IndexReader reader = null;
 
     @PostConstruct
     public void init() throws LuceneException {
@@ -73,8 +75,9 @@ public class LuceneUtility implements ILuceneUtility {
             Directory index = FSDirectory.open(relativePath);
             IndexWriterConfig configWhiteSpace = new IndexWriterConfig(whiteSpaceAnalyzer);
             writer = new IndexWriter(index, configWhiteSpace);
+            reader = DirectoryReader.open(index);
         } catch (IOException ex) {
-            throw new LuceneException("Restart the application");
+            throw new LuceneException("Restart the application", ex);
         }
     }
 
@@ -83,9 +86,12 @@ public class LuceneUtility implements ILuceneUtility {
             Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + id);
             writer.deleteDocuments(q);
             writer.commit();
-        } catch (Exception ex) {
-            throw new LuceneException("Issues in deletion. Please retry");
+        } catch (IOException ex) {
+            throw new LuceneException("Issues in deletion. Please retry", ex);
+        } catch (ParseException e) {
+            throw new LuceneException("Issues in framing queries", e);
         }
+
     }
 
     @SuppressWarnings("deprecation")
@@ -123,77 +129,75 @@ public class LuceneUtility implements ILuceneUtility {
             writer.addDocument(doc);
             writer.commit();
         } catch (IOException ex) {
-            throw new LuceneException("Cannot insert concept in lucene. Please retry");
+            throw new LuceneException("Cannot insert concept in lucene. Please retry", ex);
         }
 
     }
 
     public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id, String conceptType)
             throws LuceneException {
-        IndexReader reader = null;
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
+        Query q = null;
+        StringBuffer queryString = new StringBuffer();
+        String defaultQuery = null;
+
+        if (word != null) {
+            queryString.append("word:" + word);
+            defaultQuery = "word";
+        }
+        if (pos != null) {
+            if (queryString.length() != 0)
+                queryString.append(" AND pos:" + pos);
+            else
+                queryString.append("pos:" + pos);
+            defaultQuery = "pos";
+        }
+
+        if (listName != null) {
+            if (queryString.length() != 0) {
+                queryString.append(" AND listName:" + listName);
+            } else {
+                queryString.append("listName:" + listName);
+            }
+            defaultQuery = "listName";
+        }
+
+        if (id != null) {
+            if (queryString.length() != 0) {
+                queryString.append(" AND id:" + id);
+            } else {
+                queryString.append("id:" + id);
+            }
+            defaultQuery = "id";
+        }
+
+        if (conceptType != null) {
+            if (queryString.length() != 0) {
+                queryString.append(" AND conceptType:" + conceptType);
+            } else {
+                queryString.append("conceptType:" + conceptType);
+            }
+        }
+
+        int hitsPerPage = 10;
+        IndexSearcher searcher = null;
         try {
-            Query q = null;
-
-            StringBuffer queryString = new StringBuffer();
-            String defaultQuery = null;
-
-            if (word != null) {
-                queryString.append("word:" + word);
-                defaultQuery = "word";
-            }
-            if (pos != null) {
-                if (queryString.length() != 0)
-                    queryString.append(" AND pos:" + pos);
-                else
-                    queryString.append("pos:" + pos);
-                defaultQuery = "pos";
-            }
-
-            if (listName != null) {
-                if (queryString.length() != 0) {
-                    queryString.append(" AND listName:" + listName);
-                } else {
-                    queryString.append("listName:" + listName);
-                }
-                defaultQuery = "listName";
-            }
-
-            if (id != null) {
-                if (queryString.length() != 0) {
-                    queryString.append(" AND id:" + id);
-                } else {
-                    queryString.append("id:" + id);
-                }
-                defaultQuery = "id";
-            }
-
-            if (conceptType != null) {
-                if (queryString.length() != 0) {
-                    queryString.append(" AND conceptType:" + conceptType);
-                } else {
-                    queryString.append("conceptType:" + conceptType);
-                }
-            }
             q = new QueryParser(defaultQuery, whiteSpaceAnalyzer).parse(queryString.toString());
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            Directory index = FSDirectory.open(relativePath);
-
-            int hitsPerPage = 10;
-
-            reader = DirectoryReader.open(index);
-            IndexSearcher searcher = new IndexSearcher(reader);
+            searcher = new IndexSearcher(reader);
             TopDocs docs = searcher.search(q, hitsPerPage);
             ScoreDoc[] hits = docs.scoreDocs;
-
             for (int i = 0; i < hits.length; ++i) {
                 int docId = hits[i].doc;
                 Document d = searcher.doc(docId);
                 ConceptEntry entry = getConceptFromDocument(d);
                 concepts.add(entry);
             }
-        } catch (Exception ex) {
-            throw new LuceneException("Issues in querying lucene index. Please retry");
+        }
+
+        catch (IOException ex) {
+            throw new LuceneException("Issues in querying lucene index. Please retry", ex);
+        } catch (ParseException e) {
+            throw new LuceneException("Issues in framing the query", e);
         }
         return concepts.toArray(new ConceptEntry[concepts.size()]);
     }
@@ -223,8 +227,10 @@ public class LuceneUtility implements ILuceneUtility {
             Query q = new QueryParser("conceptType", whiteSpaceAnalyzer).parse("*:*");
             writer.deleteDocuments(q);
             writer.commit();
-        } catch (Exception ex) {
-            throw new LuceneException("Issues in deleting wordnet concepts. Please retry");
+        } catch (IOException ex) {
+            throw new LuceneException("Issues in deleting wordnet concepts. Please retry", ex);
+        } catch (ParseException e) {
+            throw new LuceneException("Issues in framing the query", e);
         }
     }
 
@@ -292,17 +298,18 @@ public class LuceneUtility implements ILuceneUtility {
 
             writer.commit();
 
-        } catch (Exception ex) {
-            throw new LuceneException("Problem in Creating Index. Please retry");
+        } catch (IOException ex) {
+            throw new LuceneException("Problem in Creating Index. Please retry", ex);
         }
     }
 
     @PreDestroy
     public void destroy() throws LuceneException {
         try {
+            reader.close();
             writer.close();
         } catch (IOException ex) {
-            throw new LuceneException(ex.getMessage());
+            throw new LuceneException(ex.getMessage(), ex);
         }
     }
 }
