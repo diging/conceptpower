@@ -129,6 +129,7 @@ public class ConceptManagerTest {
         wordEntries[0] = ponyConcept;
         wordNetwordEntries[0] = ponyConcept2;
         Mockito.when(dbManager.getEntriesForWord("pony")).thenReturn(wordEntries);
+        Mockito.when(dbManager.getEntriesForWord("pony", POS.NOUN)).thenReturn(wordEntries);
         Mockito.when(wordNetManager.getEntriesForWord("pony")).thenReturn(wordNetwordEntries);
 
         ConceptEntry listEntry = new ConceptEntry();
@@ -285,7 +286,7 @@ public class ConceptManagerTest {
     @Test
     public void getConceptListEntriesForWordAndPosTest() {
         ConceptEntry[] concepts = managerToTest.getConceptListEntriesForWord("pony",POS.NOUN);
-        Assert.assertEquals();
+        Assert.assertEquals(concepts.length,1);
     }
     
 }
