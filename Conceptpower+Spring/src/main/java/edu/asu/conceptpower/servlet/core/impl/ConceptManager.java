@@ -126,7 +126,7 @@ public class ConceptManager implements IConceptManager {
                 if (ids != null) {
                     for (String id : ids) {
                         if (id != null && !id.trim().isEmpty()) {
-                            ConceptEntry wordnetEntry = getConceptEntry(id);
+                            ConceptEntry wordnetEntry = wordnetManager.getConcept(id);
                             if (wordnetEntry != null) {
                                 sb.append(wordnetEntry.getSynonymIds());
                             }
