@@ -175,6 +175,7 @@ public class LuceneUtility implements ILuceneUtility {
                 IWord word = dict.getWord(wordId);
                 doc.add(new StringField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
                 doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
+                doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
 
                 ISynset synset = word.getSynset();
                 List<IWord> synonyms = synset.getWords();
