@@ -13,4 +13,6 @@ public interface LuceneFieldNames {
 	public final static String MODIFIED = "modifiedId";
 	public final static String SYNONYMID = "synonymId";
 	public final static String MODIFIED_TIME = "modifiedTime";
+	public final static String ID = "id";
+	public final static String WORDNETID = "wordnetid";
 }

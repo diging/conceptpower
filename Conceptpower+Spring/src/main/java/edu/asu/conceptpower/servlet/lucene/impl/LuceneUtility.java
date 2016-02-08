@@ -20,7 +20,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -44,7 +43,6 @@ import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
 import edu.asu.conceptpower.servlet.reflect.LuceneField;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
 import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
-import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wordnet.WordNetConfiguration;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
@@ -77,7 +75,7 @@ public class LuceneUtility implements ILuceneUtility {
             Directory index = FSDirectory.open(relativePath);
             IndexWriterConfig configWhiteSpace = new IndexWriterConfig(whiteSpaceAnalyzer);
             writer = new IndexWriter(index, configWhiteSpace);
-            reader = DirectoryReader.open(index);
+            reader = DirectoryReader.open(writer, true);
         } catch (IOException ex) {
             throw new LuceneException("Restart the application", ex);
         }
@@ -98,7 +96,7 @@ public class LuceneUtility implements ILuceneUtility {
 
     public void insertConcept(ConceptEntry entry) throws LuceneException {
         Document doc = new Document();
-        doc.add(new TextField(LuceneFieldNames.WORD, entry.getWord().replace(" ", ""), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.WORD, entry.getWord().replace(" ", ""), Field.Store.YES));
 
         doc.add(new StringField(LuceneFieldNames.POS, entry.getPos().toString(), Field.Store.YES));
 
@@ -119,6 +117,8 @@ public class LuceneUtility implements ILuceneUtility {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
         doc.add(new StoredField(LuceneFieldNames.MODIFIED_TIME, formatter.format(cal.getTime())));
+        doc.add(new StoredField(LuceneFieldNames.WORDNETID, entry.getWordnetId() != null ? entry.getWordnetId() : ""));
+        doc.add(new StoredField(LuceneFieldNames.ID, entry.getId() != null ? entry.getId() : ""));
 
         try {
             writer.addDocument(doc);
@@ -131,20 +131,19 @@ public class LuceneUtility implements ILuceneUtility {
 
     private ConceptEntry getConceptFromDocument(Document d) {
         ConceptEntry entry = new ConceptEntry();
-        entry.setId(d.get("id"));
-        entry.setWord(d.get("word"));
-        entry.setPos(d.get("pos"));
-        entry.setConceptList(Constants.WORDNET_DICTIONARY);
-        entry.setDescription(d.get("description"));
-        entry.setWordnetId(d.get("id"));
-        entry.setSynonymIds(d.get("synonymId"));
-        entry.setConceptList(d.get("listName"));
-        entry.setTypeId(d.get("types"));
-        entry.setEqualTo(d.get("equalTo"));
-        entry.setSimilarTo(d.get("similar"));
-        entry.setModified(d.get("modifiedId"));
-        entry.setSynonymIds(d.get("synonymId"));
-        entry.setCreatorId(d.get("creatorId"));
+        entry.setId(d.get(LuceneFieldNames.ID));
+        entry.setWord(d.get(LuceneFieldNames.WORD));
+        entry.setPos(d.get(LuceneFieldNames.POS));
+        entry.setConceptList(d.get(LuceneFieldNames.CONCEPT_LIST));
+        entry.setDescription(d.get(LuceneFieldNames.DESCRIPTION));
+        entry.setWordnetId(d.get(LuceneFieldNames.WORDNETID));
+        entry.setSynonymIds(d.get(LuceneFieldNames.SYNONYMID));
+        entry.setTypeId(d.get(d.get(LuceneFieldNames.TYPE_ID)));
+        entry.setEqualTo(d.get(LuceneFieldNames.EQUALS_TO));
+        entry.setSimilarTo(d.get(LuceneFieldNames.SIMILAR_TO));
+        entry.setModified(d.get(LuceneFieldNames.MODIFIED));
+        entry.setSynonymIds(d.get(LuceneFieldNames.SYNONYMID));
+        entry.setCreatorId(d.get(LuceneFieldNames.CREATOR));
         return entry;
     }
 
@@ -263,6 +262,7 @@ public class LuceneUtility implements ILuceneUtility {
         IndexSearcher searcher = null;
         try {
             Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
+            reader = DirectoryReader.open(writer, true);
             searcher = new IndexSearcher(reader);
             TopDocs docs = searcher.search(q, hitsPerPage);
             ScoreDoc[] hits = docs.scoreDocs;

@@ -25,6 +25,7 @@ public class ConceptEntry implements Serializable {
     private String id;
 
     @SearchField(fieldName = SearchFieldNames.WORDNETID)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORDNETID)
     private String wordnetId;
 
     @SearchField(fieldName = SearchFieldNames.WORD)
