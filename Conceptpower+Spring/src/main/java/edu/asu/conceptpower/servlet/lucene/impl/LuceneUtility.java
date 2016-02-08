@@ -187,7 +187,7 @@ public class LuceneUtility implements ILuceneUtility {
                 doc.add(new StringField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
                 // Adding this new data to delete only wordnet concepts while
                 // adding all wordnet concepts from jwi.
-                doc.add(new StringField("conceptType", "wordnetconcept", Field.Store.YES));
+                doc.add(new StringField(LuceneFieldNames.CONCEPTTYPE, "wordnetconcept", Field.Store.YES));
                 writer.addDocument(doc);
             }
 

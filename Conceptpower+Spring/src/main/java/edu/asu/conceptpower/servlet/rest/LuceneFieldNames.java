@@ -15,4 +15,5 @@ public interface LuceneFieldNames {
 	public final static String MODIFIED_TIME = "modifiedTime";
 	public final static String ID = "id";
 	public final static String WORDNETID = "wordnetid";
+	public final static String CONCEPTTYPE = "conceptType";
 }

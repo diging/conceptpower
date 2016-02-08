@@ -21,6 +21,7 @@ import edu.asu.conceptpower.servlet.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
+import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
 import edu.asu.conceptpower.servlet.rest.SearchFieldNames;
 import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
@@ -99,7 +100,7 @@ public class ConceptManager implements IConceptManager {
         Map<String,String> fieldMap = new HashMap<String,String>();
         fieldMap.put(SearchFieldNames.WORD, word);
         fieldMap.put(SearchFieldNames.POS, pos);
-        fieldMap.put(SearchFieldNames.TYPE_ID, conceptType);
+        fieldMap.put(LuceneFieldNames.CONCEPTTYPE, conceptType);
         return luceneUtility.queryIndex(fieldMap, null);
     }
 
