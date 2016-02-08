@@ -110,12 +110,10 @@ public interface IConceptManager {
 	 * concept is the Wordnet list. 
 	 */
 	public abstract String addConceptListEntry(ConceptEntry entry)
-			throws DictionaryDoesNotExistException, DictionaryModifyException;
+			throws DictionaryDoesNotExistException, DictionaryModifyException,LuceneException;
 
 	public abstract void storeModifiedConcept(ConceptEntry entry)throws LuceneException;
 	
 	public abstract void deleteConcept(String id) throws LuceneException;
 	
-	public abstract void addConcept(ConceptEntry entry)throws LuceneException;
-
 }

@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +23,7 @@ import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.POS;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
-import edu.asu.conceptpower.servlet.web.ConceptAddController;
+import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 
 @Controller
 public class Concepts {
@@ -69,7 +68,11 @@ public class Concepts {
 		} catch (DictionaryModifyException e) {
 			logger.error("Error creating concept from REST call.", e);
 			return new ResponseEntity<String>("Specified dictionary can't be modified.", HttpStatus.BAD_REQUEST);
+		} catch(LuceneException le){
+		    logger.error("Error creating concept from REST call.", le);
+            return new ResponseEntity<String>("Concept Cannot be added", HttpStatus.BAD_REQUEST);
 		}
+		
 		
 		jsonObject.put("id", id);
 		

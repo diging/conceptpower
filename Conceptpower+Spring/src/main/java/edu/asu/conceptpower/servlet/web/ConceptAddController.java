@@ -33,6 +33,8 @@ import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
+import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
+import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.profile.impl.ServiceBackBean;
 import edu.asu.conceptpower.servlet.profile.impl.ServiceRegistry;
@@ -114,9 +116,11 @@ public class ConceptAddController {
 	 *            holds log in information
 	 * @return returns string which redirects to concept list page
 	 * @throws LuceneException 
+	 * @throws DictionaryModifyException 
+	 * @throws DictionaryDoesNotExistException 
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
-    public String addConcept(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException {
+    public String addConcept(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException, DictionaryDoesNotExistException, DictionaryModifyException {
 
         ConceptEntry conceptEntry = new ConceptEntry();
         conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
@@ -128,7 +132,7 @@ public class ConceptAddController {
         conceptEntry.setSimilarTo(req.getParameter("similar"));
         conceptEntry.setTypeId(req.getParameter("types"));
         conceptEntry.setCreatorId(principal.getName());
-        conceptManager.addConcept(conceptEntry);
+        conceptManager.addConceptListEntry(conceptEntry);
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
     }
 

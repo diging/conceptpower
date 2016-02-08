@@ -3,6 +3,7 @@ package edu.asu.conceptpower.servlet.core.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,6 +21,7 @@ import edu.asu.conceptpower.servlet.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
+import edu.asu.conceptpower.servlet.rest.SearchFieldNames;
 import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
 
@@ -94,7 +96,11 @@ public class ConceptManager implements IConceptManager {
         if (pos == null)
             return null;
         word = word.replace(" ", "");
-        return luceneUtility.queryLuceneIndex(word, pos, null, null, conceptType);
+        Map<String,String> fieldMap = new HashMap<String,String>();
+        fieldMap.put(SearchFieldNames.WORD, word);
+        fieldMap.put(SearchFieldNames.POS, pos);
+        fieldMap.put(SearchFieldNames.TYPE_ID, conceptType);
+        return luceneUtility.queryIndex(fieldMap, null);
     }
 
     /**
@@ -275,7 +281,9 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public ConceptEntry[] getConceptListEntriesForWord(String word) throws LuceneException {
-        return luceneUtility.queryLuceneIndex(word, null, null, null, null);
+        Map<String,String> fieldMap = new HashMap<String,String>();
+        fieldMap.put(SearchFieldNames.WORD, word);
+        return luceneUtility.queryIndex(fieldMap, null);
     }
 
     /*
@@ -362,7 +370,7 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public String addConceptListEntry(ConceptEntry entry)
-            throws DictionaryDoesNotExistException, DictionaryModifyException {
+            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException {
         ConceptList dict = client.getConceptList(entry.getConceptList());
         if (dict == null)
             throw new DictionaryDoesNotExistException();
@@ -374,6 +382,7 @@ public class ConceptManager implements IConceptManager {
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
         client.store(entry, DBNames.DICTIONARY_DB);
+        luceneUtility.insertConcept(entry);
         return id;
     }
 
@@ -415,11 +424,5 @@ public class ConceptManager implements IConceptManager {
         ConceptEntry concept = getConceptEntry(id);
         concept.setDeleted(true);
         storeModifiedConcept(concept);
-    }
-
-    @Override
-    public void addConcept(ConceptEntry entry) throws LuceneException {
-        entry.setId(generateId(CONCEPT_PREFIX));
-        luceneUtility.insertConcept(entry);
     }
 }

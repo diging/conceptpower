@@ -16,11 +16,12 @@ import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
 import edu.asu.conceptpower.servlet.wordnet.Constants;
+import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
 import junit.framework.Assert;
 
 public class ConceptManagerTest {
 
-	@Mock
+    @Mock
     private ConceptManager conceptManager;
 
     @Mock
@@ -32,11 +33,14 @@ public class ConceptManagerTest {
     @Mock
     private ILuceneUtility luceneIndex;
 
+    @Mock
+    private WordNetManager wordNetManager;
+
     private ConceptEntry addedConcept;
 
     private ConceptEntry wordnetConcept1;
     private ConceptEntry wordnetConcept2;
-
+    private ConceptEntry addedConceptsForWordNet;
     private ConceptList list1;
 
     @Before
@@ -89,11 +93,10 @@ public class ConceptManagerTest {
         wordnet.setDescription("WordNet list");
         Mockito.when(dbManager.getConceptList(Constants.WORDNET_DICTIONARY)).thenReturn(wordnet);
 
-        ConceptEntry[] addedConcepts = { addedConcept };
-        Mockito.when(luceneIndex.queryLuceneIndex(null, null, null, "id1", null)).thenReturn(addedConcepts);
-
-        ConceptEntry[] addedConceptsForWordNet = { wordnetConcept2 };
-        Mockito.when(luceneIndex.queryLuceneIndex(null, null, null, "WID-2", null)).thenReturn(addedConceptsForWordNet);
+        addedConceptsForWordNet = new ConceptEntry();
+        addedConceptsForWordNet.setWord("wordnetConcept2");
+        addedConceptsForWordNet.setId("WID-2");
+        Mockito.when(wordNetManager.getConcept("WID-2")).thenReturn(addedConceptsForWordNet);
     }
 
     @Test
@@ -107,7 +110,7 @@ public class ConceptManagerTest {
     @Test
     public void testGetConceptEntryForWordnetConcept() throws LuceneException {
         ConceptEntry entry = managerToTest.getConceptEntry("WID-2");
-        Assert.assertEquals(wordnetConcept2, entry);
+        Assert.assertEquals(addedConceptsForWordNet, entry);
     }
 
     @Test
@@ -117,7 +120,8 @@ public class ConceptManagerTest {
     }
 
     @Test
-    public void testAddConceptListEntry() throws DictionaryDoesNotExistException, DictionaryModifyException {
+    public void testAddConceptListEntry()
+            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList("list1");
         newConcept.setCreatorId("testuser");
@@ -131,7 +135,7 @@ public class ConceptManagerTest {
     }
 
     @Test
-    public void testAddConceptListEntryWrongDict() throws DictionaryModifyException {
+    public void testAddConceptListEntryWrongDict() throws DictionaryModifyException, LuceneException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList("list-not-exist");
         newConcept.setCreatorId("testuser");
@@ -151,7 +155,7 @@ public class ConceptManagerTest {
     }
 
     @Test
-    public void testAddConceptListEntryToWordnet() throws DictionaryDoesNotExistException {
+    public void testAddConceptListEntryToWordnet() throws DictionaryDoesNotExistException, LuceneException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList(Constants.WORDNET_DICTIONARY);
         newConcept.setCreatorId("testuser");

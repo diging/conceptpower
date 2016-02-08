@@ -129,74 +129,6 @@ public class LuceneUtility implements ILuceneUtility {
 
     }
 
-    public ConceptEntry[] queryLuceneIndex(String word, String pos, String listName, String id, String conceptType)
-            throws LuceneException {
-        List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
-        Query q = null;
-        StringBuffer queryString = new StringBuffer();
-        String defaultQuery = null;
-
-        if (word != null) {
-            queryString.append("word:" + word);
-            defaultQuery = "word";
-        }
-        if (pos != null) {
-            if (queryString.length() != 0)
-                queryString.append(" AND pos:" + pos);
-            else
-                queryString.append("pos:" + pos);
-            defaultQuery = "pos";
-        }
-
-        if (listName != null) {
-            if (queryString.length() != 0) {
-                queryString.append(" AND listName:" + listName);
-            } else {
-                queryString.append("listName:" + listName);
-            }
-            defaultQuery = "listName";
-        }
-
-        if (id != null) {
-            if (queryString.length() != 0) {
-                queryString.append(" AND id:" + id);
-            } else {
-                queryString.append("id:" + id);
-            }
-            defaultQuery = "id";
-        }
-
-        if (conceptType != null) {
-            if (queryString.length() != 0) {
-                queryString.append(" AND conceptType:" + conceptType);
-            } else {
-                queryString.append("conceptType:" + conceptType);
-            }
-        }
-
-        int hitsPerPage = 10;
-        IndexSearcher searcher = null;
-        try {
-            q = new QueryParser(defaultQuery, whiteSpaceAnalyzer).parse(queryString.toString());
-            searcher = new IndexSearcher(reader);
-            TopDocs docs = searcher.search(q, hitsPerPage);
-            ScoreDoc[] hits = docs.scoreDocs;
-            for (int i = 0; i < hits.length; ++i) {
-                int docId = hits[i].doc;
-                Document d = searcher.doc(docId);
-                ConceptEntry entry = getConceptFromDocument(d);
-                concepts.add(entry);
-            }
-        }
-
-        catch (IOException ex) {
-            throw new LuceneException("Issues in querying lucene index. Please retry", ex);
-        } catch (ParseException e) {
-            throw new LuceneException("Issues in framing the query", e);
-        }
-        return concepts.toArray(new ConceptEntry[concepts.size()]);
-    }
-
     private ConceptEntry getConceptFromDocument(Document d) {
         ConceptEntry entry = new ConceptEntry();
         entry.setId(d.get("id"));
@@ -299,22 +231,28 @@ public class LuceneUtility implements ILuceneUtility {
 
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator) throws LuceneException {
 
+        if (operator == null) {
+            operator = "AND";
+        }
+
         StringBuffer queryString = new StringBuffer();
         int firstEntry = 1;
         for (String fieldName : fieldMap.keySet()) {
             String searchString = fieldMap.get(fieldName);
-            ConceptEntry con = new ConceptEntry();
-            java.lang.reflect.Field[] fields = con.getClass().getDeclaredFields();
-            for (java.lang.reflect.Field field : fields) {
-                SearchField search = field.getAnnotation(SearchField.class);
-                LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
-                if (search != null) {
-                    if (search.fieldName().equals(fieldName)) {
-                        if (firstEntry != 1)
-                            queryString.append(" " + operator + " ");
-                        firstEntry++;
-                        queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
-                        queryString.append(searchString);
+            if (searchString != null) {
+                ConceptEntry con = new ConceptEntry();
+                java.lang.reflect.Field[] fields = con.getClass().getDeclaredFields();
+                for (java.lang.reflect.Field field : fields) {
+                    SearchField search = field.getAnnotation(SearchField.class);
+                    LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
+                    if (search != null) {
+                        if (search.fieldName().equals(fieldName)) {
+                            if (firstEntry != 1)
+                                queryString.append(" " + operator + " ");
+                            firstEntry++;
+                            queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
+                            queryString.append(searchString);
+                        }
                     }
                 }
             }

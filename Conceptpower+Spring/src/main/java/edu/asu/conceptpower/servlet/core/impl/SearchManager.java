@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.servlet.core.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,11 @@ public class SearchManager implements ISearchManager {
 
     @Autowired
     private LuceneUtility luceneUtility;
+    
 
     @Override
-    public ConceptEntry[] searchForConceptsConnectedByOr(Map<String, String> fieldMap, String operator)
+    public ConceptEntry[] searchForConceptsConnected(Map<String, String> fieldMap, String operator)
             throws LuceneException {
         return luceneUtility.queryIndex(fieldMap, operator);
-
     }
 }
