@@ -169,12 +169,12 @@ public class LuceneUtility implements ILuceneUtility {
             for (IWordID wordId : wordIdds) {
 
                 Document doc = new Document();
-                doc.add(new StoredField("word", wordId.getLemma()));
-                doc.add(new StringField("pos", wordId.getPOS().toString(), Field.Store.YES));
+                doc.add(new StringField(LuceneFieldNames.WORD, wordId.getLemma(), Field.Store.YES));
+                doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
 
                 IWord word = dict.getWord(wordId);
-                doc.add(new StringField("description", word.getSynset().getGloss(), Field.Store.YES));
-                doc.add(new StringField("id", word.getID().toString(), Field.Store.YES));
+                doc.add(new StringField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
+                doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
 
                 ISynset synset = word.getSynset();
                 List<IWord> synonyms = synset.getWords();
@@ -184,7 +184,7 @@ public class LuceneUtility implements ILuceneUtility {
                         sb.append(
                                 syn.getID().toString() + edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR);
                 }
-                doc.add(new StringField("synonymId", sb.toString(), Field.Store.YES));
+                doc.add(new StringField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
                 // Adding this new data to delete only wordnet concepts while
                 // adding all wordnet concepts from jwi.
                 doc.add(new StringField("conceptType", "wordnetconcept", Field.Store.YES));
