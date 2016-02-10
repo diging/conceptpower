@@ -93,7 +93,7 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public ConceptEntry[] getConceptListEntriesForWord(String word, String pos, String conceptType)
-            throws LuceneException {
+            throws LuceneException, IllegalAccessException {
         if (pos == null)
             return null;
         word = word.replace(" ", "");
@@ -281,7 +281,7 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWord(String word) throws LuceneException {
+    public ConceptEntry[] getConceptListEntriesForWord(String word) throws LuceneException, IllegalAccessException {
         Map<String,String> fieldMap = new HashMap<String,String>();
         fieldMap.put(SearchFieldNames.WORD, word);
         return luceneUtility.queryIndex(fieldMap, null);
@@ -371,7 +371,7 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public String addConceptListEntry(ConceptEntry entry)
-            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException {
+            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException {
         ConceptList dict = client.getConceptList(entry.getConceptList());
         if (dict == null)
             throw new DictionaryDoesNotExistException();
@@ -395,12 +395,10 @@ public class ConceptManager implements IConceptManager {
      * conceptpower.core.ConceptEntry)
      */
     @Override
-    public void storeModifiedConcept(ConceptEntry entry) throws LuceneException {
+    public void storeModifiedConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException {
         client.update(entry, DBNames.DICTIONARY_DB);
         luceneUtility.deleteById(entry.getId());
-        if (!entry.isDeleted()) {
-            luceneUtility.insertConcept(entry);
-        }
+        luceneUtility.insertConcept(entry);
     }
 
     protected String generateId(String prefix) {
@@ -424,6 +422,7 @@ public class ConceptManager implements IConceptManager {
     public void deleteConcept(String id) throws LuceneException {
         ConceptEntry concept = getConceptEntry(id);
         concept.setDeleted(true);
-        storeModifiedConcept(concept);
+        client.update(concept, DBNames.DICTIONARY_DB);
+        luceneUtility.deleteById(concept.getId());
     }
 }

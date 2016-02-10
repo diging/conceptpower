@@ -10,17 +10,18 @@ import org.springframework.web.servlet.ModelAndView;
 public class ConceptPowerExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ConceptPowerExceptionHandler.class);
-    
+
     /**
-     * For now this method handles all exceptions thrown in Controller classes. Eventually this method can be
-     * replaced by methods that handle individual exceptions.
+     * For now this method handles all exceptions thrown in Controller classes.
+     * Eventually this method can be replaced by methods that handle individual
+     * exceptions.
      * 
-     * @param ex The exception thrown in a controller.
+     * @param ex
+     *            The exception thrown in a controller.
      * @return Information about the exception page.
      */
-    @ExceptionHandler(LuceneException.class)
+    @ExceptionHandler({ IllegalArgumentException.class, IllegalAccessException.class, LuceneException.class })
     public ModelAndView handleNotImplementedEx(Exception ex) {
-        
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("auth/notImplemented");
         modelAndView.addObject("ex_name", ex.getClass().getName());
@@ -28,5 +29,4 @@ public class ConceptPowerExceptionHandler {
         logger.error(ex.getMessage(), ex);
         return modelAndView;
     }
-    
 }

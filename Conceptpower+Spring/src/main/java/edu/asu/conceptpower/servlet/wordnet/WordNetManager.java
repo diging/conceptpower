@@ -59,15 +59,12 @@ public class WordNetManager {
         IWordID wordId = null;
         try {
             wordId = WordID.parseWordID(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e);
         }
 
         if (wordId != null) {
-            ConceptEntry entry = getConceptFromWordId(wordId);
-
-            return entry;
+            return getConceptFromWordId(wordId);
         }
 
         return null;

@@ -54,11 +54,12 @@ public class ConceptSearchController {
      * @param model
      *            Generic model holder for servlet
      * @return Returns a string value to redirect user to concept search page
+     * @throws IllegalAccessException 
      */
     @RequestMapping(value = "/home/conceptsearch", method = RequestMethod.GET)
     public String search(HttpServletRequest req, ModelMap model,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results)
-                    throws LuceneException {
+                    throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
             return "conceptsearch";
         }

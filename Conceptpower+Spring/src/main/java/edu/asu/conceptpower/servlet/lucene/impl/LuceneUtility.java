@@ -94,30 +94,37 @@ public class LuceneUtility implements ILuceneUtility {
 
     }
 
-    public void insertConcept(ConceptEntry entry) throws LuceneException {
+    public void insertConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException {
         Document doc = new Document();
-        doc.add(new StringField(LuceneFieldNames.WORD, entry.getWord().replace(" ", ""), Field.Store.YES));
 
-        doc.add(new StringField(LuceneFieldNames.POS, entry.getPos().toString(), Field.Store.YES));
+        java.lang.reflect.Field[] fields = entry.getClass().getDeclaredFields();
+        for (java.lang.reflect.Field field : fields) {
 
-        doc.add(new StringField(LuceneFieldNames.DESCRIPTION,
-                entry.getDescription() != null ? entry.getDescription() : "", Field.Store.YES));
+            LuceneField searchFieldAnnotation = field.getAnnotation(LuceneField.class);
+            field.setAccessible(true);
+            if (searchFieldAnnotation != null) {
 
-        doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST,
-                entry.getConceptList() != null ? entry.getConceptList() : "", Field.Store.YES));
+                try {
+                    Object contentOfField = field.get(entry);
+                    if (contentOfField != null) {
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
+                                String.valueOf(contentOfField).replace(" ", ""), Field.Store.YES));
+                    }
 
-        doc.add(new StoredField(LuceneFieldNames.SYNONYMID,
-                entry.getSynonymIds() != null ? entry.getSynonymIds() : ""));
-        doc.add(new StoredField(LuceneFieldNames.EQUALS_TO, entry.getEqualTo() != null ? entry.getEqualTo() : ""));
-        doc.add(new StoredField(LuceneFieldNames.SIMILAR_TO, entry.getSimilarTo() != null ? entry.getSimilarTo() : ""));
+                } catch (IllegalArgumentException ie) {
+                    throw new IllegalArgumentException(ie);
+                } catch (IllegalAccessException iae) {
+                    throw new IllegalAccessException(iae.getMessage());
+                }
+            }
+        }
+
         doc.add(new StoredField(LuceneFieldNames.TYPE_ID, entry.getTypeId() != null ? entry.getTypeId() : ""));
         doc.add(new StoredField(LuceneFieldNames.CREATOR, entry.getCreatorId() != null ? entry.getCreatorId() : ""));
         doc.add(new StoredField(LuceneFieldNames.MODIFIED, entry.getModified() != null ? entry.getModified() : ""));
-        doc.add(new StoredField(LuceneFieldNames.TYPE_ID, "UserConcept"));
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
         doc.add(new StoredField(LuceneFieldNames.MODIFIED_TIME, formatter.format(cal.getTime())));
-        doc.add(new StoredField(LuceneFieldNames.WORDNETID, entry.getWordnetId() != null ? entry.getWordnetId() : ""));
         doc.add(new StoredField(LuceneFieldNames.ID, entry.getId() != null ? entry.getId() : ""));
 
         try {
@@ -129,22 +136,24 @@ public class LuceneUtility implements ILuceneUtility {
 
     }
 
-    private ConceptEntry getConceptFromDocument(Document d) {
-        ConceptEntry entry = new ConceptEntry();
-        entry.setId(d.get(LuceneFieldNames.ID));
-        entry.setWord(d.get(LuceneFieldNames.WORD));
-        entry.setPos(d.get(LuceneFieldNames.POS));
-        entry.setConceptList(d.get(LuceneFieldNames.CONCEPT_LIST));
-        entry.setDescription(d.get(LuceneFieldNames.DESCRIPTION));
-        entry.setWordnetId(d.get(LuceneFieldNames.WORDNETID));
-        entry.setSynonymIds(d.get(LuceneFieldNames.SYNONYMID));
-        entry.setTypeId(d.get(d.get(LuceneFieldNames.TYPE_ID)));
-        entry.setEqualTo(d.get(LuceneFieldNames.EQUALS_TO));
-        entry.setSimilarTo(d.get(LuceneFieldNames.SIMILAR_TO));
-        entry.setModified(d.get(LuceneFieldNames.MODIFIED));
-        entry.setSynonymIds(d.get(LuceneFieldNames.SYNONYMID));
-        entry.setCreatorId(d.get(LuceneFieldNames.CREATOR));
-        return entry;
+    private ConceptEntry getConceptFromDocument(Document d) throws IllegalAccessException {
+
+        ConceptEntry con = new ConceptEntry();
+        java.lang.reflect.Field[] fields = con.getClass().getDeclaredFields();
+        for (java.lang.reflect.Field field : fields) {
+            LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
+            field.setAccessible(true);
+            try {
+                if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
+                    field.set(con, d.get(luceneFieldAnnotation.lucenefieldName()));
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException(e);
+            } catch (IllegalAccessException e) {
+                throw new IllegalAccessException();
+            }
+        }
+        con.setId(d.get("id"));
+        return con;
     }
 
     @Override
@@ -229,7 +238,7 @@ public class LuceneUtility implements ILuceneUtility {
         }
     }
 
-    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator) throws LuceneException {
+    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator) throws LuceneException, IllegalAccessException {
 
         if (operator == null) {
             operator = "AND";
@@ -237,23 +246,20 @@ public class LuceneUtility implements ILuceneUtility {
 
         StringBuffer queryString = new StringBuffer();
         int firstEntry = 1;
-        for (String fieldName : fieldMap.keySet()) {
-            String searchString = fieldMap.get(fieldName);
-            if (searchString != null) {
-                ConceptEntry con = new ConceptEntry();
-                java.lang.reflect.Field[] fields = con.getClass().getDeclaredFields();
-                for (java.lang.reflect.Field field : fields) {
-                    SearchField search = field.getAnnotation(SearchField.class);
-                    LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
-                    if (search != null) {
-                        if (search.fieldName().equals(fieldName)) {
-                            if (firstEntry != 1)
-                                queryString.append(" " + operator + " ");
-                            firstEntry++;
-                            queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
-                            queryString.append(searchString);
-                        }
-                    }
+
+        ConceptEntry con = new ConceptEntry();
+        java.lang.reflect.Field[] fields = con.getClass().getDeclaredFields();
+        for (java.lang.reflect.Field field : fields) {
+            SearchField search = field.getAnnotation(SearchField.class);
+            LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
+            if (search != null) {
+                String searchString = fieldMap.get(search.fieldName());
+                if (searchString != null) {
+                    if (firstEntry != 1)
+                        queryString.append(" " + operator + " ");
+                    firstEntry++;
+                    queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
+                    queryString.append(searchString);
                 }
             }
         }

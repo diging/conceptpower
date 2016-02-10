@@ -21,7 +21,7 @@ public class SearchManager implements ISearchManager {
 
     @Override
     public ConceptEntry[] searchForConceptsConnected(Map<String, String> fieldMap, String operator)
-            throws LuceneException {
+            throws LuceneException, IllegalAccessException {
         return luceneUtility.queryIndex(fieldMap, operator);
     }
 }

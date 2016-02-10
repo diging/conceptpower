@@ -15,4 +15,5 @@ public interface SearchFieldNames {
 	public final static String ID = "id";
 	public final static String ISCHECKED = "isChecked";
 	public final static String TYPE_URI = "type_uri";
+	public final static String SYNONYM_ID = "synonymId";
 }

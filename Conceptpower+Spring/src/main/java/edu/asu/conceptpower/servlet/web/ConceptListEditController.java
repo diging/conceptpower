@@ -75,11 +75,12 @@ public class ConceptListEditController {
      * @param req
      *            holds HTTP request information
      * @return Returns a string value to redirect user to concept list page
+     * @throws IllegalAccessException 
      */
     @RequestMapping(value = "auth/conceptlist/storeeditlist", method = RequestMethod.POST)
     public String editList(HttpServletRequest req,
             @Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
-            BindingResult result, ModelMap model) throws LuceneException {
+            BindingResult result, ModelMap model) throws LuceneException, IllegalAccessException {
 
         if (result.hasErrors()) {
             return "/auth/conceptlist/editlist";

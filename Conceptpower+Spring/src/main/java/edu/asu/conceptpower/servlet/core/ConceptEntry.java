@@ -56,6 +56,8 @@ public class ConceptEntry implements Serializable {
     @LuceneField(lucenefieldName = LuceneFieldNames.SIMILAR_TO)
     private String similarTo;
 
+    @SearchField(fieldName=SearchFieldNames.SYNONYM_ID)
+    @LuceneField(lucenefieldName = LuceneFieldNames.SYNONYMID)
     private String synonymIds;
 
     private String synsetIds;

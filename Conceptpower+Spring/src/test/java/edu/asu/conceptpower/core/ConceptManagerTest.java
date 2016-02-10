@@ -121,7 +121,7 @@ public class ConceptManagerTest {
 
     @Test
     public void testAddConceptListEntry()
-            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException {
+            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList("list1");
         newConcept.setCreatorId("testuser");
@@ -135,7 +135,7 @@ public class ConceptManagerTest {
     }
 
     @Test
-    public void testAddConceptListEntryWrongDict() throws DictionaryModifyException, LuceneException {
+    public void testAddConceptListEntryWrongDict() throws DictionaryModifyException, LuceneException, IllegalAccessException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList("list-not-exist");
         newConcept.setCreatorId("testuser");
@@ -155,7 +155,7 @@ public class ConceptManagerTest {
     }
 
     @Test
-    public void testAddConceptListEntryToWordnet() throws DictionaryDoesNotExistException, LuceneException {
+    public void testAddConceptListEntryToWordnet() throws DictionaryDoesNotExistException, LuceneException, IllegalAccessException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList(Constants.WORDNET_DICTIONARY);
         newConcept.setCreatorId("testuser");

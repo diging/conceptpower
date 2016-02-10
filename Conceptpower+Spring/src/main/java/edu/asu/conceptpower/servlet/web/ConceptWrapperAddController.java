@@ -95,10 +95,11 @@ public class ConceptWrapperAddController {
      *         page
      * @throws DictionaryModifyException
      * @throws DictionaryDoesNotExistException
+     * @throws IllegalAccessException 
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper/add", method = RequestMethod.POST)
     public String addConcept(HttpServletRequest req, Principal principal, Model model)
-            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException {
+            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException {
 
         if (req.getParameter("lists") == null || req.getParameter("lists").trim().isEmpty()) {
             req.setAttribute("errormsg", "You have to select a concept list.");
@@ -132,9 +133,10 @@ public class ConceptWrapperAddController {
      *            A generic model holder for Servlet
      * @return String value which redirects user to concept wrapper creation
      *         page
+     * @throws IllegalAccessException 
      */
     @RequestMapping(value = "/auth/conceptlist/addconceptwrapper/conceptsearch", method = RequestMethod.POST)
-    public String search(HttpServletRequest req, ModelMap model) throws LuceneException {
+    public String search(HttpServletRequest req, ModelMap model) throws LuceneException, IllegalAccessException {
 
         String concept = req.getParameter("name");
         String pos = req.getParameter("pos");
@@ -168,9 +170,10 @@ public class ConceptWrapperAddController {
      * @param synonymname
      *            A synonym string for which we need to find existing concepts
      * @return Returns array of concepts found for synonym name
+     * @throws IllegalAccessException 
      */
     @RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
-    public ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname) {
+    public ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname) throws IllegalAccessException {
         ConceptEntry[] entries = null;
         try {
             entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());

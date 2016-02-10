@@ -118,9 +118,10 @@ public class ConceptAddController {
 	 * @throws LuceneException 
 	 * @throws DictionaryModifyException 
 	 * @throws DictionaryDoesNotExistException 
+	 * @throws IllegalAccessException 
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
-    public String addConcept(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException, DictionaryDoesNotExistException, DictionaryModifyException {
+    public String addConcept(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException, DictionaryDoesNotExistException, DictionaryModifyException, IllegalAccessException {
 
         ConceptEntry conceptEntry = new ConceptEntry();
         conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
@@ -142,10 +143,11 @@ public class ConceptAddController {
 	 * @param synonymname
 	 *            A synonym string for which we need to find existing concepts
 	 * @return Returns array of concepts found for synonym name
+	 * @throws IllegalAccessException 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")
     public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname,
-            @RequestParam("addedsynonym") String addedSynonnym) throws LuceneException {
+            @RequestParam("addedsynonym") String addedSynonnym) throws LuceneException, IllegalAccessException {
         ConceptEntry[] entries = null;
             entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
         List<String> addedSynonymList = Arrays.asList(addedSynonnym.replaceAll("\\s", "").split(","));
@@ -182,10 +184,11 @@ public class ConceptAddController {
      * @param conceptname
      *            A string value for which we need to find existing concepts
      * @return Returns existing concepts which contain conceptname
+     * @throws IllegalAccessException 
      */
     @RequestMapping(method = RequestMethod.GET, value = "getExistingConcepts")
     public @ResponseBody ResponseEntity<String> getExistingConcepts(@RequestParam("conceptname") String conceptname)
-            throws LuceneException {
+            throws LuceneException, IllegalAccessException {
         if (conceptname.isEmpty())
             return null;
         ConceptEntry[] entries = null;

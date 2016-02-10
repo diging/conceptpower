@@ -71,8 +71,10 @@ public class Concepts {
 		} catch(LuceneException le){
 		    logger.error("Error creating concept from REST call.", le);
             return new ResponseEntity<String>("Concept Cannot be added", HttpStatus.BAD_REQUEST);
-		}
-		
+		} catch (IllegalAccessException e) {
+		    logger.error("Error creating concept from REST call.", e);
+		    return new ResponseEntity<String>("Illegal Access", HttpStatus.BAD_REQUEST);
+        }
 		
 		jsonObject.put("id", id);
 		

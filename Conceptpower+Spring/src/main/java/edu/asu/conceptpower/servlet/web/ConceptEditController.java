@@ -126,11 +126,12 @@ public class ConceptEditController {
      *            Holds logged in user information
      * @return String value which redirects user to a particular concept list
      *         page
+     * @throws IllegalAccessException 
      */
     @RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
     public String confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, BindingResult result)
-                    throws LuceneException {
+                    throws LuceneException, IllegalAccessException {
         ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
         conceptEntry.setWord(conceptEditBean.getWord());
         conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
@@ -164,10 +165,11 @@ public class ConceptEditController {
      *            Synonym concept name for which the existing concepts has to be
      *            fetched
      * @return The list of existing concepts
+     * @throws IllegalAccessException 
      */
     @RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
     public ResponseEntity<String> searchConcept(@RequestParam("synonymname") String synonymname)
-            throws LuceneException {
+            throws LuceneException, IllegalAccessException {
         ConceptEntry[] entries = null;
         entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
         List<ConceptEntry> synonyms = Arrays.asList(entries);

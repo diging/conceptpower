@@ -75,7 +75,7 @@ public class ConceptSearch {
 
         try {
                 searchResults = manager.searchForConceptsConnected(searchFields,operator);
-        } catch (LuceneException ex) {
+        } catch (LuceneException | IllegalAccessException ex) {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
