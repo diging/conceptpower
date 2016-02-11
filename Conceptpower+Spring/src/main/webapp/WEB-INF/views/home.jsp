@@ -15,6 +15,7 @@
 							"sPaginationType" : "full_numbers",
 							"bAutoWidth" : false,
 							"aoColumnDefs" : [ 
+								<sec:authorize access="isAuthenticated()">
 							    {
 							    	"targets": [0,1],
 							    	'bSortable': false
@@ -29,6 +30,19 @@
 										return $("<div/>").html(o).text();
 									}
 							    },
+							    </sec:authorize>
+							    <sec:authorize access="not isAuthenticated()">
+							    {
+							    	"targets": [5],
+							    	"sType" : "html",
+							    	"render" : function(o, val) {
+							    		if (o.startsWith("&lt;br/&gt;")) {
+							    			o = o.substring(11,o.length);
+							    		}
+										return $("<div/>").html(o).text();
+									}
+							    }
+							    </sec:authorize>
 							    
 							],
 							"order": [[ 2, "desc" ]]
@@ -183,8 +197,10 @@
 		class="table table-striped table-bordered" id="conceptSearchResult">
 		<thead>
 			<tr>
+				<sec:authorize access="isAuthenticated()">
 				<th></th>
 				<th></th>
+				</sec:authorize>
 				<th>Term</th>
 				<th>ID</th>
 				<th>Wordnet ID</th>
@@ -196,7 +212,7 @@
 		</thead>
 		<tbody>
 			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
-				<tr class="gradeX">
+				<tr class="gradeX" title="${concept.uri}">
 					<sec:authorize access="isAuthenticated()">
 						<td><c:choose>
 								<c:when
