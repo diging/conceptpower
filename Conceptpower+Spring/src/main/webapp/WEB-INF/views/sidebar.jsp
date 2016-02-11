@@ -8,32 +8,33 @@
 
 <sec:authorize access="isAnonymous()">
 	<p />
+	<h3>Login</h3>
 	<form name='f'
 		action="<c:url value='/j_spring_security_check' />"
 		method='post'>
 		<table>
 			<tr>
 				<td>Username:</td>
-				<td><input type='text' name='j_username' value=''></td>
+				<td><input type='text' name='j_username' class="form-control" value=''></td>
 			</tr>
 			<tr>
 				<td>Password:</td>
-				<td><input type='password' name='j_password' /></td>
+				<td><input type='password' class="form-control" name='j_password' /></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td>
 					<p>
-						<input name="submit" type="submit" value="Login" class="button" />
+						<input name="submit" type="submit" value="Login" class="btn btn-action btn-sm" />
 					</p>
 				</td>
 			</tr>
 		</table>
 	</form>
 	
-	<p>
+	<div class="text-right">
 	<a href="${pageContext.servletContext.contextPath}/forgot">Forgot password?</a>
-	</p>
+	</div>
 </sec:authorize>
 
 
@@ -76,5 +77,5 @@
 	</form>
 </sec:authorize>
 
-<p>Need help? Write Julia an email: jdamerow@asu.edu</p>
+
 
