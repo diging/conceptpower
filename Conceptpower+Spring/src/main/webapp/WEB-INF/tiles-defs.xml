@@ -11,15 +11,25 @@
 		<put-attribute name="sidebar" value="" />
 		<put-attribute name="content" value="" />
 		<put-attribute name="header" value="" />
+		<put-attribute name="pageName" value="" />
+		<put-attribute name="currentPage" value="home" />
+	</definition>
+	<definition name="base.definition.nonav" template="/WEB-INF/tiles/skeleton-nonav.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="navigation" value="" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="header" value="" />
+		<put-attribute name="pageName" value="" />
 		<put-attribute name="currentPage" value="home" />
 	</definition>
 
 	<!-- welcome etc -->
-	<definition name="welcome" extends="base.definition">
+	<definition name="welcome" extends="base.definition.nonav">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
+		<put-attribute name="pageName" value="Search" />
 		<put-attribute name="currentPage" value="home" />
 	</definition>
 	<definition name="exception" extends="base.definition">
@@ -57,11 +67,12 @@
 	    <put-attribute name="content" value="/WEB-INF/views/resetComplete.jsp" />
 	</definition>
 
-	<definition name="conceptsearch" extends="base.definition">
+	<definition name="conceptsearch" extends="base.definition.nonav">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
+		<put-attribute name="pageName" value="Search" />
 		<put-attribute name="currentPage" value="home" />
 	</definition>
 
