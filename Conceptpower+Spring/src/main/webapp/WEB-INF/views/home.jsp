@@ -47,7 +47,7 @@
 			success : function(details) {
 				$("#detailsid").text(details.id);
 				$("#detailsuri").text(details.uri);
-				$("#detailswordnetid").text(details.wordnetId);
+				$("#detailswordnetid").text(details.wordnetid);
 				$("#detailspos").text(details.pos);
 				$("#detailsconceptlist").text(details.conceptlist);
 				$("#detailstypeid").text(details.type);
@@ -139,7 +139,7 @@
 		</thead>
 		<tbody>
 			<c:forEach var="concept" items="${conceptSearchBean.foundConcepts}">
-				<tr class="gradeX">
+				<tr class="gradeX" title="${concept.uri}">
 					<sec:authorize access="isAuthenticated()">
 						<td><c:choose>
 								<c:when
