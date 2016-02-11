@@ -53,7 +53,7 @@
      </div>
       <div id="content">
         <!-- insert the page content here -->
-        <h1>Conceptpower Installation</h1>
+        <h1>Conceptpower Installation (Outdated - v1.0)</h1>
         <p>Installing Conceptpower is quite easy. You need to have WordNet and a servlet container installed and you need to be able create war-files. </p>
 
       	<h2>System Requirements</h2>
@@ -77,95 +77,62 @@
       	</li>
       	</ul>
 
-        <h2>Installation Process (Version v2.0)</h2>
-
-        <p>
-            If you're looking for the documentation of the installation process of version 1.0, please look <a href="installation-1.0.html">here</a>.
-        </p>
-
-
+        <h2>Installation Process</h2>
 <p>To install Conceptpower three steps are necessary: download Conceptpower, configure Conceptpower, and deploy Conceptpower. In the following each step is described in more detail. </p>
 
 <h3>Download</h3>
 <p>There are two ways of getting Conceptpower, check out its code from the repository or download the latest release. It is recommended to use the latest release.</p>
-<p>You can download the latest release of Conceptpower <a href="https://github.com/diging/conceptpower/releases">here</a>. </p>
-<p>The latest version of the source code of Conceptpower can be <a href="https://github.com/diging/conceptpower">checked out from GitHub</a>.
+<p>You can download the latest release of Conceptpower <a href="http://sourceforge.net/projects/conceptpower/files/latest/download">here</a>. </p>
+<p>The latest version of the source code of Conceptpower can be <a href="http://sourceforge.net/p/conceptpower/code-svn/HEAD/tree/trunk/Conceptpower+Spring/">checked out using Subversion</a>.
 </p>
 
 <h3>Configure Conceptpower</h3>
-<p>There are five settings that need to be configured before deploying Conceptpower: path to the database, path to WordNet, admin users, and the URI prefix, email server. If you downloaded the latest release, rename it from conceptpower-vX.Y.Z.war to conceptpower.zip and unzip the downloaded file. Then do the following.</p>
+<p>There are four settings that need to be configured before deploying Conceptpower: path to the database, path to WordNet, admin users, and the URI prefix. If you downloaded the latest release, rename it from conceptpower-vX.Y.Z.war to conceptpower.zip and unzip the downloaded file. Then do the following.</p>
 
-<h5>db4o-config.xml</h5>
+<h5>web.xml</h5>
 
 <ol>
-	<li>To configure the path to the database, open the file db4o-config.xml that is located in the folder WEB-INF/spring.</li>
-	<li>In the XML file find the section that defines the database paths and replace all occurances of <code>${db.path}</code> with the full path to the folder where the database files should be stored. Make sure that the database folder is modifiable by the servlet container. You should see something like:
+	<li>To configure the path to the database, path to WordNet and the URI prefix, open the file web.xml that is located in the folder WEB-INF.</li>
+	<li>In the XML file find the section that defines the database path and replace the param-value with the full path to the folder where the database files should be stored. Make sure that the database folder is modifiable by the servlet container.
 	<xmp>
+<!-- Database paths -->
+<context-param>
+    <param-name>Db4oDatabasePath</param-name>
+    <param-value>/path/to/conceptpower/db/folder/</param-value>
+</context-param>
 
-<bean id="userDatabaseManager" class="edu.asu.conceptpower.db4o.DatabaseManager" init-method="init" destroy-method="close">
-    <property name="databasePath" value="${db.path}/users.db" />
-</bean>
-    </li>
-	</xmp>
-</ol>
-
-<h5>wordnet-config.xml</h5>
-<ol>
-    <li>To configure the path to the database, open the file wordnet-config.xml that is located in the folder WEB-INF/spring.</li>
-	<li>Find the section that defines the path to WordNet and replace <code>${wordnet.install.path}</code> with the full path to your WordNet installation (e.g. /usr/local/WordNet-3.0 on a Unix system)
-	<xmp>
-<bean class="edu.asu.conceptpower.wordnet.WordNetConfiguration">
-    <property name="wordnetPath" value="${wordnet.install.path}" />
-    <property name="dictFolder" value="dict" />
-</bean>
 	</xmp>
 	</li>
-</ol>
-
-<h5>xml-config.xml</h5>
-<ol>
-    <li>To configure the path to the database, open the file xml-config.xml that is located in the folder WEB-INF/spring.</li>
-	<li>To change the default URI prefix or XML namespace (for REST interface) modify the uriPrefix and xmlNamespace properties as needed.
+	<li>Then find the section that defines the path to WordNet and replace the param-value with the full path to your WordNet installation (e.g. /usr/local/WordNet-3.0 on a Unix system)
 	<xmp>
-<bean id="xmlConfiguration" class="edu.asu.conceptpower.xml.XMLConfig">
-    <property name="uriPrefix" value="http://www.digitalhps.org/concepts/" />
-    <property name="xmlNamespace" value="http://www.digitalhps.org/" />
-</bean>
+<context-param>
+	<param-name>WordNetPath</param-name>
+	<param-value>/usr/local/WordNet-3.0</param-value>
+</context-param>
+	</xmp>
+	</li>
+
+	<li>To change the default URI prefix or XML namespace (for REST interface) modify the following section as needed.
+	<xmp>
+<!-- XML/URI stuff -->
+<context-param>
+	<param-name>URIPrefix</param-name>
+	<param-value>http://www.digitalhps.org/concepts/</param-value>
+</context-param>
+<context-param>
+	<param-name>XMLNamespace</param-name>
+	<param-value>http://www.digitalhps.org/</param-value>
+</context-param>
 	</xmp>
 	</li>
 	</ol>
 
-<h5>root-context.xml</h5>
-<ol>
-    <li>To configure the path to the database, open the file root-context.xml that is located in the folder WEB-INF/spring.</li>
-    <li>Replace <code>${email.host}</code>, <code>${email.port}</code>, <code>${email.user}</code>, and <code>${email.pw}</code> with the information for your email server.
-    <xmp>
-<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-    <property name="host" value="${email.host}" />
-    <property name="port" value="${email.port}" />
-    <property name="username" value="${email.user}" />
-    <property name="password" value="${email.pw}" />
-    <property name="javaMailProperties">
-        <props>
-            <prop key="mail.transport.protocol">smtp</prop>
-            <prop key="mail.smtp.auth">true</prop>
-            <prop key="mail.smtp.starttls.enable">true</prop>
-            <prop key="mail.debug">true</prop>
-        </props>
-    </property>
-</bean>
-    </xmp>
-</ol>
-
-	<h5>user.properties</h5>
-	<p>To configure the admin password open the file user.properties in the folder WEB-INF/classes and change the first word after the equal sign. You can add more user accounts by adding additional rows similar to the first one. The user entries follow the schema <code>[username]=[password],[role ROLE_CP_ADMIN or ROLE_CP_USER],[enabled or disabled]</code>.
-    <xmp>admin=admin,ROLE_CP_ADMIN,enabled
-    </xmp>
-</p>
+	<h5>users.xml</h5>
+	<p>To configure the admin password open the file users.xml in the folder WEB-INF/conf and change it as needed. You can add more admin accounts by adding additional user tags: <xmp style="margin-top: -15px;"><user name="admin" password="password"/></xmp></p>
 
 	<h3>Deploy Conceptpower</h3>
 	<p>
-To deploy Conceptpower first create a war-file from the modified code and then deploy it in your servlet container. If you update an existing Conceptpower installation, you might have to restart your servlet container. Otherwise the database connection might cause problems.
+To deploy Conceptpower first create a war-file from the modified code and then deploy it in your servlet container. If you update an existing Conceptpower installation, make sure to restart your servlet container. Otherwise the database connection will cause problems.
 	</p>
 	<p>
 If you downloaded the latest release of Conceptpower as a war-file (and unzipped it) and if you are using a Unix-based system, you can create a war-file by navigating into the unzipped folder using a terminal. Then type
