@@ -8,7 +8,7 @@
 <h1>Delete concept</h1>
 <p>Do you really want to delete the following concept?</p>
 
-
+<font color="red">${luceneError }</font>
 <h2>${word}</h2>
 <p>${description}</p>
 <br />

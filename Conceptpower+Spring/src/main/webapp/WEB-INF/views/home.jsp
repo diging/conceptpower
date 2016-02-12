@@ -85,6 +85,7 @@
 <form:form
 	action="${pageContext.servletContext.contextPath}/home/conceptsearch"
 	method='get' commandName='conceptSearchBean'>
+	<form:errors path="luceneError"></form:errors>
 	<table>
 		<tr>
 			<td>Word:</td>

@@ -51,6 +51,8 @@
 <h1>Concept list</h1>
 <p>Here you find all stored concept list in the selected concept
 	list.</p>
+	
+	<font color="red">${luceneError }</font>
 
 <h2>Concepts</h2>
 <c:if test="${not empty result}">
