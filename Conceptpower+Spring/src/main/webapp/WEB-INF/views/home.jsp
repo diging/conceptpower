@@ -45,10 +45,15 @@
 							    </sec:authorize>
 							    
 							],
+							
+						<sec:authorize access="isAuthenticated()">
 							"order": [[ 2, "desc" ]]
+						</sec:authorize>
+						<sec:authorize access="not isAuthenticated()">
+							"order": [[ 0, "desc" ]]
+						</sec:authorize>
 							
 						});
-
 						$('#viafSearchResult').dataTable({
 							"bJQueryUI" : true,
 							"sPaginationType" : "full_numbers",
@@ -61,7 +66,6 @@
 								}
 							} ],
 						});
-
 						$('#detailsModal')
 								.on(
 										'show.bs.modal',
@@ -71,7 +75,6 @@
 													.data('conceptid') // Extract info from data-* attributes
 											// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 											// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-
 											$
 													.ajax({
 														type : "GET",
@@ -114,15 +117,12 @@
 																			details.creator);
 														}
 													});
-
 											var modal = $(this)
 											/*modal.find('.modal-title').text('New message to ' + recipient)
 											modal.find('.modal-body input').val(recipient)*/
 										});
 					});
-
 	$(document).ready(hideFormProcessing);
-
 	function hideFormProcessing() {
 		$('#floatingCirclesG').hide();
 	}
@@ -318,4 +318,3 @@
 		</div>
 	</div>
 </div>
-

@@ -16,7 +16,7 @@
 	
 	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 	<!-- Custom styles for our template -->
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/bootstrap-theme.css" media="screen" >
@@ -55,7 +55,7 @@
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="index.html"><img src="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png" alt="Conceptpower" width="40px"></a>
+				<a class="navbar-brand" href="${pageContext.servletContext.contextPath}"><img src="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png" alt="Conceptpower" width="40px"></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
@@ -72,8 +72,8 @@
 	<div class="container main">
 
 		<ol class="breadcrumb">
-			<li><a href="index.html">Home</a></li>
-			<li class="active"><tiles:insertAttribute name="pageName" /></li>
+			<li><a href="${pageContext.servletContext.contextPath}">Home</a></li>
+			<li class="active"><tiles:insertAttribute name="currentPage" /></li>
 		</ol>
 
 		<div class="row">

@@ -56,7 +56,7 @@
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="index.html"><img src="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png" alt="Conceptpower" width="40px"> <span class="first-letter">C</span>onceptpower</a>
+				<a class="navbar-brand" href="${pageContext.servletContext.contextPath}"><img src="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png" alt="Conceptpower" width="40px"> <span class="first-letter">C</span>onceptpower</a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">

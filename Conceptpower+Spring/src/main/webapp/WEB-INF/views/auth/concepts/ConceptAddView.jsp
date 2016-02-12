@@ -236,9 +236,26 @@
 							"bJQueryUI" : true,
 							"sPaginationType" : "full_numbers",
 							"bAutoWidth" : false,
+							"bUseRendered" : true,
 							"aoColumns" : [ {
 								"sTitle" : "Select",
-								"mDataProp" : "isChecked",
+								"fnRender" : function(data) {
+									console.log(data);
+									var id = data.id;
+									var check = '';
+									var word = encodeURI(word);
+									if ($('#equals').val().indexOf(id) != -1) {
+										check = 'checked=\'checked\'';
+									}
+									return '<input type="checkbox" id="'
+											+ id
+											+ '" '
+											+ check
+											+ ' name="isChecked" onclick="serviceConceptAdd(\''
+											+ id + '\',\''
+											+ word.replace(/'/g, '%39')
+											+ '\')"></input>';
+								}
 							}, {
 								"sTitle" : "Word",
 								"mDataProp" : "word",
@@ -249,30 +266,12 @@
 								"sTitle" : "Description",
 								"mDataProp" : "description",
 							} ],
-							aoColumnDefs : [ {
-								aTargets : [ 0 ],
-								fnRender : function(o, v) {
-									var check = '';
-									if ($('#equals').val().indexOf(
-											o.aData["id"]) != -1) {
-										check = 'checked=\'checked\'';
-									}
-									var word = encodeURI(o.aData["word"]);
-									return '<input type="checkbox" id="'
-											+ o.aData["id"]
-											+ '" '
-											+ check
-											+ ' name="isChecked" onclick="serviceConceptAdd(\''
-											+ o.aData["id"] + '\',\''
-											+ word.replace(/'/g, '%39')
-											+ '\')"></input>';
-								},
-							} ]
+							"order": [[ 1, "desc" ]]
 						});
 	};
 
 	var serviceConceptAdd = function(serviceConceptID, name) {
-
+		
 		var check = false;
 		if (document.getElementById(serviceConceptID).checked) {
 			$('#equals').val(serviceConceptID);
@@ -387,7 +386,7 @@
 <div id="serviceResult" style="max-width: 1000px; padding: 15px;"
 	hidden="true">
 
-	<table cellpadding="0" cellspacing="0" class="display dataTable"
+	<table cellpadding="0" cellspacing="0" class="table table-striped table-bordered"
 		id="serviceResultTable" hidden="true">
 		<tbody>
 		</tbody>
