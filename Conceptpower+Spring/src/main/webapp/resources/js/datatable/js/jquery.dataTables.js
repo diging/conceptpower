@@ -3442,6 +3442,9 @@
 	
 		_fnCallbackFire( settings, null, 'plugin-init', [settings, json] );
 		_fnCallbackFire( settings, 'aoInitComplete', 'init', [settings, json] );
+		
+		$(".dataTables_length select").addClass("form-control");
+		$(".dataTables_filter input").addClass("form-control");
 	}
 	
 	

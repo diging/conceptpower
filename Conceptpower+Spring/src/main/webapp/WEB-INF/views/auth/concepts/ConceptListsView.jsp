@@ -6,7 +6,9 @@
 
 
 <script type="text/javascript">
+
 	$(document).ready(function() {
+		
 		$('#conceptList').dataTable({
 			"bJQueryUI" : true,
 			"sPaginationType" : "full_numbers",
@@ -27,7 +29,7 @@
 
 <c:if test="${not empty result}">
 	<table cellpadding="0" cellspacing="0"
-		class="table table-striped table-bordered" id="conceptList">
+		class="table table-striped table-bordered " id="conceptList">
 		<thead>
 			<tr>
 				<th></th>

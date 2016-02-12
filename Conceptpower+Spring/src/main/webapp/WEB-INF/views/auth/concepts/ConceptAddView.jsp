@@ -5,15 +5,22 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 
+
 <script>
+
+
+	$(function() {
+		$("#dialog").dialog({
+			autoOpen : false
+		});
+	});
+
 	$(function() {
 
 		$("#addsynonym").click(function() {
 			var addedSynonymsTable = $('#addedSynonyms');
 			$('#synonymstable').dataTable().fnClearTable();
-			$("#dialog").dialog({
-				width : 'auto'
-			});
+			$("#dialog").dialog('open');
 			$("#synonymsDialogTable").show();
 		});
 
@@ -236,26 +243,9 @@
 							"bJQueryUI" : true,
 							"sPaginationType" : "full_numbers",
 							"bAutoWidth" : false,
-							"bUseRendered" : true,
 							"aoColumns" : [ {
 								"sTitle" : "Select",
-								"fnRender" : function(data) {
-									console.log(data);
-									var id = data.id;
-									var check = '';
-									var word = encodeURI(word);
-									if ($('#equals').val().indexOf(id) != -1) {
-										check = 'checked=\'checked\'';
-									}
-									return '<input type="checkbox" id="'
-											+ id
-											+ '" '
-											+ check
-											+ ' name="isChecked" onclick="serviceConceptAdd(\''
-											+ id + '\',\''
-											+ word.replace(/'/g, '%39')
-											+ '\')"></input>';
-								}
+								"mData" : "isChecked",
 							}, {
 								"sTitle" : "Word",
 								"mDataProp" : "word",
@@ -266,12 +256,38 @@
 								"sTitle" : "Description",
 								"mDataProp" : "description",
 							} ],
-							"order": [[ 1, "desc" ]]
+							aoColumnDefs : [
+									{
+										"targets" : [ 0, 1 ],
+										'bSortable' : false
+									},
+									{
+										aTargets : [ 0 ],
+										mRender : function(sourceData,
+												dataType, fullData) {
+											var check = '';
+											if ($('#equals').val().indexOf(
+													fullData.id) != -1) {
+												check = 'checked=\'checked\'';
+											}
+											var word = encodeURI(fullData.word);
+											return '<input type="checkbox" id="'
+													+ fullData.id
+													+ '" '
+													+ check
+													+ ' name="isChecked" onclick="serviceConceptAdd(\''
+													+ fullData.id
+													+ '\',\''
+													+ word.replace(/'/g, '%39')
+													+ '\')"></input>';
+										},
+									} ],
+							"order" : [ [ 1, "desc" ] ]
 						});
 	};
 
 	var serviceConceptAdd = function(serviceConceptID, name) {
-		
+
 		var check = false;
 		if (document.getElementById(serviceConceptID).checked) {
 			$('#equals').val(serviceConceptID);
@@ -475,7 +491,7 @@
 <form>
 	<div id="dialog" title="Search synonym">
 
-		<table id="synonymsDialogTable" hidden="true">
+		<table id="synonymsDialogTable" hidden="true"  class="table table-striped table-bordered">
 			<tr>
 				<td><input type="text" name="synonymname" id="synonymname"></td>
 				<td><input type="hidden" name="addedSynonnym"
@@ -489,7 +505,7 @@
 			hidden="true">
 
 			<table cellpadding="0" cellspacing="0" class="display dataTable"
-				id="synonymstable" hidden="true">
+				id="synonymstable" hidden="true" class="table table-striped table-bordered">
 				<tbody>
 				</tbody>
 			</table>
