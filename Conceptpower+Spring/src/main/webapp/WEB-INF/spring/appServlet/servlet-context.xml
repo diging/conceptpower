@@ -39,7 +39,7 @@
 	</beans:bean>
 
 
-	<context:property-placeholder location="classpath*:lucene.properties" />
+	<context:property-placeholder location="classpath*:config.properties" />
 
 	<beans:bean id="mailSender"
 		class="org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -75,7 +75,6 @@
 	</beans:bean>
 
 	<context:component-scan base-package="edu.asu.conceptpower.servlet" />
-	<context:property-placeholder location="classpath*:lucene.properties" />
 	<import resource="../wordnet-config.xml" />
 	<import resource="../rest-service.xml" />
 

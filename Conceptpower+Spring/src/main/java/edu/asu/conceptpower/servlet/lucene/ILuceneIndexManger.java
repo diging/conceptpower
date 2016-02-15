@@ -6,6 +6,6 @@ public interface ILuceneIndexManger {
 
     public void deleteIndexes() throws LuceneException;
 
-    public void indexConcepts() throws LuceneException;
+    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException ;
 
 }

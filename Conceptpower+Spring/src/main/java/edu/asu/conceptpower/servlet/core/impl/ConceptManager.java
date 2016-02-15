@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.db4o.DBNames;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
 import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
 import edu.asu.conceptpower.servlet.rest.SearchFieldNames;
 import edu.asu.conceptpower.servlet.wordnet.Constants;
@@ -41,11 +41,11 @@ public class ConceptManager implements IConceptManager {
     private IConceptDBManager client;
 
     @Autowired
-    private ILuceneUtility luceneUtility;
+    private IIndexService indexService;
 
     @Autowired
     private WordNetManager wordnetManager;
-
+    
     protected final String CONCEPT_PREFIX = "CON";
 
     /*
@@ -92,7 +92,7 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWord(String word, String pos, String conceptType)
+    public ConceptEntry[] getConceptListEntriesForWord(String word, String pos, String conceptList)
             throws LuceneException, IllegalAccessException {
         if (pos == null)
             return null;
@@ -100,8 +100,8 @@ public class ConceptManager implements IConceptManager {
         Map<String,String> fieldMap = new HashMap<String,String>();
         fieldMap.put(SearchFieldNames.WORD, word);
         fieldMap.put(SearchFieldNames.POS, pos);
-        fieldMap.put(LuceneFieldNames.CONCEPTTYPE, conceptType);
-        return luceneUtility.queryIndex(fieldMap, null);
+        fieldMap.put(LuceneFieldNames.CONCEPT_LIST, conceptList);
+        return indexService.searchForConceptsConnected(fieldMap,null);
     }
 
     /**
@@ -284,7 +284,7 @@ public class ConceptManager implements IConceptManager {
     public ConceptEntry[] getConceptListEntriesForWord(String word) throws LuceneException, IllegalAccessException {
         Map<String,String> fieldMap = new HashMap<String,String>();
         fieldMap.put(SearchFieldNames.WORD, word);
-        return luceneUtility.queryIndex(fieldMap, null);
+        return indexService.searchForConceptsConnected(fieldMap, null);
     }
 
     /*
@@ -383,7 +383,7 @@ public class ConceptManager implements IConceptManager {
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
         client.store(entry, DBNames.DICTIONARY_DB);
-        luceneUtility.insertConcept(entry);
+        indexService.insertConcept(entry);
         return id;
     }
 
@@ -397,8 +397,8 @@ public class ConceptManager implements IConceptManager {
     @Override
     public void storeModifiedConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException {
         client.update(entry, DBNames.DICTIONARY_DB);
-        luceneUtility.deleteById(entry.getId());
-        luceneUtility.insertConcept(entry);
+        indexService.deleteById(entry.getId());
+        indexService.insertConcept(entry);
     }
 
     protected String generateId(String prefix) {
@@ -423,6 +423,6 @@ public class ConceptManager implements IConceptManager {
         ConceptEntry concept = getConceptEntry(id);
         concept.setDeleted(true);
         client.update(concept, DBNames.DICTIONARY_DB);
-        luceneUtility.deleteById(concept.getId());
+        indexService.deleteById(concept.getId());
     }
 }

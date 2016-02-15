@@ -13,7 +13,7 @@ public interface ILuceneUtility {
     
     public void deleteIndexes() throws LuceneException;
     
-    public void indexConcepts() throws LuceneException;
+    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException ;
     
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap,String operator) throws LuceneException, IllegalAccessException;
     

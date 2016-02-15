@@ -25,39 +25,39 @@ public class ConceptEntry implements Serializable {
     private String id;
 
     @SearchField(fieldName = SearchFieldNames.WORDNETID)
-    @LuceneField(lucenefieldName = LuceneFieldNames.WORDNETID)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORDNETID, isIndexable = true)
     private String wordnetId;
 
     @SearchField(fieldName = SearchFieldNames.WORD)
-    @LuceneField(lucenefieldName = LuceneFieldNames.WORD)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORD, isIndexable = true)
     private String word;
 
     @SearchField(fieldName = SearchFieldNames.DESCRIPTION)
-    @LuceneField(lucenefieldName = LuceneFieldNames.DESCRIPTION)
+    @LuceneField(lucenefieldName = LuceneFieldNames.DESCRIPTION, isIndexable = true)
     private String description;
 
     @SearchField(fieldName = SearchFieldNames.POS)
-    @LuceneField(lucenefieldName = LuceneFieldNames.POS)
+    @LuceneField(lucenefieldName = LuceneFieldNames.POS, isIndexable = true)
     private String pos;
 
     @SearchField(fieldName = SearchFieldNames.CONCEPT_LIST)
-    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST)
+    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isIndexable = true)
     private String conceptList;
 
     @SearchField(fieldName = SearchFieldNames.TYPE_ID)
-    @LuceneField(lucenefieldName = LuceneFieldNames.TYPE_ID)
+    @LuceneField(lucenefieldName = LuceneFieldNames.TYPE_ID, isIndexable = false)
     private String typeId;
 
     @SearchField(fieldName = SearchFieldNames.EQUALS_TO)
-    @LuceneField(lucenefieldName = LuceneFieldNames.EQUALS_TO)
+    @LuceneField(lucenefieldName = LuceneFieldNames.EQUALS_TO, isIndexable = true)
     private String equalTo;
 
     @SearchField(fieldName = SearchFieldNames.SIMILAR_TO)
-    @LuceneField(lucenefieldName = LuceneFieldNames.SIMILAR_TO)
+    @LuceneField(lucenefieldName = LuceneFieldNames.SIMILAR_TO, isIndexable = true)
     private String similarTo;
 
     @SearchField(fieldName=SearchFieldNames.SYNONYM_ID)
-    @LuceneField(lucenefieldName = LuceneFieldNames.SYNONYMID)
+    @LuceneField(lucenefieldName = LuceneFieldNames.SYNONYMID, isIndexable = true)
     private String synonymIds;
 
     private String synsetIds;
@@ -67,11 +67,11 @@ public class ConceptEntry implements Serializable {
     private String broadens;
 
     @SearchField(fieldName = SearchFieldNames.CREATOR)
-    @LuceneField(lucenefieldName = LuceneFieldNames.CREATOR)
+    @LuceneField(lucenefieldName = LuceneFieldNames.CREATOR, isIndexable = false)
     private String creatorId;
 
     @SearchField(fieldName = SearchFieldNames.MODIFIED)
-    @LuceneField(lucenefieldName = LuceneFieldNames.MODIFIED)
+    @LuceneField(lucenefieldName = LuceneFieldNames.MODIFIED, isIndexable = false)
     private String modified;
 
     private boolean isDeleted;

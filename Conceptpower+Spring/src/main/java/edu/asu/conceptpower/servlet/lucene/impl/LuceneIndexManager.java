@@ -17,7 +17,7 @@ public class LuceneIndexManager implements ILuceneIndexManger {
         luceneUtility.deleteIndexes();
     }
 
-    public void indexConcepts() throws LuceneException {
+    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
         luceneUtility.indexConcepts();
     }
 }

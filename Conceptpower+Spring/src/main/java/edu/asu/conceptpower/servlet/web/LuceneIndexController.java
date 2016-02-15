@@ -31,7 +31,7 @@ public class LuceneIndexController {
     }
 
     @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST)
-    public String indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException {
+    public String indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException, IllegalArgumentException, IllegalAccessException {
 
         manager.deleteIndexes();
         manager.indexConcepts();

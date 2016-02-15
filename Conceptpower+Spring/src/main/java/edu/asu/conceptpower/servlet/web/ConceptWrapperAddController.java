@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.ConceptType;
-import edu.asu.conceptpower.servlet.core.Constants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
 
@@ -142,7 +142,7 @@ public class ConceptWrapperAddController {
         String pos = req.getParameter("pos");
         if (!concept.trim().isEmpty()) {
 
-            ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(concept, pos, "WordNetConcept");
+            ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(concept, pos, Constants.WORDNET_DICTIONARY);
             List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
             model.addAttribute("result", foundConcepts);
         }

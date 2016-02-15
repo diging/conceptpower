@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<h2>Edit user: ${fullname}</h2>
+<h2>Conceptpower Index</h2>
 
 <form:form
 	action="${pageContext.servletContext.contextPath}/auth/indexLuceneWordNet"

@@ -2,6 +2,7 @@ package edu.asu.conceptpower.servlet.lucene.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -21,9 +22,9 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -37,12 +38,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import edu.asu.conceptpower.root.DatabaseClient;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
 import edu.asu.conceptpower.servlet.reflect.LuceneField;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
 import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
+import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wordnet.WordNetConfiguration;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
@@ -53,7 +56,7 @@ import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 
 @Component
-@PropertySource("classpath:lucene.properties")
+@PropertySource("classpath:config.properties")
 public class LuceneUtility implements ILuceneUtility {
 
     @Autowired
@@ -61,21 +64,32 @@ public class LuceneUtility implements ILuceneUtility {
 
     @Autowired
     private WordNetConfiguration configuration;
+    
+    @Autowired
+    private DatabaseClient databaseClient;
 
     @Value("${lucenePath}")
     private String lucenePath;
 
+    @Value("${hits}")
+    private int hitsPerPage;
+
     private IndexWriter writer = null;
-    private IndexReader reader = null;
+    private DirectoryReader reader = null;
+    private IndexWriterConfig configWhiteSpace = null;
+    private Directory index;
+    private Path relativePath = null;
+    private IndexSearcher searcher = null;
 
     @PostConstruct
     public void init() throws LuceneException {
         try {
-            Path relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-            Directory index = FSDirectory.open(relativePath);
-            IndexWriterConfig configWhiteSpace = new IndexWriterConfig(whiteSpaceAnalyzer);
+            relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
+            index = FSDirectory.open(relativePath);
+            configWhiteSpace = new IndexWriterConfig(whiteSpaceAnalyzer);
             writer = new IndexWriter(index, configWhiteSpace);
             reader = DirectoryReader.open(writer, true);
+            searcher = new IndexSearcher(reader);
         } catch (IOException ex) {
             throw new LuceneException("Restart the application", ex);
         }
@@ -103,30 +117,24 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField searchFieldAnnotation = field.getAnnotation(LuceneField.class);
             field.setAccessible(true);
             if (searchFieldAnnotation != null) {
+                Object contentOfField = field.get(entry);
+                if (contentOfField != null) {
 
-                try {
-                    Object contentOfField = field.get(entry);
-                    if (contentOfField != null) {
+                    if (searchFieldAnnotation.isIndexable()) {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
                                 String.valueOf(contentOfField).replace(" ", ""), Field.Store.YES));
+                    } else {
+                        doc.add(new StoredField(searchFieldAnnotation.lucenefieldName(),
+                                String.valueOf(contentOfField).replace(" ", "")));
                     }
-
-                } catch (IllegalArgumentException ie) {
-                    throw new IllegalArgumentException(ie);
-                } catch (IllegalAccessException iae) {
-                    throw new IllegalAccessException(iae.getMessage());
                 }
             }
         }
 
-        doc.add(new StoredField(LuceneFieldNames.TYPE_ID, entry.getTypeId() != null ? entry.getTypeId() : ""));
-        doc.add(new StoredField(LuceneFieldNames.CREATOR, entry.getCreatorId() != null ? entry.getCreatorId() : ""));
-        doc.add(new StoredField(LuceneFieldNames.MODIFIED, entry.getModified() != null ? entry.getModified() : ""));
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
         doc.add(new StoredField(LuceneFieldNames.MODIFIED_TIME, formatter.format(cal.getTime())));
         doc.add(new StoredField(LuceneFieldNames.ID, entry.getId() != null ? entry.getId() : ""));
-
         try {
             writer.addDocument(doc);
             writer.commit();
@@ -138,19 +146,13 @@ public class LuceneUtility implements ILuceneUtility {
 
     private ConceptEntry getConceptFromDocument(Document d) throws IllegalAccessException {
 
+        java.lang.reflect.Field[] fields = ConceptEntry.class.getDeclaredFields();
         ConceptEntry con = new ConceptEntry();
-        java.lang.reflect.Field[] fields = con.getClass().getDeclaredFields();
         for (java.lang.reflect.Field field : fields) {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             field.setAccessible(true);
-            try {
-                if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
-                    field.set(con, d.get(luceneFieldAnnotation.lucenefieldName()));
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException(e);
-            } catch (IllegalAccessException e) {
-                throw new IllegalAccessException();
-            }
+            if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
+                field.set(con, d.get(luceneFieldAnnotation.lucenefieldName()));
         }
         con.setId(d.get("id"));
         return con;
@@ -162,15 +164,13 @@ public class LuceneUtility implements ILuceneUtility {
             Query q = new QueryParser("conceptType", whiteSpaceAnalyzer).parse("*:*");
             writer.deleteDocuments(q);
             writer.commit();
-        } catch (IOException ex) {
-            throw new LuceneException("Issues in deleting wordnet concepts. Please retry", ex);
-        } catch (ParseException e) {
-            throw new LuceneException("Issues in framing the query", e);
+        } catch (ParseException | IOException e) {
+            throw new LuceneException("Problem in Creating Index. Please retry", e);
         }
     }
 
-    protected void createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer)
-            throws IOException {
+    protected int createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer) {
+        int numberOfUnIndexedWords = 0;
         for (; iterator.hasNext();) {
             IIndexWord indexWord = iterator.next();
             List<IWordID> wordIdds = indexWord.getWordIDs();
@@ -197,48 +197,113 @@ public class LuceneUtility implements ILuceneUtility {
                 doc.add(new StringField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
                 // Adding this new data to delete only wordnet concepts while
                 // adding all wordnet concepts from jwi.
-                doc.add(new StringField(LuceneFieldNames.CONCEPTTYPE, "wordnetconcept", Field.Store.YES));
-                writer.addDocument(doc);
+                doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
+                try {
+                    writer.addDocument(doc);
+                } catch (IOException e) {
+                    numberOfUnIndexedWords++;
+                }
             }
-
         }
+        return numberOfUnIndexedWords;
+    }
+    
+    protected int createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList,IndexWriter writer)
+            throws IllegalArgumentException, IllegalAccessException {
+        int numberOfUnindexConcepts = 0;
+        for (ConceptEntry entry : conceptEntryList) {
+            Document doc = new Document();
+
+            java.lang.reflect.Field[] fields = entry.getClass().getDeclaredFields();
+            for (java.lang.reflect.Field field : fields) {
+
+                LuceneField searchFieldAnnotation = field.getAnnotation(LuceneField.class);
+                field.setAccessible(true);
+                if (searchFieldAnnotation != null) {
+                    Object contentOfField = field.get(entry);
+                    if (contentOfField != null) {
+
+                        if (searchFieldAnnotation.isIndexable()) {
+                            doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
+                                    String.valueOf(contentOfField).replace(" ", ""), Field.Store.YES));
+                        } else {
+                            doc.add(new StoredField(searchFieldAnnotation.lucenefieldName(),
+                                    String.valueOf(contentOfField).replace(" ", "")));
+                        }
+                    }
+                }
+            }
+            doc.add(new StoredField(LuceneFieldNames.ID, entry.getId() != null ? entry.getId() : ""));
+            try{
+            writer.addDocument(doc);
+            }
+            catch(IOException ex){
+                numberOfUnindexConcepts++;
+            }
+        }
+
+        return numberOfUnindexConcepts;
     }
 
     @Override
-    public void indexConcepts() throws LuceneException {
+    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
+
+        String wnhome = configuration.getWordnetPath();
+        String path = wnhome + File.separator + configuration.getDictFolder();
+        int numberOfUnIndexedWords;
+
+        URL url;
+        try {
+            url = new URL("file", null, path);
+        } catch (MalformedURLException e) {
+            throw new LuceneException(e);
+        }
+
+        IDictionary dict = new Dictionary(url);
+        try {
+            dict.open();
+        } catch (IOException e) {
+            throw new LuceneException("Issues while opening the dictionary", e);
+        }
+
+        // 2. Adding data into
+        Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
+        numberOfUnIndexedWords = createDocuments(iterator, dict, writer);
+
+        iterator = dict.getIndexWordIterator(POS.ADVERB);
+        numberOfUnIndexedWords += createDocuments(iterator, dict, writer);
+
+        iterator = dict.getIndexWordIterator(POS.ADJECTIVE);
+        numberOfUnIndexedWords += createDocuments(iterator, dict, writer);
+
+        iterator = dict.getIndexWordIterator(POS.VERB);
+        numberOfUnIndexedWords += createDocuments(iterator, dict, writer);
+        try {
+            writer.commit();
+        } catch (IOException e) {
+            throw new LuceneException("Issues in writing document", e);
+        }
+
+        // Fetching DB4o Data
+
+        List<ConceptEntry> conceptEntriesList = (List<ConceptEntry>) databaseClient
+                .getAllElementsOfType(ConceptEntry.class);
+
+        numberOfUnIndexedWords += createDocumentsFromConceptEntries(conceptEntriesList, writer);
 
         try {
-            String wnhome = configuration.getWordnetPath();
-            String path = wnhome + File.separator + configuration.getDictFolder();
-
-            URL url = null;
-
-            url = new URL("file", null, path);
-
-            IDictionary dict = new Dictionary(url);
-            dict.open();
-
-            // 2. Adding data into
-            Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
-            createDocuments(iterator, dict, writer);
-
-            iterator = dict.getIndexWordIterator(POS.ADVERB);
-            createDocuments(iterator, dict, writer);
-
-            iterator = dict.getIndexWordIterator(POS.ADJECTIVE);
-            createDocuments(iterator, dict, writer);
-
-            iterator = dict.getIndexWordIterator(POS.VERB);
-            createDocuments(iterator, dict, writer);
-
             writer.commit();
+        } catch (IOException e) {
+            throw new LuceneException("Issues in writing document", e);
+        }
 
-        } catch (IOException ex) {
-            throw new LuceneException("Problem in Creating Index. Please retry", ex);
+        if (numberOfUnIndexedWords > 0) {
+            throw new LuceneException("Indexing not done for " + numberOfUnIndexedWords);
         }
     }
 
-    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator) throws LuceneException, IllegalAccessException {
+    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator)
+            throws LuceneException, IllegalAccessException {
 
         if (operator == null) {
             operator = "AND";
@@ -265,12 +330,16 @@ public class LuceneUtility implements ILuceneUtility {
         }
 
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
-        int hitsPerPage = 10;
-        IndexSearcher searcher = null;
+
         try {
             Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
-            reader = DirectoryReader.open(writer, true);
-            searcher = new IndexSearcher(reader);
+            DirectoryReader oldReader = reader;
+            reader = DirectoryReader.openIfChanged(oldReader);
+            if (reader == null) {
+                reader = oldReader;
+            } else {
+                searcher = new IndexSearcher(reader);
+            }
             TopDocs docs = searcher.search(q, hitsPerPage);
             ScoreDoc[] hits = docs.scoreDocs;
             for (int i = 0; i < hits.length; ++i) {

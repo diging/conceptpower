@@ -28,7 +28,7 @@
 
 		<sec:authorize access="hasRole('ROLE_CP_ADMIN')">
 			<li ${currentPage == "luceneIndex" ? "class=\"selected\"" : ""}><a
-				href="${pageContext.servletContext.contextPath}/auth/luceneIndex">Lucene
+				href="${pageContext.servletContext.contextPath}/auth/luceneIndex">
 					Index</a></li>
 		</sec:authorize>
 
