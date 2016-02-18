@@ -161,11 +161,10 @@ public class LuceneUtility implements ILuceneUtility {
     @Override
     public void deleteIndexes() throws LuceneException {
         try {
-            Query q = new QueryParser("conceptType", whiteSpaceAnalyzer).parse("*:*");
-            writer.deleteDocuments(q);
+            writer.deleteAll();
             writer.commit();
-        } catch (ParseException | IOException e) {
-            throw new LuceneException("Problem in Creating Index. Please retry", e);
+        } catch (IOException e) {
+            throw new LuceneException("Problem in deleting indexes. Please retry", e);
         }
     }
 

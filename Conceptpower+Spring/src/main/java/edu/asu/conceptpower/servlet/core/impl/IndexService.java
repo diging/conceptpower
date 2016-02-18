@@ -23,16 +23,24 @@ public class IndexService implements IIndexService {
         return luceneUtility.queryIndex(fieldMap, operator);
     }
 
-
     @Override
     public void insertConcept(ConceptEntry entry) throws IllegalAccessException, LuceneException {
        luceneUtility.insertConcept(entry);
         
     }
 
-
     @Override
     public void deleteById(String id) throws LuceneException {
        luceneUtility.deleteById(id);
+    }
+    
+    @Override
+    public void deleteIndexes() throws LuceneException {
+        luceneUtility.deleteIndexes();
+    }
+    
+    @Override
+    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
+        luceneUtility.indexConcepts();
     }
 }

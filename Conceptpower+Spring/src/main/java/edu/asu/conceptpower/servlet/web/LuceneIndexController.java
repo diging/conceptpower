@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.lucene.ILuceneIndexManger;
 
 /**
  * This class provides methods for deleting and viewing lucene indexes
@@ -26,7 +26,7 @@ import edu.asu.conceptpower.servlet.lucene.ILuceneIndexManger;
 public class LuceneIndexController {
 
     @Autowired
-    private ILuceneIndexManger manager;
+    private IIndexService manager;
 
     @RequestMapping(value = "auth/luceneIndex", method = RequestMethod.GET)
     public String showLuceneIndex(ModelMap model) {
