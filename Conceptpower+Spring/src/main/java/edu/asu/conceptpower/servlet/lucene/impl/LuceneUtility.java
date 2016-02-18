@@ -64,7 +64,7 @@ public class LuceneUtility implements ILuceneUtility {
 
     @Autowired
     private WordNetConfiguration configuration;
-    
+
     @Autowired
     private DatabaseClient databaseClient;
 
@@ -207,8 +207,8 @@ public class LuceneUtility implements ILuceneUtility {
         }
         return numberOfUnIndexedWords;
     }
-    
-    protected int createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList,IndexWriter writer)
+
+    protected int createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList, IndexWriter writer)
             throws IllegalArgumentException, IllegalAccessException {
         int numberOfUnindexConcepts = 0;
         for (ConceptEntry entry : conceptEntryList) {
@@ -234,10 +234,9 @@ public class LuceneUtility implements ILuceneUtility {
                 }
             }
             doc.add(new StoredField(LuceneFieldNames.ID, entry.getId() != null ? entry.getId() : ""));
-            try{
-            writer.addDocument(doc);
-            }
-            catch(IOException ex){
+            try {
+                writer.addDocument(doc);
+            } catch (IOException ex) {
                 numberOfUnindexConcepts++;
             }
         }

@@ -5,10 +5,13 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneIndexManger;
@@ -31,19 +34,25 @@ public class LuceneIndexController {
     }
 
     @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST)
-    public String indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException, IllegalArgumentException, IllegalAccessException {
-
-        manager.deleteIndexes();
-        manager.indexConcepts();
-        model.addAttribute("message", "Indexed Successfully");
-        return "/auth/luceneIndex";
+    public @ResponseBody ResponseEntity<String> indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+        try {
+            manager.deleteIndexes();
+            manager.indexConcepts();
+        } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Indexed Successfully", HttpStatus.OK);
     }
 
     @RequestMapping(value = "auth/deleteConcepts", method = RequestMethod.POST)
-    public String deleteConcepts(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException {
+    public @ResponseBody ResponseEntity<String> deleteConcepts(HttpServletRequest req, Principal principal,
+            ModelMap model) {
 
-        manager.deleteIndexes();
-        model.addAttribute("message", "Deleted Indexes Successfully");
-        return "/auth/luceneIndex";
+        try {
+            manager.deleteIndexes();
+        } catch (LuceneException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<String>("Deleted index successfully", HttpStatus.OK);
     }
 }
