@@ -34,12 +34,15 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.root.DatabaseClient;
+import edu.asu.conceptpower.root.DatabaseManager;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
+import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
 import edu.asu.conceptpower.servlet.reflect.LuceneField;
@@ -67,7 +70,15 @@ public class LuceneUtility implements ILuceneUtility {
 
     @Autowired
     private DatabaseClient databaseClient;
+    
+    @Autowired
+    @Qualifier("luceneDatabaseManager")
+    private DatabaseManager luceneManager;
 
+    
+    @Autowired
+    private IConceptDBManager client;
+    
     @Value("${lucenePath}")
     private String lucenePath;
 

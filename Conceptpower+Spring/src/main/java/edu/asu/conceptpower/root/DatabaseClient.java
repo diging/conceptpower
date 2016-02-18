@@ -33,6 +33,10 @@ public class DatabaseClient implements IConceptDBManager {
 	@Autowired
 	@Qualifier("conceptDatabaseManager")
 	private DatabaseManager dictionary;
+	
+	@Autowired
+	@Qualifier("luceneDatabaseManager")
+	private DatabaseManager luceneManager;
 
 	@PostConstruct
 	public void init() {
