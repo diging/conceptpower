@@ -439,7 +439,7 @@
 					<tr>
 						<td>Concept List</td>
 
-						<td><form:select path="lists" name="lists" id="lists">
+						<td><form:select path="lists" name="lists" id="lists"  class="form-control">
 								<form:options items="${lists}" />
 							</form:select></td>
 						<td><div id="listerror" style="color: red"></div></td>
