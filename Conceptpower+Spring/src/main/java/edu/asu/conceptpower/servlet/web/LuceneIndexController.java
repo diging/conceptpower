@@ -35,6 +35,12 @@ public class LuceneIndexController {
     @Qualifier("luceneDAO")
     private ILuceneDAO dao;
 
+    /**
+     * Retrives latest indexing time and number of concepts indexed so far
+     * 
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "auth/luceneIndex", method = RequestMethod.GET)
     public String showLuceneIndex(ModelMap model) {
         LuceneBean bean = dao.getTotalNumberOfWordsIndexed();
@@ -42,6 +48,15 @@ public class LuceneIndexController {
         return "/auth/luceneIndex";
     }
 
+    /**
+     * This method deletes all the index in Lucene and recreates all the index
+     * from Wordnet and from CCP db40 database
+     * 
+     * @param req
+     * @param principal
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody LuceneBean indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
         LuceneBean bean = new LuceneBean();
@@ -57,6 +72,13 @@ public class LuceneIndexController {
         return bean;
     }
 
+    /**
+     * This method deletes all the concepts in the lucene
+     * @param req
+     * @param principal
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "auth/deleteConcepts", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody LuceneBean deleteConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
         LuceneBean bean = new LuceneBean();

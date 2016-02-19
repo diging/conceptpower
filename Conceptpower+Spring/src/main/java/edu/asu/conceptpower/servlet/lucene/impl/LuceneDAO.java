@@ -13,6 +13,13 @@ import com.db4o.config.TSerializable;
 import edu.asu.conceptpower.servlet.core.LuceneBean;
 import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 
+/**
+ * This class access db40 database to store the lucene details such as number of
+ * words indexed and time of indexing
+ * 
+ * @author karthikeyanmohan
+ *
+ */
 public class LuceneDAO implements ILuceneDAO {
 
     ObjectContainer luceneClient;
@@ -27,14 +34,19 @@ public class LuceneDAO implements ILuceneDAO {
         luceneClient = Db4oEmbedded.openFile(config, getDbPath());
     }
 
+    /**
+     * Stores the number of indexed word count along with the timestamp
+     */
     public void storeValues(long numberOfIndexedWords) {
-
         long now = System.currentTimeMillis();
         LuceneBean bean = new LuceneBean(new Timestamp(now), numberOfIndexedWords);
         luceneClient.store(bean);
         luceneClient.commit();
     }
 
+    /**
+     * Retrieves the total number of words from the database
+     */
     public LuceneBean getTotalNumberOfWordsIndexed() {
         LuceneBean bean = new LuceneBean(null, 0);
         ObjectSet result = luceneClient.queryByExample(bean);
@@ -42,6 +54,13 @@ public class LuceneDAO implements ILuceneDAO {
 
     }
 
+    /**
+     * Retrives the total number of indexes and latest timestamp of indexing
+     * from the database result object
+     * 
+     * @param result
+     * @return
+     */
     private LuceneBean getTotalNumberFromResult(ObjectSet result) {
         int totalIndex = 0;
         Timestamp latestTimeStamp = null;

@@ -57,6 +57,13 @@ import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 
+/**
+ * This class creates, deletes indexes for all concepts Performs searching on
+ * various indexes
+ * 
+ * @author karthikeyanmohan
+ *
+ */
 @Component
 @PropertySource("classpath:config.properties")
 public class LuceneUtility implements ILuceneUtility {
@@ -87,6 +94,10 @@ public class LuceneUtility implements ILuceneUtility {
     private Path relativePath = null;
     private IndexSearcher searcher = null;
 
+    /**
+     * 
+     * @throws LuceneException
+     */
     @PostConstruct
     public void init() throws LuceneException {
         try {
@@ -101,6 +112,11 @@ public class LuceneUtility implements ILuceneUtility {
         }
     }
 
+    /**
+     * This method deletes the index based on the id
+     * 
+     * @throws LuceneException
+     */
     public void deleteById(String id) throws LuceneException {
         try {
             Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + id);
@@ -114,6 +130,11 @@ public class LuceneUtility implements ILuceneUtility {
         luceneDAO.storeValues(-1);
     }
 
+    /**
+     * This method is used for iterating over the concept entry and fetching the
+     * values to be stored into lucene index After storing the values in index,
+     * index count is increased in tables in lucene database
+     */
     public void insertConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException {
         Document doc = new Document();
 
@@ -150,6 +171,13 @@ public class LuceneUtility implements ILuceneUtility {
         luceneDAO.storeValues(1);
     }
 
+    /**
+     * This method fetches the values from the retrived document from lucene
+     * 
+     * @param d
+     * @return
+     * @throws IllegalAccessException
+     */
     private ConceptEntry getConceptFromDocument(Document d) throws IllegalAccessException {
 
         java.lang.reflect.Field[] fields = ConceptEntry.class.getDeclaredFields();
@@ -164,6 +192,10 @@ public class LuceneUtility implements ILuceneUtility {
         return con;
     }
 
+    /**
+     * This method deletes all the indexes in the lucene After deleting the
+     * index count is decremented in table
+     */
     @Override
     public void deleteIndexes() throws LuceneException {
         try {
@@ -176,6 +208,15 @@ public class LuceneUtility implements ILuceneUtility {
         luceneDAO.storeValues(-bean.getIndexedWordsCount());
     }
 
+    /**
+     * This method iterates over the index word and from each index word the
+     * concept details are fetched and stored into lucene index
+     * 
+     * @param iterator
+     * @param dict
+     * @param writer
+     * @return
+     */
     protected int[] createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer) {
         int numberOfIndexedWords = 0;
         int numberOfUnIndexedWords = 0;
@@ -218,6 +259,16 @@ public class LuceneUtility implements ILuceneUtility {
         return returnValue;
     }
 
+    /**
+     * This method will create the index for the concepts created by user and
+     * the concepts that are stored in the CCP database
+     * 
+     * @param conceptEntryList
+     * @param writer
+     * @return
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     */
     protected int[] createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList, IndexWriter writer)
             throws IllegalArgumentException, IllegalAccessException {
         int numberOfIndexedConcepts = 0;
@@ -258,6 +309,10 @@ public class LuceneUtility implements ILuceneUtility {
         return returnValue;
     }
 
+    /**
+     * This method calls createDocument and creates the documents for all
+     * different POS and loads the data into lucene index
+     */
     @Override
     public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
 
@@ -335,6 +390,10 @@ public class LuceneUtility implements ILuceneUtility {
         }
     }
 
+    /**
+     * This method fetches the concept power by iterating the fieldMap. The
+     * fieldMap contains the search criteria
+     */
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException {
 
