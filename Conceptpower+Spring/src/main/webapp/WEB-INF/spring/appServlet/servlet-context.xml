@@ -74,6 +74,19 @@
 		</beans:property>
 	</beans:bean>
 
+	
+	<bean id="jacksonMessageConverter"
+	class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jacksonMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+
 	<context:component-scan base-package="edu.asu.conceptpower.servlet" />
 	<import resource="../wordnet-config.xml" />
 	<import resource="../rest-service.xml" />

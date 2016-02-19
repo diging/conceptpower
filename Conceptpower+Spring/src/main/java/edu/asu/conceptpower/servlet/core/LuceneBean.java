@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.servlet.core;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class LuceneBean implements Serializable {
 
@@ -9,15 +10,17 @@ public class LuceneBean implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    private String lastRun;
+    private Timestamp lastRun;
     private long indexedWordsCount;
-
-    public String getLastRun() {
-        return lastRun;
+    private String message;
+    
+    public LuceneBean(){
+        
     }
 
-    public void setLastRun(String lastRun) {
-        this.lastRun = lastRun;
+    public LuceneBean(Timestamp run, long indexWordCount) {
+        lastRun = run;
+        indexedWordsCount = indexWordCount;
     }
 
     public long getIndexedWordsCount() {
@@ -26,6 +29,28 @@ public class LuceneBean implements Serializable {
 
     public void setIndexedWordsCount(long indexedWordsCount) {
         this.indexedWordsCount = indexedWordsCount;
+    }
+
+    public String getLastRun() {
+        if(lastRun == null)
+            return "";
+        return lastRun.toString();
+    }
+    
+    public Timestamp getLastRunTimeStamp(){
+        return lastRun;
+    }
+
+    public void setLastRun(Timestamp lastRun) {
+        this.lastRun = lastRun;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }

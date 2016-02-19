@@ -34,10 +34,6 @@ public class DatabaseClient implements IConceptDBManager {
 	@Qualifier("conceptDatabaseManager")
 	private DatabaseManager dictionary;
 	
-	@Autowired
-	@Qualifier("luceneDatabaseManager")
-	private DatabaseManager luceneManager;
-
 	@PostConstruct
 	public void init() {
 		this.wordnetCacheClient = wordnetCache.getClient();

@@ -92,18 +92,24 @@
 								<button type="button" class="btn btn-primary" id="waitMe_ex">Index
 									WordNet Wrappers</button>
 							</td>
-						</tr>
-						<tr>
+
 							<td>
 								<button type="button" class="btn btn-primary" id="waitMe_Delete">Delete
 									Indexes</button>
 							</td>
 						</tr>
 					</table>
-
-					<table style="vertical-align: top">
+					<br />
+					<br />
+					<br />
+					<table style="vertical-align: top" border="1" width="350">
 						<tr>
-							<td></td>
+							<th align="center">Total Indexed Concepts</th>
+							<th align="center">Last run</th>
+						</tr>
+						<tr>
+							<td align="center" id="indexCount">${bean.indexedWordsCount}</td>
+							<td align="center" id="lastRun">${bean.lastRun}</td>
 						</tr>
 					</table>
 
@@ -132,14 +138,20 @@
 											type : "POST",
 											success : function(result) {
 												var output = "<center><b>"
-														+ result
+														+ result.message
 														+ " </b> </center>";
 												$("#div1").html(output);
+												$('#indexCount')
+														.html(
+																result.indexedWordsCount);
+												$('#lastRun').html(
+														result.lastRun);
 												waitMeClose();
 											},
 											error : function(result) {
 												var output = "<font color=\"red\">"
-														+ output + "</font>";
+														+ result.message
+														+ "</font>";
 												$("#div1").html(output);
 												waitMeClose();
 											}
@@ -156,15 +168,20 @@
 											type : "POST",
 											success : function(result) {
 												var output = "<center><b>"
-														+ result
+														+ result.message
 														+ " </b> </center>";
-												console.log(output);
 												$("#div1").html(output);
+												$('#indexCount')
+														.html(
+																result.indexedWordsCount);
+												$('#lastRun').html(
+														result.lastRun);
 												waitMeClose();
 											},
 											error : function(result) {
 												var output = "<font color=\"red\">"
-														+ output + "</font>";
+														+ result.message
+														+ "</font>";
 												$("#div1").html(output);
 												waitMeClose();
 											}

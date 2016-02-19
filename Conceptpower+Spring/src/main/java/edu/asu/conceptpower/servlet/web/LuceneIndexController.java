@@ -5,6 +5,7 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.servlet.core.IIndexService;
+import edu.asu.conceptpower.servlet.core.LuceneBean;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 
 /**
  * This class provides methods for deleting and viewing lucene indexes
@@ -28,31 +31,43 @@ public class LuceneIndexController {
     @Autowired
     private IIndexService manager;
 
+    @Autowired
+    @Qualifier("luceneDAO")
+    private ILuceneDAO dao;
+
     @RequestMapping(value = "auth/luceneIndex", method = RequestMethod.GET)
     public String showLuceneIndex(ModelMap model) {
+        LuceneBean bean = dao.getTotalNumberOfWordsIndexed();
+        model.addAttribute("bean", bean);
         return "/auth/luceneIndex";
     }
 
-    @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<String> indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+    @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody LuceneBean indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+        LuceneBean bean = new LuceneBean();
         try {
             manager.deleteIndexes();
             manager.indexConcepts();
+            bean = dao.getTotalNumberOfWordsIndexed();
         } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.OK);
+            bean.setMessage(ex.getMessage());
+            return bean;
         }
-        return new ResponseEntity<String>("Indexed Successfully", HttpStatus.OK);
+        bean.setMessage("Indexed successfully");
+        return bean;
     }
 
-    @RequestMapping(value = "auth/deleteConcepts", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<String> deleteConcepts(HttpServletRequest req, Principal principal,
-            ModelMap model) {
-
+    @RequestMapping(value = "auth/deleteConcepts", method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody LuceneBean deleteConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+        LuceneBean bean = new LuceneBean();
         try {
             manager.deleteIndexes();
+            bean = dao.getTotalNumberOfWordsIndexed();
         } catch (LuceneException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            bean.setMessage(e.getMessage());
+            return bean;
         }
-        return new ResponseEntity<String>("Deleted index successfully", HttpStatus.OK);
+        bean.setMessage("Concept deleted successfully");
+        return bean;
     }
 }

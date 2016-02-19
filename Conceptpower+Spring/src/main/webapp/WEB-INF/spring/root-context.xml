@@ -14,7 +14,9 @@
 	<import resource="xml-config.xml" />
 	<context:component-scan base-package="edu.asu.conceptpower.root" />
 
-
+	<bean id="luceneDAO" class="edu.asu.conceptpower.servlet.lucene.impl.LuceneDAO" init-method="init">
+		<property name="dbPath" value="${db.path}/lucene.db" />
+	</bean>	
 
 	<import resource="spring-security.xml" />
 

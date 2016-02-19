@@ -24,7 +24,6 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -40,10 +39,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.root.DatabaseClient;
-import edu.asu.conceptpower.root.DatabaseManager;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
+import edu.asu.conceptpower.servlet.core.LuceneBean;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
 import edu.asu.conceptpower.servlet.reflect.LuceneField;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
@@ -70,15 +69,11 @@ public class LuceneUtility implements ILuceneUtility {
 
     @Autowired
     private DatabaseClient databaseClient;
-    
-    @Autowired
-    @Qualifier("luceneDatabaseManager")
-    private DatabaseManager luceneManager;
 
-    
     @Autowired
-    private IConceptDBManager client;
-    
+    @Qualifier("luceneDAO")
+    private ILuceneDAO luceneDAO;
+
     @Value("${lucenePath}")
     private String lucenePath;
 
@@ -116,7 +111,7 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (ParseException e) {
             throw new LuceneException("Issues in framing queries", e);
         }
-
+        luceneDAO.storeValues(-1);
     }
 
     public void insertConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException {
@@ -152,7 +147,7 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (IOException ex) {
             throw new LuceneException("Cannot insert concept in lucene. Please retry", ex);
         }
-
+        luceneDAO.storeValues(1);
     }
 
     private ConceptEntry getConceptFromDocument(Document d) throws IllegalAccessException {
@@ -177,9 +172,12 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (IOException e) {
             throw new LuceneException("Problem in deleting indexes. Please retry", e);
         }
+        LuceneBean bean = luceneDAO.getTotalNumberOfWordsIndexed();
+        luceneDAO.storeValues(-bean.getIndexedWordsCount());
     }
 
-    protected int createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer) {
+    protected int[] createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer) {
+        int numberOfIndexedWords = 0;
         int numberOfUnIndexedWords = 0;
         for (; iterator.hasNext();) {
             IIndexWord indexWord = iterator.next();
@@ -209,17 +207,20 @@ public class LuceneUtility implements ILuceneUtility {
                 // adding all wordnet concepts from jwi.
                 doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
                 try {
+                    numberOfIndexedWords++;
                     writer.addDocument(doc);
                 } catch (IOException e) {
                     numberOfUnIndexedWords++;
                 }
             }
         }
-        return numberOfUnIndexedWords;
+        int[] returnValue = { numberOfIndexedWords, numberOfUnIndexedWords };
+        return returnValue;
     }
 
-    protected int createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList, IndexWriter writer)
+    protected int[] createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList, IndexWriter writer)
             throws IllegalArgumentException, IllegalAccessException {
+        int numberOfIndexedConcepts = 0;
         int numberOfUnindexConcepts = 0;
         for (ConceptEntry entry : conceptEntryList) {
             Document doc = new Document();
@@ -245,13 +246,16 @@ public class LuceneUtility implements ILuceneUtility {
             }
             doc.add(new StoredField(LuceneFieldNames.ID, entry.getId() != null ? entry.getId() : ""));
             try {
+                numberOfIndexedConcepts++;
                 writer.addDocument(doc);
             } catch (IOException ex) {
                 numberOfUnindexConcepts++;
             }
         }
-
-        return numberOfUnindexConcepts;
+        int[] returnValue = new int[2];
+        returnValue[0] = numberOfIndexedConcepts;
+        returnValue[1] = numberOfUnindexConcepts;
+        return returnValue;
     }
 
     @Override
@@ -259,7 +263,9 @@ public class LuceneUtility implements ILuceneUtility {
 
         String wnhome = configuration.getWordnetPath();
         String path = wnhome + File.separator + configuration.getDictFolder();
-        int numberOfUnIndexedWords;
+        int[] numberOfWord;
+        int numberOfUnIndexedWords = 0;
+        int numberOfIndexedWords = 0;
 
         URL url;
         try {
@@ -277,16 +283,29 @@ public class LuceneUtility implements ILuceneUtility {
 
         // 2. Adding data into
         Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
-        numberOfUnIndexedWords = createDocuments(iterator, dict, writer);
+        numberOfWord = createDocuments(iterator, dict, writer);
+
+        numberOfIndexedWords = numberOfWord[0];
+        numberOfUnIndexedWords = numberOfWord[1];
 
         iterator = dict.getIndexWordIterator(POS.ADVERB);
-        numberOfUnIndexedWords += createDocuments(iterator, dict, writer);
+        numberOfWord = createDocuments(iterator, dict, writer);
+
+        numberOfIndexedWords += numberOfWord[0];
+        numberOfUnIndexedWords += numberOfWord[1];
 
         iterator = dict.getIndexWordIterator(POS.ADJECTIVE);
-        numberOfUnIndexedWords += createDocuments(iterator, dict, writer);
+        numberOfWord = createDocuments(iterator, dict, writer);
+
+        numberOfIndexedWords += numberOfWord[0];
+        numberOfUnIndexedWords += numberOfWord[1];
 
         iterator = dict.getIndexWordIterator(POS.VERB);
-        numberOfUnIndexedWords += createDocuments(iterator, dict, writer);
+        numberOfWord = createDocuments(iterator, dict, writer);
+
+        numberOfIndexedWords += numberOfWord[0];
+        numberOfUnIndexedWords += numberOfWord[1];
+
         try {
             writer.commit();
         } catch (IOException e) {
@@ -298,13 +317,18 @@ public class LuceneUtility implements ILuceneUtility {
         List<ConceptEntry> conceptEntriesList = (List<ConceptEntry>) databaseClient
                 .getAllElementsOfType(ConceptEntry.class);
 
-        numberOfUnIndexedWords += createDocumentsFromConceptEntries(conceptEntriesList, writer);
+        numberOfWord = createDocumentsFromConceptEntries(conceptEntriesList, writer);
+
+        numberOfIndexedWords += numberOfWord[0];
+        numberOfUnIndexedWords += numberOfWord[1];
 
         try {
             writer.commit();
         } catch (IOException e) {
             throw new LuceneException("Issues in writing document", e);
         }
+
+        luceneDAO.storeValues(numberOfIndexedWords);
 
         if (numberOfUnIndexedWords > 0) {
             throw new LuceneException("Indexing not done for " + numberOfUnIndexedWords);
