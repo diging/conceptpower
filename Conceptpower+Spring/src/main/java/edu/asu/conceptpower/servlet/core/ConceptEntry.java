@@ -22,6 +22,7 @@ public class ConceptEntry implements Serializable {
     private static final long serialVersionUID = 4569090620671054560L;
 
     @Id
+    @LuceneField(lucenefieldName = LuceneFieldNames.ID, isIndexable = false)
     private String id;
 
     @SearchField(fieldName = SearchFieldNames.WORDNETID)
@@ -75,6 +76,8 @@ public class ConceptEntry implements Serializable {
     private String modified;
 
     private boolean isDeleted;
+    
+    private String modifiedUser;
 
     public ConceptEntry() {
     }
@@ -335,6 +338,14 @@ public class ConceptEntry implements Serializable {
         } else if (!wordnetId.equals(other.wordnetId))
             return false;
         return true;
+    }
+
+    public String getModifiedUser() {
+        return modifiedUser;
+    }
+
+    public void setModifiedUser(String modifiedUser) {
+        this.modifiedUser = modifiedUser;
     }
 
 }

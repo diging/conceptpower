@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.servlet.lucene.impl;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
@@ -10,7 +11,7 @@ import com.db4o.ObjectSet;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.config.TSerializable;
 
-import edu.asu.conceptpower.servlet.core.LuceneBean;
+import edu.asu.conceptpower.servlet.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 
 /**
@@ -37,9 +38,9 @@ public class LuceneDAO implements ILuceneDAO {
     /**
      * Stores the number of indexed word count along with the timestamp
      */
-    public void storeValues(long numberOfIndexedWords) {
+    public void storeValues(long numberOfIndexedWords,String action) {
         long now = System.currentTimeMillis();
-        LuceneBean bean = new LuceneBean(new Timestamp(now), numberOfIndexedWords);
+        IndexingEvent bean = new IndexingEvent(new Timestamp(now), numberOfIndexedWords,action);
         luceneClient.store(bean);
         luceneClient.commit();
     }
@@ -47,8 +48,8 @@ public class LuceneDAO implements ILuceneDAO {
     /**
      * Retrieves the total number of words from the database
      */
-    public LuceneBean getTotalNumberOfWordsIndexed() {
-        LuceneBean bean = new LuceneBean(null, 0);
+    public IndexingEvent getTotalNumberOfWordsIndexed() {
+        IndexingEvent bean = new IndexingEvent(null, 0, null);
         ObjectSet result = luceneClient.queryByExample(bean);
         return getTotalNumberFromResult(result);
 
@@ -61,14 +62,14 @@ public class LuceneDAO implements ILuceneDAO {
      * @param result
      * @return
      */
-    private LuceneBean getTotalNumberFromResult(ObjectSet result) {
+    private IndexingEvent getTotalNumberFromResult(ObjectSet result) {
         int totalIndex = 0;
-        Timestamp latestTimeStamp = null;
+        Date latestTimeStamp = null;
         for (Object item : result) {
-            LuceneBean bean = (LuceneBean) item;
+            IndexingEvent bean = (IndexingEvent) item;
             totalIndex += bean.getIndexedWordsCount();
 
-            Timestamp t = bean.getLastRunTimeStamp();
+            Date t = bean.getLastRunDate();
 
             if (latestTimeStamp == null) {
                 latestTimeStamp = t;
@@ -78,7 +79,7 @@ public class LuceneDAO implements ILuceneDAO {
                 latestTimeStamp = t;
             }
         }
-        return new LuceneBean(latestTimeStamp, totalIndex);
+        return new IndexingEvent(latestTimeStamp, totalIndex);
     }
 
     public String getDbPath() {

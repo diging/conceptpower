@@ -3,6 +3,7 @@ package edu.asu.conceptpower.servlet.core.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -396,6 +397,10 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public void storeModifiedConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException {
+        String modified = entry.getModified() != null ? entry.getModified() : "";
+        if (!modified.trim().isEmpty())
+            modified += ", ";
+        entry.setModified(modified + entry.getModifiedUser() + "@" + (new Date()).toString());
         client.update(entry, DBNames.DICTIONARY_DB);
         indexService.deleteById(entry.getId());
         indexService.insertConcept(entry);

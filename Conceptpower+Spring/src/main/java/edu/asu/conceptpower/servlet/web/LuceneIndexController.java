@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.servlet.core.IIndexService;
-import edu.asu.conceptpower.servlet.core.LuceneBean;
+import edu.asu.conceptpower.servlet.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 
@@ -43,7 +43,7 @@ public class LuceneIndexController {
      */
     @RequestMapping(value = "auth/luceneIndex", method = RequestMethod.GET)
     public String showLuceneIndex(ModelMap model) {
-        LuceneBean bean = dao.getTotalNumberOfWordsIndexed();
+        IndexingEvent bean = dao.getTotalNumberOfWordsIndexed();
         model.addAttribute("bean", bean);
         return "/auth/luceneIndex";
     }
@@ -58,8 +58,8 @@ public class LuceneIndexController {
      * @return
      */
     @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody LuceneBean indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
-        LuceneBean bean = new LuceneBean();
+    public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+        IndexingEvent bean = new IndexingEvent();
         try {
             manager.deleteIndexes();
             manager.indexConcepts();
@@ -80,8 +80,8 @@ public class LuceneIndexController {
      * @return
      */
     @RequestMapping(value = "auth/deleteConcepts", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody LuceneBean deleteConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
-        LuceneBean bean = new LuceneBean();
+    public @ResponseBody IndexingEvent deleteConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+        IndexingEvent bean = new IndexingEvent();
         try {
             manager.deleteIndexes();
             bean = dao.getTotalNumberOfWordsIndexed();

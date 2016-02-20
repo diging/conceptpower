@@ -6,9 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -40,10 +38,11 @@ import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.root.DatabaseClient;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.LuceneBean;
+import edu.asu.conceptpower.servlet.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
+import edu.asu.conceptpower.servlet.lucene.LuceneAction;
 import edu.asu.conceptpower.servlet.reflect.LuceneField;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
 import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
@@ -127,7 +126,7 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (ParseException e) {
             throw new LuceneException("Issues in framing queries", e);
         }
-        luceneDAO.storeValues(-1);
+        luceneDAO.storeValues(-1,LuceneAction.DELETE);
     }
 
     /**
@@ -148,27 +147,23 @@ public class LuceneUtility implements ILuceneUtility {
                 if (contentOfField != null) {
 
                     if (searchFieldAnnotation.isIndexable()) {
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
-                                String.valueOf(contentOfField).replace(" ", ""), Field.Store.YES));
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
+                                Field.Store.YES));
                     } else {
                         doc.add(new StoredField(searchFieldAnnotation.lucenefieldName(),
-                                String.valueOf(contentOfField).replace(" ", "")));
+                                String.valueOf(contentOfField)));
                     }
                 }
             }
         }
 
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-        doc.add(new StoredField(LuceneFieldNames.MODIFIED_TIME, formatter.format(cal.getTime())));
-        doc.add(new StoredField(LuceneFieldNames.ID, entry.getId() != null ? entry.getId() : ""));
         try {
             writer.addDocument(doc);
             writer.commit();
         } catch (IOException ex) {
             throw new LuceneException("Cannot insert concept in lucene. Please retry", ex);
         }
-        luceneDAO.storeValues(1);
+        luceneDAO.storeValues(1.LuceneAction.INSERT);
     }
 
     /**
@@ -204,8 +199,8 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (IOException e) {
             throw new LuceneException("Problem in deleting indexes. Please retry", e);
         }
-        LuceneBean bean = luceneDAO.getTotalNumberOfWordsIndexed();
-        luceneDAO.storeValues(-bean.getIndexedWordsCount());
+        IndexingEvent bean = luceneDAO.getTotalNumberOfWordsIndexed();
+        luceneDAO.storeValues(-bean.getIndexedWordsCount(),LuceneAction.DELETE);
     }
 
     /**
@@ -225,28 +220,7 @@ public class LuceneUtility implements ILuceneUtility {
             List<IWordID> wordIdds = indexWord.getWordIDs();
 
             for (IWordID wordId : wordIdds) {
-
-                Document doc = new Document();
-                doc.add(new StringField(LuceneFieldNames.WORD, wordId.getLemma(), Field.Store.YES));
-                doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
-
-                IWord word = dict.getWord(wordId);
-                doc.add(new StringField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
-                doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
-                doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
-
-                ISynset synset = word.getSynset();
-                List<IWord> synonyms = synset.getWords();
-                StringBuffer sb = new StringBuffer();
-                for (IWord syn : synonyms) {
-                    if (!syn.getID().equals(word.getID()))
-                        sb.append(
-                                syn.getID().toString() + edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR);
-                }
-                doc.add(new StringField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
-                // Adding this new data to delete only wordnet concepts while
-                // adding all wordnet concepts from jwi.
-                doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
+                Document doc = createIndividualDocument(dict, wordId);
                 try {
                     numberOfIndexedWords++;
                     writer.addDocument(doc);
@@ -259,6 +233,31 @@ public class LuceneUtility implements ILuceneUtility {
         return returnValue;
     }
 
+    private Document createIndividualDocument(IDictionary dict, IWordID wordId) {
+        Document doc = new Document();
+        doc.add(new StringField(LuceneFieldNames.WORD, wordId.getLemma(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
+
+        IWord word = dict.getWord(wordId);
+        doc.add(new StringField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
+
+        ISynset synset = word.getSynset();
+        List<IWord> synonyms = synset.getWords();
+        StringBuffer sb = new StringBuffer();
+        for (IWord syn : synonyms) {
+            if (!syn.getID().equals(word.getID()))
+                sb.append(
+                        syn.getID().toString() + edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR);
+        }
+        doc.add(new StringField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
+        // Adding this new data to delete only wordnet concepts while
+        // adding all wordnet concepts from jwi.
+        doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
+        return doc;
+    }
+
     /**
      * This method will create the index for the concepts created by user and
      * the concepts that are stored in the CCP database
@@ -269,37 +268,15 @@ public class LuceneUtility implements ILuceneUtility {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    protected int[] createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList, IndexWriter writer)
+    protected int[] createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList)
             throws IllegalArgumentException, IllegalAccessException {
         int numberOfIndexedConcepts = 0;
         int numberOfUnindexConcepts = 0;
         for (ConceptEntry entry : conceptEntryList) {
-            Document doc = new Document();
-
-            java.lang.reflect.Field[] fields = entry.getClass().getDeclaredFields();
-            for (java.lang.reflect.Field field : fields) {
-
-                LuceneField searchFieldAnnotation = field.getAnnotation(LuceneField.class);
-                field.setAccessible(true);
-                if (searchFieldAnnotation != null) {
-                    Object contentOfField = field.get(entry);
-                    if (contentOfField != null) {
-
-                        if (searchFieldAnnotation.isIndexable()) {
-                            doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
-                                    String.valueOf(contentOfField).replace(" ", ""), Field.Store.YES));
-                        } else {
-                            doc.add(new StoredField(searchFieldAnnotation.lucenefieldName(),
-                                    String.valueOf(contentOfField).replace(" ", "")));
-                        }
-                    }
-                }
-            }
-            doc.add(new StoredField(LuceneFieldNames.ID, entry.getId() != null ? entry.getId() : ""));
             try {
+                insertConcept(entry);
                 numberOfIndexedConcepts++;
-                writer.addDocument(doc);
-            } catch (IOException ex) {
+            } catch (LuceneException e) {
                 numberOfUnindexConcepts++;
             }
         }
@@ -372,7 +349,7 @@ public class LuceneUtility implements ILuceneUtility {
         List<ConceptEntry> conceptEntriesList = (List<ConceptEntry>) databaseClient
                 .getAllElementsOfType(ConceptEntry.class);
 
-        numberOfWord = createDocumentsFromConceptEntries(conceptEntriesList, writer);
+        numberOfWord = createDocumentsFromConceptEntries(conceptEntriesList);
 
         numberOfIndexedWords += numberOfWord[0];
         numberOfUnIndexedWords += numberOfWord[1];
@@ -383,7 +360,7 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Issues in writing document", e);
         }
 
-        luceneDAO.storeValues(numberOfIndexedWords);
+        luceneDAO.storeValues(numberOfIndexedWords,LuceneAction.INSERT);
 
         if (numberOfUnIndexedWords > 0) {
             throw new LuceneException("Indexing not done for " + numberOfUnIndexedWords);

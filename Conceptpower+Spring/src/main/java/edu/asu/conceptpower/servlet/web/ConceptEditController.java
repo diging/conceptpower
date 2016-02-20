@@ -143,11 +143,7 @@ public class ConceptEditController {
         conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
 
         String userId = usersManager.findUser(principal.getName()).getUsername();
-        String modified = conceptEntry.getModified() != null ? conceptEntry.getModified() : "";
-        if (!modified.trim().isEmpty())
-            modified += ", ";
-        conceptEntry.setModified(modified + userId + "@" + (new Date()).toString());
-
+        conceptEntry.setModified(userId);
         conceptManager.storeModifiedConcept(conceptEntry);
 
         if (conceptEditBean.isFromHomeScreen()) {

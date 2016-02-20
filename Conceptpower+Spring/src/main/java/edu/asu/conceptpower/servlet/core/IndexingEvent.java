@@ -2,25 +2,30 @@ package edu.asu.conceptpower.servlet.core;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
-public class LuceneBean implements Serializable {
+public class IndexingEvent implements Serializable {
 
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
-    private Timestamp lastRun;
+    
+    
+    private Date lastRun;
     private long indexedWordsCount;
     private String message;
+    private String action;
     
-    public LuceneBean(){
+    public IndexingEvent(){
         
     }
 
-    public LuceneBean(Timestamp run, long indexWordCount) {
+    public IndexingEvent(Date run, long indexWordCount,String action) {
         lastRun = run;
         indexedWordsCount = indexWordCount;
+        this.action = action;
     }
 
     public long getIndexedWordsCount() {
@@ -37,20 +42,36 @@ public class LuceneBean implements Serializable {
         return lastRun.toString();
     }
     
-    public Timestamp getLastRunTimeStamp(){
+    public Date getLastRunDate(){
         return lastRun;
     }
-
-    public void setLastRun(Timestamp lastRun) {
-        this.lastRun = lastRun;
-    }
-
+    
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setLastRun(Date lastRun) {
+        this.lastRun = lastRun;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 
 }
