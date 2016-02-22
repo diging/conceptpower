@@ -5,6 +5,9 @@ import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -40,7 +43,8 @@ public class LuceneDAO implements ILuceneDAO {
      */
     public void storeValues(long numberOfIndexedWords,String action) {
         long now = System.currentTimeMillis();
-        IndexingEvent bean = new IndexingEvent(new Timestamp(now), numberOfIndexedWords,action);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        IndexingEvent bean = new IndexingEvent(new Timestamp(now), numberOfIndexedWords,action,auth.getName());
         luceneClient.store(bean);
         luceneClient.commit();
     }
@@ -49,7 +53,7 @@ public class LuceneDAO implements ILuceneDAO {
      * Retrieves the total number of words from the database
      */
     public IndexingEvent getTotalNumberOfWordsIndexed() {
-        IndexingEvent bean = new IndexingEvent(null, 0, null);
+        IndexingEvent bean = new IndexingEvent(0);
         ObjectSet result = luceneClient.queryByExample(bean);
         return getTotalNumberFromResult(result);
 

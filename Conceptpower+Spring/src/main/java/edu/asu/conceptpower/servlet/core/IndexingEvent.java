@@ -15,15 +15,21 @@ public class IndexingEvent implements Serializable {
     private long indexedWordsCount;
     private String message;
     private String action;
+    private String userName;
 
     public IndexingEvent() {
 
     }
 
-    public IndexingEvent(Date run, long indexWordCount, String action) {
+    public IndexingEvent(Date run, long indexWordCount, String action, String userName) {
         lastRun = run;
         indexedWordsCount = indexWordCount;
         this.action = action;
+        this.userName = userName;
+    }
+    
+    public IndexingEvent(long indexWordCount){
+        this.indexedWordsCount = indexedWordsCount;
     }
 
     public IndexingEvent(Date run, long indexWordCount) {
@@ -67,6 +73,14 @@ public class IndexingEvent implements Serializable {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 }
