@@ -14,7 +14,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
@@ -68,7 +68,7 @@ import edu.mit.jwi.item.POS;
 public class LuceneUtility implements ILuceneUtility {
 
     @Autowired
-    private WhitespaceAnalyzer whiteSpaceAnalyzer;
+    private StandardAnalyzer whiteSpaceAnalyzer;
 
     @Autowired
     private WordNetConfiguration configuration;
@@ -126,7 +126,7 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (ParseException e) {
             throw new LuceneException("Issues in framing queries", e);
         }
-        luceneDAO.storeValues(-1,LuceneAction.DELETE);
+        luceneDAO.storeValues(-1, LuceneAction.DELETE);
     }
 
     /**
@@ -163,7 +163,7 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (IOException ex) {
             throw new LuceneException("Cannot insert concept in lucene. Please retry", ex);
         }
-        luceneDAO.storeValues(1.LuceneAction.INSERT);
+        luceneDAO.storeValues(1, LuceneAction.INSERT);
     }
 
     /**
@@ -183,7 +183,6 @@ public class LuceneUtility implements ILuceneUtility {
             if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
                 field.set(con, d.get(luceneFieldAnnotation.lucenefieldName()));
         }
-        con.setId(d.get("id"));
         return con;
     }
 
@@ -200,7 +199,7 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Problem in deleting indexes. Please retry", e);
         }
         IndexingEvent bean = luceneDAO.getTotalNumberOfWordsIndexed();
-        luceneDAO.storeValues(-bean.getIndexedWordsCount(),LuceneAction.DELETE);
+        luceneDAO.storeValues(-bean.getIndexedWordsCount(), LuceneAction.DELETE);
     }
 
     /**
@@ -248,8 +247,7 @@ public class LuceneUtility implements ILuceneUtility {
         StringBuffer sb = new StringBuffer();
         for (IWord syn : synonyms) {
             if (!syn.getID().equals(word.getID()))
-                sb.append(
-                        syn.getID().toString() + edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR);
+                sb.append(syn.getID().toString() + edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR);
         }
         doc.add(new StringField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
         // Adding this new data to delete only wordnet concepts while
@@ -360,7 +358,7 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Issues in writing document", e);
         }
 
-        luceneDAO.storeValues(numberOfIndexedWords,LuceneAction.INSERT);
+        luceneDAO.storeValues(numberOfIndexedWords, LuceneAction.REINDEX);
 
         if (numberOfUnIndexedWords > 0) {
             throw new LuceneException("Indexing not done for " + numberOfUnIndexedWords);
@@ -388,12 +386,16 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
+                StringBuffer searchBuffer = new StringBuffer("(+");
                 if (searchString != null) {
                     if (firstEntry != 1)
                         queryString.append(" " + operator + " ");
                     firstEntry++;
                     queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
-                    queryString.append(searchString);
+                    searchString = searchString.split(" ")[0];
+                    searchBuffer.append(searchString);
+                    searchBuffer.append(")");
+                    queryString.append(searchBuffer.toString());
                 }
             }
         }

@@ -97,7 +97,6 @@ public class ConceptManager implements IConceptManager {
             throws LuceneException, IllegalAccessException {
         if (pos == null)
             return null;
-        word = word.replace(" ", "");
         Map<String,String> fieldMap = new HashMap<String,String>();
         fieldMap.put(SearchFieldNames.WORD, word);
         fieldMap.put(SearchFieldNames.POS, pos);
