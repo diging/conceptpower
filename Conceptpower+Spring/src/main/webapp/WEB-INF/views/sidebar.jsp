@@ -46,10 +46,11 @@
 	<p>Hi ${user}!</p>
 	<p>May the Conceptpower be with you.</p>
 
-	<h2>You can</h2>
+	
 	<form>
 
-		<c:if test="${currentPage eq 'conceptlists' }">
+		<c:if test="${currentPage eq 'ConceptList' }">
+		<h2>You can</h2>
 			<a href="${pageContext.servletContext.contextPath}/auth/conceptlist">Manage
 				Concept Lists</a>
 			<ul>
@@ -64,7 +65,8 @@
 						New Wordnet Concept Wrapper</a></li>
 			</ul>
 		</c:if>
-		<c:if test="${currentPage eq 'concepttypes' }">
+		<c:if test="${currentPage eq 'Concept Types' }">
+		<h2>You can</h2>
 			<a href="${pageContext.servletContext.contextPath}/auth/concepttype">Manage
 				Concept Types</a>
 			<ul>
@@ -74,7 +76,8 @@
 			</ul>
 		</c:if>
 
-		<c:if test="${currentPage eq 'users'}">
+		<c:if test="${currentPage eq 'Users'}">
+		<h2>You can</h2>
 			<sec:authorize access="hasRole('ROLE_CP_ADMIN')">
 				<a href="${pageContext.servletContext.contextPath}/auth/user/list">Manage
 					Users</a>

@@ -79,8 +79,15 @@
 	<div class="container main">
 
 		<ol class="breadcrumb">
+			<tiles:importAttribute />
 			<li><a href="${pageContext.servletContext.contextPath}">Home</a></li>
-			<li class="active"><tiles:insertAttribute name="currentPage" /></li>
+			<c:if test="${not empty prevURL}">
+				<li><a
+					href="${pageContext.servletContext.contextPath}/${prevURL}"><tiles:insertAttribute
+							name="prevPage" /></a></li>
+			</c:if>
+			<li class="active"><tiles:insertAttribute
+						name="currentPage" /></li>
 		</ol>
 
 		<div class="row">

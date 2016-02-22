@@ -3,7 +3,7 @@
 <h2>User Management</h2>
 
 <table id="userTable" cellpadding="0" cellspacing="0" border="0"
-	class="display dataTable" width="100%">
+	class="table table-striped table-bordered" width="100%">
 	<thead>
 		<tr>
 			<th>Delete User</th>

@@ -54,7 +54,7 @@
 
 <h2>Concepts</h2>
 <c:if test="${not empty result}">
-	<table cellpadding="0" cellspacing="0" class="display dataTable"
+	<table cellpadding="0" cellspacing="0" class="table table-striped table-bordered"
 		id="conceptList">
 		<thead>
 			<tr>
@@ -116,7 +116,7 @@
 
 
 <div id="detailsdiv" style="max-width: 600px; max-height: 500px;"  class="pageCenter">
-	<table id="detailstable" class="greyContent" hidden="true">
+	<table id="detailstable" class="table table-striped table-bordered" hidden="true">
 		<tr>
 			<td>Id:</td>
 			<td id="detailsid"></td>
