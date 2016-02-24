@@ -2,106 +2,145 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author"      content="Sergey Pozhilov (GetTemplate.com)">
+	
+	<title>Conceptpower</title>
 
-<title><tiles:insertAttribute name="title" /></title>
-<link rel="stylesheet"
-	href="${pageContext.servletContext.contextPath}/resources/css/style.css" />
-<link rel="stylesheet"
-	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery-ui.css" />
-<link rel="stylesheet"
-	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery.dataTables_themeroller.css" />
-<link rel="stylesheet"
-	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/demo_table_jui.css" />
-<link
-	href="http://fonts.googleapis.com/css?family=Open+Sans:400,700|Open+Sans+Condensed:700"
-	rel="stylesheet" />
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-1.9.1.min.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel.min.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel-ui.min.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jit.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex1.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex2.js"></script>
+	<link rel="shortcut icon" href="${pageContext.servletContext.contextPath}/resources/assets/images/gt_favicon.png">
+	
+	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-alert.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.dataTables.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery.quick.pagination.min.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-ui.js"></script>
-<noscript>
-	<link rel="stylesheet"
-		href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/skel-noscript.css" />
-	<link rel="stylesheet"
-		href="${pageContext.servletContext.contextPath}/resources/css/style.css" />
-	<link rel="stylesheet"
-		href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/style-desktop.css" />
-</noscript>
-<tiles:insertAttribute name="header" />
+	<!-- Custom styles for our template -->
+	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/bootstrap-theme.css" media="screen" >
+	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/main.css">
+	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/additions.css">
+	
+	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/js/datatable/css/dataTables.bootstrap.min.css" />
+	
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="${pageContext.servletContext.contextPath}/resources/assets/js/html5shiv.js"></script>
+	<script src="${pageContext.servletContext.contextPath}/resources/assets/js/respond.min.js"></script>
+	<![endif]-->
+	
+	
+	<tiles:insertAttribute name="header" />
 </head>
+
 <body>
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+
+
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="${pageContext.servletContext.contextPath}/resources/assets/js/headroom.min.js"></script>
+	<script src="${pageContext.servletContext.contextPath}/resources/assets/js/jQuery.headroom.min.js"></script>
+	<script src="${pageContext.servletContext.contextPath}/resources/assets/js/template.js"></script>
+	<script src="${pageContext.servletContext.contextPath}/resources/js/datatable/js/jquery.dataTables.js"></script>
+	<script src="${pageContext.servletContext.contextPath}/resources/js/datatable/js/dataTables.bootstrap.min.js"></script>
+	
+	
+	
 	<tiles:importAttribute name="currentPage" scope="request" />
-	<div id="main">
-		<div id="header">
-			<div id="logo">
-				<div id="logo_text">
-					<!-- class="logo_colour", allows you to change the colour of the text -->
-					<h1>
-						<a href="${pageContext.servletContext.contextPath}/">Concept<span
-							class="logo_colour">power</span></a>
-					</h1>
-					<h2>dHPS</h2>
-				</div>
+	
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+		<div class="container">
+			<div class="navbar-header">
+				<!-- Button for smallest screens -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+				<a class="navbar-brand" href="${pageContext.servletContext.contextPath}"><img src="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png" alt="Conceptpower" width="40px"></a>
 			</div>
-
-			<div id="menubar">
-				<tiles:insertAttribute name="navigation" />
-			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right">
+					<tiles:insertAttribute name="navigation" />
+				</ul>
+			</div><!--/.nav-collapse -->
 		</div>
+	</div> 
+	<!-- /.navbar -->
 
+	<header id="head" class="secondary"></header>
 
+	<!-- container -->
+	<div class="container main">
 
-		<div id="content_header"></div>
+		<ol class="breadcrumb">
+			<tiles:importAttribute />
+			<li><a href="${pageContext.servletContext.contextPath}">Home</a></li>
+			<c:if test="${not empty prevURL}">
+				<li><a
+					href="${pageContext.servletContext.contextPath}/${prevURL}"><tiles:insertAttribute
+							name="prevPage" /></a></li>
+			</c:if>
+			<li class="active"><tiles:insertAttribute
+						name="currentPage" /></li>
+		</ol>
 
-		<div id="site_content">
-
-			<div id="content" style="width: 75%; float: left;">
+		<div class="row">
+			
+			<!-- Article main content -->
+			<article class="col-sm-9 maincontent">
 				<tiles:insertAttribute name="content" />
-			</div>
+			</article>
+			<!-- /Article -->
+			
+			<!-- Sidebar -->
+			<aside class="col-sm-3 sidebar sidebar-right">
 
-			<div class="sidebar" style="width: 20%; float: right;">
-				<tiles:insertAttribute name="sidebar" />
-				<h2></h2>
-			</div>
+				<div class="widget">
+					<tiles:insertAttribute name="sidebar" />
+				</div>
 
+			</aside>
+			<!-- /Sidebar -->
 
 		</div>
+	</div>	<!-- /container -->
 
-		<div id="content_footer"></div>
-		<div id="footer">
+	<footer id="footer" class="top-space sticky">
+
 		
-			<p class="legal">
-			<c:set var="PR" value="${pullrequest}" />
-			    Version: ${buildNumber}<c:if test="${not empty PR}">, Pull Request: ${pullrequest}</c:if>
-			</p>
-			Copyright &#169; simplestyle_1 | <a
-				href="http://validator.w3.org/check?uri=referer">HTML5</a> | <a
-				href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> | <a
-				href="http://www.html5webtemplates.co.uk">design from
-				HTML5webtemplates.co.uk</a> | <a href="http://salleedesign.com">icons
-				by Jeremy Sallee</a>
-		</div>
 
-	</div>
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="simplenav">
+								<c:set var="PR" value="${pullrequest}" />
+			    				Version: ${buildNumber}<c:if test="${not empty PR}">, Pull Request: ${pullrequest}</c:if>
+							</p>
+						</div>
+					</div>
+
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="text-right">
+								Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
+							</p>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+	</footer>	
+		
+	
 </body>
 </html>

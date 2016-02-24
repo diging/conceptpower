@@ -10,7 +10,14 @@
 		$('#conceptTypes').dataTable({
 			"bJQueryUI" : true,
 			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false
+			"bAutoWidth" : false,
+			"aoColumnDefs" : [
+				{
+					"targets": [0,1],
+					'bSortable': false
+				}     
+			],
+		"order": [[ 2, "desc" ]]
 		});
 
 	});
@@ -21,7 +28,7 @@
 <p>See existing types below.</p>
 
 <c:if test="${not empty result}">
-	<table cellpadding="0" cellspacing="0" class="display dataTable"
+	<table cellpadding="0" cellspacing="0" class="table table-striped table-bordered"
 		id="conceptTypes">
 		<thead>
 			<tr>
