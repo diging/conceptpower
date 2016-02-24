@@ -86,7 +86,7 @@
 			value="/WEB-INF/views/auth/concepts/ConceptAddView.jsp" />
 		<put-attribute name="prevURL" value="auth/conceptlist" />
 		<put-attribute name="prevPage" value="ConceptList" />
-		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="currentPage" value="Add Concept" />
 	</definition>
 
 
@@ -98,7 +98,7 @@
 			value="/WEB-INF/views/auth/concepts/ConceptWrapperAddView.jsp" />
 		<put-attribute name="prevURL" value="auth/conceptlist" />
 		<put-attribute name="prevPage" value="ConceptList" />
-		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="currentPage" value="Add Wordnet Concept" />
 	</definition>
 
 	<definition name="/auth/conceptlist/addconceptlist" extends="base.definition">
@@ -109,7 +109,7 @@
 			value="/WEB-INF/views/auth/concepts/ListAddView.jsp" />
 		<put-attribute name="prevURL" value="auth/conceptlist" />
 		<put-attribute name="prevPage" value="ConceptList" />
-		<put-attribute name="currentPage" value="Add Concept" />		
+		<put-attribute name="currentPage" value="Add Concept List" />		
 
 	</definition>
 

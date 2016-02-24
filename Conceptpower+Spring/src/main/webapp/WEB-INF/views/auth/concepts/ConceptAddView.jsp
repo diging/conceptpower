@@ -7,10 +7,8 @@
 
 
 <script>
-
-
 	$(function() {
-		$("#dialog").dialog({
+		$("#synonymModal").dialog({
 			autoOpen : false
 		});
 	});
@@ -20,7 +18,7 @@
 		$("#addsynonym").click(function() {
 			var addedSynonymsTable = $('#addedSynonyms');
 			$('#synonymstable').dataTable().fnClearTable();
-			$("#dialog").dialog('open');
+			$("#synonymModal").dialog('open');
 			$("#synonymsDialogTable").show();
 		});
 
@@ -123,7 +121,8 @@
 	});
 
 	var synonymAdd = function(id, term, description) {
-		$("#dialog").dialog("close");
+		$("#synonymModal").dialog("close");
+		$('#synonymModal').modal('toggle');
 		$("#synonymsDialogTable").hide();
 
 		var x = document.getElementById('addedSynonymsTable');
@@ -379,7 +378,8 @@
 				<tr>
 					<td>Service</td>
 					<td><form:select path="serviceNameIdMap"
-							name="serviceNameIdMap" id="serviceNameIdMap">
+							name="serviceNameIdMap" id="serviceNameIdMap"
+							class="form-control">
 							<form:options items="${serviceNameIdMap}" />
 						</form:select></td>
 					<td>Term</td>
@@ -402,8 +402,9 @@
 <div id="serviceResult" style="max-width: 1000px; padding: 15px;"
 	hidden="true">
 
-	<table cellpadding="0" cellspacing="0" class="table table-striped table-bordered"
-		id="serviceResultTable" hidden="true">
+	<table cellpadding="0" cellspacing="0"
+		class="table table-striped table-bordered" id="serviceResultTable"
+		hidden="true">
 		<tbody>
 		</tbody>
 	</table>
@@ -428,7 +429,7 @@
 
 					<tr>
 						<td>POS</td>
-						<td><select name="pos">
+						<td><select name="pos" class="form-control">
 								<option value="noun">Nouns</option>
 								<option value="verb">Verb</option>
 								<option value="adverb">Adverb</option>
@@ -439,7 +440,8 @@
 					<tr>
 						<td>Concept List</td>
 
-						<td><form:select path="lists" name="lists" id="lists"  class="form-control">
+						<td><form:select path="lists" name="lists" id="lists"
+								class="form-control">
 								<form:options items="${lists}" />
 							</form:select></td>
 						<td><div id="listerror" style="color: red"></div></td>
@@ -453,11 +455,13 @@
 						<td>Synonyms</td>
 						<td><div id="addedSynonyms"></div></td>
 						<td><input type="button" name="synonym" id="addsynonym"
+							data-toggle="modal" data-target="#synonymModal"
 							value="Add Synonym" class="button"></td>
 					</tr>
 					<tr>
 						<td>Concept Type</td>
-						<td><form:select path="types" name="types" id="types">
+						<td><form:select path="types" name="types" id="types"
+								class="form-control">
 								<form:options items="${types}" />
 							</form:select></td>
 						<td><div id="typeerror" style="color: red"></div></td>
@@ -489,30 +493,49 @@
 
 
 <form>
-	<div id="dialog" title="Search synonym">
+	<div class="modal fade" role="dialog" id="synonymModal">
 
-		<table id="synonymsDialogTable" hidden="true"  class="table table-striped table-bordered">
-			<tr>
-				<td><input type="text" name="synonymname" id="synonymname"></td>
-				<td><input type="hidden" name="addedSynonnym"
-					id="addedSynonnym" /></td>
-				<td><input type="button" name="synsearch" id="synonymsearch"
-					value="Search" class="button"></td>
-			</tr>
-		</table>
 
-		<div id="synonymViewDiv" style="max-width: 1000px; max-height: 500px;"
-			hidden="true">
+		<div class="modal-dialog" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
 
-			<table cellpadding="0" cellspacing="0" class="table table-striped table-bordered"
-				id="synonymstable" hidden="true">
-				<tbody>
-				</tbody>
-			</table>
+			<div class="vertical-alignment-helper">
+				<div class="modal-dialog vertical-align-center">
+					<div class="modal-content">
 
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Search synonym</h4>
+							<table id="synonymsDialogTable" hidden="true">
+								<tr>
+									<td><input type="text" name="synonymname" id="synonymname"></td>
+									<td><input type="hidden" name="addedSynonnym"
+										id="addedSynonnym" /></td>
+									<td><input type="button" name="synsearch"
+										id="synonymsearch" value="Search" class="button"></td>
+								</tr>
+							</table>
+						</div>
+
+
+						<div class="modal-body">
+							<div id="synonymViewDiv"
+								style="max-width: 1000px; max-height: 500px;" hidden="true">
+
+								<table cellpadding="0" cellspacing="0" id="synonymstable"
+									hidden="true" class="table table-striped table-bordered">
+									<tbody>
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
+</div>
 
-	</div>
 
 </form>
 

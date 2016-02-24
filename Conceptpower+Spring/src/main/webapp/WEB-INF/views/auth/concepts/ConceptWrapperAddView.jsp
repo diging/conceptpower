@@ -6,6 +6,17 @@
 <%@ page session="false"%>
 
 <script type="text/javascript">
+$(function() {
+	$("#synonymModal").dialog({
+		autoOpen : false
+	});
+	$("#addsynonym").click(function() {
+		var addedSynonymsTable = $('#addedSynonyms');
+		$('#synonymstable').dataTable().fnClearTable();
+		$("#synonymModal").dialog('open');
+		$("#synonymsDialogTable").show();
+	});
+});
 	$(document)
 			.ready(
 					function() {
@@ -138,15 +149,6 @@
 										});
 					});
 
-	$(function() {
-		$("#addsynonym").click(function() {
-			$("#dialog").dialog({
-				width : "auto"
-			});
-			$("#synonymsDialogTable").show();
-		});
-	});
-
 	$(document).ready(definedatatable);
 
 	function definedatatable() {
@@ -171,8 +173,8 @@
 					} ],
 					"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
 						var description = aData.description;
-						//This functionality has been moved to Controller. 
-						//description = escape(description);
+						description = description != null ? description
+								.replace(/"/g, '&quot;') : "";
 						$('td:eq(3)', nRow).html(
 								'<a onclick="synonymAdd(\'' + aData.id
 										+ '\',\'' + aData.word + '\',\''
@@ -188,27 +190,24 @@
 						function() {
 							$("#synonymViewDiv").show();
 							$("#synonymstable").show();
+							var addedsynonym = $('#addedSynonnym').val();
 							var synonymname = $("#synonymname").val();
 							$
 									.ajax({
 										type : "GET",
-										url : "${pageContext.servletContext.contextPath}/conceptWrapperAddSynonymView",
+										url : "${pageContext.servletContext.contextPath}/conceptAddSynonymView",
 										data : {
-											synonymname : synonymname
+											synonymname : synonymname,
+											addedsynonym : addedsynonym
 										},
 
 										success : function(response) {
+											var data = jQuery
+													.parseJSON(response);
 											$('#synonymstable').dataTable()
 													.fnClearTable();
-
-											var synonym = JSON.parse(response);
-											var len = synonym.Total;
-											for (var i = 0; i < len; i++) {
-												$('#synonymstable')
-														.dataTable()
-														.fnAddData(
-																synonym.synonyms[i]);
-											}
+											$('#synonymstable').dataTable()
+													.fnAddData(data);
 
 										}
 									});
@@ -216,10 +215,12 @@
 	});
 
 	var synonymAdd = function(id, term, description) {
-		$("#dialog").dialog("close");
+		$("#synonymModal").dialog("close");
+		$('#synonymModal').modal('toggle');
 		$("#synonymsDialogTable").hide();
 		var decodedDescription = unescape(description);
 		var x = document.getElementById('addedSynonymsTable');
+		var addedsynonym = $('#addedSynonnym').val();
 
 		if (x != null) {
 
@@ -232,6 +233,10 @@
 			new_row.cells[3].hidden = true;
 
 			x.appendChild(new_row);
+			
+			addedsynonym += ','
+			addedsynonym += id;
+			$('#addedSynonnym').val(addedsynonym);
 		} else {
 			var html = '<table border="1" width="400" id="addedSynonymsTable"><thead></thead>';
 
@@ -245,6 +250,8 @@
 			html += '<td align="justify" hidden="true">' + id + '</td></tr>';
 
 			html += '</table>';
+			addedsynonym += id;
+			$('#addedSynonnym').val(addedsynonym);
 			$("#addedSynonyms").html(html);
 
 		}
@@ -258,6 +265,7 @@
 	};
 
 	var synonymRemove = function(row) {
+		$('#addedSynonnym').val('');
 		var x = document.getElementById('addedSynonymsTable');
 		x.deleteRow(row);
 		if (!(x.rows.length > 0))
@@ -268,6 +276,7 @@
 			synonyms += table.rows[r].cells[3].innerHTML + ',';
 		}
 		$("#synonymsids").val(synonyms);
+		$('#addedSynonnym').val(synonyms);
 	};
 
 	function detailsView(concept) {
@@ -321,7 +330,7 @@
 		</tr>
 		<tr>
 			<td>POS:</td>
-			<td><select name="pos">
+			<td><select name="pos" class="form-control">
 					<option value="noun">Nouns</option>
 					<option value="verb">Verb</option>
 					<option value="adverb">Adverb</option>
@@ -397,7 +406,7 @@
 		<tr>
 			<td>Concept List</td>
 
-			<td><form:select path="lists" name="lists">
+			<td><form:select path="lists" name="lists" class="form-control">
 					<form:option value="" label="Select concept list" />
 					<form:options items="${lists}" />
 				</form:select></td>
@@ -412,12 +421,12 @@
 		<tr>
 			<td>Synonyms</td>
 			<td><div id="addedSynonyms"></div></td>
-			<td><input type="button" name="synonym" id="addsynonym"
+			<td><input type="button" name="synonym" id="addsynonym" data-toggle="modal" data-target="#synonymModal"
 				value="Add Synonym" class="button"></td>
 		</tr>
 		<tr>
 			<td>Concept Type</td>
-			<td><form:select path="types" name="types">
+			<td><form:select path="types" name="types" class="form-control">
 					<form:option value="" label="Select one" />
 					<form:options items="${types}" />
 				</form:select></td>
@@ -447,42 +456,51 @@
 
 <form>
 
-
-
-
 <!-- Modal -->
-<div id="dialog" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+<div class="modal fade" role="dialog" id="synonymModal">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Search Synonym</h4>
-      </div>
-      <div class="modal-body">
-        
-        <table id="synonymsDialogTable" hidden="true" class="table table-striped table-bordered">
-			<tr>
-				<td><input type="text" name="synonymname" id="synonymname"></td>
-				<td><input type="button" name="synsearch" id="synonymsearch"
-					value="Search" class="button"></td>
-			</tr>
-		</table>
-		
-		<table cellpadding="0" cellspacing="0" class="table table-striped table-bordered"
-				id="synonymstable" hidden="true">
-				<tbody>
-				</tbody>
-			</table>
-        
-        
-      </div>
-    </div>
 
-  </div>
+		<div class="modal-dialog" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+
+			<div class="vertical-alignment-helper">
+				<div class="modal-dialog vertical-align-center">
+					<div class="modal-content">
+
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Search synonym</h4>
+							<table id="synonymsDialogTable" hidden="true">
+								<tr>
+									<td><input type="text" name="synonymname" id="synonymname"></td>
+									<td><input type="hidden" name="addedSynonnym"
+										id="addedSynonnym" /></td>
+									<td><input type="button" name="synsearch"
+										id="synonymsearch" value="Search" class="button"></td>
+								</tr>
+							</table>
+						</div>
+
+
+						<div class="modal-body">
+							<div id="synonymViewDiv"
+								style="max-width: 1000px; max-height: 500px;" hidden="true">
+
+								<table cellpadding="0" cellspacing="0" id="synonymstable"
+									hidden="true" class="table table-striped table-bordered">
+									<tbody>
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 </div>
-
+</form>
+<form>
 
 	<div id="detailsdiv" style="max-width: 600px; max-height: 500px;"  class="pageCenter">
 		<table id="detailstable" class="table table-striped table-bordered" hidden="true">
