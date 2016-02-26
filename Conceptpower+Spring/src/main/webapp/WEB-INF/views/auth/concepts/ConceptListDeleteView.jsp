@@ -8,7 +8,7 @@
 <h1>Delete List</h1>
 <p>Do you really want to delete the following List?</p>
 
-<table class="greyContent">
+<table class="table table-striped table-bordered">
 	<tr>
 		<td>List Name:</td>
 		<td>${listName}</td>
