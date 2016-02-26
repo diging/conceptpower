@@ -6,6 +6,9 @@
 <%@ page session="false"%>
 
 <h1>Delete Type</h1>
+
+<font color="red">${luceneError}</font>
+
 <p>Do you really want to delete the following Type?</p>
 <h2>${typeName}</h2>
 <p>${description}</p>

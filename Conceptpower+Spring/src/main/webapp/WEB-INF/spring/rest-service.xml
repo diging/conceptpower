@@ -80,7 +80,7 @@
 		<property name="classesToBeBound">
 			<list>
 
-				<value>edu.asu.conceptpower.profile.impl.ViafReply
+				<value>edu.asu.conceptpower.servlet.profile.impl.ViafReply
 				</value>
 
 			</list>
