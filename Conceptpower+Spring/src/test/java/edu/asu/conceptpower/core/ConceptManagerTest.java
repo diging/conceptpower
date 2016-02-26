@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
+import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.core.impl.ConceptManager;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
@@ -37,6 +38,9 @@ public class ConceptManagerTest {
 
     @Mock
     private WordNetManager wordNetManager;
+
+    @Mock
+    private IIndexService indexService;
 
     private ConceptEntry addedConcept;
 
@@ -131,13 +135,14 @@ public class ConceptManagerTest {
         newConcept.setPos("noun");
         newConcept.setWord("test new");
         newConcept.setWordnetId("WID-1");
-
         String id = managerToTest.addConceptListEntry(newConcept);
+        Mockito.verify(indexService).insertConcept(newConcept);
         Assert.assertNotNull(id);
     }
 
-    @Test
-    public void testAddConceptListEntryWrongDict() throws DictionaryModifyException, LuceneException, IllegalAccessException {
+    @Test(expected = DictionaryDoesNotExistException.class)
+    public void testAddConceptListEntryWrongDict()
+            throws DictionaryModifyException, LuceneException, IllegalAccessException, DictionaryDoesNotExistException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList("list-not-exist");
         newConcept.setCreatorId("testuser");
@@ -147,17 +152,14 @@ public class ConceptManagerTest {
         newConcept.setWordnetId("WID-1");
 
         String id = null;
-        try {
-            id = managerToTest.addConceptListEntry(newConcept);
-        } catch (DictionaryDoesNotExistException e) {
-            // test passes
-        }
+        id = managerToTest.addConceptListEntry(newConcept);
 
         Assert.assertNull(id);
     }
 
-    @Test
-    public void testAddConceptListEntryToWordnet() throws DictionaryDoesNotExistException, LuceneException, IllegalAccessException {
+    @Test(expected = DictionaryModifyException.class)
+    public void testAddConceptListEntryToWordnet()
+            throws DictionaryDoesNotExistException, LuceneException, IllegalAccessException, DictionaryModifyException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList(Constants.WORDNET_DICTIONARY);
         newConcept.setCreatorId("testuser");
@@ -167,11 +169,7 @@ public class ConceptManagerTest {
         newConcept.setWordnetId("WID-1");
 
         String id = null;
-        try {
-            id = managerToTest.addConceptListEntry(newConcept);
-        } catch (DictionaryModifyException e) {
-            // test passes
-        }
+        id = managerToTest.addConceptListEntry(newConcept);
 
         Assert.assertNull(id);
     }

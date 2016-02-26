@@ -25,7 +25,7 @@ import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 public class ConceptListManagerTest {
 
 	@Mock
-	private IConceptDBManager client = Mockito.mock(IConceptDBManager.class);;
+	private IConceptDBManager client = Mockito.mock(IConceptDBManager.class);
 
 	@InjectMocks
 	private ConceptListManager conceptListManager;
