@@ -47,15 +47,13 @@
 			<c:forEach var="types" items="${result}">
 				<tr class="gradeX">
 					<td align="justify"><a
-						href="${pageContext.servletContext.contextPath}/auth/concepttype/deletetype/${types.typeId}"><input
-							type="image"
-							src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a>
+						href="${pageContext.servletContext.contextPath}/auth/concepttype/deletetype/${types.typeId}">
+						<i class="fa fa-trash-o"></i>
+						</a>
 					</td>
 					<td align="justify"><a
-						href="${pageContext.servletContext.contextPath}/auth/concepttype/edittype/${types.typeId}"><input
-							type="image"
-							src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
-					</td>
+						href="${pageContext.servletContext.contextPath}/auth/concepttype/edittype/${types.typeId}"><i
+							class="fa fa-pencil-square-o"></i></a></td>
 					<td align="justify"><font size="2"><c:out
 								value="${types.typeName}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out

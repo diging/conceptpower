@@ -12,7 +12,7 @@
 	
 	<title>Conceptpower</title>
 
-	<link rel="shortcut icon" href="${pageContext.servletContext.contextPath}/resources/assets/images/gt_favicon.png">
+	<link rel="shortcut icon" href="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png">
 	
 	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/bootstrap.min.css">
@@ -24,6 +24,8 @@
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/additions.css">
 	
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/js/datatable/css/dataTables.bootstrap.min.css" />
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
@@ -62,7 +64,7 @@
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="${pageContext.servletContext.contextPath}"><img src="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png" alt="Conceptpower" width="40px"></a>
+				<a class="navbar-brand" href="${pageContext.servletContext.contextPath}"><img src="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png" alt="Conceptpower" width="40px"> <span class="first-letter">C</span>onceptpower</a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
@@ -86,18 +88,22 @@
 					href="${pageContext.servletContext.contextPath}/${prevURL}"><tiles:insertAttribute
 							name="prevPage" /></a></li>
 			</c:if>
-			<li class="active"><tiles:insertAttribute
-						name="currentPage" /></li>
+			<li class="active"><tiles:insertAttribute name="currentPage" /></li>
 		</ol>
+		<sec:authorize access="isAuthenticated()">
+			<p class="alignright">
+				<i class="fa fa-user"></i>  <sec:authentication property="principal.username" /> 
+			</p>
+		</sec:authorize>
 
 		<div class="row">
-			
+
 			<!-- Article main content -->
 			<article class="col-sm-9 maincontent">
 				<tiles:insertAttribute name="content" />
 			</article>
 			<!-- /Article -->
-			
+
 			<!-- Sidebar -->
 			<aside class="col-sm-3 sidebar sidebar-right">
 
@@ -109,7 +115,8 @@
 			<!-- /Sidebar -->
 
 		</div>
-	</div>	<!-- /container -->
+	</div>
+	<!-- /container -->
 
 	<footer id="footer" class="top-space sticky">
 

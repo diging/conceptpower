@@ -12,7 +12,7 @@
 	
 	<title>Conceptpower</title>
 
-	<link rel="shortcut icon" href="${pageContext.servletContext.contextPath}/resources/assets/images/gt_favicon.png">
+	<link rel="shortcut icon" href="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png">
 	
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/css/additions.css">	
 	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
@@ -71,14 +71,16 @@
 
 	<!-- container -->
 	<div class="container main">
-
 		<ol class="breadcrumb">
 			<li><a href="${pageContext.servletContext.contextPath}">Home</a></li>
 			<li class="active"><tiles:insertAttribute name="pageName" /></li>
 		</ol>
+		<sec:authorize access="isAuthenticated()">
+			<p class="alignright">
+				<i class="fa fa-user"></i>  <sec:authentication property="principal.username" /> 
+			</p>
+		</sec:authorize>
 		
-		
-
 		<div class="row">
 			
 			<!-- Article main content -->

@@ -83,6 +83,13 @@ img.pull-left { margin-right: 10px; }
     width: 100%;
 }
 
+.alignleft {
+	float: left;
+}
+.alignright {
+	float: right;
+}
+
 .footer1 { background: #232323; padding: 30px 0 0 0; font-size: 12px; color: #999; }
 	.footer1 a { color: #ccc; }
 		.footer1 a:hover {color: #fff; }
