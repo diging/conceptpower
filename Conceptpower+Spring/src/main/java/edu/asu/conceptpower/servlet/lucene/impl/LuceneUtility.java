@@ -83,8 +83,8 @@ public class LuceneUtility implements ILuceneUtility {
     @Value("${lucenePath}")
     private String lucenePath;
 
-    @Value("${hits}")
-    private int hitsPerPage;
+    @Value("${numberOfLuceneResults}")
+    private int numberOfResults;
 
     private IndexWriter writer = null;
     private DirectoryReader reader = null;
@@ -411,7 +411,7 @@ public class LuceneUtility implements ILuceneUtility {
             } else {
                 searcher = new IndexSearcher(reader);
             }
-            TopDocs docs = searcher.search(q, hitsPerPage);
+            TopDocs docs = searcher.search(q, numberOfResults);
             ScoreDoc[] hits = docs.scoreDocs;
             for (int i = 0; i < hits.length; ++i) {
                 int docId = hits[i].doc;

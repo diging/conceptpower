@@ -44,7 +44,7 @@ public class LuceneDAO implements ILuceneDAO {
     public void storeValues(long numberOfIndexedWords,String action) {
         long now = System.currentTimeMillis();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        IndexingEvent bean = new IndexingEvent(new Timestamp(now), numberOfIndexedWords,action,auth.getName());
+        IndexingEvent bean = new IndexingEvent(new Date(), numberOfIndexedWords,action,auth.getName());
         luceneClient.store(bean);
         luceneClient.commit();
     }

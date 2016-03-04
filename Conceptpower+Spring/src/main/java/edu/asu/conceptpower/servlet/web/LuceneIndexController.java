@@ -58,8 +58,9 @@ public class LuceneIndexController {
      * @return
      */
     @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+    public synchronized @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
         IndexingEvent bean = new IndexingEvent();
+        System.out.println("Inside");
         try {
             manager.deleteIndexes();
             manager.indexConcepts();
@@ -69,6 +70,7 @@ public class LuceneIndexController {
             return bean;
         }
         bean.setMessage("Indexed successfully");
+        System.out.println("Outside");
         return bean;
     }
 

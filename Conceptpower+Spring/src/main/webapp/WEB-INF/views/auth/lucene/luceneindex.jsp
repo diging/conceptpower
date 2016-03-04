@@ -8,74 +8,13 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>waitMe</title>
+<title>Lucene Index</title>
 <link type="text/css" rel="stylesheet"
 	href="https://fonts.googleapis.com/css?family=Roboto:400,500">
 <link type="text/css" rel="stylesheet"
 	href="${pageContext.servletContext.contextPath}/resources/css/waitMe.css">
 
-<style>
-/* btn */
-.btn {
-	display: inline-block;
-	cursor: pointer;
-	background: #fff;
-	border: 1px solid #bbb;
-	height: 34px;
-	padding: 6px 12px;
-	font-size: 14px;
-	line-height: 18px
-}
-
-.btn.btn-default {
-	
-}
-
-.btn.btn-default:hover {
-	background: #eee;
-	border-color: #bbb
-}
-
-.btn.btn-default:focus {
-	background: #ddd;
-	border-color: #bbb
-}
-
-.btn.btn-primary {
-	background-color: #007ec4;
-	border-color: #005A8C;
-	color: #fff
-}
-
-.btn.btn-primary:hover {
-	background-color: #158CCF;
-	border-color: #005A8C
-}
-
-.btn.btn-primary:focus {
-	background-color: #005A8C;
-	border-color: #005A8C
-}
-
-.btn.btn-default[disabled] {
-	background: #fafafa !important;
-	border-color: #ccc !important;
-	color: #aaa
-}
-
-.btn.btn-primary[disabled] {
-	background: #3F9DD0 !important;
-	border-color: #537FA9 !important;
-	color: #ACD3E8;
-	box-shadow: none !important
-}
-
-.btn.btn-left {
-	float: left;
-	margin: 0 5px 0 0 !important
-}
-</style>
-
+<h1>Index Management</h1>
 </head>
 <body>
 
