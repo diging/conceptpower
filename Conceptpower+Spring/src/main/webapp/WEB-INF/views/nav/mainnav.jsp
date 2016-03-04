@@ -12,68 +12,78 @@
 
 	<li class="dropdown"><a class="dropdown-toggle" href="#"
 		data-toggle="dropdown">Concept List<strong class="caret"></strong></a>
-		<div class="dropdown-menu"
-			style="padding: 15px; width: 220px; margin-left: -120px">
-			<div style="margin: 10px;">
-				<a href="${pageContext.servletContext.contextPath}/auth/conceptlist">Concept
-					List</a>
-			</div>
+
+		<ul class="dropdown-menu"
+			style="padding: 15px; width: 300px; margin-left: -120px">
+
+
+			<li><a
+				href="${pageContext.servletContext.contextPath}/auth/conceptlist"><i class="fa fa-list"> Show Concept
+					Lists</i></a></li>
+			<li><a
+				href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptlist"><i class="fa fa-plus-circle"> Add
+					New Concept List</i></a></li>
+			<li><a
+				href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept"> <i class="fa fa-plus-circle"> Add
+					New Concept</i></a></li>
+			<li><a
+				href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper"><i class="fa fa-plus-circle"> Add
+					New Wordnet Concept Wrapper</i></a></li>
+		</ul></li>
 
 
 
 
-			<div style="margin: 10px;">
-				<a
-					href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptlist">Add
-					New Concept List</a>
-			</div>
-			<div style="margin: 10px;">
-				<a
-					href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept">Add
-					New Concept</a>
-			</div>
-			<div style="margin: 10px;">
-				<a
-					href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper">Add
-					New Wordnet Concept Wrapper</a>
-			</div>
-
-		</div></li>
 
 
 
 	<li class="dropdown"><a class="dropdown-toggle" href="#"
 		data-toggle="dropdown">Concept Types<strong class="caret"></strong></a>
-		<div class="dropdown-menu"
+
+		<ul class="dropdown-menu"
 			style="padding: 15px; width: 220px; margin-left: -120px">
-			<div style="margin: 10px;">
-				<a href="${pageContext.servletContext.contextPath}/auth/concepttype">Concept
-					Types</a>
-			</div>
-			<div style="margin: 10px;">
-				<a
-					href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype">Add
-					New Type</a>
-			</div>
-		</div></li>
+
+
+			<li><a
+				href="${pageContext.servletContext.contextPath}/auth/concepttype"><i class="fa fa-tags"> Concept
+					Types</i></a></li>
+			<li><a
+				href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype"><i class="fa fa-plus-circle"> Add
+					New Type</i></a></li>
+		</ul></li>
 
 
 
 	<sec:authorize access="hasRole('ROLE_CP_ADMIN')">
+
 		<li class="dropdown"><a class="dropdown-toggle" href="#"
 			data-toggle="dropdown">Users<strong class="caret"></strong></a>
-			<div class="dropdown-menu"
+
+			<ul class="dropdown-menu"
 				style="padding: 15px; width: 220px; margin-left: -120px">
-				<div style="margin: 10px;">
-					<a href="${pageContext.servletContext.contextPath}/auth/user/list">Manage
-						Users</a>
-				</div>
-				<div style="margin: 10px;">
-					<a href="">Add New User</a>
-				</div>
-			</div></li>
->>>>>>> refs/heads/story/new-layout
+
+
+				<li><a
+					href="${pageContext.servletContext.contextPath}/auth/user/list"><i class="fa fa-users"> Manage
+						Users</i></a></li>
+				<li><a
+					href="${pageContext.servletContext.contextPath}/auth/user/add"><i class="fa fa-plus-circle"> Add
+						New User</i></a></li>
+			</ul></li>
+
+
 	</sec:authorize>
+
+
+	<sec:authorize access="hasRole('ROLE_CP_ADMIN')">
+		<li ${currentPage == "luceneIndex" ? "class=\"selected\"" : ""}><a
+			href="${pageContext.servletContext.contextPath}/auth/luceneIndex">
+				Index</a></li>
+	</sec:authorize>
+
+
+
+
 	<li ${currentPage == "logout" ? "class=\"active\"" : ""}><a
 		href="<c:url value="/j_spring_security_logout" />"><i
 			class="fa fa-sign-out"></i> Logout</a></li>

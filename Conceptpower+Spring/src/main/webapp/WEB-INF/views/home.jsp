@@ -141,14 +141,6 @@
 	action="${pageContext.servletContext.contextPath}/home/conceptsearch"
 	method='get' commandName='conceptSearchBean'>
 	<form:errors path="luceneError"></form:errors>
-	<table>
-		<tr>
-			<td>Word:</td>
-			<td><form:input path="word" placeholder="enter a word" /></td>
-			<td><form:errors path="word" class="ui-state-error-text"></form:errors></td>
-		</tr>
-		<tr id="searchEnginePOS">
-			<td>POS:</td>
 	<div class="row">
 		<div class="col-sm-6">
 			<form:input path="word" placeholder="Enter search term"

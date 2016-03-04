@@ -39,6 +39,9 @@
 <body>
 <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	  <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script src="${pageContext.servletContext.contextPath}/resources/assets/js/headroom.min.js"></script>
 	<script src="${pageContext.servletContext.contextPath}/resources/assets/js/jQuery.headroom.min.js"></script>
@@ -72,8 +75,14 @@
 	<!-- container -->
 	<div class="container main">
 		<ol class="breadcrumb">
+			<tiles:importAttribute />
 			<li><a href="${pageContext.servletContext.contextPath}">Home</a></li>
-			<li class="active"><tiles:insertAttribute name="pageName" /></li>
+			<c:if test="${not empty prevURL}">
+				<li><a
+					href="${pageContext.servletContext.contextPath}/${prevURL}"><tiles:insertAttribute
+							name="prevPage" /></a></li>
+			</c:if>
+			<li class="active"><tiles:insertAttribute name="currentPage" /></li>
 		</ol>
 		<sec:authorize access="isAuthenticated()">
 			<p class="alignright">

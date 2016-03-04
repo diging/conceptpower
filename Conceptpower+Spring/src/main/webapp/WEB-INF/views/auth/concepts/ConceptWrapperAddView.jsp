@@ -6,17 +6,17 @@
 <%@ page session="false"%>
 
 <script type="text/javascript">
-$(function() {
-	$("#synonymModal").dialog({
-		autoOpen : false
+	$(function() {
+		$("#synonymModal").dialog({
+			autoOpen : false
+		});
+		$("#addsynonym").click(function() {
+			var addedSynonymsTable = $('#addedSynonyms');
+			$('#synonymstable').dataTable().fnClearTable();
+			$("#synonymModal").dialog('open');
+			$("#synonymsDialogTable").show();
+		});
 	});
-	$("#addsynonym").click(function() {
-		var addedSynonymsTable = $('#addedSynonyms');
-		$('#synonymstable').dataTable().fnClearTable();
-		$("#synonymModal").dialog('open');
-		$("#synonymsDialogTable").show();
-	});
-});
 	$(document)
 			.ready(
 					function() {
@@ -74,16 +74,16 @@ $(function() {
 										'#conceptSearch tbody tr',
 										"click",
 										function() {
-
+											console.log("Inside t body");
 											var aData = oTable.fnGetData(this); // get datarow
 											if (null != aData) // null if we clicked on title row
 											{
-												var word = aData[1];
-												var conceptID = aData[2];
-												var wordnetID = aData[3];
-												var description = aData[6];
+												var word = aData[0];
+												var conceptID = aData[1];
+												var wordnetID = aData[2];
+												var description = aData[5];
 												if (conceptID === wordnetID) {
-
+													console.log(conceptID);
 													var wrapperids = '';
 													if (!$(this).hasClass(
 															'row_selected')) {
@@ -147,6 +147,66 @@ $(function() {
 											}
 
 										});
+
+						$('#detailsModal')
+								.on(
+										'show.bs.modal',
+										function(event) {
+											console.log("Inside details Modal");
+											var button = $(event.relatedTarget) // Button that triggered the modal
+											var conceptid = button
+													.data('conceptid') // Extract info from data-* attributes
+											// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+											// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+											$
+													.ajax({
+														type : "GET",
+														url : "${pageContext.servletContext.contextPath}/conceptDetail",
+														data : {
+															conceptid : conceptid
+														},
+														success : function(
+																details) {
+															$("#conceptTerm")
+																	.text(
+																			details.name);
+															$("#detailsid")
+																	.text(
+																			details.id);
+															$("#detailsuri")
+																	.text(
+																			details.uri);
+															$(
+																	"#detailswordnetid")
+																	.text(
+																			details.wordnetId);
+															$("#detailspos")
+																	.text(
+																			details.pos);
+															$(
+																	"#detailsconceptlist")
+																	.text(
+																			details.conceptlist);
+															$("#detailstypeid")
+																	.text(
+																			details.type);
+															$("#detailsequalto")
+																	.text(
+																			details.equalto);
+															$(
+																	"#detailssimilarto")
+																	.text(
+																			details.similarto);
+															$("#detailscreator")
+																	.text(
+																			details.creator);
+														}
+													});
+											var modal = $(this)
+											/*modal.find('.modal-title').text('New message to ' + recipient)
+											modal.find('.modal-body input').val(recipient)*/
+										});
+
 					});
 
 	$(document).ready(definedatatable);
@@ -233,7 +293,7 @@ $(function() {
 			new_row.cells[3].hidden = true;
 
 			x.appendChild(new_row);
-			
+
 			addedsynonym += ','
 			addedsynonym += id;
 			$('#addedSynonnym').val(addedsynonym);
@@ -278,34 +338,6 @@ $(function() {
 		$("#synonymsids").val(synonyms);
 		$('#addedSynonnym').val(synonyms);
 	};
-
-	function detailsView(concept) {
-		var conceptid = concept.id;
-		$.ajax({
-			type : "GET",
-			url : "${pageContext.servletContext.contextPath}/conceptDetail",
-			data : {
-				conceptid : conceptid
-			},
-			success : function(details) {
-				$("#detailsid").text(details.id);
-				$("#detailsuri").text(details.uri);
-				$("#detailswordnetid").text(details.wordnetid);
-				$("#detailspos").text(details.pos);
-				$("#detailsconceptlist").text(details.conceptlist);
-				$("#detailstypeid").text(details.type);
-				$("#detailsequalto").text(details.equalto);
-				$("#detailssimilarto").text(details.similarto);
-				$("#detailscreator").text(details.creator);
-
-				$("#detailsdiv").dialog({
-					title : details.name,
-					width : 'auto'
-				});
-				$("#detailstable").show();
-			}
-		});
-	}
 </script>
 
 
@@ -356,11 +388,10 @@ $(function() {
 	<p></p>
 
 	<c:if test="${not empty result}">
-		<table cellpadding="0" cellspacing="0" class="table table-striped table-bordered"
-			id="conceptSearch">
+		<table cellpadding="0" cellspacing="0"
+			class="table table-striped table-bordered" id="conceptSearch">
 			<thead>
 				<tr>
-					<th></th>
 					<th>Term</th>
 					<th>ID</th>
 					<th>Wordnet ID</th>
@@ -374,18 +405,20 @@ $(function() {
 			<tbody>
 				<c:forEach var="concept" items="${result}">
 					<tr title="${concept.uri}">
-						<td align="justify"><font size="2"><a
-								onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
-						<td align="justify"><font size="2"><c:out
-									value="${concept.entry.word}"></c:out></font></td>
+						<td align="justify">
+						<font size="2"> <a
+								id="${concept.entry.id}" data-toggle="modal"
+								data-target="#detailsModal" data-conceptid="${concept.entry.id}"><c:out
+										value="${concept.entry.word}"></c:out></a></font>
+						</td>
 						<td align="justify"><c:out value="${concept.entry.id}"></c:out></td>
 						<td align="justify"><c:out value="${concept.entry.wordnetId}"></c:out></td>
 						<td align="justify"><font size="2"><c:out
 									value="${concept.entry.pos}"></c:out></font></td>
 						<td align="justify"><font size="2"><c:out
 									value="${concept.entry.conceptList}"></c:out></font></td>
-						<td align="justify"><font size="2"><c:out
-									value="${concept.description}"></c:out></font></td>
+						<td align="justify"><font size="2">
+								${concept.description}</font></td>
 						<td align="justify"><font size="2"><c:out
 									value="${concept.type.typeName}"></c:out></font></td>
 						<td align="justify"><font size="2"><c:forEach
@@ -425,8 +458,9 @@ $(function() {
 		<tr>
 			<td>Synonyms</td>
 			<td><div id="addedSynonyms"></div></td>
-			<td><input type="button" name="synonym" id="addsynonym" data-toggle="modal" data-target="#synonymModal"
-				value="Add Synonym" class="button"></td>
+			<td><input type="button" name="synonym" id="addsynonym"
+				data-toggle="modal" data-target="#synonymModal" value="Add Synonym"
+				class="button"></td>
 		</tr>
 		<tr>
 			<td>Concept Type</td>
@@ -460,8 +494,8 @@ $(function() {
 
 <form>
 
-<!-- Modal -->
-<div class="modal fade" role="dialog" id="synonymModal">
+	<!-- Modal -->
+	<div class="modal fade" role="dialog" id="synonymModal">
 
 
 		<div class="modal-dialog" tabindex="-1" role="dialog"
@@ -502,53 +536,65 @@ $(function() {
 				</div>
 			</div>
 		</div>
-</div>
-</form>
-<form>
-
-	<div id="detailsdiv" style="max-width: 600px; max-height: 500px;"  class="pageCenter">
-		<table id="detailstable" class="table table-striped table-bordered" hidden="true">
-			<tr>
-				<td>Id:</td>
-				<td id="detailsid"></td>
-			</tr>
-			<tr>
-				<td>URI:</td>
-				<td id="detailsuri"></td>
-			</tr>
-			<tr>
-				<td>Wordnet Id:</td>
-				<td id="detailswordnetid"></td>
-			</tr>
-			<tr>
-				<td>POS:</td>
-				<td id="detailspos"></td>
-			</tr>
-			<tr>
-				<td>Concept List:</td>
-				<td id="detailsconceptlist"></td>
-			</tr>
-			<tr>
-				<td>Type:</td>
-				<td id="detailstypeid"></td>
-			</tr>
-			<tr>
-				<td>Equal to:</td>
-				<td id="detailsequalto"></td>
-			</tr>
-			<tr>
-				<td>Similar to:</td>
-				<td id="detailssimilarto"></td>
-			</tr>
-			<tr>
-				<td>Creator:</td>
-				<td id="detailscreator"></td>
-			</tr>
-		</table>
 	</div>
-
 </form>
 
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog"
+	aria-labelledby="mySmallModalLabel">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					Concept Details: <i id="conceptTerm"></i>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row row-odd">
+					<div class="col-sm-3">Id:</div>
+					<div id="detailsid" class="col-sm-9"></div>
+					</tr>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">URI:</div>
+					<div id="detailsuri" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Wordnet Id:</div>
+					<div id="detailswordnetid" class="col-sm-9"></div>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">POS:</div>
+					<div id="detailspos" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Concept List:</div>
+					<div id="detailsconceptlist" class="col-sm-9"></div>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">Type:</div>
+					<div id="detailstypeid" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Equal to:</div>
+					<div id="detailsequalto" class="col-sm-9"></div>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">Similar to:</div>
+					<div id="detailssimilarto" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Creator:</div>
+					<div id="detailscreator" class="col-sm-9"></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
 
 
 

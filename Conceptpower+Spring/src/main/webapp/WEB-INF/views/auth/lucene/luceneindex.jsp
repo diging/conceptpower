@@ -17,7 +17,7 @@
 <h1>Index Management</h1>
 </head>
 <body>
-
+	<br/><br/>
 	<div id="page">
 		<div id="page_content">
 			<div class="containerBlock">
@@ -41,7 +41,7 @@
 					<br />
 					<br />
 					<br />
-					<table style="vertical-align: top" border="1" width="350">
+					<table style="vertical-align: top" border="1" width="400">
 						<tr>
 							<th align="center">Total Indexed Concepts</th>
 							<th align="center">Last run</th>

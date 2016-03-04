@@ -7,180 +7,14 @@
 <%@ page import="edu.asu.conceptpower.servlet.core.ConceptEntry"%>
 
 <script>
-    $(function() {
-        $("#addsynonym").click(function() {
-            $("#dialog").dialog({
-                width : 'auto'
-            });
-            $("#synonymsDialogTable").show();
-            $('#synonymstable').dataTable().fnClearTable();
-        });
-    });
-    $(document).ready(definedatatable);
-    $(document).ready(definedatatableForSynonymAdd);
-    function definedatatable() {
-    	$('#synonymstable').dataTable(
-				{
-					"bJQueryUI" : true,
-					"sPaginationType" : "full_numbers",
-					"bAutoWidth" : false,
-					"bStateSave" : true,
-					"aoColumns" : [ {
-						"sTitle" : "Term",
-						"mDataProp" : "word",
-					}, {
-						"sTitle" : "POS",
-						"mDataProp" : "pos",
-					}, {
-						"sTitle" : "Description",
-						"mDataProp" : "description",
-					}, {
-						"sTitle" : "Add",
-						"mDataProp" : "id"
-					} ],
-                    "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
-						var description = aData.description;
-						description = description != null ? description
-								.replace(/"/g, '&quot;') : "";
-						$('td:eq(3)', nRow).html(
-								'<a onclick="synonymAdd(\'' + aData.id
-										+ '\',\'' + aData.word + '\',\''
-										+ description + '\')">Add</a>');
-						return nRow;
-					}
-                });
-    };
-    $(function() {
-        $("#synonymsearch")
-                .click(
-                        function() {
-                            $("#synonymViewDiv").show();
-                            $('#synonymstable').dataTable().fnClearTable();
-                            $("#synonymstable").show();
-                            var addedsynonym = $('#synonymsids').val();
-                            var synonymname = $("#synonymname").val();
-                            $
-                                    .ajax({
-                                        type : "GET",
-                                        url : "${pageContext.servletContext.contextPath}/conceptAddSynonymView",
-                                        data : {
-                                            synonymname : synonymname,
-                                            addedsynonym : addedsynonym
-                                        },
-                                        success : function(response) {
-                                        	
-											var data = jQuery
-													.parseJSON(response);
-											$('#synonymstable').dataTable()
-													.fnClearTable();
-											$('#synonymstable').dataTable()
-													.fnAddData(data);
-										}
-									});
-						});
+
+	$(function() {
+		$("#synonymModal").dialog({
+			autoOpen : false
+		});
 	});
-	var synonymAdd = function(idValue, wrd, desc) {
-		$("#dialog").dialog("close");
-		$("#synonymsDialogTable").hide();
-		var eachSynonym = {
-			Id : idValue,
-			Description : desc,
-			Word : wrd
-		};
-		//Adding synonymId to the existing list
-		var list = document.getElementById("synonymsids").value;
-
-		list += eachSynonym.Id + ',';
-		$("#synonymsids").val(list);
-		$('#addedSynonymsTable').dataTable().fnAddData(eachSynonym);
-	}
-
-	function definedatatableForSynonymAdd() {
-		$('#addedSynonymsTable').dataTable(
-				{
-					"bJQueryUI" : true,
-					"bAutoWidth" : false,
-					"bStateSave" : true,
-					"aoColumns" : [ {
-						"sTitle" : "Remove",
-						"mDataProp" : "Id"
-					}, {
-						"sTitle" : "Word",
-						"mDataProp" : "Word",
-					}, {
-						"sTitle" : "Description",
-						"mDataProp" : "Description",
-					} ],
-					"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
-						$('td:eq(0)', nRow).html(
-								'<a onclick="synonymTemporaryRemove(\''
-										+ aData.Id + '\')">Remove</a>');
-						return nRow;
-					},
-					"fnCreatedRow" : function(nRow, aData, iDataIndex) {
-						$(nRow).attr('id', aData.Id);
-						$(nRow).attr('class', '');
-					}
-				});
-	};
-
-	$(document)
-			.ready(
-					function() {
-						$('#synonyms').dataTable({
-							"bJQueryUI" : true,
-							"sPaginationType" : "full_numbers",
-							"bAutoWidth" : false
-						});
-						var conceptid = $('#conceptid').val();
-						$("#addedSynonyms").show();
-						$("#addedSynonymsTable").show();
-						$
-								.ajax({
-									type : "GET",
-									url : "${pageContext.servletContext.contextPath}/getConceptEditSynonyms",
-									data : {
-										conceptid : conceptid
-									},
-									success : function(response) {
-										var border = response.length > 0 ? 1
-												: 0;
-										var synonym = JSON.parse(response);
-										var total = synonym.Total;
-										// var arr = new Array();
-										for (var i = 0; i < total; i++) {
-
-											$('#addedSynonymsTable')
-													.dataTable()
-													.fnAddData(
-															synonym.synonyms[i]);
-										}
-									}
-								});
-					});
-	var synonymTemporaryRemove = function(synonymid) {
-		var count = $('#addedSynonymsTable tr').length;
-		var synonymTable = $("#addedSynonymsTable").dataTable();
-		var tableRow = $('#' + synonymid);
-		synonymTable.fnDeleteRow(synonymTable
-				.fnGetPosition(tableRow.find('td')[0])[0]);
-
-		//Removing synonymId from existing list
-		var list = document.getElementById("synonymsids").value;
-		document.getElementById("synonymsids").value = removeList(list,
-				synonymid, ',');
-	};
-	var removeList = function(list, synonymid, separator) {
-		separator = separator || ",";
-		var values = list.split(separator);
-		for (var i = 0; i < values.length; i++) {
-			if (values[i] == synonymid) {
-				values.splice(i, 1);
-				return values.join(separator);
-			}
-		}
-		return list;
-	};
+	
+	
 </script>
 
 
@@ -204,7 +38,7 @@
 		</tr>
 		<tr>
 			<td>POS</td>
-			<td><form:select path="selectedPosValue">
+			<td><form:select path="selectedPosValue" class="form-control">
 					<form:option value="" />
 					<form:options items="${conceptEditBean.posMap}" />
 				</form:select></td>
@@ -213,7 +47,7 @@
 			<td>Concept List</td>
 			<td><form:select path="conceptListValue"
 					items="${conceptEditBean.conceptList}" itemValue="conceptListName"
-					itemLabel="conceptListName" /></td>
+					itemLabel="conceptListName"  class="form-control"/></td>
 		</tr>
 		<tr>
 		</tr>
@@ -223,25 +57,15 @@
 		</tr>
 		<tr>
 			<td>Synonyms</td>
-			<td>
-				<div id="addedSynonyms" hidden="true">
-					<table border="1" width="400" id="addedSynonymsTable"
-						hidden="true">
-						<tbody>
-						</tbody>
-					</table>
-
-				</div>
-
-			</td>
-			<td><form:hidden path="synonymsids"></form:hidden> <input
-				type="button" name="synonym" id="addsynonym" value="Add Synonym"
+			<td><div id="addedSynonyms"></div></td>
+			<td><input type="button" name="synonym" id="addsynonym"
+				data-toggle="modal" data-target="#synonymModal" value="Add Synonym"
 				class="button"></td>
 		</tr>
 
 		<tr>
 			<td>Concept Type</td>
-			<td><form:select path="selectedTypeId">
+			<td><form:select path="selectedTypeId" class="form-control">
 					<form:option value="" />
 					<form:options items="${conceptEditBean.types}" itemValue="typeId"
 						itemLabel="typeName" />
@@ -291,25 +115,48 @@
 </form:form>
 
 <form>
-	<div id="dialog" title="Search synonym">
+	<div class="modal fade" role="dialog" id="synonymModal">
 
-		<table id="synonymsDialogTable" hidden="true">
-			<tr>
-				<td><input type="text" name="synonymname" id="synonymname"></td>
-				<td><input type="button" name="synsearch" id="synonymsearch"
-					value="Search" class="button"></td>
-			</tr>
-		</table>
 
-		<div id="synonymViewDiv" style="max-width: 1000px; max-height: 500px;"
-			hidden="true">
+		<div class="modal-dialog" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
 
-			<table cellpadding="0" cellspacing="0" class="table table-striped table-bordered"
-				id="synonymstable" hidden="true">
-				<tbody>
-				</tbody>
-			</table>
+			<div class="vertical-alignment-helper">
+				<div class="modal-dialog vertical-align-center">
+					<div class="modal-content">
 
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Search synonym</h4>
+							<table id="synonymsDialogTable" hidden="true">
+								<tr>
+									<td><input type="text" name="synonymname" id="synonymname"></td>
+									<td><input type="hidden" name="addedSynonnym"
+										id="addedSynonnym" /></td>
+									<td><input type="button" name="synsearch"
+										id="synonymsearch" value="Search" class="button"></td>
+								</tr>
+							</table>
+						</div>
+
+
+						<div class="modal-body">
+							<div id="synonymViewDiv"
+								style="max-width: 1000px; max-height: 500px;" hidden="true">
+
+								<table cellpadding="0" cellspacing="0" id="synonymstable"
+									hidden="true" class="table table-striped table-bordered">
+									<tbody>
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
+</div>
+
+
 </form>
