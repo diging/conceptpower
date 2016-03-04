@@ -11,15 +11,27 @@
 		<put-attribute name="sidebar" value="" />
 		<put-attribute name="content" value="" />
 		<put-attribute name="header" value="" />
+		<put-attribute name="pageName" value="" />
 		<put-attribute name="currentPage" value="home" />
+		<put-attribute name="currentURL" value="" />
+	</definition>
+	<definition name="base.definition.nonav" template="/WEB-INF/tiles/skeleton-nonav.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="navigation" value="" />
+		<put-attribute name="content" value="" />
+		<put-attribute name="header" value="" />
+		<put-attribute name="pageName" value="" />
+		<put-attribute name="currentPage" value="home" />
+		<put-attribute name="currentURL" value="" />
 	</definition>
 
 	<!-- welcome etc -->
-	<definition name="welcome" extends="base.definition">
+	<definition name="welcome" extends="base.definition.nonav">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
+		<put-attribute name="pageName" value="Search" />
 		<put-attribute name="currentPage" value="home" />
 	</definition>
 	<definition name="exception" extends="base.definition">
@@ -30,8 +42,8 @@
 		<put-attribute name="title" value="Access Denied" />
 		<put-attribute name="content" value="/WEB-INF/views/forbidden.jsp" />
 	</definition>
-	
-	<!--  reset password  -->
+
+	<!-- reset password -->
 	<definition name="forgot" extends="base.definition">
 		<put-attribute name="title" value="Forgotten Password" />
 		<put-attribute name="content" value="/WEB-INF/views/forgot.jsp" />
@@ -41,37 +53,40 @@
 		<put-attribute name="content" value="/WEB-INF/views/emailSent.jsp" />
 	</definition>
 	<definition name="beginReset" extends="base.definition">
-	    <put-attribute name="title" value="Reset your Password"></put-attribute>
-	    <put-attribute name="content" value="/WEB-INF/views/startReset.jsp" />
+		<put-attribute name="title" value="Reset your Password"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/startReset.jsp" />
 	</definition>
 	<definition name="resetError" extends="base.definition">
-	    <put-attribute name="title" value="Error"></put-attribute>
-	    <put-attribute name="content" value="/WEB-INF/views/resetError.jsp" />
+		<put-attribute name="title" value="Error"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/resetError.jsp" />
 	</definition>
 	<definition name="reset" extends="base.definition">
-	    <put-attribute name="title" value="Enter new password"></put-attribute>
-	    <put-attribute name="content" value="/WEB-INF/views/resetPassword.jsp" />
+		<put-attribute name="title" value="Enter new password"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/resetPassword.jsp" />
 	</definition>
 	<definition name="resetComplete" extends="base.definition">
-	    <put-attribute name="title" value="Reset process complete"></put-attribute>
-	    <put-attribute name="content" value="/WEB-INF/views/resetComplete.jsp" />
+		<put-attribute name="title" value="Reset process complete"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/resetComplete.jsp" />
 	</definition>
 
-	<definition name="conceptsearch" extends="base.definition">
+	<definition name="conceptsearch" extends="base.definition.nonav">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
+		<put-attribute name="pageName" value="Search" />
 		<put-attribute name="currentPage" value="home" />
 	</definition>
 
 	<definition name="/auth/conceptlist/addconcept" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptAddView.jsp" />
-		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="prevURL" value="auth/conceptlist" />
+		<put-attribute name="prevPage" value="ConceptList" />
+		<put-attribute name="currentPage" value="Add Concept" />
 	</definition>
 
 
@@ -81,7 +96,9 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptWrapperAddView.jsp" />
-		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="prevURL" value="auth/conceptlist" />
+		<put-attribute name="prevPage" value="ConceptList" />
+		<put-attribute name="currentPage" value="Add Wordnet Concept" />
 	</definition>
 
 	<definition name="/auth/conceptlist/addconceptlist" extends="base.definition">
@@ -90,7 +107,10 @@
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ListAddView.jsp" />
-		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="prevURL" value="auth/conceptlist" />
+		<put-attribute name="prevPage" value="ConceptList" />
+		<put-attribute name="currentPage" value="Add Concept List" />
+
 	</definition>
 
 	<definition name="/auth/concepttype/addtype" extends="base.definition">
@@ -99,26 +119,30 @@
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/TypeAddView.jsp" />
-		<put-attribute name="currentPage" value="concepttypes" />
+		<put-attribute name="prevURL" value="auth/concepttype" />
+		<put-attribute name="prevPage" value="Concept Type" />
+		<put-attribute name="currentPage" value="Add Concept Types" />
+
+
 	</definition>
 
 
 	<definition name="/auth/concepttype" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptTypesView.jsp" />
-		<put-attribute name="currentPage" value="concepttypes" />
+		<put-attribute name="currentPage" value="Concept Types" />
 	</definition>
 
 	<definition name="/auth/conceptlist" extends="base.definition">
 		<put-attribute name="title" value="Welcome to Conceptpower" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptListsView.jsp" />
-		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="currentPage" value="ConceptList" />
 	</definition>
 
 	<definition name="/auth/conceptlist/concepts" extends="base.definition">
@@ -126,7 +150,7 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptListConceptsView.jsp" />
-		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="currentPage" value="ConceptList" />
 	</definition>
 
 	<definition name="/auth/conceptlist/deleteconcept" extends="base.definition">
@@ -135,6 +159,8 @@
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptDeleteView.jsp" />
 		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="prevURL" value="auth/conceptlist" />
+		<put-attribute name="prevPage" value="ConceptList" />
 	</definition>
 
 
@@ -143,7 +169,9 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptEditView.jsp" />
-		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="currentPage" value="Edit Concept" />
+		<put-attribute name="prevURL" value="auth/conceptlist" />
+		<put-attribute name="prevPage" value="ConceptList" />
 	</definition>
 
 	<definition name="/auth/concepttype/edittype" extends="base.definition">
@@ -151,7 +179,9 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/TypeEditView.jsp" />
-		<put-attribute name="currentPage" value="concepttypes" />
+		<put-attribute name="currentPage" value="Edit Type" />
+		<put-attribute name="prevPage" value="Concept Types" />
+		<put-attribute name="prevURL" value="auth/concepttype" />
 	</definition>
 
 
@@ -160,7 +190,9 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptTypeDeleteView.jsp" />
-		<put-attribute name="currentPage" value="concepttypes" />
+		<put-attribute name="currentPage" value="Delete Type" />
+		<put-attribute name="prevPage" value="Concept Types" />
+		<put-attribute name="prevURL" value="auth/concepttype" />
 	</definition>
 
 
@@ -169,7 +201,9 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ConceptListDeleteView.jsp" />
-		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="prevURL" value="auth/conceptlist" />
+		<put-attribute name="prevPage" value="ConceptList" />
+		<put-attribute name="currentPage" value="Delete Concept List" />
 	</definition>
 
 	<definition name="/auth/conceptlist/editlist" extends="base.definition">
@@ -178,6 +212,9 @@
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/concepts/ListEditView.jsp" />
 		<put-attribute name="currentPage" value="conceptlists" />
+		<put-attribute name="prevURL" value="auth/conceptlist" />
+		<put-attribute name="prevPage" value="ConceptList" />
+		<put-attribute name="currentPage" value="Edit Concept List" />
 	</definition>
 
 	<!-- users management -->
@@ -187,8 +224,8 @@
 		<put-attribute name="header"
 			value="/WEB-INF/views/auth/user/list-header.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/auth/user/list.jsp" />
-		<put-attribute name="currentPage" value="users" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="currentPage" value="Users" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 	</definition>
 	<definition name="auth/user/notfound" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
@@ -202,31 +239,39 @@
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/user/edituser.jsp" />
-		<put-attribute name="currentPage" value="users" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
+		<put-attribute name="currentPage" value="Edit User" />
+		<put-attribute name="prevURL" value="auth/user/list" />
+		<put-attribute name="prevPage" value="Users" />
 	</definition>
 	<definition name="auth/user/deleteuser" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/user/deleteuser.jsp" />
-		<put-attribute name="currentPage" value="users" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="currentPage" value="Delete User" />
+		<put-attribute name="prevURL" value="auth/user/list" />
+		<put-attribute name="prevPage" value="Users" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 	</definition>
 	<definition name="auth/user/editpassword" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content"
 			value="/WEB-INF/views/auth/user/editpassword.jsp" />
-		<put-attribute name="currentPage" value="users" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="currentPage" value="Edit Password" />
+		<put-attribute name="prevURL" value="auth/user/list" />
+		<put-attribute name="prevPage" value="Users" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 	</definition>
 	<definition name="auth/user/add" extends="base.definition">
 		<put-attribute name="title" value="User Management" />
 		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
 		<put-attribute name="content" value="/WEB-INF/views/auth/user/add.jsp" />
-		<put-attribute name="currentPage" value="users" />
-		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+		<put-attribute name="currentPage" value="Add Users" />
+		<put-attribute name="prevURL" value="auth/user/list" />
+		<put-attribute name="prevPage" value="Users" />
+		<!-- <put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" /> -->
 	</definition>
 	
 	<definition name="/auth/luceneIndex" extends="base.definition">

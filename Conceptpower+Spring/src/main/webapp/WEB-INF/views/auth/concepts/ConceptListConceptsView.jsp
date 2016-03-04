@@ -19,9 +19,12 @@
 				}
 			} ],
 		});
-	});
-	function detailsView(concept) {
-		var conceptid = concept.id;
+	
+	
+	$('#detailsdiv').on('show.bs.modal', function(event) {
+		var button = $(event.relatedTarget) // Button that triggered the modal
+		var conceptid = button
+				.data('conceptid') // Extract info from data-* attributes
 		$.ajax({
 			type : "GET",
 			url : "${pageContext.servletContext.contextPath}/conceptDetail",
@@ -38,14 +41,13 @@
 				$("#detailsequalto").text(details.equalto);
 				$("#detailssimilarto").text(details.similarto);
 				$("#detailscreator").text(details.creator);
-				$("#detailsdiv").dialog({
-					title : details.name,
-					width : 'auto'
-				});
-				$("#detailstable").show();
 			}
 		});
-	}
+			var modal = $(this)
+		
+	});
+	
+	});
 </script>
 
 <h1>Concept list</h1>
@@ -56,11 +58,10 @@
 
 <h2>Concepts</h2>
 <c:if test="${not empty result}">
-	<table cellpadding="0" cellspacing="0" class="display dataTable"
-		id="conceptList">
+	<table cellpadding="0" cellspacing="0"
+		class="table-striped table-bordered" id="conceptList">
 		<thead>
 			<tr>
-				<th></th>
 				<th></th>
 				<th></th>
 				<th>Term</th>
@@ -77,20 +78,17 @@
 		<tbody>
 			<c:forEach var="concept" items="${result}">
 				<tr class="gradeX">
-					<td align="justify"><font size="2"><a
-							onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
 					<td align="justify" width="20"><a
-						href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcept/${concept.entry.id}"><input
-							type="image"
-							src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a>
-					</td>
-					<td align="justify"  width="20"><a
-						href="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/${concept.entry.id}"><input
-							type="image"
-							src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
-					</td>
-					<td align="justify"><font size="2"><c:out
-								value="${concept.entry.word}"></c:out></font></td>
+						href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcept/${concept.entry.id}"><i
+							class="fa fa-trash-o"></i> </a></td>
+					<td align="justify" width="20"><a
+						href="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/${concept.entry.id}"><i
+							class="fa fa-pencil-square-o"></i></a></td>
+					<td align="justify"><font size="2"> <a
+							id="${concept.entry.id}" data-toggle="modal"
+							data-target="#detailsdiv" data-conceptid="${concept.entry.id}"><c:out
+									value="${concept.entry.word}"></c:out></a>
+					</font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.entry.id}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
@@ -113,47 +111,62 @@
 			</c:forEach>
 		</tbody>
 	</table>
-
 </c:if>
 
 
-<div id="detailsdiv" style="max-width: 600px; max-height: 500px;"  class="pageCenter">
-	<table id="detailstable" class="greyContent" hidden="true">
-		<tr>
-			<td>Id:</td>
-			<td id="detailsid"></td>
-		</tr>
-		<tr>
-			<td>URI:</td>
-			<td id="detailsuri"></td>
-		</tr>
-		<tr>
-			<td>Wordnet Id:</td>
-			<td id="detailswordnetid"></td>
-		</tr>
-		<tr>
-			<td>POS:</td>
-			<td id="detailspos"></td>
-		</tr>
-		<tr>
-			<td>Concept List:</td>
-			<td id="detailsconceptlist"></td>
-		</tr>
-		<tr>
-			<td>Type:</td>
-			<td id="detailstypeid"></td>
-		</tr>
-		<tr>
-			<td>Equal to:</td>
-			<td id="detailsequalto"></td>
-		</tr>
-		<tr>
-			<td>Similar to:</td>
-			<td id="detailssimilarto"></td>
-		</tr>
-		<tr>
-			<td>Creator:</td>
-			<td id="detailscreator"></td>
-		</tr>
-	</table>
+<div class="modal fade" id="detailsdiv" tabindex="-1" role="dialog"
+	aria-labelledby="mySmallModalLabel">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					Concept Details: <i id="conceptTerm"></i>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row row-odd">
+					<div class="col-sm-3">Id:</div>
+					<div id="detailsid" class="col-sm-9"></div>
+					</tr>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">URI:</div>
+					<div id="detailsuri" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Wordnet Id:</div>
+					<div id="detailswordnetid" class="col-sm-9"></div>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">POS:</div>
+					<div id="detailspos" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Concept List:</div>
+					<div id="detailsconceptlist" class="col-sm-9"></div>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">Type:</div>
+					<div id="detailstypeid" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Equal to:</div>
+					<div id="detailsequalto" class="col-sm-9"></div>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">Similar to:</div>
+					<div id="detailssimilarto" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Creator:</div>
+					<div id="detailscreator" class="col-sm-9"></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
 </div>

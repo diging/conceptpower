@@ -13,7 +13,7 @@
 <h2>${typeName}</h2>
 <p>${description}</p>
 
-<table class="greyContent">
+<table class="table table-striped table-bordered">
 	<tr>
 		<td>Type Name:</td>
 		<td>${typeName}</td>

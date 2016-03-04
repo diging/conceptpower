@@ -304,7 +304,7 @@
 		<div id="synonymViewDiv" style="max-width: 1000px; max-height: 500px;"
 			hidden="true">
 
-			<table cellpadding="0" cellspacing="0" class="display dataTable"
+			<table cellpadding="0" cellspacing="0" class="table table-striped table-bordered"
 				id="synonymstable" hidden="true">
 				<tbody>
 				</tbody>

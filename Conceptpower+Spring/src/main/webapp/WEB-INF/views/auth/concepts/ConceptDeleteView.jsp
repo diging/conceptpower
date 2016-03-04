@@ -13,7 +13,7 @@
 <p>${description}</p>
 <br />
 <br />
-<table class="greyContent">
+<table  class="table table-striped table-bordered">
 	<tr>
 		<td>Id:</td>
 		<td>${conceptId}</td>

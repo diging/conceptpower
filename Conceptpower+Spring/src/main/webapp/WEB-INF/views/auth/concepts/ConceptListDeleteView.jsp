@@ -10,7 +10,7 @@
 
 <font color="red">${luceneError}</font>
 
-<table class="greyContent">
+<table class="table table-striped table-bordered">
 	<tr>
 		<td>List Name:</td>
 		<td>${listName}</td>
