@@ -29,7 +29,7 @@
 			<td></td>
 			<td>
 				<p>
-					<input name="submit" type="submit" value="Login" class="button" />
+					<input name="submit" type="submit" value="Login" class="btn btn-primary" />
 				</p>
 			</td>
 		</tr>

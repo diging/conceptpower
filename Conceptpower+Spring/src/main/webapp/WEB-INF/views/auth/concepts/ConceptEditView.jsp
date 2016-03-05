@@ -4,16 +4,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
-<%@ page import="edu.asu.conceptpower.core.ConceptEntry"%>
+<%@ page import="edu.asu.conceptpower.servlet.core.ConceptEntry"%>
 
 <script>
+$(function() {
+	$("#synonymModal").dialog({
+		autoOpen : false
+	});
+});
+
     $(function() {
         $("#addsynonym").click(function() {
-            $("#dialog").dialog({
-                width : 'auto'
-            });
-            $("#synonymsDialogTable").show();
-            $('#synonymstable').dataTable().fnClearTable();
+        	var addedSynonymsTable = $('#addedSynonyms');
+        	console.log(addedSynonymsTable);
+			$('#synonymstable').dataTable().fnClearTable();
+			$("#synonymModal").dialog('open');
+			$("#synonymsDialogTable").show();
         });
     });
     $(document).ready(definedatatable);
@@ -80,7 +86,8 @@
 						});
 	});
 	var synonymAdd = function(idValue, wrd, desc) {
-		$("#dialog").dialog("close");
+		$("#synonymModal").dialog("close");
+		$('#synonymModal').modal('toggle');
 		$("#synonymsDialogTable").hide();
 		var eachSynonym = {
 			Id : idValue,
@@ -89,12 +96,12 @@
 		};
 		//Adding synonymId to the existing list
 		var list = document.getElementById("synonymsids").value;
-
 		list += eachSynonym.Id + ',';
 		$("#synonymsids").val(list);
+		$("#addedSynonyms").show();
+		$("#addedSynonymsTable").show();
 		$('#addedSynonymsTable').dataTable().fnAddData(eachSynonym);
 	}
-
 	function definedatatableForSynonymAdd() {
 		$('#addedSynonymsTable').dataTable(
 				{
@@ -123,7 +130,6 @@
 					}
 				});
 	};
-
 	$(document)
 			.ready(
 					function() {
@@ -133,8 +139,7 @@
 							"bAutoWidth" : false
 						});
 						var conceptid = $('#conceptid').val();
-						$("#addedSynonyms").show();
-						$("#addedSynonymsTable").show();
+						
 						$
 								.ajax({
 									type : "GET",
@@ -149,11 +154,16 @@
 										var total = synonym.Total;
 										// var arr = new Array();
 										for (var i = 0; i < total; i++) {
-
 											$('#addedSynonymsTable')
 													.dataTable()
 													.fnAddData(
 															synonym.synonyms[i]);
+										}
+										console.log("Total");
+										console.log(total);
+										if(total > 0 ){
+											$("#addedSynonyms").show();
+											$("#addedSynonymsTable").show();
 										}
 									}
 								});
@@ -164,7 +174,6 @@
 		var tableRow = $('#' + synonymid);
 		synonymTable.fnDeleteRow(synonymTable
 				.fnGetPosition(tableRow.find('td')[0])[0]);
-
 		//Removing synonymId from existing list
 		var list = document.getElementById("synonymsids").value;
 		document.getElementById("synonymsids").value = removeList(list,
@@ -195,21 +204,21 @@
 	<br />
 	<br />
 	<table>
-	
+
 		<tr>
 			<td>Concept</td>
-			<td><form:input path="word" /></td>
+			<td><form:input path="word" class="form-control"/></td>
 		</tr>
 		<tr>
 			<td>POS</td>
-			<td><form:select path="selectedPosValue">
+			<td><form:select path="selectedPosValue" class="form-control">
 					<form:option value="" />
 					<form:options items="${conceptEditBean.posMap}" />
 				</form:select></td>
 		</tr>
 		<tr>
 			<td>Concept List</td>
-			<td><form:select path="conceptListValue"
+			<td><form:select path="conceptListValue" class="form-control"
 					items="${conceptEditBean.conceptList}" itemValue="conceptListName"
 					itemLabel="conceptListName" /></td>
 		</tr>
@@ -217,14 +226,13 @@
 		</tr>
 		<tr>
 			<td>Description</td>
-			<td><form:textarea path="description" rows="7" cols="50" /></td>
+			<td><form:textarea path="description" rows="7" cols="50" class="form-control"/></td>
 		</tr>
 		<tr>
 			<td>Synonyms</td>
 			<td>
 				<div id="addedSynonyms" hidden="true">
-					<table border="1" width="400" id="addedSynonymsTable"
-						hidden="true">
+					<table border="1" width="400" id="addedSynonymsTable" hidden="true" class="table table-striped table-bordered">
 						<tbody>
 						</tbody>
 					</table>
@@ -233,13 +241,13 @@
 
 			</td>
 			<td><form:hidden path="synonymsids"></form:hidden> <input
-				type="button" name="synonym" id="addsynonym" value="Add Synonym"
-				class="button"></td>
+				type="button" name="synonym" id="addsynonym" data-toggle="modal"
+				data-target="#synonymModal" value="Add Synonym" class="button"></td>
 		</tr>
 
 		<tr>
 			<td>Concept Type</td>
-			<td><form:select path="selectedTypeId">
+			<td><form:select path="selectedTypeId" class="form-control">
 					<form:option value="" />
 					<form:options items="${conceptEditBean.types}" itemValue="typeId"
 						itemLabel="typeName" />
@@ -252,10 +260,10 @@
 
 		<tr>
 			<td>Similar</td>
-			<td><form:input path="similar" /></td>
+			<td><form:input  path="similar" class="form-control"/></td>
 		</tr>
 		<tr>
-			<td> <form:hidden path="conceptEntryList"/></td>
+			<td><form:hidden path="conceptEntryList" /></td>
 		</tr>
 		<tr>
 			<td><input type="text" name="conceptid" id="conceptid"
@@ -268,46 +276,64 @@
 			<td><input type="submit" name="edit" id="edit"
 				value="Store modified concept" class="button"></td>
 
-			<td>
-			
-			<c:if test="${conceptEditBean.fromHomeScreen eq true }">
-			<a
-				href="${pageContext.servletContext.contextPath}/auth/concepts/canceledit?fromHomeScreen=true"><input
-					type="button" name="cancel" value="Cancel!" class="button"></a>
-			</c:if>
-					
-			<c:if test="${conceptEditBean.fromHomeScreen eq false }">
-				<a
-				href="${pageContext.servletContext.contextPath}/auth/concepts/canceledit?fromHomeScreen=false"><input
-					type="button" name="cancel" value="Cancel!" class="button"></a>
-			</c:if>
-			</td>
-		
+			<td><c:if test="${conceptEditBean.fromHomeScreen eq true }">
+					<a
+						href="${pageContext.servletContext.contextPath}/auth/concepts/canceledit?fromHomeScreen=true"><input
+						type="button" name="cancel" value="Cancel!" class="button"></a>
+				</c:if> <c:if test="${conceptEditBean.fromHomeScreen eq false }">
+					<a
+						href="${pageContext.servletContext.contextPath}/auth/concepts/canceledit?fromHomeScreen=false"><input
+						type="button" name="cancel" value="Cancel!" class="button"></a>
+				</c:if></td>
+
 		</tr>
 	</table>
 	<form:hidden path="fromHomeScreen" />
 </form:form>
 
 <form>
-	<div id="dialog" title="Search synonym">
+	<div class="modal fade" role="dialog" id="synonymModal">
 
-		<table id="synonymsDialogTable" hidden="true">
-			<tr>
-				<td><input type="text" name="synonymname" id="synonymname"></td>
-				<td><input type="button" name="synsearch" id="synonymsearch"
-					value="Search" class="button"></td>
-			</tr>
-		</table>
 
-		<div id="synonymViewDiv" style="max-width: 1000px; max-height: 500px;"
-			hidden="true">
+		<div class="modal-dialog" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
 
-			<table cellpadding="0" cellspacing="0" class="display dataTable"
-				id="synonymstable" hidden="true">
-				<tbody>
-				</tbody>
-			</table>
+			<div class="vertical-alignment-helper">
+				<div class="modal-dialog vertical-align-center">
+					<div class="modal-content">
 
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Search synonym</h4>
+							<table id="synonymsDialogTable" hidden="true">
+								<tr>
+									<td><input type="text" name="synonymname" id="synonymname"></td>
+									<td><input type="hidden" name="addedSynonnym"
+										id="addedSynonnym" /></td>
+									<td><input type="button" name="synsearch"
+										id="synonymsearch" value="Search" class="btn btn-primary"></td>
+								</tr>
+							</table>
+						</div>
+
+
+						<div class="modal-body">
+							<div id="synonymViewDiv"
+								style="max-width: 1000px; max-height: 500px;" hidden="true">
+
+								<table cellpadding="0" cellspacing="0" id="synonymstable"
+									hidden="true" class="table table-striped table-bordered">
+									<tbody>
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+
+
 </form>

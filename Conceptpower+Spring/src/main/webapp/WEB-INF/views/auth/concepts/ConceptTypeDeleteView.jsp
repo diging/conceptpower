@@ -6,11 +6,14 @@
 <%@ page session="false"%>
 
 <h1>Delete Type</h1>
+
+<font color="red">${luceneError}</font>
+
 <p>Do you really want to delete the following Type?</p>
 <h2>${typeName}</h2>
 <p>${description}</p>
 
-<table class="greyContent">
+<table class="table table-striped table-bordered">
 	<tr>
 		<td>Type Name:</td>
 		<td>${typeName}</td>
@@ -46,15 +49,15 @@
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/concepttype/deleteconcepttypeconfirm/${typeid}"><input
 					type="button" name="delete" id="delete" value="Yes, delete type"
-					class="button"></a></td>
+					class="btn btn-primary"></a></td>
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/concepttype/canceldelete/"><input
-					type="button" name="cancel" value="No, cancel!" class="button"></a></td>
+					type="button" name="cancel" value="No, cancel!" class="btn btn-primary"></a></td>
 		</c:if>
 		<c:if test="${not enabledelete}">
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/concepttype/canceldelete/"><input
-					type="button" name="cancel" value="Cancel!" class="button"></a></td>
+					type="button" name="cancel" value="Cancel!" class="btn btn-primary"></a></td>
 		</c:if>
 
 	</tr>
