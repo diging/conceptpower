@@ -25,6 +25,12 @@
 </script>
 
 <h1>Concept Lists</h1>
+<br />
+<a
+	href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptlist"><i
+	class="fa fa-plus-circle"> Add New Concept List</i></a>
+<br />
+<br />
 <p>Here you find all stored concept lists.</p>
 
 <c:if test="${not empty result}">

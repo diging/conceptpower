@@ -14,33 +14,34 @@
 	<table>
 		<tr>
 			<td>Type Name</td>
-			<td><form:input path="typeName" /></td>
+			<td><form:input path="typeName" class="form-control" /></td>
 			<td><form:errors path="typeName" class="ui-state-error-text" /></td>
 		</tr>
 
 		<tr>
 			<td>Type Description</td>
-			<td><form:textarea path="typeDescription" rows="7" cols="50" /></td>
+			<td><form:textarea path="typeDescription" rows="7" cols="50"
+					class="form-control" /></td>
 			<td><form:errors path="typeDescription"
 					class="ui-state-error-text" /></td>
 		</tr>
 		<tr>
 			<td>Matches</td>
-			<td><form:input path="matches" /></td>
+			<td><form:input path="matches" class="form-control" /></td>
 			<td><form:errors path="matches" class="ui-state-error-text" /></td>
 		</tr>
 
 		<tr>
 			<td>Super Type</td>
-			<td><form:select path="superType" name="superType" class="form-control">
+			<td><form:select path="superType" name="superType"
+					class="form-control">
 					<form:option value="" label="" />
 					<form:options items="${conceptTypeAddForm.types}" />
 				</form:select></td>
 		</tr>
-
 		<tr>
 			<td colspan="2"><input type="submit" value="Create Type"
-				class="button"></td>
+				class="btn btn-primary"></td>
 		</tr>
 	</table>
 </form:form>

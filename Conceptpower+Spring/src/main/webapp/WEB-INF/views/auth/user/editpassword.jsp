@@ -16,21 +16,21 @@
 		<tr>
 			<td>New password:</td>
 			<td><form:input type="password" name="password" id="password"
-					path="password" /></td>
+					path="password" class="form-control"/></td>
 			<td><form:errors name="password" id="password" path="password" /></td>
 		</tr>
 		<tr>
 			<td>Re-type new password:</td>
 			<td><form:input type="password" name="password" id="repassword"
-					path="retypedPassword" /></td>
+					path="retypedPassword" class="form-control" /></td>
 			<td><form:errors name="retypedPassword" id="retypedPassword" path="retypedPassword" /></td>
 		</tr>
 		<tr>
 			<td><input type="submit" value="Store changes" name="submit"
-				class="button" /></td>
+				class="btn btn-primary" /></td>
 			<td><input type="button" value="Cancel" name="submit"
 				onclick="window.location.replace('${pageContext.servletContext.contextPath}/auth/user/canceledit')"
-				class="button" /></td>
+				class="btn btn-primary" /></td>
 		</tr>
 	</table>
 

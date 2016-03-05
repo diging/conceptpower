@@ -11,27 +11,27 @@
 	action="${pageContext.servletContext.contextPath}/auth/user/confirmdeleteuser/"
 	method='post' id="edituserform">
 
-	<table class="table table-striped table-bordered">
+	<table class="table table-striped table-bordered" width="500">
 		<tr>
-			<td><form:hidden id="name" path="username" />Username :</td>
+			<td width="120"><form:hidden id="name" path="username" />Username:</td>
 			<td>${user.username}</td>
 
 		</tr>
 		<tr>
-			<td><form:hidden id="fullname" path="fullname" />Name</td>
-			<td>:${user.fullname}</td>
+			<td width="120"><form:hidden id="fullname" path="fullname" />Name:</td>
+			<td>${user.fullname}</td>
 		</tr>
 		<tr>
-			<td>Is Administrator:</td>
+			<td width="120">Is Administrator:</td>
 			<td><form:checkbox path="isAdmin" id="isadmin"
 					checked="${user.isAdmin == true ? 'checked' : ''}" disabled="true" />
 				Yes</td>
 		</tr>
 	</table>
 
-	<input type="submit" value="Delete User" name="submit" class="button" />
+	<input type="submit" value="Delete User" name="submit" class="btn btn-primary" />
 	<input type="button" value="Cancel" name="submit"
 		onclick="window.location.replace('${pageContext.servletContext.contextPath}/auth/user/canceldelete')"
-		class="button" />
+		class="btn btn-primary" />
 
 </form:form>

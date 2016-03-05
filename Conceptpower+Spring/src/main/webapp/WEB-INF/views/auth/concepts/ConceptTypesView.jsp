@@ -25,6 +25,13 @@
 
 
 <h1>Types</h1>
+<br />
+<a
+	href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype"><i
+	class="fa fa-plus-circle"> Add New Type</i></a>
+
+<br />
+<br />
 <p>See existing types below.</p>
 
 <c:if test="${not empty result}">

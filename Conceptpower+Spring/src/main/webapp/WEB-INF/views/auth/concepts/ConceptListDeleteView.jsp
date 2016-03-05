@@ -40,15 +40,15 @@
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptlistconfirm/${listName}"><input
 					type="button" name="delete" id="delete" value="Yes, delete list"
-					class="button"></a></td>
+					class="btn btn-primary"></a></td>
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/conceptlist/canceldelete/"><input
-					type="button" name="cancel" value="No, cancel!" class="button"></a></td>
+					type="button" name="cancel" value="No, cancel!" class="btn btn-primary"></a></td>
 		</c:if>
 		<c:if test="${not enabledelete}">
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/conceptlist/canceldelete/"><input
-					type="button" name="cancel" value="Cancel!" class="button"></a></td>
+					type="button" name="cancel" value="Cancel!" class="btn btn-primary"></a></td>
 		</c:if>
 
 	</tr>

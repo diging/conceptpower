@@ -385,7 +385,7 @@
 					<td>Term</td>
 					<td><input type="text" name="serviceterm" id="serviceterm"></td>
 					<td><input type="submit" id="serviceSearch" value="search"
-						class="button" /> <img alt="" id="loadingDiv" width="16px"
+						class="btn btn-primary" /> <img alt="" id="loadingDiv" width="16px"
 						height="16px"
 						src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
 						class="none"></td>
@@ -456,7 +456,7 @@
 						<td><div id="addedSynonyms"></div></td>
 						<td><input type="button" name="synonym" id="addsynonym"
 							data-toggle="modal" data-target="#synonymModal"
-							value="Add Synonym" class="button"></td>
+							value="Add Synonym" class="btn btn-primary"></td>
 					</tr>
 					<tr>
 						<td>Concept Type</td>
@@ -480,7 +480,7 @@
 					</tr>
 					<tr>
 						<td colspan="2"><input type="submit" value="Add Concept"
-							class="button" onclick="showFormProcessing()"
+							class="btn btn-primary" onclick="showFormProcessing()"
 							onsubmit="hideFormProcessing()"></td>
 					</tr>
 				</table>
@@ -512,7 +512,7 @@
 									<td><input type="hidden" name="addedSynonnym"
 										id="addedSynonnym" /></td>
 									<td><input type="button" name="synsearch"
-										id="synonymsearch" value="Search" class="button"></td>
+										id="synonymsearch" value="Search" class="btn btn-primary"></td>
 								</tr>
 							</table>
 						</div>

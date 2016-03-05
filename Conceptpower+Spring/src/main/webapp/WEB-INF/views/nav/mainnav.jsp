@@ -32,11 +32,6 @@
 		</ul></li>
 
 
-
-
-
-
-
 	<li class="dropdown"><a class="dropdown-toggle" href="#"
 		data-toggle="dropdown">Concept Types<strong class="caret"></strong></a>
 

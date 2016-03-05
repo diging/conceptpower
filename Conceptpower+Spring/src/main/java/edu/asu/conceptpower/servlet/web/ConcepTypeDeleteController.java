@@ -51,7 +51,7 @@ public class ConcepTypeDeleteController {
      * @return String value to redirect user to concept type delete page
      */
     @RequestMapping(value = "auth/concepttype/deletetype/{typeid}", method = RequestMethod.GET)
-    public String prepareDeleteType(@PathVariable("typeid") String typeid, ModelMap model, BindingResult result)
+    public String prepareDeleteType(@PathVariable("typeid") String typeid, ModelMap model)
             throws LuceneException {
 
         ConceptType type = typeManager.getType(typeid);

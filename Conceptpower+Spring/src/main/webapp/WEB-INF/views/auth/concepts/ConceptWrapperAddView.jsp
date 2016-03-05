@@ -375,7 +375,7 @@
 			</select></td>
 		</tr>
 	</table>
-	<input type="submit" value="Search" class="button">
+	<input type="submit" value="Search" class="btn btn-primary">
 </form>
 
 <form
@@ -460,7 +460,7 @@
 			<td><div id="addedSynonyms"></div></td>
 			<td><input type="button" name="synonym" id="addsynonym"
 				data-toggle="modal" data-target="#synonymModal" value="Add Synonym"
-				class="button"></td>
+				class="btn btn-primary"></td>
 		</tr>
 		<tr>
 			<td>Concept Type</td>
@@ -489,7 +489,7 @@
 
 	</table>
 	<br /> <input type="submit" disabled="disabled" id="createwrapper"
-		value="Create Wordnet concept wrapper" class="button">
+		value="Create Wordnet concept wrapper" class="btn btn-primary">
 </form>
 
 <form>
@@ -514,7 +514,7 @@
 									<td><input type="hidden" name="addedSynonnym"
 										id="addedSynonnym" /></td>
 									<td><input type="button" name="synsearch"
-										id="synonymsearch" value="Search" class="button"></td>
+										id="synonymsearch" value="Search" class="btn btn-primary"></td>
 								</tr>
 							</table>
 						</div>
