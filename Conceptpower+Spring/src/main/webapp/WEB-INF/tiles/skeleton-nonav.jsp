@@ -49,6 +49,9 @@
 	<script src="${pageContext.servletContext.contextPath}/resources/js/datatable/js/jquery.dataTables.min.js"></script>
 	<script src="${pageContext.servletContext.contextPath}/resources/js/datatable/js/dataTables.bootstrap.min.js"></script>
 	
+	<script src="${pageContext.servletContext.contextPath}/resources/js/moment.js"></script>
+<script src="${pageContext.servletContext.contextPath}/resources/js/moment-timezone-with-data.js"></script>	
+	
 	
 	
 	<tiles:importAttribute name="currentPage" scope="request" />

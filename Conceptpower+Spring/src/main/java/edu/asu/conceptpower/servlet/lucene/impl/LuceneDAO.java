@@ -1,19 +1,18 @@
 package edu.asu.conceptpower.servlet.lucene.impl;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.config.EmbeddedConfiguration;
-import com.db4o.config.TSerializable;
 
+import edu.asu.conceptpower.root.DatabaseManager;
 import edu.asu.conceptpower.servlet.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 
@@ -30,21 +29,21 @@ public class LuceneDAO implements ILuceneDAO {
 
     private String dbPath;
 
+    @Autowired
+    @Qualifier("luceneDatabaseManager")
+    private DatabaseManager luceneDatabase;
+
     @PostConstruct
     public void init() {
-
-        EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-        config.common().objectClass(Timestamp.class).translate(new TSerializable());
-        luceneClient = Db4oEmbedded.openFile(config, getDbPath());
+        this.luceneClient = luceneDatabase.getClient();
     }
 
     /**
      * Stores the number of indexed word count along with the timestamp
      */
-    public void storeValues(long numberOfIndexedWords,String action) {
-        long now = System.currentTimeMillis();
+    public void storeValues(long numberOfIndexedWords, String action) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        IndexingEvent bean = new IndexingEvent(new Date(), numberOfIndexedWords,action,auth.getName());
+        IndexingEvent bean = new IndexingEvent(new Date(), numberOfIndexedWords, action, auth.getName());
         luceneClient.store(bean);
         luceneClient.commit();
     }

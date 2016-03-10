@@ -15,6 +15,21 @@
 	href="${pageContext.servletContext.contextPath}/resources/css/waitMe.css">
 
 <h1>Index Management</h1>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		var lastRun = $('#lastRun').val();
+		console.log(lastRun);
+		console.log(lastRun.toLocaleString());
+		var d = new Date(lastRun);
+		setRowPrice('luceneTable', 1, 1, d)
+
+	});
+	function setRowPrice(tableId, rowId, colNum, newValue) {
+		$('#' + tableId).find('tr#' + rowId).find('td:eq(colNum)').html(
+				newValue);
+	};
+</script>
 </head>
 <body>
 	<br/><br/>
@@ -41,17 +56,17 @@
 					<br />
 					<br />
 					<br />
-					<table style="vertical-align: top" border="1" width="400">
+					<table id="luceneTable" style="vertical-align: top" border="1" width="400">
 						<tr>
 							<th align="center">Total Indexed Concepts</th>
 							<th align="center">Last run</th>
 						</tr>
 						<tr>
 							<td align="center" id="indexCount">${bean.indexedWordsCount}</td>
-							<td align="center" id="lastRun">${bean.lastRun}</td>
+							<td align="center" id="lastRun-1">${bean.lastRun}</td>
 						</tr>
 					</table>
-
+			<input type="hidden" id="lastRun" value="${bean.lastRun}" />
 				</form:form>
 			</div>
 

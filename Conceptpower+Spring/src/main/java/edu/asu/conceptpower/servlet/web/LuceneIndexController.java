@@ -1,13 +1,13 @@
 package edu.asu.conceptpower.servlet.web;
 
 import java.security.Principal;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +35,8 @@ public class LuceneIndexController {
     @Qualifier("luceneDAO")
     private ILuceneDAO dao;
 
+    private AtomicBoolean indexerRunningFlag = new AtomicBoolean(false);
+
     /**
      * Retrives latest indexing time and number of concepts indexed so far
      * 
@@ -58,24 +60,31 @@ public class LuceneIndexController {
      * @return
      */
     @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST, produces = "application/json")
-    public synchronized @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
-        IndexingEvent bean = new IndexingEvent();
-        System.out.println("Inside");
-        try {
-            manager.deleteIndexes();
-            manager.indexConcepts();
-            bean = dao.getTotalNumberOfWordsIndexed();
-        } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
-            bean.setMessage(ex.getMessage());
+    public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+        IndexingEvent bean = null;
+        if (!indexerRunningFlag.get()) {
+            indexerRunningFlag.set(true);
+            try {
+                manager.deleteIndexes();
+                manager.indexConcepts();
+                bean = dao.getTotalNumberOfWordsIndexed();
+            } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
+                bean = new IndexingEvent();
+                bean.setMessage(ex.getMessage());
+                return bean;
+            }
+            bean.setMessage("Indexed successfully");
+            indexerRunningFlag.compareAndSet(true, false);
             return bean;
         }
-        bean.setMessage("Indexed successfully");
-        System.out.println("Outside");
+        bean = new IndexingEvent();
+        bean.setMessage("Indexer Already Running");
         return bean;
     }
 
     /**
      * This method deletes all the concepts in the lucene
+     * 
      * @param req
      * @param principal
      * @param model
