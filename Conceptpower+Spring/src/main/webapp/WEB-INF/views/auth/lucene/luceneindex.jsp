@@ -17,17 +17,12 @@
 <h1>Index Management</h1>
 <script type="text/javascript">
 	$(document).ready(function() {
-
 		var lastRun = $('#lastRun').val();
-		console.log(lastRun);
-		console.log(lastRun.toLocaleString());
 		var d = new Date(lastRun);
-		setRowPrice('luceneTable', 1, 1, d)
-
+		setDateTime(d.toLocaleString());
 	});
-	function setRowPrice(tableId, rowId, colNum, newValue) {
-		$('#' + tableId).find('tr#' + rowId).find('td:eq(colNum)').html(
-				newValue);
+	function setDateTime(tableId, rowId, colNum, newValue) {
+		$("#luceneTable tr td:last-child").html(d);
 	};
 </script>
 </head>
