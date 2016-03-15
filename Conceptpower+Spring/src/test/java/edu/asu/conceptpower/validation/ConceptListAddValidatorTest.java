@@ -10,9 +10,10 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
-import edu.asu.conceptpower.core.IConceptListManager;
-import edu.asu.conceptpower.web.ConceptListAddForm;
-import edu.asu.conceptpower.wordnet.Constants;
+import edu.asu.conceptpower.servlet.core.IConceptListManager;
+import edu.asu.conceptpower.servlet.validation.ConceptListAddValidator;
+import edu.asu.conceptpower.servlet.web.ConceptListAddForm;
+import edu.asu.conceptpower.servlet.wordnet.Constants;
 import junit.framework.Assert;
 
 public class ConceptListAddValidatorTest {
