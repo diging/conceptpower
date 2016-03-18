@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.servlet.core.impl;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,11 @@ public class IndexService implements IIndexService {
 
     @Autowired
     private LuceneUtility luceneUtility;
+    
+    /**
+     * This field makes sure indexer runs only once when two different admins gives index command at same time
+     */
+    private AtomicBoolean indexerRunningFlag = new AtomicBoolean(false);
 
     /**
      * This method searches in lucene on a particular condition fed through
@@ -59,10 +65,17 @@ public class IndexService implements IIndexService {
     }
 
     /**
-     * This method indexes concepts in lucene
+     * This method indexes concepts in lucene and runs indexer only once
      */
     @Override
-    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
-        luceneUtility.indexConcepts();
+    public String indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
+        if (!indexerRunningFlag.get()) {
+            indexerRunningFlag.compareAndSet(false, true);
+            luceneUtility.indexConcepts();
+            indexerRunningFlag.compareAndSet(true, false);
+            return "Indexed successfully";
+        }
+        return "Indexer Already Running";
+
     }
 }

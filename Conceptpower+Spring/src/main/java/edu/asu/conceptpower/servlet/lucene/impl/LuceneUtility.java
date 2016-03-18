@@ -121,6 +121,7 @@ public class LuceneUtility implements ILuceneUtility {
             Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + id);
             writer.deleteDocuments(q);
             writer.commit();
+            reloadReader();
         } catch (IOException ex) {
             throw new LuceneException("Issues in deletion. Please retry", ex);
         } catch (ParseException e) {
@@ -160,6 +161,7 @@ public class LuceneUtility implements ILuceneUtility {
         try {
             writer.addDocument(doc);
             writer.commit();
+            reloadReader();
         } catch (IOException ex) {
             throw new LuceneException("Cannot insert concept in lucene. Please retry", ex);
         }
@@ -195,6 +197,7 @@ public class LuceneUtility implements ILuceneUtility {
         try {
             writer.deleteAll();
             writer.commit();
+            reloadReader();
         } catch (IOException e) {
             throw new LuceneException("Problem in deleting indexes. Please retry", e);
         }
@@ -338,6 +341,7 @@ public class LuceneUtility implements ILuceneUtility {
 
         try {
             writer.commit();
+            reloadReader();
         } catch (IOException e) {
             throw new LuceneException("Issues in writing document", e);
         }
@@ -354,6 +358,7 @@ public class LuceneUtility implements ILuceneUtility {
 
         try {
             writer.commit();
+            reloadReader();
         } catch (IOException e) {
             throw new LuceneException("Issues in writing document", e);
         }
@@ -404,13 +409,6 @@ public class LuceneUtility implements ILuceneUtility {
 
         try {
             Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
-            DirectoryReader oldReader = reader;
-            reader = DirectoryReader.openIfChanged(oldReader);
-            if (reader == null) {
-                reader = oldReader;
-            } else {
-                searcher = new IndexSearcher(reader);
-            }
             TopDocs docs = searcher.search(q, numberOfResults);
             ScoreDoc[] hits = docs.scoreDocs;
             for (int i = 0; i < hits.length; ++i) {
@@ -428,6 +426,21 @@ public class LuceneUtility implements ILuceneUtility {
         }
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
+    }
+    
+    /**
+     * This method reloads the reader after every update to the index
+     * 
+     * @throws IOException
+     */
+    private void reloadReader() throws IOException {
+        DirectoryReader oldReader = reader;
+        reader = DirectoryReader.openIfChanged(oldReader);
+        if (reader == null) {
+            reader = oldReader;
+        } else {
+            searcher = new IndexSearcher(reader);
+        }
     }
 
     @PreDestroy

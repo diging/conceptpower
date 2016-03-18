@@ -35,8 +35,6 @@ public class LuceneIndexController {
     @Qualifier("luceneDAO")
     private ILuceneDAO dao;
 
-    private AtomicBoolean indexerRunningFlag = new AtomicBoolean(false);
-
     /**
      * Retrives latest indexing time and number of concepts indexed so far
      * 
@@ -62,23 +60,16 @@ public class LuceneIndexController {
     @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
         IndexingEvent bean = null;
-        if (!indexerRunningFlag.get()) {
-            indexerRunningFlag.set(true);
-            try {
-                manager.deleteIndexes();
-                manager.indexConcepts();
-                bean = dao.getTotalNumberOfWordsIndexed();
-            } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
-                bean = new IndexingEvent();
-                bean.setMessage(ex.getMessage());
-                return bean;
-            }
-            bean.setMessage("Indexed successfully");
-            indexerRunningFlag.compareAndSet(true, false);
+        try {
+            manager.deleteIndexes();
+            String message = manager.indexConcepts();
+            bean = dao.getTotalNumberOfWordsIndexed();
+            bean.setMessage(message);
+        } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
+            bean = new IndexingEvent();
+            bean.setMessage(ex.getMessage());
             return bean;
         }
-        bean = new IndexingEvent();
-        bean.setMessage("Indexer Already Running");
         return bean;
     }
 

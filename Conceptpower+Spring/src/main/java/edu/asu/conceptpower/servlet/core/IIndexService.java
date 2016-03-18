@@ -15,6 +15,6 @@ public interface IIndexService {
 
     public void deleteIndexes() throws LuceneException;
 
-    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException;
+    public String indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException;
 
 }
