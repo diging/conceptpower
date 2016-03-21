@@ -392,7 +392,7 @@ public class LuceneUtility implements ILuceneUtility {
                         queryString.append(" " + operator + " ");
                     firstEntry++;
                     queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
-                    searchString = searchString.split(" ")[0];
+                    //searchString = searchString.split(" ")[0];
                     searchBuffer.append(searchString);
                     searchBuffer.append(")");
                     queryString.append(searchBuffer.toString());
@@ -426,6 +426,33 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (ParseException e) {
             throw new LuceneException("Issues in framing the query", e);
         }
+        
+        
+        
+        
+        
+        
+        
+        try{
+        for (int i = 0; i < reader.maxDoc(); i++) {
+
+            Document doc = reader.document(i);
+            String docId = doc.get("word");
+            System.out.println(docId);
+
+            // do something with docId here...
+        }
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        
+        
+        
+        
+        
+        
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
     }
