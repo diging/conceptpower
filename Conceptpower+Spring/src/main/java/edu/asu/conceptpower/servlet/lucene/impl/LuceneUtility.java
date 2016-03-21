@@ -18,7 +18,6 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
-import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
@@ -393,7 +392,16 @@ public class LuceneUtility implements ILuceneUtility {
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
                 StringBuffer searchBuffer = new StringBuffer("(+");
-                if (searchString != null) {
+                
+                if (searchString!=null && searchString.contains("pony")) {
+
+                    System.out.println("hold");
+                    
+                    //"+(" + querystr + ")"
+
+                }
+                
+                else if(searchString != null){
                     if (firstEntry != 1)
                         queryString.append(" " + operator + " ");
                     firstEntry++;
@@ -403,12 +411,14 @@ public class LuceneUtility implements ILuceneUtility {
                     searchBuffer.append(")");
                     queryString.append(searchBuffer.toString());
                 }
+                
             }
         }
 
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
         try {
+            
             Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
             TopDocs docs = searcher.search(q, numberOfResults);
             ScoreDoc[] hits = docs.scoreDocs;
@@ -424,22 +434,6 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Issues in querying lucene index. Please retry", ex);
         } catch (ParseException e) {
             throw new LuceneException("Issues in framing the query", e);
-        }
-        
-        
-        try{
-            
-
-            for (int i=0; i<reader.maxDoc(); i++) {
-
-                Document doc = reader.document(i);
-                String docId = doc.get("docId");
-                System.out.println(docId);
-                // do something with docId here...
-            }
-        }
-        catch(Exception ex){
-            
         }
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
