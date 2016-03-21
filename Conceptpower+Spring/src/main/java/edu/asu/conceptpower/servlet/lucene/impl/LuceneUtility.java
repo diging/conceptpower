@@ -19,6 +19,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -148,7 +149,7 @@ public class LuceneUtility implements ILuceneUtility {
                 if (contentOfField != null) {
 
                     if (searchFieldAnnotation.isIndexable()) {
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
+                        doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
                     } else {
                         doc.add(new StoredField(searchFieldAnnotation.lucenefieldName(),
@@ -237,13 +238,13 @@ public class LuceneUtility implements ILuceneUtility {
 
     private Document createIndividualDocument(IDictionary dict, IWordID wordId) {
         Document doc = new Document();
-        doc.add(new StringField(LuceneFieldNames.WORD, wordId.getLemma(), Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.WORD, wordId.getLemma(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
-        doc.add(new StringField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
 
         ISynset synset = word.getSynset();
         List<IWord> synonyms = synset.getWords();
@@ -252,10 +253,10 @@ public class LuceneUtility implements ILuceneUtility {
             if (!syn.getID().equals(word.getID()))
                 sb.append(syn.getID().toString() + edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR);
         }
-        doc.add(new StringField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
         // Adding this new data to delete only wordnet concepts while
         // adding all wordnet concepts from jwi.
-        doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
         return doc;
     }
 
@@ -423,6 +424,22 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Issues in querying lucene index. Please retry", ex);
         } catch (ParseException e) {
             throw new LuceneException("Issues in framing the query", e);
+        }
+        
+        
+        try{
+            
+
+            for (int i=0; i<reader.maxDoc(); i++) {
+
+                Document doc = reader.document(i);
+                String docId = doc.get("docId");
+                System.out.println(docId);
+                // do something with docId here...
+            }
+        }
+        catch(Exception ex){
+            
         }
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
