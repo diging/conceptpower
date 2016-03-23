@@ -46,12 +46,12 @@ public class ConceptLookup {
     @Autowired
     private TypeDatabaseClient typeManager;
 
-    @Autowired
-    private XMLMessageFactory messageFactory;
-
-    @Autowired
-    private URIHelper creator;
-
+	@Autowired
+	private XMLMessageFactory messageFactory;
+	
+	@Autowired
+	private URIHelper creator;
+	
     private final String madsrdf = "http://www.loc.gov/mads/rdf/v1#";
     private final String rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     private final String cidocCrm = "http://www.cidoc-crm.org/cidoc-crm/";
