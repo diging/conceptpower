@@ -8,12 +8,12 @@
 <h1>Delete concept</h1>
 <p>Do you really want to delete the following concept?</p>
 
-
+<font color="red">${luceneError }</font>
 <h2>${word}</h2>
 <p>${description}</p>
 <br />
 <br />
-<table class="greyContent">
+<table  class="table table-striped table-bordered">
 	<tr>
 		<td>Id:</td>
 		<td>${conceptId}</td>
@@ -64,18 +64,18 @@
 	<tr>
 		<td><a
 			href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${conceptId}?fromHomeScreenDelete=${fromHomeScreenDelete}"><input
-				type="button" name="delete" id="delete" value="Yes, delete concept!" class="button"></a></td>
+				type="button" name="delete" id="delete" value="Yes, delete concept!" class="btn btn-primary"></a></td>
 	
 		<c:if test="${fromHomeScreenDelete eq 'false'}">
 		<td><a
 			href="${pageContext.servletContext.contextPath}/auth/concepts/canceldelete/${conceptList}"><input
-				type="button" name="cancel" value="No, cancel!" class="button"></a></td>
+				type="button" name="cancel" value="No, cancel!" class="btn btn-primary"></a></td>
 		</c:if>
 		
 		<c:if test="${fromHomeScreenDelete eq 'true'}">
 		<td><a
 			href="${pageContext.servletContext.contextPath}/login"><input
-				type="button" name="cancel" value="No, cancel!" class="button"></a></td>
+				type="button" name="cancel" value="No, cancel!" class="btn btn-primary"></a></td>
 		</c:if>
 		
 	</tr>

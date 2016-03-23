@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.junit.Before;
@@ -15,8 +14,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.env.Environment;
 
-import edu.asu.conceptpower.users.User;
-import edu.asu.conceptpower.users.UserDatabaseClient;
+import edu.asu.conceptpower.root.UserDatabaseClient;
+import edu.asu.conceptpower.root.UsersManager;
+import edu.asu.conceptpower.servlet.users.User;
 
 public class UsersManagerTest {
 
