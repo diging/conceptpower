@@ -150,6 +150,7 @@ public class LuceneUtility implements ILuceneUtility {
                     if (searchFieldAnnotation.isIndexable()) {
                         doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
+                        
                     } else {
                         doc.add(new StoredField(searchFieldAnnotation.lucenefieldName(),
                                 String.valueOf(contentOfField)));
@@ -392,33 +393,23 @@ public class LuceneUtility implements ILuceneUtility {
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
                 StringBuffer searchBuffer = new StringBuffer("(+");
-                
-                if (searchString!=null && searchString.contains("pony")) {
-
-                    System.out.println("hold");
-                    
-                    //"+(" + querystr + ")"
-
-                }
-                
-                else if(searchString != null){
+                if (searchString != null) {
                     if (firstEntry != 1)
                         queryString.append(" " + operator + " ");
                     firstEntry++;
                     queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
-                    searchString = searchString.split(" ")[0];
+                    // searchString = searchString.split(" ")[0];
                     searchBuffer.append(searchString);
                     searchBuffer.append(")");
                     queryString.append(searchBuffer.toString());
                 }
-                
             }
+
         }
 
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
         try {
-            
             Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
             TopDocs docs = searcher.search(q, numberOfResults);
             ScoreDoc[] hits = docs.scoreDocs;
@@ -438,7 +429,7 @@ public class LuceneUtility implements ILuceneUtility {
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
     }
-    
+
     /**
      * This method reloads the reader after every update to the index
      * 
