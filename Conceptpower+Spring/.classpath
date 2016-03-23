@@ -33,6 +33,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/karthikeyanmohan/Downloads/art-uniroma2-lime-api-062ce14de8b4.zip"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -426,19 +426,6 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Issues in framing the query", e);
         }
 
-        try {
-            for (int i = 0; i < reader.maxDoc(); i++) {
-
-                Document doc = reader.document(i);
-                String docId = doc.get("word");
-                System.out.println(docId);
-
-                // do something with docId here...
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
     }
