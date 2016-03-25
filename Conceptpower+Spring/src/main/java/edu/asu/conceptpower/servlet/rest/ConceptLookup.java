@@ -1,16 +1,10 @@
 package edu.asu.conceptpower.servlet.rest;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.root.TypeDatabaseClient;
-import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
@@ -104,13 +97,7 @@ public class ConceptLookup {
         } catch (IllegalAccessException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        Model model = ModelFactory.createDefaultModel();
-        String syntax = "RDF/XML";
-        StringWriter out = new StringWriter();
-        for (ConceptEntry entry : entries) {
-            rdfFactory.generateRDF(model, syntax, out, entry);
-        }
-        return new ResponseEntity<String>(out.toString(), HttpStatus.OK);
+        return new ResponseEntity<String>(rdfFactory.generateRDF(entries), HttpStatus.OK);
     }
 
 }
