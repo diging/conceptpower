@@ -384,8 +384,7 @@ public class LuceneUtility implements ILuceneUtility {
         StringBuffer queryString = new StringBuffer();
         int firstEntry = 1;
 
-        ConceptEntry con = new ConceptEntry();
-        java.lang.reflect.Field[] fields = con.getClass().getDeclaredFields();
+        java.lang.reflect.Field[] fields = ConceptEntry.class.getDeclaredFields();
         for (java.lang.reflect.Field field : fields) {
             SearchField search = field.getAnnotation(SearchField.class);
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
