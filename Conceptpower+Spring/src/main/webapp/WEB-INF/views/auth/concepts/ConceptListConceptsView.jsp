@@ -55,6 +55,7 @@
 	list.</p>
 	
 	<font color="red">${luceneError }</font>
+	<font color="red">${IndexerStatus}</font>
 
 <h2>Concepts</h2>
 <c:if test="${not empty result}">

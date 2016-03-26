@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
+import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
@@ -110,7 +111,9 @@ public class ConceptDeleteController {
         List<ConceptEntryWrapper> foundConcepts = null;
         ModelAndView model = new ModelAndView();
         ConceptEntry concept = conceptManager.getConceptEntry(id);
-        conceptManager.deleteConcept(id);
+        if(!conceptManager.deleteConcept(id)){
+            model.addObject(ErrorConstants.INDEXERSTATUS, ErrorConstants.INDEXER_RUNNING);
+        }
         List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
 
         foundConcepts = wrapperCreator
@@ -129,7 +132,9 @@ public class ConceptDeleteController {
     public String deleteConcept(@PathVariable("id") String id, ModelMap model,
             @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult result)
                     throws LuceneException {
-        conceptManager.deleteConcept(id);
+        if(!conceptManager.deleteConcept(id)){
+            model.addAttribute(ErrorConstants.INDEXERSTATUS, ErrorConstants.INDEXER_RUNNING);
+        }
         return "welcome";
     }
 

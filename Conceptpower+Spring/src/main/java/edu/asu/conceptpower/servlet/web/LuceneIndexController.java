@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
@@ -61,12 +62,14 @@ public class LuceneIndexController {
     public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
         IndexingEvent bean = null;
         try {
-            manager.deleteIndexes();
-            String message = manager.indexConcepts();
-            bean = dao.getTotalNumberOfWordsIndexed();
-            bean.setMessage(message);
-        } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
+            if (manager.deleteIndexes() && manager.indexConcepts()) {
+                bean = dao.getTotalNumberOfWordsIndexed();
+                bean.setMessage("Indexed successfully");
+                return bean;
+            }
             bean = new IndexingEvent();
+            bean.setMessage(ErrorConstants.INDEXER_RUNNING);
+        } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
             bean.setMessage(ex.getMessage());
             return bean;
         }
@@ -81,17 +84,20 @@ public class LuceneIndexController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "auth/deleteConcepts", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "auth/deleteIndex", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody IndexingEvent deleteConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
         IndexingEvent bean = new IndexingEvent();
         try {
-            manager.deleteIndexes();
-            bean = dao.getTotalNumberOfWordsIndexed();
+            if (manager.deleteIndexes()) {
+                bean = dao.getTotalNumberOfWordsIndexed();
+                bean.setMessage("Concepts deleted from index successfully");
+                return bean;
+            }
+            bean.setMessage(ErrorConstants.INDEXER_RUNNING);
+            return bean;
         } catch (LuceneException e) {
             bean.setMessage(e.getMessage());
             return bean;
         }
-        bean.setMessage("Concept deleted successfully");
-        return bean;
     }
 }

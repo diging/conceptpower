@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptType;
+import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
@@ -77,6 +78,10 @@ public class ConceptLookup {
         List<String> xmlEntries = new ArrayList<String>();
         if (entries != null) {
             xmlEntries = returnMsg.appendEntries(entryMap);
+        }
+        
+        if(entries == null){
+            return new ResponseEntity<String>(ErrorConstants.INDEXER_RUNNING, HttpStatus.OK);
         }
 
         return new ResponseEntity<String>(returnMsg.getXML(xmlEntries), HttpStatus.OK);

@@ -34,7 +34,7 @@ public class IndexService implements IIndexService {
      * fieldMap
      */
     @Override
-    public ConceptEntry[] searchForConceptsConnected(Map<String, String> fieldMap, String operator)
+    public ConceptEntry[] searchForConcepts(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException {
         return luceneUtility.queryIndex(fieldMap, operator);
     }
@@ -43,8 +43,12 @@ public class IndexService implements IIndexService {
      * This method inserts concepts into lucene
      */
     @Override
-    public void insertConcept(ConceptEntry entry) throws IllegalAccessException, LuceneException {
-        luceneUtility.insertConcept(entry);
+    public boolean insertConcept(ConceptEntry entry) throws IllegalAccessException, LuceneException {
+        if (!indexerRunningFlag.get()) {
+            luceneUtility.insertConcept(entry);    
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -52,30 +56,41 @@ public class IndexService implements IIndexService {
      * concept
      */
     @Override
-    public void deleteById(String id) throws LuceneException {
-        luceneUtility.deleteById(id);
+    public boolean deleteById(String id) throws LuceneException {
+        if (!indexerRunningFlag.get()) {
+            luceneUtility.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     /**
      * This method deletes the index in lucene
      */
     @Override
-    public void deleteIndexes() throws LuceneException {
-        luceneUtility.deleteIndexes();
+    public boolean deleteIndexes() throws LuceneException {
+        if(indexerRunningFlag.compareAndSet(false, true)){
+            luceneUtility.deleteIndexes();
+            indexerRunningFlag.set(false);
+            return true;
+        }
+       return false;
     }
 
     /**
      * This method indexes concepts in lucene and runs indexer only once
      */
     @Override
-    public String indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
-        if (!indexerRunningFlag.get()) {
-            indexerRunningFlag.compareAndSet(false, true);
+    public boolean indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
+        if (indexerRunningFlag.compareAndSet(false, true)) {
             luceneUtility.indexConcepts();
-            indexerRunningFlag.compareAndSet(true, false);
-            return "Indexed successfully";
+            indexerRunningFlag.set(false);
+            return true;
         }
-        return "Indexer Already Running";
-
+        return false;
+    }
+    
+    public boolean checkStatus(){
+        return indexerRunningFlag.get();
     }
 }

@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.ConceptType;
+import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
@@ -133,7 +134,6 @@ public class ConceptAddController {
         conceptEntry.setSimilarTo(req.getParameter("similar"));
         conceptEntry.setTypeId(req.getParameter("types"));
         conceptEntry.setCreatorId(principal.getName());
-        conceptManager.addConceptListEntry(conceptEntry);
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
     }
 

@@ -73,7 +73,7 @@ public class ConceptSearch {
 		ConceptEntry[] searchResults = null;
 
         try {
-                searchResults = manager.searchForConceptsConnected(searchFields,operator);
+                searchResults = manager.searchForConcepts(searchFields,operator);
         } catch (LuceneException | IllegalAccessException ex) {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }

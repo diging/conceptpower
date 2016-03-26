@@ -112,8 +112,8 @@ public interface IConceptManager {
 	public abstract String addConceptListEntry(ConceptEntry entry)
 			throws DictionaryDoesNotExistException, DictionaryModifyException,LuceneException,IllegalAccessException;
 
-	public abstract void storeModifiedConcept(ConceptEntry entry)throws LuceneException,IllegalAccessException;
+	public abstract boolean storeModifiedConcept(ConceptEntry entry)throws LuceneException,IllegalAccessException;
 	
-	public abstract void deleteConcept(String id) throws LuceneException;
+	public abstract boolean deleteConcept(String id) throws LuceneException;
 	
 }

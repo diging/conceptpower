@@ -355,6 +355,7 @@
 </c:if>
 
 <h2>1. Search for Wordnet concept</h2>
+<center><font color="red">${IndexerStatus}</font></center>
 
 <form
 	action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper/conceptsearch"

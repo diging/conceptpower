@@ -3,7 +3,6 @@ package edu.asu.conceptpower.servlet.web;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +19,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.servlet.bean.ConceptEditBean;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.Constants;
+import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
@@ -129,7 +130,7 @@ public class ConceptEditController {
      * @throws IllegalAccessException 
      */
     @RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
-    public String confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
+    public ModelAndView confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, BindingResult result)
                     throws LuceneException, IllegalAccessException {
         ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
@@ -144,14 +145,18 @@ public class ConceptEditController {
 
         String userId = usersManager.findUser(principal.getName()).getUsername();
         conceptEntry.setModified(userId);
-        conceptManager.storeModifiedConcept(conceptEntry);
-
-        if (conceptEditBean.isFromHomeScreen()) {
-            return "redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="
-                    + conceptEditBean.getSelectedPosValue();
+        ModelAndView model = new ModelAndView();
+        if (conceptManager.storeModifiedConcept(conceptEntry)) {
+            model.addObject(ErrorConstants.INDEXERSTATUS, ErrorConstants.INDEXER_RUNNING);
         }
 
-        return "redirect:/auth/" + conceptEditBean.getConceptListValue() + "/concepts";
+        if (conceptEditBean.isFromHomeScreen()) {
+            model.setViewName("redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="
+                    + conceptEditBean.getSelectedPosValue());
+            return model;
+        }
+        model.setViewName("redirect:/auth/" + conceptEditBean.getConceptListValue() + "/concepts");
+        return model;
     }
 
     /**

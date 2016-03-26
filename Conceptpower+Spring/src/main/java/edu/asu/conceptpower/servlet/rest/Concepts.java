@@ -61,7 +61,9 @@ public class Concepts {
 		
 		String id = null;
 		try {
-			id = conceptManager.addConceptListEntry(conceptEntry);
+			if((id = conceptManager.addConceptListEntry(conceptEntry)) == null){
+			    return new ResponseEntity<String>(jsonObject.toJSONString(), HttpStatus.CONFLICT);
+			}
 		} catch (DictionaryDoesNotExistException e) {
 			logger.error("Error creating concept from REST call.", e);
 			return new ResponseEntity<String>("Specified dictionary does not exist in Conceptpower.", HttpStatus.BAD_REQUEST);

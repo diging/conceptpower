@@ -101,7 +101,7 @@ public class ConceptManager implements IConceptManager {
         fieldMap.put(SearchFieldNames.WORD, word);
         fieldMap.put(SearchFieldNames.POS, pos);
         fieldMap.put(LuceneFieldNames.CONCEPT_LIST, conceptList);
-        return indexService.searchForConceptsConnected(fieldMap,null);
+        return indexService.searchForConcepts(fieldMap,null);
     }
 
     /**
@@ -284,7 +284,7 @@ public class ConceptManager implements IConceptManager {
     public ConceptEntry[] getConceptListEntriesForWord(String word) throws LuceneException, IllegalAccessException {
         Map<String,String> fieldMap = new HashMap<String,String>();
         fieldMap.put(SearchFieldNames.WORD, word);
-        return indexService.searchForConceptsConnected(fieldMap, null);
+        return indexService.searchForConcepts(fieldMap, null);
     }
 
     /*
@@ -380,12 +380,15 @@ public class ConceptManager implements IConceptManager {
             throw new DictionaryModifyException();
         }
 
-        String id = generateId(CONCEPT_PREFIX);
-        entry.setId(id);
-        client.store(entry, DBNames.DICTIONARY_DB);
-        indexService.insertConcept(entry);
-        return id;
+        if (!indexService.insertConcept(entry)) {
+            String id = generateId(CONCEPT_PREFIX);
+            entry.setId(id);
+            client.store(entry, DBNames.DICTIONARY_DB);
+            return id;
+        }
+        return null;
     }
+    
 
     /*
      * (non-Javadoc)
@@ -395,14 +398,16 @@ public class ConceptManager implements IConceptManager {
      * conceptpower.core.ConceptEntry)
      */
     @Override
-    public void storeModifiedConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException {
+    public boolean storeModifiedConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException {
         String modified = entry.getModified() != null ? entry.getModified() : "";
         if (!modified.trim().isEmpty())
             modified += ", ";
         entry.setModified(modified + entry.getModifiedUser() + "@" + (new Date()).toString());
-        client.update(entry, DBNames.DICTIONARY_DB);
-        indexService.deleteById(entry.getId());
-        indexService.insertConcept(entry);
+        if(indexService.deleteById(entry.getId()) && indexService.insertConcept(entry)){
+            client.update(entry, DBNames.DICTIONARY_DB);
+            return true;
+        }
+        return false;
     }
 
     protected String generateId(String prefix) {
@@ -423,10 +428,10 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public void deleteConcept(String id) throws LuceneException {
+    public boolean deleteConcept(String id) throws LuceneException {
         ConceptEntry concept = getConceptEntry(id);
         concept.setDeleted(true);
         client.update(concept, DBNames.DICTIONARY_DB);
-        indexService.deleteById(concept.getId());
+        return indexService.deleteById(concept.getId());
     }
 }

@@ -83,7 +83,7 @@
 								run_waitMe(current_effect);
 								$
 										.ajax({
-											url : "${pageContext.servletContext.contextPath}/auth/deleteConcepts",
+											url : "${pageContext.servletContext.contextPath}/auth/deleteIndex",
 											type : "POST",
 											success : function(result) {
 												var output = "<center><b>"

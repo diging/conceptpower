@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.ConceptType;
+import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
@@ -118,7 +119,9 @@ public class ConceptWrapperAddController {
             conceptEntry.setSimilarTo(req.getParameter("similar"));
             conceptEntry.setTypeId(req.getParameter("types"));
             conceptEntry.setCreatorId(principal.getName());
-            conceptManager.addConceptListEntry(conceptEntry);
+            if(conceptManager.addConceptListEntry(conceptEntry) == null){
+                model.addAttribute(ErrorConstants.INDEXERSTATUS, ErrorConstants.INDEXER_RUNNING);
+            }
         }
 
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
@@ -143,6 +146,10 @@ public class ConceptWrapperAddController {
         if (!concept.trim().isEmpty()) {
 
             ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(concept, pos, Constants.WORDNET_DICTIONARY);
+            if(found == null){
+                model.addAttribute(ErrorConstants.INDEXER_RUNNING, ErrorConstants.INDEXERSTATUS);
+                return "/auth/conceptlist/addconceptwrapper";
+            }
             List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
             model.addAttribute("result", foundConcepts);
         }

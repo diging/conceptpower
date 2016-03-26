@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
+import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
@@ -81,7 +83,6 @@ public class ConceptListEditController {
     public String editList(HttpServletRequest req,
             @Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
             BindingResult result, ModelMap model) throws LuceneException, IllegalAccessException {
-
         if (result.hasErrors()) {
             return "/auth/conceptlist/editlist";
         }
@@ -100,7 +101,9 @@ public class ConceptListEditController {
         while (entriesIterator.hasNext()) {
             ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
             conceptEntry.setConceptList(list.getConceptListName());
-            conceptManager.storeModifiedConcept(conceptEntry);
+            if(!conceptManager.storeModifiedConcept(conceptEntry)){
+                model.addAttribute(ErrorConstants.INDEXERSTATUS, ErrorConstants.INDEXER_RUNNING);
+            }
         }
         return "redirect:/auth/conceptlist";
     }

@@ -136,6 +136,7 @@
 </header>
 
 <p>Search for a concept:</p>
+<center><font color="red">${IndexerStatus}</font></center>
 
 <form:form
 	action="${pageContext.servletContext.contextPath}/home/conceptsearch"

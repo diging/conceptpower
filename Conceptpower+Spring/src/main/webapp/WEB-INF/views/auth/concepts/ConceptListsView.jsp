@@ -25,6 +25,7 @@
 </script>
 
 <h1>Concept Lists</h1>
+<center><font color="red">${IndexerStatus}</font></center>
 <br />
 <a
 	href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptlist"><i
