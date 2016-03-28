@@ -1,5 +1,8 @@
 package edu.asu.conceptpower.web;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.conceptpower.core.ChangeEvent;
+import edu.asu.conceptpower.core.ChangeEventConstants;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -101,10 +106,19 @@ public class ConceptDeleteController {
 	 */
 	@RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
     public String confirmlDelete(@PathVariable("id") String id,
-            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, ModelMap model) {
+            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, ModelMap model,Principal principal) {
         ConceptEntry concept = conceptManager.getConceptEntry(id);
-
-        concept.setDeleted(true);
+        
+        
+        ChangeEvent changeEvent = new ChangeEvent();
+        changeEvent.setType(ChangeEventConstants.DELETION);
+        changeEvent.setDate(new Date().toString());
+        changeEvent.setUserName(principal.getName());
+        List<ChangeEvent> ChangeEventsList = new ArrayList<ChangeEvent>();
+        ChangeEventsList.add(changeEvent);
+        concept.setChangeEvent(ChangeEventsList);
+        
+        //concept.setDeleted(true);
         // set modified and user details
         conceptManager.storeModifiedConcept(concept);
 

@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.conceptpower.core.ChangeEvent;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.IConceptManager;
@@ -380,6 +381,13 @@ public class ConceptManager implements IConceptManager {
 	 */
 	@Override
 	public void storeModifiedConcept(ConceptEntry entry) {
+		
+		List<ChangeEvent> existingChangeEvents = null;
+		if((existingChangeEvents = client.getChangeEventList(entry.getId())) != null){
+			existingChangeEvents.addAll(entry.getChangeEvent());
+			entry.setChangeEvent(existingChangeEvents);
+		}
+		
 		client.update(entry, DBNames.DICTIONARY_DB);
 	}
 

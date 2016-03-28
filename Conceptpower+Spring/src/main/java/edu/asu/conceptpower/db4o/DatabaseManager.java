@@ -9,6 +9,8 @@ import com.db4o.ObjectServer;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ServerConfiguration;
 
+import edu.asu.conceptpower.core.ConceptEntry;
+
 @Component
 public class DatabaseManager implements Serializable {
 
@@ -24,6 +26,9 @@ public class DatabaseManager implements Serializable {
 		ServerConfiguration configuration = Db4oClientServer
 				.newServerConfiguration();
 		configuration.file().blockSize(80);
+		//Added to make sure list has been added to the database
+		//Ref: http://www.resolvinghere.com/sof/12343387.shtml
+		configuration.common().objectClass(ConceptEntry.class).updateDepth(2);
 		server = Db4oClientServer.openServer(configuration, databasePath, 0);
 	}
 
