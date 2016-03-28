@@ -30,6 +30,7 @@ import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.users.IUserManager;
 import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
@@ -172,7 +173,12 @@ public class ConceptEditController {
     public ResponseEntity<String> searchConcept(@RequestParam("synonymname") String synonymname)
             throws LuceneException, IllegalAccessException {
         ConceptEntry[] entries = null;
-        entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        try {
+            entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        } catch (IndexerRunningException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         List<ConceptEntry> synonyms = Arrays.asList(entries);
         return new ResponseEntity<String>(buildJSON(synonyms, true, false), HttpStatus.OK);
     }

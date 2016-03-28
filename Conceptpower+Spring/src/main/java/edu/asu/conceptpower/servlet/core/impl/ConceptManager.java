@@ -21,6 +21,7 @@ import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
 import edu.asu.conceptpower.servlet.rest.SearchFieldNames;
@@ -94,7 +95,7 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public ConceptEntry[] getConceptListEntriesForWord(String word, String pos, String conceptList)
-            throws LuceneException, IllegalAccessException {
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)
             return null;
         Map<String,String> fieldMap = new HashMap<String,String>();
@@ -281,7 +282,7 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWord(String word) throws LuceneException, IllegalAccessException {
+    public ConceptEntry[] getConceptListEntriesForWord(String word) throws LuceneException, IllegalAccessException, IndexerRunningException {
         Map<String,String> fieldMap = new HashMap<String,String>();
         fieldMap.put(SearchFieldNames.WORD, word);
         return indexService.searchForConcepts(fieldMap, null);

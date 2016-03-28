@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
+import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IIndexService;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.impl.LuceneUtility;
 
@@ -35,7 +37,12 @@ public class IndexService implements IIndexService {
      */
     @Override
     public ConceptEntry[] searchForConcepts(Map<String, String> fieldMap, String operator)
-            throws LuceneException, IllegalAccessException {
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
+        
+        if(indexerRunningFlag.get()){
+            throw new IndexerRunningException(ErrorConstants.INDEXER_RUNNING);
+        }
+        
         return luceneUtility.queryIndex(fieldMap, operator);
     }
 
@@ -90,7 +97,4 @@ public class IndexService implements IIndexService {
         return false;
     }
     
-    public boolean checkStatus(){
-        return indexerRunningFlag.get();
-    }
 }

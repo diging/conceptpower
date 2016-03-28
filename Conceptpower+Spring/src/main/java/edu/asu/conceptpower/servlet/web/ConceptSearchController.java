@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
+import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.validation.ConceptSearchValidator;
 import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
@@ -64,8 +66,14 @@ public class ConceptSearchController {
             return "conceptsearch";
         }
         List<ConceptEntryWrapper> foundConcepts = null;
-        ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
-                conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
+        ConceptEntry[] found = null;
+        try {
+            found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
+                    conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
+        } catch (IndexerRunningException e) {
+            model.addAttribute(ErrorConstants.INDEXERSTATUS, e.getMessage());
+            return "conceptsearch";
+        }
         foundConcepts = wrapperCreator.createWrappers(found);
         conceptSearchBean.setFoundConcepts(foundConcepts);
         if (CollectionUtils.isEmpty(foundConcepts)) {

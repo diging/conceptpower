@@ -36,6 +36,7 @@ import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.profile.impl.ServiceBackBean;
 import edu.asu.conceptpower.servlet.profile.impl.ServiceRegistry;
@@ -149,7 +150,11 @@ public class ConceptAddController {
     public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname,
             @RequestParam("addedsynonym") String addedSynonnym) throws LuceneException, IllegalAccessException {
         ConceptEntry[] entries = null;
+        try {
             entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        } catch (IndexerRunningException e1) {
+            return new ResponseEntity<String>(e1.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         List<String> addedSynonymList = Arrays.asList(addedSynonnym.replaceAll("\\s", "").split(","));
         // Removing existing synonym from the entries.
         int i = 0;
@@ -174,8 +179,6 @@ public class ConceptAddController {
             logger.error("Couldn't parse results.", e);
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        // return entries;
     }
 
     /**
@@ -192,7 +195,11 @@ public class ConceptAddController {
         if (conceptname.isEmpty())
             return null;
         ConceptEntry[] entries = null;
-        entries = conceptManager.getConceptListEntriesForWord(conceptname.trim());
+        try {
+            entries = conceptManager.getConceptListEntriesForWord(conceptname.trim());
+        } catch (IndexerRunningException e1) {
+            return new ResponseEntity<String>(e1.getMessage(),HttpStatus.OK);
+        }
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer();
         try {

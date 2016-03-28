@@ -20,6 +20,7 @@ import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IIndexService;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
 import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
@@ -73,8 +74,8 @@ public class ConceptSearch {
 		ConceptEntry[] searchResults = null;
 
         try {
-                searchResults = manager.searchForConcepts(searchFields,operator);
-        } catch (LuceneException | IllegalAccessException ex) {
+                    searchResults = manager.searchForConcepts(searchFields,operator);
+        } catch (LuceneException | IllegalAccessException | IndexerRunningException ex) {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
 

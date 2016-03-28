@@ -28,6 +28,7 @@ import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
@@ -136,7 +137,7 @@ public class ConceptWrapperAddController {
      *            A generic model holder for Servlet
      * @return String value which redirects user to concept wrapper creation
      *         page
-     * @throws IllegalAccessException 
+     * @throws IllegalAccessException
      */
     @RequestMapping(value = "/auth/conceptlist/addconceptwrapper/conceptsearch", method = RequestMethod.POST)
     public String search(HttpServletRequest req, ModelMap model) throws LuceneException, IllegalAccessException {
@@ -145,11 +146,15 @@ public class ConceptWrapperAddController {
         String pos = req.getParameter("pos");
         if (!concept.trim().isEmpty()) {
 
-            ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(concept, pos, Constants.WORDNET_DICTIONARY);
-            if(found == null){
-                model.addAttribute(ErrorConstants.INDEXER_RUNNING, ErrorConstants.INDEXERSTATUS);
+            ConceptEntry[] found = null;
+
+            try {
+                found = conceptManager.getConceptListEntriesForWord(concept, pos, Constants.WORDNET_DICTIONARY);
+            } catch (IndexerRunningException ie) {
+                model.addAttribute(ErrorConstants.INDEXER_RUNNING, ie.getMessage());
                 return "/auth/conceptlist/addconceptwrapper";
             }
+
             List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
             model.addAttribute("result", foundConcepts);
         }
@@ -186,6 +191,8 @@ public class ConceptWrapperAddController {
             entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
         } catch (LuceneException ex) {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IndexerRunningException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.OK);
         }
         return new ResponseEntity<String>(buildJSON(Arrays.asList(entries)), HttpStatus.OK);
     }
