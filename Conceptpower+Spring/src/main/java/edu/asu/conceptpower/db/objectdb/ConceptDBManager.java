@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import edu.asu.conceptpower.core.ChangeEvent;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.db.IDatabaseManager;
@@ -91,6 +92,12 @@ public class ConceptDBManager implements IConceptDBManager {
 	public void update(ConceptList list, String listname, String databasename) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<ChangeEvent> getChangeEventList(String id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

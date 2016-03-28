@@ -14,6 +14,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Predicate;
 
+import edu.asu.conceptpower.core.ChangeEvent;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.reflect.SearchField;
@@ -129,6 +130,7 @@ public class DatabaseClient implements IConceptDBManager {
 								if (searchFieldAnnotation.fieldName().equals(
 										fField)) {
 									String fieldContent = null;
+									List changeEventsList = null;
 									// check content
 									try {
 										field.setAccessible(true);
@@ -136,6 +138,10 @@ public class DatabaseClient implements IConceptDBManager {
 										if (contentOfField instanceof String)
 											fieldContent = contentOfField
 													.toString();
+										if(contentOfField instanceof List){
+											changeEventsList = (List)contentOfField;
+										}
+											
 									} catch (IllegalArgumentException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -154,6 +160,10 @@ public class DatabaseClient implements IConceptDBManager {
 														fSearchFor.trim()
 																.toLowerCase()))
 											return true;
+									}
+									if(changeEventsList != null){
+										return true;
+										
 									}
 									return false;
 								}
@@ -320,6 +330,7 @@ public class DatabaseClient implements IConceptDBManager {
 			toBeUpdated.setWord(entry.getWord());
 			toBeUpdated.setWordnetId(entry.getWordnetId());
 			toBeUpdated.setDeleted(entry.isDeleted());
+			toBeUpdated.setChangeEvent(entry.getChangeEvent());
 			dictionaryClient.store(toBeUpdated);
 			dictionaryClient.commit();
 		}
@@ -352,5 +363,27 @@ public class DatabaseClient implements IConceptDBManager {
 			dictionaryClient.store(list);
 			dictionaryClient.commit();
 		}
+	}
+	
+	/**
+	 * This method is for fetching the existing changeevent details for an id
+	 */
+	@Override
+	public List<ChangeEvent> getChangeEventList(String id) {
+		ObjectSet<ConceptEntry> results = dictionaryClient
+				.query(new Predicate<ConceptEntry>() {
+					public boolean match(ConceptEntry con) {
+						if(con.getId().equalsIgnoreCase(id)){
+							return true; 
+						}
+						return false;
+					}
+				});
+
+		if (results.size() > 0) {
+			return results.get(0).getChangeEvent();
+		}
+
+		return null;
 	}
 }

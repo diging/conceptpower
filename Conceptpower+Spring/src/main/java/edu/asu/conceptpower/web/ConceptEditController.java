@@ -9,8 +9,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.jettison.json.JSONException;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.bean.ConceptEditBean;
+import edu.asu.conceptpower.core.ChangeEvent;
+import edu.asu.conceptpower.core.ChangeEventConstants;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
@@ -139,7 +139,15 @@ public class ConceptEditController {
 		String modified = conceptEntry.getModified() != null ? conceptEntry.getModified() : "";
 		if (!modified.trim().isEmpty())
 			modified += ", ";
-		conceptEntry.setModified(modified + userId + "@" + (new Date()).toString());
+		
+		ChangeEvent changeEvent = new ChangeEvent();
+		changeEvent.setDate(new Date().toString());
+		changeEvent.setUserName(userId);
+		changeEvent.setType(ChangeEventConstants.MODIFICATION);
+		List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
+		conceptEntry.setChangeEvent(changeEventList);
+		
+		//conceptEntry.setModified(modified + userId + "@" + (new Date()).toString());
 
 		conceptManager.storeModifiedConcept(conceptEntry);
 		
