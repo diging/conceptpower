@@ -2,7 +2,9 @@ package edu.asu.conceptpower.web;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.core.ChangeEvent;
+import edu.asu.conceptpower.core.ChangeEventConstants;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
@@ -129,6 +133,12 @@ public class ConceptAddController {
 			conceptEntry.setSimilarTo(req.getParameter("similar"));
 			conceptEntry.setTypeId(req.getParameter("types"));
 			conceptEntry.setCreatorId(principal.getName());
+
+			ChangeEvent changeEvent = new ChangeEvent(conceptEntry.getCreatorId(), new Date().toString(),
+					ChangeEventConstants.CREATION);
+			List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
+			changeEventList.add(changeEvent);
+			conceptEntry.setChangeEvent(changeEventList);
 			conceptManager.addConceptListEntry(conceptEntry);
 
 		} catch (DictionaryDoesNotExistException e) {
