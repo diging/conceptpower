@@ -120,9 +120,13 @@ public class ConceptListController {
 		details.put("similarto",
 				conceptEntry.getEntry().getSimilarTo() == null ? ""
 						: conceptEntry.getEntry().getSimilarTo());
+//		details.put("creator",
+//				conceptEntry.getEntry().getCreatorId() == null ? ""
+//						: conceptEntry.getEntry().getCreatorId());
+		
 		details.put("creator",
-				conceptEntry.getEntry().getCreatorId() == null ? ""
-						: conceptEntry.getEntry().getCreatorId());
+				conceptEntry.getEntry().getChangeEvent().get(0).getUserName() == null ? ""
+						: conceptEntry.getEntry().getChangeEvent().get(0).getUserName());
 
 		return new ResponseEntity<String>(new JSONObject(details).toString(), HttpStatus.OK);
 	}

@@ -17,6 +17,15 @@ public class ChangeEvent {
 	 */
 	private String type;
 
+	public ChangeEvent() {
+	}
+
+	public ChangeEvent(String userName, String date, String type) {
+		this.userName = userName;
+		this.date = date;
+		this.type = type;
+	}
+
 	public String getUserName() {
 		return userName;
 	}

@@ -82,7 +82,7 @@
 							type="image"
 							src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a>
 					</td>
-					<td align="justify"  width="20"><a
+					<td align="justify" width="20"><a
 						href="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/${concept.entry.id}"><input
 							type="image"
 							src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
@@ -106,7 +106,8 @@
 								<c:out value="-> ${syn.word}"></c:out>
 							</c:forEach></font></td>
 					<td align="justify"><font size="2"><c:out
-								value="${concept.creator.username}"></c:out></font></td>
+								value="${concept.entry.changeEvent[0].userName}"></c:out></font> <!-- ${concept.creator.username} -->
+					</td>
 				</tr>
 			</c:forEach>
 		</tbody>
