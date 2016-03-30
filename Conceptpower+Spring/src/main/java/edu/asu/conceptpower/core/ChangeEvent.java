@@ -1,6 +1,10 @@
 package edu.asu.conceptpower.core;
 
-public class ChangeEvent {
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+public class ChangeEvent implements Comparable{
 
 	/**
 	 * Stores the username of the creator or modified userName
@@ -48,5 +52,19 @@ public class ChangeEvent {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		ChangeEvent changeEvent = (ChangeEvent)o;
+		//Wed Mar 30 10:59:42 MST 2016
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+		try {
+			return sdf.parse(date).before(sdf.parse(changeEvent.getDate())) ? 1 : 0;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
 	}
 }

@@ -120,8 +120,7 @@ public class ConceptWrapperAddController {
 			conceptEntry.setEqualTo(req.getParameter("equals"));
 			conceptEntry.setSimilarTo(req.getParameter("similar"));
 			conceptEntry.setTypeId(req.getParameter("types"));
-			conceptEntry.setCreatorId(principal.getName()); 
-			conceptManager.addConceptListEntry(conceptEntry);	
+			conceptManager.addConceptListEntry(conceptEntry, principal.getName());	
 		}
 
 		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.core.ChangeEvent;
+import edu.asu.conceptpower.core.ChangeEventConstants;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
@@ -120,13 +122,14 @@ public class ConceptListController {
 		details.put("similarto",
 				conceptEntry.getEntry().getSimilarTo() == null ? ""
 						: conceptEntry.getEntry().getSimilarTo());
-//		details.put("creator",
-//				conceptEntry.getEntry().getCreatorId() == null ? ""
-//						: conceptEntry.getEntry().getCreatorId());
 		
-		details.put("creator",
-				conceptEntry.getEntry().getChangeEvent().get(0).getUserName() == null ? ""
-						: conceptEntry.getEntry().getChangeEvent().get(0).getUserName());
+		List<ChangeEvent> changeEvents = conceptEntry.getEntry().getChangeEvents();
+		for(ChangeEvent changeEvent: changeEvents){
+			if (changeEvent.getType().equalsIgnoreCase(ChangeEventConstants.CREATION)) {
+				details.put("creator", changeEvent.getUserName() == null ? "" : changeEvent.getUserName());
+				break;
+			}
+		}
 
 		return new ResponseEntity<String>(new JSONObject(details).toString(), HttpStatus.OK);
 	}

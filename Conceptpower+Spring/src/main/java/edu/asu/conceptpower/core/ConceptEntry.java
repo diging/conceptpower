@@ -66,16 +66,9 @@ public class ConceptEntry implements Serializable {
 	
 	private String broadens;
 	
-	@SearchField(fieldName = SearchFieldNames.CREATOR)
-	private String creatorId;
-
-	@SearchField(fieldName = SearchFieldNames.MODIFIED)
-	private String modified;
-	
 	private boolean isDeleted;
 	
-	@SearchField(fieldName = SearchFieldNames.CHANGE_EVENTS_LIST)
-	private List<ChangeEvent> changeEvent = new ArrayList<ChangeEvent>();
+	private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
 
 	public ConceptEntry(){}
 	
@@ -85,18 +78,6 @@ public class ConceptEntry implements Serializable {
 		this.description = description;
 	}
 	
-	/**
-	 * A string containing the id of the user who created
-	 * an entry.
-	 * @return the id of the user who created an entry
-	 */
-	public String getCreatorId() {
-		return creatorId;
-	}
-
-	public void setCreatorId(String creatorId) {
-		this.creatorId = creatorId;
-	}
 
 	/**
 	 * A string containing the ids of other conceptpower entries
@@ -255,18 +236,6 @@ public class ConceptEntry implements Serializable {
 		this.synsetIds = synsetIds;
 	}
 
-	public void setModified(String modified) {
-		this.modified = modified;
-	}
-
-	/**
-	 * A string containing a string describing who modified a concept
-	 * and when.
-	 */
-	public String getModified() {
-		return modified;
-	}
-
 	/**
 	 * This function return true if the entry was deleted by a user
 	 * and false if it was not deleted.
@@ -285,8 +254,6 @@ public class ConceptEntry implements Serializable {
 		int result = 1;
 		result = prime * result
 				+ ((conceptList == null) ? 0 : conceptList.hashCode());
-		result = prime * result
-				+ ((creatorId == null) ? 0 : creatorId.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((pos == null) ? 0 : pos.hashCode());
 		result = prime * result + ((typeId == null) ? 0 : typeId.hashCode());
@@ -309,11 +276,6 @@ public class ConceptEntry implements Serializable {
 			if (other.conceptList != null)
 				return false;
 		} else if (!conceptList.equals(other.conceptList))
-			return false;
-		if (creatorId == null) {
-			if (other.creatorId != null)
-				return false;
-		} else if (!creatorId.equals(other.creatorId))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -343,12 +305,12 @@ public class ConceptEntry implements Serializable {
 		return true;
 	}
 
-	public List<ChangeEvent> getChangeEvent() {
-		return changeEvent;
+	public List<ChangeEvent> getChangeEvents() {
+		return changeEvents;
 	}
 
-	public void setChangeEvent(List<ChangeEvent> changeEvent) {
-		this.changeEvent = changeEvent;
+	public void setChangeEvents(List<ChangeEvent> changeEvents) {
+		this.changeEvents = changeEvents;
 	}
 
 }

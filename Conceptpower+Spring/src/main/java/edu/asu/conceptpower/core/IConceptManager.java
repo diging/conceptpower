@@ -108,11 +108,11 @@ public interface IConceptManager {
 	 * @throws DictionaryModifyException If the specified concept list in the
 	 * concept is the Wordnet list. 
 	 */
-	public abstract String addConceptListEntry(ConceptEntry entry)
+	public abstract String addConceptListEntry(ConceptEntry entry, String userName)
 			throws DictionaryDoesNotExistException, DictionaryModifyException;
 
-	public abstract void storeModifiedConcept(ConceptEntry entry);
+	public abstract void storeModifiedConcept(ConceptEntry entry, String userName);
 	
-	public abstract void deleteConcept(String id);
-
+	public abstract void deleteConcept(String id, String userName);
+	
 }

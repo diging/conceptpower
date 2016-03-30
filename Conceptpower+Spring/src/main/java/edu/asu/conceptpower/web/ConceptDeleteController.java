@@ -1,8 +1,7 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.core.ChangeEvent;
-import edu.asu.conceptpower.core.ChangeEventConstants;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
@@ -59,8 +57,14 @@ public class ConceptDeleteController {
 		model.addAttribute("type", concept.getTypeId());
 		model.addAttribute("equal", concept.getEqualTo());
 		model.addAttribute("similar", concept.getSimilarTo());
-		model.addAttribute("user", concept.getModified());
-		model.addAttribute("modified", concept.getModified());
+		
+		//Getting the latest modified user id
+		
+		List<ChangeEvent> changeEvents  =concept.getChangeEvents();
+		Collections.sort(changeEvents);
+		
+		model.addAttribute("user", changeEvents.get(0).getUserName());
+		model.addAttribute("modified", changeEvents.get(0).getUserName());
 		if(fromHomeScreenDelete!=null){
 		model.addAttribute("fromHomeScreenDelete",fromHomeScreenDelete);
 		}
@@ -109,18 +113,8 @@ public class ConceptDeleteController {
             @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, ModelMap model,Principal principal) {
         ConceptEntry concept = conceptManager.getConceptEntry(id);
         
-        
-        ChangeEvent changeEvent = new ChangeEvent();
-        changeEvent.setType(ChangeEventConstants.DELETION);
-        changeEvent.setDate(new Date().toString());
-        changeEvent.setUserName(principal.getName());
-        List<ChangeEvent> ChangeEventsList = new ArrayList<ChangeEvent>();
-        ChangeEventsList.add(changeEvent);
-        concept.setChangeEvent(ChangeEventsList);
-        
-        //concept.setDeleted(true);
         // set modified and user details
-        conceptManager.storeModifiedConcept(concept);
+        conceptManager.deleteConcept(concept.getId(), principal.getName());
 
         List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
 
@@ -135,8 +129,8 @@ public class ConceptDeleteController {
     }
 	
     @RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
-    public String deleteConcept(@PathVariable("id") String id, ModelMap model,@ModelAttribute("conceptSearchBean")ConceptSearchBean conceptSearchBean) {
-        conceptManager.deleteConcept(id);
+    public String deleteConcept(@PathVariable("id") String id, ModelMap model,@ModelAttribute("conceptSearchBean")ConceptSearchBean conceptSearchBean, Principal principal) {
+        conceptManager.deleteConcept(id, principal.getName());
         return "welcome";
     }
 	
