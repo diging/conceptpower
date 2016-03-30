@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.env.Environment;
 
+import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.users.UserDatabaseClient;
 
@@ -27,7 +28,7 @@ public class UsersManagerTest {
     private Environment env = Mockito.mock(Environment.class);
 
     @InjectMocks
-    private UsersManager usersManager;
+    private IUserManager usersManager;
 
     @Mock
     private Map<String, String> admins = Mockito.mock(Map.class);
