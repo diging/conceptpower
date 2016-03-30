@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.junit.Before;
@@ -15,7 +14,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.env.Environment;
 
-import edu.asu.conceptpower.users.IUserManager;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.users.UserDatabaseClient;
 
@@ -28,7 +26,7 @@ public class UsersManagerTest {
     private Environment env = Mockito.mock(Environment.class);
 
     @InjectMocks
-    private IUserManager usersManager;
+    private UsersManager usersManager;
 
     @Mock
     private Map<String, String> admins = Mockito.mock(Map.class);
