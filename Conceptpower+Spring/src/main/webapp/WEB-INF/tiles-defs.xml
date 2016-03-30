@@ -228,6 +228,13 @@
 		<put-attribute name="currentPage" value="users" />
 		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
 	</definition>
+	<definition name="auth/user/encrypt" extends="base.definition">
+		<put-attribute name="title" value="User Management" />
+		<put-attribute name="navigation" value="/WEB-INF/views/nav/mainnav.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/auth/user/encrypt.jsp" />
+		<put-attribute name="currentPage" value="users" />
+		<put-attribute name="sidebar" value="/WEB-INF/views/sidebar.jsp" />
+	</definition>
 
 
 </tiles-definitions>

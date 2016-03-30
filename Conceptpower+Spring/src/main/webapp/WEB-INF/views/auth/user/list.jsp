@@ -6,9 +6,10 @@
 	class="display dataTable" width="100%">
 	<thead>
 		<tr>
-			<th>Delete User</th>
-			<th>Edit User</th>
-			<th>Edit Password</th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th></th>
 			<th>Username</th>
 			<th>Name</th>
 			<th>Email</th>
@@ -18,15 +19,20 @@
 	<tbody>
 		<c:forEach var="user" items="${users}">
 			<tr>
-				<td width="20"><a
-					href="${pageContext.servletContext.contextPath}/auth/user/deleteuser/${user.username}"><img
-						src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png" /></a></td>
-				<td width="20"><a
-					href="${pageContext.servletContext.contextPath}/auth/user/edituser/${user.username}"><img
-						src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png" /></a></td>
-				<td width="20"><a
-					href="${pageContext.servletContext.contextPath}/auth/user/editpassword/${user.username}"><img
-						src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png" /></a></td>
+				<td ><a title="Delete User"
+					href="${pageContext.servletContext.contextPath}/auth/user/deleteuser/${user.username}"><i class="fa fa-trash"></i></a></td>
+				<td ><a title="Edit User"
+					href="${pageContext.servletContext.contextPath}/auth/user/edituser/${user.username}"><i class="fa fa-pencil"></i></a></td>
+				<td ><a title="Change Password"
+					href="${pageContext.servletContext.contextPath}/auth/user/editpassword/${user.username}"><i class="fa fa-key"></i></a></td>
+				<td>
+					<c:if test="${not user.isEncrypted}">
+						<a title="Encrypt Password" href="${pageContext.servletContext.contextPath}/auth/user/encrypt/${user.username}"><i class="fa fa-lock"></i></a>
+					</c:if>
+					<c:if test="${user.isEncrypted}">
+						<i title="Password already encrypted." class="fa fa-lock"></i>
+					</c:if>
+				</td>
 				<td>${user.username}</td>
 				<td>${user.fullname}</td>
 				<td>${user.email}</td>

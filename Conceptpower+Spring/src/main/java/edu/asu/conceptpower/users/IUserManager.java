@@ -38,4 +38,6 @@ public interface IUserManager {
 
 	public abstract User findUserByEmail(String email);
 
+	public abstract void updatePasswordEncryption(String username);
+
 }

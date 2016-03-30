@@ -128,6 +128,7 @@ public class UsersManager implements IUserManager {
 			user.setFullname(u.getFullname());
 			user.setEmail(u.getEmail());
 			user.setIsAdmin(u.getIsAdmin());
+			user.setIsEncrypted(u.getIsEncrypted());
 			userNames.add(user);
 		}
 		return userNames.toArray(new User[userNames.size()]);
@@ -146,9 +147,17 @@ public class UsersManager implements IUserManager {
 		client.addUser(user);
 		return user;
 	}
+	
+	@Override
+	public void updatePasswordEncryption(String username) {
+		User user = client.findUser(username);
+		encryptPassword(user);
+		client.update(user);
+	}
 
 	private void encryptPassword(User user) {
 		user.setPw(BCrypt.hashpw(user.getPw(), BCrypt.gensalt()));
+		user.setIsEncrypted(true);
 	}
 
 	/*
