@@ -50,8 +50,9 @@ public class UserDatabaseClient {
 		
 		ObjectSet<User> results = client.queryByExample(user);
 		// there should only be exactly one object with this id
-		if (results.size() >=  1)
+		if (results.size() >=  1) {
 			return results.get(0);	
+		}
 		
 		return null;
 	}
