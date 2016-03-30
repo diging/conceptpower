@@ -60,7 +60,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 				wrapper.setType(typesManager.getType(entry.getTypeId()));
 
 			List<ChangeEvent> changeEvents = entry.getChangeEvents();
-			if (changeEvents != null) {
+			if (changeEvents != null && changeEvents.size() > 0) {
 				Collections.sort(changeEvents);
 				wrapper.setCreator(usersManager.findUser(changeEvents.get(0).getUserName()));
 			}

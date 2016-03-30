@@ -69,6 +69,12 @@ public class ConceptEntry implements Serializable {
 	private boolean isDeleted;
 	
 	private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
+	
+	private transient String lastModifiedUser;
+	
+	private transient String lastCreatedUser;
+	
+	private transient String deletedUser;
 
 	public ConceptEntry(){}
 	
@@ -312,6 +318,30 @@ public class ConceptEntry implements Serializable {
 	public void setChangeEvents(List<ChangeEvent> changeEvents) {
 		this.changeEvents = changeEvents;
 	}
+
+    public String getLastModifiedUser() {
+        return lastModifiedUser;
+    }
+
+    public void setLastModifiedUser(String lastModifiedUser) {
+        this.lastModifiedUser = lastModifiedUser;
+    }
+
+    public String getLastCreatedUser() {
+        return lastCreatedUser;
+    }
+
+    public void setLastCreatedUser(String lastCreatedUser) {
+        this.lastCreatedUser = lastCreatedUser;
+    }
+
+    public String getDeletedUser() {
+        return deletedUser;
+    }
+
+    public void setDeletedUser(String deletedUser) {
+        this.deletedUser = deletedUser;
+    }
 
 }
 
