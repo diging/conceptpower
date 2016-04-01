@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.web;
+package edu.asu.conceptpower.servlet.web;
 
 import java.security.Principal;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.conceptpower.users.IUserManager;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.servlet.users.IUserManager;
+import edu.asu.conceptpower.servlet.users.User;
 
 @Controller
 public class UserEncryptPasswordController {

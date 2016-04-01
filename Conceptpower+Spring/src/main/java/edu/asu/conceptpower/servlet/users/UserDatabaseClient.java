@@ -1,6 +1,5 @@
-package edu.asu.conceptpower.users;
+package edu.asu.conceptpower.servlet.users;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
-import edu.asu.conceptpower.db4o.DatabaseManager;
+import edu.asu.conceptpower.root.DatabaseManager;
 
 @Component
 public class UserDatabaseClient {

@@ -215,4 +215,10 @@ public class UsersManager implements IUserManager {
     public void setEnv(Environment env) {
         this.env = env;
     }
+
+    @Override
+    public void updatePasswordEncryption(String username) {
+        // TODO Auto-generated method stub
+        
+    }
 }

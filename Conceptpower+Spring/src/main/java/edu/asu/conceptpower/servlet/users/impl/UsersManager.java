@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.users.impl;
+package edu.asu.conceptpower.servlet.users.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,10 +19,10 @@ import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.users.IUserManager;
-import edu.asu.conceptpower.users.Token;
-import edu.asu.conceptpower.users.User;
-import edu.asu.conceptpower.users.UserDatabaseClient;
+import edu.asu.conceptpower.root.UserDatabaseClient;
+import edu.asu.conceptpower.servlet.users.IUserManager;
+import edu.asu.conceptpower.servlet.users.Token;
+import edu.asu.conceptpower.servlet.users.User;
 
 /**
  * Managing class for user management.

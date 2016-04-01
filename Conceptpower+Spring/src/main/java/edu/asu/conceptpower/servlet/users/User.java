@@ -9,34 +9,35 @@ public class User implements Serializable {
      */
     private static final long serialVersionUID = 1019105087386557957L;
 
-    private String username;
+    private String user;
     private String pw;
-    private String fullname;
+    private String name;
     private boolean isAdmin;
     private String email;
+    private boolean isEncrypted;
 
     public User() {
     }
 
     public User(String user, String passwd) {
-        this.username = user;
+        this.user = user;
         this.pw = passwd;
         isAdmin = false;
     }
 
     public User(String user, String passwd, boolean isAdmin) {
-        this.username = user;
+        this.user = user;
         this.pw = passwd;
         this.isAdmin = isAdmin;
     }
 
     public String getUsername() {
-        return username;
+        return user;
     }
 
         
     public void setUsername(String user) {
-        this.username = user;
+        this.user = user;
     }
 
     public String getPw() {
@@ -56,11 +57,11 @@ public class User implements Serializable {
     }
 
     public void setFullname(String name) {
-        this.fullname = name;
+        this.name = name;
     }
 
     public String getFullname() {
-        return fullname;
+        return name;
     }
 
     public String getEmail() {
@@ -70,5 +71,13 @@ public class User implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+	public boolean getIsEncrypted() {
+		return isEncrypted;
+	}
+
+	public void setIsEncrypted(boolean isEncrypted) {
+		this.isEncrypted = isEncrypted;
+	}
 
 }
