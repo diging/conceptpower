@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import edu.asu.conceptpower.servlet.core.ErrorConstants;
+
 @ControllerAdvice
 public class ConceptPowerExceptionHandler {
 
@@ -31,26 +33,24 @@ public class ConceptPowerExceptionHandler {
         logger.error(ex.getMessage(), ex);
         return modelAndView;
     }
-    
+
+    /**
+     * This method has been introduced to handle IndexRunningExceptions. All
+     * controller level classes check for index running status and proceed to
+     * the service layer. In case new user has started indexer in that time gap
+     * IndexerRunningException is passed and handled in this advice
+     * 
+     * @param req
+     * @param e
+     * @return
+     * @throws Exception
+     */
     @ExceptionHandler(value = IndexerRunningException.class)
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-        // If the exception is annotated with @ResponseStatus rethrow it and let
-        // the framework handle it - like the OrderNotFoundException example
-        // at the start of this post.
-        // AnnotationUtils is a Spring Framework utility class.
-      //  if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null)
-        //    throw e;
-
-        // Otherwise setup and send the user to a default error-view.
         ModelAndView mav = new ModelAndView();
-        mav.addObject("exception", e);
-        System.out.println(req.getHeaderNames().hasMoreElements());
-        
-        	System.out.println(req.getHeader("referer"));
-        	
-        	
-        mav.addObject("url", req.getRequestURL());
-        mav.setViewName(req.getRequestURL().toString());
+        mav.addObject("show_error_alert", true);
+        mav.addObject("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+        mav.setViewName("conceptsearch");
         return mav;
     }
 }

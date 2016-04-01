@@ -89,12 +89,28 @@
 		</ol>
 		<sec:authorize access="isAuthenticated()">
 			<p class="alignright">
-				<i class="fa fa-user"></i>  <sec:authentication property="principal.username" /> 
+				<i class="fa fa-user"></i>
+				<sec:authentication property="principal.username" />
 			</p>
 		</sec:authorize>
-		
+
+		<br />
+		<br />
+		<c:if test="${show_error_alert}">
+			<div class="alert alert-danger" id="errorMessage">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				${error_alert_msg}
+			</div>
+		</c:if>
+
+		<div class="alert alert-danger" id="errorMessage" hidden="true">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div id="error_alert_msg"></div>
+		</div>
+
+
 		<div class="row">
-			
+
 			<!-- Article main content -->
 			<article class="col-sm-12 maincontent">
 				<tiles:insertAttribute name="content" />
@@ -102,7 +118,8 @@
 			<!-- /Article -->
 
 		</div>
-	</div>	<!-- /container -->
+	</div>
+	<!-- /container -->
 
 	<footer id="footer" class="top-space sticky">
 
