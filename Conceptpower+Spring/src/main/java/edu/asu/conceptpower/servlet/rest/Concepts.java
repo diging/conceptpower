@@ -23,6 +23,7 @@ import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.POS;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 
 @Controller
@@ -36,12 +37,13 @@ public class Concepts {
 
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(value = "rest/concept/add", method = RequestMethod.POST)
-	public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal) throws IOException, ParseException {
-		
+	public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal)
+			throws IOException, ParseException {
+
 		StringReader reader = new StringReader(body);
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
-		
+
 		String pos = jsonObject.get("pos").toString();
 		if (!POS.posValues.contains(pos)) {
 			logger.error("Error creating concept from REST call. " + pos + " does not exist.");
@@ -58,28 +60,29 @@ public class Concepts {
 		conceptEntry.setEqualTo(jsonObject.get("equals").toString());
 		conceptEntry.setSimilarTo(jsonObject.get("similar").toString());
 		conceptEntry.setTypeId(jsonObject.get("types").toString());
-		
+
 		String id = null;
 		try {
-			if((id = conceptManager.addConceptListEntry(conceptEntry)) == null){
-			    return new ResponseEntity<String>(jsonObject.toJSONString(), HttpStatus.CONFLICT);
-			}
+			id = conceptManager.addConceptListEntry(conceptEntry);
 		} catch (DictionaryDoesNotExistException e) {
 			logger.error("Error creating concept from REST call.", e);
-			return new ResponseEntity<String>("Specified dictionary does not exist in Conceptpower.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Specified dictionary does not exist in Conceptpower.",
+					HttpStatus.BAD_REQUEST);
 		} catch (DictionaryModifyException e) {
 			logger.error("Error creating concept from REST call.", e);
 			return new ResponseEntity<String>("Specified dictionary can't be modified.", HttpStatus.BAD_REQUEST);
-		} catch(LuceneException le){
-		    logger.error("Error creating concept from REST call.", le);
-            return new ResponseEntity<String>("Concept Cannot be added", HttpStatus.BAD_REQUEST);
+		} catch (LuceneException le) {
+			logger.error("Error creating concept from REST call.", le);
+			return new ResponseEntity<String>("Concept Cannot be added", HttpStatus.BAD_REQUEST);
 		} catch (IllegalAccessException e) {
-		    logger.error("Error creating concept from REST call.", e);
-		    return new ResponseEntity<String>("Illegal Access", HttpStatus.BAD_REQUEST);
-        }
-		
+			logger.error("Error creating concept from REST call.", e);
+			return new ResponseEntity<String>("Illegal Access", HttpStatus.BAD_REQUEST);
+		} catch (IndexerRunningException ir) {
+			return new ResponseEntity<String>(jsonObject.toJSONString(), HttpStatus.CONFLICT);
+		}
+
 		jsonObject.put("id", id);
-		
+
 		return new ResponseEntity<String>(jsonObject.toJSONString(), HttpStatus.OK);
 	}
 }

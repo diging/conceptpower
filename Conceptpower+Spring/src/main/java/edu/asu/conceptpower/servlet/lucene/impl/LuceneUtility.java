@@ -392,15 +392,7 @@ public class LuceneUtility implements ILuceneUtility {
                 String searchString = fieldMap.get(search.fieldName());
                 StringBuffer searchBuffer = new StringBuffer("(+");
                 
-                if (searchString!=null && searchString.contains("pony")) {
-
-                    System.out.println("hold");
-                    
-                    //"+(" + querystr + ")"
-
-                }
-                
-                else if(searchString != null){
+                if(searchString != null){
                     if (firstEntry != 1)
                         queryString.append(" " + operator + " ");
                     firstEntry++;

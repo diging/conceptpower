@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.validation.ConceptSearchValidator;
@@ -42,6 +43,9 @@ public class ConceptSearchController {
 
     @Autowired
     private ConceptSearchValidator validator;
+    
+    @Autowired
+    private IIndexService indexService;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
@@ -67,6 +71,14 @@ public class ConceptSearchController {
         }
         List<ConceptEntryWrapper> foundConcepts = null;
         ConceptEntry[] found = null;
+        
+        if (indexService.checkIndexerStatus()) {
+            model.addAttribute("show_error_alert", true);
+            model.addAttribute("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+            // Need to include command Object
+            return "conceptsearch";
+        }
+        
         try {
             found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
                     conceptSearchBean.getPos().toString().toLowerCase().trim(), null);

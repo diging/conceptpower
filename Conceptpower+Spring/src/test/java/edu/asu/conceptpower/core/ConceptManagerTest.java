@@ -15,6 +15,7 @@ import edu.asu.conceptpower.servlet.core.impl.ConceptManager;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
 import edu.asu.conceptpower.servlet.wordnet.Constants;
@@ -127,7 +128,7 @@ public class ConceptManagerTest {
 
     @Test
     public void testAddConceptListEntry()
-            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException {
+            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList("list1");
         newConcept.setCreatorId("testuser");
@@ -142,7 +143,7 @@ public class ConceptManagerTest {
 
     @Test(expected = DictionaryDoesNotExistException.class)
     public void testAddConceptListEntryWrongDict()
-            throws DictionaryModifyException, LuceneException, IllegalAccessException, DictionaryDoesNotExistException {
+            throws DictionaryModifyException, LuceneException, IllegalAccessException, DictionaryDoesNotExistException, IndexerRunningException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList("list-not-exist");
         newConcept.setCreatorId("testuser");
@@ -159,7 +160,7 @@ public class ConceptManagerTest {
 
     @Test(expected = DictionaryModifyException.class)
     public void testAddConceptListEntryToWordnet()
-            throws DictionaryDoesNotExistException, LuceneException, IllegalAccessException, DictionaryModifyException {
+            throws DictionaryDoesNotExistException, LuceneException, IllegalAccessException, DictionaryModifyException, IndexerRunningException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList(Constants.WORDNET_DICTIONARY);
         newConcept.setCreatorId("testuser");

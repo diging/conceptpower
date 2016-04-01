@@ -1,8 +1,6 @@
 package edu.asu.conceptpower.servlet.web;
 
 import java.security.Principal;
-import java.util.Date;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.core.IndexingEvent;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 
@@ -57,23 +56,27 @@ public class LuceneIndexController {
      * @param principal
      * @param model
      * @return
+     * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+    public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model)
+            throws IndexerRunningException {
         IndexingEvent bean = null;
         try {
-            if (manager.deleteIndexes() && manager.indexConcepts()) {
+            if (manager.checkIndexerStatus()) {
                 bean = dao.getTotalNumberOfWordsIndexed();
-                bean.setMessage("Indexed successfully");
+                bean.setMessage(ErrorConstants.INDEXER_RUNNING);
                 return bean;
             }
-            bean = new IndexingEvent();
-            bean.setMessage(ErrorConstants.INDEXER_RUNNING);
+            manager.deleteIndexes();
+            manager.indexConcepts();
+            bean = dao.getTotalNumberOfWordsIndexed();
+            bean.setMessage("Indexed successfully");
+            return bean;
         } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
             bean.setMessage(ex.getMessage());
             return bean;
         }
-        return bean;
     }
 
     /**
@@ -83,17 +86,21 @@ public class LuceneIndexController {
      * @param principal
      * @param model
      * @return
+     * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/deleteIndex", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody IndexingEvent deleteConcepts(HttpServletRequest req, Principal principal, ModelMap model) {
+    public @ResponseBody IndexingEvent deleteConcepts(HttpServletRequest req, Principal principal, ModelMap model)
+            throws IndexerRunningException {
         IndexingEvent bean = new IndexingEvent();
         try {
-            if (manager.deleteIndexes()) {
+            if (manager.checkIndexerStatus()) {
                 bean = dao.getTotalNumberOfWordsIndexed();
-                bean.setMessage("Concepts deleted from index successfully");
+                bean.setMessage(ErrorConstants.INDEXER_RUNNING);
                 return bean;
             }
-            bean.setMessage(ErrorConstants.INDEXER_RUNNING);
+            manager.deleteIndexes();
+            bean = dao.getTotalNumberOfWordsIndexed();
+            bean.setMessage("Concepts deleted from index successfully");
             return bean;
         } catch (LuceneException e) {
             bean.setMessage(e.getMessage());

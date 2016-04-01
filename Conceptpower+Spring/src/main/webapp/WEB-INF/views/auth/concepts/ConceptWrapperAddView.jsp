@@ -268,7 +268,15 @@
 													.fnClearTable();
 											$('#synonymstable').dataTable()
 													.fnAddData(data);
-
+										},
+										error : function(httpStatus, response){
+											if(httpStatus.status == 409){
+												var errorMessage = "<i class=\"fa fa-exclamation-triangle\">"+httpStatus.responseText+"</i>";
+												$("#synonymModal").dialog("close");
+												$('#synonymModal').modal('toggle');
+												$('#errorMessage').show();
+												$('#error_alert_msg').html(errorMessage);
+											}
 										}
 									});
 						});

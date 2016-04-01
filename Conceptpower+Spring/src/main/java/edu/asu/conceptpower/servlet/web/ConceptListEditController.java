@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +22,8 @@ import edu.asu.conceptpower.servlet.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.core.IIndexService;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.validation.ConceptListAddValidator;
 
@@ -43,6 +44,9 @@ public class ConceptListEditController {
 
     @Autowired
     private ConceptListAddValidator validator;
+    
+    @Autowired
+    private IIndexService indexService;
 
     @InitBinder
     protected void initBinder(WebDataBinder validateBinder) {
@@ -78,11 +82,13 @@ public class ConceptListEditController {
      *            holds HTTP request information
      * @return Returns a string value to redirect user to concept list page
      * @throws IllegalAccessException 
+     * @throws IndexerRunningException 
      */
     @RequestMapping(value = "auth/conceptlist/storeeditlist", method = RequestMethod.POST)
     public String editList(HttpServletRequest req,
             @Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
-            BindingResult result, ModelMap model) throws LuceneException, IllegalAccessException {
+			BindingResult result, ModelMap model)
+                    throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (result.hasErrors()) {
             return "/auth/conceptlist/editlist";
         }
@@ -90,6 +96,13 @@ public class ConceptListEditController {
         ConceptList list = conceptListManager.getConceptList(conceptListAddForm.getOldListName());
         list.setConceptListName(conceptListAddForm.getListName());
         list.setDescription(conceptListAddForm.getDescription());
+
+        if (indexService.checkIndexerStatus()) {
+            model.addAttribute("show_error_alert", true);
+            model.addAttribute("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+            // Need to include command Object
+            return "/auth/conceptlist/editlist";
+        }
 
         conceptListManager.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
 
@@ -101,9 +114,8 @@ public class ConceptListEditController {
         while (entriesIterator.hasNext()) {
             ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
             conceptEntry.setConceptList(list.getConceptListName());
-            if(!conceptManager.storeModifiedConcept(conceptEntry)){
-                model.addAttribute(ErrorConstants.INDEXERSTATUS, ErrorConstants.INDEXER_RUNNING);
-            }
+            conceptManager.storeModifiedConcept(conceptEntry);
+            model.addAttribute(ErrorConstants.INDEXERSTATUS, ErrorConstants.INDEXER_RUNNING);
         }
         return "redirect:/auth/conceptlist";
     }

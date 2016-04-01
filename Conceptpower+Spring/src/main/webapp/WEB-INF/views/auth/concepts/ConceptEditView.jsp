@@ -63,24 +63,38 @@ $(function() {
                             $("#synonymViewDiv").show();
                             $('#synonymstable').dataTable().fnClearTable();
                             $("#synonymstable").show();
-                            var addedsynonym = $('#synonymsids').val();
-                            var synonymname = $("#synonymname").val();
-                            $
-                                    .ajax({
-                                        type : "GET",
-                                        url : "${pageContext.servletContext.contextPath}/conceptAddSynonymView",
-                                        data : {
-                                            synonymname : synonymname,
-                                            addedsynonym : addedsynonym
-                                        },
-                                        success : function(response) {
-                                        	
+                            
+	var addedsynonym = $('#synonymsids').val();
+							var synonymname = $("#synonymname").val();
+							$
+									.ajax({
+										type : "GET",
+										url : "${pageContext.servletContext.contextPath}/conceptAddSynonymView",
+										data : {
+											synonymname : synonymname,
+											addedsynonym : addedsynonym
+										},
+										success : function(response) {
 											var data = jQuery
 													.parseJSON(response);
 											$('#synonymstable').dataTable()
 													.fnClearTable();
 											$('#synonymstable').dataTable()
 													.fnAddData(data);
+										},
+										error : function(httpStatus, response) {
+											if (httpStatus.status == 409) {
+												var errorMessage = "<i class=\"fa fa-exclamation-triangle\">"
+														+ httpStatus.responseText
+														+ "</i>";
+												$("#synonymModal").dialog(
+														"close");
+												$('#synonymModal').modal(
+														'toggle');
+												$('#errorMessage').show();
+												$('#error_alert_msg').html(
+														errorMessage);
+											}
 										}
 									});
 						});
@@ -139,7 +153,7 @@ $(function() {
 							"bAutoWidth" : false
 						});
 						var conceptid = $('#conceptid').val();
-						
+
 						$
 								.ajax({
 									type : "GET",
@@ -161,7 +175,7 @@ $(function() {
 										}
 										console.log("Total");
 										console.log(total);
-										if(total > 0 ){
+										if (total > 0) {
 											$("#addedSynonyms").show();
 											$("#addedSynonymsTable").show();
 										}

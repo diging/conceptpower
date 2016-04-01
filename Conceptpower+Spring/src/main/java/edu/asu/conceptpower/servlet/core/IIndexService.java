@@ -10,12 +10,14 @@ public interface IIndexService {
     public ConceptEntry[] searchForConcepts(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException,IndexerRunningException;
 
-    public boolean insertConcept(ConceptEntry entry) throws IllegalAccessException, LuceneException;
+    public void insertConcept(ConceptEntry entry) throws IllegalAccessException, LuceneException,IndexerRunningException;
 
-    public boolean deleteById(String id) throws LuceneException;
+    public void deleteById(String id) throws LuceneException, IndexerRunningException;
 
-    public boolean deleteIndexes() throws LuceneException;
+    public void deleteIndexes() throws LuceneException, IndexerRunningException;
 
-    public boolean indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException;
+    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException;
+    
+    public boolean checkIndexerStatus();
     
 }

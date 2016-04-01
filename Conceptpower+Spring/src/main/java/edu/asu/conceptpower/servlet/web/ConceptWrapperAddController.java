@@ -26,6 +26,7 @@ import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
+import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
@@ -54,6 +55,9 @@ public class ConceptWrapperAddController {
 
     @Autowired
     private IConceptTypeManger conceptTypesManager;
+    
+    @Autowired
+    private IIndexService indexService;
 
     /**
      * This method provides required information for concept wrapper creation
@@ -98,32 +102,38 @@ public class ConceptWrapperAddController {
      * @throws DictionaryModifyException
      * @throws DictionaryDoesNotExistException
      * @throws IllegalAccessException 
+     * @throws IndexerRunningException 
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper/add", method = RequestMethod.POST)
     public String addConcept(HttpServletRequest req, Principal principal, Model model)
-            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException {
+            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
 
         if (req.getParameter("lists") == null || req.getParameter("lists").trim().isEmpty()) {
             req.setAttribute("errormsg", "You have to select a concept list.");
             return "forward:/auth/conceptlist/addconceptwrapper";
         }
         String[] wrappers = req.getParameter("wrapperids").split(Constants.CONCEPT_SEPARATOR);
-        if (wrappers.length > 0) {
-            ConceptEntry conceptEntry = new ConceptEntry();
-            conceptEntry.setWord(conceptManager.getConceptEntry(wrappers[0]).getWord());
-            conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
-            conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-            conceptEntry.setWordnetId(req.getParameter("wrapperids"));
-            conceptEntry.setConceptList(req.getParameter("lists"));
-            conceptEntry.setDescription(req.getParameter("description"));
-            conceptEntry.setEqualTo(req.getParameter("equals"));
-            conceptEntry.setSimilarTo(req.getParameter("similar"));
-            conceptEntry.setTypeId(req.getParameter("types"));
-            conceptEntry.setCreatorId(principal.getName());
-            if(conceptManager.addConceptListEntry(conceptEntry) == null){
-                model.addAttribute(ErrorConstants.INDEXERSTATUS, ErrorConstants.INDEXER_RUNNING);
+		if (wrappers.length > 0) {
+			ConceptEntry conceptEntry = new ConceptEntry();
+			conceptEntry.setWord(conceptManager.getConceptEntry(wrappers[0]).getWord());
+			conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
+			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
+			conceptEntry.setWordnetId(req.getParameter("wrapperids"));
+			conceptEntry.setConceptList(req.getParameter("lists"));
+			conceptEntry.setDescription(req.getParameter("description"));
+			conceptEntry.setEqualTo(req.getParameter("equals"));
+			conceptEntry.setSimilarTo(req.getParameter("similar"));
+			conceptEntry.setTypeId(req.getParameter("types"));
+			conceptEntry.setCreatorId(principal.getName());
+			
+            if (indexService.checkIndexerStatus()) {
+                model.addAttribute("show_error_alert", true);
+                model.addAttribute("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+                // Need to include command Object
+                return "forward:/auth/conceptlist/addconceptwrapper";
             }
-        }
+			conceptManager.addConceptListEntry(conceptEntry);
+		}
 
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
     }
@@ -147,12 +157,18 @@ public class ConceptWrapperAddController {
         if (!concept.trim().isEmpty()) {
 
             ConceptEntry[] found = null;
+            
+            if (indexService.checkIndexerStatus()) {
+                model.addAttribute("show_error_alert", true);
+                model.addAttribute("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+                return "/login";
+            }
 
             try {
                 found = conceptManager.getConceptListEntriesForWord(concept, pos, Constants.WORDNET_DICTIONARY);
             } catch (IndexerRunningException ie) {
                 model.addAttribute(ErrorConstants.INDEXER_RUNNING, ie.getMessage());
-                return "/auth/conceptlist/addconceptwrapper";
+                return "/login";
             }
 
             List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);

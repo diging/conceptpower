@@ -56,9 +56,8 @@
 	
 	
 <script src="${pageContext.servletContext.contextPath}/resources/js/moment.js"></script>
-<script src="${pageContext.servletContext.contextPath}/resources/js/moment-timezone-with-data.js"></script>	
-	
-	
+<script src="${pageContext.servletContext.contextPath}/resources/js/moment-timezone-with-data.js"></script>
+
 	<tiles:importAttribute name="currentPage" scope="request" />
 	
 	<!-- Fixed navbar -->
@@ -82,7 +81,7 @@
 
 	<!-- container -->
 	<div class="container main">
-
+	
 		<ol class="breadcrumb">
 			<tiles:importAttribute />
 			<li><a href="${pageContext.servletContext.contextPath}">Home</a></li>
@@ -98,6 +97,19 @@
 				<i class="fa fa-user"></i>  <sec:authentication property="principal.username" /> 
 			</p>
 		</sec:authorize>
+		
+		<br/><br/>
+		<c:if test="${show_error_alert}">
+		<div class="alert alert-danger" id="errorMessage">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			${error_alert_msg}
+		</div>
+	</c:if>
+
+	<div class="alert alert-danger" id="errorMessage" hidden="true">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<div id="error_alert_msg"></div>
+	</div>
 
 		<div class="row">
 

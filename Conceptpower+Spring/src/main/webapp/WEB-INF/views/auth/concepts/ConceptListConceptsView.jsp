@@ -60,7 +60,7 @@
 <h2>Concepts</h2>
 <c:if test="${not empty result}">
 	<table cellpadding="0" cellspacing="0"
-		class="table-striped table-bordered" id="conceptList">
+		class="table table-striped table-bordered" id="conceptList">
 		<thead>
 			<tr>
 				<th></th>
