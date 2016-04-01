@@ -14,9 +14,9 @@
 	commandName="emailBackBean"
 	action="${pageContext.servletContext.contextPath}/reset"
 	method='post'>
-	Email address: <form:input type="text" id="email" path="email" />
+	Email address: <form:input type="text" id="email" path="email" class="form-control"/>
 	<form:hidden path="token"/>
-	<input name="submit" type="submit" value="Reset" class="button" />
+	<input name="submit" type="submit" value="Reset" class="btn btn-primary" />
 	<form:errors path="email" cssClass="error"></form:errors>
 </form:form>
 

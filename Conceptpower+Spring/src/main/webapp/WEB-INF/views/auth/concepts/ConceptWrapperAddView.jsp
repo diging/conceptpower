@@ -6,6 +6,17 @@
 <%@ page session="false"%>
 
 <script type="text/javascript">
+	$(function() {
+		$("#synonymModal").dialog({
+			autoOpen : false
+		});
+		$("#addsynonym").click(function() {
+			var addedSynonymsTable = $('#addedSynonyms');
+			$('#synonymstable').dataTable().fnClearTable();
+			$("#synonymModal").dialog('open');
+			$("#synonymsDialogTable").show();
+		});
+	});
 	$(document)
 			.ready(
 					function() {
@@ -63,16 +74,16 @@
 										'#conceptSearch tbody tr',
 										"click",
 										function() {
-
+											console.log("Inside t body");
 											var aData = oTable.fnGetData(this); // get datarow
 											if (null != aData) // null if we clicked on title row
 											{
-												var word = aData[1];
-												var conceptID = aData[2];
-												var wordnetID = aData[3];
-												var description = aData[6];
+												var word = aData[0];
+												var conceptID = aData[1];
+												var wordnetID = aData[2];
+												var description = aData[5];
 												if (conceptID === wordnetID) {
-
+													console.log(conceptID);
 													var wrapperids = '';
 													if (!$(this).hasClass(
 															'row_selected')) {
@@ -136,16 +147,67 @@
 											}
 
 										});
-					});
 
-	$(function() {
-		$("#addsynonym").click(function() {
-			$("#dialog").dialog({
-				width : "auto"
-			});
-			$("#synonymsDialogTable").show();
-		});
-	});
+						$('#detailsModal')
+								.on(
+										'show.bs.modal',
+										function(event) {
+											console.log("Inside details Modal");
+											var button = $(event.relatedTarget) // Button that triggered the modal
+											var conceptid = button
+													.data('conceptid') // Extract info from data-* attributes
+											// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+											// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+											$
+													.ajax({
+														type : "GET",
+														url : "${pageContext.servletContext.contextPath}/conceptDetail",
+														data : {
+															conceptid : conceptid
+														},
+														success : function(
+																details) {
+															$("#conceptTerm")
+																	.text(
+																			details.name);
+															$("#detailsid")
+																	.text(
+																			details.id);
+															$("#detailsuri")
+																	.text(
+																			details.uri);
+															$(
+																	"#detailswordnetid")
+																	.text(
+																			details.wordnetId);
+															$("#detailspos")
+																	.text(
+																			details.pos);
+															$(
+																	"#detailsconceptlist")
+																	.text(
+																			details.conceptlist);
+															$("#detailstypeid")
+																	.text(
+																			details.type);
+															$("#detailsequalto")
+																	.text(
+																			details.equalto);
+															$(
+																	"#detailssimilarto")
+																	.text(
+																			details.similarto);
+															$("#detailscreator")
+																	.text(
+																			details.creator);
+														}
+													});
+											var modal = $(this)
+											/*modal.find('.modal-title').text('New message to ' + recipient)
+											modal.find('.modal-body input').val(recipient)*/
+										});
+
+					});
 
 	$(document).ready(definedatatable);
 
@@ -171,8 +233,8 @@
 					} ],
 					"fnRowCallback" : function(nRow, aData, iDisplayIndex) {
 						var description = aData.description;
-						//This functionality has been moved to Controller. 
-						//description = escape(description);
+						description = description != null ? description
+								.replace(/"/g, '&quot;') : "";
 						$('td:eq(3)', nRow).html(
 								'<a onclick="synonymAdd(\'' + aData.id
 										+ '\',\'' + aData.word + '\',\''
@@ -188,38 +250,45 @@
 						function() {
 							$("#synonymViewDiv").show();
 							$("#synonymstable").show();
+							var addedsynonym = $('#addedSynonnym').val();
 							var synonymname = $("#synonymname").val();
 							$
 									.ajax({
 										type : "GET",
-										url : "${pageContext.servletContext.contextPath}/conceptWrapperAddSynonymView",
+										url : "${pageContext.servletContext.contextPath}/conceptAddSynonymView",
 										data : {
-											synonymname : synonymname
+											synonymname : synonymname,
+											addedsynonym : addedsynonym
 										},
 
 										success : function(response) {
+											var data = jQuery
+													.parseJSON(response);
 											$('#synonymstable').dataTable()
 													.fnClearTable();
-
-											var synonym = JSON.parse(response);
-											var len = synonym.Total;
-											for (var i = 0; i < len; i++) {
-												$('#synonymstable')
-														.dataTable()
-														.fnAddData(
-																synonym.synonyms[i]);
+											$('#synonymstable').dataTable()
+													.fnAddData(data);
+										},
+										error : function(httpStatus, response){
+											if(httpStatus.status == 409){
+												var errorMessage = "<i class=\"fa fa-exclamation-triangle\">"+httpStatus.responseText+"</i>";
+												$("#synonymModal").dialog("close");
+												$('#synonymModal').modal('toggle');
+												$('#errorMessage').show();
+												$('#error_alert_msg').html(errorMessage);
 											}
-
 										}
 									});
 						});
 	});
 
 	var synonymAdd = function(id, term, description) {
-		$("#dialog").dialog("close");
+		$("#synonymModal").dialog("close");
+		$('#synonymModal').modal('toggle');
 		$("#synonymsDialogTable").hide();
 		var decodedDescription = unescape(description);
 		var x = document.getElementById('addedSynonymsTable');
+		var addedsynonym = $('#addedSynonnym').val();
 
 		if (x != null) {
 
@@ -232,6 +301,10 @@
 			new_row.cells[3].hidden = true;
 
 			x.appendChild(new_row);
+
+			addedsynonym += ','
+			addedsynonym += id;
+			$('#addedSynonnym').val(addedsynonym);
 		} else {
 			var html = '<table border="1" width="400" id="addedSynonymsTable"><thead></thead>';
 
@@ -245,6 +318,8 @@
 			html += '<td align="justify" hidden="true">' + id + '</td></tr>';
 
 			html += '</table>';
+			addedsynonym += id;
+			$('#addedSynonnym').val(addedsynonym);
 			$("#addedSynonyms").html(html);
 
 		}
@@ -258,6 +333,7 @@
 	};
 
 	var synonymRemove = function(row) {
+		$('#addedSynonnym').val('');
 		var x = document.getElementById('addedSynonymsTable');
 		x.deleteRow(row);
 		if (!(x.rows.length > 0))
@@ -268,35 +344,8 @@
 			synonyms += table.rows[r].cells[3].innerHTML + ',';
 		}
 		$("#synonymsids").val(synonyms);
+		$('#addedSynonnym').val(synonyms);
 	};
-
-	function detailsView(concept) {
-		var conceptid = concept.id;
-		$.ajax({
-			type : "GET",
-			url : "${pageContext.servletContext.contextPath}/conceptDetail",
-			data : {
-				conceptid : conceptid
-			},
-			success : function(details) {
-				$("#detailsid").text(details.id);
-				$("#detailsuri").text(details.uri);
-				$("#detailswordnetid").text(details.wordnetid);
-				$("#detailspos").text(details.pos);
-				$("#detailsconceptlist").text(details.conceptlist);
-				$("#detailstypeid").text(details.type);
-				$("#detailsequalto").text(details.equalto);
-				$("#detailssimilarto").text(details.similarto);
-				$("#detailscreator").text(details.creator);
-
-				$("#detailsdiv").dialog({
-					title : details.name,
-					width : 'auto'
-				});
-				$("#detailstable").show();
-			}
-		});
-	}
 </script>
 
 
@@ -306,10 +355,15 @@
 	in Wordnet.</p>
 
 <c:if test="${not empty errormsg}">
-	<p style="text-color: red;">${errormsg}</p>
+	<font color="red">${errormsg}</font>
+</c:if>
+
+<c:if test="${not empty luceneError}">
+	<font color="red">${luceneError}</font>
 </c:if>
 
 <h2>1. Search for Wordnet concept</h2>
+<center><font color="red">${IndexerStatus}</font></center>
 
 <form
 	action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper/conceptsearch"
@@ -321,7 +375,7 @@
 		</tr>
 		<tr>
 			<td>POS:</td>
-			<td><select name="pos">
+			<td><select name="pos" class="form-control">
 					<option value="noun">Nouns</option>
 					<option value="verb">Verb</option>
 					<option value="adverb">Adverb</option>
@@ -330,7 +384,7 @@
 			</select></td>
 		</tr>
 	</table>
-	<input type="submit" value="Search" class="button">
+	<input type="submit" value="Search" class="btn btn-primary">
 </form>
 
 <form
@@ -343,11 +397,10 @@
 	<p></p>
 
 	<c:if test="${not empty result}">
-		<table cellpadding="0" cellspacing="0" class="display dataTable"
-			id="conceptSearch">
+		<table cellpadding="0" cellspacing="0"
+			class="table table-striped table-bordered" id="conceptSearch">
 			<thead>
 				<tr>
-					<th></th>
 					<th>Term</th>
 					<th>ID</th>
 					<th>Wordnet ID</th>
@@ -361,18 +414,20 @@
 			<tbody>
 				<c:forEach var="concept" items="${result}">
 					<tr title="${concept.uri}">
-						<td align="justify"><font size="2"><a
-								onclick="detailsView(this);" id="${concept.entry.id}">Details</a></font></td>
-						<td align="justify"><font size="2"><c:out
-									value="${concept.entry.word}"></c:out></font></td>
+						<td align="justify">
+						<font size="2"> <a
+								id="${concept.entry.id}" data-toggle="modal"
+								data-target="#detailsModal" data-conceptid="${concept.entry.id}"><c:out
+										value="${concept.entry.word}"></c:out></a></font>
+						</td>
 						<td align="justify"><c:out value="${concept.entry.id}"></c:out></td>
 						<td align="justify"><c:out value="${concept.entry.wordnetId}"></c:out></td>
 						<td align="justify"><font size="2"><c:out
 									value="${concept.entry.pos}"></c:out></font></td>
 						<td align="justify"><font size="2"><c:out
 									value="${concept.entry.conceptList}"></c:out></font></td>
-						<td align="justify"><font size="2"><c:out
-									value="${concept.description}"></c:out></font></td>
+						<td align="justify"><font size="2">
+								${concept.description}</font></td>
 						<td align="justify"><font size="2"><c:out
 									value="${concept.type.typeName}"></c:out></font></td>
 						<td align="justify"><font size="2"><c:forEach
@@ -392,12 +447,12 @@
 	<h2>3. Enter additional information</h2>
 	<p>Selected Wordnet concept:</p>
 
-	<table class="greyContent">
+	<table class="table table-striped table-bordered">
 
 		<tr>
 			<td>Concept List</td>
 
-			<td><form:select path="lists" name="lists">
+			<td><form:select path="lists" name="lists" class="form-control">
 					<form:option value="" label="Select concept list" />
 					<form:options items="${lists}" />
 				</form:select></td>
@@ -413,11 +468,12 @@
 			<td>Synonyms</td>
 			<td><div id="addedSynonyms"></div></td>
 			<td><input type="button" name="synonym" id="addsynonym"
-				value="Add Synonym" class="button"></td>
+				data-toggle="modal" data-target="#synonymModal" value="Add Synonym"
+				class="btn btn-primary"></td>
 		</tr>
 		<tr>
 			<td>Concept Type</td>
-			<td><form:select path="types" name="types">
+			<td><form:select path="types" name="types" class="form-control">
 					<form:option value="" label="Select one" />
 					<form:options items="${types}" />
 				</form:select></td>
@@ -442,76 +498,112 @@
 
 	</table>
 	<br /> <input type="submit" disabled="disabled" id="createwrapper"
-		value="Create Wordnet concept wrapper" class="button">
+		value="Create Wordnet concept wrapper" class="btn btn-primary">
 </form>
 
 <form>
-	<div id="dialog" title="Search synonym">
 
-		<table id="synonymsDialogTable" hidden="true">
-			<tr>
-				<td><input type="text" name="synonymname" id="synonymname"></td>
-				<td><input type="button" name="synsearch" id="synonymsearch"
-					value="Search" class="button"></td>
-			</tr>
-		</table>
+	<!-- Modal -->
+	<div class="modal fade" role="dialog" id="synonymModal">
 
-		<div id="synonymViewDiv" style="max-width: 1000px; max-height: 500px;"
-			hidden="true">
 
-			<table cellpadding="0" cellspacing="0" class="display dataTable"
-				id="synonymstable" hidden="true">
-				<tbody>
-				</tbody>
-			</table>
+		<div class="modal-dialog" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
 
+			<div class="vertical-alignment-helper">
+				<div class="modal-dialog vertical-align-center">
+					<div class="modal-content">
+
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Search synonym</h4>
+							<table id="synonymsDialogTable" hidden="true">
+								<tr>
+									<td><input type="text" name="synonymname" id="synonymname"></td>
+									<td><input type="hidden" name="addedSynonnym"
+										id="addedSynonnym" /></td>
+									<td><input type="button" name="synsearch"
+										id="synonymsearch" value="Search" class="btn btn-primary"></td>
+								</tr>
+							</table>
+						</div>
+
+
+						<div class="modal-body">
+							<div id="synonymViewDiv"
+								style="max-width: 1000px; max-height: 500px;" hidden="true">
+
+								<table cellpadding="0" cellspacing="0" id="synonymstable"
+									hidden="true" class="table table-striped table-bordered">
+									<tbody>
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-
 	</div>
-
-	<div id="detailsdiv" style="max-width: 600px; max-height: 500px;"  class="pageCenter">
-		<table id="detailstable" class="greyContent" hidden="true">
-			<tr>
-				<td>Id:</td>
-				<td id="detailsid"></td>
-			</tr>
-			<tr>
-				<td>URI:</td>
-				<td id="detailsuri"></td>
-			</tr>
-			<tr>
-				<td>Wordnet Id:</td>
-				<td id="detailswordnetid"></td>
-			</tr>
-			<tr>
-				<td>POS:</td>
-				<td id="detailspos"></td>
-			</tr>
-			<tr>
-				<td>Concept List:</td>
-				<td id="detailsconceptlist"></td>
-			</tr>
-			<tr>
-				<td>Type:</td>
-				<td id="detailstypeid"></td>
-			</tr>
-			<tr>
-				<td>Equal to:</td>
-				<td id="detailsequalto"></td>
-			</tr>
-			<tr>
-				<td>Similar to:</td>
-				<td id="detailssimilarto"></td>
-			</tr>
-			<tr>
-				<td>Creator:</td>
-				<td id="detailscreator"></td>
-			</tr>
-		</table>
-	</div>
-
 </form>
 
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog"
+	aria-labelledby="mySmallModalLabel">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					Concept Details: <i id="conceptTerm"></i>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row row-odd">
+					<div class="col-sm-3">Id:</div>
+					<div id="detailsid" class="col-sm-9"></div>
+					</tr>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">URI:</div>
+					<div id="detailsuri" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Wordnet Id:</div>
+					<div id="detailswordnetid" class="col-sm-9"></div>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">POS:</div>
+					<div id="detailspos" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Concept List:</div>
+					<div id="detailsconceptlist" class="col-sm-9"></div>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">Type:</div>
+					<div id="detailstypeid" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Equal to:</div>
+					<div id="detailsequalto" class="col-sm-9"></div>
+				</div>
+				<div class="row row-even">
+					<div class="col-sm-3">Similar to:</div>
+					<div id="detailssimilarto" class="col-sm-9"></div>
+				</div>
+				<div class="row row-odd">
+					<div class="col-sm-3">Creator:</div>
+					<div id="detailscreator" class="col-sm-9"></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
 
 
 

@@ -11,28 +11,27 @@
 	action="${pageContext.servletContext.contextPath}/auth/user/confirmdeleteuser/"
 	method='post' id="edituserform">
 
-	<table>
+	<table class="table table-striped table-bordered" width="500">
 		<tr>
-			<td><form:hidden id="name" path="username" />Username :
-				${user.username}</td>
+			<td width="120"><form:hidden id="name" path="username" />Username:</td>
+			<td>${user.username}</td>
 
 		</tr>
 		<tr>
-			<td><form:hidden id="fullname" path="fullname" />Name
-				:${user.fullname}</td>
+			<td width="120"><form:hidden id="fullname" path="fullname" />Name:</td>
+			<td>${user.fullname}</td>
 		</tr>
 		<tr>
-			<td>Is Administrator: <form:checkbox path="isAdmin" id="isadmin"
+			<td width="120">Is Administrator:</td>
+			<td><form:checkbox path="isAdmin" id="isadmin"
 					checked="${user.isAdmin == true ? 'checked' : ''}" disabled="true" />
-				Yes
-			</td>
-		</tr>
-		<tr>
-			<td><input type="submit" value="Delete User" name="submit"
-				class="button" /> <input type="button" value="Cancel" name="submit"
-				onclick="window.location.replace('${pageContext.servletContext.contextPath}/auth/user/canceldelete')"
-				class="button" /></td>
+				Yes</td>
 		</tr>
 	</table>
+
+	<input type="submit" value="Delete User" name="submit" class="btn btn-primary" />
+	<input type="button" value="Cancel" name="submit"
+		onclick="window.location.replace('${pageContext.servletContext.contextPath}/auth/user/canceldelete')"
+		class="btn btn-primary" />
 
 </form:form>
