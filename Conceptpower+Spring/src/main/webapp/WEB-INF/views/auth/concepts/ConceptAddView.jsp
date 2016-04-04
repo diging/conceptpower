@@ -5,20 +5,38 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 
-
 <script>
 	$(function() {
-		$("#synonymModal").dialog({
-			autoOpen : false
+		
+	
+	$(document).ready(function() {
+		
+			var term = $('#term').val();
+			var synonymDescription = $('#synonymDescription').val();
+			var id = $('#synonymId').val();
+			var termArray = term.split(',');
+			var synonymDescriptionArray = synonymDescription.split(',');
+			var idArray = id.split(',');
+		
+			console.log(termArray.length);
+			
+			
+			
+			for (var i = 0; i < termArray.length; i++) {
+				if(termArray.length != 1){
+					synonymAdd(idArray[i], termArray[i], synonymDescriptionArray[i],'true');
+					
+				}
+				
+			}
 		});
-	});
-
-	$(function() {
 
 		$("#addsynonym").click(function() {
 			var addedSynonymsTable = $('#addedSynonyms');
 			$('#synonymstable').dataTable().fnClearTable();
-			$("#synonymModal").dialog('open');
+			$("#dialog").dialog({
+				width : 'auto'
+			});
 			$("#synonymsDialogTable").show();
 		});
 
@@ -51,22 +69,7 @@
 												$("#warning").hide();
 												$('#warning').prop('title', '');
 											}
-										},
-										error : function(httpStatus, response) {
-											if (httpStatus.status == 409) {
-												var errorMessage = "<i class=\"fa fa-exclamation-triangle\">"
-														+ httpStatus.responseText
-														+ "</i>";
-												$("#synonymModal").dialog(
-														"close");
-												$('#synonymModal').modal(
-														'toggle');
-												$('#errorMessage').show();
-												$('#error_alert_msg').html(
-														errorMessage);
-											}
 										}
-										
 									});
 						});
 	});
@@ -129,26 +132,23 @@
 													.fnClearTable();
 											$('#synonymstable').dataTable()
 													.fnAddData(data);
-											
 
-										},
-										error : function(httpStatus, response){
-											if(httpStatus.status == 409){
-												var errorMessage = "<i class=\"fa fa-exclamation-triangle\">"+httpStatus.responseText+"</i>";
-												$("#synonymModal").dialog("close");
-												$('#synonymModal').modal('toggle');
-												$('#errorMessage').show();
-												$('#error_alert_msg').html(errorMessage);
-											}
 										}
 									});
 						});
 	});
 
-	var synonymAdd = function(id, term, description) {
-		$("#synonymModal").dialog("close");
-		$('#synonymModal').modal('toggle');
-		$("#synonymsDialogTable").hide();
+	var synonymAdd = function(id, term, description,onLoad) {
+		
+		if(typeof onLoad === "undefined"){
+			onLoad = false;
+		}
+		
+		if(onLoad == false){
+			$("#dialog").dialog("close");
+			$("#synonymsDialogTable").hide();	
+		}
+		
 
 		var x = document.getElementById('addedSynonymsTable');
 		var addedsynonym = $('#addedSynonnym').val();
@@ -161,6 +161,20 @@
 			new_row.cells[2].innerHTML = description;
 			new_row.cells[3].innerHTML = id;
 			new_row.cells[3].hidden = true;
+
+			if(onLoad == false){
+			var t = $('#term').val();
+			t = t + "," + term;
+			$('#term').val(t);
+
+			var d = $('#synonymDescription').val();
+			d = d + "," + description;
+			$('#synonymDescription').val(d);
+
+			var i = $('#synonymId').val();
+			i = i + "," + id;
+			$('#synonymId').val(i);
+			}
 
 			x.appendChild(new_row);
 
@@ -182,6 +196,21 @@
 			html += '</table>';
 			html += '<input type="hidden" name="syns" />';
 			addedsynonym += id;
+
+			if(onLoad == false){
+			var t = $('#term').val();
+			t = term;
+			$('#term').val(t);
+
+			var d = $('#synonymDescription').val();
+			d = description;
+			$('#synonymDescription').val(d);
+
+			var i = $('#synonymId').val();
+			i = id;
+			$('#synonymId').val(i);
+			}
+
 			$('#addedSynonnym').val(addedsynonym);
 			$("#addedSynonyms").html(html);
 
@@ -196,6 +225,7 @@
 	};
 
 	var synonymRemove = function(row) {
+		bindingRemoval(row);
 		$('#addedSynonnym').val('');
 		var x = document.getElementById('addedSynonymsTable');
 		x.deleteRow(row);
@@ -211,14 +241,58 @@
 
 	};
 
+	var bindingRemoval = function(row) {
+		alert(row);
+		
+		var ids = $('#synonymId').val();
+		var idArray = ids.split(',');
+		var id = idArray[row];
+		var newIdArray = '';
+		for (var i = 0; i < idArray.length; i++) {
+			if (i != row) {
+				newIdArray = newIdArray + idArray[i];
+				newIdArray = newIdArray + ',';
+			}
+		}
+		alert(newIdArray);
+		$('#synonymId').val(newIdArray);
+
+		var synonymDescriptions = $('#synonymDescription').val();
+		var synonymDescriptionArray = synonymDescriptions.split(',');
+		alert(synonymDescriptionArray);
+		alert(synonymDescriptionArray[0]);
+		alert(synonymDescriptionArray[1]);
+		var newSynonymArray = '';
+		for (var i = 0; i < newSynonymArray.length; i++) {
+			if (i != row) {
+				newSynonymArray = newSynonymArray + synonymDescriptionArray[i];
+				newSynonymArray = newSynonymArray + ',';
+			}
+		}
+		$('#synonymDescription').val(newSynonymArray);
+		alert(newSynonymArray);
+
+		var terms = $('#term').val();
+		var termArray = terms.split(',');
+		var newTermArray = '';
+		for (var i = 0; i < termArray.length; i++) {
+			if (i != row) {
+				newTermArray = newTermArray + termArray[i];
+				newTermArray = newTermArray + ',';
+			}
+		}
+		$('#term').val(newTermArray);
+
+	}
+
 	//service 
 	$(function() {
 		$("#serviceSearch")
 				.click(
 						function() {
 							var serviceterm = $("#serviceterm").val();
-							var serviceid = $(
-									"#serviceNameIdMap option:selected").val();
+							var serviceid = $("#selectedServiceNameIdMap")
+									.val();
 
 							$
 									.ajax({
@@ -269,7 +343,7 @@
 							"bAutoWidth" : false,
 							"aoColumns" : [ {
 								"sTitle" : "Select",
-								"mData" : "isChecked",
+								"mDataProp" : "isChecked",
 							}, {
 								"sTitle" : "Word",
 								"mDataProp" : "word",
@@ -280,33 +354,25 @@
 								"sTitle" : "Description",
 								"mDataProp" : "description",
 							} ],
-							aoColumnDefs : [
-									{
-										"targets" : [ 0, 1 ],
-										'bSortable' : false
-									},
-									{
-										aTargets : [ 0 ],
-										mRender : function(sourceData,
-												dataType, fullData) {
-											var check = '';
-											if ($('#equals').val().indexOf(
-													fullData.id) != -1) {
-												check = 'checked=\'checked\'';
-											}
-											var word = encodeURI(fullData.word);
-											return '<input type="checkbox" id="'
-													+ fullData.id
-													+ '" '
-													+ check
-													+ ' name="isChecked" onclick="serviceConceptAdd(\''
-													+ fullData.id
-													+ '\',\''
-													+ word.replace(/'/g, '%39')
-													+ '\')"></input>';
-										},
-									} ],
-							"order" : [ [ 1, "desc" ] ]
+							aoColumnDefs : [ {
+								aTargets : [ 0 ],
+								fnRender : function(o, v) {
+									var check = '';
+									if ($('#equals').val().indexOf(
+											o.aData["id"]) != -1) {
+										check = 'checked=\'checked\'';
+									}
+									var word = encodeURI(o.aData["word"]);
+									return '<input type="checkbox" id="'
+											+ o.aData["id"]
+											+ '" '
+											+ check
+											+ ' name="isChecked" onclick="serviceConceptAdd(\''
+											+ o.aData["id"] + '\',\''
+											+ word.replace(/'/g, '%39')
+											+ '\')"></input>';
+								},
+							} ]
 						});
 	};
 
@@ -348,13 +414,13 @@
 		} else {
 			$("#nameerror").html('');
 		}
-		if ($("#lists option:selected").text() === "") {
+		if ($("#selectedList").text() === "") {
 			$("#listerror").html('Please select a concpet list !');
 			ret = false;
 		} else {
 			$("#listerror").html('');
 		}
-		if ($("#types option:selected").text() === "") {
+		if ($("#selectedTypes").text() === "") {
 			$("#typeerror").html('Please select a concept type !');
 			ret = false;
 		} else {
@@ -395,58 +461,56 @@
 	</tr>
 </table>
 
-<table>
-	<tr>
-		<td style="vertical-align: top;">
+<tr>
+	<td><form:form
+			action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept/add"
+			commandName="conceptAddBean" method='post' id="createconceptform">
 
 			<table>
 				<tr>
-					<td>Service</td>
-					<td><form:select path="serviceNameIdMap"
-							name="serviceNameIdMap" id="serviceNameIdMap"
-							class="form-control">
-							<form:options items="${serviceNameIdMap}" />
-						</form:select></td>
-					<td>Term</td>
-					<td><input type="text" name="serviceterm" id="serviceterm"></td>
-					<td><input type="submit" id="serviceSearch" value="search"
-						class="btn btn-primary" /> <img alt="" id="loadingDiv" width="16px"
-						height="16px"
-						src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
-						class="none"></td>
+					<td style="vertical-align: top;">
+
+						<table>
+							<tr>
+								<td>Service</td>
+								<td><form:select path="selectedServiceNameIdMap">
+										<form:options items="${conceptAddBean.serviceNameIdMap}" />
+									</form:select></td>
+								<td>Term</td>
+								<td><input type="text" name="serviceterm" id="serviceterm"></td>
+								<td><input type="button" id="serviceSearch" value="search"
+									class="button" /> <img alt="" id="loadingDiv" width="16px"
+									height="16px"
+									src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
+									class="none"></td>
+							</tr>
+						</table>
+					</td>
+
 				</tr>
 			</table>
-		</td>
 
-	</tr>
-</table>
+			<div style="padding: 15px;" id="showServiceResult" hidden="true">
+				<a>Show Results</a>
+			</div>
+			<div id="serviceResult" style="max-width: 1000px; padding: 15px;"
+				hidden="true">
 
-<div style="padding: 15px;" id="showServiceResult" hidden="true">
-	<a>Show Results</a>
-</div>
-<div id="serviceResult" style="max-width: 1000px; padding: 15px;"
-	hidden="true">
+				<table cellpadding="0" cellspacing="0" class="display dataTable"
+					id="serviceResultTable" hidden="true">
+					<tbody>
+					</tbody>
+				</table>
 
-	<table cellpadding="0" cellspacing="0"
-		class="table table-striped table-bordered" id="serviceResultTable"
-		hidden="true">
-		<tbody>
-		</tbody>
-	</table>
+			</div>
 
-</div>
+			<table>
 
-<table>
-	<tr>
-		<td><form
-				action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept/add"
-				method='post' id="createconceptform">
 				<table>
 					<tr>
 						<td>Concept &nbsp &nbsp &nbsp &nbsp</td>
 
-						<td><input type="text" name="name" id="name"><b>
-						</b><img alt=""
+						<td><form:input path="name"></form:input><b> </b><img alt=""
 							src="${pageContext.servletContext.contextPath}/resources/img/warning.png"
 							class="none" name="warning" id="warning" hidden="true"></td>
 						<td><div id="nameerror" style="color: red"></div></td>
@@ -454,113 +518,91 @@
 
 					<tr>
 						<td>POS</td>
-						<td><select name="pos" class="form-control">
-								<option value="noun">Nouns</option>
-								<option value="verb">Verb</option>
-								<option value="adverb">Adverb</option>
-								<option value="adjective">Adjective</option>
-								<option value="other">Other</option>
-						</select></td>
+						<td><form:select path="pos">
+								<form:option value="noun">Nouns</form:option>
+								<form:option value="verb">Verb</form:option>
+								<form:option value="adverb">Adverb</form:option>
+								<form:option value="adjective">Adjective</form:option>
+								<form:option value="other">Other</form:option>
+							</form:select></td>
 					</tr>
 					<tr>
 						<td>Concept List</td>
 
-						<td><form:select path="lists" name="lists" id="lists"
-								class="form-control">
-								<form:options items="${lists}" />
+						<td><form:select path="selectedList">
+								<form:options items="${conceptAddBean.lists}" />
 							</form:select></td>
 						<td><div id="listerror" style="color: red"></div></td>
 					</tr>
 					<tr>
 						<td>Description</td>
-						<td><textarea rows="7" cols="50" name="description"
-								id="description"></textarea></td>
+						<td><form:textarea rows="7" cols="50" path="description"></form:textarea></td>
 					</tr>
 					<tr>
 						<td>Synonyms</td>
 						<td><div id="addedSynonyms"></div></td>
 						<td><input type="button" name="synonym" id="addsynonym"
-							data-toggle="modal" data-target="#synonymModal"
-							value="Add Synonym" class="btn btn-primary"></td>
+							value="Add Synonym" class="button"></td>
 					</tr>
 					<tr>
 						<td>Concept Type</td>
-						<td><form:select path="types" name="types" id="types"
-								class="form-control">
-								<form:options items="${types}" />
+						<td><form:select path="selectedTypes">
+								<form:options items="${conceptAddBean.types}" />
 							</form:select></td>
 						<td><div id="typeerror" style="color: red"></div></td>
 					</tr>
 					<tr>
 						<td>Equals</td>
-						<td><textarea rows="5" cols="25" name="equals" id="equals"></textarea></td>
+						<td><form:textarea rows="5" cols="25" path="equals"></form:textarea></td>
 					</tr>
 					<tr>
 						<td>Similar to</td>
-						<td><input type="text" name="similar" id="similar"></td>
+						<td><form:input path="similar"></form:input></td>
 					</tr>
 					<tr>
-						<td><input type="text" name="synonymsids" id="synonymsids"
-							hidden="true"></td>
+						<td><form:hidden path="synonymsids"></form:hidden> <!--  Data for binding synonyms -->
+							<form:hidden path="term" /> <form:hidden
+								path="synonymDescription" /> <form:hidden path="synonymId" />
+
+						</td>
 					</tr>
 					<tr>
 						<td colspan="2"><input type="submit" value="Add Concept"
-							class="btn btn-primary" onclick="showFormProcessing()"
+							class="button" onclick="showFormProcessing()"
 							onsubmit="hideFormProcessing()"></td>
 					</tr>
 				</table>
+		</form:form></td>
 
-			</form></td>
-
-	</tr>
+</tr>
 
 </table>
 
 
 <form>
-	<div class="modal fade" role="dialog" id="synonymModal">
+	<div id="dialog" title="Search synonym">
 
+		<table id="synonymsDialogTable" hidden="true">
+			<tr>
+				<td><input type="text" name="synonymname" id="synonymname"></td>
+				<td><input type="hidden" name="addedSynonnym"
+					id="addedSynonnym" /></td>
+				<td><input type="button" name="synsearch" id="synonymsearch"
+					value="Search" class="button"></td>
+			</tr>
+		</table>
 
-		<div class="modal-dialog" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
+		<div id="synonymViewDiv" style="max-width: 1000px; max-height: 500px;"
+			hidden="true">
 
-			<div class="vertical-alignment-helper">
-				<div class="modal-dialog vertical-align-center">
-					<div class="modal-content">
+			<table cellpadding="0" cellspacing="0" class="display dataTable"
+				id="synonymstable" hidden="true">
+				<tbody>
+				</tbody>
+			</table>
 
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">Search synonym</h4>
-							<table id="synonymsDialogTable" hidden="true">
-								<tr>
-									<td><input type="text" name="synonymname" id="synonymname"></td>
-									<td><input type="hidden" name="addedSynonnym"
-										id="addedSynonnym" /></td>
-									<td><input type="button" name="synsearch"
-										id="synonymsearch" value="Search" class="btn btn-primary"></td>
-								</tr>
-							</table>
-						</div>
-
-
-						<div class="modal-body">
-							<div id="synonymViewDiv"
-								style="max-width: 1000px; max-height: 500px;" hidden="true">
-
-								<table cellpadding="0" cellspacing="0" id="synonymstable"
-									hidden="true" class="table table-striped table-bordered">
-									<tbody>
-									</tbody>
-								</table>
-
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
-</div>
 
+	</div>
 
 </form>
-
