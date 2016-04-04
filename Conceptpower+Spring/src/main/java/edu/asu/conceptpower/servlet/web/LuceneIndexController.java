@@ -41,8 +41,8 @@ public class LuceneIndexController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "auth/luceneIndex", method = RequestMethod.GET)
-    public String showLuceneIndex(ModelMap model) {
+    @RequestMapping(value = "auth/loadIndex", method = RequestMethod.GET)
+    public String onLoadLucene(ModelMap model) {
         IndexingEvent bean = dao.getTotalNumberOfWordsIndexed();
         model.addAttribute("bean", bean);
         return "/auth/luceneIndex";
@@ -58,7 +58,7 @@ public class LuceneIndexController {
      * @return
      * @throws IndexerRunningException
      */
-    @RequestMapping(value = "auth/indexLuceneWordNet", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "auth/indexConcepts", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model)
             throws IndexerRunningException {
         IndexingEvent bean = null;
