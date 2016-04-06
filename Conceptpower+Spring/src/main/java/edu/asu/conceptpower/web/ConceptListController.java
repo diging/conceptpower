@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.web;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,41 +97,31 @@ public class ConceptListController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptDetail", produces = "application/json")
 	public @ResponseBody ResponseEntity<String> getConceptDetails(
-			@RequestParam("conceptid") String conceptid) {
-		ConceptEntryWrapper conceptEntry = new ConceptEntryWrapper(
-				conceptManager.getConceptEntry(conceptid));
-		Map<String, String> details = new HashMap<String, String>();
+@RequestParam("conceptid") String conceptid) {
+        ConceptEntryWrapper conceptEntry = new ConceptEntryWrapper(conceptManager.getConceptEntry(conceptid));
+        Map<String, String> details = new HashMap<String, String>();
 
-		details.put("name", conceptEntry.getEntry().getWord());
-		details.put("id", conceptEntry.getEntry().getId());
-		details.put("uri", URICreator.getURI(conceptEntry.getEntry()));
-		//This condition has been included to make sure null values are not displayed in the details dialog box
-		details.put("wordnetid", conceptEntry.getEntry().getWordnetId()==null?"":conceptEntry.getEntry().getWordnetId());
-		details.put("pos", conceptEntry.getEntry().getPos());
-		details.put("conceptlist", conceptEntry.getEntry().getConceptList());
+        details.put("name", conceptEntry.getEntry().getWord());
+        details.put("id", conceptEntry.getEntry().getId());
+        details.put("uri", URICreator.getURI(conceptEntry.getEntry()));
+        // This condition has been included to make sure null values are not
+        // displayed in the details dialog box
+        details.put("wordnetid",
+                conceptEntry.getEntry().getWordnetId() == null ? "" : conceptEntry.getEntry().getWordnetId());
+        details.put("pos", conceptEntry.getEntry().getPos());
+        details.put("conceptlist", conceptEntry.getEntry().getConceptList());
 
-		ConceptType type = conceptEntry.getEntry().getTypeId() == null ? null
-				: typeDatabaseClient.getType(
-						conceptEntry.getEntry().getTypeId());
-		
-		details.put(
-				"type",
-				type == null ? "" : type.getTypeName());
-		details.put("equalto",
-				conceptEntry.getEntry().getEqualTo() == null ? ""
-						: conceptEntry.getEntry().getEqualTo());
-		details.put("similarto",
-				conceptEntry.getEntry().getSimilarTo() == null ? ""
-						: conceptEntry.getEntry().getSimilarTo());
-		
-		List<ChangeEvent> changeEvents = conceptEntry.getEntry().getChangeEvents();
-		for(ChangeEvent changeEvent: changeEvents){
-			if (changeEvent.getType().equalsIgnoreCase(ChangeEventConstants.CREATION)) {
-				details.put("creator", changeEvent.getUserName() == null ? "" : changeEvent.getUserName());
-				break;
-			}
-		}
+        ConceptType type = conceptEntry.getEntry().getTypeId() == null ? null
+                : typeDatabaseClient.getType(conceptEntry.getEntry().getTypeId());
 
-		return new ResponseEntity<String>(new JSONObject(details).toString(), HttpStatus.OK);
-	}
+        details.put("type", type == null ? "" : type.getTypeName());
+        details.put("equalto",
+                conceptEntry.getEntry().getEqualTo() == null ? "" : conceptEntry.getEntry().getEqualTo());
+        details.put("similarto",
+                conceptEntry.getEntry().getSimilarTo() == null ? "" : conceptEntry.getEntry().getSimilarTo());
+        
+        details.put("creator", conceptEntry.getCreatorId() != null ? conceptEntry.getCreatorId() : "");
+
+        return new ResponseEntity<String>(new JSONObject(details).toString(), HttpStatus.OK);
+    }
 }

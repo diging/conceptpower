@@ -54,7 +54,7 @@ public class ConceptManagerTest {
     	 ChangeEvent changeEvent = new ChangeEvent();
          changeEvent.setUserName("testuser");
          changeEvent.setType(ChangeEventConstants.CREATION);
-         changeEvent.setDate(new Date().toString());
+         changeEvent.setDate(new Date());
          List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
          changeEventList.add(changeEvent);
          
