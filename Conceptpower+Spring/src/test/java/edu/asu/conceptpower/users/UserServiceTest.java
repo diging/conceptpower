@@ -1,6 +1,8 @@
 package edu.asu.conceptpower.users;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +12,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import edu.asu.conceptpower.root.UserService;
+import edu.asu.conceptpower.servlet.users.IUserManager;
+import edu.asu.conceptpower.servlet.users.User;
 
 public class UserServiceTest {
 

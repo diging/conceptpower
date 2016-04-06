@@ -14,8 +14,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.env.Environment;
 
-import edu.asu.conceptpower.users.User;
-import edu.asu.conceptpower.users.UserDatabaseClient;
+import edu.asu.conceptpower.root.UserDatabaseClient;
+import edu.asu.conceptpower.root.UsersManager;
+import edu.asu.conceptpower.servlet.users.User;
 
 public class UsersManagerTest {
 
