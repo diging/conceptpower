@@ -140,7 +140,7 @@ public class ConceptAddController {
 			return "failed";
 		}
 
-		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
+		return "redirect:/auth/" + conceptAddBean.getSelectedList() + "/concepts";
 	}
 
 	/**
