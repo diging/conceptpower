@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,9 +35,8 @@ import edu.asu.conceptpower.core.IConceptManager;
 import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
-import edu.asu.conceptpower.profile.impl.ServiceBackBean;
 import edu.asu.conceptpower.profile.impl.ServiceRegistry;
-import edu.asu.conceptpower.web.backing.SearchResultBackBeanForm;
+import edu.asu.conceptpower.web.backing.ConceptAddBean;
 import edu.asu.conceptpower.wrapper.IConceptWrapperCreator;
 
 /**
@@ -68,7 +68,7 @@ public class ConceptAddController {
 
 	@Autowired
 	private ServiceRegistry serviceRegistry;
-
+	
 	/**
 	 * This method provides initial types and list model elements
 	 * 
@@ -77,14 +77,15 @@ public class ConceptAddController {
 	 * @return returns string which redirects to concept creation page
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconcept")
-	public String prepareConceptAdd(ModelMap model) {
+	public String prepareConceptAdd(ModelMap model,@ModelAttribute("conceptAddBean")ConceptAddBean conceptAddBean) {
+		onLoad(conceptAddBean);
+		return "/auth/conceptlist/addconcept";
+	}
 
-		model.addAttribute("ServiceBackBean", new ServiceBackBean());
+	private void onLoad(ConceptAddBean conceptAddBean) {
 		Map<String, String> serviceNameIdMap = serviceRegistry
 				.getServiceNameIdMap();
-		model.addAttribute("serviceNameIdMap", serviceNameIdMap);
-		model.addAttribute("SearchResultBackBeanForm",
-				new SearchResultBackBeanForm());
+		conceptAddBean.setServiceNameIdMap(serviceNameIdMap);
 
 		ConceptType[] allTypes = conceptTypesManager.getAllTypes();
 		Map<String, String> types = new LinkedHashMap<String, String>();
@@ -92,17 +93,16 @@ public class ConceptAddController {
 			types.put(conceptType.getTypeId(), conceptType.getTypeName());
 		}
 
-		model.addAttribute("types", types);
-
+		conceptAddBean.setTypes(types);
+		
 		List<ConceptList> allLists = conceptListManager.getAllConceptLists();
 		Map<String, String> lists = new LinkedHashMap<String, String>();
 		for (ConceptList conceptList : allLists) {
 			lists.put(conceptList.getConceptListName(),
 					conceptList.getConceptListName());
 		}
-		model.addAttribute("lists", lists);
-
-		return "/auth/conceptlist/addconcept";
+		
+		conceptAddBean.setLists(lists);
 	}
 
 	/**
@@ -115,19 +115,18 @@ public class ConceptAddController {
 	 * @return returns string which redirects to concept list page
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
-	public String addConcept(HttpServletRequest req, Principal principal) {
-
+	public String addConcept(HttpServletRequest req, Principal principal, @ModelAttribute("conceptAddBean")ConceptAddBean conceptAddBean) {
+		onLoad(conceptAddBean);
 		try {
 			ConceptEntry conceptEntry = new ConceptEntry();
-
-			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-			conceptEntry.setWord(req.getParameter("name"));
-			conceptEntry.setConceptList(req.getParameter("lists"));
-			conceptEntry.setPos(req.getParameter("pos"));
-			conceptEntry.setDescription(req.getParameter("description"));
-			conceptEntry.setEqualTo(req.getParameter("equals"));
-			conceptEntry.setSimilarTo(req.getParameter("similar"));
-			conceptEntry.setTypeId(req.getParameter("types"));
+			conceptEntry.setSynonymIds(conceptAddBean.getSynonymsids());
+			conceptEntry.setWord(conceptAddBean.getName());
+			conceptEntry.setConceptList(conceptAddBean.getSelectedList());
+			conceptEntry.setPos(conceptAddBean.getPos());
+			conceptEntry.setDescription(conceptAddBean.getDescription());
+			conceptEntry.setEqualTo(conceptAddBean.getEquals());
+			conceptEntry.setSimilarTo(conceptAddBean.getSimilar());
+			conceptEntry.setTypeId(conceptAddBean.getSelectedTypes());
 			conceptEntry.setCreatorId(principal.getName());
 			conceptManager.addConceptListEntry(conceptEntry);
 
@@ -141,7 +140,7 @@ public class ConceptAddController {
 			return "failed";
 		}
 
-		return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
+		return "redirect:/auth/" + conceptAddBean.getSelectedList() + "/concepts";
 	}
 
 	/**
