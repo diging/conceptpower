@@ -372,7 +372,7 @@ public class ConceptManager implements IConceptManager {
 		}
 		
 		//Creating the first change event
-		ChangeEvent changeEvent = new ChangeEvent(userName, new Date().toString(),
+		ChangeEvent changeEvent = new ChangeEvent(userName, new Date(),
 				ChangeEventConstants.CREATION);
 		List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
 		changeEventList.add(changeEvent);
@@ -393,7 +393,7 @@ public class ConceptManager implements IConceptManager {
 	public void storeModifiedConcept(ConceptEntry entry, String userName) {
 
 		ChangeEvent changeEvent = new ChangeEvent();
-		changeEvent.setDate(new Date().toString());
+		changeEvent.setDate(new Date());
 		changeEvent.setUserName(userName);
 		changeEvent.setType(ChangeEventConstants.MODIFICATION);
 		entry.getChangeEvents().add(changeEvent);
@@ -426,7 +426,7 @@ public class ConceptManager implements IConceptManager {
         
         ChangeEvent changeEvent = new ChangeEvent();
         changeEvent.setType(ChangeEventConstants.DELETION);
-        changeEvent.setDate(new Date().toString());
+        changeEvent.setDate(new Date());
         changeEvent.setUserName(userName);
         List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
         changeEventList.addAll(entry.getChangeEvents());
