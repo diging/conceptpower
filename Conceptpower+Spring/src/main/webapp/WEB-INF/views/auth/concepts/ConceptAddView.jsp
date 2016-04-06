@@ -15,19 +15,13 @@
 							var term = $('#term').val();
 
 							if (term != '') {
-								console.log('term');
-								console.log(term);
 								var synonymDescription = $(
 										'#synonymDescription').val();
 								var id = $('#synonymId').val();
 								var termArray = term.split(',,');
-								console.log('term array');
-								console.log(termArray);
 								var synonymDescriptionArray = synonymDescription
 										.split(',,');
 								var idArray = id.split(',,');
-
-								console.log(termArray.length);
 
 								for (var i = 0; i < termArray.length; i++) {
 									if (idArray[i] != '') {
@@ -256,14 +250,10 @@
 		var newIdArray = '';
 		for (var i = 0; i < idArray.length; i++) {
 			if (i != row) {
-				console.log(i+'i');
-				console.log(row+'row');
 				newIdArray = newIdArray + idArray[i];
 				newIdArray = newIdArray + ',,';
-				console.log(newIdArray);
 			}
 		}
-		console.log(newIdArray);
 		$('#synonymId').val(newIdArray);
 
 		var synonymDescriptions = $('#synonymDescription').val();
