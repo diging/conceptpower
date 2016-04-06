@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
-import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IIndexService;
@@ -47,6 +47,12 @@ public class ConceptListEditController {
     
     @Autowired
     private IIndexService indexService;
+    
+    @Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
+    
+    @Value("#{messages['INDEXER_STATUS']}")
+    private String indexerStatus;
 
     @InitBinder
     protected void initBinder(WebDataBinder validateBinder) {
@@ -97,9 +103,9 @@ public class ConceptListEditController {
         list.setConceptListName(conceptListAddForm.getListName());
         list.setDescription(conceptListAddForm.getDescription());
 
-        if (indexService.checkIndexerStatus()) {
+        if (indexService.isIndexerRunning()) {
             model.addAttribute("show_error_alert", true);
-            model.addAttribute("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+            model.addAttribute("error_alert_msg", indexerRunning);
             // Need to include command Object
             return "/auth/conceptlist/editlist";
         }
@@ -115,7 +121,7 @@ public class ConceptListEditController {
             ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
             conceptEntry.setConceptList(list.getConceptListName());
             conceptManager.storeModifiedConcept(conceptEntry);
-            model.addAttribute(ErrorConstants.INDEXERSTATUS, ErrorConstants.INDEXER_RUNNING);
+            model.addAttribute(indexerStatus, indexerRunning);
         }
         return "redirect:/auth/conceptlist";
     }

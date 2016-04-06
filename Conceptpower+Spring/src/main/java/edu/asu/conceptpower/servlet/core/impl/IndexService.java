@@ -4,13 +4,16 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IIndexService;
+import edu.asu.conceptpower.servlet.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 import edu.asu.conceptpower.servlet.lucene.impl.LuceneUtility;
 
 /**
@@ -25,7 +28,14 @@ public class IndexService implements IIndexService {
 
 	@Autowired
 	private LuceneUtility luceneUtility;
-
+	
+	@Autowired
+    @Qualifier("luceneDAO")
+    private ILuceneDAO dao;
+	
+	@Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
+	
 	/**
 	 * This field makes sure indexer runs only once when two different admins
 	 * gives index command at same time
@@ -41,7 +51,7 @@ public class IndexService implements IIndexService {
 			throws LuceneException, IllegalAccessException, IndexerRunningException {
 
 		if (indexerRunningFlag.get()) {
-			throw new IndexerRunningException(ErrorConstants.INDEXER_RUNNING);
+			throw new IndexerRunningException(indexerRunning);
 		}
 
 		return luceneUtility.queryIndex(fieldMap, operator);
@@ -56,7 +66,7 @@ public class IndexService implements IIndexService {
 	public void insertConcept(ConceptEntry entry)
 			throws IllegalAccessException, LuceneException, IndexerRunningException {
 		if (indexerRunningFlag.get()) {
-			throw new IndexerRunningException(ErrorConstants.INDEXER_RUNNING);
+			throw new IndexerRunningException(indexerRunning);
 
 		}
 		luceneUtility.insertConcept(entry);
@@ -69,7 +79,7 @@ public class IndexService implements IIndexService {
 	@Override
 	public void deleteById(String id) throws LuceneException, IndexerRunningException {
 		if (indexerRunningFlag.get()) {
-			throw new IndexerRunningException(ErrorConstants.INDEXER_RUNNING);
+			throw new IndexerRunningException(indexerRunning);
 		}
 		luceneUtility.deleteById(id);
 
@@ -81,7 +91,7 @@ public class IndexService implements IIndexService {
 	@Override
 	public void deleteIndexes() throws LuceneException, IndexerRunningException {
 		if (!indexerRunningFlag.compareAndSet(false, true)) {
-			throw new IndexerRunningException(ErrorConstants.INDEXER_RUNNING);
+			throw new IndexerRunningException(indexerRunning);
 		}
 		luceneUtility.deleteIndexes();
 		indexerRunningFlag.set(false);
@@ -94,15 +104,20 @@ public class IndexService implements IIndexService {
 	public void indexConcepts()
 			throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
 		if (!indexerRunningFlag.compareAndSet(false, true)) {
-			throw new IndexerRunningException(ErrorConstants.INDEXER_RUNNING);
+			throw new IndexerRunningException(indexerRunning);
 		}
 		luceneUtility.indexConcepts();
 		indexerRunningFlag.set(false);
 	}
 
 	@Override
-	public boolean checkIndexerStatus() {
+	public boolean isIndexerRunning() {
 		return indexerRunningFlag.get();
 	}
+
+    @Override
+    public IndexingEvent getTotalNumberOfWordsIndexed() {
+        return dao.getTotalNumberOfWordsIndexed();
+    }
 
 }

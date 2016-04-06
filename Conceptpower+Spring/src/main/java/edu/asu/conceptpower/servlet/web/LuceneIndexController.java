@@ -5,19 +5,17 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 
 /**
  * This class provides methods for deleting and viewing lucene indexes
@@ -30,10 +28,9 @@ public class LuceneIndexController {
 
     @Autowired
     private IIndexService manager;
-
-    @Autowired
-    @Qualifier("luceneDAO")
-    private ILuceneDAO dao;
+    
+    @Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
 
     /**
      * Retrives latest indexing time and number of concepts indexed so far
@@ -41,11 +38,11 @@ public class LuceneIndexController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "auth/loadIndex", method = RequestMethod.GET)
+    @RequestMapping(value = "auth/index", method = RequestMethod.GET)
     public String onLoadLucene(ModelMap model) {
-        IndexingEvent bean = dao.getTotalNumberOfWordsIndexed();
+        IndexingEvent bean = manager.getTotalNumberOfWordsIndexed();
         model.addAttribute("bean", bean);
-        return "/auth/luceneIndex";
+        return "/auth/reIndex";
     }
 
     /**
@@ -63,14 +60,14 @@ public class LuceneIndexController {
             throws IndexerRunningException {
         IndexingEvent bean = null;
         try {
-            if (manager.checkIndexerStatus()) {
-                bean = dao.getTotalNumberOfWordsIndexed();
-                bean.setMessage(ErrorConstants.INDEXER_RUNNING);
+            if (manager.isIndexerRunning()) {
+                bean = manager.getTotalNumberOfWordsIndexed();
+                bean.setMessage(indexerRunning);
                 return bean;
             }
             manager.deleteIndexes();
             manager.indexConcepts();
-            bean = dao.getTotalNumberOfWordsIndexed();
+            bean = manager.getTotalNumberOfWordsIndexed();
             bean.setMessage("Indexed successfully");
             return bean;
         } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
@@ -93,13 +90,13 @@ public class LuceneIndexController {
             throws IndexerRunningException {
         IndexingEvent bean = new IndexingEvent();
         try {
-            if (manager.checkIndexerStatus()) {
-                bean = dao.getTotalNumberOfWordsIndexed();
-                bean.setMessage(ErrorConstants.INDEXER_RUNNING);
+            if (manager.isIndexerRunning()) {
+                bean = manager.getTotalNumberOfWordsIndexed();
+                bean.setMessage(indexerRunning);
                 return bean;
             }
             manager.deleteIndexes();
-            bean = dao.getTotalNumberOfWordsIndexed();
+            bean = manager.getTotalNumberOfWordsIndexed();
             bean.setMessage("Concepts deleted from index successfully");
             return bean;
         } catch (LuceneException e) {

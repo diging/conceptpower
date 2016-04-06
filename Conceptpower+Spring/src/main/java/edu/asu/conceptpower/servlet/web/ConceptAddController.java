@@ -17,6 +17,7 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.ConceptType;
-import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
@@ -75,6 +75,9 @@ public class ConceptAddController {
 	
 	@Autowired
 	private IIndexService indexService;
+	
+	@Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
 
 	/**
 	 * This method provides initial types and list model elements
@@ -141,9 +144,9 @@ public class ConceptAddController {
         conceptEntry.setCreatorId(principal.getName());
         
         //Checking if indexer is already running.
-        if(indexService.checkIndexerStatus()){
+        if(indexService.isIndexerRunning()){
             model.addAttribute("show_error_alert", true);
-            model.addAttribute("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+            model.addAttribute("error_alert_msg", indexerRunning);
         	return "forward:/auth/conceptlist/addconcept";
         }
         conceptManager.addConceptListEntry(conceptEntry);

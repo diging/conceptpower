@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.ConceptType;
-import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
@@ -58,6 +58,9 @@ public class ConceptWrapperAddController {
     
     @Autowired
     private IIndexService indexService;
+    
+    @Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
 
     /**
      * This method provides required information for concept wrapper creation
@@ -126,9 +129,9 @@ public class ConceptWrapperAddController {
 			conceptEntry.setTypeId(req.getParameter("types"));
 			conceptEntry.setCreatorId(principal.getName());
 			
-            if (indexService.checkIndexerStatus()) {
+            if (indexService.isIndexerRunning()) {
                 model.addAttribute("show_error_alert", true);
-                model.addAttribute("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+                model.addAttribute("error_alert_msg", indexerRunning);
                 // Need to include command Object
                 return "forward:/auth/conceptlist/addconceptwrapper";
             }
@@ -158,16 +161,16 @@ public class ConceptWrapperAddController {
 
             ConceptEntry[] found = null;
             
-            if (indexService.checkIndexerStatus()) {
+            if (indexService.isIndexerRunning()) {
                 model.addAttribute("show_error_alert", true);
-                model.addAttribute("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+                model.addAttribute("error_alert_msg", indexerRunning);
                 return "/login";
             }
 
             try {
                 found = conceptManager.getConceptListEntriesForWord(concept, pos, Constants.WORDNET_DICTIONARY);
             } catch (IndexerRunningException ie) {
-                model.addAttribute(ErrorConstants.INDEXER_RUNNING, ie.getMessage());
+                model.addAttribute(indexerRunning, ie.getMessage());
                 return "/login";
             }
 

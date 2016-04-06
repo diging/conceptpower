@@ -72,7 +72,7 @@
 
 	<sec:authorize access="hasRole('ROLE_CP_ADMIN')">
 		<li ${currentPage == "luceneIndex" ? "class=\"selected\"" : ""}><a
-			href="${pageContext.servletContext.contextPath}/auth/loadIndex">
+			href="${pageContext.servletContext.contextPath}/auth/index">
 				Index</a></li>
 	</sec:authorize>
 

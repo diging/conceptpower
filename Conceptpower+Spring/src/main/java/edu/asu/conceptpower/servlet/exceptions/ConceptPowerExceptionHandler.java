@@ -4,16 +4,18 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-
-import edu.asu.conceptpower.servlet.core.ErrorConstants;
 
 @ControllerAdvice
 public class ConceptPowerExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ConceptPowerExceptionHandler.class);
+    
+    @Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
 
     /**
      * For now this method handles all exceptions thrown in Controller classes.
@@ -49,7 +51,7 @@ public class ConceptPowerExceptionHandler {
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
         ModelAndView mav = new ModelAndView();
         mav.addObject("show_error_alert", true);
-        mav.addObject("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+        mav.addObject("error_alert_msg", indexerRunning);
         mav.setViewName("conceptsearch");
         return mav;
     }

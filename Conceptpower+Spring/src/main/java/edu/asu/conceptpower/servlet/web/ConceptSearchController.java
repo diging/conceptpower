@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
@@ -46,6 +46,12 @@ public class ConceptSearchController {
     
     @Autowired
     private IIndexService indexService;
+    
+    @Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
+    
+    @Value("#{messages['INDEXER_STATUS']}")
+    private String indexerStatus;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
@@ -72,9 +78,9 @@ public class ConceptSearchController {
         List<ConceptEntryWrapper> foundConcepts = null;
         ConceptEntry[] found = null;
         
-        if (indexService.checkIndexerStatus()) {
+        if (indexService.isIndexerRunning()) {
             model.addAttribute("show_error_alert", true);
-            model.addAttribute("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+            model.addAttribute("error_alert_msg", indexerRunning);
             // Need to include command Object
             return "conceptsearch";
         }
@@ -83,7 +89,7 @@ public class ConceptSearchController {
             found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
                     conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
         } catch (IndexerRunningException e) {
-            model.addAttribute(ErrorConstants.INDEXERSTATUS, e.getMessage());
+            model.addAttribute(indexerStatus, e.getMessage());
             return "conceptsearch";
         }
         foundConcepts = wrapperCreator.createWrappers(found);

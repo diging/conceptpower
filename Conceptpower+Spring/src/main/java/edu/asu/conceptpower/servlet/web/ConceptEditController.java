@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,6 @@ import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.Constants;
-import edu.asu.conceptpower.servlet.core.ErrorConstants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
@@ -62,6 +62,12 @@ public class ConceptEditController {
     
     @Autowired
     private IIndexService indexService;
+    
+    @Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
+    
+    @Value("#{messages['INDEXER_STATUS']}")
+    private String indexerStatus;
 
     /**
      * This method provides information of a concept to be edited for concept
@@ -153,7 +159,7 @@ public class ConceptEditController {
 		conceptEntry.setModified(userId);
 		ModelAndView model = new ModelAndView();
 		
-		if (indexService.checkIndexerStatus()) {
+		if (indexService.isIndexerRunning()) {
 			List<ConceptList> allLists = conceptListManager.getAllConceptLists();
 	        conceptEditBean.setConceptList(allLists);
 	        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
@@ -161,14 +167,14 @@ public class ConceptEditController {
 	        conceptEditBean.setConceptId(conceptEntry.getId());
 	        model.addObject("conceptId", conceptEntry.getId());
 			model.addObject("show_error_alert", true);
-			model.addObject("error_alert_msg", ErrorConstants.INDEXER_RUNNING);
+			model.addObject("error_alert_msg", indexerRunning);
 			// Need to include command Object
 			model.setViewName("/auth/conceptlist/editconcept");
 			return model;
 		}
 		
 		conceptManager.storeModifiedConcept(conceptEntry);
-		model.addObject(ErrorConstants.INDEXERSTATUS, ErrorConstants.INDEXER_RUNNING);
+		model.addObject(indexerStatus, indexerRunning);
 
 		if (conceptEditBean.isFromHomeScreen()) {
 			model.setViewName("redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="

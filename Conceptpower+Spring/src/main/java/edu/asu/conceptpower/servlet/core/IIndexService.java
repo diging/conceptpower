@@ -18,6 +18,7 @@ public interface IIndexService {
 
     public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException;
     
-    public boolean checkIndexerStatus();
+    public boolean isIndexerRunning();
     
+    public IndexingEvent getTotalNumberOfWordsIndexed();
 }
