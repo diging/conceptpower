@@ -8,28 +8,37 @@
 <script>
 	$(function() {
 		
-	
-	$(document).ready(function() {
-		
-			var term = $('#term').val();
-			var synonymDescription = $('#synonymDescription').val();
-			var id = $('#synonymId').val();
-			var termArray = term.split(',');
-			var synonymDescriptionArray = synonymDescription.split(',');
-			var idArray = id.split(',');
-		
-			console.log(termArray.length);
-			
-			
-			
-			for (var i = 0; i < termArray.length; i++) {
-				if(termArray.length != 1){
-					synonymAdd(idArray[i], termArray[i], synonymDescriptionArray[i],'true');
-					
-				}
-				
-			}
-		});
+	$(document)
+				.ready(
+						function() {
+
+							var term = $('#term').val();
+
+							if (term != '') {
+								console.log('term');
+								console.log(term);
+								var synonymDescription = $(
+										'#synonymDescription').val();
+								var id = $('#synonymId').val();
+								var termArray = term.split(',,');
+								console.log('term array');
+								console.log(termArray);
+								var synonymDescriptionArray = synonymDescription
+										.split(',,');
+								var idArray = id.split(',,');
+
+								console.log(termArray.length);
+
+								for (var i = 0; i < termArray.length; i++) {
+									if (idArray[i] != '') {
+										synonymAdd(idArray[i], termArray[i],
+												synonymDescriptionArray[i],
+												'true');
+									}
+								}
+							}
+
+						});
 
 		$("#addsynonym").click(function() {
 			var addedSynonymsTable = $('#addedSynonyms');
@@ -138,17 +147,16 @@
 						});
 	});
 
-	var synonymAdd = function(id, term, description,onLoad) {
-		
-		if(typeof onLoad === "undefined"){
+	var synonymAdd = function(id, term, description, onLoad) {
+
+		if (typeof onLoad === "undefined") {
 			onLoad = false;
 		}
-		
-		if(onLoad == false){
+
+		if (onLoad == false) {
 			$("#dialog").dialog("close");
-			$("#synonymsDialogTable").hide();	
+			$("#synonymsDialogTable").hide();
 		}
-		
 
 		var x = document.getElementById('addedSynonymsTable');
 		var addedsynonym = $('#addedSynonnym').val();
@@ -162,18 +170,18 @@
 			new_row.cells[3].innerHTML = id;
 			new_row.cells[3].hidden = true;
 
-			if(onLoad == false){
-			var t = $('#term').val();
-			t = t + "," + term;
-			$('#term').val(t);
+			if (onLoad == false) {
+				var t = $('#term').val();
+				t = t + ",," + term;
+				$('#term').val(t);
 
-			var d = $('#synonymDescription').val();
-			d = d + "," + description;
-			$('#synonymDescription').val(d);
+				var d = $('#synonymDescription').val();
+				d = d + ",," + description;
+				$('#synonymDescription').val(d);
 
-			var i = $('#synonymId').val();
-			i = i + "," + id;
-			$('#synonymId').val(i);
+				var i = $('#synonymId').val();
+				i = i + ",," + id;
+				$('#synonymId').val(i);
 			}
 
 			x.appendChild(new_row);
@@ -197,18 +205,18 @@
 			html += '<input type="hidden" name="syns" />';
 			addedsynonym += id;
 
-			if(onLoad == false){
-			var t = $('#term').val();
-			t = term;
-			$('#term').val(t);
+			if (onLoad == false) {
+				var t = $('#term').val();
+				t = term;
+				$('#term').val(t);
 
-			var d = $('#synonymDescription').val();
-			d = description;
-			$('#synonymDescription').val(d);
+				var d = $('#synonymDescription').val();
+				d = description;
+				$('#synonymDescription').val(d);
 
-			var i = $('#synonymId').val();
-			i = id;
-			$('#synonymId').val(i);
+				var i = $('#synonymId').val();
+				i = id;
+				$('#synonymId').val(i);
 			}
 
 			$('#addedSynonnym').val(addedsynonym);
@@ -242,43 +250,40 @@
 	};
 
 	var bindingRemoval = function(row) {
-		alert(row);
-		
+
 		var ids = $('#synonymId').val();
-		var idArray = ids.split(',');
-		var id = idArray[row];
+		var idArray = ids.split(',,');
 		var newIdArray = '';
 		for (var i = 0; i < idArray.length; i++) {
 			if (i != row) {
+				console.log(i+'i');
+				console.log(row+'row');
 				newIdArray = newIdArray + idArray[i];
-				newIdArray = newIdArray + ',';
+				newIdArray = newIdArray + ',,';
+				console.log(newIdArray);
 			}
 		}
-		alert(newIdArray);
+		console.log(newIdArray);
 		$('#synonymId').val(newIdArray);
 
 		var synonymDescriptions = $('#synonymDescription').val();
-		var synonymDescriptionArray = synonymDescriptions.split(',');
-		alert(synonymDescriptionArray);
-		alert(synonymDescriptionArray[0]);
-		alert(synonymDescriptionArray[1]);
+		var synonymDescriptionArray = synonymDescriptions.split(',,');
 		var newSynonymArray = '';
-		for (var i = 0; i < newSynonymArray.length; i++) {
+		for (var i = 0; i < synonymDescriptionArray.length; i++) {
 			if (i != row) {
 				newSynonymArray = newSynonymArray + synonymDescriptionArray[i];
-				newSynonymArray = newSynonymArray + ',';
+				newSynonymArray = newSynonymArray + ',,';
 			}
 		}
 		$('#synonymDescription').val(newSynonymArray);
-		alert(newSynonymArray);
 
 		var terms = $('#term').val();
-		var termArray = terms.split(',');
+		var termArray = terms.split(',,');
 		var newTermArray = '';
 		for (var i = 0; i < termArray.length; i++) {
 			if (i != row) {
 				newTermArray = newTermArray + termArray[i];
-				newTermArray = newTermArray + ',';
+				newTermArray = newTermArray + ',,';
 			}
 		}
 		$('#term').val(newTermArray);

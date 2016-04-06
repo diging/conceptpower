@@ -118,16 +118,7 @@ public class ConceptAddController {
 	public String addConcept(HttpServletRequest req, Principal principal, @ModelAttribute("conceptAddBean")ConceptAddBean conceptAddBean) {
 		onLoad(conceptAddBean);
 		try {
-			boolean test = true;
-			
-			conceptAddBean.getSynonymId();
-			conceptAddBean.getSynonymDescription();
-			conceptAddBean.getTerm();
-			
-			conceptAddBean.getTypes();
-			
 			ConceptEntry conceptEntry = new ConceptEntry();
-
 			conceptEntry.setSynonymIds(conceptAddBean.getSynonymsids());
 			conceptEntry.setWord(conceptAddBean.getName());
 			conceptEntry.setConceptList(conceptAddBean.getSelectedList());
@@ -137,8 +128,6 @@ public class ConceptAddController {
 			conceptEntry.setSimilarTo(conceptAddBean.getSimilar());
 			conceptEntry.setTypeId(conceptAddBean.getSelectedTypes());
 			conceptEntry.setCreatorId(principal.getName());
-			if(test == true)
-			return "/auth/conceptlist/addconcept";
 			conceptManager.addConceptListEntry(conceptEntry);
 
 		} catch (DictionaryDoesNotExistException e) {
