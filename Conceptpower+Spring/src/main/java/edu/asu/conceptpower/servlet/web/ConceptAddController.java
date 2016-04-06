@@ -118,6 +118,7 @@ public class ConceptAddController {
 	public String addConcept(HttpServletRequest req, Principal principal, @ModelAttribute("conceptAddBean")ConceptAddBean conceptAddBean) {
 		onLoad(conceptAddBean);
 		try {
+<<<<<<< 28523336edff98ebb6e0d14fae93da6d50c9b384
 			
 			conceptAddBean.getSynonymId();
 			conceptAddBean.getSynonymDescription();
@@ -125,8 +126,9 @@ public class ConceptAddController {
 			
 			conceptAddBean.getTypes();
 			
+=======
+>>>>>>> Changes for binding synonym
 			ConceptEntry conceptEntry = new ConceptEntry();
-
 			conceptEntry.setSynonymIds(conceptAddBean.getSynonymsids());
 			conceptEntry.setWord(conceptAddBean.getName());
 			conceptEntry.setConceptList(conceptAddBean.getSelectedList());
@@ -136,6 +138,10 @@ public class ConceptAddController {
 			conceptEntry.setSimilarTo(conceptAddBean.getSimilar());
 			conceptEntry.setTypeId(conceptAddBean.getSelectedTypes());
 			conceptEntry.setCreatorId(principal.getName());
+<<<<<<< 28523336edff98ebb6e0d14fae93da6d50c9b384
+=======
+			conceptManager.addConceptListEntry(conceptEntry);
+>>>>>>> Changes for binding synonym
 
 		} catch (DictionaryDoesNotExistException e) {
 			// TODO Auto-generated catch block
