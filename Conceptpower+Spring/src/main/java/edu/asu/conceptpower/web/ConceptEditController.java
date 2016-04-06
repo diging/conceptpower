@@ -135,21 +135,9 @@ public class ConceptEditController {
 		conceptEntry.setTypeId(conceptEditBean.getSelectedTypeId());
 		conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
 
-		String userId = usersManager.findUser(principal.getName()).getUsername();
-		String modified = conceptEntry.getModified() != null ? conceptEntry.getModified() : "";
-		if (!modified.trim().isEmpty())
-			modified += ", ";
-		
-		ChangeEvent changeEvent = new ChangeEvent();
-		changeEvent.setDate(new Date().toString());
-		changeEvent.setUserName(userId);
-		changeEvent.setType(ChangeEventConstants.MODIFICATION);
-		List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
-		conceptEntry.setChangeEvent(changeEventList);
-		
 		//conceptEntry.setModified(modified + userId + "@" + (new Date()).toString());
 
-		conceptManager.storeModifiedConcept(conceptEntry);
+		conceptManager.storeModifiedConcept(conceptEntry, usersManager.findUser(principal.getName()).getUsername());
 		
         if (conceptEditBean.isFromHomeScreen()) {
             return "redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="

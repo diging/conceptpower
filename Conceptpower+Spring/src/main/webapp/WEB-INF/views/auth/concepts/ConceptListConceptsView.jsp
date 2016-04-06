@@ -105,9 +105,12 @@
 								items="${concept.synonyms}">
 								<c:out value="-> ${syn.word}"></c:out>
 							</c:forEach></font></td>
-					<td align="justify"><font size="2"><c:out
-								value="${concept.entry.changeEvent[0].userName}"></c:out></font> <!-- ${concept.creator.username} -->
-					</td>
+					<td align="justify"><c:forEach var="changeEvent"
+							items="${concept.entry.changeEvents}">
+							<c:if test="${changeEvent.type eq 'CREATION' }">
+								<font size="2"><c:out value="${changeEvent.userName}"></c:out></font>
+							</c:if>
+						</c:forEach></td>
 				</tr>
 			</c:forEach>
 		</tbody>

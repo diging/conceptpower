@@ -132,14 +132,8 @@ public class ConceptAddController {
 			conceptEntry.setEqualTo(req.getParameter("equals"));
 			conceptEntry.setSimilarTo(req.getParameter("similar"));
 			conceptEntry.setTypeId(req.getParameter("types"));
-			conceptEntry.setCreatorId(principal.getName());
 
-			ChangeEvent changeEvent = new ChangeEvent(conceptEntry.getCreatorId(), new Date().toString(),
-					ChangeEventConstants.CREATION);
-			List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
-			changeEventList.add(changeEvent);
-			conceptEntry.setChangeEvent(changeEventList);
-			conceptManager.addConceptListEntry(conceptEntry);
+			conceptManager.addConceptListEntry(conceptEntry,principal.getName());
 
 		} catch (DictionaryDoesNotExistException e) {
 			// TODO Auto-generated catch block

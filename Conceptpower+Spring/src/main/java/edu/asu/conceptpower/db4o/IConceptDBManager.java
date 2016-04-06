@@ -42,6 +42,4 @@ public interface IConceptDBManager {
 	public abstract void update(ConceptList list, String listname,
 			String databasename);
 	
-	public List<ChangeEvent> getChangeEventList(String id);
-
 }

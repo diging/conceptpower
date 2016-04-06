@@ -1,12 +1,13 @@
 package edu.asu.conceptpower.wrapper.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import edu.asu.conceptpower.core.ChangeEvent;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.Constants;
 import edu.asu.conceptpower.core.IConceptManager;
@@ -53,14 +54,17 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
 		for (ConceptEntry entry : entries) {
 		    
-		    ConceptEntryWrapper wrapper = new ConceptEntryWrapper(entry);
-		    wrapper.setUri(helper.getURI(entry));
+			ConceptEntryWrapper wrapper = new ConceptEntryWrapper(entry);
+			wrapper.setUri(helper.getURI(entry));
 			if (entry.getTypeId() != null && !entry.getTypeId().isEmpty())
 				wrapper.setType(typesManager.getType(entry.getTypeId()));
 
-			if (entry.getCreatorId() != null && !entry.getCreatorId().isEmpty())
-				wrapper.setCreator(usersManager.findUser(entry.getCreatorId()));
-
+			List<ChangeEvent> changeEvents = entry.getChangeEvents();
+			if (changeEvents != null) {
+				Collections.sort(changeEvents);
+				wrapper.setCreator(usersManager.findUser(changeEvents.get(0).getUserName()));
+			}
+			
 			// if entry wraps a wordnet concepts, add it here
 			List<ConceptEntry> wordnetEntries = new ArrayList<ConceptEntry>();
 			String wordnetIds = (entry.getWordnetId() != null ? entry

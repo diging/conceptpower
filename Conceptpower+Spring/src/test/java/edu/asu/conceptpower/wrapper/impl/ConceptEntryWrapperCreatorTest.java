@@ -2,6 +2,8 @@ package edu.asu.conceptpower.wrapper.impl;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -11,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import edu.asu.conceptpower.core.ChangeEvent;
+import edu.asu.conceptpower.core.ChangeEventConstants;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.IConceptManager;
@@ -42,9 +46,17 @@ public class ConceptEntryWrapperCreatorTest {
 
     @Before
     public void init() {
-
+    	
+    	
+    	 ChangeEvent changeEvent = new ChangeEvent();
+         changeEvent.setUserName("Test");
+         changeEvent.setType(ChangeEventConstants.CREATION);
+         changeEvent.setDate(new Date().toString());
+         List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
+         changeEventList.add(changeEvent);
+    	
         entry.setTypeId("Type-1");
-        entry.setCreatorId("Test");
+        entry.setChangeEvents(changeEventList);
         entry.setWordnetId("WNET_1");
         entry.setSynonymIds("SYN_1");
         entries[0] = entry;

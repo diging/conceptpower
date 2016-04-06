@@ -1,11 +1,13 @@
 package edu.asu.conceptpower.xml;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import edu.asu.conceptpower.core.ChangeEvent;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
@@ -88,6 +90,13 @@ public class XMLConceptMessage extends AXMLMessage {
 				.getCreatorId().trim() : ""));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.CREATOR_ID + ">");
+		
+		List<ChangeEvent> changeEvents = entry.getChangeEvents();
+		Collections.sort(changeEvents);
+
+		sb.append(StringEscapeUtils
+				.escapeXml(changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : ""));
+		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
 
 		// equal to
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"

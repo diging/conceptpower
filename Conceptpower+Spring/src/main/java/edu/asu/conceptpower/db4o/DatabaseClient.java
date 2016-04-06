@@ -130,7 +130,6 @@ public class DatabaseClient implements IConceptDBManager {
 								if (searchFieldAnnotation.fieldName().equals(
 										fField)) {
 									String fieldContent = null;
-									List changeEventsList = null;
 									// check content
 									try {
 										field.setAccessible(true);
@@ -138,10 +137,6 @@ public class DatabaseClient implements IConceptDBManager {
 										if (contentOfField instanceof String)
 											fieldContent = contentOfField
 													.toString();
-										if(contentOfField instanceof List){
-											changeEventsList = (List)contentOfField;
-										}
-											
 									} catch (IllegalArgumentException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -160,10 +155,6 @@ public class DatabaseClient implements IConceptDBManager {
 														fSearchFor.trim()
 																.toLowerCase()))
 											return true;
-									}
-									if(changeEventsList != null){
-										return true;
-										
 									}
 									return false;
 								}
@@ -320,7 +311,6 @@ public class DatabaseClient implements IConceptDBManager {
 			toBeUpdated.setConceptList(entry.getConceptList());
 			toBeUpdated.setDescription(entry.getDescription());
 			toBeUpdated.setEqualTo(entry.getEqualTo());
-			toBeUpdated.setModified(entry.getModified());
 			toBeUpdated.setNarrows(entry.getNarrows());
 			toBeUpdated.setPos(entry.getPos());
 			toBeUpdated.setSimilarTo(entry.getSimilarTo());
@@ -330,7 +320,7 @@ public class DatabaseClient implements IConceptDBManager {
 			toBeUpdated.setWord(entry.getWord());
 			toBeUpdated.setWordnetId(entry.getWordnetId());
 			toBeUpdated.setDeleted(entry.isDeleted());
-			toBeUpdated.setChangeEvent(entry.getChangeEvent());
+			toBeUpdated.setChangeEvents(entry.getChangeEvents());
 			dictionaryClient.store(toBeUpdated);
 			dictionaryClient.commit();
 		}
@@ -365,25 +355,4 @@ public class DatabaseClient implements IConceptDBManager {
 		}
 	}
 	
-	/**
-	 * This method is for fetching the existing changeevent details for an id
-	 */
-	@Override
-	public List<ChangeEvent> getChangeEventList(String id) {
-		ObjectSet<ConceptEntry> results = dictionaryClient
-				.query(new Predicate<ConceptEntry>() {
-					public boolean match(ConceptEntry con) {
-						if(con.getId().equalsIgnoreCase(id)){
-							return true; 
-						}
-						return false;
-					}
-				});
-
-		if (results.size() > 0) {
-			return results.get(0).getChangeEvent();
-		}
-
-		return null;
-	}
 }
