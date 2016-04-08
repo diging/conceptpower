@@ -12,7 +12,6 @@
 	
 	<title>Conceptpower</title>
 
-<<<<<<< HEAD
 <title><tiles:insertAttribute name="title" /></title>
 <link rel="stylesheet"
 	href="${pageContext.servletContext.contextPath}/resources/css/style.css" />
@@ -38,13 +37,11 @@
 	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex1.js"></script>
 <script
 	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex2.js"></script>
-=======
 	<link rel="shortcut icon" href="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png">
 	
 	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
->>>>>>> branch 'CCP-128' of https://github.com/diging/conceptpower.git
 
 	<!-- Custom styles for our template -->
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/bootstrap-theme.css" media="screen" >
