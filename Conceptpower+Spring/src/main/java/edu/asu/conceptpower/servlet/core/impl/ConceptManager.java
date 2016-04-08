@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
+import edu.asu.conceptpower.servlet.core.ChangeEventConstants;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
@@ -373,7 +374,7 @@ public class ConceptManager implements IConceptManager {
      * conceptpower.core.ConceptEntry)
      */
     @Override
-    public String addConceptListEntry(ConceptEntry entry) throws DictionaryDoesNotExistException,
+    public String addConceptListEntry(ConceptEntry entry, String userName) throws DictionaryDoesNotExistException,
             DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptList dict = client.getConceptList(entry.getConceptList());
         if (dict == null)
@@ -383,6 +384,12 @@ public class ConceptManager implements IConceptManager {
             throw new DictionaryModifyException();
         }
 
+        //Creating the first change event
+        ChangeEvent changeEvent = new ChangeEvent(userName, new Date(),
+                ChangeEventConstants.CREATION);
+        List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
+        changeEventList.add(changeEvent);
+        entry.setChangeEvents(changeEventList);
         indexService.insertConcept(entry);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
@@ -399,19 +406,15 @@ public class ConceptManager implements IConceptManager {
      * conceptpower.core.ConceptEntry)
      */
     @Override
-    public void storeModifiedConcept(ConceptEntry entry)
+    public void storeModifiedConcept(ConceptEntry entry, String userName)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
 
-        List<ChangeEvent> existingChangeEvents = null;
-        if ((existingChangeEvents = client.getChangeEventList(entry.getId())) != null) {
-            existingChangeEvents.addAll(entry.getChangeEvent());
-            entry.setChangeEvent(existingChangeEvents);
-        }
+        ChangeEvent changeEvent = new ChangeEvent();
+        changeEvent.setDate(new Date());
+        changeEvent.setUserName(userName);
+        changeEvent.setType(ChangeEventConstants.MODIFICATION);
+        entry.getChangeEvents().add(changeEvent);
 
-        String modified = entry.getModified() != null ? entry.getModified() : "";
-        if (!modified.trim().isEmpty())
-            modified += ", ";
-        entry.setModified(modified + entry.getModifiedUser() + "@" + (new Date()).toString());
         indexService.deleteById(entry.getId());
         indexService.insertConcept(entry);
 
@@ -436,9 +439,16 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public void deleteConcept(String id) throws LuceneException, IndexerRunningException {
+    public void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException {
         ConceptEntry concept = getConceptEntry(id);
         concept.setDeleted(true);
+ChangeEvent changeEvent = new ChangeEvent();
+        changeEvent.setType(ChangeEventConstants.DELETION);
+        changeEvent.setDate(new Date());
+        changeEvent.setUserName(userName);
+        List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
+        changeEventList.addAll(concept.getChangeEvents());
+        changeEventList.add(changeEvent);
         client.update(concept, DBNames.DICTIONARY_DB);
         indexService.deleteById(concept.getId());
     }

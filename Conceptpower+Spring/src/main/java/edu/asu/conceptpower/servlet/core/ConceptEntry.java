@@ -69,6 +69,13 @@ public class ConceptEntry implements Serializable {
 
     private String broadens;
 
+    private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
+
+    private transient String lastModifiedUser;
+
+    private transient String lastCreatedUser;
+
+    private transient String deletedUser;
     @SearchField(fieldName = SearchFieldNames.CREATOR)
     @LuceneField(lucenefieldName = LuceneFieldNames.CREATOR, isIndexable = false)
     private String creatorId;
@@ -79,10 +86,7 @@ public class ConceptEntry implements Serializable {
 
     private boolean isDeleted;
     
-    private String modifiedUser;
     
-    @SearchField(fieldName = SearchFieldNames.CHANGE_EVENTS_LIST)
-    private List<ChangeEvent> changeEvent = new ArrayList<ChangeEvent>();
 
 
     public ConceptEntry() {
@@ -346,20 +350,36 @@ public class ConceptEntry implements Serializable {
         return true;
     }
 
-    public String getModifiedUser() {
-        return modifiedUser;
+ public List<ChangeEvent> getChangeEvents() {
+        return changeEvents;
     }
 
-    public void setModifiedUser(String modifiedUser) {
-        this.modifiedUser = modifiedUser;
-    }
-    
-        public List<ChangeEvent> getChangeEvent() {
-        return changeEvent;
+    public void setChangeEvents(List<ChangeEvent> changeEvents) {
+        this.changeEvents = changeEvents;
     }
 
-    public void setChangeEvent(List<ChangeEvent> changeEvent) {
-        this.changeEvent = changeEvent;
+    public String getLastModifiedUser() {
+        return lastModifiedUser;
+    }
+
+    public void setLastModifiedUser(String lastModifiedUser) {
+        this.lastModifiedUser = lastModifiedUser;
+    }
+
+    public String getLastCreatedUser() {
+        return lastCreatedUser;
+    }
+
+    public void setLastCreatedUser(String lastCreatedUser) {
+        this.lastCreatedUser = lastCreatedUser;
+    }
+
+    public String getDeletedUser() {
+        return deletedUser;
+    }
+
+    public void setDeletedUser(String deletedUser) {
+        this.deletedUser = deletedUser;
     }
 
 }

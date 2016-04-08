@@ -94,11 +94,4 @@ public class ConceptDBManager implements IConceptDBManager {
         
     }
 
-    @Override
-    public List<ChangeEvent> getChangeEventList(String id) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
-    
 }

@@ -125,11 +125,11 @@ public class ConceptDeleteController {
         ConceptEntry concept = conceptManager.getConceptEntry(id);
         ChangeEvent changeEvent = new ChangeEvent();
             changeEvent.setType(ChangeEventConstants.DELETION);
-            changeEvent.setDate(new Date().toString());
+            changeEvent.setDate(new Date());
             changeEvent.setUserName(principal.getName());
             List<ChangeEvent> ChangeEventsList = new ArrayList<ChangeEvent>();
             ChangeEventsList.add(changeEvent);
-            concept.setChangeEvent(ChangeEventsList);
+            concept.setChangeEvents(ChangeEventsList);
         //Check if indexer is running
         if (indexService.isIndexerRunning()) {
             model.addObject("show_error_alert", true);
@@ -139,7 +139,7 @@ public class ConceptDeleteController {
             return model;
         }
         
-        conceptManager.deleteConcept(id);
+        conceptManager.deleteConcept(id, principal.getName());
         List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
 
         foundConcepts = wrapperCreator
@@ -156,7 +156,7 @@ public class ConceptDeleteController {
 
     @RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
     public ModelAndView deleteConcept(@PathVariable("id") String id,
-            @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult result)
+            @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult result, Principal principal)
                     throws LuceneException, IndexerRunningException {
         ModelAndView model = new ModelAndView();
         // Check if indexer is running
@@ -167,7 +167,7 @@ public class ConceptDeleteController {
             model.setViewName("welcome");
             return model;
         }
-        conceptManager.deleteConcept(id);
+        conceptManager.deleteConcept(id, principal.getName());
         model.setViewName("welome");
         return model;
     }

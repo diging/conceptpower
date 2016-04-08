@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.servlet.web;
 
+import java.security.Principal;
 import java.util.Iterator;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class ConceptListEditController {
     @RequestMapping(value = "auth/conceptlist/storeeditlist", method = RequestMethod.POST)
     public String editList(HttpServletRequest req,
             @Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
-			BindingResult result, ModelMap model)
+			BindingResult result, ModelMap model, Principal principal)
                     throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (result.hasErrors()) {
             return "/auth/conceptlist/editlist";
@@ -120,7 +121,7 @@ public class ConceptListEditController {
         while (entriesIterator.hasNext()) {
             ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
             conceptEntry.setConceptList(list.getConceptListName());
-            conceptManager.storeModifiedConcept(conceptEntry);
+            conceptManager.storeModifiedConcept(conceptEntry, principal.getName());
             model.addAttribute(indexerStatus, indexerRunning);
         }
         return "redirect:/auth/conceptlist";

@@ -163,11 +163,11 @@ public class ConceptEditController {
         ModelAndView model = new ModelAndView();
         
         ChangeEvent changeEvent = new ChangeEvent();
-        changeEvent.setDate(new Date().toString());
+        changeEvent.setDate(new Date());
         changeEvent.setUserName(userId);
         changeEvent.setType(ChangeEventConstants.MODIFICATION);
         List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
-        conceptEntry.setChangeEvent(changeEventList);
+        conceptEntry.setChangeEvents(changeEventList);
         
         
         if (indexService.isIndexerRunning()) {
@@ -184,7 +184,7 @@ public class ConceptEditController {
             return model;
         }
         
-        conceptManager.storeModifiedConcept(conceptEntry);
+        conceptManager.storeModifiedConcept(conceptEntry, principal.getName());
         model.addObject(indexerStatus, indexerRunning);
 
         if (conceptEditBean.isFromHomeScreen()) {

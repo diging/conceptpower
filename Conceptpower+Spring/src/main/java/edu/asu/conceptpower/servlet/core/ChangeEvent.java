@@ -1,43 +1,60 @@
 package edu.asu.conceptpower.servlet.core;
 
-public class ChangeEvent {
+import java.util.Date;
 
-	/**
-	 * Stores the username of the creator or modified userName
-	 */
-	private String userName;
+public class ChangeEvent implements Comparable<ChangeEvent> {
 
-	/**
-	 * Stores the time of change
-	 */
-	private String date;
+    /**
+     * Stores the username of the creator or modified userName
+     */
+    private String userName;
 
-	/**
-	 * Stores the type as Creation, Modification, Deletion
-	 */
-	private String type;
+    /**
+     * Stores the time of change
+     */
+    private Date date;
 
-	public String getUserName() {
-		return userName;
-	}
+    /**
+     * Stores the type as Creation, Modification, Deletion
+     */
+    private String type;
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public ChangeEvent() {
+    }
 
-	public String getDate() {
-		return date;
-	}
+    public ChangeEvent(String userName, Date date, String type) {
+        this.userName = userName;
+        this.date = date;
+        this.type = type;
+    }
 
-	public void setDate(String date) {
-		this.date = date;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Override
+    public int compareTo(ChangeEvent o) {
+        ChangeEvent changeEvent = (ChangeEvent) o;
+        return date.before(changeEvent.getDate()) ? 1 : 0;
+    }
 }

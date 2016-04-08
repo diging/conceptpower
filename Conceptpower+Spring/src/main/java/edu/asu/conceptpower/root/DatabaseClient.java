@@ -313,7 +313,6 @@ public class DatabaseClient implements IConceptDBManager {
             toBeUpdated.setConceptList(entry.getConceptList());
             toBeUpdated.setDescription(entry.getDescription());
             toBeUpdated.setEqualTo(entry.getEqualTo());
-            toBeUpdated.setModified(entry.getModified());
             toBeUpdated.setNarrows(entry.getNarrows());
             toBeUpdated.setPos(entry.getPos());
             toBeUpdated.setSimilarTo(entry.getSimilarTo());
@@ -323,7 +322,7 @@ public class DatabaseClient implements IConceptDBManager {
             toBeUpdated.setWord(entry.getWord());
             toBeUpdated.setWordnetId(entry.getWordnetId());
             toBeUpdated.setDeleted(entry.isDeleted());
-            toBeUpdated.setChangeEvent(entry.getChangeEvent());
+            toBeUpdated.setChangeEvents(entry.getChangeEvents());
             dictionaryClient.store(toBeUpdated);
             dictionaryClient.commit();
         }
@@ -358,25 +357,4 @@ public class DatabaseClient implements IConceptDBManager {
         }
     }
 
-    /**
-     * This method is for fetching the existing changeevent details for an id
-     */
-    @Override
-    public List<ChangeEvent> getChangeEventList(final String id) {
-        ObjectSet<ConceptEntry> results = dictionaryClient
-                .query(new Predicate<ConceptEntry>() {
-                    public boolean match(ConceptEntry con) {
-                        if(con.getId().equalsIgnoreCase(id)){
-                            return true; 
-                        }
-                        return false;
-                    }
-                });
-
-        if (results.size() > 0) {
-            return results.get(0).getChangeEvent();
-        }
-
-        return null;
-    }
 }

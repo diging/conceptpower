@@ -135,7 +135,7 @@ public class ConceptWrapperAddController {
                 // Need to include command Object
                 return "forward:/auth/conceptlist/addconceptwrapper";
             }
-			conceptManager.addConceptListEntry(conceptEntry);
+			conceptManager.addConceptListEntry(conceptEntry, principal.getName());
 		}
 
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
