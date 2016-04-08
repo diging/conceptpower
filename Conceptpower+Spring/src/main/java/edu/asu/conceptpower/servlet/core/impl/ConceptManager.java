@@ -383,6 +383,7 @@ public class ConceptManager implements IConceptManager {
 
 		String id = generateId(CONCEPT_PREFIX);
 		entry.setId(id);
+		indexService.insertConcept(entry);
 		client.store(entry, DBNames.DICTIONARY_DB);
 		if (entry.getWordnetId() != null) {
 		    String wordnetId = entry.getWordnetId();
