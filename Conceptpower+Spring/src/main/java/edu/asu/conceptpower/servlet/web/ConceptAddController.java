@@ -35,6 +35,8 @@ import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
+import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.profile.impl.ServiceRegistry;
 import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
 import edu.asu.conceptpower.web.backing.ConceptAddBean;
@@ -106,16 +108,21 @@ public class ConceptAddController {
 	}
 
 	/**
-	 * This method prepares a new concept and stores it using concept manager
-	 * 
-	 * @param req
-	 *            Holds http request object information
-	 * @param principal
-	 *            holds log in information
-	 * @return returns string which redirects to concept list page
-	 */
+     * This method prepares a new concept and stores it using concept manager
+     * 
+     * @param req
+     *            Holds http request object information
+     * @param principal
+     *            holds log in information
+     * @return returns string which redirects to concept list page
+     * @throws IndexerRunningException
+     * @throws LuceneException
+     * @throws IllegalAccessException
+     */
 	@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
-	public String addConcept(HttpServletRequest req, Principal principal, @ModelAttribute("conceptAddBean")ConceptAddBean conceptAddBean) {
+    public String addConcept(HttpServletRequest req, Principal principal,
+            @ModelAttribute("conceptAddBean") ConceptAddBean conceptAddBean)
+                    throws IllegalAccessException, LuceneException, IndexerRunningException {
 		onLoad(conceptAddBean);
 		try {
 <<<<<<< 28523336edff98ebb6e0d14fae93da6d50c9b384
@@ -157,15 +164,19 @@ public class ConceptAddController {
 	}
 
 	/**
-	 * This method provides array of concepts for a given string
-	 * 
-	 * @param synonymname
-	 *            A synonym string for which we need to find existing concepts
-	 * @return Returns array of concepts found for synonym name
-	 */
+     * This method provides array of concepts for a given string
+     * 
+     * @param synonymname
+     *            A synonym string for which we need to find existing concepts
+     * @return Returns array of concepts found for synonym name
+     * @throws IndexerRunningException
+     * @throws LuceneException
+     * @throws IllegalAccessException
+     */
 	@RequestMapping(method = RequestMethod.GET, value = "conceptAddSynonymView")
     public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname,
-            @RequestParam("addedsynonym") String addedSynonnym) {
+            @RequestParam("addedsynonym") String addedSynonnym)
+                    throws IllegalAccessException, LuceneException, IndexerRunningException {
         ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
         List<String> addedSynonymList = Arrays.asList(addedSynonnym.replaceAll("\\s", "").split(","));
         // Removing existing synonym from the entries.
@@ -196,15 +207,19 @@ public class ConceptAddController {
     }
 
 	/**
-	 * This method provides array of existing concepts for a given string
-	 * 
-	 * @param conceptname
-	 *            A string value for which we need to find existing concepts
-	 * @return Returns existing concepts which contain conceptname
-	 */
+     * This method provides array of existing concepts for a given string
+     * 
+     * @param conceptname
+     *            A string value for which we need to find existing concepts
+     * @return Returns existing concepts which contain conceptname
+     * @throws IndexerRunningException
+     * @throws LuceneException
+     * @throws IllegalAccessException
+     */
 	@RequestMapping(method = RequestMethod.GET, value = "getExistingConcepts")
 	public @ResponseBody ResponseEntity<String> getExistingConcepts(
-			@RequestParam("conceptname") String conceptname) {
+@RequestParam("conceptname") String conceptname)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
 		if (conceptname.isEmpty())
 			return null;
 		ConceptEntry[] entries = conceptManager
