@@ -15,12 +15,12 @@
 		</tr>
 		<tr>
 			<td>Name:</td>
-			<td><form:input type="text" id="fullname" path="fullname" /></td>
+			<td><form:input type="text" id="fullname" path="fullname" class="form-control"/></td>
 			<td><form:errors type="text" id="fullname" path="fullname" /></td>
 		</tr>
 		<tr>
 			<td>Email:</td>
-			<td><form:input type="email" id="email" path="email" /></td>
+			<td><form:input type="email" id="email" path="email" class="form-control"/></td>
 			<td><form:errors type="email" id="email" path="email" /></td>
 		</tr>
 		<tr>
@@ -31,10 +31,10 @@
 		</tr>
 		<tr>
 			<td><input type="submit" value="Store changes" name="submit"
-				class="button" /></td>
+				class="btn btn-primary" /></td>
 			<td><input type="button" value="Cancel" name="submit"
 				onclick="window.location.replace('${pageContext.servletContext.contextPath}/auth/user/canceledit')"
-				class="button" /></td>
+				class="btn btn-primary" /></td>
 		</tr>
 	</table>
 

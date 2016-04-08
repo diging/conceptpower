@@ -26,7 +26,7 @@
 		<tr>
 			<td>New password:</td>
 			<td><form:input type="password" name="password" id="password"
-					path="password" /></td>
+					path="password" class="form-control"/></td>
 			<td><form:errors path="password" cssClass="error"></form:errors></td>
 		</tr>
 		<tr>
@@ -37,7 +37,7 @@
 		</tr>
 		<tr>
 			<td><input type="submit" value="Reset Password" name="submit"
-				class="button" /></td>
+				class="btn btn-primary" /></td>
 		</tr>
 	</table>
 
