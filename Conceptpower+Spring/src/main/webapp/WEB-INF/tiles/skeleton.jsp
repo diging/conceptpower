@@ -12,31 +12,6 @@
 	
 	<title>Conceptpower</title>
 
-<title><tiles:insertAttribute name="title" /></title>
-<link rel="stylesheet"
-	href="${pageContext.servletContext.contextPath}/resources/css/style.css" />
-<link rel="stylesheet"
-	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery-ui.css" />
-<link rel="stylesheet"
-	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/jquery.dataTables_themeroller.css" />
-<link rel="stylesheet"
-	href="${pageContext.servletContext.contextPath}/resources/txt-layout/css/demo_table_jui.css" />
-<link
-	href="http://fonts.googleapis.com/css?family=Open+Sans:400,700|Open+Sans+Condensed:700"
-	rel="stylesheet" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jquery-1.9.1.min.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel.min.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/skel-ui.min.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/jit.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex1.js"></script>
-<script
-	src="${pageContext.servletContext.contextPath}/resources/txt-layout/js/ex2.js"></script>
 	<link rel="shortcut icon" href="${pageContext.servletContext.contextPath}/resources/assets/images/logo_cp.png">
 	
 	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
