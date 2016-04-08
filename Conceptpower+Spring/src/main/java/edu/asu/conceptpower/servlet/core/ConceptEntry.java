@@ -1,6 +1,8 @@
 package edu.asu.conceptpower.servlet.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -78,6 +80,10 @@ public class ConceptEntry implements Serializable {
     private boolean isDeleted;
     
     private String modifiedUser;
+    
+    @SearchField(fieldName = SearchFieldNames.CHANGE_EVENTS_LIST)
+    private List<ChangeEvent> changeEvent = new ArrayList<ChangeEvent>();
+
 
     public ConceptEntry() {
     }
@@ -346,6 +352,14 @@ public class ConceptEntry implements Serializable {
 
     public void setModifiedUser(String modifiedUser) {
         this.modifiedUser = modifiedUser;
+    }
+    
+        public List<ChangeEvent> getChangeEvent() {
+        return changeEvent;
+    }
+
+    public void setChangeEvent(List<ChangeEvent> changeEvent) {
+        this.changeEvent = changeEvent;
     }
 
 }

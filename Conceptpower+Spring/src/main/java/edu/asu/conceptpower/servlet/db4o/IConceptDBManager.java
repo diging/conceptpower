@@ -2,6 +2,7 @@ package edu.asu.conceptpower.servlet.db4o;
 
 import java.util.List;
 
+import edu.asu.conceptpower.servlet.core.ChangeEvent;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptList;
 
@@ -40,5 +41,7 @@ public interface IConceptDBManager {
 
 	public abstract void update(ConceptList list, String listname,
 			String databasename);
+	
+	public List<ChangeEvent> getChangeEventList(String id);
 
 }
