@@ -373,6 +373,7 @@ public class ConceptManager implements IConceptManager {
      * conceptpower.core.ConceptEntry)
      */
     @Override
+<<<<<<< f22977d1aff97d218459153e3f6ea6a534af9ff0
     public String addConceptListEntry(ConceptEntry entry, String userName) throws DictionaryDoesNotExistException,
             DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptList dict = client.getConceptList(entry.getConceptList());
@@ -400,6 +401,30 @@ public class ConceptManager implements IConceptManager {
             indexService.deleteById(wordnetId);
         }
         indexService.insertConcept(entry);
+=======
+    public String addConceptListEntry(ConceptEntry entry)
+			throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
+		ConceptList dict = client.getConceptList(entry.getConceptList());
+		if (dict == null)
+			throw new DictionaryDoesNotExistException();
+
+		if (entry.getConceptList().equals(Constants.WORDNET_DICTIONARY)) {
+			throw new DictionaryModifyException();
+		}
+
+		String id = generateId(CONCEPT_PREFIX);
+		entry.setId(id);
+		indexService.insertConcept(entry);
+		client.store(entry, DBNames.DICTIONARY_DB);
+		if (entry.getWordnetId() != null) {
+		    String wordnetId = entry.getWordnetId();
+		    if (wordnetId.endsWith(",")) {
+		        wordnetId = wordnetId.substring(0, wordnetId.length()-1);
+		    }
+		    indexService.deleteById(wordnetId);
+		}
+		indexService.insertConcept(entry);
+>>>>>>> [CCP-138] Fixed concept delete issue and verified conceptaddbean
         return id;
 
     }
