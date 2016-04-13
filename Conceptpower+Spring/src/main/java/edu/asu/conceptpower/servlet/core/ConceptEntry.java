@@ -2,6 +2,7 @@ package edu.asu.conceptpower.servlet.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -59,7 +60,7 @@ public class ConceptEntry implements Serializable {
     @LuceneField(lucenefieldName = LuceneFieldNames.SIMILAR_TO, isIndexable = true)
     private String similarTo;
 
-    @SearchField(fieldName=SearchFieldNames.SYNONYM_ID)
+    @SearchField(fieldName = SearchFieldNames.SYNONYM_ID)
     @LuceneField(lucenefieldName = LuceneFieldNames.SYNONYMID, isIndexable = true)
     private String synonymIds;
 
@@ -75,7 +76,8 @@ public class ConceptEntry implements Serializable {
 
     private transient String lastCreatedUser;
 
-    private transient String deletedUser;
+    private transient String deletedByUser;
+
     @SearchField(fieldName = SearchFieldNames.CREATOR)
     @LuceneField(lucenefieldName = LuceneFieldNames.CREATOR, isIndexable = false)
     private String creatorId;
@@ -85,9 +87,8 @@ public class ConceptEntry implements Serializable {
     private String modified;
 
     private boolean isDeleted;
-    
-    
 
+    private String modifiedUser;
 
     public ConceptEntry() {
     }
@@ -101,10 +102,20 @@ public class ConceptEntry implements Serializable {
     /**
      * A string containing the id of the user who created an entry.
      * 
+     * First check if the creator id is in changevent list. If so fetch it . Else fetch it from old db
+     * 
      * @return the id of the user who created an entry
      */
     public String getCreatorId() {
-        return creatorId;
+        Collections.sort(this.changeEvents);
+        // Since the list is sorted first element will be Creation event. If not
+        // then concept needs to be created before change events modification.
+        // In that case fetch from the existing entry. getCreator()
+        if (changeEvents.size() > 0 && changeEvents.get(0).getType().equalsIgnoreCase(ChangeEventConstants.CREATION)) {
+            return changeEvents.get(0).getUserName();
+        } else {
+            return creatorId;
+        }
     }
 
     public void setCreatorId(String creatorId) {
@@ -350,12 +361,16 @@ public class ConceptEntry implements Serializable {
         return true;
     }
 
- public List<ChangeEvent> getChangeEvents() {
+    public List<ChangeEvent> getChangeEvents() {
         return changeEvents;
     }
 
     public void setChangeEvents(List<ChangeEvent> changeEvents) {
         this.changeEvents = changeEvents;
+    }
+    
+    public void addNewChangeEvent(ChangeEvent event){
+        this.changeEvents.add(event);
     }
 
     public String getLastModifiedUser() {
@@ -374,12 +389,20 @@ public class ConceptEntry implements Serializable {
         this.lastCreatedUser = lastCreatedUser;
     }
 
-    public String getDeletedUser() {
-        return deletedUser;
+    public String getDeletedByUser() {
+        return deletedByUser;
     }
 
-    public void setDeletedUser(String deletedUser) {
-        this.deletedUser = deletedUser;
+    public void setDeletedByUser(String deletedByUser) {
+        this.deletedByUser = deletedByUser;
+    }
+
+    public String getModifiedUser() {
+        return modifiedUser;
+    }
+
+    public void setModifiedUser(String modifiedUser) {
+        this.modifiedUser = modifiedUser;
     }
 
 }

@@ -124,6 +124,8 @@ public class ConceptManagerTest {
     public void testGetConceptEntryForAddedConcept() throws LuceneException {
         ConceptEntry entry = managerToTest.getConceptEntry("id1");
         Assert.assertEquals(addedConcept, entry);
+        //Test for fetching the creatorId from changeEvent
+        Assert.assertEquals("testuser", entry.getCreatorId());
 
         Assert.assertTrue(entry.getSynonymIds().contains("WID-2"));
     }

@@ -123,13 +123,6 @@ public class ConceptDeleteController {
         List<ConceptEntryWrapper> foundConcepts = null;
         ModelAndView model = new ModelAndView();
         ConceptEntry concept = conceptManager.getConceptEntry(id);
-        ChangeEvent changeEvent = new ChangeEvent();
-            changeEvent.setType(ChangeEventConstants.DELETION);
-            changeEvent.setDate(new Date());
-            changeEvent.setUserName(principal.getName());
-            List<ChangeEvent> ChangeEventsList = new ArrayList<ChangeEvent>();
-            ChangeEventsList.add(changeEvent);
-            concept.setChangeEvents(ChangeEventsList);
         //Check if indexer is running
         if (indexService.isIndexerRunning()) {
             model.addObject("show_error_alert", true);

@@ -390,9 +390,9 @@ public class ConceptManager implements IConceptManager {
         List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
         changeEventList.add(changeEvent);
         entry.setChangeEvents(changeEventList);
-        indexService.insertConcept(entry);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
+        indexService.insertConcept(entry);
         client.store(entry, DBNames.DICTIONARY_DB);
         return id;
 
@@ -415,8 +415,7 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setType(ChangeEventConstants.MODIFICATION);
         entry.getChangeEvents().add(changeEvent);
 
-        indexService.deleteById(entry.getId());
-        indexService.insertConcept(entry);
+        indexService.updateConceptById(entry);
 
         client.update(entry, DBNames.DICTIONARY_DB);
     }
@@ -442,13 +441,11 @@ public class ConceptManager implements IConceptManager {
     public void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException {
         ConceptEntry concept = getConceptEntry(id);
         concept.setDeleted(true);
-ChangeEvent changeEvent = new ChangeEvent();
+        ChangeEvent changeEvent = new ChangeEvent();
         changeEvent.setType(ChangeEventConstants.DELETION);
         changeEvent.setDate(new Date());
         changeEvent.setUserName(userName);
-        List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
-        changeEventList.addAll(concept.getChangeEvents());
-        changeEventList.add(changeEvent);
+        concept.addNewChangeEvent(changeEvent);
         client.update(concept, DBNames.DICTIONARY_DB);
         indexService.deleteById(concept.getId());
     }

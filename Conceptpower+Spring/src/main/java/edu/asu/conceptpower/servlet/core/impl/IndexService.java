@@ -26,94 +26,110 @@ import edu.asu.conceptpower.servlet.lucene.impl.LuceneUtility;
 @Service
 public class IndexService implements IIndexService {
 
-	@Autowired
-	private LuceneUtility luceneUtility;
-	
-	@Autowired
+    @Autowired
+    private LuceneUtility luceneUtility;
+
+    @Autowired
     @Qualifier("luceneDAO")
     private ILuceneDAO dao;
-	
-	@Value("#{messages['INDEXER_RUNNING']}")
+
+    @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
-	
-	/**
-	 * This field makes sure indexer runs only once when two different admins
-	 * gives index command at same time
-	 */
-	private AtomicBoolean indexerRunningFlag = new AtomicBoolean(false);
 
-	/**
-	 * This method searches in lucene on a particular condition fed through
-	 * fieldMap
-	 */
-	@Override
-	public ConceptEntry[] searchForConcepts(Map<String, String> fieldMap, String operator)
-			throws LuceneException, IllegalAccessException, IndexerRunningException {
+    /**
+     * This field makes sure indexer runs only once when two different admins
+     * gives index command at same time
+     */
+    private AtomicBoolean indexerRunningFlag = new AtomicBoolean(false);
 
-		if (indexerRunningFlag.get()) {
-			throw new IndexerRunningException(indexerRunning);
-		}
+    /**
+     * This method searches in lucene on a particular condition fed through
+     * fieldMap
+     */
+    @Override
+    public ConceptEntry[] searchForConcepts(Map<String, String> fieldMap, String operator)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
 
-		return luceneUtility.queryIndex(fieldMap, operator);
-	}
+        if (indexerRunningFlag.get()) {
+            throw new IndexerRunningException(indexerRunning);
+        }
 
-	/**
-	 * This method inserts concepts into lucene
-	 * 
-	 * @throws IndexerRunningException
-	 */
-	@Override
-	public void insertConcept(ConceptEntry entry)
-			throws IllegalAccessException, LuceneException, IndexerRunningException {
-		if (indexerRunningFlag.get()) {
-			throw new IndexerRunningException(indexerRunning);
+        return luceneUtility.queryIndex(fieldMap, operator);
+    }
 
-		}
-		luceneUtility.insertConcept(entry);
-	}
+    /**
+     * This method inserts concepts into lucene
+     * 
+     * @throws IndexerRunningException
+     */
+    @Override
+    public void insertConcept(ConceptEntry entry)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
+        if (indexerRunningFlag.get()) {
+            throw new IndexerRunningException(indexerRunning);
 
-	/**
-	 * This method deletes the concept in lucene index based on id of the
-	 * concept
-	 */
-	@Override
-	public void deleteById(String id) throws LuceneException, IndexerRunningException {
-		if (indexerRunningFlag.get()) {
-			throw new IndexerRunningException(indexerRunning);
-		}
-		luceneUtility.deleteById(id);
+        }
+        luceneUtility.insertConcept(entry);
+    }
 
-	}
+    /**
+     * This method updates the concept in lucene index based on id of the
+     * concept
+     * 
+     * @throws IllegalAccessException
+     */
+    @Override
+    public void updateConceptById(ConceptEntry entry)
+            throws LuceneException, IndexerRunningException, IllegalAccessException {
+        if (indexerRunningFlag.get()) {
+            throw new IndexerRunningException(indexerRunning);
+        }
+        luceneUtility.deleteById(entry.getId());
+        luceneUtility.insertConcept(entry);
+    }
 
-	/**
-	 * This method deletes the index in lucene
-	 */
-	@Override
-	public void deleteIndexes() throws LuceneException, IndexerRunningException {
-		if (!indexerRunningFlag.compareAndSet(false, true)) {
-			throw new IndexerRunningException(indexerRunning);
-		}
-		luceneUtility.deleteIndexes();
-		indexerRunningFlag.set(false);
-	}
+    /**
+     * This method deletes the concept in lucene index based on id of the
+     * concept
+     */
+    @Override
+    public void deleteById(String id) throws LuceneException, IndexerRunningException {
+        if (indexerRunningFlag.get()) {
+            throw new IndexerRunningException(indexerRunning);
+        }
+        luceneUtility.deleteById(id);
 
-	/**
-	 * This method indexes concepts in lucene and runs indexer only once
-	 */
-	@Override
-	public void indexConcepts()
-			throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
-		if (!indexerRunningFlag.compareAndSet(false, true)) {
-			throw new IndexerRunningException(indexerRunning);
-		}
-		luceneUtility.indexConcepts();
-		indexerRunningFlag.set(false);
-	}
+    }
 
-	@Override
-	public boolean isIndexerRunning() {
-		return indexerRunningFlag.get();
-	}
+    /**
+     * This method deletes the index in lucene
+     */
+    @Override
+    public void deleteIndexes() throws LuceneException, IndexerRunningException {
+        if (!indexerRunningFlag.compareAndSet(false, true)) {
+            throw new IndexerRunningException(indexerRunning);
+        }
+        luceneUtility.deleteIndexes();
+        indexerRunningFlag.set(false);
+    }
+
+    /**
+     * This method indexes concepts in lucene and runs indexer only once
+     */
+    @Override
+    public void indexConcepts()
+            throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
+        if (!indexerRunningFlag.compareAndSet(false, true)) {
+            throw new IndexerRunningException(indexerRunning);
+        }
+        luceneUtility.indexConcepts();
+        indexerRunningFlag.set(false);
+    }
+
+    @Override
+    public boolean isIndexerRunning() {
+        return indexerRunningFlag.get();
+    }
 
     @Override
     public IndexingEvent getTotalNumberOfWordsIndexed() {

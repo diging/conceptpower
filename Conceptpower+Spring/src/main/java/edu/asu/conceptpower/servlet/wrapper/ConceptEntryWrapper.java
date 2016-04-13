@@ -35,17 +35,6 @@ public class ConceptEntryWrapper implements Serializable {
 
     public ConceptEntryWrapper(ConceptEntry entry) {
         this.entry = entry;
-        List<ChangeEvent> changeEvents = entry.getChangeEvents();
-        Collections.sort(changeEvents);
-        // Since the list is sorted first element will be Creation event. If not
-        // then concept needs to be created before change events modification.
-        // In that case fetch from the existing entry. getCreator()
-        if (changeEvents.size() > 0
-                && changeEvents.get(0).getType().equalsIgnoreCase(ChangeEventConstants.CREATION)) {
-            this.creatorId = changeEvents.get(0).getUserName();
-        } else {
-            this.creatorId = entry.getCreatorId();
-        }
     }
 
     public ConceptEntry getEntry() {

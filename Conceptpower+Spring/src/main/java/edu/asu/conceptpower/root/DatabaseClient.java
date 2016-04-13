@@ -24,8 +24,8 @@ import edu.asu.conceptpower.servlet.reflect.SearchField;
 @Component
 public class DatabaseClient implements IConceptDBManager {
 
-    ObjectContainer wordnetCacheClient;
-    ObjectContainer dictionaryClient;
+    private ObjectContainer wordnetCacheClient;
+    private ObjectContainer dictionaryClient;
 
     @Autowired
     @Qualifier("wordnetCacheDatabaseManager")
