@@ -290,6 +290,7 @@ import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.profile.impl.ServiceRegistry;
+import edu.asu.conceptpower.servlet.validation.ConceptAddValidator;
 import edu.asu.conceptpower.servlet.web.backing.ConceptAddBean;
 
 /**
