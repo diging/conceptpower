@@ -24,6 +24,12 @@ public class ConceptEntryWrapper implements Serializable {
     private List<ConceptEntry> wrappedWordnetEntries;
     private String description;
     private String uri;
+
+    // This field denotes if there is an error in fetching the concept. If it is
+    // set true then error msg is displayed on the screen
+    private boolean error;
+    private String errorMsg;
+
     private String creatorId;
     private String lastModifiedEvent;
 
@@ -85,6 +91,22 @@ public class ConceptEntryWrapper implements Serializable {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 
     public String getCreatorId() {
