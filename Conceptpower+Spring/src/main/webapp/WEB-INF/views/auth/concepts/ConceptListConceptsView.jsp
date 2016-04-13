@@ -32,8 +32,6 @@
 				conceptid : conceptid
 			},
 			success : function(details) {
-				details = $.parseJSON(details);
-				$("#conceptTerm").text(details.name);
 				$("#detailsid").text(details.id);
 				$("#detailsuri").text(details.uri);
 				$("#detailswordnetid").text(details.wordnetId);
@@ -91,7 +89,13 @@
 							id="${concept.entry.id}" data-toggle="modal"
 							data-target="#detailsdiv" data-conceptid="${concept.entry.id}"><c:out
 									value="${concept.entry.word}"></c:out></a>
-					</font></td>
+					</font>
+					
+					<c:if test="${concept.error}">
+					<i class="fa fa-exclamation-triangle" aria-hidden="true" style="color:red" title="${concept.errorMsg}"></i> 
+					</c:if>
+					
+					</td>
 					<td align="justify"><font size="2"><c:out
 								value="${concept.entry.id}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out

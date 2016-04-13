@@ -79,7 +79,7 @@ public class ConceptEntry implements Serializable {
     private boolean isDeleted;
     
     private String modifiedUser;
-
+    
     public ConceptEntry() {
     }
 
