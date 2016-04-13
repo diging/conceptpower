@@ -3,6 +3,7 @@ package edu.asu.conceptpower.servlet.wrapper.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -98,50 +99,31 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 			List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
 			String synonymIds = (entry.getSynonymIds() != null ? entry
 					.getSynonymIds() : "");
-			if (synonymIds != null) {
+            if (synonymIds != null) {
 
-				String[] ids = synonymIds.trim().split(
-						Constants.SYNONYM_SEPARATOR);
-				if (ids != null) {
-					for (String id : ids) {
+                String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
+                if (ids != null) {
+                    for (String id : ids) {
                         if (id != null && !id.trim().isEmpty()) {
                             try {
                                 ConceptEntry synonym = conceptManager.getConceptEntry(id);
                                 if (synonym != null)
                                     synonyms.add(synonym);
                             } catch (IllegalArgumentException ie) {
-                                String[] idss = id.split("\"");
                                 if (wrapper.isError()) {
-                                    if (idss.length > 1) {
-                                        wrapper.setErrorMsg(wrapper.getErrorMsg() + ","
-                                                        + idss[1]);
-                                    } else {
-                                        wrapper.setErrorMsg(
-                                                wrapper.getErrorMsg() + ","
-                                                        + id);
-                                    }
+                                    wrapper.setErrorMsg(
+                                            StringEscapeUtils.escapeXml10(wrapper.getErrorMsg() + "," + id));
                                 } else {
-                                    // Id has been split and added, because id
-                                    // field is containing " and while adding to
-                                    // setErrormsg, the " is getting considered
-                                    // as delimiter. 
-                                    if (idss.length > 1) {
-                                        wrapper.setErrorMsg(
-                                                "The following synonym ids do not seem to exist in the database: "
-                                                        + idss[1]);
-                                    } else {
-                                        wrapper.setErrorMsg(
-                                                "The following synonym ids do not seem to exist in the database: "
-                                                        + id);
-                                    }
+                                    wrapper.setErrorMsg(
+                                            "The following synonym ids do not seem to exist in the database: " + id);
                                     wrapper.setError(true);
                                 }
                             }
                         }
-					}
-					wrapper.setSynonyms(synonyms);
-				}
-			}
+                    }
+                    wrapper.setSynonyms(synonyms);
+                }
+            }
 			foundConcepts.add(wrapper);
 		}
 
