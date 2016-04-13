@@ -110,11 +110,30 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
                                 if (synonym != null)
                                     synonyms.add(synonym);
                             } catch (IllegalArgumentException ie) {
+                                String[] idss = id.split("\"");
                                 if (wrapper.isError()) {
-                                    wrapper.setErrorMsg(wrapper.getErrorMsg() + "," + id.split("\"")[1]);
+                                    if (idss.length > 1) {
+                                        wrapper.setErrorMsg(wrapper.getErrorMsg() + ","
+                                                        + idss[1]);
+                                    } else {
+                                        wrapper.setErrorMsg(
+                                                wrapper.getErrorMsg() + ","
+                                                        + id);
+                                    }
                                 } else {
-                                    wrapper.setErrorMsg(
-                                            "The following synonym ids do not seem to exist in the database: " + id.split("\"")[1]);
+                                    // Id has been split and added, because id
+                                    // field is containing " and while adding to
+                                    // setErrormsg, the " is getting considered
+                                    // as delimiter. 
+                                    if (idss.length > 1) {
+                                        wrapper.setErrorMsg(
+                                                "The following synonym ids do not seem to exist in the database: "
+                                                        + idss[1]);
+                                    } else {
+                                        wrapper.setErrorMsg(
+                                                "The following synonym ids do not seem to exist in the database: "
+                                                        + id);
+                                    }
                                     wrapper.setError(true);
                                 }
                             }
