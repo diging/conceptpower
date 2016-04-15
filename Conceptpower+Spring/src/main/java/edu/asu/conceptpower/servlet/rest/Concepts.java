@@ -63,7 +63,7 @@ public class Concepts {
 
 		String id = null;
 		try {
-			id = conceptManager.addConceptListEntry(conceptEntry);
+			id = conceptManager.addConceptListEntry(conceptEntry, principal.getName());
 		} catch (DictionaryDoesNotExistException e) {
 			logger.error("Error creating concept from REST call.", e);
 			return new ResponseEntity<String>("Specified dictionary does not exist in Conceptpower.",
