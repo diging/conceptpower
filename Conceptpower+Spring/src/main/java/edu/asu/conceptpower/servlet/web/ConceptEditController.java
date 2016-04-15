@@ -66,7 +66,7 @@ public class ConceptEditController {
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
     
-    @Value("#{messages['INDEXER_STATUS']}")
+    @Value("#{messages['INDEXERSTATUS']}")
     private String indexerStatus;
 
     /**
@@ -168,13 +168,12 @@ public class ConceptEditController {
 	        model.addObject("conceptId", conceptEntry.getId());
 			model.addObject("show_error_alert", true);
 			model.addObject("error_alert_msg", indexerRunning);
-			// Need to include command Object
+			model.addObject(indexerStatus, indexerRunning);  
 			model.setViewName("/auth/conceptlist/editconcept");
 			return model;
 		}
 		
 		conceptManager.storeModifiedConcept(conceptEntry);
-		model.addObject(indexerStatus, indexerRunning);
 
 		if (conceptEditBean.isFromHomeScreen()) {
 			model.setViewName("redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="
