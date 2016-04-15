@@ -3,6 +3,8 @@ package edu.asu.conceptpower.wrapper.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -13,6 +15,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.root.IURIHelper;
+import edu.asu.conceptpower.servlet.core.ChangeEvent;
+import edu.asu.conceptpower.servlet.core.ChangeEventConstants;
 import edu.asu.conceptpower.servlet.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
@@ -45,9 +49,16 @@ public class ConceptEntryWrapperCreatorTest {
 
     @Before
     public void init() throws LuceneException {
-
+    	
+    	 ChangeEvent changeEvent = new ChangeEvent();
+         changeEvent.setUserName("Test");
+         changeEvent.setType(ChangeEventConstants.CREATION);
+         changeEvent.setDate(new Date());
+         List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
+         changeEventList.add(changeEvent);
+    	
         entry.setTypeId("Type-1");
-        entry.setCreatorId("Test");
+        entry.setChangeEvents(changeEventList);
         entry.setWordnetId("WNET_1");
         entry.setSynonymIds("SYN_1");
         entries[0] = entry;
@@ -84,7 +95,7 @@ public class ConceptEntryWrapperCreatorTest {
         assertNotNull(conceptEntryWrapperList);
         assertEquals("Type-1", conceptEntryWrapperList.get(0).getType().getTypeId());
         assertEquals("Type-Name", conceptEntryWrapperList.get(0).getType().getTypeName());
-        assertEquals("Test", conceptEntryWrapperList.get(0).getCreator().getUsername());
+        assertEquals("Test", conceptEntryWrapperList.get(0).getCreatorId());
         assertNotNull(conceptEntryWrapperList.get(0).getWrappedWordnetEntries());
         assertNotNull(conceptEntryWrapperList.get(0).getSynonyms());
         assertEquals(conceptEntryWrapperList.get(0).getUri(), "http://www.digitalhps.org/concepts/");

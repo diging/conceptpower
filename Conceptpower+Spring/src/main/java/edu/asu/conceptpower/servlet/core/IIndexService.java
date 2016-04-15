@@ -21,4 +21,7 @@ public interface IIndexService {
     public boolean isIndexerRunning();
     
     public IndexingEvent getTotalNumberOfWordsIndexed();
+    
+    public void updateConceptById(ConceptEntry entry)
+            throws LuceneException, IndexerRunningException, IllegalAccessException;
 }
