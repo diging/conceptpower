@@ -76,7 +76,7 @@ public class ConceptEntry implements Serializable {
 
     private transient String lastCreatedUser;
 
-    private transient String deletedByUser;
+    private transient String deletedBy;
 
     @SearchField(fieldName = SearchFieldNames.CREATOR)
     @LuceneField(lucenefieldName = LuceneFieldNames.CREATOR, isIndexable = false)
@@ -107,11 +107,15 @@ public class ConceptEntry implements Serializable {
      * @return the id of the user who created an entry
      */
     public String getCreatorId() {
-        Collections.sort(this.changeEvents);
-        // Since the list is sorted first element will be Creation event. If not
-        // then concept needs to be created before change events modification.
-        // In that case fetch from the existing entry. getCreator()
-        if (changeEvents.size() > 0 && changeEvents.get(0).getType().equalsIgnoreCase(ChangeEventConstants.CREATION)) {
+
+        // This check has been introduced to make sure the existing concepts
+        // work fine. For existing concepts changeevents will be null in D/B. So
+        // if changevent is null in DB fetch creatorId directly
+        if (this.changeEvents != null) {
+            Collections.sort(this.changeEvents);
+            // Since the list is sorted first element will be Creation event. If
+            // not then concept needs to be created before change events
+            // modification. In that case fetch from the existing entry. getCreator()
             return changeEvents.get(0).getUserName();
         } else {
             return creatorId;
@@ -369,8 +373,24 @@ public class ConceptEntry implements Serializable {
         this.changeEvents = changeEvents;
     }
     
-    public void addNewChangeEvent(ChangeEvent event){
+    public void addNewChangeEvent(ChangeEvent event) {
+
+        // If already existing concept is changed, there are chances concepts
+        // would have been created before this change, and so chageeevent will
+        // be null for those concept.
+        // TO handle that case check for null and create a new changeevent.
+
+        if (changeEvents == null) {
+            this.changeEvents = new ArrayList<ChangeEvent>();
+        }
         this.changeEvents.add(event);
+        if (event.getType().equalsIgnoreCase(ChangeEventConstants.MODIFICATION)) {
+            this.modifiedUser = event.getUserName();
+        } else if (event.getType().equalsIgnoreCase(ChangeEventConstants.DELETION)) {
+            this.deletedBy = event.getUserName();
+        } else {
+            this.creatorId = event.getUserName();
+        }
     }
 
     public String getLastModifiedUser() {
@@ -389,20 +409,20 @@ public class ConceptEntry implements Serializable {
         this.lastCreatedUser = lastCreatedUser;
     }
 
-    public String getDeletedByUser() {
-        return deletedByUser;
-    }
-
-    public void setDeletedByUser(String deletedByUser) {
-        this.deletedByUser = deletedByUser;
-    }
-
     public String getModifiedUser() {
         return modifiedUser;
     }
 
     public void setModifiedUser(String modifiedUser) {
         this.modifiedUser = modifiedUser;
+    }
+
+    public String getDeletedBy() {
+        return deletedBy;
+    }
+
+    public void setDeletedBy(String deletedBy) {
+        this.deletedBy = deletedBy;
     }
 
 }

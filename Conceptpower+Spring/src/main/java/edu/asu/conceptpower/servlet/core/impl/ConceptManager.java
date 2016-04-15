@@ -413,7 +413,11 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setDate(new Date());
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventConstants.MODIFICATION);
-        entry.getChangeEvents().add(changeEvent);
+        try{
+        entry.addNewChangeEvent(changeEvent);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
 
         indexService.updateConceptById(entry);
 

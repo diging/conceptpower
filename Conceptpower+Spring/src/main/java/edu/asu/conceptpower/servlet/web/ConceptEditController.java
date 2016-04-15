@@ -69,7 +69,7 @@ public class ConceptEditController {
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
     
-    @Value("#{messages['INDEXER_STATUS']}")
+    @Value("#{messages['INDEXERSTATUS']}")
     private String indexerStatus;
 
     /**
@@ -161,14 +161,6 @@ public class ConceptEditController {
         String userId = usersManager.findUser(principal.getName()).getUsername();
         conceptEntry.setModified(userId);
         ModelAndView model = new ModelAndView();
-        
-        ChangeEvent changeEvent = new ChangeEvent();
-        changeEvent.setDate(new Date());
-        changeEvent.setUserName(userId);
-        changeEvent.setType(ChangeEventConstants.MODIFICATION);
-        List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
-        conceptEntry.setChangeEvents(changeEventList);
-        
         
         if (indexService.isIndexerRunning()) {
             List<ConceptList> allLists = conceptListManager.getAllConceptLists();
