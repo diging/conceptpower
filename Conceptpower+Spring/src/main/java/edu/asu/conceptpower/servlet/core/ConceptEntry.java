@@ -102,24 +102,28 @@ public class ConceptEntry implements Serializable {
     /**
      * A string containing the id of the user who created an entry.
      * 
-     * First check if the creator id is in changevent list. If so fetch it . Else fetch it from old db
+     * First check if the creator id is in changevent list. If so fetch it .
+     * Else fetch it from old db
      * 
      * @return the id of the user who created an entry
      */
     public String getCreatorId() {
-
         // This check has been introduced to make sure the existing concepts
         // work fine. For existing concepts changeevents will be null in D/B. So
         // if changevent is null in DB fetch creatorId directly
-        if (this.changeEvents != null) {
+        if (this.changeEvents != null && this.changeEvents.size() > 0) {
             Collections.sort(this.changeEvents);
-            // Since the list is sorted first element will be Creation event. If
-            // not then concept needs to be created before change events
-            // modification. In that case fetch from the existing entry. getCreator()
-            return changeEvents.get(0).getUserName();
-        } else {
-            return creatorId;
+            // Since the list is sorted, the first event will be a creation
+            // event. If the first event is not creation event, then it means
+            // some existing concept has been modified with this new change. So
+            // changevents will contain only the modified user id. In that case
+            // fetch from the creatorId itself as per the old design
+            if (ChangeEventConstants.CREATION.equalsIgnoreCase(changeEvents.get(0).getType())) {
+                return changeEvents.get(0).getUserName();
+            }
         }
+        return creatorId;
+
     }
 
     public void setCreatorId(String creatorId) {
