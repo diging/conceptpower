@@ -72,12 +72,6 @@ public class ConceptEntry implements Serializable {
 
     private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
 
-    private transient String lastModifiedUser;
-
-    private transient String lastCreatedUser;
-
-    private transient String deletedBy;
-
     @SearchField(fieldName = SearchFieldNames.CREATOR)
     @LuceneField(lucenefieldName = LuceneFieldNames.CREATOR, isIndexable = false)
     private String creatorId;
@@ -293,6 +287,12 @@ public class ConceptEntry implements Serializable {
      * A string containing a string describing who modified a concept and when.
      */
     public String getModified() {
+        if (this.changeEvents != null && this.changeEvents.size() > 0) {
+            Collections.sort(this.changeEvents);
+            if (ChangeEventConstants.CREATION.equalsIgnoreCase(changeEvents.get(changeEvents.size() - 1).getType())) {
+                return changeEvents.get(0).getUserName();
+            }
+        }
         return modified;
     }
 
@@ -388,29 +388,6 @@ public class ConceptEntry implements Serializable {
             this.changeEvents = new ArrayList<ChangeEvent>();
         }
         this.changeEvents.add(event);
-        if (event.getType().equalsIgnoreCase(ChangeEventConstants.MODIFICATION)) {
-            this.modifiedUser = event.getUserName();
-        } else if (event.getType().equalsIgnoreCase(ChangeEventConstants.DELETION)) {
-            this.deletedBy = event.getUserName();
-        } else {
-            this.creatorId = event.getUserName();
-        }
-    }
-
-    public String getLastModifiedUser() {
-        return lastModifiedUser;
-    }
-
-    public void setLastModifiedUser(String lastModifiedUser) {
-        this.lastModifiedUser = lastModifiedUser;
-    }
-
-    public String getLastCreatedUser() {
-        return lastCreatedUser;
-    }
-
-    public void setLastCreatedUser(String lastCreatedUser) {
-        this.lastCreatedUser = lastCreatedUser;
     }
 
     public String getModifiedUser() {
@@ -419,14 +396,6 @@ public class ConceptEntry implements Serializable {
 
     public void setModifiedUser(String modifiedUser) {
         this.modifiedUser = modifiedUser;
-    }
-
-    public String getDeletedBy() {
-        return deletedBy;
-    }
-
-    public void setDeletedBy(String deletedBy) {
-        this.deletedBy = deletedBy;
     }
 
 }
