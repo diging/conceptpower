@@ -33,7 +33,8 @@ public class LoginController {
      */
     @RequestMapping(value = "/loginfailed", method = RequestMethod.GET)
     public String loginerror(ModelMap model, @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean) {
-        model.addAttribute("error", "true");
+        model.addAttribute("show_error_alert", true);
+        model.addAttribute("error_alert_msg", "Login failed. Please enter correct username and password.");
         return "welcome";
     }
 
