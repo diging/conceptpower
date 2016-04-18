@@ -18,17 +18,18 @@
 
 
 			<li><a
-				href="${pageContext.servletContext.contextPath}/auth/conceptlist"><i class="fa fa-list"> Show Concept
-					Lists</i></a></li>
+				href="${pageContext.servletContext.contextPath}/auth/conceptlist"><i
+					class="fa fa-list"> </i>Show Concept Lists</a></li>
 			<li><a
-				href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptlist"><i class="fa fa-plus-circle"> Add
-					New Concept List</i></a></li>
+				href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptlist"><i
+					class="fa fa-plus-circle"> </i>Add New Concept List</a></li>
 			<li><a
-				href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept"> <i class="fa fa-plus-circle"> Add
-					New Concept</i></a></li>
+				href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept">
+					<i class="fa fa-plus-circle"> </i>Add New Concept
+			</a></li>
 			<li><a
-				href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper"><i class="fa fa-plus-circle"> Add
-					New Wordnet Concept Wrapper</i></a></li>
+				href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper"><i
+					class="fa fa-plus-circle"> </i>Add New Wordnet Concept Wrapper</a></li>
 		</ul></li>
 
 
@@ -40,11 +41,11 @@
 
 
 			<li><a
-				href="${pageContext.servletContext.contextPath}/auth/concepttype"><i class="fa fa-tags"> Concept
-					Types</i></a></li>
+				href="${pageContext.servletContext.contextPath}/auth/concepttype"><i
+					class="fa fa-tags"> </i>Concept Types</a></li>
 			<li><a
-				href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype"><i class="fa fa-plus-circle"> Add
-					New Type</i></a></li>
+				href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype"><i
+					class="fa fa-plus-circle"> </i>Add New Type</a></li>
 		</ul></li>
 
 
@@ -59,11 +60,11 @@
 
 
 				<li><a
-					href="${pageContext.servletContext.contextPath}/auth/user/list"><i class="fa fa-users"> Manage
-						Users</i></a></li>
+					href="${pageContext.servletContext.contextPath}/auth/user/list"><i
+						class="fa fa-users"> </i>Manage Users</a></li>
 				<li><a
-					href="${pageContext.servletContext.contextPath}/auth/user/add"><i class="fa fa-plus-circle"> Add
-						New User</i></a></li>
+					href="${pageContext.servletContext.contextPath}/auth/user/add"><i
+						class="fa fa-plus-circle"> </i>Add New User</a></li>
 			</ul></li>
 
 
