@@ -36,7 +36,7 @@
 <br />
 <a
 	href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype"><i
-	class="fa fa-plus-circle"> Add New Type</i></a>
+	class="fa fa-plus-circle"></i> Add New Type</a>
 
 <br />
 <br />
