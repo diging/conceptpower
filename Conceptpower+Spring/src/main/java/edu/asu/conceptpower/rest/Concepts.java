@@ -3,11 +3,8 @@ package edu.asu.conceptpower.rest;
 import java.io.IOException;
 import java.io.StringReader;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ListIterator;
 
-import org.apache.tools.ant.taskdefs.compilers.Sj;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +27,6 @@ import edu.asu.conceptpower.core.IConceptTypeManger;
 import edu.asu.conceptpower.core.POS;
 import edu.asu.conceptpower.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.exceptions.DictionaryModifyException;
-import edu.asu.conceptpower.web.ConceptAddController;
 
 @Controller
 public class Concepts {
@@ -127,7 +122,7 @@ public class Concepts {
             JsonValidationResult result = checkJsonObject(jsonObject);
 
             JSONObject responseObj = new JSONObject();
-            responseObj.put("word", jsonObject.get("word"));
+            responseObj.put(JsonFields.WORD, jsonObject.get(JsonFields.WORD));
             responseObj.put("validation",
                     result.getMessage() != null ? result.getMessage() : "OK");
 
@@ -144,7 +139,7 @@ public class Concepts {
             String id = null;
             try {
                 id = conceptManager.addConceptListEntry(conceptEntry);
-                responseObj.put("id", id);
+                responseObj.put(JsonFields.ID, id);
                 responseObj.put("success", true);
             } catch (DictionaryDoesNotExistException e) {
                 logger.error("Error creating concept from REST call.", e);
@@ -165,37 +160,37 @@ public class Concepts {
     }
 
     private JsonValidationResult checkJsonObject(JSONObject jsonObject) {
-        if (jsonObject.get("pos") == null) {
+        if (jsonObject.get(JsonFields.POS) == null) {
             return new JsonValidationResult(
                     "Error parsing request: please provide a POS ('pos' attribute).",
                     jsonObject, false);
         }
 
-        if (jsonObject.get("word") == null) {
+        if (jsonObject.get(JsonFields.WORD) == null) {
             return new JsonValidationResult(
                     "Error parsing request: please provide a word for the concept ('word' attribute).",
                     jsonObject, false);
         }
 
-        if (jsonObject.get("description") == null) {
+        if (jsonObject.get(JsonFields.DESCRIPTION) == null) {
             return new JsonValidationResult(
                     "Error parsing request: please provide a description for the concept ('description' attribute).",
                     jsonObject, false);
         }
 
-        if (jsonObject.get("types") == null) {
+        if (jsonObject.get(JsonFields.TYPE) == null) {
             return new JsonValidationResult(
-                    "Error parsing request: please provide a type for the concept ('types' attribute).",
+                    "Error parsing request: please provide a type for the concept ('type' attribute).",
                     jsonObject, false);
         }
 
-        if (jsonObject.get("conceptlist") == null) {
+        if (jsonObject.get(JsonFields.CONCEPT_LIST) == null) {
             return new JsonValidationResult(
                     "Error parsing request: please provide a concept list for the concept ('conceptlist' attribute).",
                     jsonObject, false);
         }
 
-        String pos = jsonObject.get("pos").toString();
+        String pos = jsonObject.get(JsonFields.POS).toString();
         if (!POS.posValues.contains(pos)) {
             logger.error("Error creating concept from REST call. " + pos
                     + " does not exist.");
@@ -210,18 +205,18 @@ public class Concepts {
         ConceptEntry conceptEntry = new ConceptEntry();
         conceptEntry.setCreatorId(username);
         conceptEntry
-                .setSynonymIds(jsonObject.get("synonymids") != null ? jsonObject
-                        .get("synonymids").toString() : "");
-        conceptEntry.setWord(jsonObject.get("word").toString());
-        conceptEntry.setConceptList(jsonObject.get("conceptlist").toString());
-        conceptEntry.setPos(jsonObject.get("pos").toString());
-        conceptEntry.setDescription(jsonObject.get("description").toString());
-        conceptEntry.setEqualTo(jsonObject.get("equals") != null ? jsonObject
-                .get("equals").toString() : "");
+                .setSynonymIds(jsonObject.get(JsonFields.SYNONYM_IDS) != null ? jsonObject
+                        .get(JsonFields.SYNONYM_IDS).toString() : "");
+        conceptEntry.setWord(jsonObject.get(JsonFields.WORD).toString());
+        conceptEntry.setConceptList(jsonObject.get(JsonFields.CONCEPT_LIST).toString());
+        conceptEntry.setPos(jsonObject.get(JsonFields.POS).toString());
+        conceptEntry.setDescription(jsonObject.get(JsonFields.DESCRIPTION).toString());
+        conceptEntry.setEqualTo(jsonObject.get(JsonFields.EQUALS) != null ? jsonObject
+                .get(JsonFields.EQUALS).toString() : "");
         conceptEntry
-                .setSimilarTo(jsonObject.get("similar") != null ? jsonObject
-                        .get("similar").toString() : "");
-        conceptEntry.setTypeId(jsonObject.get("types").toString());
+                .setSimilarTo(jsonObject.get(JsonFields.SIMILAR) != null ? jsonObject
+                        .get(JsonFields.SIMILAR).toString() : "");
+        conceptEntry.setTypeId(jsonObject.get(JsonFields.TYPE).toString());
         return conceptEntry;
     }
 
