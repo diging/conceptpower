@@ -87,7 +87,9 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 			sb.append(entry.getDescription());
 			if (wordnetEntries.size() > 0) {
 				for (ConceptEntry wordnetConcept : wordnetEntries) {
-					if (wordnetConcept.getDescription() != null && !wordnetConcept.getDescription().trim().equals(entry.getDescription().trim())) {
+					if (wordnetConcept.getDescription() != null && 
+					        (entry.getDescription() == null || 
+					        !wordnetConcept.getDescription().trim().equals(entry.getDescription().trim()))) {
 						sb.append("<br/><i>" + wordnetConcept.getWord()
 								+ "</i>");
 						sb.append("<br/>" + wordnetConcept.getDescription());
