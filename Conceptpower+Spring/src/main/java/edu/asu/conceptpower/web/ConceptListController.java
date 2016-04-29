@@ -95,34 +95,44 @@ public class ConceptListController {
 	@RequestMapping(method = RequestMethod.GET, value = "conceptDetail", produces = "application/json")
 	public @ResponseBody ResponseEntity<String> getConceptDetails(
 			@RequestParam("conceptid") String conceptid) {
-		ConceptEntryWrapper conceptEntry = new ConceptEntryWrapper(
-				conceptManager.getConceptEntry(conceptid));
+		ConceptEntry entry = conceptManager.getConceptEntry(conceptid);
+		List<ConceptEntryWrapper> wrappers = wrapperCreator.createWrappers(new ConceptEntry[] { entry } );
+		ConceptEntryWrapper wrapper = null;
+		if (wrappers.size() > 0) {
+		    wrapper = wrappers.get(0);
+		}
+		else {
+		    return new ResponseEntity<String>("No entry for the provided id.", HttpStatus.BAD_REQUEST);
+		}
+		
 		Map<String, String> details = new HashMap<String, String>();
 
-		details.put("name", conceptEntry.getEntry().getWord());
-		details.put("id", conceptEntry.getEntry().getId());
-		details.put("uri", URICreator.getURI(conceptEntry.getEntry()));
+		details.put("name", wrapper.getEntry().getWord());
+		details.put("id", wrapper.getEntry().getId());
+		details.put("uri", URICreator.getURI(wrapper.getEntry()));
 		//This condition has been included to make sure null values are not displayed in the details dialog box
-		details.put("wordnetid", conceptEntry.getEntry().getWordnetId()==null?"":conceptEntry.getEntry().getWordnetId());
-		details.put("pos", conceptEntry.getEntry().getPos());
-		details.put("conceptlist", conceptEntry.getEntry().getConceptList());
+		details.put("wordnetid", wrapper.getEntry().getWordnetId()==null?"":wrapper.getEntry().getWordnetId());
+		details.put("pos", wrapper.getEntry().getPos());
+		details.put("conceptlist", wrapper.getEntry().getConceptList());
 
-		ConceptType type = conceptEntry.getEntry().getTypeId() == null ? null
+		ConceptType type = wrapper.getEntry().getTypeId() == null ? null
 				: typeDatabaseClient.getType(
-						conceptEntry.getEntry().getTypeId());
+						wrapper.getEntry().getTypeId());
+		
+		details.put("description", wrapper.getEntry().getDescription());
 		
 		details.put(
 				"type",
 				type == null ? "" : type.getTypeName());
 		details.put("equalto",
-				conceptEntry.getEntry().getEqualTo() == null ? ""
-						: conceptEntry.getEntry().getEqualTo());
+				wrapper.getEntry().getEqualTo() == null ? ""
+						: wrapper.getEntry().getEqualTo());
 		details.put("similarto",
-				conceptEntry.getEntry().getSimilarTo() == null ? ""
-						: conceptEntry.getEntry().getSimilarTo());
+				wrapper.getEntry().getSimilarTo() == null ? ""
+						: wrapper.getEntry().getSimilarTo());
 		details.put("creator",
-				conceptEntry.getEntry().getCreatorId() == null ? ""
-						: conceptEntry.getEntry().getCreatorId());
+				wrapper.getEntry().getCreatorId() == null ? ""
+						: wrapper.getEntry().getCreatorId());
 
 		return new ResponseEntity<String>(new JSONObject(details).toString(), HttpStatus.OK);
 	}
