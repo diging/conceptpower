@@ -54,6 +54,7 @@
 				$("#detailsequalto").text(details.equalto);
 				$("#detailssimilarto").text(details.similarto);
 				$("#detailscreator").text(details.creator);
+				$("#detailsdescription").text(details.description);
 				
 				$("#detailsdiv").dialog({
 					title : details.name,
@@ -213,6 +214,10 @@
 		<tr>
 			<td>Wordnet Id:</td>
 			<td id="detailswordnetid"></td>
+		</tr>
+		<tr>
+			<td>Description:</td>
+			<td id="detailsdescription"></td>
 		</tr>
 		<tr>
 			<td>POS:</td>
