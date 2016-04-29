@@ -108,7 +108,7 @@ public class Concepts {
         JSONArray jsonArray = null;
         try {
             jsonArray = (JSONArray) jsonParser.parse(reader);
-        } catch (IOException | ParseException e1) {
+        } catch (IOException | ParseException | ClassCastException e1) {
             logger.error("Error parsing request.", e1);
             return new ResponseEntity<String>("Error parsing request: " + e1,
                     HttpStatus.BAD_REQUEST);
