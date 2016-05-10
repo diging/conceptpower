@@ -50,7 +50,7 @@ public class ConceptSearchController {
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
     
-    @Value("#{messages['INDEXER_STATUS']}")
+    @Value("#{messages['INDEXERSTATUS']}")
     private String indexerStatus;
 
     @InitBinder

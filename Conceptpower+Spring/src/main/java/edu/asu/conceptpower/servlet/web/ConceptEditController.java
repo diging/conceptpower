@@ -59,14 +59,14 @@ public class ConceptEditController {
 
     @Autowired
     private WordNetManager wordNetManger;
-    
+
     @Autowired
     private IIndexService indexService;
-    
+
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
-    
-    @Value("#{messages['INDEXER_STATUS']}")
+
+    @Value("#{messages['INDEXERSTATUS']}")
     private String indexerStatus;
 
     /**
@@ -83,7 +83,7 @@ public class ConceptEditController {
     public String prepareEditConcept(@PathVariable("conceptid") String conceptid,
             @RequestParam(value = "fromHomeScreen", required = false) String fromHomeScreen,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model, BindingResult results)
-                    throws LuceneException {
+            throws LuceneException {
 
         if (fromHomeScreen != null) {
             conceptEditBean.setFromHomeScreen(true);
@@ -138,52 +138,51 @@ public class ConceptEditController {
      *            Holds logged in user information
      * @return String value which redirects user to a particular concept list
      *         page
-     * @throws IllegalAccessException 
-     * @throws IndexerRunningException 
+     * @throws IllegalAccessException
+     * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
     public ModelAndView confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, BindingResult result)
-					throws LuceneException, IllegalAccessException, IndexerRunningException {
-		ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
-		conceptEntry.setWord(conceptEditBean.getWord());
-		conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
-		conceptEntry.setPos(conceptEditBean.getSelectedPosValue());
-		conceptEntry.setDescription(conceptEditBean.getDescription());
-		conceptEntry.setEqualTo(conceptEditBean.getEquals());
-		conceptEntry.setSimilarTo(conceptEditBean.getSimilar());
-		conceptEntry.setTypeId(conceptEditBean.getSelectedTypeId());
-		conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
+        ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
+        conceptEntry.setWord(conceptEditBean.getWord());
+        conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
+        conceptEntry.setPos(conceptEditBean.getSelectedPosValue());
+        conceptEntry.setDescription(conceptEditBean.getDescription());
+        conceptEntry.setEqualTo(conceptEditBean.getEquals());
+        conceptEntry.setSimilarTo(conceptEditBean.getSimilar());
+        conceptEntry.setTypeId(conceptEditBean.getSelectedTypeId());
+        conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
 
-		String userId = usersManager.findUser(principal.getName()).getUsername();
-		conceptEntry.setModified(userId);
-		ModelAndView model = new ModelAndView();
-		
-		if (indexService.isIndexerRunning()) {
-			List<ConceptList> allLists = conceptListManager.getAllConceptLists();
-	        conceptEditBean.setConceptList(allLists);
-	        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-	        conceptEditBean.setTypes(allTypes);
-	        conceptEditBean.setConceptId(conceptEntry.getId());
-	        model.addObject("conceptId", conceptEntry.getId());
-			model.addObject("show_error_alert", true);
-			model.addObject("error_alert_msg", indexerRunning);
-			// Need to include command Object
-			model.setViewName("/auth/conceptlist/editconcept");
-			return model;
-		}
-		
-		conceptManager.storeModifiedConcept(conceptEntry);
-		model.addObject(indexerStatus, indexerRunning);
+        String userId = usersManager.findUser(principal.getName()).getUsername();
+        conceptEntry.setModified(userId);
+        ModelAndView model = new ModelAndView();
 
-		if (conceptEditBean.isFromHomeScreen()) {
-			model.setViewName("redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="
-					+ conceptEditBean.getSelectedPosValue());
-			return model;
-		}
-		model.setViewName("redirect:/auth/" + conceptEditBean.getConceptListValue() + "/concepts");
-		return model;
-	}
+        if (indexService.isIndexerRunning()) {
+            List<ConceptList> allLists = conceptListManager.getAllConceptLists();
+            conceptEditBean.setConceptList(allLists);
+            ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+            conceptEditBean.setTypes(allTypes);
+            conceptEditBean.setConceptId(conceptEntry.getId());
+            model.addObject("conceptId", conceptEntry.getId());
+            model.addObject("show_error_alert", true);
+            model.addObject("error_alert_msg", indexerRunning);
+            model.addObject(indexerStatus, indexerRunning);
+            model.setViewName("/auth/conceptlist/editconcept");
+            return model;
+        }
+
+        conceptManager.storeModifiedConcept(conceptEntry);
+
+        if (conceptEditBean.isFromHomeScreen()) {
+            model.setViewName("redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="
+                    + conceptEditBean.getSelectedPosValue());
+            return model;
+        }
+        model.setViewName("redirect:/auth/" + conceptEditBean.getConceptListValue() + "/concepts");
+        return model;
+    }
 
     /**
      * This method provides the existing concept words for a given synonym
@@ -192,16 +191,16 @@ public class ConceptEditController {
      *            Synonym concept name for which the existing concepts has to be
      *            fetched
      * @return The list of existing concepts
-     * @throws IllegalAccessException 
-     * @throws IndexerRunningException 
+     * @throws IllegalAccessException
+     * @throws IndexerRunningException
      */
     @RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
     public ResponseEntity<String> searchConcept(@RequestParam("synonymname") String synonymname)
-			throws LuceneException, IllegalAccessException, IndexerRunningException {
-		ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
-		List<ConceptEntry> synonyms = Arrays.asList(entries);
-		return new ResponseEntity<String>(buildJSON(synonyms, true, false), HttpStatus.OK);
-	}
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
+        ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        List<ConceptEntry> synonyms = Arrays.asList(entries);
+        return new ResponseEntity<String>(buildJSON(synonyms, true, false), HttpStatus.OK);
+    }
 
     /**
      * This method provides the list of existing synonyms for a concept
