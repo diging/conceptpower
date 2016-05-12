@@ -10,8 +10,8 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
-import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.validation.ConceptTypeAddValidator;
 import edu.asu.conceptpower.servlet.web.ConceptTypeAddForm;
 import junit.framework.Assert;

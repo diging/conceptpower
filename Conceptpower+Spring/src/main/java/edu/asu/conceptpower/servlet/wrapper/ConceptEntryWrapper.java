@@ -3,11 +3,8 @@ package edu.asu.conceptpower.servlet.wrapper;
 import java.io.Serializable;
 import java.util.List;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptType;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.servlet.users.User;
 
 /**

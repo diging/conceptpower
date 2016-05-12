@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.URIHelper;
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptList;
-import edu.asu.conceptpower.servlet.core.ConceptType;
 
 /**
  * This class is used to build XML messages that are sent

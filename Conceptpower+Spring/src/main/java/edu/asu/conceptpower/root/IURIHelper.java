@@ -1,7 +1,7 @@
 package edu.asu.conceptpower.root;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptType;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptType;
 
 public interface IURIHelper {
     public String getURI(ConceptEntry entry);
