@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;

@@ -2,6 +2,7 @@ package edu.asu.conceptpower.servlet.core;
 
 import java.util.Map;
 
+import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 
