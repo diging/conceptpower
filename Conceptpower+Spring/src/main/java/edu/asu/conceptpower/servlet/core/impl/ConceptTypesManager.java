@@ -5,8 +5,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
-import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 
 @Service

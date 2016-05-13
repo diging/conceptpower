@@ -14,8 +14,8 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Predicate;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptList;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.db4o.DBNames;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
