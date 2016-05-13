@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.servlet.core;
 
+import edu.asu.conceptpower.core.ConceptType;
+
 /**
  * This class is the manager class for concept types. It provides methods
  * for adding, updating, deleting, and retrieving concepts.

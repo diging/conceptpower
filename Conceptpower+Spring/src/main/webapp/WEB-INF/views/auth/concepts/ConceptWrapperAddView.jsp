@@ -467,7 +467,7 @@
 		<tr>
 			<td>Synonyms</td>
 			<td><div id="addedSynonyms"></div></td>
-			<td><input type="button" name="synonym" id="addsynonym"
+			<td width="50"><input type="button" name="synonym" id="addsynonym"
 				data-toggle="modal" data-target="#synonymModal" value="Add Synonym"
 				class="btn btn-primary"></td>
 		</tr>
