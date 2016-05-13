@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.core.IIndexService;
-import edu.asu.conceptpower.servlet.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;

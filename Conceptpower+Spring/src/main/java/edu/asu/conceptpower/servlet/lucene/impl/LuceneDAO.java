@@ -12,8 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
+import edu.asu.conceptpower.core.IndexingEvent;
 import edu.asu.conceptpower.root.DatabaseManager;
-import edu.asu.conceptpower.servlet.core.IndexingEvent;
 import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 
 /**
