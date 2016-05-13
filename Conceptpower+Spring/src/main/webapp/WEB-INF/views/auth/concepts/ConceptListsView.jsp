@@ -33,7 +33,7 @@
 <br />
 <a
 	href="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptlist"><i
-	class="fa fa-plus-circle"> </i>Add New Concept List</a>
+	class="fa fa-plus-circle"></i> Add New Concept List</a>
 <p>Here you find all stored concept lists.</p>
 
 <c:if test="${not empty result}">
