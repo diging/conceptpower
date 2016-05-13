@@ -199,16 +199,16 @@ public class Concepts {
     private ConceptEntry createEntry(JSONObject jsonObject, String username) {
         ConceptEntry conceptEntry = new ConceptEntry();
         conceptEntry.setCreatorId(username);
-        conceptEntry.setSynonymIds(jsonObject.get(JsonFields.SYNONYM_IDS) != null
-                ? jsonObject.get(JsonFields.SYNONYM_IDS).toString() : "");
+        conceptEntry.setSynonymIds(jsonObject.get(JsonFields.SYNONYM_IDS) != null ? jsonObject.get(
+                JsonFields.SYNONYM_IDS).toString() : "");
         conceptEntry.setWord(jsonObject.get(JsonFields.WORD).toString());
         conceptEntry.setConceptList(jsonObject.get(JsonFields.CONCEPT_LIST).toString());
         conceptEntry.setPos(jsonObject.get(JsonFields.POS).toString());
         conceptEntry.setDescription(jsonObject.get(JsonFields.DESCRIPTION).toString());
-        conceptEntry.setEqualTo(
-                jsonObject.get(JsonFields.EQUALS) != null ? jsonObject.get(JsonFields.EQUALS).toString() : "");
-        conceptEntry.setSimilarTo(
-                jsonObject.get(JsonFields.SIMILAR) != null ? jsonObject.get(JsonFields.SIMILAR).toString() : "");
+        conceptEntry.setEqualTo(jsonObject.get(JsonFields.EQUALS) != null ? jsonObject.get(JsonFields.EQUALS)
+                .toString() : "");
+        conceptEntry.setSimilarTo(jsonObject.get(JsonFields.SIMILAR) != null ? jsonObject.get(JsonFields.SIMILAR)
+                .toString() : "");
         conceptEntry.setTypeId(jsonObject.get(JsonFields.TYPE).toString());
         return conceptEntry;
     }
