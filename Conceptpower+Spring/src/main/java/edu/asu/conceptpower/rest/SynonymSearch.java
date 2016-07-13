@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -86,6 +87,9 @@ public class SynonymSearch {
 			xmlEntries = msg.appendEntries(entryMap);
 		}
 
-		return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
+		HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+        
+        return new ResponseEntity<String>(msg.getXML(xmlEntries), responseHeaders, HttpStatus.OK);
 	}
 }
