@@ -32,6 +32,7 @@
 				conceptid : conceptid
 			},
 			success : function(details) {
+				details = $.parseJSON(details);
 				$("#detailsid").text(details.id);
 				$("#detailsuri").text(details.uri);
 				$("#detailswordnetid").text(details.wordnetId);

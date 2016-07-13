@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.servlet.users.IUserManager;
-import edu.asu.conceptpower.servlet.users.User;
 import edu.asu.conceptpower.servlet.validation.EmailValidator;
 import edu.asu.conceptpower.servlet.web.backing.UserBacking;
+import edu.asu.conceptpower.users.User;
 
 /**
  * This class provides required methods for editing a user

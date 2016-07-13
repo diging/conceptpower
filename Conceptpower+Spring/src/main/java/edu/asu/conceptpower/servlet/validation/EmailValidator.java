@@ -6,8 +6,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import edu.asu.conceptpower.servlet.users.IUserManager;
-import edu.asu.conceptpower.servlet.users.User;
 import edu.asu.conceptpower.servlet.web.backing.UserBacking;
+import edu.asu.conceptpower.users.User;
 
 @Component
 public class EmailValidator implements Validator {

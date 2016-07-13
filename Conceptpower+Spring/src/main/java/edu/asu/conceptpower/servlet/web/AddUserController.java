@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.conceptpower.servlet.users.IUserManager;
-import edu.asu.conceptpower.servlet.users.User;
 import edu.asu.conceptpower.servlet.validation.UserValidator;
 import edu.asu.conceptpower.servlet.web.backing.UserBacking;
+import edu.asu.conceptpower.users.User;
 
 /**
  * This class provides methods for creating a user

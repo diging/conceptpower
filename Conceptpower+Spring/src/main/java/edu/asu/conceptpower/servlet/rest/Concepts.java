@@ -12,6 +12,7 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,9 +52,15 @@ public class Concepts {
         JSONObject jsonObject = null;
         try {
             jsonObject = (JSONObject) jsonParser.parse(reader);
-        } catch (IOException | ParseException | ClassCastException e1) {
+        } catch (IOException | ParseException e1) {
             logger.error("Error parsing request.", e1);
-            return new ResponseEntity<String>("Error parsing request: " + e1, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Error parsing request: " + e1,
+                    HttpStatus.BAD_REQUEST);
+        } catch (ClassCastException ex) {
+            logger.error("Couldn't cast object.", ex);
+            return new ResponseEntity<String>(
+                    "It looks like you are not submitting a JSON Object.",
+                    HttpStatus.BAD_REQUEST);
         }
 
         JsonValidationResult result = checkJsonObject(jsonObject);
@@ -92,7 +99,11 @@ public class Concepts {
 
         jsonObject.put("id", id);
 
-        return new ResponseEntity<String>(jsonObject.toJSONString(), HttpStatus.OK);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+        
+        return new ResponseEntity<String>(jsonObject.toJSONString(), responseHeaders,
+                HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -154,7 +165,11 @@ public class Concepts {
 
         }
 
-        return new ResponseEntity<String>(responseArray.toJSONString(), HttpStatus.OK);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+        
+        return new ResponseEntity<String>(responseArray.toJSONString(), responseHeaders,
+                HttpStatus.OK);
     }
 
     private JsonValidationResult checkJsonObject(JSONObject jsonObject) {
