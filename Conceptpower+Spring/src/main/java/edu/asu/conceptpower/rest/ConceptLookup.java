@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -74,6 +75,8 @@ public class ConceptLookup {
 			xmlEntries = returnMsg.appendEntries(entryMap);
 		}
 
-		return new ResponseEntity<String>(returnMsg.getXML(xmlEntries), HttpStatus.OK);
+		HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+        return new ResponseEntity<String>(returnMsg.getXML(xmlEntries), responseHeaders, HttpStatus.OK);
 	}
 }

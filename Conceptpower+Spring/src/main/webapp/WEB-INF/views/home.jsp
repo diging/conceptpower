@@ -7,6 +7,7 @@
 <%@ page session="false"%>
 
 <script type="text/javascript">
+//# sourceURL=view.js
     $(document).ready(function() {
         $('#conceptSearchResult').dataTable({
             "bJQueryUI" : true,
@@ -45,6 +46,7 @@
 				conceptid : conceptid
 			},
 			success : function(details) {
+				details = $.parseJSON(details);
 				$("#detailsid").text(details.id);
 				$("#detailsuri").text(details.uri);
 				$("#detailswordnetid").text(details.wordnetid);

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -134,6 +135,8 @@ public class ConceptListController {
 				wrapper.getEntry().getCreatorId() == null ? ""
 						: wrapper.getEntry().getCreatorId());
 
-		return new ResponseEntity<String>(new JSONObject(details).toString(), HttpStatus.OK);
+		HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+        return new ResponseEntity<String>(new JSONObject(details).toString(), responseHeaders, HttpStatus.OK);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -83,6 +84,9 @@ public class TypeIdLookup {
 		}
 		
 
-		return new ResponseEntity<String>(msg.getXML(xmlEntry), HttpStatus.OK);
+		HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+        
+        return new ResponseEntity<String>(msg.getXML(xmlEntry), responseHeaders, HttpStatus.OK);
 	}
 }
