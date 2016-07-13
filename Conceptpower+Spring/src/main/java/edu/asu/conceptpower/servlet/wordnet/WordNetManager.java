@@ -11,10 +11,14 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.impl.Log4jLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.servlet.exceptions.ConceptPowerExceptionHandler;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.item.ISynset;
@@ -26,6 +30,8 @@ import edu.mit.jwi.item.WordID;
 @Component
 public class WordNetManager {
 
+    private static final Logger logger = LoggerFactory.getLogger(WordNetManager.class);
+    
     @Autowired
     private WordNetConfiguration configuration;
 
@@ -60,7 +66,8 @@ public class WordNetManager {
         try {
             wordId = WordID.parseWordID(id);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
+            logger.error("Could not find id '" + id + "' in WordNet.", e);
+            return null;
         }
 
         if (wordId != null) {

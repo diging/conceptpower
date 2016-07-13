@@ -57,7 +57,7 @@ public class ConceptManager implements IConceptManager {
      * String)
      */
     @Override
-    public ConceptEntry getConceptEntry(String id) throws LuceneException {
+    public ConceptEntry getConceptEntry(String id) {
         ConceptEntry entry = client.getEntry(id);
         if (entry != null) {
             fillConceptEntry(entry);
@@ -116,7 +116,7 @@ public class ConceptManager implements IConceptManager {
      *            The concept entry that should be filled with the synonym ids
      *            of wrapped wordnet concepts.
      */
-    protected void fillConceptEntry(ConceptEntry entry) throws LuceneException {
+    protected void fillConceptEntry(ConceptEntry entry) {
         if (entry.getId() != null && entry.getWordnetId() != null && !entry.getId().equals(entry.getWordnetId())) {
             // generate the synonym ids
             StringBuffer sb = new StringBuffer();

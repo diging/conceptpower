@@ -237,7 +237,8 @@ public class LuceneUtility implements ILuceneUtility {
 
     private Document createIndividualDocument(IDictionary dict, IWordID wordId) {
         Document doc = new Document();
-        doc.add(new TextField(LuceneFieldNames.WORD, wordId.getLemma(), Field.Store.YES));
+        String lemma = wordId.getLemma().replace("_", " ");
+        doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
         doc.add(new TextField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
@@ -296,10 +297,7 @@ public class LuceneUtility implements ILuceneUtility {
 
         String wnhome = configuration.getWordnetPath();
         String path = wnhome + File.separator + configuration.getDictFolder();
-        int[] numberOfWord;
-        int numberOfUnIndexedWords = 0;
-        int numberOfIndexedWords = 0;
-
+        
         URL url;
         try {
             url = new URL("file", null, path);
@@ -316,10 +314,10 @@ public class LuceneUtility implements ILuceneUtility {
 
         // 2. Adding data into
         Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
-        numberOfWord = createDocuments(iterator, dict, writer);
+        int[] numberOfWord = createDocuments(iterator, dict, writer);
 
-        numberOfIndexedWords = numberOfWord[0];
-        numberOfUnIndexedWords = numberOfWord[1];
+        int numberOfIndexedWords = numberOfWord[0];
+        int numberOfUnIndexedWords = numberOfWord[1];
 
         iterator = dict.getIndexWordIterator(POS.ADVERB);
         numberOfWord = createDocuments(iterator, dict, writer);

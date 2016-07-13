@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,7 +59,7 @@ public class ConceptSearch {
 	 *            Holds HTTP request information
 	 * @return
 	 */
-	@RequestMapping(value = "rest/ConceptSearch", method = RequestMethod.GET, produces = "application/xml")
+	@RequestMapping(value = "rest/ConceptSearch", method = RequestMethod.GET, produces = "application/xml; charset=utf-8")
 	public @ResponseBody ResponseEntity<String> searchConcept(HttpServletRequest req) {
 		Map<String, String[]> queryParams = req.getParameterMap();
 		Map<String, String> searchFields = new HashMap<String, String>();
@@ -94,9 +95,6 @@ public class ConceptSearch {
 			xmlEntries = msg.appendEntries(entryMap);
 		}
 
-		HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-        
-        return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
+		return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
 	}
 }
