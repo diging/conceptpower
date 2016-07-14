@@ -55,12 +55,10 @@
 
 
 	<script
-		src="${pageContext.servletContext.contextPath}/resources/js/jquery.min.js"></script>
+		src="${pageContext.servletContext.contextPath}/resources/js/jquery-3.1.0.min.js"></script>
 
 	<script
-		src="${pageContext.servletContext.contextPath}/resources/js/jquery-1.10.2.js"></script>
-	<script
-		src="${pageContext.servletContext.contextPath}/resources/js/jquery-ui.js"></script>
+		src="${pageContext.servletContext.contextPath}/resources/js/jquery-ui-1.12.js"></script>
 
 	<script
 		src="${pageContext.servletContext.contextPath}/resources/js/bootstrap.min.js"></script>
