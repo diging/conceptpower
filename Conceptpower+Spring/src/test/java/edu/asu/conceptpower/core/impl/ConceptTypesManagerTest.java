@@ -12,7 +12,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.db4o.TypeDatabaseClient;
+import edu.asu.conceptpower.root.TypeDatabaseClient;
+import edu.asu.conceptpower.servlet.core.impl.ConceptTypesManager;
 
 public class ConceptTypesManagerTest {
 

@@ -50,7 +50,7 @@
 	<table>
 		<tr>
 			<td>Type Name</td>
-			<td><form:input path="typeName" /> <form:hidden path="typeid" />
+			<td><form:input path="typeName" class="form-control"/> <form:hidden path="typeid" />
 				<form:hidden path="oldTypeName" /></td>
 			<td><form:errors path="typeName" class="ui-state-error-text" /></td>
 		</tr>
@@ -64,7 +64,7 @@
 
 		<tr>
 			<td>Matches</td>
-			<td><form:input path="matches" /></td>
+			<td><form:input path="matches" class="form-control"/></td>
 		</tr>
 
 		<tr>
@@ -79,10 +79,10 @@
 
 		<tr>
 			<td><input type="submit" value="Edit type" id="editButton"
-				name="editButton" class="button" disabled="disabled"></td>
+				name="editButton" class="btn btn-primary" disabled="disabled"></td>
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/concepttype/edittype/canceledit"><input
-					type="button" name="cancel" value="No, cancel!" class="button"></a></td>
+					type="button" name="cancel" value="No, cancel!" class="btn btn-primary"></a></td>
 		</tr>
 	</table>
 </form:form>

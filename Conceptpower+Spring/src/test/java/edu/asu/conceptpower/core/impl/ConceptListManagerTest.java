@@ -12,18 +12,20 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.db4o.DBNames;
-import edu.asu.conceptpower.db4o.IConceptDBManager;
+import edu.asu.conceptpower.servlet.core.impl.ConceptListManager;
+import edu.asu.conceptpower.servlet.db4o.DBNames;
+import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 
 public class ConceptListManagerTest {
 
 	@Mock
-	private IConceptDBManager client = Mockito.mock(IConceptDBManager.class);;
+	private IConceptDBManager client = Mockito.mock(IConceptDBManager.class);
 
 	@InjectMocks
 	private ConceptListManager conceptListManager;
@@ -46,7 +48,7 @@ public class ConceptListManagerTest {
 	@Test
 	public void addConceptListTest() {
 		conceptListManager.addConceptList("List Name", "List Description");
-		Mockito.verify(client).store(Mockito.anyObject(), Mockito.eq(DBNames.DICTIONARY_DB));
+		Mockito.verify(client).store(Matchers.any(ConceptList.class), Mockito.eq(DBNames.DICTIONARY_DB));
 
 	}
 

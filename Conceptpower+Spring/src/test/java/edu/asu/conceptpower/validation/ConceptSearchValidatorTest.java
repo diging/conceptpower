@@ -7,8 +7,9 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
-import edu.asu.conceptpower.core.POS;
-import edu.asu.conceptpower.web.ConceptSearchBean;
+import edu.asu.conceptpower.servlet.core.POS;
+import edu.asu.conceptpower.servlet.validation.ConceptSearchValidator;
+import edu.asu.conceptpower.servlet.web.ConceptSearchBean;
 import junit.framework.Assert;
 
 public class ConceptSearchValidatorTest {

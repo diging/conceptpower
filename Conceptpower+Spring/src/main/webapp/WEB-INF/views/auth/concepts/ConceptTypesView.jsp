@@ -5,12 +5,27 @@
 <%@ page session="false"%>
 
 
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/js/datatable/css/jquery.dataTables.css" />
+
+<script type="text/javascript" charset="utf-8"
+	src="${pageContext.servletContext.contextPath}/resources/js/datatable/js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8"
+	src="${pageContext.servletContext.contextPath}/resources/js/datatable/js/jquery.dataTables.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#conceptTypes').dataTable({
 			"bJQueryUI" : true,
 			"sPaginationType" : "full_numbers",
-			"bAutoWidth" : false
+			"bAutoWidth" : false,
+			"aoColumnDefs" : [
+				{
+					"targets": [0,1],
+					'bSortable': false
+				}     
+			],
+		"order": [[ 2, "desc" ]]
 		});
 
 	});
@@ -18,10 +33,17 @@
 
 
 <h1>Types</h1>
+<br />
+<a
+	href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype"><i
+	class="fa fa-plus-circle"></i> Add New Type</a>
+
+<br />
+<br />
 <p>See existing types below.</p>
 
 <c:if test="${not empty result}">
-	<table cellpadding="0" cellspacing="0" class="display dataTable"
+	<table cellpadding="0" cellspacing="0" class="table table-striped table-bordered"
 		id="conceptTypes">
 		<thead>
 			<tr>
@@ -40,15 +62,13 @@
 			<c:forEach var="types" items="${result}">
 				<tr class="gradeX">
 					<td align="justify"><a
-						href="${pageContext.servletContext.contextPath}/auth/concepttype/deletetype/${types.typeId}"><input
-							type="image"
-							src="${pageContext.servletContext.contextPath}/resources/img/trash_16x16.png"></input></a>
+						href="${pageContext.servletContext.contextPath}/auth/concepttype/deletetype/${types.typeId}">
+						<i class="fa fa-trash-o"></i>
+						</a>
 					</td>
 					<td align="justify"><a
-						href="${pageContext.servletContext.contextPath}/auth/concepttype/edittype/${types.typeId}"><input
-							type="image"
-							src="${pageContext.servletContext.contextPath}/resources/img/edit_16x16.png"></input></a>
-					</td>
+						href="${pageContext.servletContext.contextPath}/auth/concepttype/edittype/${types.typeId}"><i
+							class="fa fa-pencil-square-o"></i></a></td>
 					<td align="justify"><font size="2"><c:out
 								value="${types.typeName}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out

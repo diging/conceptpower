@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.wrapper.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -13,12 +14,14 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.core.IConceptManager;
-import edu.asu.conceptpower.core.IConceptTypeManger;
-import edu.asu.conceptpower.users.IUserManager;
+import edu.asu.conceptpower.root.IURIHelper;
+import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
+import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.users.IUserManager;
+import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
+import edu.asu.conceptpower.servlet.wrapper.impl.ConceptEntryWrapperCreator;
 import edu.asu.conceptpower.users.User;
-import edu.asu.conceptpower.util.IURIHelper;
-import edu.asu.conceptpower.wrapper.ConceptEntryWrapper;
 
 public class ConceptEntryWrapperCreatorTest {
 
@@ -41,7 +44,7 @@ public class ConceptEntryWrapperCreatorTest {
     ConceptEntry entry = new ConceptEntry();
 
     @Before
-    public void init() {
+    public void init() throws LuceneException {
 
         entry.setTypeId("Type-1");
         entry.setCreatorId("Test");
@@ -76,7 +79,7 @@ public class ConceptEntryWrapperCreatorTest {
     }
 
     @Test
-    public void createWrappers() {
+    public void createWrappers() throws LuceneException {
         List<ConceptEntryWrapper> conceptEntryWrapperList = conceptEntryWrapperCreator.createWrappers(entries);
         assertNotNull(conceptEntryWrapperList);
         assertEquals("Type-1", conceptEntryWrapperList.get(0).getType().getTypeId());
@@ -89,7 +92,7 @@ public class ConceptEntryWrapperCreatorTest {
     }
     
     @Test
-    public void createNullWrappers(){
+    public void createNullWrappers() throws LuceneException{
     	List<ConceptEntryWrapper> conceptEntryWrapperList = conceptEntryWrapperCreator.createWrappers(null);
     	assertNotNull(conceptEntryWrapperList);
     	assertEquals(conceptEntryWrapperList.size(),0);

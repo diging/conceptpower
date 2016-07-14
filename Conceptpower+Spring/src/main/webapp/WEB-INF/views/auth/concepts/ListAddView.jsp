@@ -14,19 +14,19 @@
 	<table>
 		<tr>
 			<td>List Name</td>
-			<td><form:input path="listName" /></td>
+			<td><form:input path="listName" class="form-control"/></td>
 			<td><form:errors path="listName" class="ui-state-error-text"></form:errors></td>
 		</tr>
 
 		<tr>
 			<td>List Description</td>
-			<td><form:textarea rows="7" cols="50" path="description"></form:textarea></td>
+			<td><form:textarea rows="7" cols="50" path="description" class="form-control"></form:textarea></td>
 			<td><form:errors path="description" class="ui-state-error-text"></form:errors></td>
 		</tr>
 
 		<tr>
 			<td colspan="2"><input type="submit" value="Create List"
-				class="button"></td>
+				class="btn btn-primary"></td>
 		</tr>
 	</table>
 </form:form>

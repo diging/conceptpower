@@ -9,13 +9,15 @@
 <h1>Edit concept list</h1>
 <p>Edit concept list here.</p>
 
+<font color="red">${luceneError }</font>
+
 <form:form
 	action="${pageContext.servletContext.contextPath}/auth/conceptlist/storeeditlist"
 	method='post' commandName="conceptListAddForm">
 	<table>
 		<tr>
 			<td>List Name</td>
-			<td><form:input path="listName" />
+			<td><form:input path="listName" class="form-control"/>
 				<form:hidden path="oldListName" /></td>
 			<td><form:errors path="listName" class="ui-state-error-text"></form:errors></td>
 		</tr>
@@ -27,10 +29,10 @@
 		</tr>
 
 		<tr>
-			<td><input type="submit" value="Edit list" class="button"></td>
+			<td><input type="submit" value="Edit list" class="btn btn-primary"></td>
 			<td><a
 				href="${pageContext.servletContext.contextPath}/auth/conceptlist/editlist/canceledit"><input
-					type="button" name="cancel" value="No, cancel!" class="button"></a></td>
+					type="button" name="cancel" value="No, cancel!" class="btn btn-primary"></a></td>
 		</tr>
 	</table>
 </form:form>

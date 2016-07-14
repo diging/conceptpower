@@ -14,8 +14,8 @@
 	commandName="emailBackBean"
 	action="${pageContext.servletContext.contextPath}/emailSent"
 	method='post'>
-	Email address: <form:input type="text" id="email" path="email" />
-	<input name="submit" type="submit" value="Submit" class="button" />
+	Email address: <form:input type="text" id="email" path="email" class="form-control"/>
+	<input name="submit" type="submit" value="Submit" class="btn btn-primary" />
 	<form:errors path="email" cssClass="error"></form:errors>
 </form:form>
 

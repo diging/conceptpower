@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.service.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +13,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.profile.ISearchResult;
-import edu.asu.conceptpower.profile.IService;
-import edu.asu.conceptpower.profile.IServiceRegistry;
-import edu.asu.conceptpower.profile.impl.SearchResult;
+import edu.asu.conceptpower.servlet.profile.ISearchResult;
+import edu.asu.conceptpower.servlet.profile.IService;
+import edu.asu.conceptpower.servlet.profile.IServiceRegistry;
+import edu.asu.conceptpower.servlet.profile.impl.SearchResult;
+import edu.asu.conceptpower.servlet.service.impl.AuthorityFileSearch;
 
 public class AuthorityFileSearchTest {
 

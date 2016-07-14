@@ -13,19 +13,19 @@
 			<th>Username</th>
 			<th>Name</th>
 			<th>Email</th>
-			<th>User is admin</th>
+			<th>Is admin</th>
 		</tr>
 	</thead>
 	<tbody>
 		<c:forEach var="user" items="${users}">
 			<tr>
-				<td ><a title="Delete User"
+				<td  align="justify" width="20"><a title="Delete User"
 					href="${pageContext.servletContext.contextPath}/auth/user/deleteuser/${user.username}"><i class="fa fa-trash"></i></a></td>
-				<td ><a title="Edit User"
+				<td  align="justify" width="20"><a title="Edit User"
 					href="${pageContext.servletContext.contextPath}/auth/user/edituser/${user.username}"><i class="fa fa-pencil"></i></a></td>
-				<td ><a title="Change Password"
+				<td  align="justify" width="20"><a title="Change Password"
 					href="${pageContext.servletContext.contextPath}/auth/user/editpassword/${user.username}"><i class="fa fa-key"></i></a></td>
-				<td>
+				<td  align="justify" width="20">
 					<c:if test="${not user.isEncrypted}">
 						<a title="Encrypt Password" href="${pageContext.servletContext.contextPath}/auth/user/encrypt/${user.username}"><i class="fa fa-lock"></i></a>
 					</c:if>

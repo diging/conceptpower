@@ -14,10 +14,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
-import edu.asu.conceptpower.jaxb.viaf.Channel;
-import edu.asu.conceptpower.jaxb.viaf.Item;
-import edu.asu.conceptpower.profile.ISearchResult;
-import edu.asu.conceptpower.profile.ISearchResultFactory;
+import edu.asu.conceptpower.servlet.jaxb.viaf.Channel;
+import edu.asu.conceptpower.servlet.jaxb.viaf.Item;
+import edu.asu.conceptpower.servlet.profile.ISearchResult;
+import edu.asu.conceptpower.servlet.profile.ISearchResultFactory;
+import edu.asu.conceptpower.servlet.profile.impl.SearchResult;
+import edu.asu.conceptpower.servlet.profile.impl.ViafReply;
+import edu.asu.conceptpower.servlet.profile.impl.ViafService;
 
 public class ViafServiceTest {
 
