@@ -7,6 +7,7 @@
 <%@ page session="false"%>
 
 <script type="text/javascript">
+//# sourceURL=details.js
 $(document).ready(function() {
    $('#conceptSearchResult').dataTable({
 		"bJQueryUI" : true,

@@ -381,11 +381,11 @@ public class ConceptManager implements IConceptManager {
 			throw new DictionaryModifyException();
 		}
 
-		indexService.insertConcept(entry);
 		String id = generateId(CONCEPT_PREFIX);
 		entry.setId(id);
 		client.store(entry, DBNames.DICTIONARY_DB);
-		return id;
+		indexService.insertConcept(entry);
+        return id;
 
 	}
     
