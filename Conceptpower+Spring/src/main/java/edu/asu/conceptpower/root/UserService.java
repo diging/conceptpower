@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.servlet.users.ConceptpowerGrantedAuthority;
 import edu.asu.conceptpower.servlet.users.IUserManager;
-import edu.asu.conceptpower.servlet.users.User;
+import edu.asu.conceptpower.users.User;
 
 @Service("userService")
 public class UserService implements UserDetailsService {

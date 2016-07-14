@@ -12,7 +12,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.servlet.users.Token;
-import edu.asu.conceptpower.servlet.users.User;
+import edu.asu.conceptpower.users.User;
 
 @Component
 public class UserDatabaseClient {

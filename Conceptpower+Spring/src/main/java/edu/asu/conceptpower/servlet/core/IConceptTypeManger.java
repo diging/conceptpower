@@ -17,6 +17,12 @@ public interface IConceptTypeManger {
 
 	public ConceptType[] getAllTypes();
 
+	/**
+     * This method retrieves a type by the provided type ID. Returns null if there
+     * is not such type.
+     * @param id ID of the type to be retrieved.
+     * @return The corresponding type or null if there is no type for th ID.
+     */
 	public ConceptType getType(String id);
 
 	public void deleteType(String id);

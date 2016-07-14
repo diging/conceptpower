@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,10 +30,10 @@ import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
 
 @Controller
 public class ConceptListController {
-
+    
     @Autowired
     private IConceptManager conceptManager;
-
+    
     @Autowired
     private IConceptListManager conceptListManager;
 
@@ -72,12 +73,15 @@ public class ConceptListController {
      *         page
      */
     @RequestMapping(value = "auth/{listid}/concepts", method = RequestMethod.GET)
-    public String getConceptsOfConceptList(@PathVariable("listid") String list, ModelMap model) throws LuceneException {
+    public String getConceptsOfConceptList(@PathVariable("listid") String list,
+            ModelMap model) throws LuceneException {
 
         List<ConceptEntry> founds = conceptManager.getConceptListEntries(list);
 
         List<ConceptEntryWrapper> foundConcepts = wrapperCreator
-                .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
+                .createWrappers(founds != null ? founds
+                        .toArray(new ConceptEntry[founds.size()])
+                        : new ConceptEntry[0]);
 
         model.addAttribute("result", foundConcepts);
         return "/auth/conceptlist/concepts";
@@ -89,35 +93,52 @@ public class ConceptListController {
      * @param conceptid
      *            ID of a concept
      * @return Map containing concept details
+     * @throws LuceneException 
      */
     @RequestMapping(method = RequestMethod.GET, value = "conceptDetail", produces = "application/json")
-    public @ResponseBody ResponseEntity<String> getConceptDetails(@RequestParam("conceptid") String conceptid)
-            throws LuceneException {
-        ConceptEntryWrapper conceptEntry = null;
-        conceptEntry = new ConceptEntryWrapper(conceptManager.getConceptEntry(conceptid));
+    public @ResponseBody ResponseEntity<String> getConceptDetails(
+            @RequestParam("conceptid") String conceptid) throws LuceneException {
+        ConceptEntry entry = conceptManager.getConceptEntry(conceptid);
+        List<ConceptEntryWrapper> wrappers = wrapperCreator.createWrappers(new ConceptEntry[] { entry } );
+        ConceptEntryWrapper wrapper = null;
+        if (wrappers.size() > 0) {
+            wrapper = wrappers.get(0);
+        }
+        else {
+            return new ResponseEntity<String>("No entry for the provided id.", HttpStatus.BAD_REQUEST);
+        }
+        
         Map<String, String> details = new HashMap<String, String>();
 
-        details.put("name", conceptEntry.getEntry().getWord());
-        details.put("id", conceptEntry.getEntry().getId());
-        details.put("uri", URICreator.getURI(conceptEntry.getEntry()));
-        // This condition has been included to make sure null values are not
-        // displayed in the details dialog box
-        details.put("wordnetid",
-                conceptEntry.getEntry().getWordnetId() == null ? "" : conceptEntry.getEntry().getWordnetId());
-        details.put("pos", conceptEntry.getEntry().getPos());
-        details.put("conceptlist", conceptEntry.getEntry().getConceptList());
+        details.put("name", wrapper.getEntry().getWord());
+        details.put("id", wrapper.getEntry().getId());
+        details.put("uri", URICreator.getURI(wrapper.getEntry()));
+        //This condition has been included to make sure null values are not displayed in the details dialog box
+        details.put("wordnetid", wrapper.getEntry().getWordnetId()==null?"":wrapper.getEntry().getWordnetId());
+        details.put("pos", wrapper.getEntry().getPos());
+        details.put("conceptlist", wrapper.getEntry().getConceptList());
 
-        ConceptType type = conceptEntry.getEntry().getTypeId() == null ? null
-                : typeDatabaseClient.getType(conceptEntry.getEntry().getTypeId());
-
-        details.put("type", type == null ? "" : type.getTypeName());
+        ConceptType type = wrapper.getEntry().getTypeId() == null ? null
+                : typeDatabaseClient.getType(
+                        wrapper.getEntry().getTypeId());
+        
+        details.put("description", wrapper.getEntry().getDescription());
+        
+        details.put(
+                "type",
+                type == null ? "" : type.getTypeName());
         details.put("equalto",
-                conceptEntry.getEntry().getEqualTo() == null ? "" : conceptEntry.getEntry().getEqualTo());
+                wrapper.getEntry().getEqualTo() == null ? ""
+                        : wrapper.getEntry().getEqualTo());
         details.put("similarto",
-                conceptEntry.getEntry().getSimilarTo() == null ? "" : conceptEntry.getEntry().getSimilarTo());
+                wrapper.getEntry().getSimilarTo() == null ? ""
+                        : wrapper.getEntry().getSimilarTo());
         details.put("creator",
-                conceptEntry.getEntry().getCreatorId() == null ? "" : conceptEntry.getEntry().getCreatorId());
+                wrapper.getEntry().getCreatorId() == null ? ""
+                        : wrapper.getEntry().getCreatorId());
 
-        return new ResponseEntity<String>(new JSONObject(details).toString(), HttpStatus.OK);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+        return new ResponseEntity<String>(new JSONObject(details).toString(), responseHeaders, HttpStatus.OK);
     }
 }

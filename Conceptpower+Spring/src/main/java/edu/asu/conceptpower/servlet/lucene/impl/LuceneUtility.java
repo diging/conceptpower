@@ -237,7 +237,8 @@ public class LuceneUtility implements ILuceneUtility {
 
     private Document createIndividualDocument(IDictionary dict, IWordID wordId) {
         Document doc = new Document();
-        doc.add(new TextField(LuceneFieldNames.WORD, wordId.getLemma(), Field.Store.YES));
+        String lemma = wordId.getLemma().replace("_", " ");
+        doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
         doc.add(new TextField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
@@ -296,10 +297,7 @@ public class LuceneUtility implements ILuceneUtility {
 
         String wnhome = configuration.getWordnetPath();
         String path = wnhome + File.separator + configuration.getDictFolder();
-        int[] numberOfWord;
-        int numberOfUnIndexedWords = 0;
-        int numberOfIndexedWords = 0;
-
+        
         URL url;
         try {
             url = new URL("file", null, path);
@@ -316,10 +314,10 @@ public class LuceneUtility implements ILuceneUtility {
 
         // 2. Adding data into
         Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
-        numberOfWord = createDocuments(iterator, dict, writer);
+        int[] numberOfWord = createDocuments(iterator, dict, writer);
 
-        numberOfIndexedWords = numberOfWord[0];
-        numberOfUnIndexedWords = numberOfWord[1];
+        int numberOfIndexedWords = numberOfWord[0];
+        int numberOfUnIndexedWords = numberOfWord[1];
 
         iterator = dict.getIndexWordIterator(POS.ADVERB);
         numberOfWord = createDocuments(iterator, dict, writer);
@@ -390,15 +388,37 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
-                StringBuffer searchBuffer = new StringBuffer("(+");
                 
                 if(searchString != null){
                     if (firstEntry != 1)
                         queryString.append(" " + operator + " ");
                     firstEntry++;
                     queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
-                    searchString = searchString.split(" ")[0];
-                    searchBuffer.append(searchString);
+                    
+                    StringBuffer searchBuffer = new StringBuffer("(");
+                    String[] searchParts = searchString.split(" ");
+                    
+                    boolean quoteOpen = false;
+                    for (String term : searchParts) {
+                        if (!quoteOpen && !term.trim().isEmpty()) {
+                            searchBuffer.append("+");
+                        }
+                        
+                        searchBuffer.append(term + " ");
+                        
+                        if (term.startsWith("\"")) {
+                            quoteOpen = true;
+                        }
+                        
+                        if (term.endsWith("\"")) {
+                            quoteOpen = false;
+                        }
+                    }
+                    
+                    if (quoteOpen) {
+                        int idxLastQuote = searchBuffer.lastIndexOf("\"");
+                        searchBuffer.replace(idxLastQuote, idxLastQuote+1, "");
+                    }
                     searchBuffer.append(")");
                     queryString.append(searchBuffer.toString());
                 }

@@ -19,9 +19,9 @@ import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.users.IUserManager;
-import edu.asu.conceptpower.servlet.users.User;
 import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.servlet.wrapper.impl.ConceptEntryWrapperCreator;
+import edu.asu.conceptpower.users.User;
 
 public class ConceptEntryWrapperCreatorTest {
 

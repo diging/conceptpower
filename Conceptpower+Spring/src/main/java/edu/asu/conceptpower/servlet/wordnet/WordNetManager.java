@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,8 @@ import edu.mit.jwi.item.WordID;
 @Component
 public class WordNetManager {
 
+    private static final Logger logger = LoggerFactory.getLogger(WordNetManager.class);
+    
     @Autowired
     private WordNetConfiguration configuration;
 
@@ -60,7 +64,8 @@ public class WordNetManager {
         try {
             wordId = WordID.parseWordID(id);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
+            logger.error("Could not find id '" + id + "' in WordNet.", e);
+            return null;
         }
 
         if (wordId != null) {

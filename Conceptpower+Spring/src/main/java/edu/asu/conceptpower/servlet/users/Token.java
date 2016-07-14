@@ -2,6 +2,8 @@ package edu.asu.conceptpower.servlet.users;
 
 import java.util.Date;
 
+import edu.asu.conceptpower.users.User;
+
 /**
  * This class represents a token for password recovery.
  * @author jdamerow

@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.servlet.users;
+package edu.asu.conceptpower.users;
 
 import java.io.Serializable;
 

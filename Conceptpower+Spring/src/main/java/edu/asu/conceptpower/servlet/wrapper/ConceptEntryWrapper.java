@@ -5,7 +5,7 @@ import java.util.List;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.servlet.users.User;
+import edu.asu.conceptpower.users.User;
 
 /**
  * This class describes the concept entry wrapper in concept power. It provides
