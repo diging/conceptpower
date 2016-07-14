@@ -33,6 +33,7 @@
 			},
 			success : function(details) {
 				details = $.parseJSON(details);
+				$("#conceptTerm").text(details.name);
 				$("#detailsid").text(details.id);
 				$("#detailsuri").text(details.uri);
 				$("#detailswordnetid").text(details.wordnetId);
