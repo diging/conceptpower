@@ -45,7 +45,7 @@ public class DatabaseClient implements IConceptDBManager {
 	 * @see edu.asu.conceptpower.db4o.IConceptDBManager#getEntry(java.lang.String)
 	 */
 	@Override
-	public ConceptEntry getEntry(String id) {
+    public ConceptEntry getEntry(String id) {
 		ConceptEntry exampleEntry = new ConceptEntry();
 
 		// check if there is a wrapper for wordnet entry
