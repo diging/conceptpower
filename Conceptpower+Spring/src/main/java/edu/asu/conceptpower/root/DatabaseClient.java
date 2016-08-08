@@ -19,6 +19,7 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.db4o.DBNames;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
+import edu.asu.conceptpower.servlet.web.ConceptAddController;
 
 @Component
 public class DatabaseClient implements IConceptDBManager {
@@ -81,6 +82,15 @@ public class DatabaseClient implements IConceptDBManager {
 			return results.get(0);
 
 		return null;
+	}
+	
+	@Override
+    public List<ConceptEntry> getConceptByWordnetId(String wordnetId) {
+	    ConceptEntry entry = new ConceptEntry();
+	    entry.setWordnetId(wordnetId + ",");
+	    
+	    ObjectSet<ConceptEntry> entries = dictionaryClient.queryByExample(entry);
+	    return entries;
 	}
 
 	/* (non-Javadoc)

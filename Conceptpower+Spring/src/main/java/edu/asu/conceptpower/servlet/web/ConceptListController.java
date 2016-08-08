@@ -122,7 +122,7 @@ public class ConceptListController {
                 : typeDatabaseClient.getType(
                         wrapper.getEntry().getTypeId());
         
-        details.put("description", wrapper.getEntry().getDescription());
+        details.put("description", wrapper.getDescription());
         
         details.put(
                 "type",

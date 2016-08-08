@@ -92,6 +92,10 @@ public class ConceptDBManager implements IConceptDBManager {
 		// TODO Auto-generated method stub
 		
 	}
+
+    public List<ConceptEntry> getConceptByWordnetId(String wordnetId) {
+        return null;
+    }
 	
 	
 }

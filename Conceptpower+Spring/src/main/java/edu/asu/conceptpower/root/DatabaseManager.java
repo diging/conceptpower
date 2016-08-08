@@ -7,6 +7,8 @@ import com.db4o.ObjectServer;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ServerConfiguration;
 
+import edu.asu.conceptpower.core.ConceptEntry;
+
 public class DatabaseManager implements Serializable {
 
 	/**
@@ -21,7 +23,9 @@ public class DatabaseManager implements Serializable {
 		ServerConfiguration configuration = Db4oClientServer
 				.newServerConfiguration();
 		configuration.file().blockSize(80);
+		configuration.common().objectClass(ConceptEntry.class).objectField("wordnetId").indexed(true);
 		server = Db4oClientServer.openServer(configuration, databasePath, 0);
+		
 	}
 
 	public ObjectContainer getClient() {
