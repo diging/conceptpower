@@ -154,6 +154,7 @@ public class ConceptEditController {
         conceptEntry.setSimilarTo(conceptEditBean.getSimilar());
         conceptEntry.setTypeId(conceptEditBean.getSelectedTypeId());
         conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
+        conceptEntry.setModifiedUser(principal.getName());
 
         String userId = usersManager.findUser(principal.getName()).getUsername();
         conceptEntry.setModified(userId);
