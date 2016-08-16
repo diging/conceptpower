@@ -123,8 +123,8 @@
 		</ol>
 		<sec:authorize access="isAuthenticated()">
 			<p class="alignright">
-				<i class="fa fa-user"></i>
-				<sec:authentication property="principal.username" />
+				<a href="<c:url value="/auth/profile" />"><i class="fa fa-user"></i>
+				<sec:authentication property="principal.username" /></a>
 			</p>
 		</sec:authorize>
 
