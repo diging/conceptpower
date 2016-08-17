@@ -19,34 +19,35 @@ import edu.asu.conceptpower.users.User;
 
 @Controller
 public class ChangePasswordController {
-    
+
     @Autowired
     private IUserManager userManager;
 
     @RequestMapping(value = "/auth/profile/password/change", method = RequestMethod.GET)
     public String showChangePassword(Model model, Principal principal) {
         model.addAttribute("passwordBean", new PasswordBean());
-        
+
         return "auth/profile/password";
     }
-    
+
     @RequestMapping(value = "/auth/profile/password/change", method = RequestMethod.POST)
-    public String changePassword(@Valid @ModelAttribute PasswordBean passwordBean, BindingResult results, Model model, Principal principal) {
+    public String changePassword(@Valid @ModelAttribute PasswordBean passwordBean, BindingResult results, Model model,
+            Principal principal) {
         if (results.hasErrors()) {
             passwordBean.setOldPassword("");
             return "auth/profile/password";
         }
-        
-        String oldPasswordEncrypt = BCrypt.hashpw(passwordBean.getOldPassword(), BCrypt.gensalt());
-        User user = userManager.getUser(principal.getName(), oldPasswordEncrypt);
-        if (user != null) {
+
+        User user = userManager.findUser(principal.getName());
+        if (user != null && BCrypt.checkpw(passwordBean.getOldPassword(), user.getPw())) {
             user.setPw(passwordBean.getPassword());
             userManager.storeModifiedPassword(user);
             return "redirect:/auth/profile";
         }
-        
+
         model.addAttribute("show_error_alert", true);
-        model.addAttribute("error_alert_msg", "Your password could not be changed. The old password you've entered was incorrect.");
+        model.addAttribute("error_alert_msg",
+                "Your password could not be changed. The old password you've entered was incorrect.");
         model.addAttribute("passwordBean", new PasswordBean());
         return "auth/profile/password";
     }
