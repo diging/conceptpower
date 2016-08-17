@@ -19,11 +19,11 @@
 	<table>
 		<tr>
 			<td>Username:</td>
-			<td><input type='text' name='j_username' value=''></td>
+			<td><input type='text' name='j_username' value='' class="form-control"></td>
 		</tr>
 		<tr>
 			<td>Password:</td>
-			<td><input type='password' name='j_password' /></td>
+			<td><input type='password' name='j_password' class="form-control" /></td>
 		</tr>
 		<tr>
 			<td></td>
