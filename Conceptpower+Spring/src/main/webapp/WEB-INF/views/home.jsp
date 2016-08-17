@@ -89,7 +89,7 @@ $(document).ready(function() {
 						$("#detailsequalto").text(details.equalto);
 						$("#detailssimilarto").text(details.similarto);
 						$("#detailscreator").text(details.creator);
-						$("#detailsdescription").text(details.description);
+						$("#detailsdescription").html(details.description);
 					}
 				});
 		});
@@ -227,7 +227,7 @@ function showFormProcessing() {
           <td align="justify"><font size="2"><c:out
                 value="${concept.entry.conceptList}"></c:out></font></td>
           <td align="justify"><c:out
-              value="${concept.entry.description}"></c:out></td>
+              value="${concept.description}"></c:out></td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
         </tr>

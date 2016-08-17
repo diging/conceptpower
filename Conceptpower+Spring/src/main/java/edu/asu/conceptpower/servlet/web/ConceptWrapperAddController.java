@@ -118,7 +118,7 @@ public class ConceptWrapperAddController {
         String[] wrappers = req.getParameter("wrapperids").split(Constants.CONCEPT_SEPARATOR);
 		if (wrappers.length > 0) {
 			ConceptEntry conceptEntry = new ConceptEntry();
-			conceptEntry.setWord(conceptManager.getConceptEntry(wrappers[0]).getWord());
+			conceptEntry.setWord(conceptManager.getConceptEntry(wrappers[0]).getWord().replace("_", " "));
 			conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
 			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
 			conceptEntry.setWordnetId(req.getParameter("wrapperids"));

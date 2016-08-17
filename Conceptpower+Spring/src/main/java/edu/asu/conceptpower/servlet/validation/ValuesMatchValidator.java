@@ -51,7 +51,7 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
 
         if (firstObj.equals("") || firstObj == null) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("This field cannot be empty").addNode(firstFieldName)
+            context.buildConstraintViolationWithTemplate("This field cannot be empty.").addNode(firstFieldName)
                     .addConstraintViolation();
             return false;
         }
@@ -65,7 +65,7 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
 
         if (secondObj.equals("") || secondObj == null) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("This field cannot be empty").addNode(secondFieldName)
+            context.buildConstraintViolationWithTemplate("This field cannot be empty.").addNode(secondFieldName)
                     .addConstraintViolation();
             return false;
         }
@@ -74,7 +74,7 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
 
         if (!matches) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Passwords do not match").addNode(secondFieldName)
+            context.buildConstraintViolationWithTemplate("Passwords do not match.").addNode(secondFieldName)
                     .addConstraintViolation();
         }
 

@@ -41,7 +41,6 @@ import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.profile.impl.ServiceBackBean;
 import edu.asu.conceptpower.servlet.profile.impl.ServiceRegistry;
 import edu.asu.conceptpower.servlet.web.backing.SearchResultBackBeanForm;
-import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
 
 /**
  * This class provides all the methods required for new concept creation
@@ -60,12 +59,6 @@ public class ConceptAddController {
 	
 	@Autowired
 	private IConceptListManager conceptListManager;
-
-	@Autowired
-	private ConceptListController conceptListController;
-
-	@Autowired
-	private IConceptWrapperCreator wrapperCreator;
 
 	@Autowired
 	private IConceptTypeManger conceptTypesManager;
