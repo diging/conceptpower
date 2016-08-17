@@ -106,5 +106,8 @@
 						class="btn btn-action btn-sm" />
 				</div>
 			</form>
+            <div class="pull-right">
+            <a href="<c:url value="/forgot" />">Forgot Password?</a>
+            </div>
 		</div></li>
 </sec:authorize>

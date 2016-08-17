@@ -32,7 +32,7 @@
 		<tr>
 			<td>Re-type new password:</td>
 			<td><form:input type="password" name="password" id="repassword"
-					path="retypedPassword" /></td>
+					path="retypedPassword" class="form-control"/></td>
 			<td><form:errors path="retypedPassword" cssClass="error"></form:errors></td>
 		</tr>
 		<tr>
