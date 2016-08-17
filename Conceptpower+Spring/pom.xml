@@ -28,6 +28,7 @@
 		<spring-security-version>3.2.8.RELEASE</spring-security-version>
 		<lucene.index>/Users/karthikeyanmohan/Software/Conceptpower/indexFiles</lucene.index>
 		<pullrequest></pullrequest>
+		<debug_level>debug</debug_level>
 	</properties>
 
 	<repositories>
