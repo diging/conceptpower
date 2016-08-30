@@ -21,8 +21,8 @@
 		var d = new Date(lastRun);
 		setDateTime(d.toLocaleString());
 	});
-	function setDateTime(tableId, rowId, colNum, newValue) {
-		$("#luceneTable tr td:last-child").html(d);
+	function setDateTime(lastRun) {
+		$("#luceneTable tr td:last-child").html(lastRun);
 	};
 </script>
 </head>
@@ -61,7 +61,7 @@
 							<td align="center" id="lastRun-1">${bean.lastRun}</td>
 						</tr>
 					</table>
-			<input type="hidden" id="lastRun" value="${bean.lastRun}" />
+				<input type="hidden" id="lastRun" value="${bean.lastRun}" />
 				</form:form>
 			</div>
 
@@ -85,16 +85,7 @@
 											url : "${pageContext.servletContext.contextPath}/auth/deleteIndex",
 											type : "POST",
 											success : function(result) {
-												var output = "<center><b>"
-														+ result.message
-														+ " </b> </center>";
-												$("#div1").html(output);
-												$('#indexCount')
-														.html(
-																result.indexedWordsCount);
-												$('#lastRun').html(
-														result.lastRun);
-												waitMeClose();
+												setIndexValues(result);
 											},
 											error : function(result) {
 												var output = "<font color=\"red\">"
@@ -114,17 +105,8 @@
 										.ajax({
 											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
 											type : "POST",
-											success : function(result) {
-												var output = "<center><b>"
-														+ result.message
-														+ " </b> </center>";
-												$("#div1").html(output);
-												$('#indexCount')
-														.html(
-																result.indexedWordsCount);
-												$('#lastRun').html(
-														result.lastRun);
-												waitMeClose();
+											success : function(result){
+												setIndexValues(result);
 											},
 											error : function(result) {
 												var output = "<font color=\"red\">"
@@ -152,6 +134,17 @@
 					}
 				});
 			}
+			
+			function setIndexValues(result) {
+				var output = "<center><b>" + result.message + " </b> </center>";
+				$("#div1").html(output);
+				$('#indexCount')
+						.html(result.indexedWordsCount);
+				$('#lastRun-1')
+						.html(result.lastRun);
+				waitMeClose();
+			}
+			
 		});
 	</script>
 </body>
