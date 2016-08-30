@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -384,7 +383,6 @@ public class ConceptManager implements IConceptManager {
 
 		String id = generateId(CONCEPT_PREFIX);
 		entry.setId(id);
-		indexService.insertConcept(entry);
 		client.store(entry, DBNames.DICTIONARY_DB);
 		if (entry.getWordnetId() != null) {
 		    String wordnetId = entry.getWordnetId();
@@ -432,21 +430,21 @@ public class ConceptManager implements IConceptManager {
     }
 
     /**
-     * This methods generates a new 6 character long id. Note that this method
+     * This methods generates a new 12 character long id. Note that this method
      * does not assure that the id isn't in use yet.
      * 
      * Adapted from
      * http://stackoverflow.com/questions/9543715/generating-human-readable
      * -usable-short-but-unique-ids
      * 
-     * @return 6 character id
+     * @return 12 character id
      */
     private String generateUniqueId() {
         char[] chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
 
         Random random = new Random();
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 12; i++) {
             builder.append(chars[random.nextInt(62)]);
         }
 
