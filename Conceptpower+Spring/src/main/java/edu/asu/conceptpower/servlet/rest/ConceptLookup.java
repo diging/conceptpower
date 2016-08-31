@@ -100,6 +100,8 @@ public class ConceptLookup {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (IllegalAccessException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IndexerRunningException ir) {
+            return new ResponseEntity<String>(ir.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<String>(rdfFactory.generateRDF(entries), HttpStatus.OK);
     }
