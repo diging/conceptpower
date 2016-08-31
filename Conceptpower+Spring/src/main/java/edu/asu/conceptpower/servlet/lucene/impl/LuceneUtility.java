@@ -17,11 +17,12 @@ import javax.annotation.PreDestroy;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -30,15 +31,17 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import edu.asu.conceptpower.root.DatabaseClient;
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.IndexingEvent;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.IndexingEvent;
+import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
@@ -66,6 +69,8 @@ import edu.mit.jwi.item.POS;
 @Component
 @PropertySource("classpath:config.properties")
 public class LuceneUtility implements ILuceneUtility {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private StandardAnalyzer whiteSpaceAnalyzer;
@@ -74,7 +79,7 @@ public class LuceneUtility implements ILuceneUtility {
     private WordNetConfiguration configuration;
 
     @Autowired
-    private DatabaseClient databaseClient;
+    private IConceptDBManager databaseClient;
 
     @Autowired
     @Qualifier("luceneDAO")
@@ -118,14 +123,11 @@ public class LuceneUtility implements ILuceneUtility {
      */
     public void deleteById(String id) throws LuceneException {
         try {
-            Query q = new QueryParser("id", whiteSpaceAnalyzer).parse("id:" + id);
-            writer.deleteDocuments(q);
+            writer.deleteDocuments(new Term(LuceneFieldNames.ID, id));
             writer.commit();
             reloadReader();
         } catch (IOException ex) {
             throw new LuceneException("Issues in deletion. Please retry", ex);
-        } catch (ParseException e) {
-            throw new LuceneException("Issues in framing queries", e);
         }
         luceneDAO.storeValues(-1, LuceneAction.DELETE);
     }
@@ -150,9 +152,10 @@ public class LuceneUtility implements ILuceneUtility {
                     if (searchFieldAnnotation.isIndexable()) {
                         doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
+                        
                     } else {
-                        doc.add(new StoredField(searchFieldAnnotation.lucenefieldName(),
-                                String.valueOf(contentOfField)));
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
+                                String.valueOf(contentOfField), Field.Store.YES));
                     }
                 }
             }
@@ -222,12 +225,18 @@ public class LuceneUtility implements ILuceneUtility {
             List<IWordID> wordIdds = indexWord.getWordIDs();
 
             for (IWordID wordId : wordIdds) {
-                Document doc = createIndividualDocument(dict, wordId);
-                try {
-                    numberOfIndexedWords++;
-                    writer.addDocument(doc);
-                } catch (IOException e) {
-                    numberOfUnIndexedWords++;
+                IWord word = dict.getWord(wordId);
+                List<ConceptEntry> entries = databaseClient.getConceptByWordnetId(word.getID().toString());
+                if (entries != null && !entries.isEmpty()) {
+                    logger.debug("Found concept for " + wordId.toString());
+                } else {
+                    Document doc = createIndividualDocument(dict, wordId);
+                    try {
+                        numberOfIndexedWords++;
+                        writer.addDocument(doc);
+                    } catch (IOException e) {
+                        numberOfUnIndexedWords++;
+                    }
                 }
             }
         }
@@ -237,13 +246,14 @@ public class LuceneUtility implements ILuceneUtility {
 
     private Document createIndividualDocument(IDictionary dict, IWordID wordId) {
         Document doc = new Document();
-        doc.add(new TextField(LuceneFieldNames.WORD, wordId.getLemma(), Field.Store.YES));
-        doc.add(new TextField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
+        String lemma = wordId.getLemma().replace("_", " ");
+        doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
         doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
-        doc.add(new TextField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
-        doc.add(new TextField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
 
         ISynset synset = word.getSynset();
         List<IWord> synonyms = synset.getWords();
@@ -255,7 +265,7 @@ public class LuceneUtility implements ILuceneUtility {
         doc.add(new TextField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
         // Adding this new data to delete only wordnet concepts while
         // adding all wordnet concepts from jwi.
-        doc.add(new TextField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
         return doc;
     }
 
@@ -296,10 +306,7 @@ public class LuceneUtility implements ILuceneUtility {
 
         String wnhome = configuration.getWordnetPath();
         String path = wnhome + File.separator + configuration.getDictFolder();
-        int[] numberOfWord;
-        int numberOfUnIndexedWords = 0;
-        int numberOfIndexedWords = 0;
-
+        
         URL url;
         try {
             url = new URL("file", null, path);
@@ -316,10 +323,10 @@ public class LuceneUtility implements ILuceneUtility {
 
         // 2. Adding data into
         Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
-        numberOfWord = createDocuments(iterator, dict, writer);
+        int[] numberOfWord = createDocuments(iterator, dict, writer);
 
-        numberOfIndexedWords = numberOfWord[0];
-        numberOfUnIndexedWords = numberOfWord[1];
+        int numberOfIndexedWords = numberOfWord[0];
+        int numberOfUnIndexedWords = numberOfWord[1];
 
         iterator = dict.getIndexWordIterator(POS.ADVERB);
         numberOfWord = createDocuments(iterator, dict, writer);
@@ -390,26 +397,48 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
-                StringBuffer searchBuffer = new StringBuffer("(+");
-                
+
                 if(searchString != null){
                     if (firstEntry != 1)
                         queryString.append(" " + operator + " ");
                     firstEntry++;
                     queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
-                    searchString = searchString.split(" ")[0];
-                    searchBuffer.append(searchString);
+
+                    StringBuffer searchBuffer = new StringBuffer("(");
+                    String[] searchParts = searchString.split(" ");
+                    
+                    boolean quoteOpen = false;
+                    for (String term : searchParts) {
+                        if (!quoteOpen && !term.trim().isEmpty()) {
+                            searchBuffer.append("+");
+                        }
+                        
+                        searchBuffer.append(term + " ");
+                        
+                        if (term.startsWith("\"")) {
+                            quoteOpen = true;
+                        }
+                        
+                        if (term.endsWith("\"")) {
+                            quoteOpen = false;
+                        }
+                    }
+                    
+                    if (quoteOpen) {
+                        int idxLastQuote = searchBuffer.lastIndexOf("\"");
+                        searchBuffer.replace(idxLastQuote, idxLastQuote+1, "");
+                    }
                     searchBuffer.append(")");
                     queryString.append(searchBuffer.toString());
                 }
-                
+
             }
         }
 
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
         try {
-            
+
             Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
             TopDocs docs = searcher.search(q, numberOfResults);
             ScoreDoc[] hits = docs.scoreDocs;
@@ -429,7 +458,7 @@ public class LuceneUtility implements ILuceneUtility {
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
     }
-    
+
     /**
      * This method reloads the reader after every update to the index
      * 

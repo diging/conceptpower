@@ -12,7 +12,7 @@
 	
 	<!-- Application Loggers -->
 	<logger name="edu.asu.conceptpower">
-		<level value="info" />
+		<level value="${debug_level}" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->

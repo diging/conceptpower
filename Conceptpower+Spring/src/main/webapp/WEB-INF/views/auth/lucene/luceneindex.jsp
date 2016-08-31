@@ -69,7 +69,6 @@
 
 	</div>
 
-	<script src="http://cdn.jsdelivr.net/jquery/3.0.0-beta1/jquery.min.js"></script>
 	<script
 		src="${pageContext.servletContext.contextPath}/resources/js/waitMe.js"></script>
 

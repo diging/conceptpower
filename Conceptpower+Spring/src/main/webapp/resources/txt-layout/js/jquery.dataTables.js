@@ -2693,6 +2693,8 @@
 		{
 			oSettings._bInitComplete = true;
 			_fnCallbackFire( oSettings, 'aoInitComplete', 'init', [oSettings, json] );
+			$(".dataTables_length select").addClass("form-control");
+			$(".dataTables_filter input").addClass("form-control");
 		}
 		
 		

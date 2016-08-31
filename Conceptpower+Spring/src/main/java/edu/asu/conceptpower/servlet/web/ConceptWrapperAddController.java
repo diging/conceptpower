@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptList;
-import edu.asu.conceptpower.servlet.core.ConceptType;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
@@ -118,7 +118,7 @@ public class ConceptWrapperAddController {
         String[] wrappers = req.getParameter("wrapperids").split(Constants.CONCEPT_SEPARATOR);
 		if (wrappers.length > 0) {
 			ConceptEntry conceptEntry = new ConceptEntry();
-			conceptEntry.setWord(conceptManager.getConceptEntry(wrappers[0]).getWord());
+			conceptEntry.setWord(conceptManager.getConceptEntry(wrappers[0]).getWord().replace("_", " "));
 			conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
 			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
 			conceptEntry.setWordnetId(req.getParameter("wrapperids"));

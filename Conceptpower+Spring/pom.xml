@@ -19,14 +19,16 @@
 		<db.files.path>/Users/jdamerow/Software/Conceptpower/db_files</db.files.path>
 		<email.username></email.username>
 		<email.password></email.password>
-		<email.server.port>25</email.server.port>
-		<email.server.host>http://example.net/</email.server.host>
+		<email.server.port></email.server.port>
+		<email.server.host></email.server.host>
+		<email.from></email.from>
 		<admin.username>admin</admin.username>
 		<admin.password>admin</admin.password>
 		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
 		<spring-security-version>3.2.8.RELEASE</spring-security-version>
 		<lucene.index>/Users/karthikeyanmohan/Software/Conceptpower/indexFiles</lucene.index>
 		<pullrequest></pullrequest>
+		<debug_level>debug</debug_level>
 	</properties>
 
 	<repositories>
@@ -503,8 +505,15 @@
 		<artifactId>jackson-core</artifactId>
 		<version>2.1.0</version>
 	</dependency>
-
-	</dependencies>
+	
+	<!-- Apache Jena for RDF -->
+	<dependency>
+		<groupId>org.apache.jena</groupId>
+		<artifactId>apache-jena-libs</artifactId>
+		<type>pom</type>
+		<version>3.0.1</version>
+	</dependency>
+	</dependencies> 
 
 	<scm>
 		<connection>scm:svn:http://none</connection>

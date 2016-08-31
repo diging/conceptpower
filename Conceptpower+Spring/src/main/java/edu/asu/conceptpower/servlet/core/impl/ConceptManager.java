@@ -12,8 +12,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptList;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.db4o.DBNames;
@@ -57,7 +57,7 @@ public class ConceptManager implements IConceptManager {
      * String)
      */
     @Override
-    public ConceptEntry getConceptEntry(String id) throws LuceneException {
+    public ConceptEntry getConceptEntry(String id) {
         ConceptEntry entry = client.getEntry(id);
         if (entry != null) {
             fillConceptEntry(entry);
@@ -82,7 +82,7 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public ConceptEntry getWordnetConceptEntry(String wordnetId) throws LuceneException {
-        ConceptEntry entry = getConceptEntry(wordnetId);
+        ConceptEntry entry = wordnetManager.getConcept(wordnetId);
         return entry;
     }
 
@@ -116,7 +116,7 @@ public class ConceptManager implements IConceptManager {
      *            The concept entry that should be filled with the synonym ids
      *            of wrapped wordnet concepts.
      */
-    protected void fillConceptEntry(ConceptEntry entry) throws LuceneException {
+    protected void fillConceptEntry(ConceptEntry entry) {
         if (entry.getId() != null && entry.getWordnetId() != null && !entry.getId().equals(entry.getWordnetId())) {
             // generate the synonym ids
             StringBuffer sb = new StringBuffer();
@@ -381,11 +381,18 @@ public class ConceptManager implements IConceptManager {
 			throw new DictionaryModifyException();
 		}
 
-		indexService.insertConcept(entry);
 		String id = generateId(CONCEPT_PREFIX);
 		entry.setId(id);
 		client.store(entry, DBNames.DICTIONARY_DB);
-		return id;
+		if (entry.getWordnetId() != null) {
+		    String wordnetId = entry.getWordnetId();
+		    if (wordnetId.endsWith(",")) {
+		        wordnetId = wordnetId.substring(0, wordnetId.length()-1);
+		    }
+		    indexService.deleteById(wordnetId);
+		}
+		indexService.insertConcept(entry);
+        return id;
 
 	}
     
@@ -401,8 +408,9 @@ public class ConceptManager implements IConceptManager {
 	public void storeModifiedConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException, IndexerRunningException {
 		String modified = entry.getModified() != null ? entry.getModified() : "";
 		if (!modified.trim().isEmpty())
-			modified += ", ";
+			modified += ", ";		
 		entry.setModified(modified + entry.getModifiedUser() + "@" + (new Date()).toString());
+		
 		indexService.deleteById(entry.getId());
 		indexService.insertConcept(entry);
 		client.update(entry, DBNames.DICTIONARY_DB);

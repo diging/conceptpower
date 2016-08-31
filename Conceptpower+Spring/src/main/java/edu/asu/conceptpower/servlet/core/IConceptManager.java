@@ -3,6 +3,7 @@ package edu.asu.conceptpower.servlet.core;
 import java.util.List;
 import java.util.Map;
 
+import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;

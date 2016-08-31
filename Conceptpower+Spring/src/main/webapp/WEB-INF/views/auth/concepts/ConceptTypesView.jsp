@@ -5,6 +5,14 @@
 <%@ page session="false"%>
 
 
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/js/datatable/css/jquery.dataTables.css" />
+
+<script type="text/javascript" charset="utf-8"
+	src="${pageContext.servletContext.contextPath}/resources/js/datatable/js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8"
+	src="${pageContext.servletContext.contextPath}/resources/js/datatable/js/jquery.dataTables.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#conceptTypes').dataTable({
@@ -28,7 +36,7 @@
 <br />
 <a
 	href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype"><i
-	class="fa fa-plus-circle"> Add New Type</i></a>
+	class="fa fa-plus-circle"></i> Add New Type</a>
 
 <br />
 <br />

@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import edu.asu.conceptpower.root.UserService;
 import edu.asu.conceptpower.servlet.users.IUserManager;
-import edu.asu.conceptpower.servlet.users.User;
 
 public class UserServiceTest {
 

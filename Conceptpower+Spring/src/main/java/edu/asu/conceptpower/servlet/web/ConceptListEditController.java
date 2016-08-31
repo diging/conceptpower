@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptList;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IIndexService;
@@ -51,7 +51,7 @@ public class ConceptListEditController {
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
     
-    @Value("#{messages['INDEXER_STATUS']}")
+    @Value("#{messages['INDEXERSTATUS']}")
     private String indexerStatus;
 
     @InitBinder

@@ -2,8 +2,10 @@ package edu.asu.conceptpower.servlet.db4o;
 
 import java.util.List;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptList;
+import com.db4o.ObjectSet;
+
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
 
 public interface IConceptDBManager {
 
@@ -40,5 +42,7 @@ public interface IConceptDBManager {
 
 	public abstract void update(ConceptList list, String listname,
 			String databasename);
+
+    List<ConceptEntry> getConceptByWordnetId(String wordnetId);
 
 }

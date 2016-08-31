@@ -1,9 +1,8 @@
 package edu.asu.conceptpower.servlet.users;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
+import edu.asu.conceptpower.users.User;
 
 public interface IUserManager {
 

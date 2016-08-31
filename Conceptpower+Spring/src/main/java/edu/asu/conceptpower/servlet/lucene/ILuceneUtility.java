@@ -2,7 +2,7 @@ package edu.asu.conceptpower.servlet.lucene;
 
 import java.util.Map;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 
 public interface ILuceneUtility {
