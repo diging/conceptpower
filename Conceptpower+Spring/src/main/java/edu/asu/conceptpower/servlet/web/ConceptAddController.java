@@ -17,29 +17,30 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptList;
-import edu.asu.conceptpower.servlet.core.ConceptType;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
+import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.profile.impl.ServiceBackBean;
 import edu.asu.conceptpower.servlet.profile.impl.ServiceRegistry;
 import edu.asu.conceptpower.servlet.web.backing.SearchResultBackBeanForm;
-import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
 
 /**
  * This class provides all the methods required for new concept creation
@@ -60,16 +61,16 @@ public class ConceptAddController {
 	private IConceptListManager conceptListManager;
 
 	@Autowired
-	private ConceptListController conceptListController;
-
-	@Autowired
-	private IConceptWrapperCreator wrapperCreator;
-
-	@Autowired
 	private IConceptTypeManger conceptTypesManager;
 
 	@Autowired
 	private ServiceRegistry serviceRegistry;
+	
+	@Autowired
+	private IIndexService indexService;
+	
+	@Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
 
 	/**
 	 * This method provides initial types and list model elements
@@ -119,9 +120,10 @@ public class ConceptAddController {
 	 * @throws DictionaryModifyException 
 	 * @throws DictionaryDoesNotExistException 
 	 * @throws IllegalAccessException 
+	 * @throws IndexerRunningException 
 	 */
 	@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
-    public String addConcept(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException, DictionaryDoesNotExistException, DictionaryModifyException, IllegalAccessException {
+    public String addConcept(HttpServletRequest req, Principal principal, ModelMap model) throws LuceneException, DictionaryDoesNotExistException, DictionaryModifyException, IllegalAccessException, IndexerRunningException {
 
         ConceptEntry conceptEntry = new ConceptEntry();
         conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
@@ -133,6 +135,13 @@ public class ConceptAddController {
         conceptEntry.setSimilarTo(req.getParameter("similar"));
         conceptEntry.setTypeId(req.getParameter("types"));
         conceptEntry.setCreatorId(principal.getName());
+        
+        //Checking if indexer is already running.
+        if(indexService.isIndexerRunning()){
+            model.addAttribute("show_error_alert", true);
+            model.addAttribute("error_alert_msg", indexerRunning);
+        	return "forward:/auth/conceptlist/addconcept";
+        }
         conceptManager.addConceptListEntry(conceptEntry);
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
     }
@@ -149,7 +158,11 @@ public class ConceptAddController {
     public @ResponseBody ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname,
             @RequestParam("addedsynonym") String addedSynonnym) throws LuceneException, IllegalAccessException {
         ConceptEntry[] entries = null;
+        try {
             entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
+        } catch (IndexerRunningException e1) {
+            return new ResponseEntity<String>(e1.getMessage(), HttpStatus.CONFLICT);
+        }
         List<String> addedSynonymList = Arrays.asList(addedSynonnym.replaceAll("\\s", "").split(","));
         // Removing existing synonym from the entries.
         int i = 0;
@@ -174,8 +187,6 @@ public class ConceptAddController {
             logger.error("Couldn't parse results.", e);
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        // return entries;
     }
 
     /**
@@ -192,7 +203,11 @@ public class ConceptAddController {
         if (conceptname.isEmpty())
             return null;
         ConceptEntry[] entries = null;
-        entries = conceptManager.getConceptListEntriesForWord(conceptname.trim());
+        try {
+            entries = conceptManager.getConceptListEntriesForWord(conceptname.trim());
+        } catch (IndexerRunningException e1) {
+            return new ResponseEntity<String>(e1.getMessage(),HttpStatus.CONFLICT);
+        }
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer();
         try {

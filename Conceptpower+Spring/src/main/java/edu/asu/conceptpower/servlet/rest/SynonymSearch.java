@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
@@ -74,7 +75,7 @@ public class SynonymSearch {
 		
         ConceptEntry[] synonyms = null;
         try {
-            dictManager.getSynonymsForConcept(wordnetId);
+            synonyms = dictManager.getSynonymsForConcept(wordnetId);
         } catch (LuceneException ex) {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -92,6 +93,9 @@ public class SynonymSearch {
 			xmlEntries = msg.appendEntries(entryMap);
 		}
 
-		return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
+		HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+        
+        return new ResponseEntity<String>(msg.getXML(xmlEntries), responseHeaders, HttpStatus.OK);
 	}
 }

@@ -11,9 +11,9 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
 import edu.asu.conceptpower.servlet.users.IUserManager;
-import edu.asu.conceptpower.servlet.users.User;
 import edu.asu.conceptpower.servlet.validation.UserValidator;
 import edu.asu.conceptpower.servlet.web.backing.UserBacking;
+import edu.asu.conceptpower.users.User;
 import junit.framework.Assert;
 
 public class UserValidatorTest {

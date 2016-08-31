@@ -32,7 +32,7 @@
 		<div id="page_content">
 			<div class="containerBlock">
 				<form:form
-					action="${pageContext.servletContext.contextPath}/auth/indexLuceneWordNet"
+					action="${pageContext.servletContext.contextPath}/auth/indexConcepts"
 					method='post' id="indexLucene">
 					<div id="div1"></div>
 					<table style="vertical-align: top">
@@ -69,7 +69,6 @@
 
 	</div>
 
-	<script src="http://cdn.jsdelivr.net/jquery/3.0.0-beta1/jquery.min.js"></script>
 	<script
 		src="${pageContext.servletContext.contextPath}/resources/js/waitMe.js"></script>
 
@@ -83,7 +82,7 @@
 								run_waitMe(current_effect);
 								$
 										.ajax({
-											url : "${pageContext.servletContext.contextPath}/auth/deleteConcepts",
+											url : "${pageContext.servletContext.contextPath}/auth/deleteIndex",
 											type : "POST",
 											success : function(result) {
 												var output = "<center><b>"
@@ -113,7 +112,7 @@
 								run_waitMe(current_effect);
 								$
 										.ajax({
-											url : "${pageContext.servletContext.contextPath}/auth/indexLuceneWordNet",
+											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
 											type : "POST",
 											success : function(result) {
 												var output = "<center><b>"

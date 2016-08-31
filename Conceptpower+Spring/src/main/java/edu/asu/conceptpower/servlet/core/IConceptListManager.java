@@ -2,6 +2,7 @@ package edu.asu.conceptpower.servlet.core;
 
 import java.util.List;
 
+import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryExistsException;
 
 public interface IConceptListManager {

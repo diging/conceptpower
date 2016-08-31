@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.core.IIndexService;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.validation.ConceptSearchValidator;
 import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
@@ -40,6 +43,15 @@ public class ConceptSearchController {
 
     @Autowired
     private ConceptSearchValidator validator;
+    
+    @Autowired
+    private IIndexService indexService;
+    
+    @Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
+    
+    @Value("#{messages['INDEXERSTATUS']}")
+    private String indexerStatus;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
@@ -64,8 +76,22 @@ public class ConceptSearchController {
             return "conceptsearch";
         }
         List<ConceptEntryWrapper> foundConcepts = null;
-        ConceptEntry[] found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
-                conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
+        ConceptEntry[] found = null;
+        
+        if (indexService.isIndexerRunning()) {
+            model.addAttribute("show_error_alert", true);
+            model.addAttribute("error_alert_msg", indexerRunning);
+            // Need to include command Object
+            return "conceptsearch";
+        }
+        
+        try {
+            found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
+                    conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
+        } catch (IndexerRunningException e) {
+            model.addAttribute(indexerStatus, e.getMessage());
+            return "conceptsearch";
+        }
         foundConcepts = wrapperCreator.createWrappers(found);
         conceptSearchBean.setFoundConcepts(foundConcepts);
         if (CollectionUtils.isEmpty(foundConcepts)) {

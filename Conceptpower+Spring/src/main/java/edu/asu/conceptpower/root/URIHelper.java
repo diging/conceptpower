@@ -3,8 +3,8 @@ package edu.asu.conceptpower.root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptType;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.servlet.xml.XMLConstants;
 
 /**

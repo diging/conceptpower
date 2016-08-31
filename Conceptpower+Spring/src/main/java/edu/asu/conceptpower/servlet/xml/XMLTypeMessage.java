@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.URIHelper;
-import edu.asu.conceptpower.servlet.core.ConceptType;
 
 /**
  * This class is used to create XML responses for
@@ -43,21 +43,21 @@ public class XMLTypeMessage extends AXMLMessage {
 		}
 		sb.append(">");
 		if (type != null)
-			sb.append(StringEscapeUtils.escapeXml(type.getTypeName()));
+			sb.append(StringEscapeUtils.escapeXml10(type.getTypeName()));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.TYPE + ">");
 
 		// type description
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.DESCRIPTION + ">");
-		sb.append(StringEscapeUtils.escapeXml(type.getDescription()));
+		sb.append(StringEscapeUtils.escapeXml10(type.getDescription()));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.DESCRIPTION + ">");
 
 		// creator id
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.CREATOR_ID + ">");
-		sb.append(StringEscapeUtils.escapeXml(type.getCreatorId() != null ? type
+		sb.append(StringEscapeUtils.escapeXml10(type.getCreatorId() != null ? type
 				.getCreatorId().trim() : ""));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.CREATOR_ID + ">");
@@ -65,7 +65,7 @@ public class XMLTypeMessage extends AXMLMessage {
 		// matches
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.MATCHES + ">");
-		sb.append(StringEscapeUtils.escapeXml(type.getMatches() != null ? type
+		sb.append(StringEscapeUtils.escapeXml10(type.getMatches() != null ? type
 				.getMatches().trim() : ""));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.MATCHES + ">");
@@ -73,7 +73,7 @@ public class XMLTypeMessage extends AXMLMessage {
 		// modified by
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.MODIFIED_BY + ">");
-		sb.append(StringEscapeUtils.escapeXml(type.getModified() != null ? type
+		sb.append(StringEscapeUtils.escapeXml10(type.getModified() != null ? type
 				.getModified().trim() : ""));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.MODIFIED_BY + ">");
@@ -89,7 +89,7 @@ public class XMLTypeMessage extends AXMLMessage {
 					+ uriCreator.getTypeURI(supertype) + "\"");
 
 			sb.append(">");
-			sb.append(StringEscapeUtils.escapeXml(supertype.getTypeName()));
+			sb.append(StringEscapeUtils.escapeXml10(supertype.getTypeName()));
 			sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 					+ XMLConstants.SUPERTYPE + ">");
 		}

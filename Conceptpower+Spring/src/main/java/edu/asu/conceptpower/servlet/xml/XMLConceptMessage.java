@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.URIHelper;
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptList;
-import edu.asu.conceptpower.servlet.core.ConceptType;
 
 /**
  * This class is used to build XML messages that are sent
@@ -56,7 +56,7 @@ public class XMLConceptMessage extends AXMLMessage {
 		// lemma
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.LEMMA + ">");
-		sb.append(StringEscapeUtils.escapeXml(entry.getWord()));
+		sb.append(StringEscapeUtils.escapeXml10(entry.getWord()));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.LEMMA + ">");
 
@@ -70,21 +70,21 @@ public class XMLConceptMessage extends AXMLMessage {
 		// description
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.DESCRIPTION + ">");
-		sb.append(StringEscapeUtils.escapeXml(entry.getDescription()));
+		sb.append(StringEscapeUtils.escapeXml10(entry.getDescription()));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.DESCRIPTION + ">");
 
 		// concept list
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.CONCEPT_LIST + ">");
-		sb.append(StringEscapeUtils.escapeXml(entry.getConceptList()));
+		sb.append(StringEscapeUtils.escapeXml10(entry.getConceptList()));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.CONCEPT_LIST + ">");
 
 		// creator id
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.CREATOR_ID + ">");
-		sb.append(StringEscapeUtils.escapeXml(entry.getCreatorId() != null ? entry
+		sb.append(StringEscapeUtils.escapeXml10(entry.getCreatorId() != null ? entry
 				.getCreatorId().trim() : ""));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.CREATOR_ID + ">");
@@ -92,7 +92,7 @@ public class XMLConceptMessage extends AXMLMessage {
 		// equal to
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.EQUAL_TO + ">");
-		sb.append(StringEscapeUtils.escapeXml(entry.getEqualTo() != null ? entry
+		sb.append(StringEscapeUtils.escapeXml10(entry.getEqualTo() != null ? entry
 				.getEqualTo().trim() : ""));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.EQUAL_TO + ">");
@@ -100,7 +100,7 @@ public class XMLConceptMessage extends AXMLMessage {
 		// modified by
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.MODIFIED_BY + ">");
-		sb.append(StringEscapeUtils.escapeXml(entry.getModified() != null ? entry
+		sb.append(StringEscapeUtils.escapeXml10(entry.getModified() != null ? entry
 				.getModified().trim() : ""));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.MODIFIED_BY + ">");
@@ -108,7 +108,7 @@ public class XMLConceptMessage extends AXMLMessage {
 		// similar to
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.SIMILAR_TO + ">");
-		sb.append(StringEscapeUtils.escapeXml(entry.getSimilarTo() != null ? entry
+		sb.append(StringEscapeUtils.escapeXml10(entry.getSimilarTo() != null ? entry
 				.getSimilarTo().trim() : ""));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.SIMILAR_TO + ">");
@@ -116,7 +116,7 @@ public class XMLConceptMessage extends AXMLMessage {
 		// synonym ids
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.SYNONYM_IDS + ">");
-		sb.append(StringEscapeUtils.escapeXml(entry.getSynonymIds() != null ? entry
+		sb.append(StringEscapeUtils.escapeXml10(entry.getSynonymIds() != null ? entry
 				.getSynonymIds().trim() : ""));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.SYNONYM_IDS + ">");
@@ -132,7 +132,7 @@ public class XMLConceptMessage extends AXMLMessage {
 		}
 		sb.append(">");
 		if (type != null)
-			sb.append(StringEscapeUtils.escapeXml(type.getTypeName()));
+			sb.append(StringEscapeUtils.escapeXml10(type.getTypeName()));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.TYPE + ">");
 
@@ -146,7 +146,7 @@ public class XMLConceptMessage extends AXMLMessage {
 		// wordnet id
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.WORDNET_ID + ">");
-		sb.append(StringEscapeUtils.escapeXml(entry.getWordnetId() != null ? entry
+		sb.append(StringEscapeUtils.escapeXml10(entry.getWordnetId() != null ? entry
 				.getWordnetId().trim() : ""));
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.WORDNET_ID + ">");

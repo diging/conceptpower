@@ -12,9 +12,9 @@ import org.apache.jena.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.root.URIHelper;
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
 
 @Component
 public class RDFMessageFactory {

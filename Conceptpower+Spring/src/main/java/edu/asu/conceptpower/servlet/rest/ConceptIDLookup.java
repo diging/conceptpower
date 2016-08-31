@@ -8,16 +8,18 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
@@ -52,7 +54,7 @@ public class ConceptIDLookup {
 	 *            Holds the HTTP request information
 	 * @return XML containing concept information
 	 */
-	@RequestMapping(value = "rest/Concept", method = RequestMethod.GET, produces = "application/xml")
+	@RequestMapping(value = "rest/Concept", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE + "; charset=utf-8")
     public @ResponseBody ResponseEntity<String> getConceptById(HttpServletRequest req) {
 
         String id = req.getParameter("id");
@@ -90,7 +92,7 @@ public class ConceptIDLookup {
             entryMap.put(entry, type);
             xmlEntries = msg.appendEntries(entryMap);
         }
-
+        
         return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
     }
 }

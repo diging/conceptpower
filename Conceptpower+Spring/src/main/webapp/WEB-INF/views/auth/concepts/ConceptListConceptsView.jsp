@@ -32,6 +32,8 @@
 				conceptid : conceptid
 			},
 			success : function(details) {
+				details = $.parseJSON(details);
+				$("#conceptTerm").text(details.name);
 				$("#detailsid").text(details.id);
 				$("#detailsuri").text(details.uri);
 				$("#detailswordnetid").text(details.wordnetId);
@@ -55,11 +57,12 @@
 	list.</p>
 	
 	<font color="red">${luceneError }</font>
+	<font color="red">${IndexerStatus}</font>
 
 <h2>Concepts</h2>
 <c:if test="${not empty result}">
 	<table cellpadding="0" cellspacing="0"
-		class="table-striped table-bordered" id="conceptList">
+		class="table table-striped table-bordered" id="conceptList">
 		<thead>
 			<tr>
 				<th></th>

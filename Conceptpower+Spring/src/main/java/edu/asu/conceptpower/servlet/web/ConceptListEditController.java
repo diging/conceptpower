@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptList;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.core.IIndexService;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.validation.ConceptListAddValidator;
 
@@ -41,6 +44,15 @@ public class ConceptListEditController {
 
     @Autowired
     private ConceptListAddValidator validator;
+    
+    @Autowired
+    private IIndexService indexService;
+    
+    @Value("#{messages['INDEXER_RUNNING']}")
+    private String indexerRunning;
+    
+    @Value("#{messages['INDEXERSTATUS']}")
+    private String indexerStatus;
 
     @InitBinder
     protected void initBinder(WebDataBinder validateBinder) {
@@ -76,12 +88,13 @@ public class ConceptListEditController {
      *            holds HTTP request information
      * @return Returns a string value to redirect user to concept list page
      * @throws IllegalAccessException 
+     * @throws IndexerRunningException 
      */
     @RequestMapping(value = "auth/conceptlist/storeeditlist", method = RequestMethod.POST)
     public String editList(HttpServletRequest req,
             @Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
-            BindingResult result, ModelMap model) throws LuceneException, IllegalAccessException {
-
+			BindingResult result, ModelMap model)
+                    throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (result.hasErrors()) {
             return "/auth/conceptlist/editlist";
         }
@@ -89,6 +102,13 @@ public class ConceptListEditController {
         ConceptList list = conceptListManager.getConceptList(conceptListAddForm.getOldListName());
         list.setConceptListName(conceptListAddForm.getListName());
         list.setDescription(conceptListAddForm.getDescription());
+
+        if (indexService.isIndexerRunning()) {
+            model.addAttribute("show_error_alert", true);
+            model.addAttribute("error_alert_msg", indexerRunning);
+            // Need to include command Object
+            return "/auth/conceptlist/editlist";
+        }
 
         conceptListManager.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
 
@@ -101,6 +121,7 @@ public class ConceptListEditController {
             ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
             conceptEntry.setConceptList(list.getConceptListName());
             conceptManager.storeModifiedConcept(conceptEntry);
+            model.addAttribute(indexerStatus, indexerRunning);
         }
         return "redirect:/auth/conceptlist";
     }

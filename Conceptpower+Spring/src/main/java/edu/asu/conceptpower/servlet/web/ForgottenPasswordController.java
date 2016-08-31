@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.servlet.service.IEmailService;
 import edu.asu.conceptpower.servlet.users.IUserManager;
 import edu.asu.conceptpower.servlet.users.Token;
-import edu.asu.conceptpower.servlet.users.User;
 import edu.asu.conceptpower.servlet.web.backing.EmailBackBean;
 import edu.asu.conceptpower.servlet.web.backing.UserBacking;
+import edu.asu.conceptpower.users.User;
 
 /**
  * 

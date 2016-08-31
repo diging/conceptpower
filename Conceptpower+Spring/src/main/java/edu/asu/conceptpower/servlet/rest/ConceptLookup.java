@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
-import edu.asu.conceptpower.servlet.core.ConceptEntry;
-import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.rdf.RDFMessageFactory;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
@@ -66,7 +67,10 @@ public class ConceptLookup {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch(IndexerRunningException ie){
+            return new ResponseEntity<String>(ie.getMessage(), HttpStatus.OK);
         }
+        
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
         for (ConceptEntry entry : entries) {

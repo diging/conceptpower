@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
-import edu.asu.conceptpower.servlet.core.ConceptType;
 import edu.asu.conceptpower.servlet.xml.XMLConstants;
 import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
 import edu.asu.conceptpower.servlet.xml.XMLTypeMessage;
@@ -83,6 +84,9 @@ public class TypeIdLookup {
 		}
 		
 
-		return new ResponseEntity<String>(msg.getXML(xmlEntry), HttpStatus.OK);
+		HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+        
+        return new ResponseEntity<String>(msg.getXML(xmlEntry), responseHeaders, HttpStatus.OK);
 	}
 }

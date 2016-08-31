@@ -268,7 +268,15 @@
 													.fnClearTable();
 											$('#synonymstable').dataTable()
 													.fnAddData(data);
-
+										},
+										error : function(httpStatus, response){
+											if(httpStatus.status == 409){
+												var errorMessage = "<i class=\"fa fa-exclamation-triangle\">"+httpStatus.responseText+"</i>";
+												$("#synonymModal").dialog("close");
+												$('#synonymModal').modal('toggle');
+												$('#errorMessage').show();
+												$('#error_alert_msg').html(errorMessage);
+											}
 										}
 									});
 						});
@@ -355,6 +363,7 @@
 </c:if>
 
 <h2>1. Search for Wordnet concept</h2>
+<center><font color="red">${IndexerStatus}</font></center>
 
 <form
 	action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper/conceptsearch"
@@ -458,7 +467,7 @@
 		<tr>
 			<td>Synonyms</td>
 			<td><div id="addedSynonyms"></div></td>
-			<td><input type="button" name="synonym" id="addsynonym"
+			<td width="50"><input type="button" name="synonym" id="addsynonym"
 				data-toggle="modal" data-target="#synonymModal" value="Add Synonym"
 				class="btn btn-primary"></td>
 		</tr>

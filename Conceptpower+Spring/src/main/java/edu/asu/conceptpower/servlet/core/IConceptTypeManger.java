@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.servlet.core;
 
+import edu.asu.conceptpower.core.ConceptType;
+
 /**
  * This class is the manager class for concept types. It provides methods
  * for adding, updating, deleting, and retrieving concepts.
@@ -15,6 +17,12 @@ public interface IConceptTypeManger {
 
 	public ConceptType[] getAllTypes();
 
+	/**
+     * This method retrieves a type by the provided type ID. Returns null if there
+     * is not such type.
+     * @param id ID of the type to be retrieved.
+     * @return The corresponding type or null if there is no type for th ID.
+     */
 	public ConceptType getType(String id);
 
 	public void deleteType(String id);

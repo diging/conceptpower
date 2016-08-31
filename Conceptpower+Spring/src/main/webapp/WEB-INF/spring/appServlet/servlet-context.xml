@@ -60,7 +60,7 @@
 	<!-- You can have some pre-configured messagess also which are ready to 
 		send -->
 	<beans:bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
-		<beans:property name="from" value="email"></beans:property>
+		<beans:property name="from" value="${email.from}"></beans:property>
 	</beans:bean>
 
 	<beans:bean id="analyzer"

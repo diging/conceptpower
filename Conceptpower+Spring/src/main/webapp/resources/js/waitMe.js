@@ -5,7 +5,7 @@ Github: https://github.com/vadimsva/waitMe
 */
 (function($) {
   $.fn.waitMe = function(method) {
-	  console.log("Inside wait meee");
+
     return this.each(function() {
 
       var elem = $(this),
@@ -213,7 +213,6 @@ Github: https://github.com/vadimsva/waitMe
 							}
 						}
 					};
-					console.log("Inside init");
 					return elemObj;
         },
         hide : function() {

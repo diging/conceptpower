@@ -3,9 +3,11 @@ package edu.asu.conceptpower.servlet.core;
 import java.util.List;
 import java.util.Map;
 
+import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 
 public interface IConceptManager {
@@ -41,7 +43,7 @@ public interface IConceptManager {
 	 * @return matching concepts
 	 */
 	public abstract ConceptEntry[] getConceptListEntriesForWord(String word,
-			String pos,String conceptType)throws LuceneException,IllegalAccessException;
+			String pos,String conceptType)throws LuceneException,IllegalAccessException, IndexerRunningException;
 
 	/**
 	 * Searches in all additional concepts for in the given fields for the given
@@ -88,7 +90,7 @@ public interface IConceptManager {
 	 * @return An array list with matching concepts. This method never returns
 	 *         null only empty or filled arrays.
 	 */
-	public abstract ConceptEntry[] getConceptListEntriesForWord(String word)throws LuceneException,IllegalAccessException;
+	public abstract ConceptEntry[] getConceptListEntriesForWord(String word)throws LuceneException,IllegalAccessException, IndexerRunningException;
 
 	public abstract List<ConceptEntry> getConceptListEntries(String conceptList)throws LuceneException;
 
@@ -110,10 +112,10 @@ public interface IConceptManager {
 	 * concept is the Wordnet list. 
 	 */
 	public abstract String addConceptListEntry(ConceptEntry entry)
-			throws DictionaryDoesNotExistException, DictionaryModifyException,LuceneException,IllegalAccessException;
+			throws DictionaryDoesNotExistException, DictionaryModifyException,LuceneException,IllegalAccessException, IndexerRunningException;
 
-	public abstract void storeModifiedConcept(ConceptEntry entry)throws LuceneException,IllegalAccessException;
+	public abstract void storeModifiedConcept(ConceptEntry entry)throws LuceneException,IllegalAccessException, IndexerRunningException;
 	
-	public abstract void deleteConcept(String id) throws LuceneException;
+	public abstract void deleteConcept(String id) throws LuceneException, IndexerRunningException;
 	
 }
