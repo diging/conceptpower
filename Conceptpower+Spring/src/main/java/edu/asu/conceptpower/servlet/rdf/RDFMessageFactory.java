@@ -8,10 +8,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.shared.BadURIException;
 import org.apache.jena.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +16,13 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.root.URIHelper;
 
+/**
+ * 
+ * @author karthikeyanmohan
+ *
+ */
 @Component
 public class RDFMessageFactory {
-
-    private static final Logger logger = LoggerFactory.getLogger(RDFMessageFactory.class);
 
     @Autowired
     private TypeDatabaseClient typeManager;
@@ -45,93 +45,90 @@ public class RDFMessageFactory {
         Model model = ModelFactory.createDefaultModel();
         String syntax = "RDF/XML";
         StringWriter out = new StringWriter();
-        try {
-            for (ConceptEntry entry : entries) {
-                model.setNsPrefixes(setPrefixMap());
-                Property identifiers = model.createProperty(dCTerms + "identifiers");
-                Property madsrdfProperty = model.createProperty(madsrdf + "authoritativeLabel");
-                Property skosProperty = model.createProperty(skos + "prefLabel");
-                Property schemaName = model.createProperty(schema + "name");
-                Property schemaDescription = model.createProperty(schema + "description");
-                Property madsrdfCL = model.createProperty(madsrdf + "isMemberOfMADSCollection");
-                Property csCreator = model.createProperty(changeset + "creatorName");
-                Property owlEqualTo = model.createProperty(owl + "sameAs");
-                Property rdfsSeeAlso = model.createProperty(rdf + "seeAlso");
-                Property skosRelated = model.createProperty(skos + "related");
+        model.setNsPrefixes(getPrefixMap());
+        for (ConceptEntry entry : entries) {
+            Property identifiers = model.createProperty(dCTerms + "identifiers");
+            Property madsrdfProperty = model.createProperty(madsrdf + "authoritativeLabel");
+            Property skosProperty = model.createProperty(skos + "prefLabel");
+            Property schemaName = model.createProperty(schema + "name");
+            Property schemaDescription = model.createProperty(schema + "description");
+            Property madsrdfCL = model.createProperty(madsrdf + "isMemberOfMADSCollection");
+            Property csCreator = model.createProperty(changeset + "creatorName");
+            Property owlEqualTo = model.createProperty(owl + "sameAs");
+            Property rdfsSeeAlso = model.createProperty(rdf + "seeAlso");
+            Property skosRelated = model.createProperty(skos + "related");
 
-                Resource resource = model.createResource(creator.getURI(entry));
+            Resource resource = model.createResource(creator.getURI(entry));
 
-                resource.addProperty(identifiers, entry.getId());
-                resource.addProperty(madsrdfProperty, entry.getWord());
-                resource.addProperty(skosProperty, entry.getWord());
-                resource.addProperty(schemaName, entry.getWord());
-                resource.addProperty(schemaDescription, entry.getDescription());
+            resource.addProperty(identifiers, entry.getId());
+            resource.addProperty(madsrdfProperty, entry.getWord());
+            resource.addProperty(skosProperty, entry.getWord());
+            resource.addProperty(schemaName, entry.getWord());
+            resource.addProperty(schemaDescription, entry.getDescription());
 
-                if (entry.getConceptList() != null) {
-                    resource.addProperty(madsrdfCL, creator.getConceptListURI(entry));
+            if (entry.getConceptList() != null) {
+                resource.addProperty(madsrdfCL, creator.getConceptListURI(entry));
+            }
+
+            if (entry.getCreatorId() != null) {
+                resource.addProperty(csCreator, entry.getCreatorId());
+            }
+
+            if (entry.getModified() != null) {
+                resource.addProperty(csCreator, entry.getCreatorId());
+            }
+
+            if (entry.getEqualTo() != null) {
+                String[] equals = entry.getEqualTo().split(",");
+                for (String equal : equals) {
+                    resource.addProperty(owlEqualTo, equal);
                 }
+            }
 
-                if (entry.getCreatorId() != null) {
-                    resource.addProperty(csCreator, entry.getCreatorId());
+            if (entry.getSimilarTo() != null) {
+                String[] similarTo = entry.getSimilarTo().split(",");
+                for (String similar : similarTo) {
+                    resource.addProperty(rdfsSeeAlso, similar);
                 }
+            }
 
-                if (entry.getModified() != null) {
-                    resource.addProperty(csCreator, entry.getCreatorId());
+            if (entry.getWordnetId() != null) {
+                resource.addProperty(owlEqualTo, creator.getWordnetURI(entry));
+            }
+
+            if (entry.getSynonymIds() != null) {
+                String[] synonymIds = entry.getSynonymIds()
+                        .split(edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR);
+                for (String synonymId : synonymIds) {
+                    resource.addProperty(skosRelated, synonymId);
                 }
+            }
 
-                if (entry.getEqualTo() != null) {
-                    String[] equals = entry.getEqualTo().split(",");
-                    for (String equal : equals) {
-                        resource.addProperty(owlEqualTo, equal);
-                    }
-                }
+            Resource typeResource = model.createResource(skosType);
+            resource.addProperty(RDF.type, typeResource);
 
-                if (entry.getSimilarTo() != null) {
-                    String[] similarTo = entry.getSimilarTo().split(",");
-                    for (String similar : similarTo) {
-                        resource.addProperty(rdfsSeeAlso, similar);
-                    }
-                }
+            Resource typeRes = model.createResource(authorityType);
+            resource.addProperty(RDF.type, typeRes);
 
-                if (entry.getWordnetId() != null) {
-                    resource.addProperty(owlEqualTo, creator.getWordnetURI(entry));
-                }
+            if (entry.getTypeId() != null) {
+                Resource typesRes = model.createResource(creator.getTypeURI(entry));
+                resource.addProperty(RDF.type, typesRes);
+            }
 
-                if (entry.getSynonymIds() != null) {
-                    String[] synonymIds = entry.getSynonymIds()
-                            .split(edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR);
-                    for (String synonymId : synonymIds) {
-                        resource.addProperty(skosRelated, synonymId);
-                    }
-                }
-
-                Resource typeResource = model.createResource(skosType);
-                resource.addProperty(RDF.type, typeResource);
-
-                Resource typeRes = model.createResource(authorityType);
-                resource.addProperty(RDF.type, typeRes);
-
-                if (entry.getTypeId() != null) {
-                    Resource typesRes = model.createResource(creator.getTypeURI(entry));
-                    resource.addProperty(RDF.type, typesRes);
-                }
-
-                String matchesURI = entry.getTypeId();
-                if (matchesURI != null) {
-                    String matches = typeManager.getType(matchesURI).getMatches();
+            String matchesURI = entry.getTypeId();
+            if (matchesURI != null) {
+                String matches = typeManager.getType(matchesURI).getMatches();
+                if (matches != null && !matches.equalsIgnoreCase("")) {
                     Resource cdocResource = model.createResource(matches);
                     resource.addProperty(RDF.type, cdocResource);
                 }
-                model.write(out, syntax);
             }
-        } catch (BadURIException e) {
-            logger.error("Bad uri exception" + e.getMessage());
+            model.write(out, syntax);
         }
-
         return out.toString();
     }
 
-    private Map<String, String> setPrefixMap() {
+    private Map<String, String> getPrefixMap() {
         Map<String, String> prefixMap = new HashMap<String, String>();
         prefixMap.put("skos", skos);
         prefixMap.put("madsrdf", madsrdf);
