@@ -83,7 +83,7 @@ public class ConceptListAddValidatorTest {
         ValidationUtils.invokeValidator(conceptListAddValidator, wordNetConcepts, errors);
         Assert.assertEquals(1, errors.getFieldErrorCount());
         Assert.assertNull(errors.getFieldError("description"));
-        Assert.assertEquals(errors.getFieldError("listName").getCode(), "concept_name.wordnet");
+        Assert.assertEquals(errors.getFieldError("listName").getCode(), "concept_list_name.wordnet");
     }
 
     @Test
