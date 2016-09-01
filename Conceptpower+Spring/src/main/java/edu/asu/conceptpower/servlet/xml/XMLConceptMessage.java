@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.servlet.xml;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.URIHelper;
+import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
 /**
  * This class is used to build XML messages that are sent
@@ -82,12 +84,13 @@ public class XMLConceptMessage extends AXMLMessage {
 				+ XMLConstants.CONCEPT_LIST + ">");
 
 		// creator id
-		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.CREATOR_ID + ">");
-		sb.append(StringEscapeUtils.escapeXml10(entry.getCreatorId() != null ? entry
-				.getCreatorId().trim() : ""));
-		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.CREATOR_ID + ">");
+        List<ChangeEvent> changeEvents = entry.getChangeEvents();
+        Collections.sort(changeEvents);
+
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
+        sb.append(StringEscapeUtils.escapeXml10(
+                changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : ""));
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
 
 		// equal to
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"

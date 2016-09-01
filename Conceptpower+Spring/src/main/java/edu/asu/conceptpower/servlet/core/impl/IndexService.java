@@ -120,4 +120,20 @@ public class IndexService implements IIndexService {
         return dao.getTotalNumberOfWordsIndexed();
     }
 
+    /**
+     * This method updates the concept in lucene index based on id of the
+     * concept
+     * 
+     * @throws IllegalAccessException
+     */
+    @Override
+    public void updateConceptById(ConceptEntry entry)
+            throws LuceneException, IndexerRunningException, IllegalAccessException {
+        if (indexerRunningFlag.get()) {
+            throw new IndexerRunningException(indexerRunning);
+        }
+        luceneUtility.deleteById(entry.getId());
+        luceneUtility.insertConcept(entry);
+    }
+
 }

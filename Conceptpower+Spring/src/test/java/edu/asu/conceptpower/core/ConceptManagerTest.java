@@ -1,5 +1,9 @@
 package edu.asu.conceptpower.core;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 //github.com/diging/conceptpower.git
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import edu.asu.conceptpower.servlet.core.ChangeEvent;
+import edu.asu.conceptpower.servlet.core.ChangeEventConstants;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.core.impl.ConceptManager;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
@@ -51,13 +57,22 @@ public class ConceptManagerTest {
     @Before
     public void init() throws LuceneException {
         conceptManager = Mockito.mock(ConceptManager.class);
+
+        ChangeEvent changeEvent = new ChangeEvent();
+        changeEvent.setUserName("testuser");
+        changeEvent.setType(ChangeEventConstants.CREATION);
+        changeEvent.setDate(new Date());
+        List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
+        changeEventList.add(changeEvent);
+
+        wordNetManager = Mockito.mock(WordNetManager.class);
         dbManager = Mockito.mock(IConceptDBManager.class);
         MockitoAnnotations.initMocks(this);
 
         addedConcept = new ConceptEntry();
         addedConcept.setId("id1");
         addedConcept.setConceptList("list1");
-        addedConcept.setCreatorId("testuser");
+        addedConcept.setChangeEvents(changeEventList);
         addedConcept.setDescription("description");
         addedConcept.setPos("noun");
         addedConcept.setWord("test");
@@ -69,7 +84,7 @@ public class ConceptManagerTest {
         wordnetConcept1 = new ConceptEntry();
         wordnetConcept1.setId("WID-1");
         wordnetConcept1.setConceptList("list1");
-        wordnetConcept1.setCreatorId("testuser");
+        wordnetConcept1.setChangeEvents(changeEventList);
         wordnetConcept1.setDescription("description wid 1");
         wordnetConcept1.setPos("noun");
         wordnetConcept1.setWord("test wid 1");
@@ -79,7 +94,7 @@ public class ConceptManagerTest {
         wordnetConcept2 = new ConceptEntry();
         wordnetConcept2.setId("WID-2");
         wordnetConcept2.setConceptList("list1");
-        wordnetConcept2.setCreatorId("testuser");
+        wordnetConcept2.setChangeEvents(changeEventList);
         wordnetConcept2.setDescription("description wid");
         wordnetConcept2.setPos("noun");
         wordnetConcept2.setWord("test wid");
@@ -108,7 +123,8 @@ public class ConceptManagerTest {
     public void testGetConceptEntryForAddedConcept() throws LuceneException {
         ConceptEntry entry = managerToTest.getConceptEntry("id1");
         Assert.assertEquals(addedConcept, entry);
-
+        // Test for fetching the creatorId from changeEvent
+        Assert.assertEquals("testuser", entry.getCreatorId());
         Assert.assertTrue(entry.getSynonymIds().contains("WID-2"));
     }
 
@@ -129,12 +145,12 @@ public class ConceptManagerTest {
             throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList("list1");
-        newConcept.setCreatorId("testuser");
         newConcept.setDescription("description");
         newConcept.setPos("noun");
         newConcept.setWord("test new");
         newConcept.setWordnetId("WID-1");
-        String id = managerToTest.addConceptListEntry(newConcept);
+        String id = managerToTest.addConceptListEntry(newConcept, "testuser");
+        Assert.assertNotNull(newConcept.getChangeEvents());
         Mockito.verify(indexService).insertConcept(newConcept);
         Assert.assertNotNull(id);
     }
@@ -144,14 +160,13 @@ public class ConceptManagerTest {
             throws DictionaryModifyException, LuceneException, IllegalAccessException, DictionaryDoesNotExistException, IndexerRunningException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList("list-not-exist");
-        newConcept.setCreatorId("testuser");
         newConcept.setDescription("description");
         newConcept.setPos("noun");
         newConcept.setWord("test new");
         newConcept.setWordnetId("WID-1");
 
         String id = null;
-        id = managerToTest.addConceptListEntry(newConcept);
+        id = managerToTest.addConceptListEntry(newConcept, "testuser");
 
         Assert.assertNull(id);
     }
@@ -161,14 +176,13 @@ public class ConceptManagerTest {
             throws DictionaryDoesNotExistException, LuceneException, IllegalAccessException, DictionaryModifyException, IndexerRunningException {
         ConceptEntry newConcept = new ConceptEntry();
         newConcept.setConceptList(Constants.WORDNET_DICTIONARY);
-        newConcept.setCreatorId("testuser");
         newConcept.setDescription("description");
         newConcept.setPos("noun");
         newConcept.setWord("test new");
         newConcept.setWordnetId("WID-1");
 
         String id = null;
-        id = managerToTest.addConceptListEntry(newConcept);
+        id = managerToTest.addConceptListEntry(newConcept, "testuser");
 
         Assert.assertNull(id);
     }

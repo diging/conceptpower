@@ -1,10 +1,15 @@
 package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import edu.asu.conceptpower.servlet.core.ChangeEvent;
+import edu.asu.conceptpower.servlet.core.ChangeEventConstants;
 import edu.asu.conceptpower.servlet.reflect.LuceneField;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
 import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
@@ -79,6 +84,8 @@ public class ConceptEntry implements Serializable {
     
     private String modifiedUser;
 
+    private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
+
     public ConceptEntry() {
     }
 
@@ -91,10 +98,28 @@ public class ConceptEntry implements Serializable {
     /**
      * A string containing the id of the user who created an entry.
      * 
+     * First check if creator is in change event list. If so fetch it Else fetch
+     * it from old db
+     * 
      * @return the id of the user who created an entry
      */
     public String getCreatorId() {
+        // This check has been introduced to make sure the existing concepts
+        // work fine. For existing concepts changeevents will be null in D/B. So
+        // if changevent is null in DB fetch creatorId directly
+        if (this.changeEvents != null && this.changeEvents.size() > 0) {
+            Collections.sort(this.changeEvents);
+            // Since the list is sorted, the first event will be a creation
+            // event. If the first event is not creation event, then it means
+            // some existing concept has been modified with this new change. So
+            // changevents will contain only the modified user id. In that case
+            // fetch from the creatorId itself as per the old design
+            if (ChangeEventConstants.CREATION.equalsIgnoreCase(changeEvents.get(0).getType())) {
+                return changeEvents.get(0).getUserName();
+            }
+        }
         return creatorId;
+
     }
 
     public void setCreatorId(String creatorId) {
@@ -264,6 +289,12 @@ public class ConceptEntry implements Serializable {
      * A string containing a string describing who modified a concept and when.
      */
     public String getModified() {
+        if (this.changeEvents != null && this.changeEvents.size() > 0) {
+            Collections.sort(this.changeEvents);
+            if (ChangeEventConstants.CREATION.equalsIgnoreCase(changeEvents.get(changeEvents.size() - 1).getType())) {
+                return changeEvents.get(0).getUserName();
+            }
+        }
         return modified;
     }
 
@@ -338,6 +369,27 @@ public class ConceptEntry implements Serializable {
         } else if (!wordnetId.equals(other.wordnetId))
             return false;
         return true;
+    }
+
+    public List<ChangeEvent> getChangeEvents() {
+        return changeEvents;
+    }
+
+    public void setChangeEvents(List<ChangeEvent> changeEvents) {
+        this.changeEvents = changeEvents;
+    }
+
+    public void addNewChangeEvent(ChangeEvent event) {
+
+        // If already existing concept is changed, there are chances concepts
+        // would have been created before this change, and so chageeevent will
+        // be null for those concept.
+        // TO handle that case check for null and create a new changeevent.
+
+        if (changeEvents == null) {
+            this.changeEvents = new ArrayList<ChangeEvent>();
+        }
+        this.changeEvents.add(event);
     }
 
     public String getModifiedUser() {

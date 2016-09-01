@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.servlet.web;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +114,7 @@ public class ConceptDeleteController {
      */
     @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
     public ModelAndView confirmlDelete(@PathVariable("id") String id,
-			@RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete)
+            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, Principal principal)
 					throws LuceneException, IndexerRunningException {
 		List<ConceptEntryWrapper> foundConcepts = null;
 		ModelAndView model = new ModelAndView();
@@ -127,7 +128,7 @@ public class ConceptDeleteController {
 			return model;
 		}
 		
-		conceptManager.deleteConcept(id);
+        conceptManager.deleteConcept(id, principal.getName());
 		List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
 
 		foundConcepts = wrapperCreator
@@ -144,7 +145,8 @@ public class ConceptDeleteController {
 
 	@RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
 	public ModelAndView deleteConcept(@PathVariable("id") String id,
-			@ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult result)
+            @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult result,
+            Principal principal)
 					throws LuceneException, IndexerRunningException {
 		ModelAndView model = new ModelAndView();
 		// Check if indexer is running
@@ -155,7 +157,7 @@ public class ConceptDeleteController {
 			model.setViewName("welcome");
 			return model;
 		}
-		conceptManager.deleteConcept(id);
+        conceptManager.deleteConcept(id, principal.getName());
 		model.setViewName("welome");
 		return model;
 	}

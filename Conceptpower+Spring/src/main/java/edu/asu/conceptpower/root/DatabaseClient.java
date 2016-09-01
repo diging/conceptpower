@@ -19,13 +19,12 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.db4o.DBNames;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
-import edu.asu.conceptpower.servlet.web.ConceptAddController;
 
 @Component
 public class DatabaseClient implements IConceptDBManager {
 
-    ObjectContainer wordnetCacheClient;
-    ObjectContainer dictionaryClient;
+    private ObjectContainer wordnetCacheClient;
+    private ObjectContainer dictionaryClient;
 
     @Autowired
     @Qualifier("wordnetCacheDatabaseManager")
@@ -355,6 +354,7 @@ public class DatabaseClient implements IConceptDBManager {
             toBeUpdated.setWord(entry.getWord());
             toBeUpdated.setWordnetId(entry.getWordnetId());
             toBeUpdated.setDeleted(entry.isDeleted());
+            toBeUpdated.setChangeEvents(entry.getChangeEvents());
             dictionaryClient.store(toBeUpdated);
             dictionaryClient.commit();
         }

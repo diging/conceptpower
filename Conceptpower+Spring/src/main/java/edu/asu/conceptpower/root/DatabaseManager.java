@@ -25,6 +25,9 @@ public class DatabaseManager implements Serializable {
 		configuration.file().blockSize(80);
 		configuration.common().objectClass(ConceptEntry.class).objectField("wordnetId").indexed(true);
 		configuration.common().objectClass(ConceptEntry.class).objectField("id").indexed(true);
+        // Added to make sure list has been added to the database
+        // Ref: http://www.resolvinghere.com/sof/12343387.shtml
+        configuration.common().objectClass(ConceptEntry.class).updateDepth(2);
 		server = Db4oClientServer.openServer(configuration, databasePath, 0);
 		
 	}

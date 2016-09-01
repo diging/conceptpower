@@ -3,6 +3,8 @@ package edu.asu.conceptpower.wrapper.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -15,6 +17,8 @@ import org.mockito.MockitoAnnotations;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.IURIHelper;
+import edu.asu.conceptpower.servlet.core.ChangeEvent;
+import edu.asu.conceptpower.servlet.core.ChangeEventConstants;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
@@ -46,7 +50,15 @@ public class ConceptEntryWrapperCreatorTest {
     @Before
     public void init() throws LuceneException {
 
+        ChangeEvent changeEvent = new ChangeEvent();
+        changeEvent.setUserName("Test");
+        changeEvent.setType(ChangeEventConstants.CREATION);
+        changeEvent.setDate(new Date());
+        List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
+        changeEventList.add(changeEvent);
+
         entry.setTypeId("Type-1");
+        entry.setChangeEvents(changeEventList);
         entry.setCreatorId("Test");
         entry.setWordnetId("WNET_1");
         entry.setSynonymIds("SYN_1");

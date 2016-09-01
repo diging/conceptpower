@@ -111,11 +111,12 @@ public interface IConceptManager {
 	 * @throws DictionaryModifyException If the specified concept list in the
 	 * concept is the Wordnet list. 
 	 */
-	public abstract String addConceptListEntry(ConceptEntry entry)
+    public abstract String addConceptListEntry(ConceptEntry entry, String userName)
 			throws DictionaryDoesNotExistException, DictionaryModifyException,LuceneException,IllegalAccessException, IndexerRunningException;
 
-	public abstract void storeModifiedConcept(ConceptEntry entry)throws LuceneException,IllegalAccessException, IndexerRunningException;
+    public abstract void storeModifiedConcept(ConceptEntry entry, String userName)
+            throws LuceneException, IllegalAccessException, IndexerRunningException;
 	
-	public abstract void deleteConcept(String id) throws LuceneException, IndexerRunningException;
+    public abstract void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException;
 	
 }

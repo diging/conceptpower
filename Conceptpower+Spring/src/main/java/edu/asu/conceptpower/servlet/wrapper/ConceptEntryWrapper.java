@@ -24,6 +24,8 @@ public class ConceptEntryWrapper implements Serializable {
 	private List<ConceptEntry> wrappedWordnetEntries;
 	private String description;
 	private String uri;
+    private String creatorId;
+    private String lastModifiedEvent;
 	
 	
 	public ConceptEntryWrapper(ConceptEntry entry) {
@@ -85,5 +87,21 @@ public class ConceptEntryWrapper implements Serializable {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public String getLastModifiedEvent() {
+        return lastModifiedEvent;
+    }
+
+    public void setLastModifiedEvent(String lastModifiedEvent) {
+        this.lastModifiedEvent = lastModifiedEvent;
     }
 }
