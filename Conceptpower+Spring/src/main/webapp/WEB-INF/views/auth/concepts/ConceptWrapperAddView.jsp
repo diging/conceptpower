@@ -447,7 +447,7 @@
 	<h2>3. Enter additional information</h2>
 	<p>Selected Wordnet concept:</p>
 
-	<table class="table table-striped table-bordered">
+	<table class="table-striped table-bordered">
 
 		<tr>
 			<td>Concept List</td>
@@ -461,7 +461,11 @@
 		</tr>
 		<tr>
 			<td>Description</td>
-			<td><input type="text" name="description" id="description"></td>
+			<td>
+                <div>
+                    <textarea id="description" cols="60" name="description"></textarea>
+                </div>
+            </td>
 			<td />
 		</tr>
 		<tr>
