@@ -26,9 +26,8 @@ public class ConceptEntry implements Serializable {
 
     private static final long serialVersionUID = 4569090620671054560L;
 
-    //ID has been set to Indexable to make sure deleteById works in luceneUtility. If not indexed writer is not able to delete the document.
     @Id
-    @LuceneField(lucenefieldName = LuceneFieldNames.ID, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.ID, isIndexable = false)
     private String id;
 
     @SearchField(fieldName = SearchFieldNames.WORDNETID)
