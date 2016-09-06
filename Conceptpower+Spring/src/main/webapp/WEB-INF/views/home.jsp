@@ -22,7 +22,7 @@ $(document).ready(function() {
 				{
 				   	"targets": [7],
 				   	"sType" : "html",
-				   	"render" : function(o, val) {
+				   	"fnRender" : function(o, val) {
   				  		if (o.startsWith("&lt;br/&gt;")) {
   				   			o = o.substring(11,o.length);
   				   		}
@@ -34,7 +34,7 @@ $(document).ready(function() {
   			    {
   			    	"targets": [5],
   			    	"sType" : "html",
-  			    	"render" : function(o, val) {
+  			    	"fnRender" : function(o, val) {
       			   		if (o.startsWith("&lt;br/&gt;")) {
       			   			o = o.substring(11,o.length);
       			   		}
@@ -226,8 +226,11 @@ function showFormProcessing() {
                 value="${concept.entry.pos}"></c:out></font></td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.entry.conceptList}"></c:out></font></td>
-          <td align="justify"><c:out
-              value="${concept.description}"></c:out></td>
+          <td align="justify">
+                <div class="scrollable" style="max-height: 100px; max-width: 400px;">
+                    <c:out value="${concept.description}"></c:out>
+                </div>
+          </td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
         </tr>
