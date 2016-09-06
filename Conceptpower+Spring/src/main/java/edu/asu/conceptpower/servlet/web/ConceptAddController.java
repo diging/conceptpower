@@ -142,7 +142,7 @@ public class ConceptAddController {
             model.addAttribute("error_alert_msg", indexerRunning);
         	return "forward:/auth/conceptlist/addconcept";
         }
-        conceptManager.addConceptListEntry(conceptEntry);
+        conceptManager.addConceptListEntry(conceptEntry, principal.getName());
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
     }
 

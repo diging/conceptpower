@@ -174,7 +174,7 @@ public class ConceptEditController {
             return model;
         }
 
-        conceptManager.storeModifiedConcept(conceptEntry);
+        conceptManager.storeModifiedConcept(conceptEntry, principal.getName());
 
         if (conceptEditBean.isFromHomeScreen()) {
             model.setViewName("redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="

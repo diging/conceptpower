@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.servlet.web;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,10 @@ public class ConceptDeleteController {
 
     @Autowired
     private IIndexService indexService;
-    
+
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
-    
+
     /**
      * This method provides details of a concept to be deleted for concept
      * delete page
@@ -109,55 +110,55 @@ public class ConceptDeleteController {
      * @param model
      *            A generic model holder for Servlet
      * @return String value to redirect user to a particular concept list page
-     * @throws IndexerRunningException 
+     * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
     public ModelAndView confirmlDelete(@PathVariable("id") String id,
-			@RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete)
-					throws LuceneException, IndexerRunningException {
-		List<ConceptEntryWrapper> foundConcepts = null;
-		ModelAndView model = new ModelAndView();
-		ConceptEntry concept = conceptManager.getConceptEntry(id);
-		//Check if indexer is running
-		if (indexService.isIndexerRunning()) {
-			model.addObject("show_error_alert", true);
-			model.addObject("error_alert_msg", indexerRunning);
-			//Need to include command Object
-			model.setViewName("/auth/conceptlist/deleteconcept");
-			return model;
-		}
-		
-		conceptManager.deleteConcept(id);
-		List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
+            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, Principal principal)
+                    throws LuceneException, IndexerRunningException {
+        List<ConceptEntryWrapper> foundConcepts = null;
+        ModelAndView model = new ModelAndView();
+        ConceptEntry concept = conceptManager.getConceptEntry(id);
+        // Check if indexer is running
+        if (indexService.isIndexerRunning()) {
+            model.addObject("show_error_alert", true);
+            model.addObject("error_alert_msg", indexerRunning);
+            // Need to include command Object
+            model.setViewName("/auth/conceptlist/deleteconcept");
+            return model;
+        }
 
-		foundConcepts = wrapperCreator
-				.createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
+        conceptManager.deleteConcept(id, principal.getName());
+        List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
 
-		model.addObject("result", foundConcepts);
-		if (fromHomeScreenDelete.equalsIgnoreCase("true")) {
-			model.setViewName("redirect:/login");
-			return model;
-		}
-		model.setViewName("/auth/conceptlist/concepts");
-		return model;
-	}
+        foundConcepts = wrapperCreator
+                .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
 
-	@RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
-	public ModelAndView deleteConcept(@PathVariable("id") String id,
-			@ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult result)
-					throws LuceneException, IndexerRunningException {
-		ModelAndView model = new ModelAndView();
-		// Check if indexer is running
-		if (indexService.isIndexerRunning()) {
-			model.addObject("show_error_alert", true);
-			model.addObject("error_alert_msg", indexerRunning);
-			// Need to include command Object
-			model.setViewName("welcome");
-			return model;
-		}
-		conceptManager.deleteConcept(id);
-		model.setViewName("welome");
-		return model;
-	}
+        model.addObject("result", foundConcepts);
+        if (fromHomeScreenDelete.equalsIgnoreCase("true")) {
+            model.setViewName("redirect:/login");
+            return model;
+        }
+        model.setViewName("/auth/conceptlist/concepts");
+        return model;
+    }
+
+    @RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteConcept(@PathVariable("id") String id,
+            @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult result,
+            Principal principal) throws LuceneException, IndexerRunningException {
+        ModelAndView model = new ModelAndView();
+        // Check if indexer is running
+        if (indexService.isIndexerRunning()) {
+            model.addObject("show_error_alert", true);
+            model.addObject("error_alert_msg", indexerRunning);
+            // Need to include command Object
+            model.setViewName("welcome");
+            return model;
+        }
+        conceptManager.deleteConcept(id, principal.getName());
+        model.setViewName("welome");
+        return model;
+    }
 
 }
