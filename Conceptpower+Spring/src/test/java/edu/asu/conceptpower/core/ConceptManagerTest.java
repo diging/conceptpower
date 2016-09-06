@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEventConstants;
+import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.core.impl.ConceptManager;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
@@ -60,7 +60,7 @@ public class ConceptManagerTest {
 
         ChangeEvent changeEvent = new ChangeEvent();
         changeEvent.setUserName("testuser");
-        changeEvent.setType(ChangeEventConstants.CREATION);
+        changeEvent.setType(ChangeEventTypes.CREATION);
         changeEvent.setDate(new Date());
         List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
         changeEventList.add(changeEvent);

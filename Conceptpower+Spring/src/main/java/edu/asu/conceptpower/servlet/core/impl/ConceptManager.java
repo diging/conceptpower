@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEventConstants;
+import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.db4o.DBNames;
@@ -373,28 +373,36 @@ public class ConceptManager implements IConceptManager {
      * conceptpower.core.ConceptEntry)
      */
     @Override
-    public String addConceptListEntry(ConceptEntry entry, String userName)
-			throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
-		ConceptList dict = client.getConceptList(entry.getConceptList());
-		if (dict == null)
-			throw new DictionaryDoesNotExistException();
+    public String addConceptListEntry(ConceptEntry entry, String userName) throws DictionaryDoesNotExistException,
+            DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
+        ConceptList dict = client.getConceptList(entry.getConceptList());
+        if (dict == null)
+            throw new DictionaryDoesNotExistException();
 
-		if (entry.getConceptList().equals(Constants.WORDNET_DICTIONARY)) {
-			throw new DictionaryModifyException();
-		}
+        if (entry.getConceptList().equals(Constants.WORDNET_DICTIONARY)) {
+            throw new DictionaryModifyException();
+        }
 
         // Creating the first change event
-        ChangeEvent changeEvent = new ChangeEvent(userName, new Date(), ChangeEventConstants.CREATION);
+        ChangeEvent changeEvent = new ChangeEvent(userName, new Date(), ChangeEventTypes.CREATION);
         List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
         changeEventList.add(changeEvent);
         entry.setChangeEvents(changeEventList);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
-        indexService.insertConcept(entry);
+
         client.store(entry, DBNames.DICTIONARY_DB);
+        if (entry.getWordnetId() != null) {
+            String wordnetId = entry.getWordnetId();
+            if (wordnetId.endsWith(",")) {
+                wordnetId = wordnetId.substring(0, wordnetId.length() - 1);
+            }
+            indexService.deleteById(wordnetId);
+        }
+        indexService.insertConcept(entry);
         return id;
 
-	}
+    }
     
 
     /*
@@ -410,10 +418,10 @@ public class ConceptManager implements IConceptManager {
         ChangeEvent changeEvent = new ChangeEvent();
         changeEvent.setDate(new Date());
         changeEvent.setUserName(userName);
-        changeEvent.setType(ChangeEventConstants.MODIFICATION);
+        changeEvent.setType(ChangeEventTypes.MODIFICATION);
         entry.addNewChangeEvent(changeEvent);
 
-        indexService.updateConceptById(entry);
+        indexService.updateConceptEntry(entry);
 
         client.update(entry, DBNames.DICTIONARY_DB);
     }
@@ -440,7 +448,7 @@ public class ConceptManager implements IConceptManager {
         ConceptEntry concept = getConceptEntry(id);
         concept.setDeleted(true);
         ChangeEvent changeEvent = new ChangeEvent();
-        changeEvent.setType(ChangeEventConstants.DELETION);
+        changeEvent.setType(ChangeEventTypes.DELETION);
         changeEvent.setDate(new Date());
         changeEvent.setUserName(userName);
         concept.addNewChangeEvent(changeEvent);

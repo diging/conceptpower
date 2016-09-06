@@ -4,6 +4,10 @@ import java.util.Date;
 
 public class ChangeEvent implements Comparable<ChangeEvent> {
 
+    public enum ChangeEventTypes {
+        MODIFICATION, CREATION, DELETION
+    }
+
     /**
      * Stores the username of the creator or modified userName
      */
@@ -17,12 +21,12 @@ public class ChangeEvent implements Comparable<ChangeEvent> {
     /**
      * Stores the type as Creation, Modification, Deletion
      */
-    private String type;
+    private ChangeEventTypes type;
 
     public ChangeEvent() {
     }
 
-    public ChangeEvent(String userName, Date date, String type) {
+    public ChangeEvent(String userName, Date date, ChangeEventTypes type) {
         this.userName = userName;
         this.date = date;
         this.type = type;
@@ -44,17 +48,16 @@ public class ChangeEvent implements Comparable<ChangeEvent> {
         this.date = date;
     }
 
-    public String getType() {
+    @Override
+    public int compareTo(ChangeEvent changeEvent) {
+        return date.before(changeEvent.getDate()) ? 1 : 0;
+    }
+
+    public ChangeEventTypes getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ChangeEventTypes type) {
         this.type = type;
-    }
-
-    @Override
-    public int compareTo(ChangeEvent o) {
-        ChangeEvent changeEvent = (ChangeEvent) o;
-        return date.before(changeEvent.getDate()) ? 1 : 0;
     }
 }

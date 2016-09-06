@@ -18,7 +18,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.IURIHelper;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEventConstants;
+import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
@@ -52,7 +52,7 @@ public class ConceptEntryWrapperCreatorTest {
 
         ChangeEvent changeEvent = new ChangeEvent();
         changeEvent.setUserName("Test");
-        changeEvent.setType(ChangeEventConstants.CREATION);
+        changeEvent.setType(ChangeEventTypes.CREATION);
         changeEvent.setDate(new Date());
         List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
         changeEventList.add(changeEvent);

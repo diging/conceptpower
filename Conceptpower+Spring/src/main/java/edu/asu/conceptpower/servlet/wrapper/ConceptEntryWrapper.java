@@ -16,70 +16,68 @@ import edu.asu.conceptpower.users.User;
  */
 public class ConceptEntryWrapper implements Serializable {
 
-	private static final long serialVersionUID = -4261304897583134670L;
-	private ConceptEntry entry;
-	private List<ConceptEntry> synonyms;
-	private ConceptType type;
-	private User creator;
-	private List<ConceptEntry> wrappedWordnetEntries;
-	private String description;
-	private String uri;
+    private static final long serialVersionUID = -4261304897583134670L;
+    private ConceptEntry entry;
+    private List<ConceptEntry> synonyms;
+    private ConceptType type;
+    private User creator;
+    private List<ConceptEntry> wrappedWordnetEntries;
+    private String description;
+    private String uri;
     private String creatorId;
     private String lastModifiedEvent;
-	
-	
-	public ConceptEntryWrapper(ConceptEntry entry) {
-	    this.entry = entry;
-	}
 
-	public ConceptEntry getEntry() {
-		return entry;
-	}
+    public ConceptEntryWrapper(ConceptEntry entry) {
+        this.entry = entry;
+    }
 
-	public void setEntry(ConceptEntry entry) {
-		this.entry = entry;
-	}
+    public ConceptEntry getEntry() {
+        return entry;
+    }
 
-	public List<ConceptEntry> getSynonyms() {
-		return synonyms;
-	}
+    public void setEntry(ConceptEntry entry) {
+        this.entry = entry;
+    }
 
-	public void setSynonyms(List<ConceptEntry> synonyms) {
-		this.synonyms = synonyms;
-	}
+    public List<ConceptEntry> getSynonyms() {
+        return synonyms;
+    }
 
-	public ConceptType getType() {
-		return type;
-	}
+    public void setSynonyms(List<ConceptEntry> synonyms) {
+        this.synonyms = synonyms;
+    }
 
-	public void setType(ConceptType type) {
-		this.type = type;
-	}
+    public ConceptType getType() {
+        return type;
+    }
 
-	public User getCreator() {
-		return creator;
-	}
+    public void setType(ConceptType type) {
+        this.type = type;
+    }
 
-	public void setCreator(User creator) {
-		this.creator = creator;
-	}
+    public User getCreator() {
+        return creator;
+    }
 
-	public void setWrappedWordnetEntries(
-			List<ConceptEntry> wrappedWordnetEntries) {
-		this.wrappedWordnetEntries = wrappedWordnetEntries;
-	}
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
 
-	public List<ConceptEntry> getWrappedWordnetEntries() {
-		return wrappedWordnetEntries;
-	}
+    public void setWrappedWordnetEntries(List<ConceptEntry> wrappedWordnetEntries) {
+        this.wrappedWordnetEntries = wrappedWordnetEntries;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public List<ConceptEntry> getWrappedWordnetEntries() {
+        return wrappedWordnetEntries;
+    }
 
-	public void setDescription(String description) {
-		this.description = description.replace("\n", "<br/>");
-	}
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description.replace("\n", "<br/>");
+    }
 
     public String getUri() {
         return uri;

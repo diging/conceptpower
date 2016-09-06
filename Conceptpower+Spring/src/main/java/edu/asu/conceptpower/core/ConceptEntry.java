@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEventConstants;
+import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.servlet.reflect.LuceneField;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
 import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
@@ -114,7 +114,7 @@ public class ConceptEntry implements Serializable {
             // some existing concept has been modified with this new change. So
             // changevents will contain only the modified user id. In that case
             // fetch from the creatorId itself as per the old design
-            if (ChangeEventConstants.CREATION.equalsIgnoreCase(changeEvents.get(0).getType())) {
+            if (ChangeEventTypes.CREATION == changeEvents.get(0).getType()) {
                 return changeEvents.get(0).getUserName();
             }
         }
@@ -291,7 +291,7 @@ public class ConceptEntry implements Serializable {
     public String getModified() {
         if (this.changeEvents != null && this.changeEvents.size() > 0) {
             Collections.sort(this.changeEvents);
-            if (ChangeEventConstants.CREATION.equalsIgnoreCase(changeEvents.get(changeEvents.size() - 1).getType())) {
+            if (ChangeEventTypes.CREATION == changeEvents.get(changeEvents.size() - 1).getType()) {
                 return changeEvents.get(0).getUserName();
             }
         }

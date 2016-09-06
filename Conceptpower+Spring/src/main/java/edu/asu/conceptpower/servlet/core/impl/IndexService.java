@@ -121,13 +121,13 @@ public class IndexService implements IIndexService {
     }
 
     /**
-     * This method updates the concept in lucene index based on id of the
-     * concept
+     * This method updates the concept in lucene index by deleting the concept
+     * entry based on the id and inserting the concept entry
      * 
      * @throws IllegalAccessException
      */
     @Override
-    public void updateConceptById(ConceptEntry entry)
+    public void updateConceptEntry(ConceptEntry entry)
             throws LuceneException, IndexerRunningException, IllegalAccessException {
         if (indexerRunningFlag.get()) {
             throw new IndexerRunningException(indexerRunning);
