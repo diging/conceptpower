@@ -73,10 +73,19 @@ public class XMLConceptMessage extends AXMLMessage {
         List<ChangeEvent> changeEvents = entry.getChangeEvents();
         Collections.sort(changeEvents);
 
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
-        sb.append(StringEscapeUtils.escapeXml10(
-                changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : ""));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
+        if (changeEvents != null && !changeEvents.isEmpty()) {
+            sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
+            sb.append(StringEscapeUtils.escapeXml10(
+                    changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : ""));
+            sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
+        }
+
+        else {
+            // creator id
+            sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
+            sb.append(StringEscapeUtils.escapeXml10(entry.getCreatorId() != null ? entry.getCreatorId().trim() : ""));
+            sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
+        }
 
         // equal to
         sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.EQUAL_TO + ">");
@@ -120,6 +129,24 @@ public class XMLConceptMessage extends AXMLMessage {
         sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.WORDNET_ID + ">");
 
         sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_ENTRY + ">");
+
+        // Adding alternative ids and their corresponding uris
+        if (entry.getAlternativeIds() != null && !entry.getAlternativeIds().isEmpty()) {
+            Map<String, String> uriMap = uriCreator.getUrisBasedOnIds(entry.getAlternativeIds());
+            if (uriMap != null && !uriMap.isEmpty()) {
+                sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ALTERNATIVE_IDS + ">");
+                for (Map.Entry<String, String> uri : uriMap.entrySet()) {
+                    sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + " ");
+                    sb.append(XMLConstants.CONCEPT_ID + "=\"" + uri.getKey() + "\" ");
+                    sb.append(XMLConstants.CONCEPT_URI + "=\"" + uri.getValue() + "\"");
+                    sb.append(">");
+                    sb.append(uri.getValue());
+                    sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + ">");
+                }
+                sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ALTERNATIVE_IDS + ">");
+            }
+
+        }
 
         return sb.toString();
     }

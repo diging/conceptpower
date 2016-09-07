@@ -3,7 +3,9 @@ package edu.asu.conceptpower.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -85,6 +87,8 @@ public class ConceptEntry implements Serializable {
     private String modifiedUser;
 
     private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
+
+    private Set<String> alternativeIds = new HashSet<>();
 
     public ConceptEntry() {
     }
@@ -398,6 +402,14 @@ public class ConceptEntry implements Serializable {
 
     public void setModifiedUser(String modifiedUser) {
         this.modifiedUser = modifiedUser;
+    }
+
+    public Set<String> getAlternativeIds() {
+        return alternativeIds;
+    }
+
+    public void setAlternativeIds(Set<String> alternativeIds) {
+        this.alternativeIds = alternativeIds;
     }
 
 }

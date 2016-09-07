@@ -1,5 +1,9 @@
 package edu.asu.conceptpower.root;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,4 +45,13 @@ public class URIHelper implements IURIHelper{
 		
 		return typeUriOrId.substring((XMLConstants.TYPE_NAMESPACE + XMLConstants.TYPE_PREFIX).length());
 	}
+
+    public Map<String, String> getUrisBasedOnIds(Set<String> ids) {
+        Map<String, String> uriPrefixes = new HashMap<>();
+        String uriPrefix = xmlConfig.getUriPrefix();
+        for (String id : ids) {
+            uriPrefixes.put(id, uriPrefix + id);
+        }
+        return uriPrefixes;
+    }
 }
