@@ -473,7 +473,7 @@
                         </div>
 
 
-                        <div class="modal-body">
+                        <div class="modal-body synonym-modal-body">
                             <div id="synonymViewDiv"
                                 style="max-width: 1000px; max-height: 500px;"
                                 hidden="true">
