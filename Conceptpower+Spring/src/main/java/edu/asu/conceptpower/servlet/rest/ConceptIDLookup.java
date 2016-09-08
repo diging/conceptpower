@@ -121,7 +121,9 @@ public class ConceptIDLookup {
         fieldMap.put(SearchFieldNames.WORDNETID, entry.getWordnetId());
         ConceptEntry[] conceptEntries = indexService.searchForConcepts(fieldMap, "AND");
         for (ConceptEntry conceptEntry : conceptEntries) {
-            entry.getAlternativeIds().add(conceptEntry.getId());
+            if (!entry.getId().equalsIgnoreCase(conceptEntry.getId())) {
+                entry.getAlternativeIds().add(conceptEntry.getId());
+            }
         }
     }
 }
