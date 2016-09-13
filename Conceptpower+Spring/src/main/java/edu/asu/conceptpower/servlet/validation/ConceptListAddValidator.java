@@ -30,7 +30,7 @@ public class ConceptListAddValidator implements Validator {
         if (!errors.hasErrors()) {
             ConceptListAddForm conceptListAddForm = (ConceptListAddForm) target;
             if (conceptListAddForm.getListName().equals(Constants.WORDNET_DICTIONARY)) {
-                errors.rejectValue("listName", "concept_name.wordnet");
+                errors.rejectValue("listName", "concept_list_name.wordnet");
             }
 
             if (!conceptListAddForm.getListName().equalsIgnoreCase(conceptListAddForm.getOldListName())) {
