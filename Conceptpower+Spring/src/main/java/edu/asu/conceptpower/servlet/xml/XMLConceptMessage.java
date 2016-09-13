@@ -78,9 +78,7 @@ public class XMLConceptMessage extends AXMLMessage {
             sb.append(StringEscapeUtils.escapeXml10(
                     changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : ""));
             sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
-        }
-
-        else {
+        } else {
             // creator id
             sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
             sb.append(StringEscapeUtils.escapeXml10(entry.getCreatorId() != null ? entry.getCreatorId().trim() : ""));

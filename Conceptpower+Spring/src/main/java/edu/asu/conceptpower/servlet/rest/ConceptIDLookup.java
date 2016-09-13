@@ -20,8 +20,6 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
-import edu.asu.conceptpower.servlet.core.IIndexService;
-import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
 import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
@@ -47,8 +45,7 @@ public class ConceptIDLookup {
 	private XMLMessageFactory messageFactory;
 
     @Autowired
-    private IIndexService indexService;
-
+    private IConceptManager conceptManager;
 	/**
 	 * This method provides concept information for the rest interface of the
 	 * form
@@ -90,10 +87,8 @@ public class ConceptIDLookup {
 
             try {
                 addAlternativeIds(pathParts[lastIndex], entry);
-            } catch (IllegalAccessException | LuceneException e) {
+            } catch (LuceneException e) {
                 return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.BAD_REQUEST);
-            } catch (IndexerRunningException ire) {
-                return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.CONFLICT);
             }
 
             ConceptType type = null;
@@ -108,22 +103,23 @@ public class ConceptIDLookup {
         return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
     }
 
-    private void addAlternativeIds(String id, ConceptEntry entry)
-            throws IllegalAccessException, LuceneException, IndexerRunningException {
+    private void addAlternativeIds(String id, ConceptEntry entry) throws LuceneException {
 
-        // Check if this id is same as the id sent by user
+        // User have queried with a general wordnet id
         if (!entry.getId().equalsIgnoreCase(id)) {
+            // general wordnet id
             entry.getAlternativeIds().add(id);
-        }
-
-        // Fetch the internal concept id based on the wordnetid
-        Map<String, String> fieldMap = new HashMap<String, String>();
-        fieldMap.put(SearchFieldNames.WORDNETID, entry.getWordnetId());
-        ConceptEntry[] conceptEntries = indexService.searchForConcepts(fieldMap, "AND");
-        for (ConceptEntry conceptEntry : conceptEntries) {
-            if (!entry.getId().equalsIgnoreCase(conceptEntry.getId())) {
-                entry.getAlternativeIds().add(conceptEntry.getId());
-            }
+            
+            ConceptEntry conceptEntry = conceptManager.getConceptEntry(entry.getWordnetId());
+            // CP id
+            entry.getAlternativeIds().add(conceptEntry.getId());
+            // specific wordnet ID
+            entry.getAlternativeIds().add(conceptEntry.getWordnetId());
+        } else {
+            // User queried with specific wordnet id or CP id. Add it
+            // directly from the entry parameter
+            entry.getAlternativeIds().add(entry.getId());
+            entry.getAlternativeIds().add(entry.getWordnetId());
         }
     }
 }

@@ -376,23 +376,22 @@ public class ConceptEntry implements Serializable {
     }
 
     public List<ChangeEvent> getChangeEvents() {
-        return changeEvents;
+        // Creates a copy of changeevent
+        return new ArrayList<>(this.changeEvents);
     }
 
-    public void setChangeEvents(List<ChangeEvent> changeEvents) {
-        this.changeEvents = changeEvents;
-    }
-
+    /**
+     * This method add the changeevent to the end of the list. The first element
+     * will always be a creator
+     * 
+     * @param event
+     */
     public void addNewChangeEvent(ChangeEvent event) {
-
-        // If already existing concept is changed, there are chances concepts
-        // would have been created before this change, and so chageeevent will
-        // be null for those concept.
-        // TO handle that case check for null and create a new changeevent.
 
         if (changeEvents == null) {
             this.changeEvents = new ArrayList<ChangeEvent>();
         }
+        // Appends to the end of the list
         this.changeEvents.add(event);
     }
 

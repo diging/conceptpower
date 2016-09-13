@@ -385,9 +385,7 @@ public class ConceptManager implements IConceptManager {
 
         // Creating the first change event
         ChangeEvent changeEvent = new ChangeEvent(userName, new Date(), ChangeEventTypes.CREATION);
-        List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
-        changeEventList.add(changeEvent);
-        entry.setChangeEvents(changeEventList);
+        entry.addNewChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
 
