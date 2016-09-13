@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 import edu.asu.conceptpower.servlet.core.POS;
@@ -40,6 +41,9 @@ public class Concepts {
 
     @Autowired
     private IConceptTypeManger typeManager;
+
+    @Autowired
+    private URIHelper uriHelper;
 
     private static final Logger logger = LoggerFactory.getLogger(Concepts.class);
 
@@ -78,9 +82,8 @@ public class Concepts {
                     HttpStatus.BAD_REQUEST);
         }
 
-        String id = null;
         try {
-            id = conceptManager.addConceptListEntry(conceptEntry, principal.getName());
+            conceptEntry.setId(conceptManager.addConceptListEntry(conceptEntry, principal.getName()));
         } catch (DictionaryDoesNotExistException e) {
             logger.error("Error creating concept from REST call.", e);
             return new ResponseEntity<String>("Specified concept list does not exist in Conceptpower.",
@@ -98,7 +101,8 @@ public class Concepts {
             return new ResponseEntity<String>(jsonObject.toJSONString(), HttpStatus.CONFLICT);
         }
 
-        jsonObject.put("id", id);
+        jsonObject.put(JsonFields.ID, conceptEntry.getId());
+        jsonObject.put(JsonFields.URI, uriHelper.getURI(conceptEntry));
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8");
@@ -141,10 +145,10 @@ public class Concepts {
 
             ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
 
-            String id = null;
             try {
-                id = conceptManager.addConceptListEntry(conceptEntry, principal.getName());
-                responseObj.put(JsonFields.ID, id);
+                conceptEntry.setId(conceptManager.addConceptListEntry(conceptEntry, principal.getName()));
+                responseObj.put(JsonFields.ID, conceptEntry.getId());
+                responseObj.put(JsonFields.URI, uriHelper.getURI(conceptEntry));
                 responseObj.put("success", true);
             } catch (DictionaryDoesNotExistException e) {
                 logger.error("Error creating concept from REST call.", e);

@@ -552,53 +552,48 @@
     </tr>
 </table>
 
-<form>
-    <div class="modal fade" role="dialog" id="synonymModal">
-        <div class="modal-dialog" tabindex="-1" role="dialog"
-            aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="vertical-alignment-helper">
-                <div class="modal-dialog vertical-align-center">
-                    <div class="modal-content">
+<div class="modal fade" role="dialog" id="synonymModal">
+    <div class="modal-dialog" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                            data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Search synonym</h4>
+                        <table id="synonymsDialogTable" hidden="true">
+                            <tr>
+                                <td><input type="text"
+                                    name="synonymname" id="synonymname"></td>
+                                <td><input type="hidden"
+                                    name="addedSynonnym"
+                                    id="addedSynonnym" /></td>
+                                <td><input type="button"
+                                    name="synsearch" id="synonymsearch"
+                                    value="Search"
+                                    class="btn btn-primary"></td>
+                            </tr>
+                        </table>
+                    </div>
 
-                        <div class="modal-header">
-                            <button type="button" class="close"
-                                data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Search synonym</h4>
-                            <table id="synonymsDialogTable"
-                                hidden="true">
-                                <tr>
-                                    <td><input type="text"
-                                        name="synonymname"
-                                        id="synonymname"></td>
-                                    <td><input type="hidden"
-                                        name="addedSynonnym"
-                                        id="addedSynonnym" /></td>
-                                    <td><input type="button"
-                                        name="synsearch"
-                                        id="synonymsearch"
-                                        value="Search"
-                                        class="btn btn-primary"></td>
-                                </tr>
+
+                    <div class="modal-body synonym-modal-body">
+                        <div id="synonymViewDiv"
+                            style="max-width: 1000px; max-height: 500px;"
+                            hidden="true">
+
+                            <table cellpadding="0" cellspacing="0"
+                                id="synonymstable" hidden="true"
+                                class="table table-striped table-bordered">
+                                <tbody>
+                                </tbody>
                             </table>
-                        </div>
 
-                        <div class="modal-body">
-                            <div id="synonymViewDiv"
-                                style="max-width: 1000px; max-height: 500px;"
-                                hidden="true">
-
-                                <table cellpadding="0" cellspacing="0"
-                                    id="synonymstable" hidden="true"
-                                    class="table table-striped table-bordered">
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</form>
+</div>
