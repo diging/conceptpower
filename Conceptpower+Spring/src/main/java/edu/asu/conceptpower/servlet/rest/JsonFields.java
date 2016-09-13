@@ -18,4 +18,5 @@ public interface JsonFields {
     public final static String EQUALS = "equals";
     public final static String SIMILAR = "similar";
     public final static String TYPE = "type";
+    public final static String URI = "uri";
 }
