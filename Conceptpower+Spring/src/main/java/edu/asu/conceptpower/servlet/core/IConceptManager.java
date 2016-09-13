@@ -20,7 +20,7 @@ public interface IConceptManager {
 	 *            of entry
 	 * @return Entry for ID or null.
 	 */
-	public abstract ConceptEntry getConceptEntry(String id)throws LuceneException;
+    public abstract ConceptEntry getConceptEntry(String id);
 
 	/**
 	 * Get an entry from WordNet given its WordNet ID.

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.URIHelper;
+import edu.asu.conceptpower.servlet.core.Constants;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 import edu.asu.conceptpower.servlet.core.POS;
@@ -47,6 +48,24 @@ public class Concepts {
 
     private static final Logger logger = LoggerFactory.getLogger(Concepts.class);
 
+    /**
+     * This method creates concepts as well as concept wrappers. This is decided
+     * based on the request parameter. If the request parameter contains the
+     * wrapper ids then concept is wrapped else the new concept is created.
+     * 
+     * Sample input
+     * 
+     * { "wordnetids":
+     * "WID-00450866-N-01-pony-trekking,WID-03981924-N-01-pony_cart",
+     * "synonymids" : " WID-02380464-N-01-polo_pony,WID-04206225-N-03-pony",
+     * "conceptlist" : "FirstList-1", "type" :
+     * "88bea1dc-1443-4296-8315-715c71128b01" "description" : "Description",
+     * "equalsTo" : "equals", "similarTo" : "similar" }
+     * 
+     * @param body
+     * @param principal
+     * @return
+     */
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "rest/concept/add", method = RequestMethod.POST)
     public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal) {
@@ -68,7 +87,14 @@ public class Concepts {
                     HttpStatus.BAD_REQUEST);
         }
 
-        JsonValidationResult result = checkJsonObject(jsonObject);
+        JsonValidationResult result = null;
+        if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
+            result = checkJsonObjectForWrapper(jsonObject);
+        }
+        else {
+            result = checkJsonObject(jsonObject);
+        }
+
         if (!result.isValid())
             return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
 
@@ -130,7 +156,14 @@ public class Concepts {
         while (listIt.hasNext()) {
             JSONObject jsonObject = listIt.next();
 
-            JsonValidationResult result = checkJsonObject(jsonObject);
+            JsonValidationResult result = null;
+
+            if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
+                result = checkJsonObjectForWrapper(jsonObject);
+            }
+            else {
+                result = checkJsonObject(jsonObject);
+            }
 
             JSONObject responseObj = new JSONObject();
             responseObj.put(JsonFields.WORD, jsonObject.get(JsonFields.WORD));
@@ -165,7 +198,7 @@ public class Concepts {
                 logger.error("Error creating concept from REST call.", e);
                 return new ResponseEntity<String>("Illegal Access", HttpStatus.BAD_REQUEST);
             } catch (IndexerRunningException ir) {
-                return new ResponseEntity<String>(jsonObject.toJSONString(), HttpStatus.CONFLICT);
+                return new ResponseEntity<String>(jsonObject.toJSONString(), HttpStatus.SERVICE_UNAVAILABLE);
             }
 
         }
@@ -189,10 +222,21 @@ public class Concepts {
                     false);
         }
 
-        if (jsonObject.get(JsonFields.DESCRIPTION) == null) {
+        String pos = jsonObject.get(JsonFields.POS).toString();
+        if (!POS.posValues.contains(pos)) {
+            logger.error("Error creating concept from REST call. " + pos + " does not exist.");
+            return new JsonValidationResult("POS '" + pos + "' does not exist.", jsonObject, false);
+        }
+
+        return checkJsonObjectForWrapper(jsonObject);
+    }
+
+    private JsonValidationResult checkJsonObjectForWrapper(JSONObject jsonObject) {
+
+        if (jsonObject.get(JsonFields.CONCEPT_LIST) == null) {
             return new JsonValidationResult(
-                    "Error parsing request: please provide a description for the concept ('description' attribute).",
-                    jsonObject, false);
+                    "Error parsing request: please provide a list name for the concept ('list' attribute).", jsonObject,
+                    false);
         }
 
         if (jsonObject.get(JsonFields.TYPE) == null) {
@@ -201,35 +245,40 @@ public class Concepts {
                     false);
         }
 
-        if (jsonObject.get(JsonFields.CONCEPT_LIST) == null) {
+        if (jsonObject.get(JsonFields.DESCRIPTION) == null) {
             return new JsonValidationResult(
-                    "Error parsing request: please provide a concept list for the concept ('conceptlist' attribute).",
+                    "Error parsing request: please provide a description for the concept ('description' attribute).",
                     jsonObject, false);
         }
-
-        String pos = jsonObject.get(JsonFields.POS).toString();
-        if (!POS.posValues.contains(pos)) {
-            logger.error("Error creating concept from REST call. " + pos + " does not exist.");
-            return new JsonValidationResult("POS '" + pos + "' does not exist.", jsonObject, false);
-        }
-
         return new JsonValidationResult(null, jsonObject, true);
     }
 
+
     private ConceptEntry createEntry(JSONObject jsonObject, String username) {
         ConceptEntry conceptEntry = new ConceptEntry();
-        conceptEntry.setCreatorId(username);
-        conceptEntry.setSynonymIds(jsonObject.get(JsonFields.SYNONYM_IDS) != null ? jsonObject.get(
-                JsonFields.SYNONYM_IDS).toString() : "");
-        conceptEntry.setWord(jsonObject.get(JsonFields.WORD).toString());
+        if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
+            conceptEntry.setWordnetId(jsonObject.get(JsonFields.WORDNET_ID).toString());
+            String[] wrappers = jsonObject.get(JsonFields.WORDNET_ID).toString().split(Constants.CONCEPT_SEPARATOR);
+            if (wrappers.length > 0) {
+                ConceptEntry existingConceptEntry = conceptManager.getConceptEntry(wrappers[0]);
+                conceptEntry.setWord(existingConceptEntry.getWord().replace("_", " "));
+                conceptEntry.setPos(existingConceptEntry.getPos());
+            }
+        } else {
+            conceptEntry.setWord(jsonObject.get(JsonFields.WORD).toString());
+            conceptEntry.setPos(jsonObject.get(JsonFields.POS).toString());
+        }
         conceptEntry.setConceptList(jsonObject.get(JsonFields.CONCEPT_LIST).toString());
-        conceptEntry.setPos(jsonObject.get(JsonFields.POS).toString());
+        conceptEntry.setCreatorId(username);
+        conceptEntry.setSynonymIds(jsonObject.get(JsonFields.SYNONYM_IDS) != null
+                ? jsonObject.get(JsonFields.SYNONYM_IDS).toString() : "");
         conceptEntry.setDescription(jsonObject.get(JsonFields.DESCRIPTION).toString());
-        conceptEntry.setEqualTo(jsonObject.get(JsonFields.EQUALS) != null ? jsonObject.get(JsonFields.EQUALS)
-                .toString() : "");
-        conceptEntry.setSimilarTo(jsonObject.get(JsonFields.SIMILAR) != null ? jsonObject.get(JsonFields.SIMILAR)
-                .toString() : "");
+        conceptEntry.setEqualTo(
+                jsonObject.get(JsonFields.EQUALS) != null ? jsonObject.get(JsonFields.EQUALS).toString() : "");
+        conceptEntry.setSimilarTo(
+                jsonObject.get(JsonFields.SIMILAR) != null ? jsonObject.get(JsonFields.SIMILAR).toString() : "");
         conceptEntry.setTypeId(jsonObject.get(JsonFields.TYPE).toString());
+
         return conceptEntry;
     }
 

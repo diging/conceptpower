@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
-import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
 import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
 
@@ -71,12 +69,7 @@ public class ConceptIDLookup {
         if (wordnetId == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
-        ConceptEntry entry = null;
-        try {
-            entry = dictManager.getConceptEntry(wordnetId);
-        } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        ConceptEntry entry = dictManager.getConceptEntry(wordnetId);
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
         List<String> xmlEntries = new ArrayList<String>();
 
