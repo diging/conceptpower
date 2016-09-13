@@ -185,7 +185,7 @@ public class ConceptAddController {
         try {
             entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
         } catch (IndexerRunningException e1) {
-            return new ResponseEntity<String>(e1.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<String>(e1.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         List<String> addedSynonymList = Arrays.asList(addedSynonnym.replaceAll("\\s", "").split(","));
         // Removing existing synonym from the entries.
@@ -230,7 +230,7 @@ public class ConceptAddController {
         try {
             entries = conceptManager.getConceptListEntriesForWord(conceptname.trim());
         } catch (IndexerRunningException e1) {
-            return new ResponseEntity<String>(e1.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<String>(e1.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer();
