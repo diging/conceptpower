@@ -402,7 +402,8 @@
 
 <table>
     <tr>
-        <td><form:form
+        <td>
+            <form:form
                 action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept/add"
                 commandName="conceptAddBean" method='post'
                 id="createconceptform">
@@ -546,20 +547,15 @@
                     </tr>
                 </table>
 
-            </form:form></td>
-
+            </form:form>
+        </td>
     </tr>
-
 </table>
-
 
 <form>
     <div class="modal fade" role="dialog" id="synonymModal">
-
-
         <div class="modal-dialog" tabindex="-1" role="dialog"
             aria-labelledby="myModalLabel" aria-hidden="true">
-
             <div class="vertical-alignment-helper">
                 <div class="modal-dialog vertical-align-center">
                     <div class="modal-content">
@@ -586,7 +582,6 @@
                             </table>
                         </div>
 
-
                         <div class="modal-body">
                             <div id="synonymViewDiv"
                                 style="max-width: 1000px; max-height: 500px;"
@@ -598,14 +593,12 @@
                                     <tbody>
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 </form>

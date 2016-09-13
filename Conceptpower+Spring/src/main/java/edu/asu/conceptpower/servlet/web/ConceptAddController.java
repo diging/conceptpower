@@ -94,12 +94,8 @@ public class ConceptAddController {
     @RequestMapping(value = "auth/conceptlist/addconcept")
     public String prepareConceptAdd(ModelMap model, @ModelAttribute("conceptAddBean") ConceptAddBean conceptAddBean) {
 
-        // model.addAttribute("ServiceBackBean", new ServiceBackBean());
         Map<String, String> serviceNameIdMap = serviceRegistry.getServiceNameIdMap();
         conceptAddBean.setServiceNameIdMap(serviceNameIdMap);
-        // model.addAttribute("SearchResultBackBeanForm", new
-        // SearchResultBackBeanForm());
-
         ConceptType[] allTypes = conceptTypesManager.getAllTypes();
         Map<String, String> types = new LinkedHashMap<String, String>();
         for (ConceptType conceptType : allTypes) {
