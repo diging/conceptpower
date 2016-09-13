@@ -46,17 +46,18 @@ public class RDFMessageFactory {
         String syntax = "RDF/XML";
         StringWriter out = new StringWriter();
         model.setNsPrefixes(getPrefixMap());
+        Property identifiers = model.createProperty(dCTerms + "identifiers");
+        Property madsrdfProperty = model.createProperty(madsrdf + "authoritativeLabel");
+        Property skosProperty = model.createProperty(skos + "prefLabel");
+        Property schemaName = model.createProperty(schema + "name");
+        Property schemaDescription = model.createProperty(schema + "description");
+        Property madsrdfCL = model.createProperty(madsrdf + "isMemberOfMADSCollection");
+        Property csCreator = model.createProperty(changeset + "creatorName");
+        Property owlEqualTo = model.createProperty(owl + "sameAs");
+        Property rdfsSeeAlso = model.createProperty(rdf + "seeAlso");
+        Property skosRelated = model.createProperty(skos + "related");
+
         for (ConceptEntry entry : entries) {
-            Property identifiers = model.createProperty(dCTerms + "identifiers");
-            Property madsrdfProperty = model.createProperty(madsrdf + "authoritativeLabel");
-            Property skosProperty = model.createProperty(skos + "prefLabel");
-            Property schemaName = model.createProperty(schema + "name");
-            Property schemaDescription = model.createProperty(schema + "description");
-            Property madsrdfCL = model.createProperty(madsrdf + "isMemberOfMADSCollection");
-            Property csCreator = model.createProperty(changeset + "creatorName");
-            Property owlEqualTo = model.createProperty(owl + "sameAs");
-            Property rdfsSeeAlso = model.createProperty(rdf + "seeAlso");
-            Property skosRelated = model.createProperty(skos + "related");
 
             Resource resource = model.createResource(creator.getURI(entry));
 
@@ -123,8 +124,9 @@ public class RDFMessageFactory {
                     resource.addProperty(RDF.type, cdocResource);
                 }
             }
-            model.write(out, syntax);
+
         }
+        model.write(out, syntax);
         return out.toString();
     }
 
