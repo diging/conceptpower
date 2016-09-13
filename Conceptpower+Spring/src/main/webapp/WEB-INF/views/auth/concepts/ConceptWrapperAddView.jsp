@@ -58,7 +58,6 @@
 
         //ajax call to add the concept selected for wrappping
         $('body').delegate('#conceptSearch tbody tr', "click", function() {
-            console.log("Inside t body");
             var aData = oTable.fnGetData(this); // get datarow
             if (null != aData) // null if we clicked on title row
             {
@@ -67,7 +66,6 @@
                 var wordnetID = aData[2];
                 var description = aData[5];
                 if (conceptID === wordnetID) {
-                    console.log(conceptID);
                     var wrapperids = '';
                     if (!$(this).hasClass('row_selected')) {
                         wrapperids = $("#wrapperids").val();
@@ -105,7 +103,6 @@
         });
 
         $('#detailsModal').on('show.bs.modal', function(event) {
-            console.log("Inside details Modal");
             var button = $(event.relatedTarget) // Button that triggered the modal
             var conceptid = button.data('conceptid') // Extract info from data-* attributes
             // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
@@ -117,6 +114,7 @@
                     conceptid : conceptid
                 },
                 success : function(details) {
+                    details = $.parseJSON(details);
                     $("#conceptTerm").text(details.name);
                     $("#detailsid").text(details.id);
                     $("#detailsuri").text(details.uri);
@@ -129,9 +127,6 @@
                     $("#detailscreator").text(details.creator);
                 }
             });
-            var modal = $(this)
-            /*modal.find('.modal-title').text('New message to ' + recipient)
-            modal.find('.modal-body input').val(recipient)*/
         });
 
     });
