@@ -19,5 +19,5 @@ public interface JsonFields {
     public final static String SIMILAR = "similar";
     public final static String TYPE = "type";
     public final static String URI = "uri";
-    public final static String WORDNET_ID = "wordnetids";
+    public final static String WORDNET_ID = "wordnetIds";
 }
