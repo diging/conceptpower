@@ -3,7 +3,11 @@ package edu.asu.conceptpower.servlet.rest;
 import java.io.IOException;
 import java.io.StringReader;
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ListIterator;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +38,8 @@ import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.exceptions.POSMismatchException;
+import edu.mit.jwi.item.WordID;
 
 @Controller
 public class Concepts {
@@ -63,7 +70,9 @@ public class Concepts {
      * "equalsTo" : "equals", "similarTo" : "similar" }
      * 
      * Please note any word or pos passed during concept wrapper creation will
-     * be ignore. Word and pos details are fetched from wordnet.
+     * be ignored. Word and pos details are fetched from wordnet. In case POS is
+     * entered by user, the code validates with the wordnet POS and throws an
+     * error if POS is not matching with wordnet
      * 
      * Sample input for creating a concept:
      * 
@@ -74,10 +83,12 @@ public class Concepts {
      * @param body
      * @param principal
      * @return
+     * @throws POSMismatchException
      */
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "rest/concept/add", method = RequestMethod.POST)
-    public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal) {
+    public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal)
+            throws POSMismatchException {
 
         StringReader reader = new StringReader(body);
         JSONParser jsonParser = new JSONParser();
@@ -147,7 +158,8 @@ public class Concepts {
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "rest/concepts/add", method = RequestMethod.POST)
-    public ResponseEntity<String> addConcepts(@RequestBody String body, Principal principal) {
+    public ResponseEntity<String> addConcepts(@RequestBody String body, Principal principal)
+            throws POSMismatchException {
         StringReader reader = new StringReader(body);
         JSONParser jsonParser = new JSONParser();
 
@@ -184,7 +196,7 @@ public class Concepts {
                 continue;
             }
 
-            ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
+            ConceptEntry conceptEntry = conceptEntry = createEntry(jsonObject, principal.getName());
 
             try {
                 conceptEntry.setId(conceptManager.addConceptListEntry(conceptEntry, principal.getName()));
@@ -258,11 +270,28 @@ public class Concepts {
                     "Error parsing request: please provide a description for the concept ('description' attribute).",
                     jsonObject, false);
         }
+
+        // Validation to check if wordnet ids are seperated by comma
+        if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
+            String wordnetIds = jsonObject.get(JsonFields.WORDNET_ID).toString();
+            List<String> wordnetIdsList = Arrays
+                    .asList(wordnetIds.split("\\s*" + Constants.CONCEPT_SEPARATOR + "\\s*"));
+            for (String wordNetId : wordnetIdsList) {
+                try{ 
+                    WordID.parseWordID(wordNetId);
+                } catch (IllegalArgumentException ex) {
+                    return new JsonValidationResult(
+                            "Error parsing request: please provide a valid list of wordnet ids seperated by commas.",
+                            jsonObject, false);
+                }
+            }
+        }
+
         return new JsonValidationResult(null, jsonObject, true);
     }
 
 
-    private ConceptEntry createEntry(JSONObject jsonObject, String username) {
+    private ConceptEntry createEntry(JSONObject jsonObject, String username) throws POSMismatchException {
         ConceptEntry conceptEntry = new ConceptEntry();
         if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
             conceptEntry.setWordnetId(jsonObject.get(JsonFields.WORDNET_ID).toString());
@@ -270,6 +299,15 @@ public class Concepts {
             if (wrappers.length > 0) {
                 ConceptEntry existingConceptEntry = conceptManager.getConceptEntry(wrappers[0]);
                 conceptEntry.setWord(existingConceptEntry.getWord().replace("_", " "));
+                // In case user has entered a POS value. Validate whether POS is
+                // same as wordnet POS
+                if (jsonObject.get(JsonFields.POS) != null) {
+                    if (!existingConceptEntry.getPos().equalsIgnoreCase(jsonObject.get(JsonFields.POS).toString())) {
+                        throw new POSMismatchException("Entered POS " + jsonObject.get(JsonFields.POS).toString()
+                                + " is not matching with wordnet POS " + existingConceptEntry.getPos()
+                                + ". Please enter POS matching wordnet concept POS.");
+                    }
+                }
                 conceptEntry.setPos(existingConceptEntry.getPos());
             }
         } else {
@@ -288,6 +326,11 @@ public class Concepts {
         conceptEntry.setTypeId(jsonObject.get(JsonFields.TYPE).toString());
 
         return conceptEntry;
+    }
+
+    @ExceptionHandler({ POSMismatchException.class })
+    public ResponseEntity<String> posMismatchHandler(HttpServletRequest req, Exception ex) {
+        return new ResponseEntity<String>(ex.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
     }
 
     class JsonValidationResult {
