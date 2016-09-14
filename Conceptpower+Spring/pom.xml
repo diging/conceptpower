@@ -505,8 +505,15 @@
 		<artifactId>jackson-core</artifactId>
 		<version>2.1.0</version>
 	</dependency>
-
-	</dependencies>
+	
+	<!-- Apache Jena for RDF -->
+	<dependency>
+		<groupId>org.apache.jena</groupId>
+		<artifactId>apache-jena-libs</artifactId>
+		<type>pom</type>
+		<version>3.0.1</version>
+	</dependency>
+	</dependencies> 
 
 	<scm>
 		<connection>scm:svn:http://none</connection>
