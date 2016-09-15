@@ -57,17 +57,21 @@ public class Concepts {
 
     /**
      * This method creates concepts as well as concept wrappers. This is decided
-     * based on the request parameter. If the request parameter contains the
-     * wrapper ids then concept is wrapped else the new concept is created.
+     * based on the request parameter. If the request parameter contains one or
+     * more wordnet ids then concept wrapper is created else a new concept is
+     * created.
      * 
      * Sample input for creating a concept wrapper:
      * 
-     * { "wordnetIds":
-     * "WID-00450866-N-01-pony-trekking,WID-03981924-N-01-pony_cart",
-     * "synonymids" : " WID-02380464-N-01-polo_pony,WID-04206225-N-03-pony",
-     * "conceptlist" : "FirstList-1", "type" :
-     * "88bea1dc-1443-4296-8315-715c71128b01", "description" : "Description",
-     * "equalsTo" : "equals", "similarTo" : "similar" }
+     * { 
+     *     "wordnetIds": "WID-00450866-N-01-pony-trekking,WID-03981924-N-01-pony_cart",
+     *     "synonymids" : "WID-02380464-N-01-polo_pony,WID-04206225-N-03-pony",
+     *     "conceptlist" : "FirstList-1", 
+     *     "type" :"88bea1dc-1443-4296-8315-715c71128b01", 
+     *     "description" : "Description",
+     *     "equalsTo" : "equals", 
+     *     "similarTo" : "similar" 
+     * }
      * 
      * Please note any word or pos passed during concept wrapper creation will
      * be ignored. Word and pos details are fetched from wordnet. In case POS is
@@ -76,9 +80,13 @@ public class Concepts {
      * 
      * Sample input for creating a concept:
      * 
-     * { "word":"kitty", "pos": "noun", "conceptlist":"mylist", "description":
-     * "Soft kitty, sleepy kitty, little ball of fur.",
-     * "type":"3b755111-545a-4c1c-929c-a2c0d4c3913b" }
+     * { 
+     *    "word": "kitty", 
+     *    "pos": "noun",
+     *    "conceptlist": "mylist", 
+     *    "description": "Soft kitty, sleepy kitty, little ball of fur.",
+     *    "type": "3b755111-545a-4c1c-929c-a2c0d4c3913b" 
+     * }
      * 
      * @param body
      * @param principal
@@ -180,8 +188,7 @@ public class Concepts {
 
             if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
                 result = checkJsonObjectForWrapper(jsonObject);
-            }
-            else {
+            } else {
                 result = checkJsonObject(jsonObject);
             }
 
@@ -239,7 +246,8 @@ public class Concepts {
         String pos = jsonObject.get(JsonFields.POS).toString();
         if (!POS.posValues.contains(pos)) {
             logger.debug("Error creating concept from REST call. " + pos + " does not exist.");
-            return new JsonValidationResult("POS '" + pos + "' does not exist.", jsonObject, false);
+            return new JsonValidationResult("Error parsing request: please provide a valid POS ('pos' attribute).",
+                    jsonObject, false);
         }
 
         if (jsonObject.get(JsonFields.WORD) == null) {
@@ -281,7 +289,8 @@ public class Concepts {
                     WordID.parseWordID(wordNetId);
                 } catch (IllegalArgumentException ex) {
                     return new JsonValidationResult(
-                            "Error parsing request: please provide a valid list of wordnet ids seperated by commas.",
+                            "Error parsing request: please provide a valid list of wordnet ids seperated by commas. Wordnet id "
+                                    + wordNetId + " is not matching.",
                             jsonObject, false);
                 }
             }
