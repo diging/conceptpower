@@ -53,11 +53,12 @@ public class ConceptDeleteController {
      * @param model
      *            A generic model holder for Servlet
      * @return String value to redirect user to concept delete page
+     * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
     public String prepareDeleteConcept(@PathVariable("conceptid") String conceptid, ModelMap model,
             @RequestParam(value = "fromHomeScreenDelete", required = false) String fromHomeScreenDelete)
-                    throws LuceneException {
+                    throws LuceneException, IndexerRunningException {
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
         model.addAttribute("word", concept.getWord());
         model.addAttribute("description", concept.getDescription());
@@ -71,7 +72,6 @@ public class ConceptDeleteController {
         model.addAttribute("user", concept.getModified());
         model.addAttribute("modified", concept.getModified());
         model.addAttribute("synonyms", concept.getSynonymIds());
-        // conceptManager.deleteConcept(conceptid);
 
         if (fromHomeScreenDelete != null) {
             model.addAttribute("fromHomeScreenDelete", fromHomeScreenDelete);

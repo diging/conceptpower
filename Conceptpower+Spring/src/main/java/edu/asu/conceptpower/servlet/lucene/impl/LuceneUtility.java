@@ -152,6 +152,7 @@ public class LuceneUtility implements ILuceneUtility {
                     if (searchFieldAnnotation.isIndexable()) {
                         doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
+                        
                     } else {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
                                 String.valueOf(contentOfField), Field.Store.YES));
@@ -396,13 +397,13 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
-                
+
                 if(searchString != null){
                     if (firstEntry != 1)
                         queryString.append(" " + operator + " ");
                     firstEntry++;
                     queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
-                    
+
                     StringBuffer searchBuffer = new StringBuffer("(");
                     String[] searchParts = searchString.split(" ");
                     
@@ -430,14 +431,14 @@ public class LuceneUtility implements ILuceneUtility {
                     searchBuffer.append(")");
                     queryString.append(searchBuffer.toString());
                 }
-                
+
             }
         }
 
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
         try {
-            
+
             Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
             TopDocs docs = searcher.search(q, numberOfResults);
             ScoreDoc[] hits = docs.scoreDocs;
@@ -457,7 +458,7 @@ public class LuceneUtility implements ILuceneUtility {
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
     }
-    
+
     /**
      * This method reloads the reader after every update to the index
      * 

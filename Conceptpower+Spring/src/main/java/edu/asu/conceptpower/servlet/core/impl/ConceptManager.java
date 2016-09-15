@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -399,7 +399,6 @@ public class ConceptManager implements IConceptManager {
         }
         indexService.insertConcept(entry);
         return id;
-
     }
     
 
@@ -425,20 +424,38 @@ public class ConceptManager implements IConceptManager {
     }
 
     protected String generateId(String prefix) {
-        String id = prefix + UUID.randomUUID().toString();
-
         while (true) {
-            ConceptEntry example = null;
-            example = new ConceptEntry();
+            String id = prefix + generateUniqueId();
+
+            ConceptEntry example = new ConceptEntry();
             example.setId(id);
             // if there doesn't exist an object with this id return id
             List<Object> results = client.queryByExample(example);
             if (results == null || results.size() == 0)
                 return id;
-
-            // try other id
-            id = prefix + UUID.randomUUID().toString();
         }
+    }
+
+    /**
+     * This methods generates a new 12 character long id. Note that this method
+     * does not assure that the id isn't in use yet.
+     * 
+     * Adapted from
+     * http://stackoverflow.com/questions/9543715/generating-human-readable
+     * -usable-short-but-unique-ids
+     * 
+     * @return 12 character id
+     */
+    private String generateUniqueId() {
+        char[] chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
+
+        Random random = new Random();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 12; i++) {
+            builder.append(chars[random.nextInt(62)]);
+        }
+
+        return builder.toString();
     }
 
     @Override

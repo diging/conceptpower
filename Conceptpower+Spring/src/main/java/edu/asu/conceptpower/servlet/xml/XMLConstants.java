@@ -7,6 +7,8 @@ public interface XMLConstants {
 	public final static String ID_NAMESPACE = "http://www.digitalhps.org/concepts/";
 	public final static String TYPE_NAMESPACE = "http://www.digitalhps.org/types/";
 	public final static String TYPE_PREFIX = "TYPE_";
+	public final static String LIST_NAMESPACE = "http://www.digitalhps.org/lists/";
+	public final static String WORDNET_NAMESPACE = "http://www.digitalhps.org/wordnet/";
 	
 	// nodes
 	public final static String CONCEPTPOWER_ANSWER = "conceptpowerReply";

@@ -3,6 +3,7 @@ package edu.asu.conceptpower.servlet.wrapper.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
  */
 @Component
 public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
-    
+
     @Autowired
     private IConceptManager conceptManager;
 
@@ -33,17 +34,16 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
     @Autowired
     private IUserManager usersManager;
-    
+
     @Autowired
     private IURIHelper helper;
-    
+
     /**
      * This method creates wrappers for the concept entries passed as parameter
      * 
      * @param entries
      *            Holds the concept entries to be wrapped
      * @return
-     * @throws LuceneException 
      */
     @Override
     public List<ConceptEntryWrapper> createWrappers(ConceptEntry[] entries) throws LuceneException {
@@ -53,7 +53,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             return foundConcepts;
 
         for (ConceptEntry entry : entries) {
-            
+
             ConceptEntryWrapper wrapper = new ConceptEntryWrapper(entry);
             wrapper.setUri(helper.getURI(entry));
             if (entry.getTypeId() != null && !entry.getTypeId().isEmpty())
@@ -64,16 +64,13 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
             // if entry wraps a wordnet concepts, add it here
             List<ConceptEntry> wordnetEntries = new ArrayList<ConceptEntry>();
-            String wordnetIds = (entry.getWordnetId() != null ? entry
-                    .getWordnetId() : "");
+            String wordnetIds = (entry.getWordnetId() != null ? entry.getWordnetId() : "");
             {
-                String[] ids = wordnetIds.trim().split(
-                        Constants.CONCEPT_SEPARATOR);
+                String[] ids = wordnetIds.trim().split(Constants.CONCEPT_SEPARATOR);
                 if (ids != null) {
                     for (String id : ids) {
                         if (id != null && !id.trim().isEmpty()) {
-                            ConceptEntry wordnetEntry = conceptManager
-                                    .getWordnetConceptEntry(id);
+                            ConceptEntry wordnetEntry = conceptManager.getWordnetConceptEntry(id);
                             if (wordnetEntry != null)
                                 wordnetEntries.add(wordnetEntry);
                         }
@@ -85,11 +82,9 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
             // build description considering all the wordnet entries wrappe
             StringBuffer sb = new StringBuffer();
-            sb.append(entry.getDescription());
             if (wordnetEntries.size() > 0) {
                 for (ConceptEntry wordnetConcept : wordnetEntries) {
-                    if (wordnetConcept.getDescription() != null && (entry.getDescription() == null
-                            || !wordnetConcept.getDescription().trim().equals(entry.getDescription().trim()))) {
+                    if (wordnetConcept.getDescription() != null) {
                         sb.append("<br/><i>" + wordnetConcept.getWord() + "</i>");
                         sb.append("<br/>" + wordnetConcept.getDescription());
                     }
@@ -98,19 +93,27 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             wrapper.setDescription(sb.toString());
 
             List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
-            String synonymIds = (entry.getSynonymIds() != null ? entry
-                    .getSynonymIds() : "");
+            String synonymIds = (entry.getSynonymIds() != null ? entry.getSynonymIds() : "");
             if (synonymIds != null) {
 
-                String[] ids = synonymIds.trim().split(
-                        Constants.SYNONYM_SEPARATOR);
+                String[] ids = synonymIds.trim().split(Constants.SYNONYM_SEPARATOR);
                 if (ids != null) {
                     for (String id : ids) {
                         if (id != null && !id.trim().isEmpty()) {
-                            ConceptEntry synonym = conceptManager
-                                    .getConceptEntry(id);
-                            if (synonym != null)
-                                synonyms.add(synonym);
+                            try {
+                                ConceptEntry synonym = conceptManager.getConceptEntry(id);
+                                if (synonym != null)
+                                    synonyms.add(synonym);
+                            } catch (IllegalArgumentException ie) {
+                                if (wrapper.isError()) {
+                                    wrapper.setErrorMsg(
+                                            StringEscapeUtils.escapeXml10(wrapper.getErrorMsg() + "," + id));
+                                } else {
+                                    wrapper.setErrorMsg(
+                                            "The following synonym ids do not seem to exist in the database: " + id);
+                                    wrapper.setError(true);
+                                }
+                            }
                         }
                     }
                     wrapper.setSynonyms(synonyms);
@@ -121,4 +124,5 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
         return foundConcepts;
     }
+
 }

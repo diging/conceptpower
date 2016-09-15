@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,12 +20,13 @@ import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.rdf.RDFMessageFactory;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
 import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
 
 /**
- * This class provides a method to retrieve all concepts
- * for a given word and part of speech. It answers requests of the form:
+ * This class provides a method to retrieve all concepts for a given word and
+ * part of speech. It answers requests of the form:
  * "http://[server.url]/conceptpower/rest/ConceptLookup/{word}/{pos}"
  * 
  * @author Chetan, Julia Damerow
@@ -36,35 +35,38 @@ import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
 @Controller
 public class ConceptLookup {
 
-	@Autowired
-	private IConceptManager dictManager;
+    @Autowired
+    private IConceptManager dictManager;
 
-	@Autowired
-	private TypeDatabaseClient typeManager;
+    @Autowired
+    private TypeDatabaseClient typeManager;
 
-	@Autowired
-	private XMLMessageFactory messageFactory;
+    @Autowired
+    private XMLMessageFactory messageFactory;
 
-	/**
-	 * This method provides information of a concept for a rest interface of the
-	 * form "http://[server.url]/conceptpower/rest/ConceptLookup/{word}/{pos}"
-	 * 
-	 * @param word
-	 *            String value of concept to be looked
-	 * @param pos
-	 *            String value of the POS of concept to be looked
-	 * @return XML containing information of given concept for given POS
-	 */
-	@RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/xml; charset=utf-8")
-	public @ResponseBody ResponseEntity<String> getWordNetEntry(@PathVariable("word") String word,
+    @Autowired
+    private RDFMessageFactory rdfFactory;
+
+    /**
+     * This method provides information of a concept for a rest interface of the
+     * form "http://[server.url]/conceptpower/rest/ConceptLookup/{word}/{pos}"
+     * 
+     * @param word
+     *            String value of concept to be looked
+     * @param pos
+     *            String value of the POS of concept to be looked
+     * @return XML containing information of given concept for given POS
+     */
+    @RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/xml")
+    public @ResponseBody ResponseEntity<String> getWordNetEntry(@PathVariable("word") String word,
             @PathVariable("pos") String pos) {
         ConceptEntry[] entries = null;
         try {
             entries = dictManager.getConceptListEntriesForWord(word, pos, null);
         } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch(IndexerRunningException ie){
             return new ResponseEntity<String>(ie.getMessage(), HttpStatus.OK);
         }
@@ -87,4 +89,21 @@ public class ConceptLookup {
 
         return new ResponseEntity<String>(returnMsg.getXML(xmlEntries), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/rdf+xml")
+    public @ResponseBody ResponseEntity<String> getWordNetEntryInRdf(@PathVariable("word") String word,
+            @PathVariable("pos") String pos) {
+        ConceptEntry[] entries = null;
+        try {
+            entries = dictManager.getConceptListEntriesForWord(word, pos, null);
+        } catch (LuceneException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IllegalAccessException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IndexerRunningException ir) {
+            return new ResponseEntity<String>(ir.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<String>(rdfFactory.generateRDF(entries), HttpStatus.OK);
+    }
+
 }
