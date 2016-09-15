@@ -247,6 +247,13 @@
     $(function() {
         $("#serviceSearch").click(function() {
             var serviceterm = $("#serviceterm").val();
+            // Added validation for search term
+            if(!serviceterm.trim()) {
+                $("#serviceTermError").html('Term cannot be empty.');
+                return false;
+            } else {
+                $("#serviceTermError").html('');
+            }
             var serviceid = $("#selectedServiceNameIdMap").val();
             $.ajax({
                 type : "GET",
@@ -256,16 +263,24 @@
                     serviceid : serviceid
                 },
                 success : function(response) {
-                    if (response.length > 0) {
+                    if (response.length > 0 && response != "[]") {
                         var data = jQuery.parseJSON(response);
                         $('#serviceResultTable').dataTable().fnClearTable();
                         $('#serviceResultTable').dataTable().fnAddData(data);
                         $('#showServiceResult').show();
                     } else {
                         $('#serviceResultTable').dataTable().fnClearTable();
-                        $('#showServiceResult').show();
+                        $('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
+                        $('#showServiceResult').hide();
+                        $("#serviceTermError").html('No data found.');
                     }
-                }
+                },
+				error : function(response) {
+                    $('#serviceResultTable').dataTable().fnClearTable();
+                    $('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
+                    $('#showServiceResult').hide();
+                    $("#serviceTermError").html('Processing error. Try after sometime.');
+				}
             });
         });
     });
@@ -389,6 +404,16 @@
     function showFormProcessing() {
         $('#loadingDiv').show();
     }
+    
+    
+    $(document).ready(function() {
+        $(window).keydown(function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
 </script>
 
 <table style="padding: 0px;">
@@ -428,12 +453,13 @@
                                         class="form-control"></td>
                                     <td><input type="button"
                                         id="serviceSearch"
-                                        value="search" class="button"
-                                        class="btn btn-primary" /> <img
+                                        value="search" 
+                                        class="btn btn-primary btn-sm" /> <img
                                         alt="" id="loadingDiv"
                                         width="16px" height="16px"
                                         src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
                                         class="none"></td>
+                                    <td><div id="serviceTermError" style="color: red"></div></td>
                                 </tr>
                             </table>
                         </td>
