@@ -104,22 +104,20 @@ public class ConceptIDLookup {
     }
 
     private void addAlternativeIds(String id, ConceptEntry entry) throws LuceneException {
-
-        // User have queried with a general wordnet id
-        if (!entry.getId().equalsIgnoreCase(id)) {
-            // general wordnet id
+        if (id.contains("??")) {
+            // User have queried with a general wordnet id
+            // Added general wordnet id, CP id and specific wordnet id
             entry.getAlternativeIds().add(id);
-            
-            ConceptEntry conceptEntry = conceptManager.getConceptEntry(entry.getWordnetId());
-            // CP id
-            entry.getAlternativeIds().add(conceptEntry.getId());
-            // specific wordnet ID
-            entry.getAlternativeIds().add(conceptEntry.getWordnetId());
-        } else {
-            // User queried with specific wordnet id or CP id. Add it
-            // directly from the entry parameter
             entry.getAlternativeIds().add(entry.getId());
-            entry.getAlternativeIds().add(entry.getWordnetId());
+        } else if (!id.startsWith("CON")) {
+            // User has queried with specific wordnet id
+            // Added specific wordnet id and CP id
+            entry.getAlternativeIds().add(entry.getId());
+        }
+        // Specific Wordnet id is added irrespective of what is queried for
+        String[] wordNetIds = entry.getWordnetId().split(",");
+        for (String wordNetId : wordNetIds) {
+            entry.getAlternativeIds().add(wordNetId);
         }
     }
 }
