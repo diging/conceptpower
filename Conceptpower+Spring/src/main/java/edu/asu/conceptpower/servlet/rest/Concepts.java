@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,7 +35,6 @@ import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.exceptions.POSMismatchException;
 import edu.mit.jwi.item.WordID;
 
 @Controller
@@ -95,8 +91,7 @@ public class Concepts {
      */
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "rest/concept/add", method = RequestMethod.POST)
-    public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal)
-            throws POSMismatchException {
+    public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal) {
 
         StringReader reader = new StringReader(body);
         JSONParser jsonParser = new JSONParser();
@@ -115,17 +110,17 @@ public class Concepts {
                     HttpStatus.BAD_REQUEST);
         }
 
+        ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
+
         JsonValidationResult result = null;
         if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
-            result = checkJsonObjectForWrapper(jsonObject);
+            result = checkJsonObjectForWrapper(jsonObject, conceptEntry);
         } else {
-            result = checkJsonObject(jsonObject);
+            result = checkJsonObject(jsonObject, conceptEntry);
         }
 
         if (!result.isValid())
             return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
-
-        ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
 
         // check type
         String typeId = conceptEntry.getTypeId();
@@ -166,8 +161,7 @@ public class Concepts {
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "rest/concepts/add", method = RequestMethod.POST)
-    public ResponseEntity<String> addConcepts(@RequestBody String body, Principal principal)
-            throws POSMismatchException {
+    public ResponseEntity<String> addConcepts(@RequestBody String body, Principal principal) {
         StringReader reader = new StringReader(body);
         JSONParser jsonParser = new JSONParser();
 
@@ -186,10 +180,12 @@ public class Concepts {
 
             JsonValidationResult result = null;
 
+            ConceptEntry conceptEntry = conceptEntry = createEntry(jsonObject, principal.getName());
+
             if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
-                result = checkJsonObjectForWrapper(jsonObject);
+                result = checkJsonObjectForWrapper(jsonObject, conceptEntry);
             } else {
-                result = checkJsonObject(jsonObject);
+                result = checkJsonObject(jsonObject, conceptEntry);
             }
 
             JSONObject responseObj = new JSONObject();
@@ -202,8 +198,6 @@ public class Concepts {
                 responseObj.put("success", false);
                 continue;
             }
-
-            ConceptEntry conceptEntry = conceptEntry = createEntry(jsonObject, principal.getName());
 
             try {
                 conceptEntry.setId(conceptManager.addConceptListEntry(conceptEntry, principal.getName()));
@@ -237,7 +231,7 @@ public class Concepts {
                 HttpStatus.OK);
     }
 
-    private JsonValidationResult checkJsonObject(JSONObject jsonObject) {
+    private JsonValidationResult checkJsonObject(JSONObject jsonObject, ConceptEntry entry) {
         if (jsonObject.get(JsonFields.POS) == null) {
             return new JsonValidationResult("Error parsing request: please provide a POS ('pos' attribute).",
                     jsonObject, false);
@@ -256,10 +250,10 @@ public class Concepts {
                     false);
         }
 
-        return checkJsonObjectForWrapper(jsonObject);
+        return checkJsonObjectForWrapper(jsonObject, entry);
     }
 
-    private JsonValidationResult checkJsonObjectForWrapper(JSONObject jsonObject) {
+    private JsonValidationResult checkJsonObjectForWrapper(JSONObject jsonObject, ConceptEntry entry) {
 
         if (jsonObject.get(JsonFields.CONCEPT_LIST) == null) {
             return new JsonValidationResult(
@@ -290,9 +284,18 @@ public class Concepts {
                 } catch (IllegalArgumentException ex) {
                     return new JsonValidationResult(
                             "Error parsing request: please provide a valid list of wordnet ids seperated by commas. Wordnet id "
-                                    + wordNetId + " is not matching.",
+                                    + wordNetId + " doesn't exist.",
                             jsonObject, false);
                 }
+            }
+        }
+
+        // In case user has entered a POS value. Validate whether POS is
+        // same as wordnet POS
+        if (jsonObject.get(JsonFields.POS) != null) {
+            if (!entry.getPos().equalsIgnoreCase(jsonObject.get(JsonFields.POS).toString())) {
+                return new JsonValidationResult(
+                        "Error parsing request: please enter POS that matches with the wordnet POS " +entry.getPos(), jsonObject, false);
             }
         }
 
@@ -300,7 +303,7 @@ public class Concepts {
     }
 
 
-    private ConceptEntry createEntry(JSONObject jsonObject, String username) throws POSMismatchException {
+    private ConceptEntry createEntry(JSONObject jsonObject, String username) {
         ConceptEntry conceptEntry = new ConceptEntry();
         if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
             conceptEntry.setWordnetId(jsonObject.get(JsonFields.WORDNET_ID).toString());
@@ -308,15 +311,6 @@ public class Concepts {
             if (wrappers.length > 0) {
                 ConceptEntry existingConceptEntry = conceptManager.getConceptEntry(wrappers[0]);
                 conceptEntry.setWord(existingConceptEntry.getWord().replace("_", " "));
-                // In case user has entered a POS value. Validate whether POS is
-                // same as wordnet POS
-                if (jsonObject.get(JsonFields.POS) != null) {
-                    if (!existingConceptEntry.getPos().equalsIgnoreCase(jsonObject.get(JsonFields.POS).toString())) {
-                        throw new POSMismatchException("Entered POS " + jsonObject.get(JsonFields.POS).toString()
-                                + " is not matching with wordnet POS " + existingConceptEntry.getPos()
-                                + ". Please enter POS matching wordnet concept POS.");
-                    }
-                }
                 conceptEntry.setPos(existingConceptEntry.getPos());
             }
         } else {
@@ -335,11 +329,6 @@ public class Concepts {
         conceptEntry.setTypeId(jsonObject.get(JsonFields.TYPE).toString());
 
         return conceptEntry;
-    }
-
-    @ExceptionHandler({ POSMismatchException.class })
-    public ResponseEntity<String> posMismatchHandler(HttpServletRequest req, Exception ex) {
-        return new ResponseEntity<String>(ex.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
     }
 
     class JsonValidationResult {
