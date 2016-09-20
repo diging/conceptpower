@@ -2,12 +2,13 @@ package edu.asu.conceptpower.servlet.db4o;
 
 import java.util.List;
 
-import com.db4o.ObjectSet;
-
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 
 public interface IConceptDBManager {
+
+    public static final int ASCENDING = 1;
+    public static final int DESCENDING = -1;
 
 	public abstract ConceptEntry getEntry(String id);
 
@@ -32,7 +33,8 @@ public interface IConceptDBManager {
 	 */
 	public abstract List<?> getAllElementsOfType(Class<?> clazz);
 
-	public abstract List<ConceptEntry> getAllEntriesFromList(String listname);
+    public abstract List<ConceptEntry> getAllEntriesFromList(String conceptList, int pageNo, int pageSize,
+            String sortBy, int sortDirection);
 
 	public abstract void store(Object element, String databasename);
 

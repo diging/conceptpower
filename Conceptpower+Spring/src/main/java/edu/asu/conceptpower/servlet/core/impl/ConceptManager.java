@@ -298,9 +298,10 @@ public class ConceptManager implements IConceptManager {
      * .String)
      */
     @Override
-    public List<ConceptEntry> getConceptListEntries(String conceptList) throws LuceneException {
+    public List<ConceptEntry> getConceptListEntries(String conceptList, int pageNo, int pageSize, int sortDirection)
+            throws LuceneException {
 
-        List<ConceptEntry> entries = client.getAllEntriesFromList(conceptList);
+        List<ConceptEntry> entries = client.getAllEntriesFromList(conceptList, pageNo, pageSize, "id", sortDirection);
         Collections.sort(entries, new Comparator<ConceptEntry>() {
 
             public int compare(ConceptEntry o1, ConceptEntry o2) {

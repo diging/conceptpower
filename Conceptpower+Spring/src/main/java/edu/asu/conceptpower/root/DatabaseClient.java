@@ -1,11 +1,15 @@
 package edu.asu.conceptpower.root;
 
 import java.lang.reflect.Field;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Predicate;
+import com.db4o.query.Query;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
@@ -25,6 +30,7 @@ public class DatabaseClient implements IConceptDBManager {
 
     private ObjectContainer wordnetCacheClient;
     private ObjectContainer dictionaryClient;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     @Qualifier("wordnetCacheDatabaseManager")
@@ -296,17 +302,74 @@ public class DatabaseClient implements IConceptDBManager {
      * lang.String)
      */
     @Override
-    public List<ConceptEntry> getAllEntriesFromList(String listname) {
+    public List<ConceptEntry> getAllEntriesFromList(String listname, int page, int pageSize, final String sortBy,
+            final int sortDirection) {
         ConceptEntry entry = new ConceptEntry();
         entry.setConceptList(listname);
 
-        List<ConceptEntry> results = wordnetCacheClient.queryByExample(entry);
-        List<ConceptEntry> dictResults = dictionaryClient.queryByExample(entry);
+        Query wordNetQuery = wordnetCacheClient.query();
+        wordNetQuery.constrain(ConceptEntry.class);
+        wordNetQuery.descend("conceptList").constrain(listname);
+
+        Query dictQuery = dictionaryClient.query();
+        dictQuery.constrain(ConceptEntry.class);
+        dictQuery.descend("conceptList").constrain(listname);
+
+        try {
+            final Field sortField = ConceptEntry.class.getDeclaredField(sortBy);
+            sortField.setAccessible(true);
+
+            Comparator<ConceptEntry> conceptEntryComparator = new Comparator() {
+
+                @Override
+                public int compare(Object o1, Object o2) {
+                    Object o1FieldContent;
+                    Object o2FieldContent;
+                    try {
+                        if (sortDirection == IConceptDBManager.ASCENDING) {
+                            o1FieldContent = sortField.get(o1);
+                            o2FieldContent = sortField.get(o2);
+                        } else {
+                            o2FieldContent = sortField.get(o1);
+                            o1FieldContent = sortField.get(o2);
+                        }
+                    } catch (IllegalArgumentException | IllegalAccessException e) {
+                        logger.error("Error accessing field.", e);
+                        return 0;
+                    }
+
+                    if (sortBy.endsWith("Date")) {
+                        ZonedDateTime date1 = ZonedDateTime.parse(o1FieldContent.toString());
+                        ZonedDateTime date2 = ZonedDateTime.parse(o2FieldContent.toString());
+                        return date1.compareTo(date2);
+                    }
+                    if (o1FieldContent instanceof Integer) {
+                        return ((Integer) o1FieldContent).compareTo((Integer) o2FieldContent);
+                    }
+                    return o1FieldContent.toString().compareTo(o2FieldContent.toString());
+                }
+            };
+            
+            wordNetQuery.sortBy(conceptEntryComparator);
+            dictQuery.sortBy(conceptEntryComparator);
+        } catch (NoSuchFieldException | SecurityException e) {
+            logger.error("Couldn't sort list.", e);
+            return null;
+        }
+
+        List<ConceptEntry> results = wordNetQuery.execute();
+        List<ConceptEntry> dictResults = dictQuery.execute();
 
         List<ConceptEntry> allResults = new ArrayList<ConceptEntry>();
         allResults.addAll(results);
         allResults.addAll(dictResults);
-        return allResults;
+
+        int startIndex = (page - 1) * pageSize;
+        int endIndex = startIndex + pageSize;
+        if (endIndex > allResults.size()) {
+            endIndex = allResults.size();
+        }
+        return allResults.subList(startIndex, endIndex);
     }
 
     /*

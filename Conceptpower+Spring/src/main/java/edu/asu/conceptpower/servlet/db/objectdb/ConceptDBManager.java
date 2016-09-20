@@ -64,7 +64,8 @@ public class ConceptDBManager implements IConceptDBManager {
 	}
 
 	@Override
-	public List<ConceptEntry> getAllEntriesFromList(String listname) {
+    public List<ConceptEntry> getAllEntriesFromList(String conceptList, int pageNo, int pageSize, String sortBy,
+            int sortDirection) {
 		// TODO Auto-generated method stub
 		return null;
 	}

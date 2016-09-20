@@ -92,7 +92,8 @@ public interface IConceptManager {
 	 */
 	public abstract ConceptEntry[] getConceptListEntriesForWord(String word)throws LuceneException,IllegalAccessException, IndexerRunningException;
 
-	public abstract List<ConceptEntry> getConceptListEntries(String conceptList)throws LuceneException;
+    public abstract List<ConceptEntry> getConceptListEntries(String conceptList, int pageNo, int pageSize,
+            int sortDirection) throws LuceneException;
 
 	public abstract void addConceptListEntry(String word, String pos,
 			String description, String conceptListName, String typeId,
