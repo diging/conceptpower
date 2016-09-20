@@ -246,44 +246,50 @@
     //service 
     $(function() {
         $("#serviceSearch").click(function() {
-            var serviceterm = $("#serviceterm").val();
-            // Added validation for search term
-            if(!serviceterm.trim()) {
-                $("#serviceTermError").html('Term cannot be empty.');
-                return false;
-            } else {
-                $("#serviceTermError").html('');
-            }
-            var serviceid = $("#selectedServiceNameIdMap").val();
-            $.ajax({
-                type : "GET",
-                url : "${pageContext.servletContext.contextPath}/serviceSearch",
-                data : {
-                    serviceterm : serviceterm,
-                    serviceid : serviceid
-                },
-                success : function(response) {
-                    if (response.length > 0 && response != "[]") {
-                        var data = jQuery.parseJSON(response);
-                        $('#serviceResultTable').dataTable().fnClearTable();
-                        $('#serviceResultTable').dataTable().fnAddData(data);
-                        $('#showServiceResult').show();
-                    } else {
-                        $('#serviceResultTable').dataTable().fnClearTable();
-                        $('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
-                        $('#showServiceResult').hide();
-                        $("#serviceTermError").html('No data found.');
-                    }
-                },
-				error : function(response) {
+            getTermDetails();
+        });
+    });
+    
+    function getTermDetails() {
+
+        var serviceterm = $("#serviceterm").val();
+        // Added validation for search term
+        if(!serviceterm.trim()) {
+            $("#serviceTermError").html('Term cannot be empty.');
+            return false;
+        } else {
+            $("#serviceTermError").html('');
+        }
+        var serviceid = $("#selectedServiceNameIdMap").val();
+        $.ajax({
+            type : "GET",
+            url : "${pageContext.servletContext.contextPath}/serviceSearch",
+            data : {
+                serviceterm : serviceterm,
+                serviceid : serviceid
+            },
+            success : function(response) {
+                if (response.length > 0 && response != "[]") {
+                    var data = jQuery.parseJSON(response);
+                    $('#serviceResultTable').dataTable().fnClearTable();
+                    $('#serviceResultTable').dataTable().fnAddData(data);
+                    $('#showServiceResult').show();
+                } else {
                     $('#serviceResultTable').dataTable().fnClearTable();
                     $('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
                     $('#showServiceResult').hide();
-                    $("#serviceTermError").html('Processing error. Try after sometime.');
-				}
-            });
+                    $("#serviceTermError").html('No data found.');
+                }
+            },
+			error : function(response) {
+                $('#serviceResultTable').dataTable().fnClearTable();
+                $('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
+                $('#showServiceResult').hide();
+                $("#serviceTermError").html('Processing error. Try after sometime.');
+			}
         });
-    });
+    }
+    
     $(function() {
         $("#showServiceResult").click(function() {
             $('#serviceResult').toggle();
@@ -407,10 +413,10 @@
     
     
     $(document).ready(function() {
-        $(window).keydown(function(event) {
+        $("#serviceterm").keydown(function(event) {
             if (event.keyCode == 13) {
                 event.preventDefault();
-                return false;
+                return getTermDetails();
             }
         });
     });
