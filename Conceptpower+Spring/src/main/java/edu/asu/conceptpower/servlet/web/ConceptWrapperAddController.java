@@ -209,7 +209,7 @@ public class ConceptWrapperAddController {
         try {
             entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
         } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IndexerRunningException ex) {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.OK);
         }

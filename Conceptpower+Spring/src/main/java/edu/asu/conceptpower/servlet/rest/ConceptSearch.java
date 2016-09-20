@@ -75,7 +75,7 @@ public class ConceptSearch {
         try {
             searchResults = manager.searchForConcepts(searchFields, operator);
         } catch (LuceneException | IllegalAccessException | IndexerRunningException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         List<String> xmlEntries = new ArrayList<String>();

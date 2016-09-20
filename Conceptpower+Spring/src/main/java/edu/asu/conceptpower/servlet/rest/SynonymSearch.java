@@ -77,7 +77,7 @@ public class SynonymSearch {
         try {
             synonyms = dictManager.getSynonymsForConcept(wordnetId);
         } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 		List<String> xmlEntries = new ArrayList<String>();
 		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
