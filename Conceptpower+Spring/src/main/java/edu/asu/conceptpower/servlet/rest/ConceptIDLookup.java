@@ -96,7 +96,7 @@ public class ConceptIDLookup {
                 if (conceptTypesService
                         .getConceptTypeByConceptId(pathParts[lastIndex]) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
                     ConceptEntry wrapperConceptEntry = conceptManager.getConceptEntry(entry.getId());
-                    entry.setId(wrapperConceptEntry.getId());
+                    wrapperConceptEntry.copyConceptEntry(entry);
                 }
                 addAlternativeIds(pathParts[lastIndex], entry);
             } catch (LuceneException e) {

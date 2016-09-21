@@ -411,4 +411,16 @@ public class ConceptEntry implements Serializable {
         this.alternativeIds = alternativeIds;
     }
 
+    public void copyConceptEntry(ConceptEntry destination) {
+        destination.setId(this.getId());
+        destination.setTypeId(this.getTypeId());
+        destination.setDescription(this.getDescription());
+        destination.setSynonymIds(this.getSynonymIds());
+        destination.setEqualTo(this.getEqualTo());
+        destination.setSimilarTo(this.getSimilarTo());
+        destination.setConceptList(this.getConceptList());
+        destination.setPos(this.getPos());
+        destination.setWord(this.getWord());
+    }
+
 }

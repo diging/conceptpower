@@ -15,7 +15,8 @@ public class ConceptTypesService {
         }
         if (id.contains("??")) {
             return ConceptTypes.GENERIC_WORDNET_CONCEPT;
-        } else if (id.startsWith("WID")) {
+        }
+        if (id.startsWith("WID")) {
             return ConceptTypes.SPECIFIC_WORDNET_CONCEPT;
         }
         return ConceptTypes.LOCAL_CONCEPT;
