@@ -368,24 +368,28 @@
             var ret = true;
             if ($("#name").val() === "") {
                 $("#nameerror").html('Please enter a name for concept.');
+                hideFormProcessing();
                 ret = false;
             } else {
                 $("#nameerror").html('');
             }
             if ($("#pos").val() === "") {
                 $("#poserror").html('Please select a pos.');
+                hideFormProcessing();
                 ret = false;
             } else {
                 $("#poserror").html('');
             }
             if ($("#selectedList").val() === "") {
                 $("#listerror").html('Please select a concept list.');
+                hideFormProcessing();
                 ret = false;
             } else {
                 $("#listerror").html('');
             }
             if ($("#selectedTypes").val() === "") {
                 $("#typeerror").html('Please select a concept type.');
+                hideFormProcessing();
                 ret = false;
             } else {
                 $("#typeerror").html('');
