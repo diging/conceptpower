@@ -47,4 +47,6 @@ public interface IConceptDBManager {
 
     List<ConceptEntry> getConceptByWordnetId(String wordnetId);
 
+    public List<ConceptEntry> getAllEntriesFromList(String listname);
+
 }

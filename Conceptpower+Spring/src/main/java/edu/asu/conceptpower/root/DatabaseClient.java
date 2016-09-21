@@ -371,6 +371,27 @@ public class DatabaseClient implements IConceptDBManager {
         }
         return allResults.subList(startIndex, endIndex);
     }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.conceptpower.db4o.IConceptDBManager#getAllEntriesFromList(java.
+     * lang.String)
+     */
+    @Override
+    public List<ConceptEntry> getAllEntriesFromList(String listname) {
+        ConceptEntry entry = new ConceptEntry();
+        entry.setConceptList(listname);
+
+        List<ConceptEntry> results = wordnetCacheClient.queryByExample(entry);
+        List<ConceptEntry> dictResults = dictionaryClient.queryByExample(entry);
+
+        List<ConceptEntry> allResults = new ArrayList<ConceptEntry>();
+        allResults.addAll(results);
+        allResults.addAll(dictResults);
+        return allResults;
+    }
 
     /*
      * (non-Javadoc)

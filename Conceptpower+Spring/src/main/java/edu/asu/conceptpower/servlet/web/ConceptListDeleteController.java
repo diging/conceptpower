@@ -13,6 +13,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.users.IUserManager;
 
@@ -46,7 +47,7 @@ public class ConceptListDeleteController {
         // condition to check enable whether to delete the conceptlist
         boolean enableDelete = true;
         List<ConceptEntry> conceptEntries = null;
-        conceptEntries = conceptManager.getConceptListEntries(name);
+        conceptEntries = conceptManager.getConceptListEntries(name, 1, -1, "id", IConceptDBManager.DESCENDING);
 
         if (conceptEntries.size() > 0)
             enableDelete = false;

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IIndexService;
+import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
@@ -94,7 +95,8 @@ public class ConceptDeleteController {
     @RequestMapping(value = "auth/concepts/canceldelete/{conceptList}", method = RequestMethod.GET)
     public String cancelDelete(@PathVariable("conceptList") String conceptList, ModelMap model) throws LuceneException {
         List<ConceptEntryWrapper> foundConcepts = null;
-        List<ConceptEntry> founds = conceptManager.getConceptListEntries(conceptList);
+        List<ConceptEntry> founds = conceptManager.getConceptListEntries(conceptList, 1, -1, "id",
+                IConceptDBManager.DESCENDING);
         foundConcepts = wrapperCreator
                 .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
 
@@ -129,7 +131,8 @@ public class ConceptDeleteController {
         }
 
         conceptManager.deleteConcept(id, principal.getName());
-        List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
+        List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList(), 1, -1, "id",
+                IConceptDBManager.DESCENDING);
 
         foundConcepts = wrapperCreator
                 .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
