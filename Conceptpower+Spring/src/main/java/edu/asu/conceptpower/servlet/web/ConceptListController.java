@@ -88,6 +88,13 @@ public class ConceptListController {
                         .toArray(new ConceptEntry[founds.size()])
                         : new ConceptEntry[0]);
 
+        if (pageInt < 1) {
+            pageInt = 1;
+        }
+        if (pageInt > pageCount) {
+            pageInt = pageCount;
+        }
+        model.addAttribute("page", pageInt);
         model.addAttribute("result", foundConcepts);
         model.addAttribute("count", pageCount);
         model.addAttribute("listid", list);

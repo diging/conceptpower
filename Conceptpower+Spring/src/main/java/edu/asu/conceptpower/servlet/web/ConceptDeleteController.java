@@ -116,7 +116,8 @@ public class ConceptDeleteController {
      */
     @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
     public ModelAndView confirmlDelete(@PathVariable("id") String id,
-            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, Principal principal)
+            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete,
+            @RequestParam(value = "listName") String listName, Principal principal)
                     throws LuceneException, IndexerRunningException {
         List<ConceptEntryWrapper> foundConcepts = null;
         ModelAndView model = new ModelAndView();
@@ -142,7 +143,7 @@ public class ConceptDeleteController {
             model.setViewName("redirect:/login");
             return model;
         }
-        model.setViewName("/auth/conceptlist/concepts");
+        model.setViewName("forward:/auth/" + listName + "/concepts");
         return model;
     }
 

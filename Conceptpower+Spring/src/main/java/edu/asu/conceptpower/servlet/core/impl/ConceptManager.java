@@ -307,7 +307,6 @@ public class ConceptManager implements IConceptManager {
     public List<ConceptEntry> getConceptListEntries(String conceptList, int page, int pageSize, String sortBy,
             int sortDirection) throws LuceneException {
 
-        int defaultPageSize = new Integer(20);
         if (pageSize == -1) {
             pageSize = defaultPageSize;
         }

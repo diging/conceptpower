@@ -63,7 +63,7 @@
 <table>
 	<tr>
 		<td><a
-			href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${conceptId}?fromHomeScreenDelete=${fromHomeScreenDelete}"><input
+			href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${conceptId}?fromHomeScreenDelete=${fromHomeScreenDelete}&listName=${conceptList}"><input
 				type="button" name="delete" id="delete" value="Yes, delete concept!" class="btn btn-primary"></a></td>
 	
 		<c:if test="${fromHomeScreenDelete eq 'false'}">

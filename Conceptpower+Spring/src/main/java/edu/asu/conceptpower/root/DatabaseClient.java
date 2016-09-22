@@ -357,11 +357,11 @@ public class DatabaseClient implements IConceptDBManager {
             return null;
         }
 
-        List<ConceptEntry> results = wordNetQuery.execute();
+        List<ConceptEntry> wordNetResults = wordNetQuery.execute();
         List<ConceptEntry> dictResults = dictQuery.execute();
 
         List<ConceptEntry> allResults = new ArrayList<ConceptEntry>();
-        allResults.addAll(results);
+        allResults.addAll(wordNetResults);
         allResults.addAll(dictResults);
 
         int startIndex = (page - 1) * pageSize;
