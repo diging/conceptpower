@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
-import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.users.IUserManager;
 
@@ -62,14 +60,10 @@ public class ConcepTypeDeleteController {
         model.addAttribute("supertype", type.getSupertypeId());
         // condition to check enable whether to delete the concepttype
         boolean enableDelete = true;
-        List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
-        for (ConceptList conceptList : conceptLists) {
-            List<ConceptEntry> conceptEntries = conceptManager.getConceptListEntries(conceptList.getConceptListName(),
-                    1, -1, "id", IConceptDBManager.DESCENDING);
-            for (ConceptEntry conceptEntry : conceptEntries) {
-                if ((conceptEntry.getTypeId() != null) && (conceptEntry.getTypeId()).equals(typeid)) {
-                    enableDelete = false;
-                }
+        List<ConceptEntry> conceptEntries = conceptManager.getConceptEntryByTypeId(typeid);
+        for (ConceptEntry conceptEntry : conceptEntries) {
+            if ((conceptEntry.getTypeId() != null) && (conceptEntry.getTypeId()).equals(typeid)) {
+                enableDelete = false;
             }
         }
         model.addAttribute("enabledelete", enableDelete);

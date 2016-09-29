@@ -49,4 +49,6 @@ public interface IConceptDBManager {
 
     public List<ConceptEntry> getAllEntriesFromList(String listname);
 
+    public List<ConceptEntry> getAllEntriesByTypeId(String typeId);
+
 }

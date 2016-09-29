@@ -132,14 +132,13 @@ public class ConceptDeleteController {
         }
 
         conceptManager.deleteConcept(id, principal.getName());
-        List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList(), 1, -1, "id",
-                IConceptDBManager.DESCENDING);
-
-        foundConcepts = wrapperCreator
-                .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
-
-        model.addObject("result", foundConcepts);
         if (fromHomeScreenDelete.equalsIgnoreCase("true")) {
+            List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList(), 1, -1, "id",
+                    IConceptDBManager.DESCENDING);
+
+            foundConcepts = wrapperCreator.createWrappers(
+                    founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
+            model.addObject("result", foundConcepts);
             model.setViewName("redirect:/login");
             return model;
         }

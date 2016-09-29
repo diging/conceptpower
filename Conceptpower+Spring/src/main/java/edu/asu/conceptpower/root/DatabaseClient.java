@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.root;
 
 import java.lang.reflect.Field;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -338,11 +337,6 @@ public class DatabaseClient implements IConceptDBManager {
                         return 0;
                     }
 
-                    if (sortBy.endsWith("Date")) {
-                        ZonedDateTime date1 = ZonedDateTime.parse(o1FieldContent.toString());
-                        ZonedDateTime date2 = ZonedDateTime.parse(o2FieldContent.toString());
-                        return date1.compareTo(date2);
-                    }
                     if (o1FieldContent instanceof Integer) {
                         return ((Integer) o1FieldContent).compareTo((Integer) o2FieldContent);
                     }
@@ -383,6 +377,20 @@ public class DatabaseClient implements IConceptDBManager {
     public List<ConceptEntry> getAllEntriesFromList(String listname) {
         ConceptEntry entry = new ConceptEntry();
         entry.setConceptList(listname);
+
+        List<ConceptEntry> results = wordnetCacheClient.queryByExample(entry);
+        List<ConceptEntry> dictResults = dictionaryClient.queryByExample(entry);
+
+        List<ConceptEntry> allResults = new ArrayList<ConceptEntry>();
+        allResults.addAll(results);
+        allResults.addAll(dictResults);
+        return allResults;
+    }
+
+    @Override
+    public List<ConceptEntry> getAllEntriesByTypeId(String typeId) {
+        ConceptEntry entry = new ConceptEntry();
+        entry.setTypeId(typeId);
 
         List<ConceptEntry> results = wordnetCacheClient.queryByExample(entry);
         List<ConceptEntry> dictResults = dictionaryClient.queryByExample(entry);

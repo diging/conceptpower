@@ -103,4 +103,10 @@ public class ConceptDBManager implements IConceptDBManager {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public List<ConceptEntry> getAllEntriesByTypeId(String typeId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

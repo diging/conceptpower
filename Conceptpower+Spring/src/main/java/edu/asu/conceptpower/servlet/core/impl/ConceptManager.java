@@ -502,4 +502,9 @@ public class ConceptManager implements IConceptManager {
         List<ConceptEntry> allEntries = client.getAllEntriesFromList(listName);
         return allEntries.size();
     }
+
+    @Override
+    public List<ConceptEntry> getConceptEntryByTypeId(String typeId) {
+        return client.getAllEntriesByTypeId(typeId);
+    }
 }

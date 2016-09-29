@@ -123,5 +123,13 @@ public interface IConceptManager {
     public abstract void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException;
 
     public int getPageCount(String conceptListName);
+
+    /**
+     * Gets all the concept entries for the specified typeid
+     * 
+     * @param typeId
+     * @return
+     */
+    public List<ConceptEntry> getConceptEntryByTypeId(String typeId);
 	
 }
