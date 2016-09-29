@@ -278,15 +278,15 @@
                     $('#serviceResultTable').dataTable().fnClearTable();
                     $('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
                     $('#showServiceResult').hide();
-                    $("#serviceTermError").html('No data found.');
+                    $("#serviceTermError").html('No results found.');
                 }
             },
-			error : function(response) {
+            error : function(response) {
                 $('#serviceResultTable').dataTable().fnClearTable();
                 $('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
                 $('#showServiceResult').hide();
-                $("#serviceTermError").html('Processing error. Try after sometime.');
-			}
+                $("#serviceTermError").html('An error occurred. Please try again later.');
+            }
         });
     }
     
