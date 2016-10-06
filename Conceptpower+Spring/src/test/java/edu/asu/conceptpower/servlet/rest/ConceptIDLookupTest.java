@@ -6,6 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
@@ -43,7 +45,6 @@ public class ConceptIDLookupTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-
         Mockito.when(messageFactory.createXMLConceptMessage()).thenReturn(new XMLConceptMessage(uriCreator));
     }
 
@@ -53,12 +54,11 @@ public class ConceptIDLookupTest {
         entry.setId("CONf375adff-dde7-4536-9e62-f80328f800d0");
         entry.setWordnetId("W-ID1, W-ID2");
         Mockito.when(dictManager.getConceptEntry("CONf375adff-dde7-4536-9e62-f80328f800d0")).thenReturn(entry);
-        String s = conceptIDLookup
-                .getConceptById("http://www.digitalhps.org/concepts/CONf375adff-dde7-4536-9e62-f80328f800d0")
-                .toString();
-
-        Assert.assertEquals(true, s.contains("W-ID1"));
-        Assert.assertEquals(true, s.contains("W-ID2"));
+        ResponseEntity<String> response = conceptIDLookup
+                .getConceptById("http://www.digitalhps.org/concepts/CONf375adff-dde7-4536-9e62-f80328f800d0");
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assert.assertEquals(true, response.getBody().contains("W-ID1"));
+        Assert.assertEquals(true, response.getBody().contains("W-ID2"));
 
     }
 
@@ -81,14 +81,16 @@ public class ConceptIDLookupTest {
         newEntry.setSimilarTo("similar");
         newEntry.setPos("NOUN");
         newEntry.setWord("pony");
+        newEntry.setWordnetId("W-ID01");
 
         Mockito.when(conceptManager.getConceptEntry("W-ID01")).thenReturn(newEntry);
 
-        String s = conceptIDLookup.getConceptById("W-ID??").toString();
+        ResponseEntity<String> response = conceptIDLookup.getConceptById("W-ID??");
 
-        Assert.assertEquals(false, s.contains("W-ID1"));
-        Assert.assertEquals(false, s.contains("W-ID2"));
-        Assert.assertEquals(true, s.contains("CONf375adff-dde7-4536-9e62-f80328f800d0"));
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assert.assertEquals(false, response.getBody().contains("W-ID1"));
+        Assert.assertEquals(false, response.getBody().contains("W-ID2"));
+        Assert.assertEquals(true, response.getBody().contains("CONf375adff-dde7-4536-9e62-f80328f800d0"));
 
     }
 }
