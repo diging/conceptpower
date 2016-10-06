@@ -377,7 +377,10 @@ public class ConceptEntry implements Serializable {
 
     public List<ChangeEvent> getChangeEvents() {
         // Creates a copy of changeevent
-        return new ArrayList<>(this.changeEvents);
+        if (this.changeEvents != null) {
+            return new ArrayList<>(this.changeEvents);
+        }
+        return null;
     }
 
     /**

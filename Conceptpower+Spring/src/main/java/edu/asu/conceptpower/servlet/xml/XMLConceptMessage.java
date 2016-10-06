@@ -70,10 +70,9 @@ public class XMLConceptMessage extends AXMLMessage {
         sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_LIST + ">");
 
         // creator id
-        List<ChangeEvent> changeEvents = entry.getChangeEvents();
-        Collections.sort(changeEvents);
-
-        if (changeEvents != null && !changeEvents.isEmpty()) {
+        if (entry.getChangeEvents() != null && !entry.getChangeEvents().isEmpty()) {
+            List<ChangeEvent> changeEvents = entry.getChangeEvents();
+            Collections.sort(changeEvents);
             sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
             sb.append(StringEscapeUtils.escapeXml10(
                     changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : ""));

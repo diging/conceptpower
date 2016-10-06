@@ -1,5 +1,9 @@
+
 package edu.asu.conceptpower.servlet.rest;
 
+import java.io.IOException;
+
+import org.apache.commons.io.IOUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -43,26 +47,16 @@ public class ConceptIDLookupTest {
     private ConceptIDLookup conceptIDLookup;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         MockitoAnnotations.initMocks(this);
         Mockito.when(messageFactory.createXMLConceptMessage()).thenReturn(new XMLConceptMessage(uriCreator));
     }
 
     @Test
     public void testGetConceptByIdForAlternativeIDs() throws Exception {
+        String expectedResponse = IOUtil.toString(this.getClass().getResourceAsStream("alternativeIds.txt"));
         String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
         String wordNetIds = "W-ID1, W-ID2";
-        String expectedResponseString = "<conceptpowerReply xmlns:digitalHPS=\"http://www.digitalhps.org/\">"
-                + "<digitalHPS:conceptEntry><digitalHPS:id concept_id=\"" + conceptId + "\" "
-                + "concept_uri=\"null\">null</digitalHPS:id><digitalHPS:lemma>null</digitalHPS:lemma>"
-                + "<digitalHPS:pos>null</digitalHPS:pos><digitalHPS:description>null</digitalHPS:description>"
-                + "<digitalHPS:conceptList>null</digitalHPS:conceptList><digitalHPS:creator_id>"
-                + "</digitalHPS:creator_id><digitalHPS:equal_to></digitalHPS:equal_to>"
-                + "<digitalHPS:modified_by></digitalHPS:modified_by><digitalHPS:similar_to>"
-                + "</digitalHPS:similar_to><digitalHPS:synonym_ids></digitalHPS:synonym_ids><digitalHPS:type ></digitalHPS:type>"
-                + "<digitalHPS:deleted>false</digitalHPS:deleted><digitalHPS:wordnet_id>" + wordNetIds
-                + "</digitalHPS:wordnet_id>"
-                + "</digitalHPS:conceptEntry></conceptpowerReply>";
         ConceptEntry entry = new ConceptEntry();
         entry.setId(conceptId);
         entry.setWordnetId(wordNetIds);
@@ -70,25 +64,15 @@ public class ConceptIDLookupTest {
         ResponseEntity<String> response = conceptIDLookup
                 .getConceptById("http://www.digitalhps.org/concepts/" + conceptId);
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assert.assertEquals(expectedResponseString, response.getBody());
+        Assert.assertEquals(expectedResponse, response.getBody());
 
     }
 
     @Test
     public void testGetConcepyByIdWithGenericIDs() throws Exception {
+        String expectedResponse = IOUtil.toString(this.getClass().getResourceAsStream("alternativeGenericIds.txt"));
         String wordNetIds = "W-ID01, W-ID02";
         String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
-        String expectedResponse = "<conceptpowerReply xmlns:digitalHPS=\"http://www.digitalhps.org/\"><digitalHPS:conceptEntry>"
-                + "<digitalHPS:id concept_id=\"" + conceptId + "\" concept_uri=\"null\">null</digitalHPS:id>"
-                + "<digitalHPS:lemma>pony</digitalHPS:lemma><digitalHPS:pos>NOUN</digitalHPS:pos>"
-                + "<digitalHPS:description>Description</digitalHPS:description>"
-                + "<digitalHPS:conceptList>null</digitalHPS:conceptList>"
-                + "<digitalHPS:creator_id></digitalHPS:creator_id><digitalHPS:equal_to>equals</digitalHPS:equal_to>"
-                + "<digitalHPS:modified_by></digitalHPS:modified_by><digitalHPS:similar_to>similar</digitalHPS:similar_to>"
-                + "<digitalHPS:synonym_ids>SYN-01</digitalHPS:synonym_ids><digitalHPS:type ></digitalHPS:type>"
-                + "<digitalHPS:deleted>false</digitalHPS:deleted>"
-                + "<digitalHPS:wordnet_id>" + wordNetIds
-                + "</digitalHPS:wordnet_id></digitalHPS:conceptEntry></conceptpowerReply>";
         ConceptEntry entry = new ConceptEntry();
         entry.setId("W-ID01");
         entry.setWordnetId(wordNetIds);

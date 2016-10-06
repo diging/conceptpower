@@ -2,6 +2,7 @@ package edu.asu.conceptpower.servlet.rest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -10,9 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -61,7 +62,7 @@ public class ConceptIDLookup {
 	 */
     @RequestMapping(value = "/rest/Concept", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE
             + "; charset=utf-8")
-    public @ResponseBody ResponseEntity<String> getConceptById(@PathVariable String id) {
+    public @ResponseBody ResponseEntity<String> getConceptById(@RequestParam String id) {
 
         if (id == null || id.trim().isEmpty()) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -114,15 +115,20 @@ public class ConceptIDLookup {
     }
 
     private void addAlternativeIds(String id, ConceptEntry entry) throws LuceneException {
+        if (entry.getAlternativeIds() == null) {
+            entry.setAlternativeIds(new HashSet<String>());
+        }
         if (conceptTypesService.getConceptTypeByConceptId(id) == ConceptTypes.LOCAL_CONCEPT
                 || conceptTypesService.getConceptTypeByConceptId(id) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
             // User has queried with specific wordnet id or generic wordnet id
             entry.getAlternativeIds().add(entry.getId());
         }
         // Specific Wordnet id is added irrespective of what is queried for
-        String[] wordNetIds = entry.getWordnetId().split(",");
-        for (String wordNetId : wordNetIds) {
-            entry.getAlternativeIds().add(wordNetId);
+        if (entry.getWordnetId() != null) {
+            String[] wordNetIds = entry.getWordnetId().split(",");
+            for (String wordNetId : wordNetIds) {
+                entry.getAlternativeIds().add(wordNetId);
+            }
         }
     }
 }
