@@ -50,30 +50,55 @@ public class ConceptIDLookupTest {
 
     @Test
     public void testGetConceptByIdForAlternativeIDs() throws Exception {
+        String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
+        String wordNetIds = "W-ID1, W-ID2";
+        String expectedResponseString = "<conceptpowerReply xmlns:digitalHPS=\"http://www.digitalhps.org/\">"
+                + "<digitalHPS:conceptEntry><digitalHPS:id concept_id=\"" + conceptId + "\" "
+                + "concept_uri=\"null\">null</digitalHPS:id><digitalHPS:lemma>null</digitalHPS:lemma>"
+                + "<digitalHPS:pos>null</digitalHPS:pos><digitalHPS:description>null</digitalHPS:description>"
+                + "<digitalHPS:conceptList>null</digitalHPS:conceptList><digitalHPS:creator_id>"
+                + "</digitalHPS:creator_id><digitalHPS:equal_to></digitalHPS:equal_to>"
+                + "<digitalHPS:modified_by></digitalHPS:modified_by><digitalHPS:similar_to>"
+                + "</digitalHPS:similar_to><digitalHPS:synonym_ids></digitalHPS:synonym_ids><digitalHPS:type ></digitalHPS:type>"
+                + "<digitalHPS:deleted>false</digitalHPS:deleted><digitalHPS:wordnet_id>" + wordNetIds
+                + "</digitalHPS:wordnet_id>"
+                + "</digitalHPS:conceptEntry></conceptpowerReply>";
         ConceptEntry entry = new ConceptEntry();
-        entry.setId("CONf375adff-dde7-4536-9e62-f80328f800d0");
-        entry.setWordnetId("W-ID1, W-ID2");
-        Mockito.when(dictManager.getConceptEntry("CONf375adff-dde7-4536-9e62-f80328f800d0")).thenReturn(entry);
+        entry.setId(conceptId);
+        entry.setWordnetId(wordNetIds);
+        Mockito.when(dictManager.getConceptEntry(conceptId)).thenReturn(entry);
         ResponseEntity<String> response = conceptIDLookup
-                .getConceptById("http://www.digitalhps.org/concepts/CONf375adff-dde7-4536-9e62-f80328f800d0");
+                .getConceptById("http://www.digitalhps.org/concepts/" + conceptId);
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assert.assertEquals(true, response.getBody().contains("W-ID1"));
-        Assert.assertEquals(true, response.getBody().contains("W-ID2"));
+        Assert.assertEquals(expectedResponseString, response.getBody());
 
     }
 
     @Test
     public void testGetConcepyByIdWithGenericIDs() throws Exception {
+        String wordNetIds = "W-ID01, W-ID02";
+        String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
+        String expectedResponse = "<conceptpowerReply xmlns:digitalHPS=\"http://www.digitalhps.org/\"><digitalHPS:conceptEntry>"
+                + "<digitalHPS:id concept_id=\"" + conceptId + "\" concept_uri=\"null\">null</digitalHPS:id>"
+                + "<digitalHPS:lemma>pony</digitalHPS:lemma><digitalHPS:pos>NOUN</digitalHPS:pos>"
+                + "<digitalHPS:description>Description</digitalHPS:description>"
+                + "<digitalHPS:conceptList>null</digitalHPS:conceptList>"
+                + "<digitalHPS:creator_id></digitalHPS:creator_id><digitalHPS:equal_to>equals</digitalHPS:equal_to>"
+                + "<digitalHPS:modified_by></digitalHPS:modified_by><digitalHPS:similar_to>similar</digitalHPS:similar_to>"
+                + "<digitalHPS:synonym_ids>SYN-01</digitalHPS:synonym_ids><digitalHPS:type ></digitalHPS:type>"
+                + "<digitalHPS:deleted>false</digitalHPS:deleted>"
+                + "<digitalHPS:wordnet_id>" + wordNetIds
+                + "</digitalHPS:wordnet_id></digitalHPS:conceptEntry></conceptpowerReply>";
         ConceptEntry entry = new ConceptEntry();
         entry.setId("W-ID01");
-        entry.setWordnetId("W-ID01, W-ID02");
+        entry.setWordnetId(wordNetIds);
         Mockito.when(dictManager.getConceptEntry("W-ID??")).thenReturn(entry);
         Mockito.when(conceptTypesService.getConceptTypeByConceptId("W-ID??"))
                 .thenReturn(ConceptTypes.GENERIC_WORDNET_CONCEPT);
 
         ConceptEntry newEntry = new ConceptEntry();
 
-        newEntry.setId("CONf375adff-dde7-4536-9e62-f80328f800d0");
+        newEntry.setId(conceptId);
         newEntry.setTypeId("T-123");
         newEntry.setDescription("Description");
         newEntry.setSynonymIds("SYN-01");
@@ -81,16 +106,11 @@ public class ConceptIDLookupTest {
         newEntry.setSimilarTo("similar");
         newEntry.setPos("NOUN");
         newEntry.setWord("pony");
-        newEntry.setWordnetId("W-ID01, W-ID02");
+        newEntry.setWordnetId(wordNetIds);
 
         Mockito.when(conceptManager.getConceptEntry("W-ID01")).thenReturn(newEntry);
-
         ResponseEntity<String> response = conceptIDLookup.getConceptById("W-ID??");
-
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assert.assertEquals(false, response.getBody().contains("W-ID1"));
-        Assert.assertEquals(false, response.getBody().contains("W-ID2"));
-        Assert.assertEquals(true, response.getBody().contains("CONf375adff-dde7-4536-9e62-f80328f800d0"));
-
+        Assert.assertEquals(expectedResponse, response.getBody());
     }
 }
