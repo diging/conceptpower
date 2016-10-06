@@ -81,7 +81,7 @@ public class ConceptIDLookupTest {
         newEntry.setSimilarTo("similar");
         newEntry.setPos("NOUN");
         newEntry.setWord("pony");
-        newEntry.setWordnetId("W-ID01");
+        newEntry.setWordnetId("W-ID01, W-ID02");
 
         Mockito.when(conceptManager.getConceptEntry("W-ID01")).thenReturn(newEntry);
 

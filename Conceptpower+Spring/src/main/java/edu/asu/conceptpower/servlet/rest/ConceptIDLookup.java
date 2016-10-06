@@ -94,8 +94,7 @@ public class ConceptIDLookup {
                 // wrapper id for the generic wordnet id
                 if (conceptTypesService
                         .getConceptTypeByConceptId(pathParts[lastIndex]) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
-                    ConceptEntry wrapperConceptEntry = conceptManager.getConceptEntry(entry.getId());
-                    wrapperConceptEntry.copyConceptEntry(entry);
+                    entry = conceptManager.getConceptEntry(entry.getId());
                 }
                 addAlternativeIds(pathParts[lastIndex], entry);
             } catch (LuceneException e) {
