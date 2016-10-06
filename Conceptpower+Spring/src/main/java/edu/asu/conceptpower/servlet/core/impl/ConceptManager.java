@@ -507,4 +507,9 @@ public class ConceptManager implements IConceptManager {
     public List<ConceptEntry> getConceptEntryByTypeId(String typeId) {
         return client.getAllEntriesByTypeId(typeId);
     }
+
+    @Override
+    public List<ConceptEntry> getConceptEntriedByConceptListName(String conceptListName) {
+        return client.getAllEntriesFromList(conceptListName);
+    }
 }

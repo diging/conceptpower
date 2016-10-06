@@ -131,5 +131,13 @@ public interface IConceptManager {
      * @return
      */
     public List<ConceptEntry> getConceptEntryByTypeId(String typeId);
+
+    /**
+     * Gets all the concept entry for the specified concept list name
+     * 
+     * @param conceptListName
+     * @return
+     */
+    public List<ConceptEntry> getConceptEntriedByConceptListName(String conceptListName);
 	
 }

@@ -306,10 +306,6 @@ public class DatabaseClient implements IConceptDBManager {
         ConceptEntry entry = new ConceptEntry();
         entry.setConceptList(listname);
 
-        Query wordNetQuery = wordnetCacheClient.query();
-        wordNetQuery.constrain(ConceptEntry.class);
-        wordNetQuery.descend("conceptList").constrain(listname);
-
         Query dictQuery = dictionaryClient.query();
         dictQuery.constrain(ConceptEntry.class);
         dictQuery.descend("conceptList").constrain(listname);
@@ -318,10 +314,10 @@ public class DatabaseClient implements IConceptDBManager {
             final Field sortField = ConceptEntry.class.getDeclaredField(sortBy);
             sortField.setAccessible(true);
 
-            Comparator<ConceptEntry> conceptEntryComparator = new Comparator() {
+            Comparator<ConceptEntry> conceptEntryComparator = new Comparator<ConceptEntry>() {
 
                 @Override
-                public int compare(Object o1, Object o2) {
+                public int compare(ConceptEntry o1, ConceptEntry o2) {
                     Object o1FieldContent;
                     Object o2FieldContent;
                     try {
@@ -344,26 +340,20 @@ public class DatabaseClient implements IConceptDBManager {
                 }
             };
             
-            wordNetQuery.sortBy(conceptEntryComparator);
             dictQuery.sortBy(conceptEntryComparator);
         } catch (NoSuchFieldException | SecurityException e) {
             logger.error("Couldn't sort list.", e);
             return null;
         }
 
-        List<ConceptEntry> wordNetResults = wordNetQuery.execute();
         List<ConceptEntry> dictResults = dictQuery.execute();
-
-        List<ConceptEntry> allResults = new ArrayList<ConceptEntry>();
-        allResults.addAll(wordNetResults);
-        allResults.addAll(dictResults);
 
         int startIndex = (page - 1) * pageSize;
         int endIndex = startIndex + pageSize;
-        if (endIndex > allResults.size()) {
-            endIndex = allResults.size();
+        if (endIndex > dictResults.size()) {
+            endIndex = dictResults.size();
         }
-        return allResults.subList(startIndex, endIndex);
+        return new ArrayList<ConceptEntry>(dictResults.subList(startIndex, endIndex));
     }
     
     /*

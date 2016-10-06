@@ -24,7 +24,6 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IIndexService;
-import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.validation.ConceptListAddValidator;
@@ -116,8 +115,8 @@ public class ConceptListEditController {
 
         // modify the name for all the existing concepts under this concept
         // list
-        List<ConceptEntry> entries = conceptManager.getConceptListEntries(conceptListAddForm.getOldListName(), 1, -1,
-                "id", IConceptDBManager.DESCENDING);
+        List<ConceptEntry> entries = conceptManager
+                .getConceptEntriedByConceptListName(conceptListAddForm.getOldListName());
         Iterator<ConceptEntry> entriesIterator = entries.iterator();
 
         while (entriesIterator.hasNext()) {
