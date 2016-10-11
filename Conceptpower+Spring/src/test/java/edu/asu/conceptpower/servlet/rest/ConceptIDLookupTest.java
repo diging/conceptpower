@@ -54,7 +54,8 @@ public class ConceptIDLookupTest {
 
     @Test
     public void testGetConceptByIdForAlternativeIDs() throws Exception {
-        String expectedResponse = IOUtil.toString(ConceptIDLookupTest.class.getResourceAsStream("alternativeIds.txt"));
+        String expectedResponse = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("alternativeIds.txt"));
         String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
         String wordNetIds = "W-ID1, W-ID2";
         ConceptEntry entry = new ConceptEntry();
@@ -71,7 +72,7 @@ public class ConceptIDLookupTest {
     @Test
     public void testGetConcepyByIdWithGenericIDs() throws Exception {
         String expectedResponse = IOUtil
-                .toString(ConceptIDLookupTest.class.getResourceAsStream("alternativeGenericIds.txt"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("alternativeGenericIds.txt"));
         String wordNetIds = "W-ID01, W-ID02";
         String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
         ConceptEntry entry = new ConceptEntry();
