@@ -71,6 +71,7 @@ public class ConceptIDLookupTest {
 
     @Test
     public void testGetConcepyByIdWithGenericIDs() throws Exception {
+        System.out.println("Hello");
         String expectedResponse = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("alternativeGenericIds.txt"));
         String wordNetIds = "W-ID01, W-ID02";
