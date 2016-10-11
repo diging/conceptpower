@@ -118,5 +118,14 @@ public interface IConceptManager {
             throws LuceneException, IllegalAccessException, IndexerRunningException;
 	
     public abstract void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException;
+
+    /**
+     * Fetches the concept wrapped entries based on the wordnet id
+     * 
+     * @param wordNetID
+     * @return
+     */
+    public ConceptEntry getConceptWrappedEntryByWordNetId(String wordNetID)
+            throws IllegalAccessException, LuceneException, IndexerRunningException;
 	
 }

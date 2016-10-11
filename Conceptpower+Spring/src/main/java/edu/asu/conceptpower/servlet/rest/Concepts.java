@@ -87,11 +87,15 @@ public class Concepts {
      * @param body
      * @param principal
      * @return
+     * @throws IndexerRunningException
+     * @throws LuceneException
+     * @throws IllegalAccessException
      * @throws POSMismatchException
      */
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "rest/concept/add", method = RequestMethod.POST)
-    public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal) {
+    public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
 
         StringReader reader = new StringReader(body);
         JSONParser jsonParser = new JSONParser();
@@ -161,7 +165,8 @@ public class Concepts {
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "rest/concepts/add", method = RequestMethod.POST)
-    public ResponseEntity<String> addConcepts(@RequestBody String body, Principal principal) {
+    public ResponseEntity<String> addConcepts(@RequestBody String body, Principal principal)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
         StringReader reader = new StringReader(body);
         JSONParser jsonParser = new JSONParser();
 
@@ -180,7 +185,7 @@ public class Concepts {
 
             JsonValidationResult result = null;
 
-            ConceptEntry conceptEntry = conceptEntry = createEntry(jsonObject, principal.getName());
+            ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
 
             if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
                 result = checkJsonObjectForWrapper(jsonObject, conceptEntry);
@@ -231,7 +236,8 @@ public class Concepts {
                 HttpStatus.OK);
     }
 
-    private JsonValidationResult checkJsonObject(JSONObject jsonObject, ConceptEntry entry) {
+    private JsonValidationResult checkJsonObject(JSONObject jsonObject, ConceptEntry entry)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
         if (jsonObject.get(JsonFields.POS) == null) {
             return new JsonValidationResult("Error parsing request: please provide a POS ('pos' attribute).",
                     jsonObject, false);
@@ -253,7 +259,8 @@ public class Concepts {
         return checkJsonObjectForWrapper(jsonObject, entry);
     }
 
-    private JsonValidationResult checkJsonObjectForWrapper(JSONObject jsonObject, ConceptEntry entry) {
+    private JsonValidationResult checkJsonObjectForWrapper(JSONObject jsonObject, ConceptEntry entry)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
 
         if (jsonObject.get(JsonFields.CONCEPT_LIST) == null) {
             return new JsonValidationResult(
@@ -285,6 +292,16 @@ public class Concepts {
                     return new JsonValidationResult(
                             "Error parsing request: please provide a valid list of wordnet ids seperated by commas. Wordnet id "
                                     + wordNetId + " doesn't exist.",
+                            jsonObject, false);
+                }
+            }
+
+            // Check if there is an existing wrapper concept if so throw error
+            for (String wordNetId : wordnetIdsList) {
+                if (conceptManager.getConceptWrappedEntryByWordNetId(wordNetId) != null) {
+                    // This wordnet id is already wrapped. Throw error
+                    return new JsonValidationResult(
+                            "Error parsing request: please provide a valid wordnet id that doesn't have a wrapped concept.",
                             jsonObject, false);
                 }
             }
