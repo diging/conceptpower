@@ -115,7 +115,7 @@ public class ConceptDeleteController {
      * @return String value to redirect user to a particular concept list page
      * @throws IndexerRunningException
      */
-    @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.POST)
     public ModelAndView confirmlDelete(@PathVariable("id") String id,
             @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete,
             @RequestParam(value = "listName") String listName, Principal principal,
@@ -138,7 +138,7 @@ public class ConceptDeleteController {
             model.setViewName("redirect:/login");
             return model;
         }
-        model.setViewName("forward:/auth/" + listName + "/concepts");
+        model.setViewName("redirect:/auth/" + listName + "/concepts");
         return model;
     }
 

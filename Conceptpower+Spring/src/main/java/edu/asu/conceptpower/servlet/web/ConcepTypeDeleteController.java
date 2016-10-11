@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.users.IUserManager;
 
 /**
  * This class provides methods for concept type deletion
@@ -30,13 +28,7 @@ public class ConcepTypeDeleteController {
     private IConceptTypeManger typeManager;
 
     @Autowired
-    private IUserManager usersManager;
-
-    @Autowired
     private IConceptManager conceptManager;
-
-    @Autowired
-    private IConceptListManager conceptListManager;
 
     /**
      * This method provides information of a type to be deleted to concept type
@@ -62,7 +54,7 @@ public class ConcepTypeDeleteController {
         boolean enableDelete = true;
         List<ConceptEntry> conceptEntries = conceptManager.getConceptEntryByTypeId(typeid);
         for (ConceptEntry conceptEntry : conceptEntries) {
-            if ((conceptEntry.getTypeId() != null) && (conceptEntry.getTypeId()).equals(typeid)) {
+            if (conceptEntry.getTypeId() != null) {
                 enableDelete = false;
             }
         }

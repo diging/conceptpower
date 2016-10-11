@@ -27,13 +27,8 @@ import edu.asu.conceptpower.servlet.reflect.SearchField;
 @Component
 public class DatabaseClient implements IConceptDBManager {
 
-    private ObjectContainer wordnetCacheClient;
     private ObjectContainer dictionaryClient;
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    @Qualifier("wordnetCacheDatabaseManager")
-    private DatabaseManager wordnetCache;
 
     @Autowired
     @Qualifier("conceptDatabaseManager")
@@ -41,7 +36,6 @@ public class DatabaseClient implements IConceptDBManager {
 
     @PostConstruct
     public void init() {
-        this.wordnetCacheClient = wordnetCache.getClient();
         this.dictionaryClient = dictionary.getClient();
     }
 
@@ -69,19 +63,11 @@ public class DatabaseClient implements IConceptDBManager {
 
         exampleEntry.setId(id);
         exampleEntry.setWordnetId(null);
-        /*
-         * check if there is a concept in the wordnet cache
-         */
-        ObjectSet<ConceptEntry> results = wordnetCacheClient.queryByExample(exampleEntry);
-
-        // there should only be exactly one object with this id
-        if (results.size() == 1)
-            return results.get(0);
 
         /*
          * check if there is a concept with this id
          */
-        results = dictionaryClient.queryByExample(exampleEntry);
+        ObjectSet<ConceptEntry> results = dictionaryClient.queryByExample(exampleEntry);
         // there should only be exactly one object with this id
         if (results.size() == 1)
             return results.get(0);
@@ -107,20 +93,7 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     public List<Object> queryByExample(Object example) {
-        ObjectSet<Object> results = wordnetCacheClient.queryByExample(example);
-        ObjectSet<Object> results2 = dictionaryClient.queryByExample(example);
-
-        List<Object> allResults = new ArrayList<Object>();
-        for (Object r : results) {
-            allResults.add(r);
-        }
-
-        for (Object r : results2) {
-            allResults.add(r);
-        }
-
-        return allResults;
-
+        return dictionaryClient.queryByExample(example);
     }
 
     /*
@@ -285,12 +258,7 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     public List<?> getAllElementsOfType(Class<?> clazz) {
-        List<?> results = wordnetCacheClient.query(clazz);
-        List<?> dictResults = dictionaryClient.query(clazz);
-        List<Object> allResults = new ArrayList<Object>();
-        allResults.addAll(results);
-        allResults.addAll(dictResults);
-        return allResults;
+        return dictionaryClient.query(clazz);
     }
 
     /*
@@ -367,28 +335,14 @@ public class DatabaseClient implements IConceptDBManager {
     public List<ConceptEntry> getAllEntriesFromList(String listname) {
         ConceptEntry entry = new ConceptEntry();
         entry.setConceptList(listname);
-
-        List<ConceptEntry> results = wordnetCacheClient.queryByExample(entry);
-        List<ConceptEntry> dictResults = dictionaryClient.queryByExample(entry);
-
-        List<ConceptEntry> allResults = new ArrayList<ConceptEntry>();
-        allResults.addAll(results);
-        allResults.addAll(dictResults);
-        return allResults;
+        return dictionaryClient.queryByExample(entry);
     }
 
     @Override
     public List<ConceptEntry> getAllEntriesByTypeId(String typeId) {
         ConceptEntry entry = new ConceptEntry();
         entry.setTypeId(typeId);
-
-        List<ConceptEntry> results = wordnetCacheClient.queryByExample(entry);
-        List<ConceptEntry> dictResults = dictionaryClient.queryByExample(entry);
-
-        List<ConceptEntry> allResults = new ArrayList<ConceptEntry>();
-        allResults.addAll(results);
-        allResults.addAll(dictResults);
-        return allResults;
+        return dictionaryClient.queryByExample(entry);
     }
 
     /*
