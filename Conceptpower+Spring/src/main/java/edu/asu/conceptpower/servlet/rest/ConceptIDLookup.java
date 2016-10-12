@@ -118,10 +118,13 @@ public class ConceptIDLookup {
         if (entry.getAlternativeIds() == null) {
             entry.setAlternativeIds(new HashSet<String>());
         }
-        if (conceptTypesService.getConceptTypeByConceptId(id) == ConceptTypes.LOCAL_CONCEPT
-                || conceptTypesService.getConceptTypeByConceptId(id) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
+        if (conceptTypesService.getConceptTypeByConceptId(id) == ConceptTypes.LOCAL_CONCEPT) {
             // User has queried with specific wordnet id or generic wordnet id
             entry.getAlternativeIds().add(entry.getId());
+        }
+        if (conceptTypesService.getConceptTypeByConceptId(id) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
+            entry.getAlternativeIds().add(entry.getId());
+            entry.getAlternativeIds().add(id);
         }
         // Specific Wordnet id is added irrespective of what is queried for
         if (entry.getWordnetId() != null) {
