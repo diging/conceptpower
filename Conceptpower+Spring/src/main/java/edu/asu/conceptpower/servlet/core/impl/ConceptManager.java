@@ -499,7 +499,7 @@ public class ConceptManager implements IConceptManager {
         for (ConceptEntry entry : conceptEntries) {
             // Wordnet is also added because lucene doesn't do an exact search
             // on fields
-            if (entry.getId().contains("CON") && entry.getWordnetId().contains(wordNetID)) {
+            if (entry.getId().contains(CONCEPT_PREFIX) && entry.getWordnetId().contains(wordNetID)) {
                 return entry;
             }
         }
