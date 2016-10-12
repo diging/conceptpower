@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -39,6 +41,7 @@ import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
  * 
  */
 @Service
+@PropertySource("classpath:config.properties")
 public class ConceptManager implements IConceptManager {
 
     @Autowired
@@ -51,6 +54,9 @@ public class ConceptManager implements IConceptManager {
     private WordNetManager wordnetManager;
     
     protected final String CONCEPT_PREFIX = "CON";
+
+    @Value("${default_page_size}")
+    private Integer defaultPageSize;
 
     /*
      * (non-Javadoc)
@@ -298,9 +304,22 @@ public class ConceptManager implements IConceptManager {
      * .String)
      */
     @Override
-    public List<ConceptEntry> getConceptListEntries(String conceptList) throws LuceneException {
+    public List<ConceptEntry> getConceptListEntries(String conceptList, int page, int pageSize, String sortBy,
+            int sortDirection) throws LuceneException {
 
-        List<ConceptEntry> entries = client.getAllEntriesFromList(conceptList);
+        if (pageSize == -1) {
+            pageSize = defaultPageSize;
+        }
+        if (page < 1) {
+            page = 1;
+        }
+        int pageCount = getConceptsCountForConceptList(conceptList);
+        pageCount = pageCount > 0 ? pageCount : 1;
+        if (page > pageCount) {
+            page = pageCount;
+        }
+
+        List<ConceptEntry> entries = client.getAllEntriesFromList(conceptList, page, pageSize, sortBy, sortDirection);
         Collections.sort(entries, new Comparator<ConceptEntry>() {
 
             public int compare(ConceptEntry o1, ConceptEntry o2) {
@@ -471,5 +490,26 @@ public class ConceptManager implements IConceptManager {
         concept.addNewChangeEvent(changeEvent);
         client.update(concept, DBNames.DICTIONARY_DB);
         indexService.deleteById(concept.getId());
+    }
+
+    @Override
+    public int getPageCount(String conceptListName) {
+        int totalUploads = getConceptsCountForConceptList(conceptListName);
+        return (int) Math.ceil(new Double(totalUploads) / new Double(defaultPageSize));
+    }
+
+    private int getConceptsCountForConceptList(String listName) {
+        List<ConceptEntry> allEntries = client.getAllEntriesFromList(listName);
+        return allEntries.size();
+    }
+
+    @Override
+    public List<ConceptEntry> getConceptEntryByTypeId(String typeId) {
+        return client.getAllEntriesByTypeId(typeId);
+    }
+
+    @Override
+    public List<ConceptEntry> getConceptEntriedByConceptListName(String conceptListName) {
+        return client.getAllEntriesFromList(conceptListName);
     }
 }
