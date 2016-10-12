@@ -13,7 +13,7 @@
 <p>${description}</p>
 <br />
 <br />
-<form:form id="deleteConfirmForm" action="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${conceptId}?fromHomeScreenDelete=${fromHomeScreenDelete}&listName=${conceptList}">
+<form:form id="deleteConfirmForm" action="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconceptconfirm/${conceptId}?fromHomeScreenDelete=${fromHomeScreenDelete}&listName=${conceptList}" method="post">
     <table  class="table table-striped table-bordered">
     	<tr>
     		<td>Id:</td>

@@ -53,10 +53,8 @@ public class ConcepTypeDeleteController {
         // condition to check enable whether to delete the concepttype
         boolean enableDelete = true;
         List<ConceptEntry> conceptEntries = conceptManager.getConceptEntryByTypeId(typeid);
-        for (ConceptEntry conceptEntry : conceptEntries) {
-            if (conceptEntry.getTypeId() != null) {
-                enableDelete = false;
-            }
+        if (conceptEntries.size() > 0) {
+            enableDelete = false;
         }
         model.addAttribute("enabledelete", enableDelete);
 
