@@ -27,7 +27,6 @@ import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
 import edu.asu.conceptpower.servlet.rest.SearchFieldNames;
-import edu.asu.conceptpower.servlet.rest.SearchParamters;
 import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
 
@@ -477,10 +476,8 @@ public class ConceptManager implements IConceptManager {
     @Override
     public ConceptEntry getConceptWrappedEntryByWordNetId(String wordNetID)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
-        Map<String, String> fieldMap = new HashMap<>();
-        fieldMap.put(LuceneFieldNames.WORDNETID, wordNetID);
-        ConceptEntry[] entries = indexService.searchForConcepts(fieldMap, SearchParamters.OP_AND);
-        for (ConceptEntry entry : entries) {
+        List<ConceptEntry> conceptEntries = client.getConceptByWordnetId(wordNetID);
+        for (ConceptEntry entry : conceptEntries) {
             // Wordnet is also added because lucene doesn't do an exact search
             // on fields
             if (entry.getId().contains("CON") && entry.getWordnetId().contains(wordNetID)) {

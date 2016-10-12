@@ -301,7 +301,7 @@ public class Concepts {
                 if (conceptManager.getConceptWrappedEntryByWordNetId(wordNetId) != null) {
                     // This wordnet id is already wrapped. Throw error
                     return new JsonValidationResult(
-                            "Error parsing request: please provide a valid wordnet id that doesn't have a wrapped concept.",
+                            "Error parsing request: the WordNet concept you are trying to wrap is already wrapped.",
                             jsonObject, false);
                 }
             }
