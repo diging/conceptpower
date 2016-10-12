@@ -12,6 +12,8 @@ import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 
 public interface IConceptManager {
 
+    public final static String DEFAULT_PAGE_SIZE = "default_page_size";
+
 	/**
 	 * Return entry given its ID. First the additional concepts are queried,
 	 * then WordNet.
@@ -92,7 +94,8 @@ public interface IConceptManager {
 	 */
 	public abstract ConceptEntry[] getConceptListEntriesForWord(String word)throws LuceneException,IllegalAccessException, IndexerRunningException;
 
-	public abstract List<ConceptEntry> getConceptListEntries(String conceptList)throws LuceneException;
+    public abstract List<ConceptEntry> getConceptListEntries(String conceptList, int pageNo, int pageSize,
+            String sortBy, int sortDirection) throws LuceneException;
 
 	public abstract void addConceptListEntry(String word, String pos,
 			String description, String conceptListName, String typeId,
@@ -127,5 +130,23 @@ public interface IConceptManager {
      */
     public ConceptEntry getConceptWrappedEntryByWordNetId(String wordNetID)
             throws IllegalAccessException, LuceneException, IndexerRunningException;
+
+    public int getPageCount(String conceptListName);
+
+    /**
+     * Gets all the concept entries for the specified typeid
+     * 
+     * @param typeId
+     * @return
+     */
+    public List<ConceptEntry> getConceptEntryByTypeId(String typeId);
+
+    /**
+     * Gets all the concept entry for the specified concept list name
+     * 
+     * @param conceptListName
+     * @return
+     */
+    public List<ConceptEntry> getConceptEntriedByConceptListName(String conceptListName);
 	
 }

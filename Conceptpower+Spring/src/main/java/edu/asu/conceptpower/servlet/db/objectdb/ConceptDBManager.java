@@ -64,7 +64,8 @@ public class ConceptDBManager implements IConceptDBManager {
 	}
 
 	@Override
-	public List<ConceptEntry> getAllEntriesFromList(String listname) {
+    public List<ConceptEntry> getAllEntriesFromList(String conceptList, int pageNo, int pageSize, String sortBy,
+            int sortDirection) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -96,6 +97,16 @@ public class ConceptDBManager implements IConceptDBManager {
     public List<ConceptEntry> getConceptByWordnetId(String wordnetId) {
         return null;
     }
-	
-	
+
+    @Override
+    public List<ConceptEntry> getAllEntriesFromList(String listname) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<ConceptEntry> getAllEntriesByTypeId(String typeId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

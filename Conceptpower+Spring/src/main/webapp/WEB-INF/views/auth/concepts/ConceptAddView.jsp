@@ -246,29 +246,50 @@
     //service 
     $(function() {
         $("#serviceSearch").click(function() {
-            var serviceterm = $("#serviceterm").val();
-            var serviceid = $("#selectedServiceNameIdMap").val();
-            $.ajax({
-                type : "GET",
-                url : "${pageContext.servletContext.contextPath}/serviceSearch",
-                data : {
-                    serviceterm : serviceterm,
-                    serviceid : serviceid
-                },
-                success : function(response) {
-                    if (response.length > 0) {
-                        var data = jQuery.parseJSON(response);
-                        $('#serviceResultTable').dataTable().fnClearTable();
-                        $('#serviceResultTable').dataTable().fnAddData(data);
-                        $('#showServiceResult').show();
-                    } else {
-                        $('#serviceResultTable').dataTable().fnClearTable();
-                        $('#showServiceResult').show();
-                    }
-                }
-            });
+            getTermDetails();
         });
     });
+    
+    function getTermDetails() {
+
+        var serviceterm = $("#serviceterm").val();
+        // Added validation for search term
+        if(!serviceterm.trim()) {
+            $("#serviceTermError").html('Term cannot be empty.');
+            return false;
+        } else {
+            $("#serviceTermError").html('');
+        }
+        var serviceid = $("#selectedServiceNameIdMap").val();
+        $.ajax({
+            type : "GET",
+            url : "${pageContext.servletContext.contextPath}/serviceSearch",
+            data : {
+                serviceterm : serviceterm,
+                serviceid : serviceid
+            },
+            success : function(response) {
+                if (response.length > 0 && response != "[]") {
+                    var data = jQuery.parseJSON(response);
+                    $('#serviceResultTable').dataTable().fnClearTable();
+                    $('#serviceResultTable').dataTable().fnAddData(data);
+                    $('#showServiceResult').show();
+                } else {
+                    $('#serviceResultTable').dataTable().fnClearTable();
+                    $('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
+                    $('#showServiceResult').hide();
+                    $("#serviceTermError").html('No results found.');
+                }
+            },
+            error : function(response) {
+                $('#serviceResultTable').dataTable().fnClearTable();
+                $('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
+                $('#showServiceResult').hide();
+                $("#serviceTermError").html('An error occurred. Please try again later.');
+            }
+        });
+    }
+    
     $(function() {
         $("#showServiceResult").click(function() {
             $('#serviceResult').toggle();
@@ -347,24 +368,28 @@
             var ret = true;
             if ($("#name").val() === "") {
                 $("#nameerror").html('Please enter a name for concept.');
+                hideFormProcessing();
                 ret = false;
             } else {
                 $("#nameerror").html('');
             }
             if ($("#pos").val() === "") {
                 $("#poserror").html('Please select a pos.');
+                hideFormProcessing();
                 ret = false;
             } else {
                 $("#poserror").html('');
             }
             if ($("#selectedList").val() === "") {
                 $("#listerror").html('Please select a concept list.');
+                hideFormProcessing();
                 ret = false;
             } else {
                 $("#listerror").html('');
             }
             if ($("#selectedTypes").val() === "") {
                 $("#typeerror").html('Please select a concept type.');
+                hideFormProcessing();
                 ret = false;
             } else {
                 $("#typeerror").html('');
@@ -389,6 +414,16 @@
     function showFormProcessing() {
         $('#loadingDiv').show();
     }
+    
+    
+    $(document).ready(function() {
+        $("#serviceterm").keydown(function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return getTermDetails();
+            }
+        });
+    });
 </script>
 
 <table style="padding: 0px;">
@@ -428,12 +463,13 @@
                                         class="form-control"></td>
                                     <td><input type="button"
                                         id="serviceSearch"
-                                        value="search" class="button"
-                                        class="btn btn-primary" /> <img
+                                        value="search" 
+                                        class="btn btn-primary btn-sm" /> <img
                                         alt="" id="loadingDiv"
                                         width="16px" height="16px"
                                         src="${pageContext.servletContext.contextPath}/resources/img/ajax_process_16x16.gif"
                                         class="none"></td>
+                                    <td><div id="serviceTermError" style="color: red"></div></td>
                                 </tr>
                             </table>
                         </td>

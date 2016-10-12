@@ -13,10 +13,6 @@
 		<property name="databasePath" value="${db.path}/conceptLists.db" />
 	</bean>
 	
-	<bean id="wordnetCacheDatabaseManager" class="edu.asu.conceptpower.root.DatabaseManager" init-method="init" destroy-method="close">
-		<property name="databasePath" value="${db.path}/wordnetCache.db" />
-	</bean>
-	
 	<bean id="typesDatabaseManager" class="edu.asu.conceptpower.root.DatabaseManager" init-method="init" destroy-method="close">
 		<property name="databasePath" value="${db.path}/conceptTypes.db" />
 	</bean>
