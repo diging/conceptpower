@@ -61,19 +61,27 @@ public class ConceptSearch {
         Map<String, String[]> queryParams = req.getParameterMap();
         Map<String, String> searchFields = new HashMap<String, String>();
         String operator = SearchParamters.OP_OR;
+        int page = 1;
         for (String key : queryParams.keySet()) {
             if (key.trim().equals(SearchParamters.OPERATOR) && !queryParams.get(key)[0].trim().isEmpty()) {
                 operator = queryParams.get(key)[0].trim();
             } else if (key.trim().equalsIgnoreCase(SearchFieldNames.TYPE_URI)) {
                 searchFields.put("type_id", uriHelper.getTypeId(queryParams.get(key)[0]));
+            } else if (key.trim().equalsIgnoreCase(SearchFieldNames.PAGE)) {
+                page = Integer.parseInt(queryParams.get(key)[0]);
             } else {
                 searchFields.put(key.trim(), queryParams.get(key)[0]);
             }
         }
         ConceptEntry[] searchResults = null;
 
+        int totalNumberOfRecords = Integer.MIN_VALUE;
         try {
-            searchResults = manager.searchForConcepts(searchFields, operator);
+            if (page == 1) {
+                // Fetching total number of records for page 1
+                totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields, operator);
+            }
+            searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields, operator, page);
         } catch (LuceneException | IllegalAccessException | IndexerRunningException ex) {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -89,6 +97,12 @@ public class ConceptSearch {
             }
             entryMap.put(entry, type);
             xmlEntries = msg.appendEntries(entryMap);
+        }
+
+        if (totalNumberOfRecords != Integer.MIN_VALUE) {
+            // Append the number of records when user fetches the first page.
+            // Total number of records is returned only for first page.
+            xmlEntries.add(msg.appendNumberOfRecords(totalNumberOfRecords));
         }
 
         return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);

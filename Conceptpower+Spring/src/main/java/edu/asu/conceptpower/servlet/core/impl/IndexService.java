@@ -53,9 +53,24 @@ public class IndexService implements IIndexService {
 		if (indexerRunningFlag.get()) {
 			throw new IndexerRunningException(indexerRunning);
 		}
-
-		return luceneUtility.queryIndex(fieldMap, operator);
+        // Fetches all the pages
+        return luceneUtility.queryIndex(fieldMap, operator, Integer.MIN_VALUE);
 	}
+
+    /**
+     * This method searches in lucene on a particular condition fed through
+     * fieldMap
+     */
+    @Override
+    public ConceptEntry[] searchForConceptByPageNumberAndFieldMap(Map<String, String> fieldMap, String operator,
+            int pageNumber) throws LuceneException, IllegalAccessException, IndexerRunningException {
+
+        if (indexerRunningFlag.get()) {
+            throw new IndexerRunningException(indexerRunning);
+        }
+
+        return luceneUtility.queryIndex(fieldMap, operator, pageNumber);
+    }
 
 	/**
 	 * This method inserts concepts into lucene
@@ -134,6 +149,12 @@ public class IndexService implements IIndexService {
         }
         luceneUtility.deleteById(entry.getId());
         luceneUtility.insertConcept(entry);
+    }
+
+    @Override
+    public int getTotalNumberOfRecordsForSearch(Map<String, String> fieldMap, String operator)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
+        return searchForConcepts(fieldMap, operator).length;
     }
 
 }

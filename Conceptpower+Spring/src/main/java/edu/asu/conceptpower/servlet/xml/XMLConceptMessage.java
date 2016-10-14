@@ -28,6 +28,15 @@ public class XMLConceptMessage extends AXMLMessage {
         this.uriCreator = uriCreator;
     }
 
+    public String appendNumberOfRecords(int numberOfRecords) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + " ");
+        sb.append(XMLConstants.NUMBER_OF_RECORDS + "=\"" + numberOfRecords + "\" ");
+        sb.append(">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + ">");
+        return sb.toString();
+    }
+
     public List<String> appendEntries(Map<ConceptEntry, ConceptType> entries) {
         List<String> xmlEntries = new ArrayList<String>();
         for (ConceptEntry entry : entries.keySet())

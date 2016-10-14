@@ -29,6 +29,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
@@ -97,6 +98,7 @@ public class LuceneUtility implements ILuceneUtility {
     private Directory index;
     private Path relativePath = null;
     private IndexSearcher searcher = null;
+    private int numberOfEntriesPerPage = 10;
 
     /**
      * 
@@ -381,7 +383,7 @@ public class LuceneUtility implements ILuceneUtility {
      * This method fetches the concept power by iterating the fieldMap. The
      * fieldMap contains the search criteria
      */
-    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator)
+    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page)
             throws LuceneException, IllegalAccessException {
 
         if (operator == null) {
@@ -438,10 +440,26 @@ public class LuceneUtility implements ILuceneUtility {
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
         try {
-
+            TopScoreDocCollector collector = TopScoreDocCollector.create(numberOfResults);
+            int startIndex = 0;
+            int hitsPerPage = 0;
+            if (page > 0) {
+                // page number starts with 1.
+                startIndex = calculateStartIndex(page);
+                hitsPerPage = numberOfEntriesPerPage;
+            } else {
+                // Fetching results without pagination.
+                // Start index 0 to end Index --> 100 (default we fetch top 100
+                // records)
+                startIndex = 0;
+                hitsPerPage = numberOfResults;
+            }
             Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
-            TopDocs docs = searcher.search(q, numberOfResults);
-            ScoreDoc[] hits = docs.scoreDocs;
+            searcher.search(q, collector);
+            // If page number is more than the available results, we just pass
+            // empty result.
+            TopDocs topDocs = collector.topDocs(startIndex, hitsPerPage);
+            ScoreDoc[] hits = topDocs.scoreDocs;
             for (int i = 0; i < hits.length; ++i) {
                 int docId = hits[i].doc;
                 Document d = searcher.doc(docId);
@@ -457,6 +475,10 @@ public class LuceneUtility implements ILuceneUtility {
         }
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
+    }
+
+    private int calculateStartIndex(int page) {
+        return (page - 1) * numberOfEntriesPerPage;
     }
 
     /**

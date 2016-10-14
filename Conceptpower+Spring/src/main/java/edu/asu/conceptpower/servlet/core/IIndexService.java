@@ -26,4 +26,11 @@ public interface IIndexService {
 
     public void updateConceptEntry(ConceptEntry entry)
             throws LuceneException, IndexerRunningException, IllegalAccessException;
+
+    public ConceptEntry[] searchForConceptByPageNumberAndFieldMap(Map<String, String> fieldMap, String operator,
+            int pageNumber) throws LuceneException, IllegalAccessException, IndexerRunningException;
+
+    public int getTotalNumberOfRecordsForSearch(Map<String, String> fieldMap, String operator)
+            throws LuceneException, IllegalAccessException, IndexerRunningException;
+
 }
