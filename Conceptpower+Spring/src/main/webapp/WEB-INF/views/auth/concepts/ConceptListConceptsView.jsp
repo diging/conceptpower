@@ -89,8 +89,8 @@
                     <td align="justify">
                         <div class="scrollable"
                             style="max-height: 100px; max-width: 200px;">
-                            <font size="2"> <c:out
-                                    value="${concept.description}"></c:out>
+                            <font size="2"><c:out
+                                    value="${concept.description}" escapeXml="false"></c:out>
                             </font>
                         </div>
                     </td>
