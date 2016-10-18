@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,9 @@ public class ConceptSearch {
     @Autowired
     private URIHelper uriHelper;
 
+    @Value("${default_page_size}")
+    private int numberOfRecordsPerPage;
+
     /**
      * This method provides information of a concept for a rest interface of the
      * form
@@ -66,7 +70,6 @@ public class ConceptSearch {
         Map<String, String> searchFields = new HashMap<String, String>();
         String operator = SearchParamters.OP_OR;
         int page = 1;
-        int numberOfRecordsPerPage = 0;
 
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
             field.setAccessible(true);
@@ -76,10 +79,12 @@ public class ConceptSearch {
             } else if (SearchParamters.OPERATOR.equalsIgnoreCase(field.getName())) {
                 operator = String.valueOf(field.get(conceptSearchParameters));
             } else if (SearchParamters.PAGE.equalsIgnoreCase(field.getName())) {
-                page = (Integer) field.get(conceptSearchParameters);
+                page = field.get(conceptSearchParameters) != null
+                        ? (Integer) field.get(conceptSearchParameters) : page;
             } else if (SearchParamters.NUMBER_OF_RECORDS_PER_PAGE
                     .equalsIgnoreCase(field.getName())) {
-                numberOfRecordsPerPage = (Integer) field.get(conceptSearchParameters);
+                numberOfRecordsPerPage = field.get(conceptSearchParameters) != null
+                        ? (Integer) field.get(conceptSearchParameters) : numberOfRecordsPerPage;
             } else if (field.get(conceptSearchParameters) != null) {
                 searchFields.put(field.getName().trim(), String.valueOf(field.get(conceptSearchParameters)));
             }
