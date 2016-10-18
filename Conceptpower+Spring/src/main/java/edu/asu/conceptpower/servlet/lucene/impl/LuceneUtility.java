@@ -98,7 +98,7 @@ public class LuceneUtility implements ILuceneUtility {
     private Directory index;
     private Path relativePath = null;
     private IndexSearcher searcher = null;
-    private int numberOfEntriesPerPage = 10;
+    private int numberOfEntriesPerPage = 20;
 
     /**
      * 

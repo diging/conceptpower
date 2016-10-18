@@ -1,11 +1,12 @@
 package edu.asu.conceptpower.servlet.rest;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,35 +56,45 @@ public class ConceptSearch {
      * @param req
      *            Holds HTTP request information
      * @return
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
      */
     @RequestMapping(value = "rest/ConceptSearch", method = RequestMethod.GET, produces = "application/xml; charset=utf-8")
-    public @ResponseBody ResponseEntity<String> searchConcept(HttpServletRequest req) {
-        Map<String, String[]> queryParams = req.getParameterMap();
+    public @ResponseBody ResponseEntity<String> searchConcept(
+            @Valid ConceptSearchParameters conceptSearchParameters)
+                    throws IllegalArgumentException, IllegalAccessException {
         Map<String, String> searchFields = new HashMap<String, String>();
         String operator = SearchParamters.OP_OR;
         int page = 1;
-        for (String key : queryParams.keySet()) {
-            if (key.trim().equals(SearchParamters.OPERATOR) && !queryParams.get(key)[0].trim().isEmpty()) {
-                operator = queryParams.get(key)[0].trim();
-            } else if (key.trim().equalsIgnoreCase(SearchFieldNames.TYPE_URI)) {
-                searchFields.put("type_id", uriHelper.getTypeId(queryParams.get(key)[0]));
-            } else if (key.trim().equalsIgnoreCase(SearchFieldNames.PAGE)) {
-                page = Integer.parseInt(queryParams.get(key)[0]);
-            } else {
-                searchFields.put(key.trim(), queryParams.get(key)[0]);
+
+        for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.getName().equalsIgnoreCase("type_uri")) {
+                searchFields.put("type_id",
+                        uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
+            } else if (field.getName().equalsIgnoreCase("operator")) {
+                operator = String.valueOf(field.get(conceptSearchParameters));
+            } else if (field.getName().equalsIgnoreCase("page")) {
+                page = (Integer) field.get(conceptSearchParameters);
+            } else if(field.get(conceptSearchParameters) != null){
+                searchFields.put(field.getName().trim(), String.valueOf(field.get(conceptSearchParameters)));
             }
         }
+
         ConceptEntry[] searchResults = null;
 
-        int totalNumberOfRecords = Integer.MIN_VALUE;
+        int totalNumberOfRecords = 0;
         try {
-            if (page == 1) {
-                // Fetching total number of records for page 1
-                totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields, operator);
-            }
+            totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields, operator);
             searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields, operator, page);
         } catch (LuceneException | IllegalAccessException | IndexerRunningException ex) {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        if (searchResults.length == 0) {
+            // Returning a 404 error.
+            return new ResponseEntity<String>("No records found for the search condition.",
+                    HttpStatus.NOT_FOUND);
         }
 
         List<String> xmlEntries = new ArrayList<String>();
@@ -99,11 +110,9 @@ public class ConceptSearch {
             xmlEntries = msg.appendEntries(entryMap);
         }
 
-        if (totalNumberOfRecords != Integer.MIN_VALUE) {
-            // Append the number of records when user fetches the first page.
-            // Total number of records is returned only for first page.
-            xmlEntries.add(msg.appendNumberOfRecords(totalNumberOfRecords));
-        }
+        // Append the number of records when user fetches the first page.
+        // Total number of records is returned only for first page.
+        xmlEntries.add(msg.appendNumberOfRecords(totalNumberOfRecords));
 
         return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
     }
