@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,6 +53,9 @@ public class ConceptIDLookup {
 
     @Autowired
     private ConceptTypesService conceptTypesService;
+
+    private static final Logger logger = LoggerFactory.getLogger(ConceptIDLookup.class);
+
 	/**
 	 * This method provides concept information for the rest interface of the
 	 * form
@@ -81,6 +86,7 @@ public class ConceptIDLookup {
         try {
             entry = dictManager.getConceptEntry(wordnetId);
         } catch (LuceneException ex) {
+            logger.warn("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
@@ -99,6 +105,7 @@ public class ConceptIDLookup {
                 }
                 addAlternativeIds(pathParts[lastIndex], entry);
             } catch (LuceneException e) {
+                logger.warn("Lucene Exception", e);
                 return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
@@ -118,13 +125,14 @@ public class ConceptIDLookup {
         if (entry.getAlternativeIds() == null) {
             entry.setAlternativeIds(new HashSet<String>());
         }
-        if (conceptTypesService.getConceptTypeByConceptId(id) == ConceptTypes.LOCAL_CONCEPT) {
-            // User has queried with specific wordnet id or generic wordnet id
-            entry.getAlternativeIds().add(entry.getId());
-        }
-        if (conceptTypesService.getConceptTypeByConceptId(id) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
-            entry.getAlternativeIds().add(entry.getId());
+        if (conceptTypesService
+                .getConceptTypeByConceptId(id) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
             entry.getAlternativeIds().add(id);
+        }
+        if (conceptTypesService
+                .getConceptTypeByConceptId(id) != ConceptTypes.SPECIFIC_WORDNET_CONCEPT) {
+            // Added for generic wordnet and specific local concept
+            entry.getAlternativeIds().add(entry.getId());
         }
         // Specific Wordnet id is added irrespective of what is queried for
         if (entry.getWordnetId() != null) {
