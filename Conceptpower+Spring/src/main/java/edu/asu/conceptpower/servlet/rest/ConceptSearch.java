@@ -66,17 +66,21 @@ public class ConceptSearch {
         Map<String, String> searchFields = new HashMap<String, String>();
         String operator = SearchParamters.OP_OR;
         int page = 1;
+        int numberOfRecordsPerPage = 0;
 
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.getName().equalsIgnoreCase("type_uri")) {
                 searchFields.put("type_id",
                         uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
-            } else if (field.getName().equalsIgnoreCase("operator")) {
+            } else if (SearchParamters.OPERATOR.equalsIgnoreCase(field.getName())) {
                 operator = String.valueOf(field.get(conceptSearchParameters));
-            } else if (field.getName().equalsIgnoreCase("page")) {
+            } else if (SearchParamters.PAGE.equalsIgnoreCase(field.getName())) {
                 page = (Integer) field.get(conceptSearchParameters);
-            } else if(field.get(conceptSearchParameters) != null){
+            } else if (SearchParamters.NUMBER_OF_RECORDS_PER_PAGE
+                    .equalsIgnoreCase(field.getName())) {
+                numberOfRecordsPerPage = (Integer) field.get(conceptSearchParameters);
+            } else if (field.get(conceptSearchParameters) != null) {
                 searchFields.put(field.getName().trim(), String.valueOf(field.get(conceptSearchParameters)));
             }
         }
@@ -86,7 +90,8 @@ public class ConceptSearch {
         int totalNumberOfRecords = 0;
         try {
             totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields, operator);
-            searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields, operator, page);
+            searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields, operator,
+                    page, numberOfRecordsPerPage);
         } catch (LuceneException | IllegalAccessException | IndexerRunningException ex) {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }

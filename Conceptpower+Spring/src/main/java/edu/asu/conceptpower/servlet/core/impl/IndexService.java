@@ -54,7 +54,7 @@ public class IndexService implements IIndexService {
 			throw new IndexerRunningException(indexerRunning);
 		}
         // Fetches all the pages
-        return luceneUtility.queryIndex(fieldMap, operator, Integer.MIN_VALUE);
+        return luceneUtility.queryIndex(fieldMap, operator, Integer.MIN_VALUE, Integer.MIN_VALUE);
 	}
 
     /**
@@ -62,14 +62,15 @@ public class IndexService implements IIndexService {
      * fieldMap
      */
     @Override
-    public ConceptEntry[] searchForConceptByPageNumberAndFieldMap(Map<String, String> fieldMap, String operator,
-            int pageNumber) throws LuceneException, IllegalAccessException, IndexerRunningException {
+    public ConceptEntry[] searchForConceptByPageNumberAndFieldMap(Map<String, String> fieldMap,
+            String operator, int pageNumber, int numberOfRecordsPerPage)
+                    throws LuceneException, IllegalAccessException, IndexerRunningException {
 
         if (indexerRunningFlag.get()) {
             throw new IndexerRunningException(indexerRunning);
         }
 
-        return luceneUtility.queryIndex(fieldMap, operator, pageNumber);
+        return luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage);
     }
 
 	/**

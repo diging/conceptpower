@@ -1,5 +1,9 @@
 package edu.asu.conceptpower.servlet.rest;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+
+@PropertySource("classpath:config.properties")
 public class ConceptSearchParameters {
 
     private String type_uri;
@@ -14,6 +18,9 @@ public class ConceptSearchParameters {
     private String type_id;
     private String creator;
     private String modified_by;
+
+    @Value("${default_page_size}")
+    private Integer number_of_records_per_page;
 
     public String getType_uri() {
         return type_uri;
@@ -109,5 +116,13 @@ public class ConceptSearchParameters {
 
     public void setModified_by(String modified_by) {
         this.modified_by = modified_by;
+    }
+
+    public Integer getNumber_of_records_per_page() {
+        return number_of_records_per_page;
+    }
+
+    public void setNumber_of_records_per_page(Integer number_of_records_per_page) {
+        this.number_of_records_per_page = number_of_records_per_page;
     }
 }

@@ -98,7 +98,6 @@ public class LuceneUtility implements ILuceneUtility {
     private Directory index;
     private Path relativePath = null;
     private IndexSearcher searcher = null;
-    private int numberOfEntriesPerPage = 20;
 
     /**
      * 
@@ -383,8 +382,8 @@ public class LuceneUtility implements ILuceneUtility {
      * This method fetches the concept power by iterating the fieldMap. The
      * fieldMap contains the search criteria
      */
-    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page)
-            throws LuceneException, IllegalAccessException {
+    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
+            int numberOfRecordsPerPage) throws LuceneException, IllegalAccessException {
 
         if (operator == null) {
             operator = "AND";
@@ -445,8 +444,8 @@ public class LuceneUtility implements ILuceneUtility {
             int hitsPerPage = 0;
             if (page > 0) {
                 // page number starts with 1.
-                startIndex = calculateStartIndex(page);
-                hitsPerPage = numberOfEntriesPerPage;
+                startIndex = calculateStartIndex(page, numberOfRecordsPerPage);
+                hitsPerPage = numberOfRecordsPerPage;
             } else {
                 // Fetching results without pagination.
                 // Start index 0 to end Index --> 100 (default we fetch top 100
@@ -477,8 +476,8 @@ public class LuceneUtility implements ILuceneUtility {
 
     }
 
-    private int calculateStartIndex(int page) {
-        return (page - 1) * numberOfEntriesPerPage;
+    private int calculateStartIndex(int page, int numberOfRecordsPerPage) {
+        return (page - 1) * numberOfRecordsPerPage;
     }
 
     /**
