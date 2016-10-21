@@ -13,6 +13,30 @@ $(function() {
 	});
 });
 
+$(document).ready(function() {
+    $("#searchconcept").click(function() {
+        console.log("Search clicked");
+        console.log($("name").val());
+        $.ajax({
+            type : "GET",
+            url : "${pageContext.servletContext.contextPath}/conceptEdit/conceptSearch",
+            data : {
+                concept : $("#name").val(),
+                pos : $("#pos").val()
+            },
+            success : function(response) {
+                console.log(data);
+                var data = jQuery.parseJSON(response);
+            },
+    
+            error : function(httpStatus, response) {
+               console.log("try again later");
+            }
+        });
+    });
+});
+
+
     $(function() {
         $("#addsynonym").click(function() {
         	var addedSynonymsTable = $('#addedSynonyms');
@@ -173,8 +197,6 @@ $(function() {
 													.fnAddData(
 															synonym.synonyms[i]);
 										}
-										console.log("Total");
-										console.log(total);
 										if (total > 0) {
 											$("#addedSynonyms").show();
 											$("#addedSynonymsTable").show();
@@ -182,6 +204,7 @@ $(function() {
 									}
 								});
 					});
+	
 	var synonymTemporaryRemove = function(synonymid) {
 		var count = $('#addedSynonymsTable tr').length;
 		var synonymTable = $("#addedSynonymsTable").dataTable();
@@ -276,6 +299,90 @@ $(function() {
 			<td>Similar</td>
 			<td><form:input  path="similar" class="form-control"/></td>
 		</tr>
+        <tr>
+            <td>Wordnet</td>
+            <td><form:input path="wordnetIds" class="form-control" /></td>
+        </tr>
+        
+        
+        
+        <tr>
+            <td>Create wrapper for wordnet concept:</td>
+            <td><input type="text" id="name" /></td>
+        </tr>
+        <tr>
+            <td>POS:</td>
+            <td><select id="pos" class="form-control">
+                    <option value="noun">Nouns</option>
+                    <option value="verb">Verb</option>
+                    <option value="adverb">Adverb</option>
+                    <option value="adjective">Adjective</option>
+                    <option value="other">Other</option>
+            </select></td>
+        </tr>
+    </table>
+    <input type="button" id="searchconcept" name="searchconcept" value="searchconcept" class="btn btn-primary">
+
+    <c:if test="${not empty result}">
+        <h2>2. Select Wordnet concept from search results</h2>
+    
+        <h4>The following concepts were found:</h4>
+        Remember, you can only create a wrapper for concepts in Wordnet!
+        <p></p>
+        <table cellpadding="0" cellspacing="0"
+            class="table table-striped table-bordered"
+            id="conceptSearch">
+            <thead>
+                <tr>
+                    <th>Term</th>
+                    <th>ID</th>
+                    <th>Wordnet ID</th>
+                    <th>POS</th>
+                    <th>Concept List</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Synonyms</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach var="concept" items="${result}">
+                    <tr title="${concept.uri}">
+                        <td align="justify"><font size="2">
+                                <a id="${concept.entry.id}"
+                                data-toggle="modal"
+                                data-target="#detailsModal"
+                                data-conceptid="${concept.entry.id}"><c:out
+                                        value="${concept.entry.word}"></c:out></a>
+                        </font></td>
+                        <td align="justify"><c:out
+                                value="${concept.entry.id}"></c:out></td>
+                        <td align="justify"><c:out
+                                value="${concept.entry.wordnetId}"></c:out></td>
+                        <td align="justify"><font size="2"><c:out
+                                    value="${concept.entry.pos}"></c:out></font></td>
+                        <td align="justify"><font size="2"><c:out
+                                    value="${concept.entry.conceptList}"></c:out></font></td>
+                        <td align="justify"><font size="2">
+                                ${concept.description}</font></td>
+                        <td align="justify"><font size="2"><c:out
+                                    value="${concept.type.typeName}"></c:out></font></td>
+                        <td align="justify"><font size="2"><c:forEach
+                                    var="syn"
+                                    items="${concept.synonyms}">
+                                    <c:out value="-> ${syn.word}"></c:out>
+                                </c:forEach></font></td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+
+    </c:if>
+
+    <p />
+    <div id="selectedconcepts"></div>
+        
+        
+
 		<tr>
 			<td><form:hidden path="conceptEntryList" /></td>
 		</tr>

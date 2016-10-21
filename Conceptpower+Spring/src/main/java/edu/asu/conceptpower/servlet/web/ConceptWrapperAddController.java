@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.servlet.core.Constants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
@@ -31,7 +32,6 @@ import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
 

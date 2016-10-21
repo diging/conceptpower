@@ -35,6 +35,8 @@ import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.users.IUserManager;
 import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
+import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
+import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
 
 /**
  * This method provides all the required methods for editing a concept
@@ -44,6 +46,9 @@ import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
  */
 @Controller
 public class ConceptEditController {
+
+    @Autowired
+    private IConceptWrapperCreator wrapperCreator;
 
     @Autowired
     private IConceptManager conceptManager;
@@ -106,6 +111,7 @@ public class ConceptEditController {
         conceptEditBean.setSimilar(concept.getSimilarTo());
         conceptEditBean.setConceptId(concept.getId());
         conceptEditBean.setConceptEntryList(new ArrayList());
+        conceptEditBean.setWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
         return "/auth/conceptlist/editconcept";
     }
@@ -256,6 +262,56 @@ public class ConceptEditController {
         List<ConceptEntry> synonymList = new ArrayList<ConceptEntry>();
         synonymList.add(synonym);
         return new ResponseEntity<String>(buildJSON(synonymList, false, true), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "conceptEdit/conceptSearch")
+    public ResponseEntity<Object> searchConcept(@RequestParam("concept") String concept,
+            @RequestParam("pos") String pos) throws IllegalAccessException, LuceneException {
+
+        List<ConceptEntryWrapper> foundConcepts = null;
+
+        if (!concept.trim().isEmpty()) {
+
+            ConceptEntry[] found = null;
+
+            if (indexService.isIndexerRunning()) {
+                return new ResponseEntity<Object>("Indexer is running. Try again after sometime.",
+                        HttpStatus.SERVICE_UNAVAILABLE);
+            }
+
+            try {
+                found = conceptManager.getConceptListEntriesForWord(concept, pos,
+                        Constants.WORDNET_DICTIONARY);
+            } catch (IndexerRunningException ie) {
+                return new ResponseEntity<Object>("Indexer is running. Try again after sometime.",
+                        HttpStatus.SERVICE_UNAVAILABLE);
+            }
+
+            foundConcepts = wrapperCreator.createWrappers(found);
+        }
+        // ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+        // Map<String, String> types = new LinkedHashMap<String, String>();
+        // for (ConceptType conceptType : allTypes) {
+        // types.put(conceptType.getTypeId(), conceptType.getTypeName());
+        // }
+        //
+        // model.addAttribute("types", types);
+        //
+        // List<ConceptList> allLists = conceptListManager.getAllConceptLists();
+        // Map<String, String> lists = new LinkedHashMap<String, String>();
+        // for (ConceptList conceptList : allLists) {
+        // lists.put(conceptList.getConceptListName(),
+        // conceptList.getConceptListName());
+        // }
+        // model.addAttribute("lists", lists);
+        //
+        // return "/auth/conceptlist/addconceptwrapper";
+        
+        if (foundConcepts == null) {
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<Object>(foundConcepts, HttpStatus.OK);
     }
 
     private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired, boolean synonymRequired) {
