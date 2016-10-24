@@ -74,7 +74,7 @@
 					<td align="justify"><font size="2"><c:out
 								value="${types.typeId}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
-								value="${types.description}"></c:out></font></td>
+								value="${types.description}" escapeXml="false"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out
 								value="${types.supertypeId}"></c:out></font></td>
 					<td align="justify"><font size="2"><c:out

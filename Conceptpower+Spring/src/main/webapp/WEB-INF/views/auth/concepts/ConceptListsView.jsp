@@ -59,7 +59,7 @@
 					<td align="justify"><font size="2"><a
 							href="${pageContext.servletContext.contextPath}/auth/${list.conceptListName}/concepts">${list.conceptListName}</a></font></td>
 					<td align="justify"><font size="2"><c:out
-								value="${list.description}"></c:out></font></td>
+								value="${list.description}" escapeXml="false"></c:out></font></td>
 				</tr>
 			</c:forEach>
 		</tbody>
