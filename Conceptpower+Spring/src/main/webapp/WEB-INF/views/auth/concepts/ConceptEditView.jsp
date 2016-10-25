@@ -13,10 +13,56 @@ $(function() {
 	});
 });
 
+$(document).ready(function(){
+    oTable = $('#conceptSearch').dataTable({
+        "bJQueryUI" : true,
+        "sPaginationType" : "full_numbers",
+        "bAutoWidth" : false,
+
+        //set row class to gradeX even if the row is selectable
+        "fnRowCallback" : function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            if (aData[2] == aData[3]) {
+                $(nRow).removeClass('odd');
+                $(nRow).removeClass('even');
+                $(nRow).addClass('gradeX even');
+            } else {
+                $(nRow).removeClass('odd');
+                $(nRow).removeClass('even');
+                $(nRow).addClass('gradeX odd');
+            }
+
+        }
+    
+	});
+    
+//     Used for loading the wordnet ids when clicked on a row
+    $('body').delegate('#conceptSearch tbody tr', "click", function() {
+        console.log('onclick called');
+        var aData = oTable.fnGetData(this); // get datarow
+        
+        if (null != aData) // null if we clicked on title row
+        {
+            var wordnetID = aData[2];
+            var selectedWordNetIds = $("#wordnetIds").val();
+            console.log(selectedWordNetIds);
+            console.log(wordnetID);
+            console.log(selectedWordNetIds.indexOf(wordnetID));
+            if(selectedWordNetIds.length == 0) {
+                // Then just append
+                selectedWordNetIds = wordnetID;
+            } else if(selectedWordNetIds.indexOf(wordnetID) !== -1) {
+                selectedWordNetIds = selectedWordNetIds+','+wordnetID;
+            }
+            $("#wordnetIds").val(selectedWordNetIds);    
+        }
+    });
+    
+});
+
+
 $(document).ready(function() {
+    
     $("#searchconcept").click(function() {
-        console.log("Search clicked");
-        console.log($("name").val());
         $.ajax({
             type : "GET",
             url : "${pageContext.servletContext.contextPath}/conceptEdit/conceptSearch",
@@ -25,8 +71,20 @@ $(document).ready(function() {
                 pos : $("#pos").val()
             },
             success : function(response) {
-                console.log(data);
-                var data = jQuery.parseJSON(response);
+                for(var i=0; i< response.length; i++) {
+                    var conceptEntry = response[i].entry;
+                    
+                    var t = $('#conceptSearch').DataTable();
+                    t.row.add( [
+                                conceptEntry.word,
+                                conceptEntry.id,
+                                conceptEntry.wordnetId,
+                                conceptEntry.pos
+                            ] ).draw( false );
+                    
+                    // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
+                }
+                $('#conceptSearch').show();  
             },
     
             error : function(httpStatus, response) {
@@ -299,11 +357,6 @@ $(document).ready(function() {
 			<td>Similar</td>
 			<td><form:input  path="similar" class="form-control"/></td>
 		</tr>
-        <tr>
-            <td>Wordnet</td>
-            <td><form:input path="wordnetIds" class="form-control" /></td>
-        </tr>
-        
         
         
         <tr>
@@ -323,66 +376,49 @@ $(document).ready(function() {
     </table>
     <input type="button" id="searchconcept" name="searchconcept" value="searchconcept" class="btn btn-primary">
 
-    <c:if test="${not empty result}">
-        <h2>2. Select Wordnet concept from search results</h2>
-    
         <h4>The following concepts were found:</h4>
         Remember, you can only create a wrapper for concepts in Wordnet!
         <p></p>
-        <table cellpadding="0" cellspacing="0"
-            class="table table-striped table-bordered"
-            id="conceptSearch">
+        <table class="table table-striped table-bordered"
+            id="conceptSearch" style="display:none;">
             <thead>
                 <tr>
                     <th>Term</th>
                     <th>ID</th>
                     <th>Wordnet ID</th>
                     <th>POS</th>
-                    <th>Concept List</th>
-                    <th>Description</th>
-                    <th>Type</th>
-                    <th>Synonyms</th>
+                    
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="concept" items="${result}">
-                    <tr title="${concept.uri}">
-                        <td align="justify"><font size="2">
-                                <a id="${concept.entry.id}"
-                                data-toggle="modal"
-                                data-target="#detailsModal"
-                                data-conceptid="${concept.entry.id}"><c:out
-                                        value="${concept.entry.word}"></c:out></a>
-                        </font></td>
-                        <td align="justify"><c:out
-                                value="${concept.entry.id}"></c:out></td>
-                        <td align="justify"><c:out
-                                value="${concept.entry.wordnetId}"></c:out></td>
-                        <td align="justify"><font size="2"><c:out
-                                    value="${concept.entry.pos}"></c:out></font></td>
-                        <td align="justify"><font size="2"><c:out
-                                    value="${concept.entry.conceptList}"></c:out></font></td>
-                        <td align="justify"><font size="2">
-                                ${concept.description}</font></td>
-                        <td align="justify"><font size="2"><c:out
-                                    value="${concept.type.typeName}"></c:out></font></td>
-                        <td align="justify"><font size="2"><c:forEach
-                                    var="syn"
-                                    items="${concept.synonyms}">
-                                    <c:out value="-> ${syn.word}"></c:out>
-                                </c:forEach></font></td>
-                    </tr>
-                </c:forEach>
+<%--                     <tr title="${concept.uri}"> --%>
+<!--                         <td align="justify"><font size="2"> -->
+<%--                                 <a id="${concept.entry.id}" --%>
+<!--                                 data-toggle="modal" -->
+<!--                                 data-target="#detailsModal" -->
+<%--                                 data-conceptid="${concept.entry.id}"><c:out --%>
+<%--                                         value="${concept.entry.word}"></c:out></a> --%>
+<!--                         </font></td> -->
+<%--                         <td align="justify"><c:out --%>
+<%--                                 value="${concept.entry.id}"></c:out></td> --%>
+<%--                         <td align="justify"><c:out --%>
+<%--                                 value="${concept.entry.wordnetId}"></c:out></td> --%>
+<%--                         <td align="justify"><font size="2"><c:out --%>
+<%--                                     value="${concept.entry.pos}"></c:out></font></td> --%>
+<!--                         </font></td> -->
+<!--                     </tr> -->
             </tbody>
         </table>
-
-    </c:if>
 
     <p />
     <div id="selectedconcepts"></div>
         
         
-
+        <tr>
+            <td>Wordnet</td>
+            <td><form:input path="wordnetIds" class="form-control" /></td>
+        </tr>
+        
 		<tr>
 			<td><form:hidden path="conceptEntryList" /></td>
 		</tr>

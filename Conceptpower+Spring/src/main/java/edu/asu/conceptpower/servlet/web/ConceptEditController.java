@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -265,7 +267,7 @@ public class ConceptEditController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "conceptEdit/conceptSearch")
-    public ResponseEntity<Object> searchConcept(@RequestParam("concept") String concept,
+    public @ResponseBody ResponseEntity<Object> searchConcept(@RequestParam("concept") String concept,
             @RequestParam("pos") String pos) throws IllegalAccessException, LuceneException {
 
         List<ConceptEntryWrapper> foundConcepts = null;
@@ -287,27 +289,18 @@ public class ConceptEditController {
                         HttpStatus.SERVICE_UNAVAILABLE);
             }
 
-            foundConcepts = wrapperCreator.createWrappers(found);
+            foundConcepts = new CopyOnWriteArrayList<>(wrapperCreator.createWrappers(found));
         }
-        // ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-        // Map<String, String> types = new LinkedHashMap<String, String>();
-        // for (ConceptType conceptType : allTypes) {
-        // types.put(conceptType.getTypeId(), conceptType.getTypeName());
-        // }
-        //
-        // model.addAttribute("types", types);
-        //
-        // List<ConceptList> allLists = conceptListManager.getAllConceptLists();
-        // Map<String, String> lists = new LinkedHashMap<String, String>();
-        // for (ConceptList conceptList : allLists) {
-        // lists.put(conceptList.getConceptListName(),
-        // conceptList.getConceptListName());
-        // }
-        // model.addAttribute("lists", lists);
-        //
-        // return "/auth/conceptlist/addconceptwrapper";
         
-        if (foundConcepts == null) {
+        // Remove CCP concepts. 
+        for(ConceptEntryWrapper wrapper : foundConcepts) {
+            System.out.println(wrapper.getEntry().getId());
+            if (wrapper.getEntry().getId().startsWith(Constants.CONCEPT_PREFIX)) {
+                foundConcepts.remove(wrapper);
+            }
+        }
+        
+        if (foundConcepts == null || foundConcepts.isEmpty()) {
             return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
 
