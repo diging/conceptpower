@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -97,14 +99,16 @@ public class ConceptSearch {
             totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields, operator);
             searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields, operator,
                     page, numberOfRecordsPerPage);
-        } catch (LuceneException | IllegalAccessException | IndexerRunningException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (LuceneException | IllegalAccessException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IndexerRunningException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
 
         if (searchResults.length == 0) {
-            // Returning a 404 error.
+            // Data is not found but still returning OK
             return new ResponseEntity<String>("No records found for the search condition.",
-                    HttpStatus.NOT_FOUND);
+                    HttpStatus.OK);
         }
 
         List<String> xmlEntries = new ArrayList<String>();
@@ -125,5 +129,11 @@ public class ConceptSearch {
         xmlEntries.add(msg.appendNumberOfRecords(totalNumberOfRecords));
 
         return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
+    }
+
+    @ExceptionHandler({ BindException.class })
+    public ResponseEntity<String> handleMethodArgumentTypeMismatch(BindException ex) {
+        return new ResponseEntity<String>(ex.getFieldError().getDefaultMessage(),
+                HttpStatus.BAD_REQUEST);
     }
 }

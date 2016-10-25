@@ -54,7 +54,7 @@ public class IndexService implements IIndexService {
 			throw new IndexerRunningException(indexerRunning);
 		}
         // Fetches all the pages
-        return luceneUtility.queryIndex(fieldMap, operator, Integer.MIN_VALUE, Integer.MIN_VALUE);
+        return luceneUtility.queryIndex(fieldMap, operator, 0, -1);
 	}
 
     /**
