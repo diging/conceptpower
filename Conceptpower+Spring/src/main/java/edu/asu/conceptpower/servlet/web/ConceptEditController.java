@@ -163,6 +163,7 @@ public class ConceptEditController {
         conceptEntry.setTypeId(conceptEditBean.getSelectedTypeId());
         conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
         conceptEntry.setModifiedUser(principal.getName());
+        conceptEntry.setWordnetId(conceptEditBean.getWordnetIds());
 
         String userId = usersManager.findUser(principal.getName()).getUsername();
         conceptEntry.setModified(userId);

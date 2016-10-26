@@ -44,16 +44,13 @@ $(document).ready(function(){
         {
             var wordnetID = aData[2];
             var selectedWordNetIds = $("#wordnetIds").val();
-            console.log(selectedWordNetIds);
-            console.log(wordnetID);
-            console.log(selectedWordNetIds.indexOf(wordnetID));
             if(selectedWordNetIds.length == 0) {
                 // Then just append
                 selectedWordNetIds = wordnetID;
-            } else if(selectedWordNetIds.indexOf(wordnetID) !== -1) {
+            } else if(selectedWordNetIds.indexOf(wordnetID) == -1) {
                 selectedWordNetIds = selectedWordNetIds+','+wordnetID;
             }
-            $("#wordnetIds").val(selectedWordNetIds);    
+            $("#wordnetIds").val(selectedWordNetIds);
         }
     });
     
@@ -84,11 +81,12 @@ $(document).ready(function() {
                     
                     // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
                 }
-                $('#conceptSearch').show();  
+                $('#conceptSearchDiv').show();  
             },
     
             error : function(httpStatus, response) {
-               console.log("try again later");
+                var t = $('#conceptSearch').DataTable();
+                t.clear().draw();
             }
         });
     });
@@ -337,7 +335,7 @@ $(document).ready(function() {
 			</td>
 			<td><form:hidden path="synonymsids"></form:hidden> <input
 				type="button" name="synonym" id="addsynonym" data-toggle="modal"
-				data-target="#synonymModal" value="Add Synonym" class="btn btn-primary"></td>
+				data-target="#synonymModal" value="Add Synonym" class="btn-xs btn-primary"></td>
 		</tr>
 
 		<tr>
@@ -358,7 +356,28 @@ $(document).ready(function() {
 			<td><form:input  path="similar" class="form-control"/></td>
 		</tr>
         
+        <tr>
+            <td>Wordnet</td>
+            <td><form:textarea path="wordnetIds" id="wordnetIds" class="wordnetIds" rows="5" cols="60"/></td>
+        </tr>
         
+        <tr>
+            <td><form:hidden path="conceptEntryList" /></td>
+        </tr>
+        
+        <tr>
+            <td><input type="text" name="conceptid" id="conceptid"
+                hidden="true" value="${conceptId}"></td>
+        </tr>
+        
+    </table>
+    <br/><br/>
+    <table>
+        <tr>
+            <td>
+                <h4>Search for wordnet ids below</h4>
+            </td>
+        </tr>
         <tr>
             <td>Create wrapper for wordnet concept:</td>
             <td><input type="text" id="name" /></td>
@@ -372,15 +391,19 @@ $(document).ready(function() {
                     <option value="adjective">Adjective</option>
                     <option value="other">Other</option>
             </select></td>
+            <td><input type="button" id="searchconcept" name="searchconcept" value="searchconcept" class="btn-xs btn-primary"></td>
         </tr>
+        
     </table>
-    <input type="button" id="searchconcept" name="searchconcept" value="searchconcept" class="btn btn-primary">
-
+    
+    <br/><br/>
+    
+    <div id="conceptSearchDiv" style="display:none;">
         <h4>The following concepts were found:</h4>
-        Remember, you can only create a wrapper for concepts in Wordnet!
+        Click on the row to add the wordnet id
         <p></p>
         <table class="table table-striped table-bordered"
-            id="conceptSearch" style="display:none;">
+            id="conceptSearch">
             <thead>
                 <tr>
                     <th>Term</th>
@@ -391,43 +414,10 @@ $(document).ready(function() {
                 </tr>
             </thead>
             <tbody>
-<%--                     <tr title="${concept.uri}"> --%>
-<!--                         <td align="justify"><font size="2"> -->
-<%--                                 <a id="${concept.entry.id}" --%>
-<!--                                 data-toggle="modal" -->
-<!--                                 data-target="#detailsModal" -->
-<%--                                 data-conceptid="${concept.entry.id}"><c:out --%>
-<%--                                         value="${concept.entry.word}"></c:out></a> --%>
-<!--                         </font></td> -->
-<%--                         <td align="justify"><c:out --%>
-<%--                                 value="${concept.entry.id}"></c:out></td> --%>
-<%--                         <td align="justify"><c:out --%>
-<%--                                 value="${concept.entry.wordnetId}"></c:out></td> --%>
-<%--                         <td align="justify"><font size="2"><c:out --%>
-<%--                                     value="${concept.entry.pos}"></c:out></font></td> --%>
-<!--                         </font></td> -->
-<!--                     </tr> -->
             </tbody>
         </table>
-
-    <p />
-    <div id="selectedconcepts"></div>
+    </div>
         
-        
-        <tr>
-            <td>Wordnet</td>
-            <td><form:input path="wordnetIds" class="form-control" /></td>
-        </tr>
-        
-		<tr>
-			<td><form:hidden path="conceptEntryList" /></td>
-		</tr>
-		<tr>
-			<td><input type="text" name="conceptid" id="conceptid"
-				hidden="true" value="${conceptId}"></td>
-		</tr>
-	</table>
-
 	<table>
 		<tr>
 			<td><input type="submit" name="edit" id="edit"
@@ -478,8 +468,7 @@ $(document).ready(function() {
 							<div id="synonymViewDiv"
 								style="max-width: 1000px; max-height: 500px;" hidden="true">
 
-								<table cellpadding="0" cellspacing="0" id="synonymstable"
-									hidden="true" class="table table-striped table-bordered">
+								<table id="synonymstable" hidden="true" class="table table-striped table-bordered">
 									<tbody>
 									</tbody>
 								</table>
