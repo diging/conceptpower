@@ -62,7 +62,7 @@ $(document).ready(function() {
     $("#searchconcept").click(function() {
         $.ajax({
             type : "GET",
-            url : "${pageContext.servletContext.contextPath}/conceptEdit/conceptSearch",
+            url : "${pageContext.servletContext.contextPath}/conceptEdit/search",
             data : {
                 concept : $("#name").val(),
                 pos : $("#pos").val()

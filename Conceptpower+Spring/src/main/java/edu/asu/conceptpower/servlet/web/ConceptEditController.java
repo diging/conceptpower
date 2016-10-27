@@ -267,7 +267,7 @@ public class ConceptEditController {
         return new ResponseEntity<String>(buildJSON(synonymList, false, true), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "conceptEdit/conceptSearch")
+    @RequestMapping(method = RequestMethod.GET, value = "conceptEdit/search")
     public @ResponseBody ResponseEntity<Object> searchConcept(@RequestParam("concept") String concept,
             @RequestParam("pos") String pos) throws IllegalAccessException, LuceneException {
 
@@ -295,16 +295,11 @@ public class ConceptEditController {
         
         // Remove CCP concepts. 
         for(ConceptEntryWrapper wrapper : foundConcepts) {
-            System.out.println(wrapper.getEntry().getId());
             if (wrapper.getEntry().getId().startsWith(Constants.CONCEPT_PREFIX)) {
                 foundConcepts.remove(wrapper);
             }
         }
         
-        if (foundConcepts == null || foundConcepts.isEmpty()) {
-            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
-        }
-
         return new ResponseEntity<Object>(foundConcepts, HttpStatus.OK);
     }
 
