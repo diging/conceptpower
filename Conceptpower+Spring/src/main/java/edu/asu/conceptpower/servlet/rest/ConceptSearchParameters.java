@@ -1,7 +1,5 @@
 package edu.asu.conceptpower.servlet.rest;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 public class ConceptSearchParameters {
 
     private String type_uri;
@@ -10,7 +8,6 @@ public class ConceptSearchParameters {
     private String equals_to;
     private String similar_to;
     private String description;
-    @NotEmpty(message = "Word cannot be empty.")
     private String word;
     private String pos;
     private String concept_list;

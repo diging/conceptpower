@@ -37,6 +37,15 @@ public class XMLConceptMessage extends AXMLMessage {
         return sb.toString();
     }
 
+    public String appendErrorMessage(String errorMessage) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + " ");
+        sb.append(XMLConstants.ERROR_MESSAGE + "=\"" + errorMessage + "\" ");
+        sb.append(">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + ">");
+        return sb.toString();
+    }
+
     public List<String> appendEntries(Map<ConceptEntry, ConceptType> entries) {
         List<String> xmlEntries = new ArrayList<String>();
         for (ConceptEntry entry : entries.keySet())

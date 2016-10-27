@@ -15,6 +15,7 @@ public interface XMLConstants {
 	public final static String CONCEPT_ENTRY = "conceptEntry";
 	public final static String TYPE_ENTRY = "type_entry";
     public final static String PAGINATION = "pagination";
+    public final static String ERROR = "error";
 	
 	public final static String ID = "id";
 	public final static String CONCEPT_URI = "concept_uri";
@@ -37,4 +38,5 @@ public interface XMLConstants {
 	public final static String TYPE_URI_ATTR = "type_uri";
 	public final static String MATCHES = "matches";
     public final static String NUMBER_OF_RECORDS = "number_of_records";
+    public final static String ERROR_MESSAGE = "error_message";
 }

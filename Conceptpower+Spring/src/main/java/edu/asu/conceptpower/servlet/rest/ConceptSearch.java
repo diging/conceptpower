@@ -6,15 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,6 +55,14 @@ public class ConceptSearch {
     @Value("${default_page_size}")
     private int numberOfRecordsPerPage;
 
+    @Autowired
+    private ConceptSearchParameterValidator validator;
+
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.setValidator(validator);
+    }
+
     /**
      * This method provides information of a concept for a rest interface of the
      * form
@@ -67,8 +76,20 @@ public class ConceptSearch {
      */
     @RequestMapping(value = "rest/ConceptSearch", method = RequestMethod.GET, produces = "application/xml; charset=utf-8")
     public @ResponseBody ResponseEntity<String> searchConcept(
-            @Valid ConceptSearchParameters conceptSearchParameters)
-                    throws IllegalArgumentException, IllegalAccessException {
+            @Validated ConceptSearchParameters conceptSearchParameters,
+            BindingResult result)
+            throws IllegalArgumentException, IllegalAccessException {
+
+        List<String> xmlEntries = new ArrayList<String>();
+
+        if (result.hasErrors()) {
+            XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
+            for (ObjectError error : result.getAllErrors()) {
+                xmlEntries.add(msg.appendErrorMessage(error.getDefaultMessage()));
+            }
+            return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.BAD_REQUEST);
+        }
+
         Map<String, String> searchFields = new HashMap<String, String>();
         String operator = SearchParamters.OP_OR;
         int page = 1;
@@ -106,12 +127,12 @@ public class ConceptSearch {
         }
 
         if (searchResults.length == 0) {
-            // Data is not found but still returning OK
-            return new ResponseEntity<String>("No records found for the search condition.",
-                    HttpStatus.OK);
+            // Data is not found but still returning OK as per review comments
+            XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
+            xmlEntries.add(msg.appendErrorMessage("No records found for the search condition."));
+            return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
         }
-
-        List<String> xmlEntries = new ArrayList<String>();
+        
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
         XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
@@ -131,9 +152,4 @@ public class ConceptSearch {
         return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
     }
 
-    @ExceptionHandler({ BindException.class })
-    public ResponseEntity<String> handleMethodArgumentTypeMismatch(BindException ex) {
-        return new ResponseEntity<String>(ex.getFieldError().getDefaultMessage(),
-                HttpStatus.BAD_REQUEST);
-    }
 }
