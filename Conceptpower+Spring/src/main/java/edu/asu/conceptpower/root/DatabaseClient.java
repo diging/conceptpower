@@ -78,7 +78,7 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     public List<ConceptEntry> getConceptByWordnetId(String wordnetId) {
         ConceptEntry entry = new ConceptEntry();
-        entry.setWordnetId(wordnetId + ",");
+        entry.setWordnetId(wordnetId);
 
         ObjectSet<ConceptEntry> entries = dictionaryClient.queryByExample(entry);
         return entries;
