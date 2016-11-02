@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,8 @@ public class ConceptSearch {
     @Autowired
     private URIHelper uriHelper;
 
+    private static final Logger logger = LoggerFactory.getLogger(ConceptSearch.class);
+
     /**
      * This method provides information of a concept for a rest interface of the
      * form
@@ -74,8 +78,13 @@ public class ConceptSearch {
 
         try {
             searchResults = manager.searchForConcepts(searchFields, operator);
-        } catch (LuceneException | IllegalAccessException | IndexerRunningException ex) {
+        } catch (LuceneException ex) {
+            logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IllegalAccessException iae) {
+            return new ResponseEntity<String>(iae.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IndexerRunningException ire) {
+            return new ResponseEntity<String>(ire.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
 
         List<String> xmlEntries = new ArrayList<String>();

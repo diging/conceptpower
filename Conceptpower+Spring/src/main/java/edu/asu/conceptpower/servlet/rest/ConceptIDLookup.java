@@ -99,7 +99,7 @@ public class ConceptIDLookup {
                 }
                 addAlternativeIds(pathParts[lastIndex], entry);
             } catch (LuceneException e) {
-                logger.warn("Lucene Exception", e);
+                logger.error("Lucene Exception", e);
                 return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
