@@ -8,9 +8,9 @@ import org.springframework.validation.Validator;
 import edu.asu.conceptpower.servlet.core.POS;
 
 /**
- * This class validates the Concept power search parameters. Checks whether user
- * has submitted word and pos details for searching the concept In addition, the
- * validator checks for the operators (OR and AND)
+ * This class validates the Conceptpower search parameters. Checks whether a
+ * user has submitted word and pos details when searching for a concept. In
+ * addition, the validator checks for the operators (OR and AND).
  * 
  * @author karthikeyanmohan
  *
