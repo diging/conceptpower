@@ -2,10 +2,19 @@ package edu.asu.conceptpower.servlet.rest;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import edu.asu.conceptpower.servlet.core.POS;
 
+/**
+ * This class validates the Concept power search parameters. Checks whether user
+ * has submitted word and pos details for searching the concept In addition, the
+ * validator checks for the operators (OR and AND)
+ * 
+ * @author karthikeyanmohan
+ *
+ */
 @Component
 public class ConceptSearchParameterValidator implements Validator {
 
@@ -18,13 +27,10 @@ public class ConceptSearchParameterValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ConceptSearchParameters conceptSearchParameter = (ConceptSearchParameters) target;
 
-        if (conceptSearchParameter.getWord() == null || conceptSearchParameter.getWord().isEmpty()) {
-            errors.reject("word", "Word cannot be empty.");
-        }
+        ValidationUtils.rejectIfEmpty(errors, conceptSearchParameter.getWord(), "word", "Word cannot be empty.");
+        ValidationUtils.rejectIfEmpty(errors, conceptSearchParameter.getPos(), "pos", "Pos cannot be empty.");
 
-        if (conceptSearchParameter.getPos() == null) {
-            errors.reject("pos", "Pos cannot be empty.");
-        } else if (!POS.posValues.contains(conceptSearchParameter.getPos())) {
+        if (!POS.posValues.contains(conceptSearchParameter.getPos())) {
             errors.reject("pos", "Please enter correct pos value.");
         }
 
@@ -34,9 +40,6 @@ public class ConceptSearchParameterValidator implements Validator {
                 errors.reject("operator", "Please enter correct operator value.");
             }
         }
-
-        // Not validating for null condition of operator.
-        // If operator is null, by default we apply or filter
     }
 
 }
