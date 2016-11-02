@@ -7,19 +7,6 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#conceptList').dataTable({
-            "bJQueryUI" : true,
-            "sPaginationType" : "full_numbers",
-            "bAutoWidth" : false,
-            "aoColumnDefs" : [ {
-                "aTargets" : [ 8 ],
-                "sType" : "html",
-                "fnRender" : function(o, val) {
-                    return $("<div/>").html(o.aData[8]).text();
-                }
-            } ],
-        });
-
         $('#detailsdiv').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
             var conceptid = button.data('conceptid') // Extract info from data-* attributes
@@ -102,8 +89,8 @@
                     <td align="justify">
                         <div class="scrollable"
                             style="max-height: 100px; max-width: 200px;">
-                            <font size="2"> <c:out
-                                    value="${concept.description}"></c:out>
+                            <font size="2"><c:out
+                                    value="${concept.description}" escapeXml="false"></c:out>
                             </font>
                         </div>
                     </td>
@@ -119,6 +106,23 @@
             </c:forEach>
         </tbody>
     </table>
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li <c:if test="${page == 1}">class="disabled"</c:if>>
+          <a <c:if test="${page > 1}">href="<c:url value="/auth/${listid}/concepts?page=${page - 1}&sortDir=${sortDir}" />"</c:if> aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+    <c:forEach begin="1" end="${count}" var="val">
+        <li <c:if test="${val == page}">class="active"</c:if>><a href="<c:url value="/auth/${listid}/concepts?page=${val}&sortDir=${sortDir}" />"><c:out value="${val}"/></a></li>
+    </c:forEach>
+        <li <c:if test="${page == count}">class="disabled"</c:if>>
+          <a <c:if test="${page < count}">href="<c:url value="/auth/${listid}/concepts?page=${page + 1}&sortDir=${sortDir}" />"</c:if> aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 </c:if>
 
 

@@ -82,13 +82,7 @@ public class ConceptIDLookup {
         if (wordnetId == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
-        ConceptEntry entry = null;
-        try {
-            entry = dictManager.getConceptEntry(wordnetId);
-        } catch (LuceneException ex) {
-            logger.warn("Lucene Exception", ex);
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        ConceptEntry entry = dictManager.getConceptEntry(wordnetId);
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
         List<String> xmlEntries = new ArrayList<String>();
 

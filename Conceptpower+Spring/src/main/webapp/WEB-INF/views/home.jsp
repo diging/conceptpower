@@ -228,7 +228,7 @@ function showFormProcessing() {
                 value="${concept.entry.conceptList}"></c:out></font></td>
           <td align="justify">
                 <div class="scrollable" style="max-height: 100px; max-width: 400px;">
-                    <c:out value="${concept.description}"></c:out>
+                    <c:out value="${concept.description}" escapeXml="false"></c:out>
                 </div>
           </td>
           <td align="justify"><font size="2"><c:out

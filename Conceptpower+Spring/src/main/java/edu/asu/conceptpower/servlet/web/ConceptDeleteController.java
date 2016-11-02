@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IIndexService;
+import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
@@ -94,7 +96,8 @@ public class ConceptDeleteController {
     @RequestMapping(value = "auth/concepts/canceldelete/{conceptList}", method = RequestMethod.GET)
     public String cancelDelete(@PathVariable("conceptList") String conceptList, ModelMap model) throws LuceneException {
         List<ConceptEntryWrapper> foundConcepts = null;
-        List<ConceptEntry> founds = conceptManager.getConceptListEntries(conceptList);
+        List<ConceptEntry> founds = conceptManager.getConceptListEntries(conceptList, 1, -1, "id",
+                IConceptDBManager.DESCENDING);
         foundConcepts = wrapperCreator
                 .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
 
@@ -112,9 +115,11 @@ public class ConceptDeleteController {
      * @return String value to redirect user to a particular concept list page
      * @throws IndexerRunningException
      */
-    @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.POST)
     public ModelAndView confirmlDelete(@PathVariable("id") String id,
-            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete, Principal principal)
+            @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete,
+            @RequestParam(value = "listName") String listName, Principal principal,
+            RedirectAttributes redirectAttributes)
                     throws LuceneException, IndexerRunningException {
         List<ConceptEntryWrapper> foundConcepts = null;
         ModelAndView model = new ModelAndView();
@@ -129,17 +134,11 @@ public class ConceptDeleteController {
         }
 
         conceptManager.deleteConcept(id, principal.getName());
-        List<ConceptEntry> founds = conceptManager.getConceptListEntries(concept.getConceptList());
-
-        foundConcepts = wrapperCreator
-                .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
-
-        model.addObject("result", foundConcepts);
         if (fromHomeScreenDelete.equalsIgnoreCase("true")) {
             model.setViewName("redirect:/login");
             return model;
         }
-        model.setViewName("/auth/conceptlist/concepts");
+        model.setViewName("redirect:/auth/" + listName + "/concepts");
         return model;
     }
 

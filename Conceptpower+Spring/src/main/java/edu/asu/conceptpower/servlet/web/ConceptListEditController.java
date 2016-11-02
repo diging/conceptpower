@@ -115,7 +115,8 @@ public class ConceptListEditController {
 
         // modify the name for all the existing concepts under this concept
         // list
-        List<ConceptEntry> entries = conceptManager.getConceptListEntries(conceptListAddForm.getOldListName());
+        List<ConceptEntry> entries = conceptManager
+                .getConceptEntriedByConceptListName(conceptListAddForm.getOldListName());
         Iterator<ConceptEntry> entriesIterator = entries.iterator();
 
         while (entriesIterator.hasNext()) {

@@ -2,10 +2,13 @@ package edu.asu.conceptpower.root;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Predicate;
+import com.db4o.query.Query;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
@@ -24,12 +28,8 @@ import edu.asu.conceptpower.servlet.reflect.SearchField;
 @Component
 public class DatabaseClient implements IConceptDBManager {
 
-    private ObjectContainer wordnetCacheClient;
     private ObjectContainer dictionaryClient;
-
-    @Autowired
-    @Qualifier("wordnetCacheDatabaseManager")
-    private DatabaseManager wordnetCache;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     @Qualifier("conceptDatabaseManager")
@@ -37,7 +37,6 @@ public class DatabaseClient implements IConceptDBManager {
 
     @PostConstruct
     public void init() {
-        this.wordnetCacheClient = wordnetCache.getClient();
         this.dictionaryClient = dictionary.getClient();
     }
 
@@ -65,19 +64,11 @@ public class DatabaseClient implements IConceptDBManager {
 
         exampleEntry.setId(id);
         exampleEntry.setWordnetId(null);
-        /*
-         * check if there is a concept in the wordnet cache
-         */
-        ObjectSet<ConceptEntry> results = wordnetCacheClient.queryByExample(exampleEntry);
-
-        // there should only be exactly one object with this id
-        if (results.size() == 1)
-            return results.get(0);
 
         /*
          * check if there is a concept with this id
          */
-        results = dictionaryClient.queryByExample(exampleEntry);
+        ObjectSet<ConceptEntry> results = dictionaryClient.queryByExample(exampleEntry);
         // there should only be exactly one object with this id
         if (results.size() == 1)
             return results.get(0);
@@ -88,7 +79,7 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     public List<ConceptEntry> getConceptByWordnetId(String wordnetId) {
         ConceptEntry entry = new ConceptEntry();
-        entry.setWordnetId(wordnetId + ",");
+        entry.setWordnetId(wordnetId);
 
         ObjectSet<ConceptEntry> entries = dictionaryClient.queryByExample(entry);
         return entries;
@@ -103,20 +94,7 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     public List<Object> queryByExample(Object example) {
-        ObjectSet<Object> results = wordnetCacheClient.queryByExample(example);
-        ObjectSet<Object> results2 = dictionaryClient.queryByExample(example);
-
-        List<Object> allResults = new ArrayList<Object>();
-        for (Object r : results) {
-            allResults.add(r);
-        }
-
-        for (Object r : results2) {
-            allResults.add(r);
-        }
-
-        return allResults;
-
+        return dictionaryClient.queryByExample(example);
     }
 
     /*
@@ -281,14 +259,72 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     public List<?> getAllElementsOfType(Class<?> clazz) {
-        List<?> results = wordnetCacheClient.query(clazz);
-        List<?> dictResults = dictionaryClient.query(clazz);
-        List<Object> allResults = new ArrayList<Object>();
-        allResults.addAll(results);
-        allResults.addAll(dictResults);
-        return allResults;
+        return dictionaryClient.query(clazz);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.conceptpower.db4o.IConceptDBManager#getAllEntriesFromList(java.
+     * lang.String)
+     */
+    @Override
+    public List<ConceptEntry> getAllEntriesFromList(String listname, int page, int pageSize, final String sortBy,
+            final int sortDirection) {
+        ConceptEntry entry = new ConceptEntry();
+        entry.setConceptList(listname);
+
+        Query dictQuery = dictionaryClient.query();
+        dictQuery.constrain(ConceptEntry.class);
+        dictQuery.descend("conceptList").constrain(listname);
+
+        try {
+            final Field sortField = ConceptEntry.class.getDeclaredField(sortBy);
+            sortField.setAccessible(true);
+
+            Comparator<ConceptEntry> conceptEntryComparator = new Comparator<ConceptEntry>() {
+
+                @Override
+                public int compare(ConceptEntry o1, ConceptEntry o2) {
+                    Object o1FieldContent;
+                    Object o2FieldContent;
+                    try {
+                        if (sortDirection == IConceptDBManager.ASCENDING) {
+                            o1FieldContent = sortField.get(o1);
+                            o2FieldContent = sortField.get(o2);
+                        } else {
+                            o2FieldContent = sortField.get(o1);
+                            o1FieldContent = sortField.get(o2);
+                        }
+                    } catch (IllegalArgumentException | IllegalAccessException e) {
+                        logger.error("Error accessing field.", e);
+                        return 0;
+                    }
+
+                    if (o1FieldContent instanceof Integer) {
+                        return ((Integer) o1FieldContent).compareTo((Integer) o2FieldContent);
+                    }
+                    return o1FieldContent.toString().compareTo(o2FieldContent.toString());
+                }
+            };
+            
+            dictQuery.sortBy(conceptEntryComparator);
+        } catch (NoSuchFieldException | SecurityException e) {
+            logger.error("Couldn't sort list.", e);
+            return null;
+        }
+
+        List<ConceptEntry> dictResults = dictQuery.execute();
+
+        int startIndex = (page - 1) * pageSize;
+        int endIndex = startIndex + pageSize;
+        if (endIndex > dictResults.size()) {
+            endIndex = dictResults.size();
+        }
+        return new ArrayList<ConceptEntry>(dictResults.subList(startIndex, endIndex));
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -300,14 +336,14 @@ public class DatabaseClient implements IConceptDBManager {
     public List<ConceptEntry> getAllEntriesFromList(String listname) {
         ConceptEntry entry = new ConceptEntry();
         entry.setConceptList(listname);
+        return dictionaryClient.queryByExample(entry);
+    }
 
-        List<ConceptEntry> results = wordnetCacheClient.queryByExample(entry);
-        List<ConceptEntry> dictResults = dictionaryClient.queryByExample(entry);
-
-        List<ConceptEntry> allResults = new ArrayList<ConceptEntry>();
-        allResults.addAll(results);
-        allResults.addAll(dictResults);
-        return allResults;
+    @Override
+    public List<ConceptEntry> getAllEntriesByTypeId(String typeId) {
+        ConceptEntry entry = new ConceptEntry();
+        entry.setTypeId(typeId);
+        return dictionaryClient.queryByExample(entry);
     }
 
     /*

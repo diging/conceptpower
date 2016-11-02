@@ -24,6 +24,7 @@ import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.servlet.wrapper.IConceptWrapperCreator;
@@ -59,7 +60,6 @@ public class ConceptListController {
 
         List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
         model.addAttribute("result", conceptLists);
-
         return "/auth/conceptlist";
     }
 
@@ -73,17 +73,31 @@ public class ConceptListController {
      *         page
      */
     @RequestMapping(value = "auth/{listid}/concepts", method = RequestMethod.GET)
-    public String getConceptsOfConceptList(@PathVariable("listid") String list,
-            ModelMap model) throws LuceneException {
+    public String getConceptsOfConceptList(@PathVariable("listid") String list, ModelMap model,
+            @RequestParam(defaultValue = "1") String page,
+            @RequestParam(defaultValue = IConceptDBManager.DESCENDING + "") String sortDir) throws LuceneException {
 
-        List<ConceptEntry> founds = conceptManager.getConceptListEntries(list);
+        int pageInt = new Integer(page);
+        int sortDirInt = new Integer(sortDir);
+        int pageCount = conceptManager.getPageCount(list);
+        
+        List<ConceptEntry> founds = conceptManager.getConceptListEntries(list, pageInt, -1, "id", sortDirInt);
 
         List<ConceptEntryWrapper> foundConcepts = wrapperCreator
                 .createWrappers(founds != null ? founds
                         .toArray(new ConceptEntry[founds.size()])
                         : new ConceptEntry[0]);
 
+        if (pageInt < 1) {
+            pageInt = 1;
+        }
+        if (pageInt > pageCount) {
+            pageInt = pageCount;
+        }
+        model.addAttribute("page", pageInt);
         model.addAttribute("result", foundConcepts);
+        model.addAttribute("count", pageCount);
+        model.addAttribute("listid", list);
         return "/auth/conceptlist/concepts";
     }
 
