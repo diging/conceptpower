@@ -85,7 +85,7 @@ public class ConceptSearch {
             logger.error("Illegal access exception", iae);
             return new ResponseEntity<String>(iae.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (IndexerRunningException ire) {
-            logger.warn("Indexer running exception", ire);
+            logger.info("Indexer running exception", ire);
             return new ResponseEntity<String>(ire.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
 

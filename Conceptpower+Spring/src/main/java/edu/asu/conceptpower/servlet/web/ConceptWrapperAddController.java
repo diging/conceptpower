@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -61,6 +63,8 @@ public class ConceptWrapperAddController {
     
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
+
+    private static final Logger logger = LoggerFactory.getLogger(ConceptWrapperAddController.class);
 
     /**
      * This method provides required information for concept wrapper creation
@@ -209,8 +213,10 @@ public class ConceptWrapperAddController {
         try {
             entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
         } catch (LuceneException ex) {
+            logger.error("Lucene exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IndexerRunningException ex) {
+            logger.info("Indexer running exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.OK);
         }
         return new ResponseEntity<String>(buildJSON(Arrays.asList(entries)), HttpStatus.OK);
