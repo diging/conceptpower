@@ -404,9 +404,7 @@ public class ConceptManager implements IConceptManager {
 
         // Creating the first change event
         ChangeEvent changeEvent = new ChangeEvent(userName, new Date(), ChangeEventTypes.CREATION);
-        List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
-        changeEventList.add(changeEvent);
-        entry.setChangeEvents(changeEventList);
+        entry.addNewChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
 
@@ -493,6 +491,20 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
+    public ConceptEntry getConceptWrappedEntryByWordNetId(String wordNetID)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
+        List<ConceptEntry> conceptEntries = client.getConceptByWordnetId(wordNetID);
+        for (ConceptEntry entry : conceptEntries) {
+            // Wordnet is also added because lucene doesn't do an exact search
+            // on fields
+            if (entry.getId().contains(CONCEPT_PREFIX) && entry.getWordnetId().contains(wordNetID)) {
+                return entry;
+            }
+        }
+        // No concept wrapper found for wordnet id
+        return null;
+    }
+
     public int getPageCount(String conceptListName) {
         int totalUploads = getConceptsCountForConceptList(conceptListName);
         return (int) Math.ceil(new Double(totalUploads) / new Double(defaultPageSize));

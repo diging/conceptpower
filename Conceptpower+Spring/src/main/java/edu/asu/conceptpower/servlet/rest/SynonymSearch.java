@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,6 +47,8 @@ public class SynonymSearch {
 	@Autowired
 	private XMLMessageFactory messageFactory;
 
+    private static final Logger logger = LoggerFactory.getLogger(SynonymSearch.class);
+
 	/**
 	 * This method provides information of synonyms of a word for a rest
 	 * interface of the form
@@ -77,7 +81,8 @@ public class SynonymSearch {
         try {
             synonyms = dictManager.getSynonymsForConcept(wordnetId);
         } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            logger.error("Lucene exception", ex);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 		List<String> xmlEntries = new ArrayList<String>();
 		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();

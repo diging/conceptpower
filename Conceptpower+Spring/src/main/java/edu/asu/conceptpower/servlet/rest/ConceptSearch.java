@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -62,6 +64,8 @@ public class ConceptSearch {
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(validator);
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(ConceptSearch.class);
 
     /**
      * This method provides information of a concept for a rest interface of the
@@ -123,10 +127,15 @@ public class ConceptSearch {
             totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields, operator);
             searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields, operator,
                     page, numberOfRecordsPerPage);
-        } catch (LuceneException | IllegalAccessException ex) {
+        } catch (LuceneException ex) {
+            logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (IndexerRunningException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+        } catch (IllegalAccessException iae) {
+            logger.error("Illegal access exception", iae);
+            return new ResponseEntity<String>(iae.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IndexerRunningException ire) {
+            logger.info("Indexer running exception", ire);
+            return new ResponseEntity<String>(ire.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
 
         if (searchResults.length == 0) {
