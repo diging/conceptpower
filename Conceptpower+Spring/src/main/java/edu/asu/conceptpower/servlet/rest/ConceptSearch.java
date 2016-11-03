@@ -100,7 +100,10 @@ public class ConceptSearch {
                 searchFields.put("type_id",
                         uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
             } else if (SearchParamters.OPERATOR.equalsIgnoreCase(field.getName())) {
-                operator = String.valueOf(field.get(conceptSearchParameters));
+                // If the value is null, then operator will be OR by default
+                if (field.get(conceptSearchParameters) != null) {
+                    operator = String.valueOf(field.get(conceptSearchParameters));
+                }
             } else if (SearchParamters.PAGE.equalsIgnoreCase(field.getName())) {
                 page = field.get(conceptSearchParameters) != null
                         ? (Integer) field.get(conceptSearchParameters) : page;

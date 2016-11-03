@@ -35,8 +35,8 @@ public class ConceptSearchParameterValidator implements Validator {
         }
 
         if (conceptSearchParameter.getOperator() != null) {
-            if (SearchParamters.OP_OR.equalsIgnoreCase(conceptSearchParameter.getOperator())
-                    || SearchParamters.OP_AND.equalsIgnoreCase(conceptSearchParameter.getOperator())) {
+            if (!SearchParamters.OP_OR.equalsIgnoreCase(conceptSearchParameter.getOperator())
+                    && !SearchParamters.OP_AND.equalsIgnoreCase(conceptSearchParameter.getOperator())) {
                 errors.reject("operator", "Please enter correct operator value.");
             }
         }
