@@ -22,8 +22,8 @@ import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.xml.MessageFactory;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
-import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
 
 /**
  * This class provides a method to search concepts. It answers requests to:
@@ -42,7 +42,7 @@ public class ConceptSearch {
     private TypeDatabaseClient typeManager;
 
     @Autowired
-    private XMLMessageFactory messageFactory;
+    private MessageFactory messageFactory;
 
     @Autowired
     private URIHelper uriHelper;
@@ -81,7 +81,7 @@ public class ConceptSearch {
         List<String> xmlEntries = new ArrayList<String>();
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
-        XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
+        XMLConceptMessage msg = messageFactory.getXMLMessageFactory().createXMLConceptMessage();
         for (ConceptEntry entry : searchResults) {
             ConceptType type = null;
             if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {

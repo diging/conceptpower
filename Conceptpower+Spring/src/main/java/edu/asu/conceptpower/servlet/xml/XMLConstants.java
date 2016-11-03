@@ -35,4 +35,5 @@ public interface XMLConstants {
 	public final static String TYPE_ID_ATTR = "type_id";
 	public final static String TYPE_URI_ATTR = "type_uri";
 	public final static String MATCHES = "matches";
+    public final static String TYPE_NAME = "type_name";
 }

@@ -20,9 +20,10 @@ import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.json.JsonConceptMessage;
 import edu.asu.conceptpower.servlet.rdf.RDFMessageFactory;
+import edu.asu.conceptpower.servlet.xml.MessageFactory;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
-import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
 
 /**
  * This class provides a method to retrieve all concepts for a given word and
@@ -42,7 +43,7 @@ public class ConceptLookup {
     private TypeDatabaseClient typeManager;
 
     @Autowired
-    private XMLMessageFactory messageFactory;
+    private MessageFactory messageFactory;
 
     @Autowired
     private RDFMessageFactory rdfFactory;
@@ -58,7 +59,32 @@ public class ConceptLookup {
      * @return XML containing information of given concept for given POS
      */
     @RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/xml")
-    public @ResponseBody ResponseEntity<String> getWordNetEntry(@PathVariable("word") String word,
+    public @ResponseBody ResponseEntity<String> getWordNetEntryInXml(@PathVariable("word") String word,
+            @PathVariable("pos") String pos) {
+        ConceptEntry[] entries = null;
+        try {
+            entries = dictManager.getConceptListEntriesForWord(word, pos, null);
+        } catch (LuceneException ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IllegalAccessException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IndexerRunningException ie) {
+            return new ResponseEntity<String>(ie.getMessage(), HttpStatus.OK);
+        }
+
+        Map<ConceptEntry, ConceptType> entryMap = generateEntryMap(entries);
+
+        XMLConceptMessage returnMsg = messageFactory.getXMLMessageFactory().createXMLConceptMessage();
+        List<String> xmlEntries = new ArrayList<String>();
+        if (entries != null) {
+            xmlEntries = returnMsg.appendEntries(entryMap);
+        }
+
+        return new ResponseEntity<String>(returnMsg.getXML(xmlEntries), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody ResponseEntity<String> getWordNetEntryInJson(@PathVariable("word") String word,
             @PathVariable("pos") String pos) {
         ConceptEntry[] entries = null;
         try {
@@ -71,6 +97,18 @@ public class ConceptLookup {
             return new ResponseEntity<String>(ie.getMessage(), HttpStatus.OK);
         }
         
+        Map<ConceptEntry, ConceptType> entryMap = generateEntryMap(entries);
+
+        JsonConceptMessage returnMsg = messageFactory.getJsonMessageFactory().createJsonConceptMessage();
+
+        if (entries != null) {
+            return new ResponseEntity<String>(returnMsg.getJsonArray(entryMap), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<String>("{}", HttpStatus.NOT_FOUND);
+    }
+
+    private Map<ConceptEntry, ConceptType> generateEntryMap(ConceptEntry[] entries) {
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
         for (ConceptEntry entry : entries) {
@@ -80,14 +118,7 @@ public class ConceptLookup {
             }
             entryMap.put(entry, type);
         }
-
-        XMLConceptMessage returnMsg = messageFactory.createXMLConceptMessage();
-        List<String> xmlEntries = new ArrayList<String>();
-        if (entries != null) {
-            xmlEntries = returnMsg.appendEntries(entryMap);
-        }
-
-        return new ResponseEntity<String>(returnMsg.getXML(xmlEntries), HttpStatus.OK);
+        return entryMap;
     }
 
     @RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/rdf+xml")

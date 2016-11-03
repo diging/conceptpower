@@ -21,8 +21,8 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
+import edu.asu.conceptpower.servlet.xml.MessageFactory;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
-import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
 
 /**
  * This class provides a method to retrieve all synonyms for a given concept
@@ -43,7 +43,7 @@ public class SynonymSearch {
 	private TypeDatabaseClient typeManager;
 
 	@Autowired
-	private XMLMessageFactory messageFactory;
+    private MessageFactory messageFactory;
 
 	/**
 	 * This method provides information of synonyms of a word for a rest
@@ -82,7 +82,7 @@ public class SynonymSearch {
 		List<String> xmlEntries = new ArrayList<String>();
 		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
-		XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
+        XMLConceptMessage msg = messageFactory.getXMLMessageFactory().createXMLConceptMessage();
 		for (ConceptEntry entry : synonyms) {
 			ConceptType type = null;
 			if (typeManager != null && entry.getTypeId() != null

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
+import edu.asu.conceptpower.servlet.xml.MessageFactory;
 import edu.asu.conceptpower.servlet.xml.XMLConstants;
-import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
 import edu.asu.conceptpower.servlet.xml.XMLTypeMessage;
 
 /**
@@ -34,7 +34,7 @@ public class TypeIdLookup {
 	private TypeDatabaseClient typeManager;
 
 	@Autowired
-	private XMLMessageFactory messageFactory;
+    private MessageFactory messageFactory;
 
 	/**
 	 * This method provides information of a type for a rest interface of the
@@ -70,7 +70,7 @@ public class TypeIdLookup {
 
 		ConceptType type = typeManager.getType(typeId);
 
-		XMLTypeMessage msg = messageFactory.createXMLTypeMessage();
+        XMLTypeMessage msg = messageFactory.getXMLMessageFactory().createXMLTypeMessage();
 		List<String> xmlEntry = null;
 		if (type != null) {
 			ConceptType superType = null;
