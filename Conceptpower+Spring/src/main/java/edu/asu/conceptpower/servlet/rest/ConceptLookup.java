@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,8 @@ public class ConceptLookup {
     @Autowired
     private RDFMessageFactory rdfFactory;
 
+    private static final Logger logger = LoggerFactory.getLogger(ConceptLookup.class);
+
     /**
      * This method provides information of a concept for a rest interface of the
      * form "http://[server.url]/conceptpower/rest/ConceptLookup/{word}/{pos}"
@@ -64,10 +68,13 @@ public class ConceptLookup {
         try {
             entries = dictManager.getConceptListEntriesForWord(word, pos, null);
         } catch (LuceneException ex) {
+            logger.error("Lucene exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
+            logger.error("Illegal access exception", e);
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch(IndexerRunningException ie){
+            logger.info("Indexer running exception", ie);
             return new ResponseEntity<String>(ie.getMessage(), HttpStatus.OK);
         }
         
@@ -97,11 +104,14 @@ public class ConceptLookup {
         try {
             entries = dictManager.getConceptListEntriesForWord(word, pos, null);
         } catch (LuceneException ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            logger.error("Lucene Exception", ex);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
+            logger.error("Illegal access exception", e);
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (IndexerRunningException ir) {
-            return new ResponseEntity<String>(ir.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.info("Indexer running exception", ir);
+            return new ResponseEntity<String>(ir.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         return new ResponseEntity<String>(rdfFactory.generateRDF(entries), HttpStatus.OK);
     }

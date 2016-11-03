@@ -145,7 +145,7 @@ public class Concepts {
             return new ResponseEntity<String>("Specified concept list can't be modified.", HttpStatus.BAD_REQUEST);
         } catch (LuceneException le) {
             logger.error("Error creating concept from REST call.", le);
-            return new ResponseEntity<String>("Concept Cannot be added", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Concept Cannot be added", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
             logger.error("Error creating concept from REST call.", e);
             return new ResponseEntity<String>("Illegal Access", HttpStatus.BAD_REQUEST);
@@ -219,7 +219,7 @@ public class Concepts {
                 responseObj.put("error_message", "Specified dictionary can't be modified.");
             } catch (LuceneException le) {
                 logger.error("Error creating concept from REST call.", le);
-                return new ResponseEntity<String>("Concept Cannot be added", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<String>("Concept Cannot be added", HttpStatus.INTERNAL_SERVER_ERROR);
             } catch (IllegalAccessException e) {
                 logger.error("Error creating concept from REST call.", e);
                 return new ResponseEntity<String>("Illegal Access", HttpStatus.BAD_REQUEST);

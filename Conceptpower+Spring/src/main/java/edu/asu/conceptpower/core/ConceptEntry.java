@@ -3,7 +3,9 @@ package edu.asu.conceptpower.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -85,6 +87,8 @@ public class ConceptEntry implements Serializable {
     private String modifiedUser;
 
     private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
+
+    private Set<String> alternativeIds = new HashSet<>();
 
     public ConceptEntry() {
     }
@@ -372,23 +376,25 @@ public class ConceptEntry implements Serializable {
     }
 
     public List<ChangeEvent> getChangeEvents() {
-        return changeEvents;
+        // Creates a copy of changeevent
+        if (this.changeEvents != null) {
+            return new ArrayList<>(this.changeEvents);
+        }
+        return null;
     }
 
-    public void setChangeEvents(List<ChangeEvent> changeEvents) {
-        this.changeEvents = changeEvents;
-    }
-
+    /**
+     * This method add the changeevent to the end of the list. The first element
+     * will always be a creator
+     * 
+     * @param event
+     */
     public void addNewChangeEvent(ChangeEvent event) {
-
-        // If already existing concept is changed, there are chances concepts
-        // would have been created before this change, and so chageeevent will
-        // be null for those concept.
-        // TO handle that case check for null and create a new changeevent.
 
         if (changeEvents == null) {
             this.changeEvents = new ArrayList<ChangeEvent>();
         }
+        // Appends to the end of the list
         this.changeEvents.add(event);
     }
 
@@ -400,4 +406,11 @@ public class ConceptEntry implements Serializable {
         this.modifiedUser = modifiedUser;
     }
 
+    public Set<String> getAlternativeIds() {
+        return alternativeIds;
+    }
+
+    public void setAlternativeIds(Set<String> alternativeIds) {
+        this.alternativeIds = alternativeIds;
+    }
 }
