@@ -28,10 +28,11 @@ public class XMLConceptMessage extends AXMLMessage {
         this.uriCreator = uriCreator;
     }
 
-    public String appendNumberOfRecords(int numberOfRecords) {
+    public String appendPaginationDetails(int numberOfRecords, int pageNumber) {
         StringBuilder sb = new StringBuilder();
         sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + " ");
         sb.append(XMLConstants.NUMBER_OF_RECORDS + "=\"" + numberOfRecords + "\" ");
+        sb.append(XMLConstants.PAGE_NUMBER + "=\"" + pageNumber + "\" ");
         sb.append(">");
         sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + ">");
         return sb.toString();

@@ -38,6 +38,7 @@ public interface XMLConstants {
     public final static String TYPE_URI_ATTR = "type_uri";
     public final static String MATCHES = "matches";
     public final static String NUMBER_OF_RECORDS = "number_of_records";
+    public final static String PAGE_NUMBER = "page_number";
     public final static String ERROR_MESSAGE = "error_message";
     public final static String ALTERNATIVE_IDS = "alternativeIds";
 }
