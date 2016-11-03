@@ -68,10 +68,13 @@ public class ConceptLookup {
         try {
             entries = dictManager.getConceptListEntriesForWord(word, pos, null);
         } catch (LuceneException ex) {
+            logger.error("Lucene exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
+            logger.error("Illegal access exception", e);
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch(IndexerRunningException ie){
+            logger.info("Indexer running exception", ie);
             return new ResponseEntity<String>(ie.getMessage(), HttpStatus.OK);
         }
         
@@ -104,8 +107,10 @@ public class ConceptLookup {
             logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
+            logger.error("Illegal access exception", e);
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (IndexerRunningException ir) {
+            logger.info("Indexer running exception", ir);
             return new ResponseEntity<String>(ir.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         return new ResponseEntity<String>(rdfFactory.generateRDF(entries), HttpStatus.OK);

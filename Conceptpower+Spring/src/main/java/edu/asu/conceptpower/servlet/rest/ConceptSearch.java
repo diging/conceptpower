@@ -82,8 +82,10 @@ public class ConceptSearch {
             logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException iae) {
+            logger.error("Illegal access exception", iae);
             return new ResponseEntity<String>(iae.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (IndexerRunningException ire) {
+            logger.warn("Indexer running exception", ire);
             return new ResponseEntity<String>(ire.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
 
