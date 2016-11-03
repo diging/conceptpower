@@ -28,6 +28,8 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.servlet.bean.ConceptEditBean;
+import edu.asu.conceptpower.servlet.core.ConceptTypesService;
+import edu.asu.conceptpower.servlet.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.servlet.core.Constants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
@@ -75,6 +77,9 @@ public class ConceptEditController {
 
     @Value("#{messages['INDEXERSTATUS']}")
     private String indexerStatus;
+
+    @Autowired
+    private ConceptTypesService conceptTypesService;
 
     /**
      * This method provides information of a concept to be edited for concept
@@ -295,7 +300,8 @@ public class ConceptEditController {
         
         // Remove CCP concepts. 
         for(ConceptEntryWrapper wrapper : foundConcepts) {
-            if (wrapper.getEntry().getId().startsWith(Constants.CONCEPT_PREFIX)) {
+            if (conceptTypesService
+                    .getConceptTypeByConceptId(wrapper.getEntry().getId()) == ConceptTypes.LOCAL_CONCEPT) {
                 foundConcepts.remove(wrapper);
             }
         }
