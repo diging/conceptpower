@@ -3,7 +3,6 @@ package edu.asu.conceptpower.wrapper.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,11 +53,10 @@ public class ConceptEntryWrapperCreatorTest {
         changeEvent.setUserName("Test");
         changeEvent.setType(ChangeEventTypes.CREATION);
         changeEvent.setDate(new Date());
-        List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
-        changeEventList.add(changeEvent);
 
         entry.setTypeId("Type-1");
-        entry.setChangeEvents(changeEventList);
+        entry.addNewChangeEvent(changeEvent);
+
         entry.setCreatorId("Test");
         entry.setWordnetId("WNET_1");
         entry.setSynonymIds("SYN_1");
