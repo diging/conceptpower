@@ -1,8 +1,6 @@
 package edu.asu.conceptpower.core;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 //github.com/diging/conceptpower.git
 import org.junit.Before;
@@ -62,8 +60,6 @@ public class ConceptManagerTest {
         changeEvent.setUserName("testuser");
         changeEvent.setType(ChangeEventTypes.CREATION);
         changeEvent.setDate(new Date());
-        List<ChangeEvent> changeEventList = new ArrayList<ChangeEvent>();
-        changeEventList.add(changeEvent);
 
         wordNetManager = Mockito.mock(WordNetManager.class);
         dbManager = Mockito.mock(IConceptDBManager.class);
@@ -72,7 +68,8 @@ public class ConceptManagerTest {
         addedConcept = new ConceptEntry();
         addedConcept.setId("id1");
         addedConcept.setConceptList("list1");
-        addedConcept.setChangeEvents(changeEventList);
+
+        addedConcept.addNewChangeEvent(changeEvent);
         addedConcept.setDescription("description");
         addedConcept.setPos("noun");
         addedConcept.setWord("test");
@@ -84,7 +81,7 @@ public class ConceptManagerTest {
         wordnetConcept1 = new ConceptEntry();
         wordnetConcept1.setId("WID-1");
         wordnetConcept1.setConceptList("list1");
-        wordnetConcept1.setChangeEvents(changeEventList);
+        wordnetConcept1.addNewChangeEvent(changeEvent);
         wordnetConcept1.setDescription("description wid 1");
         wordnetConcept1.setPos("noun");
         wordnetConcept1.setWord("test wid 1");
@@ -94,7 +91,7 @@ public class ConceptManagerTest {
         wordnetConcept2 = new ConceptEntry();
         wordnetConcept2.setId("WID-2");
         wordnetConcept2.setConceptList("list1");
-        wordnetConcept2.setChangeEvents(changeEventList);
+        wordnetConcept2.addNewChangeEvent(changeEvent);
         wordnetConcept2.setDescription("description wid");
         wordnetConcept2.setPos("noun");
         wordnetConcept2.setWord("test wid");

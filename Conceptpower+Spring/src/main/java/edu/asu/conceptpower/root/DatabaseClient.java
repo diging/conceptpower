@@ -20,6 +20,7 @@ import com.db4o.query.Query;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.servlet.core.ChangeEvent;
 import edu.asu.conceptpower.servlet.db4o.DBNames;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
@@ -78,7 +79,7 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     public List<ConceptEntry> getConceptByWordnetId(String wordnetId) {
         ConceptEntry entry = new ConceptEntry();
-        entry.setWordnetId(wordnetId + ",");
+        entry.setWordnetId(wordnetId);
 
         ObjectSet<ConceptEntry> entries = dictionaryClient.queryByExample(entry);
         return entries;
@@ -390,7 +391,10 @@ public class DatabaseClient implements IConceptDBManager {
             toBeUpdated.setWord(entry.getWord());
             toBeUpdated.setWordnetId(entry.getWordnetId());
             toBeUpdated.setDeleted(entry.isDeleted());
-            toBeUpdated.setChangeEvents(entry.getChangeEvents());
+            for(ChangeEvent changeEvent : entry.getChangeEvents()) {
+                toBeUpdated.addNewChangeEvent(changeEvent);
+            }
+            
             dictionaryClient.store(toBeUpdated);
             dictionaryClient.commit();
         }
