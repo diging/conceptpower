@@ -142,6 +142,32 @@ public class JsonConceptMessage {
         sb.append("\"" + StringEscapeUtils.escapeXml10(entry.getWordnetId() != null ? entry.getWordnetId().trim() : "")
                 + "\"");
 
+        // Adding alternative ids and their corresponding uris
+        if (entry.getAlternativeIds() != null && !entry.getAlternativeIds().isEmpty()) {
+            Map<String, String> uriMap = uriCreator.getUrisBasedOnIds(entry.getAlternativeIds());
+            if (uriMap != null && !uriMap.isEmpty()) {
+
+                sb.append(",");
+                sb.append("\"" + XMLConstants.ALTERNATIVE_IDS + "\"" + ":");
+                sb.append("[{");
+                boolean addComma = false;
+                for (Map.Entry<String, String> uri : uriMap.entrySet()) {
+                    if (addComma) {
+                        sb.append(",");
+                    }
+                    sb.append("\"" + XMLConstants.CONCEPT_ID + "\" : ");
+                    sb.append("\"" + uri.getKey() + "\"");
+                    sb.append(",");
+                    sb.append("\""+ XMLConstants.CONCEPT_URI +"\" : ");
+                    sb.append("\"" + uri.getValue() + "\"");
+                    sb.append("}");
+                    addComma = true;
+                }
+                sb.append("]");
+            }
+
+        }
+
         sb.append("}");
         return sb.toString();
     }

@@ -66,8 +66,8 @@ public class ConceptIDLookup {
      *            Holds the HTTP request information
      * @return XML containing concept information
      */
-    @RequestMapping(value = "rest/Concept", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE + ","
-            + MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "rest/Concept", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE })
     public @ResponseBody ResponseEntity<String> getConceptById(@RequestParam String id, @RequestHeader(value="Accept", defaultValue=MediaType.APPLICATION_XML_VALUE) String acceptHeader) {
 
 
