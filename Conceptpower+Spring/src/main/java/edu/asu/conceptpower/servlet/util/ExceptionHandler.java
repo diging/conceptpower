@@ -36,5 +36,17 @@ public class ExceptionHandler {
 		logger.error("ExceptionHandler caught exception.", e);
 		return "exception";
 	}
+	
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+        logger.error("Illegal argument exception.", ex);
+        return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = IllegalAccessException.class)
+    public ResponseEntity<String> handleIllegalAccessException(IllegalAccessException ex) {
+        logger.error("Illegal access exception.", ex);
+        return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }
