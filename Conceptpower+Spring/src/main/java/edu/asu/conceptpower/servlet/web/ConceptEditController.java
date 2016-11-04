@@ -29,7 +29,6 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.servlet.bean.ConceptEditBean;
 import edu.asu.conceptpower.servlet.core.ConceptTypesService;
-import edu.asu.conceptpower.servlet.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.servlet.core.Constants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
@@ -283,7 +282,7 @@ public class ConceptEditController {
             ConceptEntry[] found = null;
 
             if (indexService.isIndexerRunning()) {
-                return new ResponseEntity<Object>("Indexer is running. Try again after sometime.",
+                return new ResponseEntity<Object>("Indexer is running. Please try again later.",
                         HttpStatus.SERVICE_UNAVAILABLE);
             }
 
@@ -291,19 +290,11 @@ public class ConceptEditController {
                 found = conceptManager.getConceptListEntriesForWord(concept, pos,
                         Constants.WORDNET_DICTIONARY);
             } catch (IndexerRunningException ie) {
-                return new ResponseEntity<Object>("Indexer is running. Try again after sometime.",
+                return new ResponseEntity<Object>("Indexer is running. Please try again later.",
                         HttpStatus.SERVICE_UNAVAILABLE);
             }
 
             foundConcepts = new CopyOnWriteArrayList<>(wrapperCreator.createWrappers(found));
-        }
-        
-        // Remove CCP concepts. 
-        for(ConceptEntryWrapper wrapper : foundConcepts) {
-            if (conceptTypesService
-                    .getConceptTypeByConceptId(wrapper.getEntry().getId()) == ConceptTypes.LOCAL_CONCEPT) {
-                foundConcepts.remove(wrapper);
-            }
         }
         
         return new ResponseEntity<Object>(foundConcepts, HttpStatus.OK);
