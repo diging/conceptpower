@@ -2,7 +2,7 @@ package edu.asu.conceptpower.servlet.xml;
 
 import edu.asu.conceptpower.root.URIHelper;
 
-public class XMLMessageFactory {
+public class XMLMessageFactory implements MessageConverters {
 
     private URIHelper uriCreator;
 
@@ -10,11 +10,11 @@ public class XMLMessageFactory {
         this.uriCreator = uriCreator;
     }
 
-	public XMLConceptMessage createXMLConceptMessage() {
+    public IConceptMessage createConceptMessage() {
 		return new XMLConceptMessage(uriCreator);
 	}
 	
-	public XMLTypeMessage createXMLTypeMessage() {
+    public XMLTypeMessage createTypeMessage() {
 		return new XMLTypeMessage(uriCreator);
 	}
 }

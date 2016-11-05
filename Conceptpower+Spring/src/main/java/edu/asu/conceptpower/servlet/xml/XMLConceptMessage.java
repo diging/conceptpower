@@ -1,6 +1,5 @@
 package edu.asu.conceptpower.servlet.xml;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,7 @@ import edu.asu.conceptpower.servlet.core.ChangeEvent;
  * @author Julia Damerow
  *
  */
-public class XMLConceptMessage extends AXMLMessage {
+public class XMLConceptMessage extends AXMLMessage implements IConceptMessage {
 
     private URIHelper uriCreator;
 
@@ -28,15 +27,16 @@ public class XMLConceptMessage extends AXMLMessage {
         this.uriCreator = uriCreator;
     }
 
-    public List<String> appendEntries(Map<ConceptEntry, ConceptType> entries) {
-        List<String> xmlEntries = new ArrayList<String>();
+    @Override
+    public String getAllConceptMessage(Map<ConceptEntry, ConceptType> entries) {
+        StringBuilder xmlEntries = new StringBuilder();
         for (ConceptEntry entry : entries.keySet())
-            xmlEntries.add(getEntry(entry, entries.get(entry)));
+            xmlEntries.append(getConceptMessage(entry, entries.get(entry)));
 
-        return xmlEntries;
+        return xmlEntries.toString();
     }
 
-    public String getEntry(ConceptEntry entry, ConceptType type) {
+    public String getConceptMessage(ConceptEntry entry, ConceptType type) {
         StringBuffer sb = new StringBuffer();
 
         sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_ENTRY + ">");
@@ -151,4 +151,5 @@ public class XMLConceptMessage extends AXMLMessage {
     public void appendDictionaries(List<ConceptList> lists) throws NotImplementedException {
         throw new NotImplementedException();
     }
+
 }

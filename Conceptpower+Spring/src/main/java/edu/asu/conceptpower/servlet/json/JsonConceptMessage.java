@@ -11,10 +11,11 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
+import edu.asu.conceptpower.servlet.xml.IConceptMessage;
 import edu.asu.conceptpower.servlet.xml.NotImplementedException;
 import edu.asu.conceptpower.servlet.xml.XMLConstants;
 
-public class JsonConceptMessage {
+public class JsonConceptMessage implements IConceptMessage {
 
     private URIHelper uriCreator;
 
@@ -22,13 +23,13 @@ public class JsonConceptMessage {
         this.uriCreator = uriCreator;
     }
 
-    public String getJsonArray(Map<ConceptEntry, ConceptType> entries) {
+    public String getAllConceptMessage(Map<ConceptEntry, ConceptType> entries) {
         StringBuilder jsonEntries = new StringBuilder("");
         jsonEntries.append("{\"entries\":");
         jsonEntries.append("[");
         int i = 1;
         for (ConceptEntry entry : entries.keySet()) {
-            jsonEntries.append(getJson(entry, entries.get(entry)));
+            jsonEntries.append(getConceptMessage(entry, entries.get(entry)));
             if (i < entries.size()) {
                 jsonEntries.append(",");
                 i++;
@@ -39,7 +40,7 @@ public class JsonConceptMessage {
         return jsonEntries.toString();
     }
 
-    public String getJson(ConceptEntry entry, ConceptType type) {
+    public String getConceptMessage(ConceptEntry entry, ConceptType type) {
         StringBuffer sb = new StringBuffer();
 
         // id
