@@ -36,7 +36,7 @@ $(document).ready(function(){
 	});
     
 //     Used for loading the wordnet ids when clicked on a row
-    $('body').delegate('#conceptSearch tbody tr', "click", function() {
+    $('body').delegate('#conceptSearch tbody tr', "click", "td button", function() {
         console.log('onclick called');
         var aData = oTable.fnGetData(this); // get datarow
         
@@ -76,7 +76,8 @@ $(document).ready(function() {
                                 conceptEntry.word,
                                 conceptEntry.id,
                                 conceptEntry.wordnetId,
-                                conceptEntry.pos
+                                conceptEntry.pos,
+                                "<input type=\"button\" id=\"addwrapper\" name=\"addwrapper\" value=\"AddWrapper\" class=\"btn-xs btn-primary\">"
                             ] ).draw( false );
                     
                     // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
@@ -410,7 +411,7 @@ $(document).ready(function() {
                     <th>ID</th>
                     <th>Wordnet ID</th>
                     <th>POS</th>
-                    
+                    <th>Button</th>
                 </tr>
             </thead>
             <tbody>
