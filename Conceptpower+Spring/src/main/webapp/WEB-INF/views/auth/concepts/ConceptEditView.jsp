@@ -6,6 +6,12 @@
 <%@ page session="false"%>
 <%@ page import="edu.asu.conceptpower.core.ConceptEntry"%>
 
+<style>
+#clickableIcon {
+    cursor: pointer
+}
+</style>
+
 <script>
 $(function() {
     $("#synonymModal").dialog({
@@ -54,6 +60,9 @@ $(document).ready(function(){
 });
 $(document).ready(function() {
     
+    var t = $('#conceptSearch').DataTable();
+    t.clear().draw();
+    
     $("#searchconcept").click(function() {
         $.ajax({
             type : "GET",
@@ -68,21 +77,16 @@ $(document).ready(function() {
                     
                     var t = $('#conceptSearch').DataTable();
                     t.row.add( [
+								"<span id=\"clickableIcon\"><i class=\"fa fa-plus\" id=\"addwrapper\" name=\"addwrapper\" aria-hidden=\"true\"></i></span>",
                                 conceptEntry.word,
                                 conceptEntry.id,
                                 conceptEntry.wordnetId,
-                                conceptEntry.pos,
-                                "<input type=\"button\" id=\"addwrapper\" name=\"addwrapper\" value=\"AddWrapper\" class=\"btn-xs btn-primary\">"
+                                conceptEntry.pos
                             ] ).draw( false );
                     
                     // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
                 }
                 $('#conceptSearchDiv').show();  
-            },
-    
-            error : function(httpStatus, response) {
-                var t = $('#conceptSearch').DataTable();
-                t.clear().draw();
             }
         });
     });
@@ -384,7 +388,7 @@ $(document).ready(function() {
                     <option value="adjective">Adjective</option>
                     <option value="other">Other</option>
             </select></td>
-            <td><input type="button" id="searchconcept" name="searchconcept" value="searchconcept" class="btn-xs btn-primary"></td>
+            <td><span id='clickableIcon'><i class="fa fa-search" id="searchconcept" name="searchconcept" aria-hidden="true"></i></span></td>
         </tr>
         
     </table>
@@ -399,11 +403,11 @@ $(document).ready(function() {
             id="conceptSearch">
             <thead>
                 <tr>
+                    <th>Add</th>
                     <th>Term</th>
                     <th>ID</th>
                     <th>Wordnet ID</th>
                     <th>POS</th>
-                    <th>Button</th>
                 </tr>
             </thead>
             <tbody>
