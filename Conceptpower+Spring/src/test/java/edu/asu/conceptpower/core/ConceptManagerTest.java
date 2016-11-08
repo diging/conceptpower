@@ -2,7 +2,6 @@ package edu.asu.conceptpower.core;
 
 import java.util.Date;
 
-//github.com/diging/conceptpower.git
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

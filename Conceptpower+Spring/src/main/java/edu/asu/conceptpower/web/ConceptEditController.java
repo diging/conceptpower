@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.app.bean.ConceptEditBean;
+import edu.asu.conceptpower.app.core.ConceptTypesService;
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
@@ -32,6 +35,8 @@ import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
+import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
+import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
@@ -50,6 +55,12 @@ public class ConceptEditController {
 
     @Autowired
     private IConceptListManager conceptListManager;
+
+    @Autowired
+    private IConceptWrapperCreator wrapperCreator;
+
+    @Autowired
+    private ConceptTypesService conceptTypesService;
 
     @Autowired
     private IUserManager usersManager;
@@ -106,6 +117,7 @@ public class ConceptEditController {
         conceptEditBean.setSimilar(concept.getSimilarTo());
         conceptEditBean.setConceptId(concept.getId());
         conceptEditBean.setConceptEntryList(new ArrayList());
+        conceptEditBean.setWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
         return "/auth/conceptlist/editconcept";
     }
@@ -147,6 +159,7 @@ public class ConceptEditController {
             throws LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
         conceptEntry.setWord(conceptEditBean.getWord());
+        conceptEntry.setWordnetId(conceptEditBean.getWordnetIds());
         conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
         conceptEntry.setPos(conceptEditBean.getSelectedPosValue());
         conceptEntry.setDescription(conceptEditBean.getDescription());
@@ -292,4 +305,33 @@ public class ConceptEditController {
         jsonStringBuilder.append("}");
         return jsonStringBuilder.toString();
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "conceptEdit/search")
+    public @ResponseBody ResponseEntity<Object> searchConcept(@RequestParam("concept") String concept,
+            @RequestParam("pos") String pos) throws IllegalAccessException, LuceneException {
+
+        List<ConceptEntryWrapper> foundConcepts = null;
+
+        if (!concept.trim().isEmpty()) {
+
+            ConceptEntry[] found = null;
+
+            if (indexService.isIndexerRunning()) {
+                return new ResponseEntity<Object>("Indexer is running. Please try again later.",
+                        HttpStatus.SERVICE_UNAVAILABLE);
+            }
+
+            try {
+                found = conceptManager.getConceptListEntriesForWord(concept, pos, Constants.WORDNET_DICTIONARY);
+            } catch (IndexerRunningException ie) {
+                return new ResponseEntity<Object>("Indexer is running. Please try again later.",
+                        HttpStatus.SERVICE_UNAVAILABLE);
+            }
+
+            foundConcepts = new CopyOnWriteArrayList<>(wrapperCreator.createWrappers(found));
+        }
+
+        return new ResponseEntity<Object>(foundConcepts, HttpStatus.OK);
+    }
+
 }
