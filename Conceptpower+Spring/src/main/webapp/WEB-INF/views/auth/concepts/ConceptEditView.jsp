@@ -13,6 +13,87 @@ $(function() {
 	});
 });
 
+$(document).ready(function(){
+    oTable = $('#conceptSearch').dataTable({
+        "bJQueryUI" : true,
+        "sPaginationType" : "full_numbers",
+        "bAutoWidth" : false,
+
+        //set row class to gradeX even if the row is selectable
+        "fnRowCallback" : function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            if (aData[2] == aData[3]) {
+                $(nRow).removeClass('odd');
+                $(nRow).removeClass('even');
+                $(nRow).addClass('gradeX even');
+            } else {
+                $(nRow).removeClass('odd');
+                $(nRow).removeClass('even');
+                $(nRow).addClass('gradeX odd');
+            }
+
+        }
+    
+	});
+    
+//     Used for loading the wordnet ids when clicked on a row
+    $('body').delegate('#conceptSearch tbody tr', "click", "td button", function() {
+        console.log('onclick called');
+        var aData = oTable.fnGetData(this); // get datarow
+        
+        if (null != aData) // null if we clicked on title row
+        {
+            var wordnetID = aData[2];
+            var selectedWordNetIds = $("#wordnetIds").val();
+            if(selectedWordNetIds.length == 0) {
+                // Then just append
+                selectedWordNetIds = wordnetID;
+            } else if(selectedWordNetIds.indexOf(wordnetID) == -1) {
+                selectedWordNetIds = selectedWordNetIds+','+wordnetID;
+            }
+            $("#wordnetIds").val(selectedWordNetIds);
+        }
+    });
+    
+});
+
+
+$(document).ready(function() {
+    
+    $("#searchconcept").click(function() {
+        $.ajax({
+            type : "GET",
+            url : "${pageContext.servletContext.contextPath}/conceptEdit/search",
+            data : {
+                concept : $("#name").val(),
+                pos : $("#pos").val()
+            },
+            success : function(response) {
+                for(var i=0; i< response.length; i++) {
+                    var conceptEntry = response[i].entry;
+                    
+                    var t = $('#conceptSearch').DataTable();
+                    t.row.add( [
+                                conceptEntry.word,
+                                conceptEntry.id,
+                                conceptEntry.wordnetId,
+                                conceptEntry.pos,
+                                "<input type=\"button\" id=\"addwrapper\" name=\"addwrapper\" value=\"AddWrapper\" class=\"btn-xs btn-primary\">"
+                            ] ).draw( false );
+                    
+                    // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
+                }
+                $('#conceptSearchDiv').show();  
+            },
+    
+            error : function(httpStatus, response) {
+                var t = $('#conceptSearch').DataTable();
+                t.clear().draw();
+            }
+        });
+    });
+});
+
+
     $(function() {
         $("#addsynonym").click(function() {
         	var addedSynonymsTable = $('#addedSynonyms');
@@ -173,8 +254,6 @@ $(function() {
 													.fnAddData(
 															synonym.synonyms[i]);
 										}
-										console.log("Total");
-										console.log(total);
 										if (total > 0) {
 											$("#addedSynonyms").show();
 											$("#addedSynonymsTable").show();
@@ -182,6 +261,7 @@ $(function() {
 									}
 								});
 					});
+	
 	var synonymTemporaryRemove = function(synonymid) {
 		var count = $('#addedSynonymsTable tr').length;
 		var synonymTable = $("#addedSynonymsTable").dataTable();
@@ -256,7 +336,7 @@ $(function() {
 			</td>
 			<td><form:hidden path="synonymsids"></form:hidden> <input
 				type="button" name="synonym" id="addsynonym" data-toggle="modal"
-				data-target="#synonymModal" value="Add Synonym" class="btn btn-primary"></td>
+				data-target="#synonymModal" value="Add Synonym" class="btn-xs btn-primary"></td>
 		</tr>
 
 		<tr>
@@ -276,15 +356,69 @@ $(function() {
 			<td>Similar</td>
 			<td><form:input  path="similar" class="form-control"/></td>
 		</tr>
-		<tr>
-			<td><form:hidden path="conceptEntryList" /></td>
-		</tr>
-		<tr>
-			<td><input type="text" name="conceptid" id="conceptid"
-				hidden="true" value="${conceptId}"></td>
-		</tr>
-	</table>
-
+        
+        <tr>
+            <td>Wordnet</td>
+            <td><form:textarea path="wordnetIds" id="wordnetIds" class="wordnetIds" rows="5" cols="60"/></td>
+        </tr>
+        
+        <tr>
+            <td><form:hidden path="conceptEntryList" /></td>
+        </tr>
+        
+        <tr>
+            <td><input type="text" name="conceptid" id="conceptid"
+                hidden="true" value="${conceptId}"></td>
+        </tr>
+        
+    </table>
+    <br/><br/>
+    <table>
+        <tr>
+            <td>
+                <h4>Search for wordnet ids below</h4>
+            </td>
+        </tr>
+        <tr>
+            <td>Create wrapper for wordnet concept:</td>
+            <td><input type="text" id="name" /></td>
+        </tr>
+        <tr>
+            <td>POS:</td>
+            <td><select id="pos" class="form-control">
+                    <option value="noun">Nouns</option>
+                    <option value="verb">Verb</option>
+                    <option value="adverb">Adverb</option>
+                    <option value="adjective">Adjective</option>
+                    <option value="other">Other</option>
+            </select></td>
+            <td><input type="button" id="searchconcept" name="searchconcept" value="searchconcept" class="btn-xs btn-primary"></td>
+        </tr>
+        
+    </table>
+    
+    <br/><br/>
+    
+    <div id="conceptSearchDiv" style="display:none;">
+        <h4>The following concepts were found:</h4>
+        Click on the row to add the wordnet id
+        <p></p>
+        <table class="table table-striped table-bordered"
+            id="conceptSearch">
+            <thead>
+                <tr>
+                    <th>Term</th>
+                    <th>ID</th>
+                    <th>Wordnet ID</th>
+                    <th>POS</th>
+                    <th>Button</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+        
 	<table>
 		<tr>
 			<td><input type="submit" name="edit" id="edit"
@@ -335,8 +469,7 @@ $(function() {
 							<div id="synonymViewDiv"
 								style="max-width: 1000px; max-height: 500px;" hidden="true">
 
-								<table cellpadding="0" cellspacing="0" id="synonymstable"
-									hidden="true" class="table table-striped table-bordered">
+								<table id="synonymstable" hidden="true" class="table table-striped table-bordered">
 									<tbody>
 									</tbody>
 								</table>

@@ -18,6 +18,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.servlet.core.Constants;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.db4o.DBNames;
@@ -29,7 +30,6 @@ import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
 import edu.asu.conceptpower.servlet.rest.SearchFieldNames;
-import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
 
 /**

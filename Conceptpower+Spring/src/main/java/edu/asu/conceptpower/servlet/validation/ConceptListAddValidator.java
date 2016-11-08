@@ -6,9 +6,9 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import edu.asu.conceptpower.servlet.core.Constants;
 import edu.asu.conceptpower.servlet.core.IConceptListManager;
 import edu.asu.conceptpower.servlet.web.ConceptListAddForm;
-import edu.asu.conceptpower.servlet.wordnet.Constants;
 
 @Component
 public class ConceptListAddValidator implements Validator {
