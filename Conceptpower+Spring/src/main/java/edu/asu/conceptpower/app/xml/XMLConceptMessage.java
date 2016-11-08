@@ -143,8 +143,6 @@ public class XMLConceptMessage extends AXMLMessage {
         sb.append(StringEscapeUtils.escapeXml10(entry.getWordnetId() != null ? entry.getWordnetId().trim() : ""));
         sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.WORDNET_ID + ">");
 
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_ENTRY + ">");
-
         // Adding alternative ids and their corresponding uris
         if (entry.getAlternativeIds() != null && !entry.getAlternativeIds().isEmpty()) {
             Map<String, String> uriMap = uriCreator.getUrisBasedOnIds(entry.getAlternativeIds());
@@ -162,6 +160,8 @@ public class XMLConceptMessage extends AXMLMessage {
             }
 
         }
+
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_ENTRY + ">");
 
         return sb.toString();
     }
