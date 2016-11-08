@@ -40,7 +40,6 @@ $(document).ready(function(){
     
 //     Used for loading the wordnet ids when clicked on a row
     $('body').delegate('#conceptSearch tbody tr', "click", "td button", function() {
-        console.log('onclick called');
         var aData = oTable.fnGetData(this); // get datarow
         
         if (null != aData) // null if we clicked on title row
@@ -58,12 +57,20 @@ $(document).ready(function(){
     });
     
 });
+
+ 
 $(document).ready(function() {
     
-    var t = $('#conceptSearch').DataTable();
-    t.clear().draw();
+    $('#name').keydown(function(event){
+        if(event.keyCode == 13) {
+          event.preventDefault();
+          return false;
+        }
+	});
     
     $("#searchconcept").click(function() {
+        var t = $('#conceptSearch').DataTable();
+        t.clear().draw();
         $.ajax({
             type : "GET",
             url : "${pageContext.servletContext.contextPath}/conceptEdit/search",
@@ -77,7 +84,7 @@ $(document).ready(function() {
                     
                     var t = $('#conceptSearch').DataTable();
                     t.row.add( [
-								"<span id=\"clickableIcon\"><i class=\"fa fa-plus\" id=\"addwrapper\" name=\"addwrapper\" aria-hidden=\"true\"></i></span>",
+								"<span id=\"clickableIcon\"><i title=\"Click to add wordnet id\" class=\"fa fa-plus\" id=\"addwrapper\" name=\"addwrapper\" aria-hidden=\"true\"></i></span>",
                                 conceptEntry.word,
                                 conceptEntry.id,
                                 conceptEntry.wordnetId,
@@ -94,7 +101,6 @@ $(document).ready(function() {
     $(function() {
         $("#addsynonym").click(function() {
             var addedSynonymsTable = $('#addedSynonyms');
-            console.log(addedSynonymsTable);
             $('#synonymstable').dataTable().fnClearTable();
             $("#synonymModal").dialog('open');
             $("#synonymsDialogTable").show();
@@ -403,7 +409,7 @@ $(document).ready(function() {
             id="conceptSearch">
             <thead>
                 <tr>
-                    <th>Add</th>
+                    <th></th>
                     <th>Term</th>
                     <th>ID</th>
                     <th>Wordnet ID</th>
