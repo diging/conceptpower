@@ -24,13 +24,13 @@ public class JsonTypeMessage implements ITypeMessage {
         sb.append("{");
 
         // type uri, id
-        sb.append("\"" + XMLConstants.TYPE + "\"{[");
+        sb.append("\"" + XMLConstants.TYPE + "\" : [{");
         if (type != null) {
             sb.append("\"" + XMLConstants.TYPE_ID_ATTR + "\"" + ":" + "\"" + type.getTypeId() + "\"");
             sb.append(",");
             sb.append("\"" + XMLConstants.TYPE_URI_ATTR + "\"" + ":" + "\"" + uriCreator.getTypeURI(type) + "\"");
         }
-        sb.append("]}");
+        sb.append("}]");
         sb.append(",");
 
         // type description
@@ -60,7 +60,7 @@ public class JsonTypeMessage implements ITypeMessage {
         if (supertype != null) {
             sb.append(",");
             sb.append("\"" + XMLConstants.SUPERTYPE + "\"");
-            sb.append("[{");
+            sb.append(": [{");
             sb.append("\"" + XMLConstants.TYPE_ID_ATTR + "\"" + ":");
             sb.append("\"" + supertype.getTypeId() + "\"");
             sb.append(",");
@@ -69,7 +69,7 @@ public class JsonTypeMessage implements ITypeMessage {
             sb.append(",");
             sb.append("\"" + XMLConstants.TYPE_NAME + "\"" + ":");
             sb.append("\"" + StringEscapeUtils.escapeXml10(supertype.getTypeName()) + "\"");
-            sb.append("]}");
+            sb.append("}]");
         }
 
         // end entry

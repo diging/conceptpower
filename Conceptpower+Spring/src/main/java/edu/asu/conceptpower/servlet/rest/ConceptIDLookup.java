@@ -46,6 +46,7 @@ public class ConceptIDLookup {
 
     @Autowired
     private MessageRegistry messageFactory;
+
     @Autowired
     private IConceptManager conceptManager;
 

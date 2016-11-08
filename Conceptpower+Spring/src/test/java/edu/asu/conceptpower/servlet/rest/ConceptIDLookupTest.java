@@ -20,8 +20,9 @@ import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.core.ConceptTypesService;
 import edu.asu.conceptpower.servlet.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
+import edu.asu.conceptpower.servlet.xml.IMessageConverter;
+import edu.asu.conceptpower.servlet.xml.MessageRegistry;
 import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
-import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
 import junit.framework.Assert;
 
 public class ConceptIDLookupTest {
@@ -33,7 +34,7 @@ public class ConceptIDLookupTest {
     private TypeDatabaseClient typeManager;
 
     @Mock
-    private XMLMessageFactory messageFactory;
+    private MessageRegistry messageFactory;
 
     @Mock
     private IConceptManager conceptManager;
@@ -44,13 +45,18 @@ public class ConceptIDLookupTest {
     @Mock
     private URIHelper uriCreator;
 
+    @Mock
+    private IMessageConverter xmlMessageFactory;
+
     @InjectMocks
     private ConceptIDLookup conceptIDLookup;
 
     @Before
     public void setup() throws IOException {
         MockitoAnnotations.initMocks(this);
-        Mockito.when(messageFactory.createXMLConceptMessage()).thenReturn(new XMLConceptMessage(uriCreator));
+        Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_XML_VALUE)).thenReturn(xmlMessageFactory);
+        Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_XML_VALUE).createConceptMessage())
+                .thenReturn(new XMLConceptMessage(uriCreator));
     }
 
     @Test

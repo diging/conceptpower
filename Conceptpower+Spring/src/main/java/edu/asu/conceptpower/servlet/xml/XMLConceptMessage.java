@@ -19,7 +19,7 @@ import edu.asu.conceptpower.servlet.core.ChangeEvent;
  * @author Julia Damerow
  *
  */
-public class XMLConceptMessage extends AXMLMessage implements IConceptMessage {
+public class XMLConceptMessage implements IConceptMessage {
 
     private URIHelper uriCreator;
 
@@ -30,8 +30,14 @@ public class XMLConceptMessage extends AXMLMessage implements IConceptMessage {
     @Override
     public String getAllConceptMessage(Map<ConceptEntry, ConceptType> entries) {
         StringBuilder xmlEntries = new StringBuilder();
+
+        xmlEntries.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
+                + XMLConstants.NAMESPACE + "\">");
+
         for (ConceptEntry entry : entries.keySet())
             xmlEntries.append(getConceptMessage(entry, entries.get(entry)));
+
+        xmlEntries.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
 
         return xmlEntries.toString();
     }

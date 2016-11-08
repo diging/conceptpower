@@ -12,7 +12,7 @@ import edu.asu.conceptpower.root.URIHelper;
  * @author Julia Damerow
  *
  */
-public class XMLTypeMessage extends AXMLMessage implements ITypeMessage {
+public class XMLTypeMessage implements ITypeMessage {
 
 	private URIHelper uriCreator;
 	
@@ -23,6 +23,9 @@ public class XMLTypeMessage extends AXMLMessage implements ITypeMessage {
     public String getConceptTypeMessage(ConceptType type, ConceptType supertype) {
 
 		StringBuffer sb = new StringBuffer();
+
+        sb.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
+                + XMLConstants.NAMESPACE + "\">");
 
 		// start entry
 		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
@@ -93,6 +96,8 @@ public class XMLTypeMessage extends AXMLMessage implements ITypeMessage {
 		// end entry
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.TYPE_ENTRY + ">");
+
+        sb.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
 
         return sb.toString();
 	}
