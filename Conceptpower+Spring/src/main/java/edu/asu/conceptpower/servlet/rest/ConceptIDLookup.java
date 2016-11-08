@@ -1,9 +1,7 @@
 package edu.asu.conceptpower.servlet.rest;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -26,9 +24,8 @@ import edu.asu.conceptpower.servlet.core.ConceptTypesService;
 import edu.asu.conceptpower.servlet.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.json.JsonConceptMessage;
-import edu.asu.conceptpower.servlet.xml.MessageFactory;
-import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
+import edu.asu.conceptpower.servlet.xml.IConceptMessage;
+import edu.asu.conceptpower.servlet.xml.MessageRegistry;
 
 /**
  * This class provides a method to query concepts by their id.
@@ -48,7 +45,7 @@ public class ConceptIDLookup {
     private TypeDatabaseClient typeManager;
 
     @Autowired
-    private MessageFactory messageFactory;
+    private MessageRegistry messageFactory;
     @Autowired
     private IConceptManager conceptManager;
 
@@ -68,8 +65,8 @@ public class ConceptIDLookup {
      */
     @RequestMapping(value = "rest/Concept", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE })
-    public @ResponseBody ResponseEntity<String> getConceptById(@RequestParam String id, @RequestHeader(value="Accept", defaultValue=MediaType.APPLICATION_XML_VALUE) String acceptHeader) {
-
+    public @ResponseBody ResponseEntity<String> getConceptById(@RequestParam String id,
+            @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader) {
 
         if (id == null || id.trim().isEmpty()) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -86,53 +83,27 @@ public class ConceptIDLookup {
         }
         ConceptEntry entry = dictManager.getConceptEntry(wordnetId);
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
-        List<String> xmlEntries = new ArrayList<String>();
 
-        if (acceptHeader.equalsIgnoreCase(MediaType.APPLICATION_XML_VALUE)) {
-            // XML
-            XMLConceptMessage msg = messageFactory.getXMLMessageFactory().createXMLConceptMessage();
-            if (entry != null) {
+        IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
 
-                try {
-                    // Check if the id used in a generic id. If so fetch the
-                    // concept wrapper id for the generic wordnet id
-                    entry = checkAndAddAlternativeIds(pathParts, lastIndex, entry);
-                } catch (LuceneException e) {
-                    logger.error("Lucene Exception", e);
-                    return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-                ConceptType type = null;
-                if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
-                    type = typeManager.getType(entry.getTypeId());
-                }
-                entryMap.put(entry, type);
-                xmlEntries = msg.appendEntries(entryMap);
+        if (entry != null) {
+
+            try {
+                // Check if the id used in a generic id. If so fetch the
+                // concept wrapper id for the generic wordnet id
+                entry = checkAndAddAlternativeIds(pathParts, lastIndex, entry);
+            } catch (LuceneException e) {
+                logger.error("Lucene Exception", e);
+                return new ResponseEntity<String>("Lucene exception.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-
-            return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
-        } else {
-            // JSON
-            JsonConceptMessage msg = messageFactory.getJsonMessageFactory().createJsonConceptMessage();
-
-            if (entry != null) {
-
-                try {
-                    entry = checkAndAddAlternativeIds(pathParts, lastIndex, entry);
-                } catch (LuceneException e) {
-                    logger.error("Lucene Exception", e);
-                    return new ResponseEntity<String>(msg.getJsonArray(entryMap), HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-
-                ConceptType type = null;
-                if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
-                    type = typeManager.getType(entry.getTypeId());
-                }
-                entryMap.put(entry, type);
-                return new ResponseEntity<String>(msg.getJsonArray(entryMap), HttpStatus.OK);
+            ConceptType type = null;
+            if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
+                type = typeManager.getType(entry.getTypeId());
             }
-
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+            entryMap.put(entry, type);
         }
+
+        return new ResponseEntity<String>(msg.getAllConceptMessage(entryMap), HttpStatus.OK);
 
     }
 

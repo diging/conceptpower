@@ -25,7 +25,7 @@ import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.xml.IConceptMessage;
-import edu.asu.conceptpower.servlet.xml.MessageFactory;
+import edu.asu.conceptpower.servlet.xml.MessageRegistry;
 
 /**
  * This class provides a method to search concepts. It answers requests to:
@@ -44,7 +44,7 @@ public class ConceptSearch {
     private TypeDatabaseClient typeManager;
 
     @Autowired
-    private MessageFactory messageFactory;
+    private MessageRegistry messageFactory;
 
     @Autowired
     private URIHelper uriHelper;

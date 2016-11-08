@@ -1,8 +1,5 @@
 package edu.asu.conceptpower.servlet.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import edu.asu.conceptpower.core.ConceptType;
@@ -15,7 +12,7 @@ import edu.asu.conceptpower.root.URIHelper;
  * @author Julia Damerow
  *
  */
-public class XMLTypeMessage extends AXMLMessage {
+public class XMLTypeMessage extends AXMLMessage implements ITypeMessage {
 
 	private URIHelper uriCreator;
 	
@@ -23,9 +20,8 @@ public class XMLTypeMessage extends AXMLMessage {
 		this.uriCreator = uriCreator;
 	}
 
-	public List<String> appendEntry(ConceptType type, ConceptType supertype) {
+    public String getConceptTypeMessage(ConceptType type, ConceptType supertype) {
 
-		List<String> xmlEntries = new ArrayList<String>();
 		StringBuffer sb = new StringBuffer();
 
 		// start entry
@@ -98,8 +94,6 @@ public class XMLTypeMessage extends AXMLMessage {
 		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
 				+ XMLConstants.TYPE_ENTRY + ">");
 
-		xmlEntries.add(sb.toString());
-
-		return xmlEntries;
+        return sb.toString();
 	}
 }
