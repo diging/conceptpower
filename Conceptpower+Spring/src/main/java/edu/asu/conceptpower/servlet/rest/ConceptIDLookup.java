@@ -95,7 +95,7 @@ public class ConceptIDLookup {
                 entry = checkAndAddAlternativeIds(pathParts, lastIndex, entry);
             } catch (LuceneException e) {
                 logger.error("Lucene Exception", e);
-                return new ResponseEntity<String>("Lucene exception.", HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<String>(msg.getAllConceptMessage(entryMap), HttpStatus.INTERNAL_SERVER_ERROR);
             }
             ConceptType type = null;
             if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {

@@ -63,16 +63,19 @@ public class ConceptLookup {
      */
     @RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody ResponseEntity<String> getWordNetEntryInXml(@PathVariable("word") String word, 
+    public @ResponseBody ResponseEntity<String> getWordNetEntry(@PathVariable("word") String word,
             @PathVariable("pos") String pos, @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader) {
         ConceptEntry[] entries = null;
         try {
             entries = dictManager.getConceptListEntriesForWord(word, pos, null);
         } catch (LuceneException ex) {
+            logger.error("Lucene exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
+            logger.error("Illegal access exception", e);
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IndexerRunningException ie) {
+            logger.info("Indexer running exception", ie);
             return new ResponseEntity<String>(ie.getMessage(), HttpStatus.OK);
         }
 

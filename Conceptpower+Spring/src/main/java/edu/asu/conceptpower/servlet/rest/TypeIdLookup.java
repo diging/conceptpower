@@ -17,7 +17,7 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.servlet.xml.ITypeMessage;
 import edu.asu.conceptpower.servlet.xml.MessageRegistry;
-import edu.asu.conceptpower.servlet.xml.XMLConstants;
+import edu.asu.conceptpower.servlet.xml.XMLJsonConstants;
 
 /**
  * This class provides a method to query types by their ids. It 
@@ -64,8 +64,8 @@ public class TypeIdLookup {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 
-		if (typeId.startsWith(XMLConstants.TYPE_PREFIX)) {
-			typeId = typeId.substring(XMLConstants.TYPE_PREFIX.length());
+		if (typeId.startsWith(XMLJsonConstants.TYPE_PREFIX)) {
+			typeId = typeId.substring(XMLJsonConstants.TYPE_PREFIX.length());
 		}
 
 		ConceptType type = typeManager.getType(typeId);

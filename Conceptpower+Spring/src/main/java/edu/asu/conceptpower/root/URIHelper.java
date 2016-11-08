@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.servlet.xml.XMLConstants;
+import edu.asu.conceptpower.servlet.xml.XMLJsonConstants;
 
 /**
  * This class creates URIs for concepts and types based on the in xml-config.xml
@@ -33,29 +33,29 @@ public class URIHelper implements IURIHelper {
     }
 
     public String getTypeURI(ConceptType type) {
-        return XMLConstants.TYPE_NAMESPACE + XMLConstants.TYPE_PREFIX + type.getTypeId();
+        return XMLJsonConstants.TYPE_NAMESPACE + XMLJsonConstants.TYPE_PREFIX + type.getTypeId();
     }
 
     public String getTypeURI(ConceptEntry entry) {
-        return XMLConstants.TYPE_NAMESPACE + XMLConstants.TYPE_PREFIX + entry.getTypeId();
+        return XMLJsonConstants.TYPE_NAMESPACE + XMLJsonConstants.TYPE_PREFIX + entry.getTypeId();
     }
 
     public String getTypeId(String typeUriOrId) {
-        if (!typeUriOrId.startsWith(XMLConstants.TYPE_NAMESPACE + XMLConstants.TYPE_PREFIX)) {
+        if (!typeUriOrId.startsWith(XMLJsonConstants.TYPE_NAMESPACE + XMLJsonConstants.TYPE_PREFIX)) {
             return typeUriOrId;
         }
 
-        return typeUriOrId.substring((XMLConstants.TYPE_NAMESPACE + XMLConstants.TYPE_PREFIX).length());
+        return typeUriOrId.substring((XMLJsonConstants.TYPE_NAMESPACE + XMLJsonConstants.TYPE_PREFIX).length());
     }
 
     public String getConceptListURI(ConceptEntry entry) {
         String list = entry.getConceptList();
-        return XMLConstants.LIST_NAMESPACE + list;
+        return XMLJsonConstants.LIST_NAMESPACE + list;
     }
 
     public String getWordnetURI(ConceptEntry entry) {
         String wordnetId = entry.getWordnetId();
-        return XMLConstants.WORDNET_NAMESPACE + wordnetId;
+        return XMLJsonConstants.WORDNET_NAMESPACE + wordnetId;
     }
 
     public Map<String, String> getUrisBasedOnIds(Set<String> ids) {

@@ -31,13 +31,13 @@ public class XMLConceptMessage implements IConceptMessage {
     public String getAllConceptMessage(Map<ConceptEntry, ConceptType> entries) {
         StringBuilder xmlEntries = new StringBuilder();
 
-        xmlEntries.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
-                + XMLConstants.NAMESPACE + "\">");
+        xmlEntries.append("<" + XMLJsonConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLJsonConstants.NAMESPACE_PREFIX + "=\""
+                + XMLJsonConstants.NAMESPACE + "\">");
 
         for (ConceptEntry entry : entries.keySet())
             xmlEntries.append(getConceptMessage(entry, entries.get(entry)));
 
-        xmlEntries.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
+        xmlEntries.append("</" + XMLJsonConstants.CONCEPTPOWER_ANSWER + ">");
 
         return xmlEntries.toString();
     }
@@ -45,111 +45,111 @@ public class XMLConceptMessage implements IConceptMessage {
     public String getConceptMessage(ConceptEntry entry, ConceptType type) {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_ENTRY + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CONCEPT_ENTRY + ">");
 
         // id
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + " ");
-        sb.append(XMLConstants.CONCEPT_ID + "=\"" + entry.getId() + "\" ");
-        sb.append(XMLConstants.CONCEPT_URI + "=\"" + uriCreator.getURI(entry) + "\"");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ID + " ");
+        sb.append(XMLJsonConstants.CONCEPT_ID + "=\"" + entry.getId() + "\" ");
+        sb.append(XMLJsonConstants.CONCEPT_URI + "=\"" + uriCreator.getURI(entry) + "\"");
         sb.append(">");
         sb.append(uriCreator.getURI(entry));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ID + ">");
 
         // lemma
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.LEMMA + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.LEMMA + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getWord()));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.LEMMA + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.LEMMA + ">");
 
         // pos
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.POS + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.POS + ">");
         sb.append(entry.getPos());
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.POS + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.POS + ">");
 
         // description
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.DESCRIPTION + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.DESCRIPTION + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getDescription()));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.DESCRIPTION + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.DESCRIPTION + ">");
 
         // concept list
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_LIST + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CONCEPT_LIST + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getConceptList()));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_LIST + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CONCEPT_LIST + ">");
 
         // creator id
         if (entry.getChangeEvents() != null && !entry.getChangeEvents().isEmpty()) {
             List<ChangeEvent> changeEvents = entry.getChangeEvents();
             Collections.sort(changeEvents);
-            sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
+            sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CREATOR_ID + ">");
             sb.append(StringEscapeUtils.escapeXml10(
                     changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : ""));
-            sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
+            sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CREATOR_ID + ">");
         } else {
             // creator id
-            sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
+            sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CREATOR_ID + ">");
             sb.append(StringEscapeUtils.escapeXml10(entry.getCreatorId() != null ? entry.getCreatorId().trim() : ""));
-            sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
+            sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CREATOR_ID + ">");
         }
 
         // equal to
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.EQUAL_TO + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.EQUAL_TO + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getEqualTo() != null ? entry.getEqualTo().trim() : ""));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.EQUAL_TO + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.EQUAL_TO + ">");
 
         // modified by
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.MODIFIED_BY + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.MODIFIED_BY + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getModified() != null ? entry.getModified().trim() : ""));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.MODIFIED_BY + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.MODIFIED_BY + ">");
 
         // similar to
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.SIMILAR_TO + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.SIMILAR_TO + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getSimilarTo() != null ? entry.getSimilarTo().trim() : ""));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.SIMILAR_TO + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.SIMILAR_TO + ">");
 
         // synonym ids
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.SYNONYM_IDS + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.SYNONYM_IDS + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getSynonymIds() != null ? entry.getSynonymIds().trim() : ""));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.SYNONYM_IDS + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.SYNONYM_IDS + ">");
 
         // type
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.TYPE + " ");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.TYPE + " ");
         if (type != null) {
-            sb.append(XMLConstants.TYPE_ID_ATTR + "=\"" + type.getTypeId() + "\" ");
-            sb.append(XMLConstants.TYPE_URI_ATTR + "=\"" + uriCreator.getTypeURI(type) + "\"");
+            sb.append(XMLJsonConstants.TYPE_ID_ATTR + "=\"" + type.getTypeId() + "\" ");
+            sb.append(XMLJsonConstants.TYPE_URI_ATTR + "=\"" + uriCreator.getTypeURI(type) + "\"");
         }
         sb.append(">");
         if (type != null)
             sb.append(StringEscapeUtils.escapeXml10(type.getTypeName()));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.TYPE + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.TYPE + ">");
 
         // is deleted
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.IS_DELETED + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.IS_DELETED + ">");
         sb.append(entry.isDeleted() + "");
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.IS_DELETED + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.IS_DELETED + ">");
 
         // wordnet id
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.WORDNET_ID + ">");
+        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.WORDNET_ID + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getWordnetId() != null ? entry.getWordnetId().trim() : ""));
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.WORDNET_ID + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.WORDNET_ID + ">");
 
         // Adding alternative ids and their corresponding uris
         if (entry.getAlternativeIds() != null && !entry.getAlternativeIds().isEmpty()) {
             Map<String, String> uriMap = uriCreator.getUrisBasedOnIds(entry.getAlternativeIds());
             if (uriMap != null && !uriMap.isEmpty()) {
-                sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ALTERNATIVE_IDS + ">");
+                sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ALTERNATIVE_IDS + ">");
                 for (Map.Entry<String, String> uri : uriMap.entrySet()) {
-                    sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + " ");
-                    sb.append(XMLConstants.CONCEPT_ID + "=\"" + uri.getKey() + "\" ");
-                    sb.append(XMLConstants.CONCEPT_URI + "=\"" + uri.getValue() + "\"");
+                    sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ID + " ");
+                    sb.append(XMLJsonConstants.CONCEPT_ID + "=\"" + uri.getKey() + "\" ");
+                    sb.append(XMLJsonConstants.CONCEPT_URI + "=\"" + uri.getValue() + "\"");
                     sb.append(">");
                     sb.append(uri.getValue());
-                    sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + ">");
+                    sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ID + ">");
                 }
-                sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ALTERNATIVE_IDS + ">");
+                sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ALTERNATIVE_IDS + ">");
             }
 
         }
 
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_ENTRY + ">");
+        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CONCEPT_ENTRY + ">");
 
         return sb.toString();
     }

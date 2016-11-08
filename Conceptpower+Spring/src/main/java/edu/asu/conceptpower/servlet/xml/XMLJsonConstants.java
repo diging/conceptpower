@@ -1,6 +1,6 @@
 package edu.asu.conceptpower.servlet.xml;
 
-public interface XMLConstants {
+public interface XMLJsonConstants {
     public final static String NAMESPACE = "http://www.digitalhps.org/";
     public final static String NAMESPACE_PREFIX = "digitalHPS";
     public final static String ID_NAMESPACE = "http://www.digitalhps.org/concepts/";

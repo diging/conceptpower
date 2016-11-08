@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.xml.ITypeMessage;
-import edu.asu.conceptpower.servlet.xml.XMLConstants;
+import edu.asu.conceptpower.servlet.xml.XMLJsonConstants;
 
 public class JsonTypeMessage implements ITypeMessage {
 
@@ -24,34 +24,34 @@ public class JsonTypeMessage implements ITypeMessage {
         sb.append("{");
 
         // type uri, id
-        sb.append("\"" + XMLConstants.TYPE + "\" : [{");
+        sb.append("\"" + XMLJsonConstants.TYPE + "\" : [{");
         if (type != null) {
-            sb.append("\"" + XMLConstants.TYPE_ID_ATTR + "\"" + ":" + "\"" + type.getTypeId() + "\"");
+            sb.append("\"" + XMLJsonConstants.TYPE_ID_ATTR + "\"" + ":" + "\"" + type.getTypeId() + "\"");
             sb.append(",");
-            sb.append("\"" + XMLConstants.TYPE_URI_ATTR + "\"" + ":" + "\"" + uriCreator.getTypeURI(type) + "\"");
+            sb.append("\"" + XMLJsonConstants.TYPE_URI_ATTR + "\"" + ":" + "\"" + uriCreator.getTypeURI(type) + "\"");
         }
         sb.append("}]");
         sb.append(",");
 
         // type description
-        sb.append("\"" + XMLConstants.DESCRIPTION + "\"" + ":");
+        sb.append("\"" + XMLJsonConstants.DESCRIPTION + "\"" + ":");
         sb.append("\"" + StringEscapeUtils.escapeXml10(type.getDescription()) + "\"");
         sb.append(",");
 
         // creator id
-        sb.append("\"" + XMLConstants.CREATOR_ID + "\"" + ":");
+        sb.append("\"" + XMLJsonConstants.CREATOR_ID + "\"" + ":");
         sb.append("\"" + StringEscapeUtils.escapeXml10(type.getCreatorId() != null ? type.getCreatorId().trim() : "")
                 + "\"");
         sb.append(",");
 
         // matches
-        sb.append("\"" + XMLConstants.MATCHES + "\"" + ":");
+        sb.append("\"" + XMLJsonConstants.MATCHES + "\"" + ":");
         sb.append(
                 "\"" + StringEscapeUtils.escapeXml10(type.getMatches() != null ? type.getMatches().trim() : "") + "\"");
         sb.append(",");
 
         // modified by
-        sb.append("\"" + XMLConstants.MODIFIED_BY + "\"" + ":");
+        sb.append("\"" + XMLJsonConstants.MODIFIED_BY + "\"" + ":");
         sb.append("\"" + StringEscapeUtils.escapeXml10(type.getModified() != null ? type.getModified().trim() : "")
                 + "\"");
 
@@ -59,15 +59,15 @@ public class JsonTypeMessage implements ITypeMessage {
         // supertype
         if (supertype != null) {
             sb.append(",");
-            sb.append("\"" + XMLConstants.SUPERTYPE + "\"");
+            sb.append("\"" + XMLJsonConstants.SUPERTYPE + "\"");
             sb.append(": [{");
-            sb.append("\"" + XMLConstants.TYPE_ID_ATTR + "\"" + ":");
+            sb.append("\"" + XMLJsonConstants.TYPE_ID_ATTR + "\"" + ":");
             sb.append("\"" + supertype.getTypeId() + "\"");
             sb.append(",");
-            sb.append("\"" + XMLConstants.TYPE_URI_ATTR + "\"" + ":");
+            sb.append("\"" + XMLJsonConstants.TYPE_URI_ATTR + "\"" + ":");
             sb.append("\"" + uriCreator.getTypeURI(supertype) + "\"");
             sb.append(",");
-            sb.append("\"" + XMLConstants.TYPE_NAME + "\"" + ":");
+            sb.append("\"" + XMLJsonConstants.TYPE_NAME + "\"" + ":");
             sb.append("\"" + StringEscapeUtils.escapeXml10(supertype.getTypeName()) + "\"");
             sb.append("}]");
         }
