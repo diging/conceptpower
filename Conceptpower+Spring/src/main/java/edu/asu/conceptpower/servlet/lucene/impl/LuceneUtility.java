@@ -42,6 +42,7 @@ import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IndexingEvent;
+import edu.asu.conceptpower.servlet.core.Constants;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneDAO;
@@ -50,7 +51,6 @@ import edu.asu.conceptpower.servlet.lucene.LuceneAction;
 import edu.asu.conceptpower.servlet.reflect.LuceneField;
 import edu.asu.conceptpower.servlet.reflect.SearchField;
 import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
-import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wordnet.WordNetConfiguration;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;

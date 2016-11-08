@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.servlet.core.Constants;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.core.impl.ConceptManager;
 import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
@@ -20,7 +21,6 @@ import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
 import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
-import edu.asu.conceptpower.servlet.wordnet.Constants;
 import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
 //github.com/diging/conceptpower.git
 import junit.framework.Assert;
