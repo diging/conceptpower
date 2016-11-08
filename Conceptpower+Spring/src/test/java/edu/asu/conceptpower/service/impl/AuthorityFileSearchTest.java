@@ -13,11 +13,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.servlet.profile.ISearchResult;
-import edu.asu.conceptpower.servlet.profile.IService;
-import edu.asu.conceptpower.servlet.profile.IServiceRegistry;
-import edu.asu.conceptpower.servlet.profile.impl.SearchResult;
-import edu.asu.conceptpower.servlet.service.impl.AuthorityFileSearch;
+import edu.asu.conceptpower.app.profile.ISearchResult;
+import edu.asu.conceptpower.app.profile.IService;
+import edu.asu.conceptpower.app.profile.IServiceRegistry;
+import edu.asu.conceptpower.app.profile.impl.SearchResult;
+import edu.asu.conceptpower.app.service.impl.AuthorityFileSearch;
 
 public class AuthorityFileSearchTest {
 

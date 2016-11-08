@@ -44,43 +44,6 @@
 		</beans:property>
 	</beans:bean>
 
-
-	<context:property-placeholder location="classpath*:config.properties" />
-
-	<beans:bean id="mailSender"
-		class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<beans:property name="host" value="${email.host}" />
-		<beans:property name="port" value="${email.port}" />
-		<beans:property name="username" value="${email.user}" />
-		<beans:property name="password" value="${email.pw}" />
-		<beans:property name="javaMailProperties">
-			<beans:props>
-				<beans:prop key="mail.transport.protocol">smtp</beans:prop>
-				<beans:prop key="mail.smtp.auth">true</beans:prop>
-				<beans:prop key="mail.smtp.starttls.enable">true</beans:prop>
-				<beans:prop key="mail.debug">true</beans:prop>
-			</beans:props>
-		</beans:property>
-	</beans:bean>
-
-	<!-- You can have some pre-configured messagess also which are ready to 
-		send -->
-	<beans:bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
-		<beans:property name="from" value="${email.from}"></beans:property>
-	</beans:bean>
-
-	<beans:bean id="analyzer"
-		class="org.apache.lucene.analysis.standard.StandardAnalyzer"></beans:bean>
-	<beans:bean id="simpleAnalyzer"
-		class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />
-
-	<beans:bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<beans:property name="basenames" value="validatormessages">
-		</beans:property>
-	</beans:bean>
-
-	
 	<bean id="jacksonMessageConverter"
 	class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
 	<bean
@@ -92,11 +55,6 @@
 		</property>
 	</bean>
 
-
-	<context:component-scan base-package="edu.asu.conceptpower.servlet" />
-	<import resource="../wordnet-config.xml" />
-	<import resource="../rest-service.xml" />
-
-
+	<context:component-scan base-package="edu.asu.conceptpower.web" />
 
 </beans:beans>

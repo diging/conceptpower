@@ -13,8 +13,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import edu.asu.conceptpower.root.UserService;
-import edu.asu.conceptpower.servlet.users.IUserManager;
+import edu.asu.conceptpower.app.users.IUserManager;
+import edu.asu.conceptpower.app.users.UserService;
 
 public class UserServiceTest {
 

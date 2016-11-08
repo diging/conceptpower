@@ -58,6 +58,22 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
     
+    <!--  Rest context -->
+    <servlet>
+        <servlet-name>restServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/appServlet/rest-context.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>restServlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+    
     <!--  Added session timeout as four hours -->
     <session-config>
         <session-timeout>240</session-timeout>
