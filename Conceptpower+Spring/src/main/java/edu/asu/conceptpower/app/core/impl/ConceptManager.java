@@ -27,7 +27,6 @@ import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.rest.LuceneFieldNames;
 import edu.asu.conceptpower.rest.SearchFieldNames;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
@@ -109,7 +108,7 @@ public class ConceptManager implements IConceptManager {
         Map<String,String> fieldMap = new HashMap<String,String>();
         fieldMap.put(SearchFieldNames.WORD, word);
         fieldMap.put(SearchFieldNames.POS, pos);
-        fieldMap.put(LuceneFieldNames.CONCEPT_LIST, conceptList);
+        fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
         return indexService.searchForConcepts(fieldMap,null);
     }
 
