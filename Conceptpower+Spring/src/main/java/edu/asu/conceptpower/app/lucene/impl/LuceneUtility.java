@@ -384,10 +384,13 @@ public class LuceneUtility implements ILuceneUtility {
      */
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
             int numberOfRecordsPerPage) throws LuceneException, IllegalAccessException {
+        logger.debug("Querying lucene index");
 
         if (operator == null) {
             operator = "AND";
         }
+
+        logger.debug("Querying lucene index with operator " + operator);
 
         StringBuffer queryString = new StringBuffer();
         int firstEntry = 1;
@@ -436,6 +439,8 @@ public class LuceneUtility implements ILuceneUtility {
             }
         }
 
+        logger.debug("Query string for lucene " + queryString.toString());
+
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
         try {
@@ -446,12 +451,14 @@ public class LuceneUtility implements ILuceneUtility {
                 // page number starts with 1.
                 startIndex = calculateStartIndex(page, numberOfRecordsPerPage);
                 hitsPerPage = numberOfRecordsPerPage;
+                logger.debug("Number of records per page " + numberOfRecordsPerPage);
             } else {
                 // Fetching results without pagination.
                 // Start index 0 to end Index --> 100 (default we fetch top 100
                 // records)
                 startIndex = 0;
                 hitsPerPage = numberOfResults;
+                logger.debug("Number of Results " + numberOfResults);
             }
             Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
             searcher.search(q, collector);
@@ -459,6 +466,7 @@ public class LuceneUtility implements ILuceneUtility {
             // empty result.
             TopDocs topDocs = collector.topDocs(startIndex, hitsPerPage);
             ScoreDoc[] hits = topDocs.scoreDocs;
+            logger.debug("Hits length " + hits.length);
             for (int i = 0; i < hits.length; ++i) {
                 int docId = hits[i].doc;
                 Document d = searcher.doc(docId);
@@ -472,6 +480,7 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (ParseException e) {
             throw new LuceneException("Issues in framing the query", e);
         }
+        logger.debug("Concepts retrieved from lucene index : " + concepts.size());
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
     }

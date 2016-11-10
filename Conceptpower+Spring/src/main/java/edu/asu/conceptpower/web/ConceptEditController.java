@@ -9,6 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.jettison.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -79,6 +81,8 @@ public class ConceptEditController {
 
     @Value("#{messages['INDEXERSTATUS']}")
     private String indexerStatus;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * This method provides information of a concept to be edited for concept
@@ -327,6 +331,7 @@ public class ConceptEditController {
                 return new ResponseEntity<Object>("Indexer is running. Please try again later.",
                         HttpStatus.SERVICE_UNAVAILABLE);
             }
+            logger.debug("Inside search concept" + found.length);
 
             foundConcepts = new CopyOnWriteArrayList<>(wrapperCreator.createWrappers(found));
         }
