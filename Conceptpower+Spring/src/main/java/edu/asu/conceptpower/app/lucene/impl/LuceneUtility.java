@@ -153,9 +153,17 @@ public class LuceneUtility implements ILuceneUtility {
                         doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
                         
+                    } else if (searchFieldAnnotation.lucenefieldName()
+                            .equalsIgnoreCase(LuceneFieldNames.CONCEPT_LIST)) {
+                        // Just made as lower case for concept list. This is
+                        // because if we make it lowercase for wordnet id and
+                        // concept id, it creates problem while fetching the
+                        // data from ConceptManager
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName().toLowerCase(),
+                                String.valueOf(contentOfField), Field.Store.YES));
                     } else {
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
-                                String.valueOf(contentOfField).toLowerCase(), Field.Store.YES));
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
+                                Field.Store.YES));
                     }
                 }
             }
@@ -248,12 +256,12 @@ public class LuceneUtility implements ILuceneUtility {
         Document doc = new Document();
         String lemma = wordId.getLemma().replace("_", " ");
         doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString().toLowerCase(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
         doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString().toLowerCase(), Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString().toLowerCase(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
 
         ISynset synset = word.getSynset();
         List<IWord> synonyms = synset.getWords();
