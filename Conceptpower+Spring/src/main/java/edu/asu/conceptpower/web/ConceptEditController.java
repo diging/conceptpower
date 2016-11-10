@@ -9,8 +9,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.jettison.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.app.bean.ConceptEditBean;
-import edu.asu.conceptpower.app.core.ConceptTypesService;
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
@@ -36,7 +33,6 @@ import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.users.IUserManager;
-import edu.asu.conceptpower.app.wordnet.WordNetManager;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -62,16 +58,10 @@ public class ConceptEditController {
     private IConceptWrapperCreator wrapperCreator;
 
     @Autowired
-    private ConceptTypesService conceptTypesService;
-
-    @Autowired
     private IUserManager usersManager;
 
     @Autowired
     private IConceptTypeManger conceptTypesManager;
-
-    @Autowired
-    private WordNetManager wordNetManger;
 
     @Autowired
     private IIndexService indexService;
@@ -82,7 +72,7 @@ public class ConceptEditController {
     @Value("#{messages['INDEXERSTATUS']}")
     private String indexerStatus;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final int numberOfRecords = 20;
 
     /**
      * This method provides information of a concept to be edited for concept
@@ -326,12 +316,12 @@ public class ConceptEditController {
             }
 
             try {
-                found = conceptManager.getConceptListEntriesForWord(concept, pos, Constants.WORDNET_DICTIONARY);
+                found = conceptManager.getConceptListEntriesForWordPOSConceptList(concept, pos,
+                        Constants.WORDNET_DICTIONARY, -1, numberOfRecords);
             } catch (IndexerRunningException ie) {
                 return new ResponseEntity<Object>("Indexer is running. Please try again later.",
                         HttpStatus.SERVICE_UNAVAILABLE);
             }
-            logger.debug("Inside search concept" + found.length);
 
             foundConcepts = new CopyOnWriteArrayList<>(wrapperCreator.createWrappers(found));
         }

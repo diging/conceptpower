@@ -49,7 +49,7 @@ public class ConceptEntry implements Serializable {
     private String pos;
 
     @SearchField(fieldName = SearchFieldNames.CONCEPT_LIST)
-    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isIndexable = false)
     private String conceptList;
 
     @SearchField(fieldName = SearchFieldNames.TYPE_ID)

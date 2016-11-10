@@ -172,7 +172,8 @@ public class ConceptWrapperAddController {
             }
 
             try {
-                found = conceptManager.getConceptListEntriesForWord(concept, pos, Constants.WORDNET_DICTIONARY);
+                found = conceptManager.getConceptListEntriesForWordPOSConceptList(concept, pos,
+                        Constants.WORDNET_DICTIONARY);
             } catch (IndexerRunningException ie) {
                 model.addAttribute(indexerRunning, ie.getMessage());
                 return "/login";

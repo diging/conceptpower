@@ -149,14 +149,13 @@ public class LuceneUtility implements ILuceneUtility {
             if (searchFieldAnnotation != null) {
                 Object contentOfField = field.get(entry);
                 if (contentOfField != null) {
-
                     if (searchFieldAnnotation.isIndexable()) {
                         doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
                         
                     } else {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
-                                String.valueOf(contentOfField), Field.Store.YES));
+                                String.valueOf(contentOfField).toLowerCase(), Field.Store.YES));
                     }
                 }
             }
@@ -249,12 +248,12 @@ public class LuceneUtility implements ILuceneUtility {
         Document doc = new Document();
         String lemma = wordId.getLemma().replace("_", " ");
         doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString().toLowerCase(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
         doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString().toLowerCase(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString().toLowerCase(), Field.Store.YES));
 
         ISynset synset = word.getSynset();
         List<IWord> synonyms = synset.getWords();
@@ -266,7 +265,8 @@ public class LuceneUtility implements ILuceneUtility {
         doc.add(new TextField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
         // Adding this new data to delete only wordnet concepts while
         // adding all wordnet concepts from jwi.
-        doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY.toLowerCase(),
+                Field.Store.YES));
         return doc;
     }
 
@@ -384,13 +384,10 @@ public class LuceneUtility implements ILuceneUtility {
      */
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
             int numberOfRecordsPerPage) throws LuceneException, IllegalAccessException {
-        logger.debug("Querying lucene index");
 
         if (operator == null) {
             operator = "AND";
         }
-
-        logger.debug("Querying lucene index with operator " + operator);
 
         StringBuffer queryString = new StringBuffer();
         int firstEntry = 1;
@@ -439,8 +436,6 @@ public class LuceneUtility implements ILuceneUtility {
             }
         }
 
-        logger.debug("Query string for lucene " + queryString.toString());
-
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
         try {
@@ -451,14 +446,18 @@ public class LuceneUtility implements ILuceneUtility {
                 // page number starts with 1.
                 startIndex = calculateStartIndex(page, numberOfRecordsPerPage);
                 hitsPerPage = numberOfRecordsPerPage;
-                logger.debug("Number of records per page " + numberOfRecordsPerPage);
+            } else if (numberOfRecordsPerPage > 0) {
+                // This condition will be called when user requests with a
+                // particular number of results and we need to return all the
+                // page result. Page will be -1
+                startIndex = 0;
+                hitsPerPage = numberOfRecordsPerPage;
             } else {
                 // Fetching results without pagination.
                 // Start index 0 to end Index --> 100 (default we fetch top 100
                 // records)
                 startIndex = 0;
                 hitsPerPage = numberOfResults;
-                logger.debug("Number of Results " + numberOfResults);
             }
             Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
             searcher.search(q, collector);
@@ -466,7 +465,6 @@ public class LuceneUtility implements ILuceneUtility {
             // empty result.
             TopDocs topDocs = collector.topDocs(startIndex, hitsPerPage);
             ScoreDoc[] hits = topDocs.scoreDocs;
-            logger.debug("Hits length " + hits.length);
             for (int i = 0; i < hits.length; ++i) {
                 int docId = hits[i].doc;
                 Document d = searcher.doc(docId);
@@ -480,7 +478,7 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (ParseException e) {
             throw new LuceneException("Issues in framing the query", e);
         }
-        logger.debug("Concepts retrieved from lucene index : " + concepts.size());
+        logger.debug("Number of concepts retrieved from lucene = " + concepts.size());
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
     }

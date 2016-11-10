@@ -66,7 +66,7 @@ public class ConceptLookup {
             @PathVariable("pos") String pos) {
         ConceptEntry[] entries = null;
         try {
-            entries = dictManager.getConceptListEntriesForWord(word, pos, null);
+            entries = dictManager.getConceptListEntriesForWordPOSConceptList(word, pos, null);
         } catch (LuceneException ex) {
             logger.error("Lucene exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -102,7 +102,7 @@ public class ConceptLookup {
             @PathVariable("pos") String pos) {
         ConceptEntry[] entries = null;
         try {
-            entries = dictManager.getConceptListEntriesForWord(word, pos, null);
+            entries = dictManager.getConceptListEntriesForWordPOSConceptList(word, pos, null);
         } catch (LuceneException ex) {
             logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

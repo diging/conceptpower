@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -59,8 +57,6 @@ public class ConceptManager implements IConceptManager {
     @Value("${default_page_size}")
     private Integer defaultPageSize;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     /*
      * (non-Javadoc)
      * 
@@ -105,19 +101,31 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWord(String word, String pos, String conceptList)
+    public ConceptEntry[] getConceptListEntriesForWordPOSConceptList(String word, String pos, String conceptList)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
+        return getConceptListEntriesForWordPOSConceptList(word, pos, conceptList, -1, -1);
+    }
+
+    /*
+     * This method fetches the concepts based on word, pos and concept list
+     * details. This method also accepts parameters for pagination
+     * 
+     * @see
+     * edu.asu.conceptpower.core.IConceptManager#getConceptListEntriesForWord(
+     * java.lang.String, java.lang.String)
+     */
+    @Override
+    public ConceptEntry[] getConceptListEntriesForWordPOSConceptList(String word, String pos, String conceptList,
+            int page, int numberOfRecordsPerPage)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)
             return null;
-        logger.debug("Framing map in concept list entries for word");
-        
-        Map<String,String> fieldMap = new HashMap<String,String>();
+
+        Map<String, String> fieldMap = new HashMap<String, String>();
         fieldMap.put(SearchFieldNames.WORD, word);
         fieldMap.put(SearchFieldNames.POS, pos);
         fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
-
-        logger.debug("Map is framed for searching concept" + fieldMap);
-        return indexService.searchForConcepts(fieldMap,null);
+        return indexService.searchForConceptByPageNumberAndFieldMap(fieldMap, null, page, numberOfRecordsPerPage);
     }
 
     /**

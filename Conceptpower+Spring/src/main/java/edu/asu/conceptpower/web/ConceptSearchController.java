@@ -86,7 +86,7 @@ public class ConceptSearchController {
         }
         
         try {
-            found = conceptManager.getConceptListEntriesForWord(conceptSearchBean.getWord(),
+            found = conceptManager.getConceptListEntriesForWordPOSConceptList(conceptSearchBean.getWord(),
                     conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
         } catch (IndexerRunningException e) {
             model.addAttribute(indexerStatus, e.getMessage());
