@@ -2,10 +2,12 @@ package edu.asu.conceptpower.servlet.json;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.xml.ITypeMessage;
-import edu.asu.conceptpower.servlet.xml.XMLJsonConstants;
 
 public class JsonTypeMessage implements ITypeMessage {
 
@@ -18,64 +20,40 @@ public class JsonTypeMessage implements ITypeMessage {
     @Override
     public String getConceptTypeMessage(ConceptType type, ConceptType supertype) {
 
-        StringBuffer sb = new StringBuffer();
+        ObjectMapper mapper = new ObjectMapper();
 
-        // start entry
-        sb.append("{");
+        ConceptTypeJson jsonType = new ConceptTypeJson();
 
-        // type uri, id
-        sb.append("\"" + XMLJsonConstants.TYPE + "\" : [{");
         if (type != null) {
-            sb.append("\"" + XMLJsonConstants.TYPE_ID_ATTR + "\"" + ":" + "\"" + type.getTypeId() + "\"");
-            sb.append(",");
-            sb.append("\"" + XMLJsonConstants.TYPE_URI_ATTR + "\"" + ":" + "\"" + uriCreator.getTypeURI(type) + "\"");
+            jsonType.setTypeId(type.getTypeId());
+            jsonType.setTypeUri(uriCreator.getTypeURI(type));
         }
-        sb.append("}]");
-        sb.append(",");
 
-        // type description
-        sb.append("\"" + XMLJsonConstants.DESCRIPTION + "\"" + ":");
-        sb.append("\"" + StringEscapeUtils.escapeXml10(type.getDescription()) + "\"");
-        sb.append(",");
-
-        // creator id
-        sb.append("\"" + XMLJsonConstants.CREATOR_ID + "\"" + ":");
-        sb.append("\"" + StringEscapeUtils.escapeXml10(type.getCreatorId() != null ? type.getCreatorId().trim() : "")
-                + "\"");
-        sb.append(",");
-
-        // matches
-        sb.append("\"" + XMLJsonConstants.MATCHES + "\"" + ":");
-        sb.append(
-                "\"" + StringEscapeUtils.escapeXml10(type.getMatches() != null ? type.getMatches().trim() : "") + "\"");
-        sb.append(",");
-
-        // modified by
-        sb.append("\"" + XMLJsonConstants.MODIFIED_BY + "\"" + ":");
-        sb.append("\"" + StringEscapeUtils.escapeXml10(type.getModified() != null ? type.getModified().trim() : "")
-                + "\"");
-
+        jsonType.setDescription(StringEscapeUtils.escapeXml10(type.getDescription()));
+        jsonType.setCreatorId(
+                StringEscapeUtils.escapeXml10(type.getCreatorId() != null ? type.getCreatorId().trim() : ""));
+        jsonType.setMatches(StringEscapeUtils.escapeXml10(type.getMatches() != null ? type.getMatches().trim() : ""));
+        jsonType.setModifiedBy(
+                StringEscapeUtils.escapeXml10(type.getModified() != null ? type.getModified().trim() : ""));
 
         // supertype
         if (supertype != null) {
-            sb.append(",");
-            sb.append("\"" + XMLJsonConstants.SUPERTYPE + "\"");
-            sb.append(": [{");
-            sb.append("\"" + XMLJsonConstants.TYPE_ID_ATTR + "\"" + ":");
-            sb.append("\"" + supertype.getTypeId() + "\"");
-            sb.append(",");
-            sb.append("\"" + XMLJsonConstants.TYPE_URI_ATTR + "\"" + ":");
-            sb.append("\"" + uriCreator.getTypeURI(supertype) + "\"");
-            sb.append(",");
-            sb.append("\"" + XMLJsonConstants.TYPE_NAME + "\"" + ":");
-            sb.append("\"" + StringEscapeUtils.escapeXml10(supertype.getTypeName()) + "\"");
-            sb.append("}]");
+            ConceptSuperTypeJson superTypeJson = new ConceptSuperTypeJson();
+            superTypeJson.setTypeId(supertype.getTypeId());
+            superTypeJson.setTypeUri(uriCreator.getTypeURI(supertype));
+            superTypeJson.setTypeName(StringEscapeUtils.escapeXml10(supertype.getTypeName()));
+            jsonType.setSuperType(superTypeJson);
         }
 
-        // end entry
-        sb.append("}");
+        String json = null;
+        try {
+            json = mapper.writeValueAsString(jsonType);
+        } catch (JsonProcessingException ex) {
+            // TODO
+            ex.printStackTrace();
+        }
 
-        return sb.toString();
+        return json;
     }
 
 }

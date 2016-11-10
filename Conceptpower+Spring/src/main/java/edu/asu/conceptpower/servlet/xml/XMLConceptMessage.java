@@ -42,7 +42,7 @@ public class XMLConceptMessage implements IConceptMessage {
         return xmlEntries.toString();
     }
 
-    public String getConceptMessage(ConceptEntry entry, ConceptType type) {
+    private String getConceptMessage(ConceptEntry entry, ConceptType type) {
         StringBuffer sb = new StringBuffer();
 
         sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CONCEPT_ENTRY + ">");

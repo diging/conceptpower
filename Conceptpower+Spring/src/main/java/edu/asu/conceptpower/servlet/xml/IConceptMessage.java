@@ -9,7 +9,5 @@ public interface IConceptMessage {
 
     public String getAllConceptMessage(Map<ConceptEntry, ConceptType> entries);
 
-    public String getConceptMessage(ConceptEntry entry, ConceptType type);
-
 }
 
