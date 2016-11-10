@@ -64,13 +64,11 @@ $(document).ready(function() {
     $('#name').keydown(function(event){
         if(event.keyCode == 13) {
           event.preventDefault();
-          return false;
+          $("#searchconcept").trigger("click");
         }
 	});
     
     $("#searchconcept").click(function() {
-        var t = $('#conceptSearch').DataTable();
-        t.clear().draw();
         $.ajax({
             type : "GET",
             url : "${pageContext.servletContext.contextPath}/conceptEdit/search",
@@ -79,6 +77,8 @@ $(document).ready(function() {
                 pos : $("#pos").val()
             },
             success : function(response) {
+                var t = $('#conceptSearch').DataTable();
+                t.clear().draw();
                 for(var i=0; i< response.length; i++) {
                     var conceptEntry = response[i].entry;
                     
@@ -94,6 +94,9 @@ $(document).ready(function() {
                     // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
                 }
                 $('#conceptSearchDiv').show();  
+            }, error : function(response) {
+                var t = $('#conceptSearch').DataTable();
+                t.clear().draw();
             }
         });
     });
