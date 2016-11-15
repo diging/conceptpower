@@ -1,8 +1,5 @@
 package edu.asu.conceptpower.app.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import edu.asu.conceptpower.core.ConceptType;
@@ -14,7 +11,7 @@ import edu.asu.conceptpower.core.ConceptType;
  * @author Julia Damerow
  *
  */
-public class XMLTypeMessage extends AXMLMessage {
+public class XMLTypeMessage implements ITypeMessage {
 
 	private URIHelper uriCreator;
 	
@@ -22,83 +19,85 @@ public class XMLTypeMessage extends AXMLMessage {
 		this.uriCreator = uriCreator;
 	}
 
-	public List<String> appendEntry(ConceptType type, ConceptType supertype) {
+    public String getConceptTypeMessage(ConceptType type, ConceptType supertype) {
 
-		List<String> xmlEntries = new ArrayList<String>();
 		StringBuffer sb = new StringBuffer();
 
+        sb.append("<" + XMLJsonConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLJsonConstants.NAMESPACE_PREFIX + "=\""
+                + XMLJsonConstants.NAMESPACE + "\">");
+
 		// start entry
-		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.TYPE_ENTRY + ">");
+		sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.TYPE_ENTRY + ">");
 
 		// type uri, id
-		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.TYPE
+		sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.TYPE
 				+ " ");
 		if (type != null) {
-			sb.append(XMLConstants.TYPE_ID_ATTR + "=\"" + type.getTypeId()
+			sb.append(XMLJsonConstants.TYPE_ID_ATTR + "=\"" + type.getTypeId()
 					+ "\" ");
-			sb.append(XMLConstants.TYPE_URI_ATTR + "=\""
+			sb.append(XMLJsonConstants.TYPE_URI_ATTR + "=\""
 					+ uriCreator.getTypeURI(type) + "\"");
 		}
 		sb.append(">");
 		if (type != null)
 			sb.append(StringEscapeUtils.escapeXml10(type.getTypeName()));
-		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.TYPE + ">");
+		sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.TYPE + ">");
 
 		// type description
-		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.DESCRIPTION + ">");
+		sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.DESCRIPTION + ">");
 		sb.append(StringEscapeUtils.escapeXml10(type.getDescription()));
-		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.DESCRIPTION + ">");
+		sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.DESCRIPTION + ">");
 
 		// creator id
-		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.CREATOR_ID + ">");
+		sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.CREATOR_ID + ">");
 		sb.append(StringEscapeUtils.escapeXml10(type.getCreatorId() != null ? type
 				.getCreatorId().trim() : ""));
-		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.CREATOR_ID + ">");
+		sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.CREATOR_ID + ">");
 
 		// matches
-		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.MATCHES + ">");
+		sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.MATCHES + ">");
 		sb.append(StringEscapeUtils.escapeXml10(type.getMatches() != null ? type
 				.getMatches().trim() : ""));
-		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.MATCHES + ">");
+		sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.MATCHES + ">");
 
 		// modified by
-		sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.MODIFIED_BY + ">");
+		sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.MODIFIED_BY + ">");
 		sb.append(StringEscapeUtils.escapeXml10(type.getModified() != null ? type
 				.getModified().trim() : ""));
-		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.MODIFIED_BY + ">");
+		sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.MODIFIED_BY + ">");
 
 		// supertype
 		if (supertype != null) {
-			sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":"
-					+ XMLConstants.SUPERTYPE + " ");
+			sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+					+ XMLJsonConstants.SUPERTYPE + " ");
 
-			sb.append(XMLConstants.TYPE_ID_ATTR + "=\"" + supertype.getTypeId()
+			sb.append(XMLJsonConstants.TYPE_ID_ATTR + "=\"" + supertype.getTypeId()
 					+ "\" ");
-			sb.append(XMLConstants.TYPE_URI_ATTR + "=\""
+			sb.append(XMLJsonConstants.TYPE_URI_ATTR + "=\""
 					+ uriCreator.getTypeURI(supertype) + "\"");
 
 			sb.append(">");
 			sb.append(StringEscapeUtils.escapeXml10(supertype.getTypeName()));
-			sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
-					+ XMLConstants.SUPERTYPE + ">");
+			sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+					+ XMLJsonConstants.SUPERTYPE + ">");
 		}
 
 		// end entry
-		sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":"
-				+ XMLConstants.TYPE_ENTRY + ">");
+		sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":"
+				+ XMLJsonConstants.TYPE_ENTRY + ">");
 
-		xmlEntries.add(sb.toString());
+        sb.append("</" + XMLJsonConstants.CONCEPTPOWER_ANSWER + ">");
 
-		return xmlEntries;
+        return sb.toString();
 	}
 }
