@@ -303,34 +303,36 @@ $(document).ready(function() {
     <p>${conceptEditBean.description}</p>
     <br />
     <br />
+    
     <table>
-
         <tr>
-            <td>Concept</td>
-            <td><form:input path="word" class="form-control"/></td>
+            <td class="col-sm-3">Concept</td>
+            <td class="col-sm-9"><form:input path="word" class="form-control"/></td>
         </tr>
         <tr>
-            <td>POS</td>
-            <td><form:select path="selectedPosValue" class="form-control">
+            <td class="col-sm-3">POS</td>
+            <td class="col-sm-9">
+                <form:select path="selectedPosValue" class="form-control">
                     <form:option value="" />
                     <form:options items="${conceptEditBean.posMap}" />
-                </form:select></td>
+                </form:select>
+            </td>
         </tr>
         <tr>
-            <td>Concept List</td>
-            <td><form:select path="conceptListValue" class="form-control"
+            <td class="col-sm-3">Concept List</td>
+            <td class="col-sm-9"><form:select path="conceptListValue" class="form-control"
                     items="${conceptEditBean.conceptList}" itemValue="conceptListName"
                     itemLabel="conceptListName" /></td>
         </tr>
         <tr>
         </tr>
         <tr>
-            <td>Description</td>
-            <td><form:textarea path="description" rows="7" cols="50" class="form-control"/></td>
+            <td class="col-sm-3">Description</td>
+            <td class="col-sm-9"><form:textarea path="description" rows="7" cols="50" class="form-control"/></td>
         </tr>
         <tr>
-            <td>Synonyms</td>
-            <td>
+            <td class="col-sm-3">Synonyms</td>
+            <td class="col-sm-9">
                 <div id="addedSynonyms" hidden="true">
                     <table border="1" width="400" id="addedSynonymsTable" hidden="true" class="table table-striped table-bordered">
                         <tbody>
@@ -346,26 +348,28 @@ $(document).ready(function() {
         </tr>
 
         <tr>
-            <td>Concept Type</td>
-            <td><form:select path="selectedTypeId" class="form-control">
+            <td class="col-sm-3">Concept Type</td>
+            <td class="col-sm-9">
+                <form:select path="selectedTypeId" class="form-control">
                     <form:option value="" />
                     <form:options items="${conceptEditBean.types}" itemValue="typeId"
                         itemLabel="typeName" />
                 </form:select>
+              </td>
         </tr>
         <tr>
-            <td>Equals</td>
-            <td><form:textarea path="equals" rows="5" cols="25" />
+            <td class="col-sm-3">Equals</td>
+            <td class="col-sm-9"><form:textarea path="equals" class="form-control" />
         </tr>
 
         <tr>
-            <td>Similar</td>
-            <td><form:input  path="similar" class="form-control"/></td>
+            <td class="col-sm-3">Similar</td>
+            <td class="col-sm-9"><form:input  path="similar" class="form-control"/></td>
         </tr>
         
         <tr>
-            <td>Wordnet</td>
-            <td><form:textarea path="wordnetIds" id="wordnetIds" class="wordnetIds" rows="5" cols="60"/></td>
+            <td class="col-sm-3">Wordnet</td>
+            <td class="col-sm-9"><form:textarea path="wordnetIds" id="wordnetIds" class="form-control"/></td>
         </tr>
         
         <tr>
@@ -381,24 +385,24 @@ $(document).ready(function() {
     <br/><br/>
     <table>
         <tr>
-            <td>
+            <td class="col-sm-6">
                 <h4>Search for wordnet ids below</h4>
             </td>
         </tr>
         <tr>
-            <td>Create wrapper for wordnet concept:</td>
-            <td><input type="text" id="name" /></td>
+            <td class="col-sm-6">Create wrapper for wordnet concept:</td>
+            <td class="col-sm-6"><input type="text" id="name"  class="form-control" /></td>
         </tr>
         <tr>
-            <td>POS:</td>
-            <td><select id="pos" class="form-control">
+            <td class="col-sm-3">POS:</td>
+            <td class="col-sm-7"><select id="pos" class="form-control">
                     <option value="noun">Noun</option>
                     <option value="verb">Verb</option>
                     <option value="adverb">Adverb</option>
                     <option value="adjective">Adjective</option>
                     <option value="other">Other</option>
             </select></td>
-            <td><span id='clickableIcon'><i class="fa fa-search" id="searchconcept" name="searchconcept" aria-hidden="true"></i></span></td>
+            <td  class="col-sm-2"><span id='clickableIcon'><i class="fa fa-search" id="searchconcept" name="searchconcept" aria-hidden="true"></i></span></td>
         </tr>
         
     </table>
@@ -426,7 +430,7 @@ $(document).ready(function() {
         </table>
     </div>
         
-    <table>
+    <table  class="width: 100%;">
         <tr>
             <td><input type="submit" name="edit" id="edit"
                 value="Store modified concept" class="btn btn-primary"></td>
@@ -488,6 +492,5 @@ $(document).ready(function() {
             </div>
         </div>
     </div>
-
 
 </form>

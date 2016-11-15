@@ -44,7 +44,7 @@ public interface IConceptManager {
      *            Part of speech of word (noun, verb, adjective, adverb).
      * @return matching concepts
      */
-    public abstract ConceptEntry[] getConceptListEntriesForWordPOSConceptList(String word, String pos,
+    public abstract ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos,
             String conceptList) throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
@@ -164,7 +164,7 @@ public interface IConceptManager {
      * @throws IllegalAccessException
      * @throws IndexerRunningException
      */
-    public ConceptEntry[] getConceptListEntriesForWordPOSConceptList(String word, String pos, String conceptList,
+    public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList,
             int page, int numberOfRecordsPerPage)
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
 

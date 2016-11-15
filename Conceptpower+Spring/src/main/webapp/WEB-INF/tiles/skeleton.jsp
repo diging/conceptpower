@@ -109,7 +109,7 @@
 	<header id="head" class="secondary"></header>
 
 	<!-- container -->
-	<div class="container main">
+	<div class="container-fluid">
 
 		<ol class="breadcrumb">
 			<tiles:importAttribute />
@@ -144,7 +144,7 @@
 		<div class="row">
 
 			<!-- Article main content -->
-			<article class="col-sm-9 maincontent">
+			<article class="col-sm-12 maincontent">
 				<tiles:insertAttribute name="content" />
 			</article>
 			<!-- /Article -->

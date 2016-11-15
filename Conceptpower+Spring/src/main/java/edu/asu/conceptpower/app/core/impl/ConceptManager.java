@@ -101,9 +101,9 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOSConceptList(String word, String pos, String conceptList)
+    public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
-        return getConceptListEntriesForWordPOSConceptList(word, pos, conceptList, -1, -1);
+        return getConceptListEntriesForWordPOS(word, pos, conceptList, -1, -1);
     }
 
     /*
@@ -115,7 +115,7 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOSConceptList(String word, String pos, String conceptList,
+    public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList,
             int page, int numberOfRecordsPerPage)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)

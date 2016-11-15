@@ -43,6 +43,10 @@
 			</beans:list>
 		</beans:property>
 	</beans:bean>
+    
+    <beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <beans:property name="basenames" value="validatormessages"></beans:property>
+    </beans:bean>
 
 	<bean id="jacksonMessageConverter"
 	class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>

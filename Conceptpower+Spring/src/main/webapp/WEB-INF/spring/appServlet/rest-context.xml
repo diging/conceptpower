@@ -28,18 +28,22 @@
 	<se:global-method-security
 		pre-post-annotations="enabled" />
 
-<!-- 	<bean id="jacksonMessageConverter" -->
-<!-- 	class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean> -->
-<!-- 	<bean -->
-<!-- 		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"> -->
-<!-- 		<property name="messageConverters"> -->
-<!-- 			<list> -->
-<!-- 				<ref bean="jacksonMessageConverter" /> -->
-<!-- 			</list> -->
-<!-- 		</property> -->
-<!-- 	</bean> -->
+	<bean id="jacksonMessageConverter"
+	class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jacksonMessageConverter" />
+			</list>
+		</property>
+	</bean>
 
 	<context:component-scan base-package="edu.asu.conceptpower.rest" />
+    
+    <beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <beans:property name="basenames" value="validatormessages"></beans:property>
+    </beans:bean>
 	
 
 </beans:beans>

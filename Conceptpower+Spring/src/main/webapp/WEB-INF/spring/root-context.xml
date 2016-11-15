@@ -45,7 +45,11 @@
     <bean id="analyzer"
         class="org.apache.lucene.analysis.standard.StandardAnalyzer"></bean>
     <bean id="simpleAnalyzer"
-        class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />	
+        class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />
+        
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames" value="validatormessages"></property>
+    </bean>	
 
 	<import resource="spring-security.xml" />
     <import resource="wordnet-config.xml" />

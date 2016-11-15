@@ -316,7 +316,7 @@ public class ConceptEditController {
             }
 
             try {
-                found = conceptManager.getConceptListEntriesForWordPOSConceptList(concept, pos,
+                found = conceptManager.getConceptListEntriesForWordPOS(concept, pos,
                         Constants.WORDNET_DICTIONARY, -1, numberOfRecords);
             } catch (IndexerRunningException ie) {
                 return new ResponseEntity<Object>("Indexer is running. Please try again later.",
