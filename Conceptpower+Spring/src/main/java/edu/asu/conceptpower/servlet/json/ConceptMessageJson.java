@@ -3,12 +3,14 @@ package edu.asu.conceptpower.servlet.json;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 
-@JsonRootName("entries")
 public class ConceptMessageJson {
 
     private String id;
+
+    @JsonProperty("concept_uri")
+    private String conceptUri;
+
     private String lemma;
     private String pos;
     private String description;
@@ -28,11 +30,14 @@ public class ConceptMessageJson {
 
     @JsonProperty("synonym_ids")
     private String synonymIds;
+
     private ConceptTypeJson type;
+
     private boolean deleted;
 
     @JsonProperty("wordnet_id")
     private String wordnetId;
+
     private List<AlternativeId> alternativeIds;
 
     public String getId() {
@@ -145,6 +150,14 @@ public class ConceptMessageJson {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getConceptUri() {
+        return conceptUri;
+    }
+
+    public void setConceptUri(String conceptUri) {
+        this.conceptUri = conceptUri;
     }
 
 }

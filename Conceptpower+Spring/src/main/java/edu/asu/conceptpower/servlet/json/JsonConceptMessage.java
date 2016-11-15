@@ -50,7 +50,8 @@ public class JsonConceptMessage implements IConceptMessage {
 
         ConceptMessageJson json = new ConceptMessageJson();
 
-        json.setId(uriCreator.getURI(entry));
+        json.setId(entry.getId());
+        json.setConceptUri(uriCreator.getURI(entry));
         json.setLemma(StringEscapeUtils.escapeXml10(entry.getWord()));
         json.setPos(entry.getPos());
         json.setDescription(StringEscapeUtils.escapeXml10(entry.getDescription()));
