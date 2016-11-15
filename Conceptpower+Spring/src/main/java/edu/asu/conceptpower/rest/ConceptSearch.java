@@ -80,7 +80,7 @@ public class ConceptSearch {
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      */
-    @RequestMapping(value = "rest/ConceptSearch", method = RequestMethod.GET, produces = "application/xml; charset=utf-8")
+    @RequestMapping(value = "/ConceptSearch", method = RequestMethod.GET, produces = "application/xml; charset=utf-8")
     public @ResponseBody ResponseEntity<String> searchConcept(
             @Validated ConceptSearchParameters conceptSearchParameters,
             BindingResult result)

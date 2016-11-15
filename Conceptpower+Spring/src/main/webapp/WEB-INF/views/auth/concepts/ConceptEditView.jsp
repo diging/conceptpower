@@ -292,7 +292,6 @@ $(document).ready(function() {
     };
 </script>
 
-
 <form:form
     action="${pageContext.servletContext.contextPath}/auth/conceptlist/editconcept/edit/${conceptId}"
     method='post' modelAttribute="conceptEditBean">
@@ -306,12 +305,12 @@ $(document).ready(function() {
     
     <table>
         <tr>
-            <td class="col-sm-3">Concept</td>
-            <td class="col-sm-9"><form:input path="word" class="form-control"/></td>
+            <td class="col-sm-1">Concept</td>
+            <td class="col-sm-11"><form:input path="word" class="form-control"/></td>
         </tr>
         <tr>
-            <td class="col-sm-3">POS</td>
-            <td class="col-sm-9">
+            <td class="col-sm-1">POS</td>
+            <td class="col-sm-11">
                 <form:select path="selectedPosValue" class="form-control">
                     <form:option value="" />
                     <form:options items="${conceptEditBean.posMap}" />
@@ -319,20 +318,20 @@ $(document).ready(function() {
             </td>
         </tr>
         <tr>
-            <td class="col-sm-3">Concept List</td>
-            <td class="col-sm-9"><form:select path="conceptListValue" class="form-control"
+            <td class="col-sm-1">Concept List</td>
+            <td class="col-sm-11"><form:select path="conceptListValue" class="form-control"
                     items="${conceptEditBean.conceptList}" itemValue="conceptListName"
                     itemLabel="conceptListName" /></td>
         </tr>
         <tr>
         </tr>
         <tr>
-            <td class="col-sm-3">Description</td>
-            <td class="col-sm-9"><form:textarea path="description" rows="7" cols="50" class="form-control"/></td>
+            <td class="col-sm-1">Description</td>
+            <td class="col-sm-11"><form:textarea path="description" rows="7" cols="50" class="form-control"/></td>
         </tr>
         <tr>
-            <td class="col-sm-3">Synonyms</td>
-            <td class="col-sm-9">
+            <td class="col-sm-1">Synonyms</td>
+            <td class="col-sm-11">
                 <div id="addedSynonyms" hidden="true">
                     <table border="1" width="400" id="addedSynonymsTable" hidden="true" class="table table-striped table-bordered">
                         <tbody>
@@ -348,8 +347,8 @@ $(document).ready(function() {
         </tr>
 
         <tr>
-            <td class="col-sm-3">Concept Type</td>
-            <td class="col-sm-9">
+            <td class="col-sm-1">Concept Type</td>
+            <td class="col-sm-11">
                 <form:select path="selectedTypeId" class="form-control">
                     <form:option value="" />
                     <form:options items="${conceptEditBean.types}" itemValue="typeId"
@@ -358,18 +357,18 @@ $(document).ready(function() {
               </td>
         </tr>
         <tr>
-            <td class="col-sm-3">Equals</td>
-            <td class="col-sm-9"><form:textarea path="equals" class="form-control" />
+            <td class="col-sm-1">Equals</td>
+            <td class="col-sm-11"><form:textarea path="equals" class="form-control" />
         </tr>
 
         <tr>
-            <td class="col-sm-3">Similar</td>
-            <td class="col-sm-9"><form:input  path="similar" class="form-control"/></td>
+            <td class="col-sm-1">Similar</td>
+            <td class="col-sm-11"><form:input  path="similar" class="form-control"/></td>
         </tr>
         
         <tr>
-            <td class="col-sm-3">Wordnet</td>
-            <td class="col-sm-9"><form:textarea path="wordnetIds" id="wordnetIds" class="form-control"/></td>
+            <td class="col-sm-1">Wordnet</td>
+            <td class="col-sm-11"><form:textarea path="wordnetIds" id="wordnetIds" class="form-control"/></td>
         </tr>
         
         <tr>
@@ -383,19 +382,15 @@ $(document).ready(function() {
         
     </table>
     <br/><br/>
+    <h4>Search for wordnet ids below</h4>
     <table>
         <tr>
-            <td class="col-sm-6">
-                <h4>Search for wordnet ids below</h4>
-            </td>
+            <td class="col-sm-2">Create wrapper for wordnet concept:</td>
+            <td class="col-sm-9"><input type="text" id="name"  class="form-control" /></td>
         </tr>
         <tr>
-            <td class="col-sm-6">Create wrapper for wordnet concept:</td>
-            <td class="col-sm-6"><input type="text" id="name"  class="form-control" /></td>
-        </tr>
-        <tr>
-            <td class="col-sm-3">POS:</td>
-            <td class="col-sm-7"><select id="pos" class="form-control">
+            <td class="col-sm-2">POS:</td>
+            <td class="col-sm-8"><select id="pos" class="form-control">
                     <option value="noun">Noun</option>
                     <option value="verb">Verb</option>
                     <option value="adverb">Adverb</option>

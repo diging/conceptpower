@@ -51,7 +51,7 @@ import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetConfiguration;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IndexingEvent;
-import edu.asu.conceptpower.rest.LuceneFieldNames;
+import edu.asu.conceptpower.web.constants.LuceneFieldNames;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.item.IIndexWord;

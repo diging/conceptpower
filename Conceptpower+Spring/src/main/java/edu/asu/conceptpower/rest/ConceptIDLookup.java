@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.core.ConceptTypesService;
-import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
+import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.xml.XMLConceptMessage;
@@ -65,7 +65,7 @@ public class ConceptIDLookup {
 	 *            Holds the HTTP request information
 	 * @return XML containing concept information
 	 */
-    @RequestMapping(value = "/rest/Concept", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE
+    @RequestMapping(value = "/Concept", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE
             + "; charset=utf-8")
     public @ResponseBody ResponseEntity<String> getConceptById(@RequestParam String id) {
 

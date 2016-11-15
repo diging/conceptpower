@@ -12,10 +12,10 @@ import javax.persistence.Id;
 
 import edu.asu.conceptpower.app.reflect.LuceneField;
 import edu.asu.conceptpower.app.reflect.SearchField;
-import edu.asu.conceptpower.rest.LuceneFieldNames;
-import edu.asu.conceptpower.rest.SearchFieldNames;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.web.constants.LuceneFieldNames;
+import edu.asu.conceptpower.web.constants.SearchFieldNames;
 
 /**
  * This class represents one entry in the authority file.

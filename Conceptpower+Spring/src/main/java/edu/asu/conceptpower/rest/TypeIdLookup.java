@@ -45,7 +45,7 @@ public class TypeIdLookup {
 	 *            Holds HTTP request information
 	 * @return
 	 */
-	@RequestMapping(value = "rest/Type", method = RequestMethod.GET, produces = "application/xml")
+    @RequestMapping(value = "/Type", method = RequestMethod.GET, produces = "application/xml")
 	public @ResponseBody ResponseEntity<String> getTypeById(HttpServletRequest req) {
 
 		String id = req.getParameter("id");

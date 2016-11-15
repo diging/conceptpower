@@ -163,7 +163,7 @@
 	</div>
 	<!-- /container -->
 
-<br/><br/>
+    <br/><br/><br/>
 	<footer id="footer" class="top-space sticky">
 
 		<div class="footer2">

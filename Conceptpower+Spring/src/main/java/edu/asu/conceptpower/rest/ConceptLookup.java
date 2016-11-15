@@ -61,7 +61,7 @@ public class ConceptLookup {
      *            String value of the POS of concept to be looked
      * @return XML containing information of given concept for given POS
      */
-    @RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/xml")
+    @RequestMapping(value = "/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/xml")
     public @ResponseBody ResponseEntity<String> getWordNetEntry(@PathVariable("word") String word,
             @PathVariable("pos") String pos) {
         ConceptEntry[] entries = null;
@@ -97,7 +97,7 @@ public class ConceptLookup {
         return new ResponseEntity<String>(returnMsg.getXML(xmlEntries), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/rdf+xml")
+    @RequestMapping(value = "ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/rdf+xml")
     public @ResponseBody ResponseEntity<String> getWordNetEntryInRdf(@PathVariable("word") String word,
             @PathVariable("pos") String pos) {
         ConceptEntry[] entries = null;

@@ -57,7 +57,7 @@ public class SynonymSearch {
 	 * @param req
 	 * @return
 	 */
-	@RequestMapping(value = "rest/SynonymSearch", method = RequestMethod.GET, produces = "application/xml")
+    @RequestMapping(value = "/SynonymSearch", method = RequestMethod.GET, produces = "application/xml")
 	public @ResponseBody ResponseEntity<String> getSynonymsForId(HttpServletRequest req) {
 
 		// construct the URL to the Wordnet dictionary directory
