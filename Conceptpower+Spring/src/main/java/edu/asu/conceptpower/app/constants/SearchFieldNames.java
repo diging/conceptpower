@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.web.constants;
+package edu.asu.conceptpower.app.constants;
 
 public interface SearchFieldNames {
 
