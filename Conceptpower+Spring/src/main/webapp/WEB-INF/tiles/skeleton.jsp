@@ -163,9 +163,8 @@
 	</div>
 	<!-- /container -->
 
+<br/><br/>
 	<footer id="footer" class="top-space sticky">
-
-
 
 		<div class="footer2">
 			<div class="container">
