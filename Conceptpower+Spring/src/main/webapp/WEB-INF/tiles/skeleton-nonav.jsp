@@ -104,7 +104,7 @@
 	<header id="head" class="secondary"></header>
 
 	<!-- container -->
-	<div class="container main">
+	<div class="container-fluid">
 		<ol class="breadcrumb">
 			<tiles:importAttribute />
 			<li><a href="${pageContext.servletContext.contextPath}">Home</a></li>
@@ -148,9 +148,8 @@
 	</div>
 	<!-- /container -->
 
+    <br/><br/><br/>
 	<footer id="footer" class="top-space sticky">
-
-
 
 		<div class="footer2">
 			<div class="container">

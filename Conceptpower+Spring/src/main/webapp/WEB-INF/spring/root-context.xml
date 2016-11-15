@@ -12,13 +12,48 @@
 
 	<import resource="db4o-config.xml" />
 	<import resource="xml-config.xml" />
-	<context:component-scan base-package="edu.asu.conceptpower.root" />
+	<context:component-scan base-package="edu.asu.conceptpower.app" />
 
-	<bean id="luceneDAO" class="edu.asu.conceptpower.servlet.lucene.impl.LuceneDAO" init-method="init">
+	<bean id="luceneDAO" class="edu.asu.conceptpower.app.lucene.impl.LuceneDAO" init-method="init">
 		<property name="dbPath" value="${db.path}/lucene.db" />
-	</bean>	
+	</bean>
+    
+    <context:property-placeholder location="classpath*:config.properties" />
+
+    <bean id="mailSender"
+        class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${email.host}" />
+        <property name="port" value="${email.port}" />
+        <property name="username" value="${email.user}" />
+        <property name="password" value="${email.pw}" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- You can have some pre-configured messagess also which are ready to 
+        send -->
+    <bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="${email.from}"></property>
+    </bean>
+
+    <bean id="analyzer"
+        class="org.apache.lucene.analysis.standard.StandardAnalyzer"></bean>
+    <bean id="simpleAnalyzer"
+        class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />
+        
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames" value="validatormessages"></property>
+    </bean>	
 
 	<import resource="spring-security.xml" />
+    <import resource="wordnet-config.xml" />
+    <import resource="rest-service.xml" />
 
 	<util:properties id="messages"
 		location="classpath:/locale/messages_en_US.properties" />

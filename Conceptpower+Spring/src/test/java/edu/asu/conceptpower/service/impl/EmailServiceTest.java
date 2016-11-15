@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
-import edu.asu.conceptpower.servlet.service.impl.EmailService;
+import edu.asu.conceptpower.app.service.impl.EmailService;
 
 public class EmailServiceTest {
 

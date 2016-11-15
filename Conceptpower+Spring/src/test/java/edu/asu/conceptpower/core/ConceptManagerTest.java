@@ -2,7 +2,6 @@ package edu.asu.conceptpower.core;
 
 import java.util.Date;
 
-//github.com/diging/conceptpower.git
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -10,19 +9,18 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.core.impl.ConceptManager;
+import edu.asu.conceptpower.app.db4o.IConceptDBManager;
+import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
+import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
+import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.lucene.ILuceneUtility;
+import edu.asu.conceptpower.app.wordnet.Constants;
+import edu.asu.conceptpower.app.wordnet.WordNetManager;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
-import edu.asu.conceptpower.servlet.core.IIndexService;
-import edu.asu.conceptpower.servlet.core.impl.ConceptManager;
-import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
-import edu.asu.conceptpower.servlet.exceptions.DictionaryDoesNotExistException;
-import edu.asu.conceptpower.servlet.exceptions.DictionaryModifyException;
-import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
-import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.lucene.ILuceneUtility;
-import edu.asu.conceptpower.servlet.wordnet.Constants;
-import edu.asu.conceptpower.servlet.wordnet.WordNetManager;
-//github.com/diging/conceptpower.git
 import junit.framework.Assert;
 
 public class ConceptManagerTest {

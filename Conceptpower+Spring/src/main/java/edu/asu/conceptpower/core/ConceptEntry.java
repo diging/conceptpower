@@ -10,12 +10,12 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import edu.asu.conceptpower.app.constants.LuceneFieldNames;
+import edu.asu.conceptpower.app.constants.SearchFieldNames;
+import edu.asu.conceptpower.app.reflect.LuceneField;
+import edu.asu.conceptpower.app.reflect.SearchField;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
-import edu.asu.conceptpower.servlet.reflect.LuceneField;
-import edu.asu.conceptpower.servlet.reflect.SearchField;
-import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
-import edu.asu.conceptpower.servlet.rest.SearchFieldNames;
 
 /**
  * This class represents one entry in the authority file.
@@ -49,7 +49,7 @@ public class ConceptEntry implements Serializable {
     private String pos;
 
     @SearchField(fieldName = SearchFieldNames.CONCEPT_LIST)
-    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isIndexable = false)
     private String conceptList;
 
     @SearchField(fieldName = SearchFieldNames.TYPE_ID)
@@ -133,7 +133,7 @@ public class ConceptEntry implements Serializable {
     /**
      * A string containing the ids of other conceptpower entries that are
      * synonyms for an entry. The synonym ids are speparated by
-     * {@link edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR}.
+     * {@link edu.asu.conceptpower.app.core.Constants.SYNONYM_SEPARATOR}.
      */
     public String getSynonymIds() {
         return synonymIds;

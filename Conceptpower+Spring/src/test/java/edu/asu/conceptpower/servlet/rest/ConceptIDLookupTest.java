@@ -13,14 +13,15 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import edu.asu.conceptpower.app.core.ConceptTypesService;
+import edu.asu.conceptpower.app.core.IConceptManager;
+import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
+import edu.asu.conceptpower.app.db.TypeDatabaseClient;
+import edu.asu.conceptpower.app.xml.URIHelper;
+import edu.asu.conceptpower.app.xml.XMLConceptMessage;
+import edu.asu.conceptpower.app.xml.XMLMessageFactory;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.root.TypeDatabaseClient;
-import edu.asu.conceptpower.root.URIHelper;
-import edu.asu.conceptpower.servlet.core.ConceptTypesService;
-import edu.asu.conceptpower.servlet.core.ConceptTypesService.ConceptTypes;
-import edu.asu.conceptpower.servlet.core.IConceptManager;
-import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
-import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
+import edu.asu.conceptpower.rest.ConceptIDLookup;
 import junit.framework.Assert;
 
 public class ConceptIDLookupTest {
