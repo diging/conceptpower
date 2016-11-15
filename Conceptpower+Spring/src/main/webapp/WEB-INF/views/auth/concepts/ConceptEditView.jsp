@@ -88,7 +88,8 @@ $(document).ready(function() {
                                 conceptEntry.word,
                                 conceptEntry.id,
                                 conceptEntry.wordnetId,
-                                conceptEntry.pos
+                                conceptEntry.pos,
+                                conceptEntry.description
                             ] ).draw( false );
                     
                     // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
@@ -391,7 +392,7 @@ $(document).ready(function() {
         <tr>
             <td>POS:</td>
             <td><select id="pos" class="form-control">
-                    <option value="noun">Nouns</option>
+                    <option value="noun">Noun</option>
                     <option value="verb">Verb</option>
                     <option value="adverb">Adverb</option>
                     <option value="adjective">Adjective</option>
@@ -417,6 +418,7 @@ $(document).ready(function() {
                     <th>ID</th>
                     <th>Wordnet ID</th>
                     <th>POS</th>
+                    <th>Description</th>
                 </tr>
             </thead>
             <tbody>
