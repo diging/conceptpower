@@ -1,8 +1,6 @@
 package edu.asu.conceptpower.servlet.rest;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,8 +23,8 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.root.TypeDatabaseClient;
 import edu.asu.conceptpower.servlet.core.IConceptManager;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
-import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
+import edu.asu.conceptpower.servlet.xml.IConceptMessage;
+import edu.asu.conceptpower.servlet.xml.MessageRegistry;
 
 /**
  * This class provides a method to retrieve all synonyms for a given concept
@@ -45,7 +45,7 @@ public class SynonymSearch {
 	private TypeDatabaseClient typeManager;
 
 	@Autowired
-	private XMLMessageFactory messageFactory;
+    private MessageRegistry messageFactory;
 
     private static final Logger logger = LoggerFactory.getLogger(SynonymSearch.class);
 
@@ -57,8 +57,10 @@ public class SynonymSearch {
 	 * @param req
 	 * @return
 	 */
-	@RequestMapping(value = "rest/SynonymSearch", method = RequestMethod.GET, produces = "application/xml")
-	public @ResponseBody ResponseEntity<String> getSynonymsForId(HttpServletRequest req) {
+    @RequestMapping(value = "rest/SynonymSearch", method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody ResponseEntity<String> getSynonymsForId(HttpServletRequest req,
+            @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader) {
 
 		// construct the URL to the Wordnet dictionary directory
 		String id = req.getParameter("id");
@@ -84,10 +86,10 @@ public class SynonymSearch {
             logger.error("Lucene exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-		List<String> xmlEntries = new ArrayList<String>();
+        String entries = null;
 		Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
-		XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
+        IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
 		for (ConceptEntry entry : synonyms) {
 			ConceptType type = null;
 			if (typeManager != null && entry.getTypeId() != null
@@ -95,12 +97,12 @@ public class SynonymSearch {
 				type = typeManager.getType(entry.getTypeId());
 			}
 			entryMap.put(entry, type);
-			xmlEntries = msg.appendEntries(entryMap);
+            entries = msg.getAllConceptMessage(entryMap);
 		}
 
 		HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "text/html; charset=utf-8");
         
-        return new ResponseEntity<String>(msg.getXML(xmlEntries), responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<String>(entries, responseHeaders, HttpStatus.OK);
 	}
 }

@@ -1,8 +1,6 @@
 package edu.asu.conceptpower.servlet.rest;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,8 +24,8 @@ import edu.asu.conceptpower.root.URIHelper;
 import edu.asu.conceptpower.servlet.core.IIndexService;
 import edu.asu.conceptpower.servlet.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.xml.XMLConceptMessage;
-import edu.asu.conceptpower.servlet.xml.XMLMessageFactory;
+import edu.asu.conceptpower.servlet.xml.IConceptMessage;
+import edu.asu.conceptpower.servlet.xml.MessageRegistry;
 
 /**
  * This class provides a method to search concepts. It answers requests to:
@@ -44,7 +44,7 @@ public class ConceptSearch {
     private TypeDatabaseClient typeManager;
 
     @Autowired
-    private XMLMessageFactory messageFactory;
+    private MessageRegistry messageFactory;
 
     @Autowired
     private URIHelper uriHelper;
@@ -60,8 +60,10 @@ public class ConceptSearch {
      *            Holds HTTP request information
      * @return
      */
-    @RequestMapping(value = "rest/ConceptSearch", method = RequestMethod.GET, produces = "application/xml; charset=utf-8")
-    public @ResponseBody ResponseEntity<String> searchConcept(HttpServletRequest req) {
+    @RequestMapping(value = "rest/ConceptSearch", method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    public @ResponseBody ResponseEntity<String> searchConcept(HttpServletRequest req,
+            @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader) {
         Map<String, String[]> queryParams = req.getParameterMap();
         Map<String, String> searchFields = new HashMap<String, String>();
         String operator = SearchParamters.OP_OR;
@@ -89,19 +91,22 @@ public class ConceptSearch {
             return new ResponseEntity<String>(ire.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
 
-        List<String> xmlEntries = new ArrayList<String>();
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
-        XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
+        IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
+        createEntryMap(searchResults, entryMap);
+
+        return new ResponseEntity<String>(msg.getAllConceptMessage(entryMap), HttpStatus.OK);
+
+    }
+
+    private void createEntryMap(ConceptEntry[] searchResults, Map<ConceptEntry, ConceptType> entryMap) {
         for (ConceptEntry entry : searchResults) {
             ConceptType type = null;
             if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
                 type = typeManager.getType(entry.getTypeId());
             }
             entryMap.put(entry, type);
-            xmlEntries = msg.appendEntries(entryMap);
         }
-
-        return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
     }
 }
