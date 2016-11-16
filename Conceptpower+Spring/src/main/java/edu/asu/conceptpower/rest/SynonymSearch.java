@@ -60,7 +60,7 @@ public class SynonymSearch {
      * @return
      * @throws JsonProcessingException
      */
-    @RequestMapping(value = "rest/SynonymSearch", method = RequestMethod.GET, produces = {
+    @RequestMapping(value = "/SynonymSearch", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody ResponseEntity<String> getSynonymsForId(HttpServletRequest req,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
@@ -101,10 +101,10 @@ public class SynonymSearch {
 				type = typeManager.getType(entry.getTypeId());
 			}
 			entryMap.put(entry, type);
-            entries = msg.getAllConceptMessage(entryMap);
+            entries = msg.getAllConceptEntries(entryMap);
 		}
 
-		HttpHeaders responseHeaders = new HttpHeaders();
+        HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "text/html; charset=utf-8");
         
         return new ResponseEntity<String>(entries, responseHeaders, HttpStatus.OK);

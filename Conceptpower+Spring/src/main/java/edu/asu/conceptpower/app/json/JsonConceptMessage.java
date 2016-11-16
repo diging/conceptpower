@@ -5,19 +5,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.springframework.validation.ObjectError;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.asu.conceptpower.app.xml.IConceptMessage;
-import edu.asu.conceptpower.app.xml.NotImplementedException;
+import edu.asu.conceptpower.app.xml.Pagination;
 import edu.asu.conceptpower.app.xml.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
+/**
+ * This class helps to convert the given object to json. This class loads the
+ * data from concept entry to concept message. If pagination details are passed,
+ * then pagination details and concept message details are added to
+ * ConceptMessagePagination class and final json is created.
+ * 
+ * @author karthikeyanmohan
+ *
+ */
 public class JsonConceptMessage implements IConceptMessage {
 
     private URIHelper uriCreator;
@@ -26,57 +34,45 @@ public class JsonConceptMessage implements IConceptMessage {
         this.uriCreator = uriCreator;
     }
 
-    public String getAllConceptMessage(Map<ConceptEntry, ConceptType> entries) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        List<ConceptMessageJson> conceptMessages = new ArrayList<>();
-        for (ConceptEntry entry : entries.keySet()) {
-            conceptMessages.add(getConceptMessage(entry, entries.get(entry)));
-        }
-        return mapper.writeValueAsString(conceptMessages);
+    public String getAllConceptEntries(Map<ConceptEntry, ConceptType> entries) throws JsonProcessingException {
+        return getAllConceptEntriesAndPaginationDetails(entries, null);
     }
 
-    private ConceptMessageJson getConceptMessage(ConceptEntry entry, ConceptType type) {
+    private ConceptMessage getConceptMessage(ConceptEntry entry, ConceptType type) {
 
-        ConceptMessageJson json = new ConceptMessageJson();
+        ConceptMessage json = new ConceptMessage();
 
         json.setId(entry.getId());
         json.setConceptUri(uriCreator.getURI(entry));
-        json.setLemma(StringEscapeUtils.escapeXml10(entry.getWord()));
+        json.setLemma(entry.getWord());
         json.setPos(entry.getPos());
-        json.setDescription(StringEscapeUtils.escapeXml10(entry.getDescription()));
-        json.setConceptList(StringEscapeUtils.escapeXml10(entry.getConceptList()));
+        json.setDescription(entry.getDescription());
+        json.setConceptList(entry.getConceptList());
 
         if (entry.getChangeEvents() != null && !entry.getChangeEvents().isEmpty()) {
             List<ChangeEvent> changeEvents = entry.getChangeEvents();
             Collections.sort(changeEvents);
-            json.setCreatorId(StringEscapeUtils.escapeXml10(changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : ""));
+            json.setCreatorId(changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : "");
         } else {
-            json.setCreatorId(
-                    StringEscapeUtils.escapeXml10(entry.getCreatorId() != null ? entry.getCreatorId().trim() : ""));
+            json.setCreatorId(entry.getCreatorId() != null ? entry.getCreatorId().trim() : "");
         }
 
-        json.setEqualTo(StringEscapeUtils.escapeXml10(entry.getEqualTo() != null ? entry.getEqualTo().trim() : ""));
-        json.setModifiedBy(
-                StringEscapeUtils.escapeXml10(entry.getModified() != null ? entry.getModified().trim() : ""));
-
-        json.setSimilarTo(
-                StringEscapeUtils.escapeXml10(entry.getSimilarTo() != null ? entry.getSimilarTo().trim() : ""));
-
-        json.setSynonymIds(
-                StringEscapeUtils.escapeXml10(entry.getSynonymIds() != null ? entry.getSynonymIds().trim() : ""));
+        json.setEqualTo(entry.getEqualTo() != null ? entry.getEqualTo().trim() : "");
+        json.setModifiedBy(entry.getModified() != null ? entry.getModified().trim() : "");
+        json.setSimilarTo(entry.getSimilarTo() != null ? entry.getSimilarTo().trim() : "");
+        json.setSynonymIds(entry.getSynonymIds() != null ? entry.getSynonymIds().trim() : "");
 
         if (type != null) {
             ConceptTypeJson jsonType = new ConceptTypeJson();
             jsonType.setTypeId(type.getTypeId());
             jsonType.setTypeUri(uriCreator.getTypeURI(type));
-            jsonType.setTypeName(StringEscapeUtils.escapeXml10(type.getTypeName()));
+            jsonType.setTypeName(type.getTypeName());
 
             json.setType(jsonType);
         }
 
         json.setDeleted(entry.isDeleted());
-        json.setWordnetId(
-                StringEscapeUtils.escapeXml10(entry.getWordnetId() != null ? entry.getWordnetId().trim() : ""));
+        json.setWordnetId(entry.getWordnetId() != null ? entry.getWordnetId().trim() : "");
         
         if (entry.getAlternativeIds() != null && !entry.getAlternativeIds().isEmpty()) {
             Map<String, String> uriMap = uriCreator.getUrisBasedOnIds(entry.getAlternativeIds());
@@ -94,8 +90,33 @@ public class JsonConceptMessage implements IConceptMessage {
         return json;
     }
 
-    public void appendDictionaries(List<ConceptList> lists) throws NotImplementedException {
-        throw new NotImplementedException();
+    @Override
+    public String appendErrorMessages(List<ObjectError> errors) throws JsonProcessingException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String appendErrorMessage(String errorMessage) throws JsonProcessingException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getAllConceptEntriesAndPaginationDetails(Map<ConceptEntry, ConceptType> entries,
+            Pagination pagination) throws JsonProcessingException {
+        List<ConceptMessage> conceptMessages = new ArrayList<>();
+        for (ConceptEntry entry : entries.keySet()) {
+            conceptMessages.add(getConceptMessage(entry, entries.get(entry)));
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        if (pagination != null) {
+            ConceptMessagePagination conceptMessagePagination = new ConceptMessagePagination();
+            conceptMessagePagination.setConceptEntries(conceptMessages);
+            conceptMessagePagination.setPagination(pagination);
+            return mapper.writeValueAsString(conceptMessagePagination);
+        }
+        return mapper.writeValueAsString(conceptMessages);
     }
 
 }

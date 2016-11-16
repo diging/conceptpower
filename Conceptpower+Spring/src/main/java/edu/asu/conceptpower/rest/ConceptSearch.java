@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.rest;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,10 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,13 +26,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.asu.conceptpower.app.constants.SearchFieldNames;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.xml.IConceptMessage;
 import edu.asu.conceptpower.app.xml.MessageRegistry;
+import edu.asu.conceptpower.app.xml.Pagination;
 import edu.asu.conceptpower.app.xml.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
@@ -38,6 +45,7 @@ import edu.asu.conceptpower.core.ConceptType;
  * 
  */
 @Controller
+@PropertySource("classpath:config.properties")
 public class ConceptSearch {
 
     @Autowired
@@ -52,6 +60,17 @@ public class ConceptSearch {
     @Autowired
     private URIHelper uriHelper;
 
+    @Value("${default_page_size}")
+    private int numberOfRecordsPerPage;
+
+    @Autowired
+    private ConceptSearchParameterValidator validator;
+
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.setValidator(validator);
+    }
+
     private static final Logger logger = LoggerFactory.getLogger(ConceptSearch.class);
 
     /**
@@ -64,45 +83,69 @@ public class ConceptSearch {
      * @return
      * @throws JsonProcessingException
      */
-    @RequestMapping(value = "rest/ConceptSearch", method = RequestMethod.GET, produces = {
+    @RequestMapping(value = "/ConceptSearch", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     public @ResponseBody ResponseEntity<String> searchConcept(HttpServletRequest req,
+            @Validated ConceptSearchParameters conceptSearchParameters, BindingResult result,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
-                    throws JsonProcessingException {
-        Map<String, String[]> queryParams = req.getParameterMap();
+                    throws JsonProcessingException, IllegalArgumentException, IllegalAccessException {
+
+        if (result.hasErrors()) {
+            IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
+            String errorMessage = msg.appendErrorMessages(result.getAllErrors());
+            return new ResponseEntity<String>(errorMessage, HttpStatus.BAD_REQUEST);
+        }
         Map<String, String> searchFields = new HashMap<String, String>();
         String operator = SearchParamters.OP_OR;
-        for (String key : queryParams.keySet()) {
-            if (key.trim().equals(SearchParamters.OPERATOR) && !queryParams.get(key)[0].trim().isEmpty()) {
-                operator = queryParams.get(key)[0].trim();
-            } else if (key.trim().equalsIgnoreCase(SearchFieldNames.TYPE_URI)) {
-                searchFields.put("type_id", uriHelper.getTypeId(queryParams.get(key)[0]));
-            } else {
-                searchFields.put(key.trim(), queryParams.get(key)[0]);
+
+        int page = 1;
+
+        for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.getName().equalsIgnoreCase("type_uri")) {
+                searchFields.put("type_id", uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
+            } else if (SearchParamters.OPERATOR.equalsIgnoreCase(field.getName())) {
+                // If the value is null, then operator will be OR by default
+                if (field.get(conceptSearchParameters) != null) {
+                    operator = String.valueOf(field.get(conceptSearchParameters));
+                }
+            } else if (SearchParamters.PAGE.equalsIgnoreCase(field.getName())) {
+                page = field.get(conceptSearchParameters) != null ? (Integer) field.get(conceptSearchParameters) : page;
+            } else if (SearchParamters.NUMBER_OF_RECORDS_PER_PAGE.equalsIgnoreCase(field.getName())) {
+                numberOfRecordsPerPage = field.get(conceptSearchParameters) != null
+                        ? (Integer) field.get(conceptSearchParameters) : numberOfRecordsPerPage;
+            } else if (field.get(conceptSearchParameters) != null) {
+                searchFields.put(field.getName().trim(), String.valueOf(field.get(conceptSearchParameters)));
             }
         }
-        ConceptEntry[] searchResults = null;
 
+        ConceptEntry[] searchResults = null;
+        int totalNumberOfRecords = 0;
         try {
-            searchResults = manager.searchForConcepts(searchFields, operator);
+            totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields, operator);
+            searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields, operator, page,
+                    numberOfRecordsPerPage);
         } catch (LuceneException ex) {
             logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (IllegalAccessException iae) {
-            logger.error("Illegal access exception", iae);
-            return new ResponseEntity<String>(iae.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (IndexerRunningException ire) {
             logger.info("Indexer running exception", ire);
             return new ResponseEntity<String>(ire.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
 
-        Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
+        if (searchResults.length == 0) {
+            // Data is not found but still returning OK as per review comments
+            IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
+            return new ResponseEntity<String>(msg.appendErrorMessage("No records found for the search condition."),
+                    HttpStatus.OK);
+        }
 
+        Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
         IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
         createEntryMap(searchResults, entryMap);
-
-        return new ResponseEntity<String>(msg.getAllConceptMessage(entryMap), HttpStatus.OK);
-
+        Pagination pagination = new Pagination(page, totalNumberOfRecords);
+        return new ResponseEntity<String>(msg.getAllConceptEntriesAndPaginationDetails(entryMap, pagination),
+                HttpStatus.OK);
     }
 
     private void createEntryMap(ConceptEntry[] searchResults, Map<ConceptEntry, ConceptType> entryMap) {

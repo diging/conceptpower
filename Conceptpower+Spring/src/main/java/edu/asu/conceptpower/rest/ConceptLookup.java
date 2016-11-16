@@ -64,7 +64,7 @@ public class ConceptLookup {
      * @return XML containing information of given concept for given POS
      * @throws JsonProcessingException
      */
-    @RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = {
+    @RequestMapping(value = "/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody ResponseEntity<String> getWordNetEntry(@PathVariable("word") String word,
             @PathVariable("pos") String pos,
@@ -83,16 +83,12 @@ public class ConceptLookup {
             logger.info("Indexer running exception", ie);
             return new ResponseEntity<String>(ie.getMessage(), HttpStatus.OK);
         }
-
         Map<ConceptEntry, ConceptType> entryMap = generateEntryMap(entries);
         IConceptMessage conceptMessage = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
-
         String xmlEntries = null;
         if (entries != null) {
-            xmlEntries = conceptMessage.getAllConceptMessage(entryMap);
-
+            xmlEntries = conceptMessage.getAllConceptEntries(entryMap);
         }
-
         return new ResponseEntity<String>(xmlEntries, HttpStatus.OK);
     }
 
@@ -109,7 +105,7 @@ public class ConceptLookup {
         return entryMap;
     }
 
-    @RequestMapping(value = "rest/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/rdf+xml")
+    @RequestMapping(value = "/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/rdf+xml")
     public @ResponseBody ResponseEntity<String> getWordNetEntryInRdf(@PathVariable("word") String word,
             @PathVariable("pos") String pos) {
         ConceptEntry[] entries = null;

@@ -93,7 +93,7 @@ public class Concepts {
      * @throws POSMismatchException
      */
     @PreAuthorize("isAuthenticated()")
-    @RequestMapping(value = "rest/concept/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/concept/add", method = RequestMethod.POST)
     public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
 
@@ -164,7 +164,7 @@ public class Concepts {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @RequestMapping(value = "rest/concepts/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/concepts/add", method = RequestMethod.POST)
     public ResponseEntity<String> addConcepts(@RequestBody String body, Principal principal)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
         StringReader reader = new StringReader(body);

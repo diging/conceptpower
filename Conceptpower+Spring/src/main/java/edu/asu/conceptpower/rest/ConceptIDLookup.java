@@ -67,7 +67,7 @@ public class ConceptIDLookup {
      * @return XML containing concept information
      * @throws JsonProcessingException
      */
-    @RequestMapping(value = "rest/Concept", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+    @RequestMapping(value = "/Concept", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE })
     public @ResponseBody ResponseEntity<String> getConceptById(@RequestParam String id,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
@@ -99,7 +99,7 @@ public class ConceptIDLookup {
                 entry = checkAndAddAlternativeIds(pathParts, lastIndex, entry);
             } catch (LuceneException e) {
                 logger.error("Lucene Exception", e);
-                return new ResponseEntity<String>(msg.getAllConceptMessage(entryMap), HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<String>("Lucene exception.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
             ConceptType type = null;
             if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
@@ -108,7 +108,7 @@ public class ConceptIDLookup {
             entryMap.put(entry, type);
         }
 
-        return new ResponseEntity<String>(msg.getAllConceptMessage(entryMap), HttpStatus.OK);
+        return new ResponseEntity<String>(msg.getAllConceptEntries(entryMap), HttpStatus.OK);
 
     }
 

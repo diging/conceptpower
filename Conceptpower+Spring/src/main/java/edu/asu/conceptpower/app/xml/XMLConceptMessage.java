@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.springframework.validation.ObjectError;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
@@ -27,7 +29,16 @@ public class XMLConceptMessage implements IConceptMessage {
     }
 
     @Override
-    public String getAllConceptMessage(Map<ConceptEntry, ConceptType> entries) {
+    public String getAllConceptEntriesAndPaginationDetails(Map<ConceptEntry, ConceptType> entries,
+            Pagination pagination) {
+        StringBuffer sb = new StringBuffer("");
+        sb.append(getAllConceptEntries(entries));
+        sb.append(appendPaginationDetails(pagination.getTotalNumberOfRecords(), pagination.getPageNumber()));
+        return sb.toString();
+    }
+
+    @Override
+    public String getAllConceptEntries(Map<ConceptEntry, ConceptType> entries) {
         StringBuilder xmlEntries = new StringBuilder();
 
         xmlEntries.append("<" + XMLJsonConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLJsonConstants.NAMESPACE_PREFIX + "=\""
@@ -153,8 +164,33 @@ public class XMLConceptMessage implements IConceptMessage {
         return sb.toString();
     }
 
-    public void appendDictionaries(List<ConceptList> lists) throws NotImplementedException {
-        throw new NotImplementedException();
+    @Override
+    public String appendErrorMessages(List<ObjectError> errors) {
+
+        StringBuilder sb = new StringBuilder();
+        for (ObjectError error : errors) {
+            sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + " ");
+            sb.append(XMLConstants.ERROR_MESSAGE + "=\"" + error.getDefaultMessage() + "\" ");
+            sb.append(">");
+            sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + ">");
+        }
+        return sb.toString();
+
     }
 
+    @Override
+    public String appendErrorMessage(String errorMessage) throws JsonProcessingException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public String appendPaginationDetails(int numberOfRecords, int pageNumber) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + " ");
+        sb.append(XMLConstants.NUMBER_OF_RECORDS + "=\"" + numberOfRecords + "\" ");
+        sb.append(XMLConstants.PAGE_NUMBER + "=\"" + pageNumber + "\" ");
+        sb.append(">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + ">");
+        return sb.toString();
+    }
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.xml.ITypeMessage;
 import edu.asu.conceptpower.app.xml.MessageRegistry;
@@ -37,16 +39,20 @@ public class TypeIdLookup {
     private MessageRegistry messageFactory;
 
 	/**
-	 * This method provides information of a type for a rest interface of the
-	 * form
-	 * "http://[server.url]/conceptpower/rest/Type?id={URI or ID of concept}"
-	 * 
-	 * @param req
-	 *            Holds HTTP request information
-	 * @return
-	 */
-	@RequestMapping(value = "rest/Type", method = RequestMethod.GET, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public @ResponseBody ResponseEntity<String> getTypeById(HttpServletRequest req, @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader) {
+     * This method provides information of a type for a rest interface of the
+     * form
+     * "http://[server.url]/conceptpower/rest/Type?id={URI or ID of concept}"
+     * 
+     * @param req
+     *            Holds HTTP request information
+     * @return
+     * @throws JsonProcessingException
+     */
+    @RequestMapping(value = "/Type", method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody ResponseEntity<String> getTypeById(HttpServletRequest req,
+            @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
+                    throws JsonProcessingException {
 
 		String id = req.getParameter("id");
 		if (id == null) {

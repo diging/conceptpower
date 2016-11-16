@@ -20,7 +20,7 @@ public class ConceptTypeJson {
 
     private String matches;
 
-    private ConceptSuperTypeJson superType;
+    private ConceptTypeJson superType;
 
     @JsonProperty("modified_by")
     private String modifiedBy;
@@ -81,11 +81,11 @@ public class ConceptTypeJson {
         this.modifiedBy = modifiedBy;
     }
 
-    public ConceptSuperTypeJson getSuperType() {
+    public ConceptTypeJson getSuperType() {
         return superType;
     }
 
-    public void setSuperType(ConceptSuperTypeJson superType) {
+    public void setSuperType(ConceptTypeJson superType) {
         this.superType = superType;
     }
 }

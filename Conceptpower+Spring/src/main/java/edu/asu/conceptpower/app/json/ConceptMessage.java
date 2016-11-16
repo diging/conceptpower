@@ -4,7 +4,14 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ConceptMessageJson {
+/**
+ * This class is used for serializing the concept entry details. This class will
+ * be serialized using Jackson
+ * 
+ * @author karthikeyanmohan
+ *
+ */
+public class ConceptMessage {
 
     private String id;
 

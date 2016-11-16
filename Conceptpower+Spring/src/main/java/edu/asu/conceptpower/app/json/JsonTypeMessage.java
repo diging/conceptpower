@@ -18,42 +18,30 @@ public class JsonTypeMessage implements ITypeMessage {
     }
 
     @Override
-    public String getConceptTypeMessage(ConceptType type, ConceptType supertype) {
-
-        ObjectMapper mapper = new ObjectMapper();
+    public String getConceptTypeMessage(ConceptType type, ConceptType supertype) throws JsonProcessingException {
 
         ConceptTypeJson jsonType = new ConceptTypeJson();
-
         if (type != null) {
             jsonType.setTypeId(type.getTypeId());
             jsonType.setTypeUri(uriCreator.getTypeURI(type));
         }
-
         jsonType.setDescription(StringEscapeUtils.escapeXml10(type.getDescription()));
         jsonType.setCreatorId(
                 StringEscapeUtils.escapeXml10(type.getCreatorId() != null ? type.getCreatorId().trim() : ""));
         jsonType.setMatches(StringEscapeUtils.escapeXml10(type.getMatches() != null ? type.getMatches().trim() : ""));
         jsonType.setModifiedBy(
                 StringEscapeUtils.escapeXml10(type.getModified() != null ? type.getModified().trim() : ""));
-
         // supertype
         if (supertype != null) {
-            ConceptSuperTypeJson superTypeJson = new ConceptSuperTypeJson();
+            ConceptTypeJson superTypeJson = new ConceptTypeJson();
             superTypeJson.setTypeId(supertype.getTypeId());
             superTypeJson.setTypeUri(uriCreator.getTypeURI(supertype));
             superTypeJson.setTypeName(StringEscapeUtils.escapeXml10(supertype.getTypeName()));
             jsonType.setSuperType(superTypeJson);
         }
 
-        String json = null;
-        try {
-            json = mapper.writeValueAsString(jsonType);
-        } catch (JsonProcessingException ex) {
-            // TODO
-            ex.printStackTrace();
-        }
-
-        return json;
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(jsonType);
     }
 
 }
