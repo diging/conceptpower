@@ -3,6 +3,7 @@ package edu.asu.conceptpower.rest;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,18 +98,20 @@ public class ConceptSearch {
         }
 
         Map<String, String> searchFields = new HashMap<String, String>();
-        String operator = SearchParamters.OP_OR;
+        String operator = SearchParamters.OP_AND;
         int page = 1;
 
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.getName().equalsIgnoreCase("type_uri")) {
-                searchFields.put("type_id",
-                        uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
+                if (field.get(conceptSearchParameters) != null) {
+                    searchFields.put("type_id",
+                            uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
+                }
             } else if (SearchParamters.OPERATOR.equalsIgnoreCase(field.getName())) {
                 // If the value is null, then operator will be OR by default
                 if (field.get(conceptSearchParameters) != null) {
-                    operator = String.valueOf(field.get(conceptSearchParameters));
+                    operator = String.valueOf(field.get(conceptSearchParameters)).toUpperCase();
                 }
             } else if (SearchParamters.PAGE.equalsIgnoreCase(field.getName())) {
                 page = field.get(conceptSearchParameters) != null
@@ -144,7 +147,7 @@ public class ConceptSearch {
             return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
         }
         
-        Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
+        Map<ConceptEntry, ConceptType> entryMap = new LinkedHashMap<ConceptEntry, ConceptType>();
 
         XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
         for (ConceptEntry entry : searchResults) {
