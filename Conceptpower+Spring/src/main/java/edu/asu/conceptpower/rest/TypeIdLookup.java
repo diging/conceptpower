@@ -19,7 +19,7 @@ import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.ITypeMessage;
 import edu.asu.conceptpower.rest.msg.MessageRegistry;
-import edu.asu.conceptpower.rest.xml.XMLConstants;
+import edu.asu.conceptpower.rest.msg.xml.XMLConstants;
 
 /**
  * This class provides a method to query types by their ids. It 

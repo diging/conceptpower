@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.rest.xml;
+package edu.asu.conceptpower.rest.msg.xml;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;

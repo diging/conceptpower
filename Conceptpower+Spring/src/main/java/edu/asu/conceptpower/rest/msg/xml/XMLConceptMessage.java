@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.rest.xml;
+package edu.asu.conceptpower.rest.msg.xml;
 
 import java.util.Collections;
 import java.util.List;

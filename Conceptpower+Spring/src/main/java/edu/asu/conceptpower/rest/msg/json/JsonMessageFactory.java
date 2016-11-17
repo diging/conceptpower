@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.rest.json;
+package edu.asu.conceptpower.rest.msg.json;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

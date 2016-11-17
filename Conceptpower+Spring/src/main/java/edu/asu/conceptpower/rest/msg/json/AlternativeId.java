@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.rest.json;
+package edu.asu.conceptpower.rest.msg.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

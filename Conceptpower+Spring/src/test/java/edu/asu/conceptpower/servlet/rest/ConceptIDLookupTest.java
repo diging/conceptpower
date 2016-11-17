@@ -23,7 +23,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.rest.ConceptIDLookup;
 import edu.asu.conceptpower.rest.msg.IMessageConverter;
 import edu.asu.conceptpower.rest.msg.MessageRegistry;
-import edu.asu.conceptpower.rest.xml.XMLConceptMessage;
+import edu.asu.conceptpower.rest.msg.xml.XMLConceptMessage;
 import junit.framework.Assert;
 
 public class ConceptIDLookupTest {
