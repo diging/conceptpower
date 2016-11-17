@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.xml;
+package edu.asu.conceptpower.rest.msg;
 
 public interface IMessageConverter {
 

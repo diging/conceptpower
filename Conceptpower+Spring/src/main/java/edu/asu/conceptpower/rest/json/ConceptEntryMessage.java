@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.json;
+package edu.asu.conceptpower.rest.json;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author karthikeyanmohan
  *
  */
-public class ConceptMessage {
+public class ConceptEntryMessage {
 
     private String id;
 
@@ -38,7 +38,7 @@ public class ConceptMessage {
     @JsonProperty("synonym_ids")
     private String synonymIds;
 
-    private ConceptTypeJson type;
+    private ConceptTypeMessage type;
 
     private boolean deleted;
 
@@ -127,11 +127,11 @@ public class ConceptMessage {
         this.synonymIds = synonymIds;
     }
 
-    public ConceptTypeJson getType() {
+    public ConceptTypeMessage getType() {
         return type;
     }
 
-    public void setType(ConceptTypeJson type) {
+    public void setType(ConceptTypeMessage type) {
         this.type = type;
     }
 

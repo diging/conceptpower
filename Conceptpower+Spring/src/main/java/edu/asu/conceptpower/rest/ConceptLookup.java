@@ -23,10 +23,10 @@ import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.rdf.RDFMessageFactory;
-import edu.asu.conceptpower.app.xml.IConceptMessage;
-import edu.asu.conceptpower.app.xml.MessageRegistry;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.rest.msg.IConceptMessage;
+import edu.asu.conceptpower.rest.msg.MessageRegistry;
 
 /**
  * This class provides a method to retrieve all concepts for a given word and

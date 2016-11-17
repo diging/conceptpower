@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
-import edu.asu.conceptpower.app.xml.ITypeMessage;
-import edu.asu.conceptpower.app.xml.MessageRegistry;
-import edu.asu.conceptpower.app.xml.XMLConstants;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.rest.msg.ITypeMessage;
+import edu.asu.conceptpower.rest.msg.MessageRegistry;
+import edu.asu.conceptpower.rest.xml.XMLConstants;
 
 /**
  * This class provides a method to query types by their ids. It 

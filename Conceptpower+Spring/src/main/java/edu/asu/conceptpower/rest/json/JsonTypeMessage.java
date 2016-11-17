@@ -1,13 +1,13 @@
-package edu.asu.conceptpower.app.json;
+package edu.asu.conceptpower.rest.json;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.asu.conceptpower.app.xml.ITypeMessage;
-import edu.asu.conceptpower.app.xml.URIHelper;
+import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.rest.msg.ITypeMessage;
 
 public class JsonTypeMessage implements ITypeMessage {
 
@@ -20,7 +20,7 @@ public class JsonTypeMessage implements ITypeMessage {
     @Override
     public String getConceptTypeMessage(ConceptType type, ConceptType supertype) throws JsonProcessingException {
 
-        ConceptTypeJson jsonType = new ConceptTypeJson();
+        ConceptTypeMessage jsonType = new ConceptTypeMessage();
         if (type != null) {
             jsonType.setTypeId(type.getTypeId());
             jsonType.setTypeUri(uriCreator.getTypeURI(type));
@@ -33,7 +33,7 @@ public class JsonTypeMessage implements ITypeMessage {
                 StringEscapeUtils.escapeXml10(type.getModified() != null ? type.getModified().trim() : ""));
         // supertype
         if (supertype != null) {
-            ConceptTypeJson superTypeJson = new ConceptTypeJson();
+            ConceptTypeMessage superTypeJson = new ConceptTypeMessage();
             superTypeJson.setTypeId(supertype.getTypeId());
             superTypeJson.setTypeUri(uriCreator.getTypeURI(supertype));
             superTypeJson.setTypeName(StringEscapeUtils.escapeXml10(supertype.getTypeName()));

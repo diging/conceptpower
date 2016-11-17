@@ -1,13 +1,13 @@
-package edu.asu.conceptpower.app.json;
+package edu.asu.conceptpower.rest.json;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import edu.asu.conceptpower.app.xml.IConceptMessage;
-import edu.asu.conceptpower.app.xml.IMessageConverter;
-import edu.asu.conceptpower.app.xml.ITypeMessage;
-import edu.asu.conceptpower.app.xml.URIHelper;
+import edu.asu.conceptpower.app.util.URIHelper;
+import edu.asu.conceptpower.rest.msg.IConceptMessage;
+import edu.asu.conceptpower.rest.msg.IMessageConverter;
+import edu.asu.conceptpower.rest.msg.ITypeMessage;
 
 @Component
 public class JsonMessageFactory implements IMessageConverter {

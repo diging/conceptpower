@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.xml;
+package edu.asu.conceptpower.rest.xml;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,8 +7,11 @@ import java.util.Map;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.validation.ObjectError;
 
+import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.rest.msg.IConceptMessage;
+import edu.asu.conceptpower.rest.msg.Pagination;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
 /**

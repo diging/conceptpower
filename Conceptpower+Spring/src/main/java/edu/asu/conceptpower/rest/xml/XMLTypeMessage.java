@@ -1,8 +1,10 @@
-package edu.asu.conceptpower.app.xml;
+package edu.asu.conceptpower.rest.xml;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.rest.msg.ITypeMessage;
 
 /**
  * This class is used to create XML responses for

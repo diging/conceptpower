@@ -1,8 +1,8 @@
-package edu.asu.conceptpower.app.json;
+package edu.asu.conceptpower.rest.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ConceptTypeJson {
+public class ConceptTypeMessage {
 
     @JsonProperty("type_id")
     private String typeId;
@@ -20,7 +20,7 @@ public class ConceptTypeJson {
 
     private String matches;
 
-    private ConceptTypeJson superType;
+    private ConceptTypeMessage superType;
 
     @JsonProperty("modified_by")
     private String modifiedBy;
@@ -81,11 +81,11 @@ public class ConceptTypeJson {
         this.modifiedBy = modifiedBy;
     }
 
-    public ConceptTypeJson getSuperType() {
+    public ConceptTypeMessage getSuperType() {
         return superType;
     }
 
-    public void setSuperType(ConceptTypeJson superType) {
+    public void setSuperType(ConceptTypeMessage superType) {
         this.superType = superType;
     }
 }

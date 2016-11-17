@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.json;
+package edu.asu.conceptpower.rest.json;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,11 +10,11 @@ import org.springframework.validation.ObjectError;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.asu.conceptpower.app.xml.IConceptMessage;
-import edu.asu.conceptpower.app.xml.Pagination;
-import edu.asu.conceptpower.app.xml.URIHelper;
+import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.rest.msg.IConceptMessage;
+import edu.asu.conceptpower.rest.msg.Pagination;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
 /**
@@ -43,9 +43,9 @@ public class JsonConceptMessage implements IConceptMessage {
         return getAllConceptEntriesAndPaginationDetails(entries, null);
     }
 
-    private ConceptMessage getConceptMessage(ConceptEntry entry, ConceptType type) {
+    private ConceptEntryMessage getConceptMessage(ConceptEntry entry, ConceptType type) {
 
-        ConceptMessage json = new ConceptMessage();
+        ConceptEntryMessage json = new ConceptEntryMessage();
 
         json.setId(entry.getId());
         json.setConceptUri(uriCreator.getURI(entry));
@@ -69,7 +69,7 @@ public class JsonConceptMessage implements IConceptMessage {
         json.setSynonymIds(entry.getSynonymIds() != null ? entry.getSynonymIds().trim() : "");
 
         if (type != null) {
-            ConceptTypeJson jsonType = new ConceptTypeJson();
+            ConceptTypeMessage jsonType = new ConceptTypeMessage();
             jsonType.setTypeId(type.getTypeId());
             jsonType.setTypeUri(uriCreator.getTypeURI(type));
             jsonType.setTypeName(type.getTypeName());
@@ -117,7 +117,7 @@ public class JsonConceptMessage implements IConceptMessage {
     @Override
     public String getAllConceptEntriesAndPaginationDetails(Map<ConceptEntry, ConceptType> entries,
             Pagination pagination) throws JsonProcessingException {
-        List<ConceptMessage> conceptMessages = new ArrayList<>();
+        List<ConceptEntryMessage> conceptMessages = new ArrayList<>();
         for (ConceptEntry entry : entries.keySet()) {
             conceptMessages.add(getConceptMessage(entry, entries.get(entry)));
         }

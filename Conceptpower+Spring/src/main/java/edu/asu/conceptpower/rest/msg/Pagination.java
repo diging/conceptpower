@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.xml;
+package edu.asu.conceptpower.rest.msg;
 
 /**
  * This class contians the pagination details. This class will be serialized
