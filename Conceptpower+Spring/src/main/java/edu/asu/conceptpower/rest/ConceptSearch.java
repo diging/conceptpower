@@ -3,6 +3,7 @@ package edu.asu.conceptpower.rest;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -146,7 +147,7 @@ public class ConceptSearch {
             return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.OK);
         }
         
-        Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
+        Map<ConceptEntry, ConceptType> entryMap = new LinkedHashMap<ConceptEntry, ConceptType>();
 
         XMLConceptMessage msg = messageFactory.createXMLConceptMessage();
         for (ConceptEntry entry : searchResults) {

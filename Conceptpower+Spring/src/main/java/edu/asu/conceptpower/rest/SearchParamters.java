@@ -2,7 +2,7 @@ package edu.asu.conceptpower.rest;
 
 public interface SearchParamters {
 
-	public final static String OPERATOR = "operator";
+    public final static String OPERATOR = "operator";
     public final static String OP_AND = "AND";
     public final static String OP_OR = "OR";
     public final static String PAGE = "page";
