@@ -96,12 +96,20 @@ $(document).ready(function() {
 });
 					
 $(document).ready(hideFormProcessing);
+$(document).ready(mergeConcepts);
 function hideFormProcessing() {
 	$('#floatingCirclesG').hide();
 }
 function showFormProcessing() {
 	$('#floatingCirclesG').show();
 }
+
+function mergeConcepts(conceptId) {
+    console.log(conceptId);
+    console.log("Merge column clicked");
+    return false;
+}
+
 </script>
 
 <header class="page-header">
@@ -212,6 +220,9 @@ function showFormProcessing() {
                     class="fa fa-trash disabled"></i>
                 </c:otherwise>
               </c:choose></td>
+              
+              <td> <a href="#" onclick="mergeConcepts(${concept.entry.id});">Merge concepts</a></td>
+            
           </sec:authorize>
           <td align="justify"><font size="2"> <a
               id="${concept.entry.id}" data-toggle="modal"
