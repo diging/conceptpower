@@ -41,9 +41,7 @@ public class XMLConceptMessage implements IConceptMessage {
         if (entries == null || entries.isEmpty()) {
             return getErrorMessage("No concept entry found.");
         }
-
         StringBuilder xmlEntries = new StringBuilder();
-
         xmlEntries.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
                 + XMLConstants.NAMESPACE + "\">");
 
@@ -51,7 +49,6 @@ public class XMLConceptMessage implements IConceptMessage {
             xmlEntries.append(getConceptMessage(entry, entries.get(entry)));
 
         xmlEntries.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
-
         return xmlEntries.toString();
     }
 
@@ -191,7 +188,7 @@ public class XMLConceptMessage implements IConceptMessage {
         return sb.toString();
     }
 
-    public String appendPaginationDetails(int numberOfRecords, int pageNumber) {
+    private String appendPaginationDetails(int numberOfRecords, int pageNumber) {
         StringBuilder sb = new StringBuilder();
         sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + " ");
         sb.append(XMLConstants.NUMBER_OF_RECORDS + "=\"" + numberOfRecords + "\" ");

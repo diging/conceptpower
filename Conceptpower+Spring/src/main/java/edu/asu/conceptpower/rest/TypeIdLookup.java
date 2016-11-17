@@ -72,7 +72,7 @@ public class TypeIdLookup {
 
         if (typeId.startsWith(XMLConstants.TYPE_PREFIX)) {
             typeId = typeId.substring(XMLConstants.TYPE_PREFIX.length());
-		}
+        }
 
 		ConceptType type = typeManager.getType(typeId);
 		
