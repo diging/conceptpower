@@ -35,6 +35,11 @@ public class JsonConceptMessage implements IConceptMessage {
     }
 
     public String getAllConceptEntries(Map<ConceptEntry, ConceptType> entries) throws JsonProcessingException {
+        if (entries == null || entries.isEmpty()) {
+            ErrorMessage errorMessage = new ErrorMessage("No concept entry found.");
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(errorMessage);
+        }
         return getAllConceptEntriesAndPaginationDetails(entries, null);
     }
 
@@ -52,7 +57,8 @@ public class JsonConceptMessage implements IConceptMessage {
         if (entry.getChangeEvents() != null && !entry.getChangeEvents().isEmpty()) {
             List<ChangeEvent> changeEvents = entry.getChangeEvents();
             Collections.sort(changeEvents);
-            json.setCreatorId(changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : "");
+            json.setCreatorId(
+                    changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : "");
         } else {
             json.setCreatorId(entry.getCreatorId() != null ? entry.getCreatorId().trim() : "");
         }
@@ -73,7 +79,7 @@ public class JsonConceptMessage implements IConceptMessage {
 
         json.setDeleted(entry.isDeleted());
         json.setWordnetId(entry.getWordnetId() != null ? entry.getWordnetId().trim() : "");
-        
+
         if (entry.getAlternativeIds() != null && !entry.getAlternativeIds().isEmpty()) {
             Map<String, String> uriMap = uriCreator.getUrisBasedOnIds(entry.getAlternativeIds());
             if (uriMap != null && !uriMap.isEmpty()) {
@@ -91,15 +97,21 @@ public class JsonConceptMessage implements IConceptMessage {
     }
 
     @Override
-    public String appendErrorMessages(List<ObjectError> errors) throws JsonProcessingException {
-        // TODO Auto-generated method stub
-        return null;
+    public String getErrorMessages(List<ObjectError> errors) throws JsonProcessingException {
+        List<ErrorMessage> errorMessages = new ArrayList<>();
+        for (ObjectError error : errors) {
+            ErrorMessage errorMessage = new ErrorMessage(error.getDefaultMessage());
+            errorMessages.add(errorMessage);
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(errorMessages);
     }
 
     @Override
-    public String appendErrorMessage(String errorMessage) throws JsonProcessingException {
-        // TODO Auto-generated method stub
-        return null;
+    public String getErrorMessage(String errorMessage) throws JsonProcessingException {
+        ErrorMessage errorMessageObj = new ErrorMessage(errorMessage);
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(errorMessageObj);
     }
 
     @Override

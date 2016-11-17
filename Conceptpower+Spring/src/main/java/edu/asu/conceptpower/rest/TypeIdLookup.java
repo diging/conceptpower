@@ -18,7 +18,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.xml.ITypeMessage;
 import edu.asu.conceptpower.app.xml.MessageRegistry;
-import edu.asu.conceptpower.app.xml.XMLJsonConstants;
+import edu.asu.conceptpower.app.xml.XMLConstants;
 import edu.asu.conceptpower.core.ConceptType;
 
 /**
@@ -70,8 +70,8 @@ public class TypeIdLookup {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 
-		if (typeId.startsWith(XMLJsonConstants.TYPE_PREFIX)) {
-			typeId = typeId.substring(XMLJsonConstants.TYPE_PREFIX.length());
+        if (typeId.startsWith(XMLConstants.TYPE_PREFIX)) {
+            typeId = typeId.substring(XMLConstants.TYPE_PREFIX.length());
 		}
 
 		ConceptType type = typeManager.getType(typeId);

@@ -7,8 +7,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.validation.ObjectError;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
@@ -39,15 +37,20 @@ public class XMLConceptMessage implements IConceptMessage {
 
     @Override
     public String getAllConceptEntries(Map<ConceptEntry, ConceptType> entries) {
+
+        if (entries == null || entries.isEmpty()) {
+            return getErrorMessage("No concept entry found.");
+        }
+
         StringBuilder xmlEntries = new StringBuilder();
 
-        xmlEntries.append("<" + XMLJsonConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLJsonConstants.NAMESPACE_PREFIX + "=\""
-                + XMLJsonConstants.NAMESPACE + "\">");
+        xmlEntries.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
+                + XMLConstants.NAMESPACE + "\">");
 
         for (ConceptEntry entry : entries.keySet())
             xmlEntries.append(getConceptMessage(entry, entries.get(entry)));
 
-        xmlEntries.append("</" + XMLJsonConstants.CONCEPTPOWER_ANSWER + ">");
+        xmlEntries.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
 
         return xmlEntries.toString();
     }
@@ -55,117 +58,117 @@ public class XMLConceptMessage implements IConceptMessage {
     private String getConceptMessage(ConceptEntry entry, ConceptType type) {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CONCEPT_ENTRY + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_ENTRY + ">");
 
         // id
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ID + " ");
-        sb.append(XMLJsonConstants.CONCEPT_ID + "=\"" + entry.getId() + "\" ");
-        sb.append(XMLJsonConstants.CONCEPT_URI + "=\"" + uriCreator.getURI(entry) + "\"");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + " ");
+        sb.append(XMLConstants.CONCEPT_ID + "=\"" + entry.getId() + "\" ");
+        sb.append(XMLConstants.CONCEPT_URI + "=\"" + uriCreator.getURI(entry) + "\"");
         sb.append(">");
         sb.append(uriCreator.getURI(entry));
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ID + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + ">");
 
         // lemma
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.LEMMA + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.LEMMA + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getWord()));
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.LEMMA + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.LEMMA + ">");
 
         // pos
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.POS + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.POS + ">");
         sb.append(entry.getPos());
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.POS + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.POS + ">");
 
         // description
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.DESCRIPTION + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.DESCRIPTION + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getDescription()));
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.DESCRIPTION + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.DESCRIPTION + ">");
 
         // concept list
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CONCEPT_LIST + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_LIST + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getConceptList()));
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CONCEPT_LIST + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_LIST + ">");
 
         // creator id
         if (entry.getChangeEvents() != null && !entry.getChangeEvents().isEmpty()) {
             List<ChangeEvent> changeEvents = entry.getChangeEvents();
             Collections.sort(changeEvents);
-            sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CREATOR_ID + ">");
+            sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
             sb.append(StringEscapeUtils.escapeXml10(
                     changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : ""));
-            sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CREATOR_ID + ">");
+            sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
         } else {
             // creator id
-            sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CREATOR_ID + ">");
+            sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
             sb.append(StringEscapeUtils.escapeXml10(entry.getCreatorId() != null ? entry.getCreatorId().trim() : ""));
-            sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CREATOR_ID + ">");
+            sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CREATOR_ID + ">");
         }
 
         // equal to
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.EQUAL_TO + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.EQUAL_TO + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getEqualTo() != null ? entry.getEqualTo().trim() : ""));
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.EQUAL_TO + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.EQUAL_TO + ">");
 
         // modified by
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.MODIFIED_BY + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.MODIFIED_BY + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getModified() != null ? entry.getModified().trim() : ""));
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.MODIFIED_BY + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.MODIFIED_BY + ">");
 
         // similar to
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.SIMILAR_TO + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.SIMILAR_TO + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getSimilarTo() != null ? entry.getSimilarTo().trim() : ""));
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.SIMILAR_TO + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.SIMILAR_TO + ">");
 
         // synonym ids
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.SYNONYM_IDS + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.SYNONYM_IDS + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getSynonymIds() != null ? entry.getSynonymIds().trim() : ""));
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.SYNONYM_IDS + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.SYNONYM_IDS + ">");
 
         // type
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.TYPE + " ");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.TYPE + " ");
         if (type != null) {
-            sb.append(XMLJsonConstants.TYPE_ID_ATTR + "=\"" + type.getTypeId() + "\" ");
-            sb.append(XMLJsonConstants.TYPE_URI_ATTR + "=\"" + uriCreator.getTypeURI(type) + "\"");
+            sb.append(XMLConstants.TYPE_ID_ATTR + "=\"" + type.getTypeId() + "\" ");
+            sb.append(XMLConstants.TYPE_URI_ATTR + "=\"" + uriCreator.getTypeURI(type) + "\"");
         }
         sb.append(">");
         if (type != null)
             sb.append(StringEscapeUtils.escapeXml10(type.getTypeName()));
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.TYPE + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.TYPE + ">");
 
         // is deleted
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.IS_DELETED + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.IS_DELETED + ">");
         sb.append(entry.isDeleted() + "");
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.IS_DELETED + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.IS_DELETED + ">");
 
         // wordnet id
-        sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.WORDNET_ID + ">");
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.WORDNET_ID + ">");
         sb.append(StringEscapeUtils.escapeXml10(entry.getWordnetId() != null ? entry.getWordnetId().trim() : ""));
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.WORDNET_ID + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.WORDNET_ID + ">");
 
         // Adding alternative ids and their corresponding uris
         if (entry.getAlternativeIds() != null && !entry.getAlternativeIds().isEmpty()) {
             Map<String, String> uriMap = uriCreator.getUrisBasedOnIds(entry.getAlternativeIds());
             if (uriMap != null && !uriMap.isEmpty()) {
-                sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ALTERNATIVE_IDS + ">");
+                sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ALTERNATIVE_IDS + ">");
                 for (Map.Entry<String, String> uri : uriMap.entrySet()) {
-                    sb.append("<" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ID + " ");
-                    sb.append(XMLJsonConstants.CONCEPT_ID + "=\"" + uri.getKey() + "\" ");
-                    sb.append(XMLJsonConstants.CONCEPT_URI + "=\"" + uri.getValue() + "\"");
+                    sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + " ");
+                    sb.append(XMLConstants.CONCEPT_ID + "=\"" + uri.getKey() + "\" ");
+                    sb.append(XMLConstants.CONCEPT_URI + "=\"" + uri.getValue() + "\"");
                     sb.append(">");
                     sb.append(uri.getValue());
-                    sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ID + ">");
+                    sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + ">");
                 }
-                sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.ALTERNATIVE_IDS + ">");
+                sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ALTERNATIVE_IDS + ">");
             }
 
         }
 
-        sb.append("</" + XMLJsonConstants.NAMESPACE_PREFIX + ":" + XMLJsonConstants.CONCEPT_ENTRY + ">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_ENTRY + ">");
 
         return sb.toString();
     }
 
     @Override
-    public String appendErrorMessages(List<ObjectError> errors) {
+    public String getErrorMessages(List<ObjectError> errors) {
 
         StringBuilder sb = new StringBuilder();
         for (ObjectError error : errors) {
@@ -179,9 +182,13 @@ public class XMLConceptMessage implements IConceptMessage {
     }
 
     @Override
-    public String appendErrorMessage(String errorMessage) throws JsonProcessingException {
-        // TODO Auto-generated method stub
-        return null;
+    public String getErrorMessage(String errorMessage) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + " ");
+        sb.append(XMLConstants.ERROR_MESSAGE + "=\"" + errorMessage + "\" ");
+        sb.append(">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + ">");
+        return sb.toString();
     }
 
     public String appendPaginationDetails(int numberOfRecords, int pageNumber) {

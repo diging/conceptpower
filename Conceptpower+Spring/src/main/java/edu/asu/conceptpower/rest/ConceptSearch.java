@@ -92,7 +92,7 @@ public class ConceptSearch {
 
         if (result.hasErrors()) {
             IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
-            String errorMessage = msg.appendErrorMessages(result.getAllErrors());
+            String errorMessage = msg.getErrorMessages(result.getAllErrors());
             return new ResponseEntity<String>(errorMessage, HttpStatus.BAD_REQUEST);
         }
         Map<String, String> searchFields = new HashMap<String, String>();
@@ -136,7 +136,7 @@ public class ConceptSearch {
         if (searchResults.length == 0) {
             // Data is not found but still returning OK as per review comments
             IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
-            return new ResponseEntity<String>(msg.appendErrorMessage("No records found for the search condition."),
+            return new ResponseEntity<String>(msg.getErrorMessage("No records found for the search condition."),
                     HttpStatus.OK);
         }
 

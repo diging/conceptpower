@@ -17,9 +17,9 @@ public interface IConceptMessage {
     public String getAllConceptEntriesAndPaginationDetails(Map<ConceptEntry, ConceptType> entries,
             Pagination pagination) throws JsonProcessingException;
 
-    public String appendErrorMessages(List<ObjectError> errors) throws JsonProcessingException;
+    public String getErrorMessages(List<ObjectError> errors) throws JsonProcessingException;
 
-    public String appendErrorMessage(String errorMessage) throws JsonProcessingException;
+    public String getErrorMessage(String errorMessage) throws JsonProcessingException;
 
 }
 
