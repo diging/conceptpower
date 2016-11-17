@@ -2,6 +2,7 @@ package edu.asu.conceptpower.rest;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -103,11 +104,14 @@ public class ConceptSearch {
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.getName().equalsIgnoreCase("type_uri")) {
-                searchFields.put("type_id", uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
+                if (field.get(conceptSearchParameters) != null) {
+                    searchFields.put("type_id",
+                            uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
+                }
             } else if (SearchParamters.OPERATOR.equalsIgnoreCase(field.getName())) {
                 // If the value is null, then operator will be OR by default
                 if (field.get(conceptSearchParameters) != null) {
-                    operator = String.valueOf(field.get(conceptSearchParameters));
+                    operator = String.valueOf(field.get(conceptSearchParameters)).toUpperCase();
                 }
             } else if (SearchParamters.PAGE.equalsIgnoreCase(field.getName())) {
                 page = field.get(conceptSearchParameters) != null ? (Integer) field.get(conceptSearchParameters) : page;
@@ -139,8 +143,7 @@ public class ConceptSearch {
             return new ResponseEntity<String>(msg.getErrorMessage("No records found for the search condition."),
                     HttpStatus.OK);
         }
-
-        Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
+        Map<ConceptEntry, ConceptType> entryMap = new LinkedHashMap<ConceptEntry, ConceptType>();
         IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
         createEntryMap(searchResults, entryMap);
         Pagination pagination = new Pagination(page, totalNumberOfRecords);

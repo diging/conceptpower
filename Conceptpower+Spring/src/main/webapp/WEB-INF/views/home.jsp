@@ -13,6 +13,7 @@ $(document).ready(function() {
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
 		"bAutoWidth" : false,
+		"aaSorting" : [],
 		"aoColumnDefs" : [ 
 				<sec:authorize access="isAuthenticated()">
 			    {
@@ -42,14 +43,7 @@ $(document).ready(function() {
   			    	}
   			    }
   				</sec:authorize>
-		],
-				
-		<sec:authorize access="isAuthenticated()">
-			"order": [[ 2, "desc" ]]
-		</sec:authorize>
-		<sec:authorize access="not isAuthenticated()">
-			"order": [[ 0, "desc" ]]
-		</sec:authorize>
+		]
 	});
 	$('#viafSearchResult').dataTable({
 		"bJQueryUI" : true,
