@@ -97,18 +97,20 @@ public class ConceptSearch {
         }
 
         Map<String, String> searchFields = new HashMap<String, String>();
-        String operator = SearchParamters.OP_OR;
+        String operator = SearchParamters.OP_AND;
         int page = 1;
 
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.getName().equalsIgnoreCase("type_uri")) {
-                searchFields.put("type_id",
-                        uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
+                if (field.get(conceptSearchParameters) != null) {
+                    searchFields.put("type_id",
+                            uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
+                }
             } else if (SearchParamters.OPERATOR.equalsIgnoreCase(field.getName())) {
                 // If the value is null, then operator will be OR by default
                 if (field.get(conceptSearchParameters) != null) {
-                    operator = String.valueOf(field.get(conceptSearchParameters));
+                    operator = String.valueOf(field.get(conceptSearchParameters)).toUpperCase();
                 }
             } else if (SearchParamters.PAGE.equalsIgnoreCase(field.getName())) {
                 page = field.get(conceptSearchParameters) != null
