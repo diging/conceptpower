@@ -90,7 +90,6 @@ $(document).ready(function() {
 });
 					
 $(document).ready(hideFormProcessing);
-$(document).ready(mergeConcepts);
 function hideFormProcessing() {
 	$('#floatingCirclesG').hide();
 }
@@ -103,6 +102,16 @@ function mergeConcepts(conceptId) {
     console.log("Merge column clicked");
     return false;
 }
+
+
+function generateCheckBoxes() {
+    console.log('Generate Check bix if user is logged in');
+    <sec:authorize access="isAuthenticated()">
+    	console.log('User is logged in');
+    	console.log('Generate check boxes');
+    </sec:authorize>
+}
+
 
 </script>
 
@@ -124,7 +133,7 @@ function mergeConcepts(conceptId) {
       <form:input path="word" placeholder="Enter search term"
         class="form-control" />
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-2">
       <form:select path="pos" name="pos" class="form-control">
         <form:options items="${conceptSearchBean.posMap}" />
       </form:select>
@@ -133,6 +142,10 @@ function mergeConcepts(conceptId) {
       <input type="submit" value="Search" class="btn btn-action"
         onclick="showFormProcessing()" onsubmit="hideFormProcessing()">
     </div>
+    <div class="col-sm-2">
+      <input type="button" value="Merge Concepts" class="btn btn-action" onclick="generateCheckBoxes();">
+    </div>
+    
   </div>
 
   <div class="row">
@@ -215,8 +228,6 @@ function mergeConcepts(conceptId) {
                 </c:otherwise>
               </c:choose></td>
               
-              <td> <a href="#" onclick="mergeConcepts(${concept.entry.id});">Merge concepts</a></td>
-            
           </sec:authorize>
           <td align="justify"><font size="2"> <a
               id="${concept.entry.id}" data-toggle="modal"
