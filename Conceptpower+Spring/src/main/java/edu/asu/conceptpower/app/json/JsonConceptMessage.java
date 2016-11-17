@@ -109,14 +109,12 @@ public class JsonConceptMessage implements IConceptMessage {
         for (ConceptEntry entry : entries.keySet()) {
             conceptMessages.add(getConceptMessage(entry, entries.get(entry)));
         }
+
+        ConceptResult conceptResult = new ConceptResult();
+        conceptResult.setConceptEntries(conceptMessages);
+        conceptResult.setPagination(pagination);
         ObjectMapper mapper = new ObjectMapper();
-        if (pagination != null) {
-            ConceptMessagePagination conceptMessagePagination = new ConceptMessagePagination();
-            conceptMessagePagination.setConceptEntries(conceptMessages);
-            conceptMessagePagination.setPagination(pagination);
-            return mapper.writeValueAsString(conceptMessagePagination);
-        }
-        return mapper.writeValueAsString(conceptMessages);
+        return mapper.writeValueAsString(conceptResult);
     }
 
 }

@@ -5,14 +5,16 @@ import java.util.List;
 import edu.asu.conceptpower.app.xml.Pagination;
 
 /**
- * This class contains list of concept entries message and the pagination
- * details. In future we can add other utility classes similar to pagination and
- * frame the final message using this class.
+ * This class will be serialized through Jackson for Json objects. This class
+ * will contain all the objects that needs to be serialized. Currently, apart
+ * from ConceptMessage we have Pagination object, but in future if we introduce
+ * any new utilities that needs to be added to JSON, we can create that object
+ * and add it to the ConceptResult class.
  * 
  * @author karthikeyanmohan
  *
  */
-public class ConceptMessagePagination {
+public class ConceptResult {
 
     private List<ConceptMessage> conceptEntries;
     private Pagination pagination;
