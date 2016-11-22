@@ -320,7 +320,8 @@ public class Concepts {
     }
 
 
-    private ConceptEntry createEntry(JSONObject jsonObject, String username) {
+    private ConceptEntry createEntry(JSONObject jsonObject, String username)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
         ConceptEntry conceptEntry = new ConceptEntry();
         if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
             conceptEntry.setWordnetId(jsonObject.get(JsonFields.WORDNET_ID).toString());

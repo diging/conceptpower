@@ -29,6 +29,7 @@ public class ConceptEntry implements Serializable {
     private static final long serialVersionUID = 4569090620671054560L;
 
     @Id
+    @SearchField(fieldName = SearchFieldNames.ID)
     @LuceneField(lucenefieldName = LuceneFieldNames.ID, isIndexable = false)
     private String id;
 

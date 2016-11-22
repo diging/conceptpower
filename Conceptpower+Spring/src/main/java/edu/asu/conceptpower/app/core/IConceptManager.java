@@ -22,7 +22,8 @@ public interface IConceptManager {
      *            of entry
      * @return Entry for ID or null.
      */
-    public abstract ConceptEntry getConceptEntry(String id);
+    public abstract ConceptEntry getConceptEntry(String id)
+            throws IllegalAccessException, LuceneException, IndexerRunningException;
 
     /**
      * Get an entry from WordNet given its WordNet ID.
@@ -77,7 +78,8 @@ public interface IConceptManager {
      *         with the given id. This method will never return null only filled
      *         or empty arrays.
      */
-    public abstract ConceptEntry[] getSynonymsForConcept(String id) throws LuceneException;
+    public abstract ConceptEntry[] getSynonymsForConcept(String id)
+            throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
      * This method returns an array of concept entries that have words that
@@ -121,7 +123,8 @@ public interface IConceptManager {
     public abstract void storeModifiedConcept(ConceptEntry entry, String userName)
             throws LuceneException, IllegalAccessException, IndexerRunningException;
 
-    public abstract void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException;
+    public abstract void deleteConcept(String id, String userName)
+            throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
      * Fetches the concept wrapped entries based on the wordnet id

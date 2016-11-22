@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
+import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.xml.XMLConceptMessage;
 import edu.asu.conceptpower.app.xml.XMLMessageFactory;
@@ -50,15 +51,18 @@ public class SynonymSearch {
     private static final Logger logger = LoggerFactory.getLogger(SynonymSearch.class);
 
 	/**
-	 * This method provides information of synonyms of a word for a rest
-	 * interface of the form
-	 * "http://[server.url]/conceptpower/rest/SynonymSearch?id={URI or ID of concept you want synonyms for}"
-	 * 
-	 * @param req
-	 * @return
-	 */
+     * This method provides information of synonyms of a word for a rest
+     * interface of the form
+     * "http://[server.url]/conceptpower/rest/SynonymSearch?id={URI or ID of concept you want synonyms for}"
+     * 
+     * @param req
+     * @return
+     * @throws IndexerRunningException
+     * @throws IllegalAccessException
+     */
     @RequestMapping(value = "/SynonymSearch", method = RequestMethod.GET, produces = "application/xml")
-	public @ResponseBody ResponseEntity<String> getSynonymsForId(HttpServletRequest req) {
+    public @ResponseBody ResponseEntity<String> getSynonymsForId(HttpServletRequest req)
+            throws IllegalAccessException, IndexerRunningException {
 
 		// construct the URL to the Wordnet dictionary directory
 		String id = req.getParameter("id");

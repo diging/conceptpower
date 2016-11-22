@@ -8,6 +8,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -41,6 +43,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
@@ -101,6 +105,11 @@ public class LuceneUtility implements ILuceneUtility {
     private Directory index;
     private Path relativePath = null;
     private IndexSearcher searcher = null;
+
+    // This map has the key as CCP id and value as wordnet ids associated
+    private Map<String, Set<String>> ccpAlternativeIdMap = new HashMap<>();
+    // Multivalue map holds the key as a list of String
+    private MultiValueMap<String, String> wordNetAlternativeIdMap = new LinkedMultiValueMap<>();
 
     /**
      * 
@@ -164,6 +173,14 @@ public class LuceneUtility implements ILuceneUtility {
                         // data from ConceptManager
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName().toLowerCase(),
                                 String.valueOf(contentOfField), Field.Store.YES));
+                    } else if (searchFieldAnnotation.lucenefieldName()
+                            .equalsIgnoreCase(LuceneFieldNames.ALTERNATIVE_IDS)) {
+                        // Gets the alternative ids from the map.
+                        // CCP Alternative Map contains its own id as value
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
+                                StringUtils.join(ccpAlternativeIdMap.get(String.valueOf(entry.getId())), ','),
+                                Field.Store.YES));
+
                     } else {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
@@ -278,6 +295,21 @@ public class LuceneUtility implements ILuceneUtility {
         // adding all wordnet concepts from jwi.
         doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY.toLowerCase(),
                 Field.Store.YES));
+        
+        // Adding alternative ids
+        Set<String> alternativeIds = new HashSet<>();
+        // Adding the same id as alternative id
+        alternativeIds.add(word.getID().toString());
+        if(wordNetAlternativeIdMap.get(word.getID().toString()) != null) {
+            List<String> ccpIds = wordNetAlternativeIdMap.get(word.getID().toString());
+            for (String ccpId : ccpIds) {
+                alternativeIds.add(ccpId);
+            }
+        }
+        
+        doc.add(new StringField(LuceneFieldNames.ALTERNATIVE_IDS, StringUtils.join(alternativeIds, ','),
+                Field.Store.YES));
+
         return doc;
     }
 
@@ -315,6 +347,8 @@ public class LuceneUtility implements ILuceneUtility {
      */
     @Override
     public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
+
+        loadAlternativeIdsMap();
 
         String wnhome = configuration.getWordnetPath();
         String path = wnhome + File.separator + configuration.getDictFolder();
@@ -389,46 +423,33 @@ public class LuceneUtility implements ILuceneUtility {
         }
     }
 
-    public Map<String, Set<String>> getAlternativeIdsMap() throws LuceneException {
-        Map<String, Set<String>> alternativeIdsMap = new HashMap<>();
-
-        // This map has the key as CCP id and value as wordnet ids associated
-        Map<String, Set<String>> ccpAlternativeIdMap = new HashMap<>();
-        String wnhome = configuration.getWordnetPath();
-        String path = wnhome + File.separator + configuration.getDictFolder();
-        URL url;
-        try {
-            url = new URL("file", null, path);
-        } catch (MalformedURLException e) {
-            throw new LuceneException(e);
-        }
-
-        IDictionary dict = new Dictionary(url);
-
-
-        for (POS pos : POS.values()) {
-            Iterator<IIndexWord> iterator = dict.getIndexWordIterator(pos);
-        }
+    private void loadAlternativeIdsMap() {
 
         List<ConceptEntry> conceptEntriesList = (List<ConceptEntry>) databaseClient
                 .getAllElementsOfType(ConceptEntry.class);
 
         for (ConceptEntry conceptEntry : conceptEntriesList) {
             Set<String> alternativeIds = new HashSet<>();
-            for(String wordNetID : conceptEntry.getWordnetId().split(",")) {
-                if(!wordNetID.trim().equalsIgnoreCase("")) {
-                    alternativeIds.add(wordNetID);
+            alternativeIds.add(conceptEntry.getId());
+
+            List<String> conceptEntryId = new ArrayList<>();
+            conceptEntryId.add(conceptEntry.getId());
+
+            if (conceptEntry.getWordnetId() != null) {
+                for (String wordNetID : conceptEntry.getWordnetId().split(",")) {
+                    wordNetAlternativeIdMap.put(wordNetID, conceptEntryId);
+                    if (!wordNetID.trim().equalsIgnoreCase("")) {
+                        alternativeIds.add(wordNetID);
+                    }
                 }
             }
-            
-            if(!alternativeIds.isEmpty()) {
+
+            if (!alternativeIds.isEmpty()) {
                 ccpAlternativeIdMap.put(conceptEntry.getId(), alternativeIds);
             }
-            
         }
-
-        return alternativeIdsMap;
     }
+
 
     /**
      * This method fetches the concept power by iterating the fieldMap. The
