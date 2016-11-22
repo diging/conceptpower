@@ -1,7 +1,5 @@
 package edu.asu.conceptpower.rest.msg.json;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,18 +23,17 @@ public class JsonTypeMessage implements ITypeMessage {
             jsonType.setTypeId(type.getTypeId());
             jsonType.setTypeUri(uriCreator.getTypeURI(type));
         }
-        jsonType.setDescription(StringEscapeUtils.escapeXml10(type.getDescription()));
+        jsonType.setDescription(type.getDescription());
         jsonType.setCreatorId(
-                StringEscapeUtils.escapeXml10(type.getCreatorId() != null ? type.getCreatorId().trim() : ""));
-        jsonType.setMatches(StringEscapeUtils.escapeXml10(type.getMatches() != null ? type.getMatches().trim() : ""));
-        jsonType.setModifiedBy(
-                StringEscapeUtils.escapeXml10(type.getModified() != null ? type.getModified().trim() : ""));
+                type.getCreatorId() != null ? type.getCreatorId().trim() : "");
+        jsonType.setMatches(type.getMatches() != null ? type.getMatches().trim() : "");
+        jsonType.setModifiedBy(type.getModified() != null ? type.getModified().trim() : "");
         // supertype
         if (supertype != null) {
             ConceptTypeMessage superTypeJson = new ConceptTypeMessage();
             superTypeJson.setTypeId(supertype.getTypeId());
             superTypeJson.setTypeUri(uriCreator.getTypeURI(supertype));
-            superTypeJson.setTypeName(StringEscapeUtils.escapeXml10(supertype.getTypeName()));
+            superTypeJson.setTypeName(supertype.getTypeName() != null ? supertype.getTypeName() : "");
             jsonType.setSuperType(superTypeJson);
         }
 

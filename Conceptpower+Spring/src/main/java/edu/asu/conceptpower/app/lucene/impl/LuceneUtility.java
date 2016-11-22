@@ -160,8 +160,8 @@ public class LuceneUtility implements ILuceneUtility {
                         // because if we make it lowercase for wordnet id and
                         // concept id, it creates problem while fetching the
                         // data from ConceptManager
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName().toLowerCase(),
-                                String.valueOf(contentOfField), Field.Store.YES));
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
+                                String.valueOf(contentOfField).toLowerCase(), Field.Store.YES));
                     } else {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
@@ -236,9 +236,7 @@ public class LuceneUtility implements ILuceneUtility {
             for (IWordID wordId : wordIdds) {
                 IWord word = dict.getWord(wordId);
                 List<ConceptEntry> entries = databaseClient.getConceptByWordnetId(word.getID().toString());
-                if (entries != null && !entries.isEmpty()) {
-                    logger.debug("Found concept for " + wordId.toString());
-                } else {
+                if (entries == null || entries.isEmpty()) {
                     Document doc = createIndividualDocument(dict, wordId);
                     try {
                         numberOfIndexedWords++;
