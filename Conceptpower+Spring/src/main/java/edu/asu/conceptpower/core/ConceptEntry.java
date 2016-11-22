@@ -88,6 +88,7 @@ public class ConceptEntry implements Serializable {
 
     private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
 
+    @LuceneField(lucenefieldName = LuceneFieldNames.ALTERNATIVE_IDS, isIndexable = false)
     private Set<String> alternativeIds = new HashSet<>();
 
     public ConceptEntry() {

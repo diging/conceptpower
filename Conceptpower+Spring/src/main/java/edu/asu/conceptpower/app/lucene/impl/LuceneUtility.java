@@ -7,9 +7,11 @@ import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -385,6 +387,47 @@ public class LuceneUtility implements ILuceneUtility {
         if (numberOfUnIndexedWords > 0) {
             throw new LuceneException("Indexing not done for " + numberOfUnIndexedWords);
         }
+    }
+
+    public Map<String, Set<String>> getAlternativeIdsMap() throws LuceneException {
+        Map<String, Set<String>> alternativeIdsMap = new HashMap<>();
+
+        // This map has the key as CCP id and value as wordnet ids associated
+        Map<String, Set<String>> ccpAlternativeIdMap = new HashMap<>();
+        String wnhome = configuration.getWordnetPath();
+        String path = wnhome + File.separator + configuration.getDictFolder();
+        URL url;
+        try {
+            url = new URL("file", null, path);
+        } catch (MalformedURLException e) {
+            throw new LuceneException(e);
+        }
+
+        IDictionary dict = new Dictionary(url);
+
+
+        for (POS pos : POS.values()) {
+            Iterator<IIndexWord> iterator = dict.getIndexWordIterator(pos);
+        }
+
+        List<ConceptEntry> conceptEntriesList = (List<ConceptEntry>) databaseClient
+                .getAllElementsOfType(ConceptEntry.class);
+
+        for (ConceptEntry conceptEntry : conceptEntriesList) {
+            Set<String> alternativeIds = new HashSet<>();
+            for(String wordNetID : conceptEntry.getWordnetId().split(",")) {
+                if(!wordNetID.trim().equalsIgnoreCase("")) {
+                    alternativeIds.add(wordNetID);
+                }
+            }
+            
+            if(!alternativeIds.isEmpty()) {
+                ccpAlternativeIdMap.put(conceptEntry.getId(), alternativeIds);
+            }
+            
+        }
+
+        return alternativeIdsMap;
     }
 
     /**
