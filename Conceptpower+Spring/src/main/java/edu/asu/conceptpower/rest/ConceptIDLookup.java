@@ -22,6 +22,7 @@ import edu.asu.conceptpower.app.core.ConceptTypesService;
 import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
+import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.xml.XMLConceptMessage;
 import edu.asu.conceptpower.app.xml.XMLMessageFactory;
@@ -57,17 +58,21 @@ public class ConceptIDLookup {
     private static final Logger logger = LoggerFactory.getLogger(ConceptIDLookup.class);
 
 	/**
-	 * This method provides concept information for the rest interface of the
-	 * form
-	 * "http://[server.url]/conceptpower/rest/Concept?id={URI or ID of concept}"
-	 * 
-	 * @param req
-	 *            Holds the HTTP request information
-	 * @return XML containing concept information
-	 */
+     * This method provides concept information for the rest interface of the
+     * form
+     * "http://[server.url]/conceptpower/rest/Concept?id={URI or ID of concept}"
+     * 
+     * @param req
+     *            Holds the HTTP request information
+     * @return XML containing concept information
+     * @throws IndexerRunningException
+     * @throws LuceneException
+     * @throws IllegalAccessException
+     */
     @RequestMapping(value = "/Concept", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE
             + "; charset=utf-8")
-    public @ResponseBody ResponseEntity<String> getConceptById(@RequestParam String id) {
+    public @ResponseBody ResponseEntity<String> getConceptById(@RequestParam String id)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
 
         if (id == null || id.trim().isEmpty()) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -90,18 +95,20 @@ public class ConceptIDLookup {
 
         if (entry != null) {
 
-            try {
+            // try {
                 // Check if the id used in a generic id. If so fetch the concept
                 // wrapper id for the generic wordnet id
-                if (conceptTypesService
-                        .getConceptTypeByConceptId(pathParts[lastIndex]) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
-                    entry = conceptManager.getConceptEntry(entry.getId());
-                }
-                addAlternativeIds(pathParts[lastIndex], entry);
-            } catch (LuceneException e) {
-                logger.error("Lucene Exception", e);
-                return new ResponseEntity<String>(msg.getXML(xmlEntries), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            // if (conceptTypesService
+            // .getConceptTypeByConceptId(pathParts[lastIndex]) ==
+            // ConceptTypes.GENERIC_WORDNET_CONCEPT) {
+            // entry = conceptManager.getConceptEntry(entry.getId());
+            // }
+                // addAlternativeIds(pathParts[lastIndex], entry);
+            // } catch (LuceneException e) {
+            // logger.error("Lucene Exception", e);
+            // return new ResponseEntity<String>(msg.getXML(xmlEntries),
+            // HttpStatus.INTERNAL_SERVER_ERROR);
+            // }
 
             ConceptType type = null;
 

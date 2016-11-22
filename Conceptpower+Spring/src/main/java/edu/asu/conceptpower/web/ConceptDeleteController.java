@@ -56,11 +56,12 @@ public class ConceptDeleteController {
      *            A generic model holder for Servlet
      * @return String value to redirect user to concept delete page
      * @throws IndexerRunningException
+     * @throws IllegalAccessException
      */
     @RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
     public String prepareDeleteConcept(@PathVariable("conceptid") String conceptid, ModelMap model,
             @RequestParam(value = "fromHomeScreenDelete", required = false) String fromHomeScreenDelete)
-                    throws LuceneException, IndexerRunningException {
+                    throws LuceneException, IndexerRunningException, IllegalAccessException {
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
         model.addAttribute("word", concept.getWord());
         model.addAttribute("description", concept.getDescription());
@@ -92,9 +93,12 @@ public class ConceptDeleteController {
      * @param model
      *            A generic model holder for Servlet
      * @return String value to redirect user to a particular concept list
+     * @throws IndexerRunningException
+     * @throws IllegalAccessException
      */
     @RequestMapping(value = "auth/concepts/canceldelete/{conceptList}", method = RequestMethod.GET)
-    public String cancelDelete(@PathVariable("conceptList") String conceptList, ModelMap model) throws LuceneException {
+    public String cancelDelete(@PathVariable("conceptList") String conceptList, ModelMap model)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
         List<ConceptEntryWrapper> foundConcepts = null;
         List<ConceptEntry> founds = conceptManager.getConceptListEntries(conceptList, 1, -1, "id",
                 IConceptDBManager.DESCENDING);
@@ -114,13 +118,14 @@ public class ConceptDeleteController {
      *            A generic model holder for Servlet
      * @return String value to redirect user to a particular concept list page
      * @throws IndexerRunningException
+     * @throws IllegalAccessException
      */
     @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.POST)
     public ModelAndView confirmlDelete(@PathVariable("id") String id,
             @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete,
             @RequestParam(value = "listName") String listName, Principal principal,
             RedirectAttributes redirectAttributes)
-                    throws LuceneException, IndexerRunningException {
+                    throws LuceneException, IndexerRunningException, IllegalAccessException {
         List<ConceptEntryWrapper> foundConcepts = null;
         ModelAndView model = new ModelAndView();
         ConceptEntry concept = conceptManager.getConceptEntry(id);
@@ -145,7 +150,7 @@ public class ConceptDeleteController {
     @RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
     public ModelAndView deleteConcept(@PathVariable("id") String id,
             @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult result,
-            Principal principal) throws LuceneException, IndexerRunningException {
+            Principal principal) throws LuceneException, IndexerRunningException, IllegalAccessException {
         ModelAndView model = new ModelAndView();
         // Check if indexer is running
         if (indexService.isIndexerRunning()) {

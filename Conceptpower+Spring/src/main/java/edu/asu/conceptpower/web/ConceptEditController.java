@@ -83,12 +83,14 @@ public class ConceptEditController {
      * @param model
      *            A generic model holder for Servlet
      * @return String value to redirect user to concept edit page
+     * @throws IndexerRunningException
+     * @throws IllegalAccessException
      */
     @RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
     public String prepareEditConcept(@PathVariable("conceptid") String conceptid,
             @RequestParam(value = "fromHomeScreen", required = false) String fromHomeScreen,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model, BindingResult results)
-            throws LuceneException {
+                    throws LuceneException, IllegalAccessException, IndexerRunningException {
 
         if (fromHomeScreen != null) {
             conceptEditBean.setFromHomeScreen(true);
@@ -218,11 +220,13 @@ public class ConceptEditController {
      * @param model
      *            A generic model holder for Servlet
      * @return List of existing synonyms
+     * @throws IndexerRunningException
+     * @throws IllegalAccessException
      * @throws JSONException
      */
     @RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
     public ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model)
-            throws LuceneException {
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
         List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
         String synonymIds = concept.getSynonymIds();
@@ -253,10 +257,12 @@ public class ConceptEditController {
      * @param model
      *            A generic model holder for Servlet
      * @return synonym details
+     * @throws IndexerRunningException
+     * @throws IllegalAccessException
      */
     @RequestMapping(method = RequestMethod.GET, value = "getConceptAddSynonyms")
     public ResponseEntity<String> getSynonymRows(@RequestParam("synonymid") String synonymid, ModelMap model)
-            throws LuceneException {
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry synonym = null;
         synonym = conceptManager.getConceptEntry(synonymid);
 
@@ -302,7 +308,7 @@ public class ConceptEditController {
 
     @RequestMapping(method = RequestMethod.GET, value = "conceptEdit/search")
     public @ResponseBody ResponseEntity<Object> searchConcept(@RequestParam("concept") String concept,
-            @RequestParam("pos") String pos) throws IllegalAccessException, LuceneException {
+            @RequestParam("pos") String pos) throws IllegalAccessException, LuceneException, IndexerRunningException {
 
         List<ConceptEntryWrapper> foundConcepts = null;
 
