@@ -105,6 +105,7 @@
 										.ajax({
 											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
 											type : "POST",
+									        async: false,
 											success : function(result){
 												setIndexValues(result);
 											},
