@@ -99,15 +99,11 @@
 
 			$('#waitMe_ex')
 					.click(
-							function() {
+							function index() {
 								run_waitMe(current_effect);
 								$.ajax({
 											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
 											type : "POST",
-											success : function(result){
-											    poll();
-												setIndexValues(result);
-											},
 											error : function(result) {
 												var output = "<font color=\"red\">"
 														+ result.message
@@ -115,7 +111,10 @@
 												$("#div1").html(output);
 												waitMeClose();
 											}
-										}, 30000);
+										}).done(function(data, statusText, jqXHR){
+									        console.log(data);
+									        setIndexValues(result);
+									    });
 							});
 
 			function waitMeClose() {
