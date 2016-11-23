@@ -83,6 +83,7 @@
 								return $.ajax({
 											url : "${pageContext.servletContext.contextPath}/auth/deleteIndex",
 											type : "POST",
+											timeout : 3600000,
 											success : function(result) {
 												setIndexValues(result);
 											},
@@ -103,6 +104,7 @@
 								return $.ajax({
 											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
 											type : "POST",
+											timeout : 3600000,
 											success : function(result){
 												setIndexValues(result);
 											},
