@@ -1,11 +1,14 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
+import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,24 +58,26 @@ public class LuceneIndexController {
      * @return
      * @throws IndexerRunningException
      */
+    @Async
     @RequestMapping(value = "auth/indexConcepts", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model)
+    public @ResponseBody Future<IndexingEvent> indexConcepts(HttpServletRequest req, Principal principal,
+            ModelMap model)
             throws IndexerRunningException {
         IndexingEvent bean = null;
         try {
             if (manager.isIndexerRunning()) {
                 bean = manager.getTotalNumberOfWordsIndexed();
                 bean.setMessage(indexerRunning);
-                return bean;
+                return new AsyncResult<IndexingEvent>(bean);
             }
             manager.deleteIndexes();
             manager.indexConcepts();
             bean = manager.getTotalNumberOfWordsIndexed();
             bean.setMessage("Indexed successfully");
-            return bean;
+            return new AsyncResult<IndexingEvent>(bean);
         } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
             bean.setMessage(ex.getMessage());
-            return bean;
+            return new AsyncResult<IndexingEvent>(bean);
         }
     }
 

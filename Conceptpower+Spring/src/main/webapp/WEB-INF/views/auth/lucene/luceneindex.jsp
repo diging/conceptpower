@@ -104,6 +104,10 @@
 								$.ajax({
 											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
 											type : "POST",
+											success: function(result) {
+											    console.log(data);
+										        setIndexValues(result);
+											},
 											error : function(result) {
 												var output = "<font color=\"red\">"
 														+ result.message
@@ -111,10 +115,7 @@
 												$("#div1").html(output);
 												waitMeClose();
 											}
-										}).done(function(data, statusText, jqXHR){
-									        console.log(data);
-									        setIndexValues(result);
-									    });
+										});
 							});
 
 			function waitMeClose() {
