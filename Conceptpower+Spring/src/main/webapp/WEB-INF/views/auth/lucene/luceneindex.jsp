@@ -80,8 +80,7 @@
 					.click(
 							function() {
 								run_waitMe(current_effect);
-								$
-										.ajax({
+								return $.ajax({
 											url : "${pageContext.servletContext.contextPath}/auth/deleteIndex",
 											type : "POST",
 											success : function(result) {
@@ -101,11 +100,9 @@
 					.click(
 							function() {
 								run_waitMe(current_effect);
-								$
-										.ajax({
+								return $.ajax({
 											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
 											type : "POST",
-									        async: false,
 											success : function(result){
 												setIndexValues(result);
 											},
