@@ -101,11 +101,11 @@
 					.click(
 							function() {
 								run_waitMe(current_effect);
-								return $.ajax({
+								$.ajax({
 											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
 											type : "POST",
-											timeout : 3600000,
 											success : function(result){
+											    poll();
 												setIndexValues(result);
 											},
 											error : function(result) {
@@ -115,7 +115,7 @@
 												$("#div1").html(output);
 												waitMeClose();
 											}
-										});
+										}, 30000);
 							});
 
 			function waitMeClose() {
