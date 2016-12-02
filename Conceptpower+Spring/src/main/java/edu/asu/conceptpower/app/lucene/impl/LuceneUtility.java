@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -39,8 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
@@ -312,9 +309,8 @@ public class LuceneUtility implements ILuceneUtility {
      * This method calls createDocument and creates the documents for all
      * different POS and loads the data into lucene index
      */
-    @Async("indexExecutor")
     @Override
-    public Future<Integer> indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
+    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
 
         String wnhome = configuration.getWordnetPath();
         String path = wnhome + File.separator + configuration.getDictFolder();
@@ -387,8 +383,6 @@ public class LuceneUtility implements ILuceneUtility {
         if (numberOfUnIndexedWords > 0) {
             throw new LuceneException("Indexing not done for " + numberOfUnIndexedWords);
         }
-
-        return new AsyncResult<Integer>(numberOfIndexedWords);
     }
 
     /**

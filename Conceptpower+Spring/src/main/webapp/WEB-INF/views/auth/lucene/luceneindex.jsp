@@ -105,8 +105,9 @@
 											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
 											type : "POST",
 											success: function(result) {
-											    console.log(result);
-										        setIndexValues(result);
+											    // Poll here
+											    checkIndexerStatus();
+										        
 											},
 											error : function(result) {
 												var output = "<font color=\"red\">"
@@ -117,6 +118,20 @@
 											}
 										});
 							});
+			
+			function checkIndexerStatus(){
+			    $.ajax({
+					url : "${pageContext.servletContext.contextPath}/auth/getIndexerStatus",
+					type : "POST",
+					success: function(result) {
+					    // Poll here
+					    console.log(result);
+					    if(result.message == 'Indexer Running') {
+					        setTimeout(checkIndexerStatus,5000);    
+					    }
+					}
+				});
+			}
 
 			function waitMeClose() {
 				$('.containerBlock > form').waitMe('hide');

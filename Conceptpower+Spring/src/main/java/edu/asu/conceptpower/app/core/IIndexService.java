@@ -34,4 +34,6 @@ public interface IIndexService {
     public int getTotalNumberOfRecordsForSearch(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException, IndexerRunningException;
 
+    public boolean getIndexerRunningStatus();
+
 }

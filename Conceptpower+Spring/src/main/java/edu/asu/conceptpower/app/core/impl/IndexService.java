@@ -1,19 +1,19 @@
 package edu.asu.conceptpower.app.core.impl;
 
 import java.util.Map;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
-import edu.asu.conceptpower.app.lucene.impl.LuceneUtility;
+import edu.asu.conceptpower.app.lucene.ILuceneUtility;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IndexingEvent;
 
@@ -28,7 +28,7 @@ import edu.asu.conceptpower.core.IndexingEvent;
 public class IndexService implements IIndexService {
 
 	@Autowired
-	private LuceneUtility luceneUtility;
+    private ILuceneUtility luceneUtility;
 	
 	@Autowired
     @Qualifier("luceneDAO")
@@ -118,15 +118,15 @@ public class IndexService implements IIndexService {
 	 * This method indexes concepts in lucene and runs indexer only once
 	 */
 	@Override
+    @Async("indexExecutor")
     public void indexConcepts()
 			throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
 		if (!indexerRunningFlag.compareAndSet(false, true)) {
 			throw new IndexerRunningException(indexerRunning);
 		}
-        Future<Integer> totalNumberOfIndexedWords = luceneUtility.indexConcepts();
-        if (totalNumberOfIndexedWords.isDone()) {
-            indexerRunningFlag.set(false);
-        }
+        System.out.println("Calling");
+        luceneUtility.indexConcepts();
+        indexerRunningFlag.set(false);
 	}
 
 	@Override
@@ -159,6 +159,10 @@ public class IndexService implements IIndexService {
     public int getTotalNumberOfRecordsForSearch(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
         return searchForConcepts(fieldMap, operator).length;
+    }
+
+    public boolean getIndexerRunningStatus() {
+        return indexerRunningFlag.get();
     }
 
 }

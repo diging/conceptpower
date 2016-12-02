@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 
 public class IndexingEvent implements Serializable {
