@@ -105,7 +105,7 @@
 											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
 											type : "POST",
 											success: function(result) {
-											    console.log(data);
+											    console.log(result);
 										        setIndexValues(result);
 											},
 											error : function(result) {

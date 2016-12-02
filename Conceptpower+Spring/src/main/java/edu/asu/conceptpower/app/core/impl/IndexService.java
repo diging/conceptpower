@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.app.core.impl;
 
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,13 +118,15 @@ public class IndexService implements IIndexService {
 	 * This method indexes concepts in lucene and runs indexer only once
 	 */
 	@Override
-	public void indexConcepts()
+    public void indexConcepts()
 			throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
 		if (!indexerRunningFlag.compareAndSet(false, true)) {
 			throw new IndexerRunningException(indexerRunning);
 		}
-		luceneUtility.indexConcepts();
-		indexerRunningFlag.set(false);
+        Future<Integer> totalNumberOfIndexedWords = luceneUtility.indexConcepts();
+        if (totalNumberOfIndexedWords.isDone()) {
+            indexerRunningFlag.set(false);
+        }
 	}
 
 	@Override
