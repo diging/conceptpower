@@ -125,9 +125,11 @@
 					type : "POST",
 					success: function(result) {
 					    // Poll here
-					    console.log(result);
 					    if(result.message == 'Indexer Running') {
 					        setTimeout(checkIndexerStatus,5000);    
+					    } else {
+					        setIndexValues(result);
+					        waitMeClose();
 					    }
 					}
 				});
