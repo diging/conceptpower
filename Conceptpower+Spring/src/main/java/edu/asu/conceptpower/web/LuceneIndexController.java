@@ -58,22 +58,23 @@ public class LuceneIndexController {
      * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/indexConcepts", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model)
+    public @ResponseBody ResponseEntity<IndexingEvent> indexConcepts(HttpServletRequest req, Principal principal,
+            ModelMap model)
             throws IndexerRunningException {
         IndexingEvent bean = new IndexingEvent();
         try {
             if (manager.isIndexerRunning()) {
-                bean = manager.getTotalNumberOfWordsIndexed();
                 bean.setMessage(indexerRunning);
-                return bean;
+                return new ResponseEntity<IndexingEvent>(bean, HttpStatus.SERVICE_UNAVAILABLE);
             }
+
             manager.deleteIndexes(principal.getName());
             manager.indexConcepts(principal.getName());
             bean.setMessage("Indexer Running");
-            return bean;
+            return new ResponseEntity<IndexingEvent>(bean, HttpStatus.OK);
         } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
             bean.setMessage(ex.getMessage());
-            return bean;
+            return new ResponseEntity<IndexingEvent>(bean, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

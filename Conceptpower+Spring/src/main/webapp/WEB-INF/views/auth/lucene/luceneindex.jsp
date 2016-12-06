@@ -98,26 +98,28 @@
 							});
 
 			$('#waitMe_ex')
-					.click(
-							function index() {
-								run_waitMe(current_effect);
-								$.ajax({
-											url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
-											type : "POST",
-											success: function(result) {
-											    // Poll here
-											    checkIndexerStatus();
-										        
-											},
-											error : function(result) {
-												var output = "<font color=\"red\">"
-														+ result.message
-														+ "</font>";
-												$("#div1").html(output);
-												waitMeClose();
-											}
-										});
-							});
+			.click(
+					function index() {
+						run_waitMe(current_effect);
+						$.ajax({
+									url : "${pageContext.servletContext.contextPath}/auth/indexConcepts",
+									type : "POST",
+									success: function(result) {
+									    // Poll here
+									    checkIndexerStatus();
+								        
+									},
+									error : function(result) {
+									    var responseText = JSON.parse(result.responseText);
+									    console.log(responseText.message);
+										var output = "<font color=\"red\">"
+												+ responseText.message
+												+ "</font>";
+										$("#div1").html(output);
+										waitMeClose();
+									}
+								});
+					});
 			
 			function checkIndexerStatus(){
 			    $.ajax({
