@@ -123,9 +123,9 @@
 			    $.ajax({
 					url : "${pageContext.servletContext.contextPath}/auth/getIndexerStatus",
 					type : "POST",
-					success: function(result) {
+					success: function(result, status, jqXHR) {
 					    // Poll here
-					    if(result.message == 'Indexer Running') {
+					    if(jqXHR.status == 202) {
 					        setTimeout(checkIndexerStatus,5000);    
 					    } else {
 					        setIndexValues(result);

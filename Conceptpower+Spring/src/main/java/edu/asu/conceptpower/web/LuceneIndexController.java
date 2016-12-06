@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,8 +67,8 @@ public class LuceneIndexController {
                 bean.setMessage(indexerRunning);
                 return bean;
             }
-            manager.deleteIndexes();
-            manager.indexConcepts();
+            manager.deleteIndexes(principal.getName());
+            manager.indexConcepts(principal.getName());
             bean.setMessage("Indexer Running");
             return bean;
         } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
@@ -76,16 +78,16 @@ public class LuceneIndexController {
     }
 
     @RequestMapping(value = "auth/getIndexerStatus", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody IndexingEvent getIndexerStatus() throws IndexerRunningException {
+    public @ResponseBody ResponseEntity<IndexingEvent> getIndexerStatus() throws IndexerRunningException {
 
         IndexingEvent bean = new IndexingEvent();
         if (!manager.isIndexerRunning()) {
             bean = manager.getTotalNumberOfWordsIndexed();
             bean.setMessage("Indexed successfully");
-            return bean;
+            return new ResponseEntity<IndexingEvent>(bean, HttpStatus.OK);
         }
         bean.setMessage("Indexer Running");
-        return bean;
+        return new ResponseEntity<IndexingEvent>(bean, HttpStatus.ACCEPTED);
     }
 
     /**
@@ -107,7 +109,7 @@ public class LuceneIndexController {
                 bean.setMessage(indexerRunning);
                 return bean;
             }
-            manager.deleteIndexes();
+            manager.deleteIndexes(principal.getName());
             bean = manager.getTotalNumberOfWordsIndexed();
             bean.setMessage("Concepts deleted from index successfully");
             return bean;

@@ -80,13 +80,13 @@ public class IndexService implements IIndexService {
 	 * @throws IndexerRunningException
 	 */
 	@Override
-	public void insertConcept(ConceptEntry entry)
+    public void insertConcept(ConceptEntry entry, String userName)
 			throws IllegalAccessException, LuceneException, IndexerRunningException {
 		if (indexerRunningFlag.get()) {
 			throw new IndexerRunningException(indexerRunning);
 
 		}
-		luceneUtility.insertConcept(entry);
+        luceneUtility.insertConcept(entry, userName);
 	}
 
 	/**
@@ -94,11 +94,11 @@ public class IndexService implements IIndexService {
 	 * concept
 	 */
 	@Override
-	public void deleteById(String id) throws LuceneException, IndexerRunningException {
+    public void deleteById(String id, String userName) throws LuceneException, IndexerRunningException {
 		if (indexerRunningFlag.get()) {
 			throw new IndexerRunningException(indexerRunning);
 		}
-		luceneUtility.deleteById(id);
+        luceneUtility.deleteById(id, userName);
 
 	}
 
@@ -106,11 +106,11 @@ public class IndexService implements IIndexService {
 	 * This method deletes the index in lucene
 	 */
 	@Override
-	public void deleteIndexes() throws LuceneException, IndexerRunningException {
+    public void deleteIndexes(String userName) throws LuceneException, IndexerRunningException {
 		if (!indexerRunningFlag.compareAndSet(false, true)) {
 			throw new IndexerRunningException(indexerRunning);
 		}
-		luceneUtility.deleteIndexes();
+        luceneUtility.deleteIndexes(userName);
 		indexerRunningFlag.set(false);
 	}
 
@@ -119,13 +119,13 @@ public class IndexService implements IIndexService {
      */
     @Override
     @Async("indexExecutor")
-    public void indexConcepts()
+    public void indexConcepts(String userName)
             throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
         if (!indexerRunningFlag.compareAndSet(false, true)) {
             throw new IndexerRunningException(indexerRunning);
         }
         try {
-            luceneUtility.indexConcepts();
+            luceneUtility.indexConcepts(userName);
         } catch (IllegalArgumentException | IllegalAccessException | LuceneException e) {
             throw e;
         } finally {
@@ -150,13 +150,13 @@ public class IndexService implements IIndexService {
      * @throws IllegalAccessException
      */
     @Override
-    public void updateConceptEntry(ConceptEntry entry)
+    public void updateConceptEntry(ConceptEntry entry, String userName)
             throws LuceneException, IndexerRunningException, IllegalAccessException {
         if (indexerRunningFlag.get()) {
             throw new IndexerRunningException(indexerRunning);
         }
-        luceneUtility.deleteById(entry.getId());
-        luceneUtility.insertConcept(entry);
+        luceneUtility.deleteById(entry.getId(), userName);
+        luceneUtility.insertConcept(entry, userName);
     }
 
     @Override
