@@ -67,8 +67,8 @@ public class ConceptIDLookup {
      * @return XML containing concept information
      * @throws JsonProcessingException
      */
-    @RequestMapping(value = "/Concept", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE })
+    @RequestMapping(value = "/Concept", method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody ResponseEntity<String> getConceptById(@RequestParam String id,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
                     throws JsonProcessingException {

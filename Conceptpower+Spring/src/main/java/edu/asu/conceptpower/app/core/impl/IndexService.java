@@ -127,10 +127,10 @@ public class IndexService implements IIndexService {
         try {
             luceneUtility.indexConcepts();
         } catch (IllegalArgumentException | IllegalAccessException | LuceneException e) {
-            indexerRunningFlag.set(false);
             throw e;
+        } finally {
+            indexerRunningFlag.set(false);
         }
-        indexerRunningFlag.set(false);
     }
 
 	@Override
@@ -163,10 +163,6 @@ public class IndexService implements IIndexService {
     public int getTotalNumberOfRecordsForSearch(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
         return searchForConcepts(fieldMap, operator).length;
-    }
-
-    public boolean isIndexerRunningStatus() {
-        return indexerRunningFlag.get();
     }
 
 }

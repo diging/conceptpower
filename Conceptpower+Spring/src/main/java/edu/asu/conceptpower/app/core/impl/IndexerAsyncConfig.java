@@ -10,6 +10,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 
+import edu.asu.conceptpower.app.exceptions.AsyncExceptionHandler;
+
 @Configuration
 @EnableAsync
 class IndexerAsyncConfig implements AsyncConfigurer {
@@ -27,8 +29,7 @@ class IndexerAsyncConfig implements AsyncConfigurer {
 
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        // return new AsyncExceptionHandler();
-        return null;
+        return new AsyncExceptionHandler();
     }
 
 }

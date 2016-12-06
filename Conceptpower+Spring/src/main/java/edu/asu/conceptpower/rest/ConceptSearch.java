@@ -84,8 +84,8 @@ public class ConceptSearch {
      * @return
      * @throws JsonProcessingException
      */
-    @RequestMapping(value = "/ConceptSearch", method = RequestMethod.GET, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @RequestMapping(value = "/ConceptSearch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody ResponseEntity<String> searchConcept(HttpServletRequest req,
             @Validated ConceptSearchParameters conceptSearchParameters, BindingResult result,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)

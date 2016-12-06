@@ -79,7 +79,7 @@ public class LuceneIndexController {
     public @ResponseBody IndexingEvent getIndexerStatus() throws IndexerRunningException {
 
         IndexingEvent bean = new IndexingEvent();
-        if (!manager.isIndexerRunningStatus()) {
+        if (!manager.isIndexerRunning()) {
             bean = manager.getTotalNumberOfWordsIndexed();
             bean.setMessage("Indexed successfully");
             return bean;
