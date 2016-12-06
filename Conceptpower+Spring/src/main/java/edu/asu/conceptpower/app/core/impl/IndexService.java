@@ -114,20 +114,24 @@ public class IndexService implements IIndexService {
 		indexerRunningFlag.set(false);
 	}
 
-	/**
-	 * This method indexes concepts in lucene and runs indexer only once
-	 */
-	@Override
+    /**
+     * This method indexes concepts in lucene and runs indexer only once
+     */
+    @Override
     @Async("indexExecutor")
     public void indexConcepts()
-			throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
-		if (!indexerRunningFlag.compareAndSet(false, true)) {
-			throw new IndexerRunningException(indexerRunning);
-		}
-        System.out.println("Calling");
-        luceneUtility.indexConcepts();
+            throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
+        if (!indexerRunningFlag.compareAndSet(false, true)) {
+            throw new IndexerRunningException(indexerRunning);
+        }
+        try {
+            luceneUtility.indexConcepts();
+        } catch (IllegalArgumentException | IllegalAccessException | LuceneException e) {
+            indexerRunningFlag.set(false);
+            throw e;
+        }
         indexerRunningFlag.set(false);
-	}
+    }
 
 	@Override
 	public boolean isIndexerRunning() {
@@ -161,7 +165,7 @@ public class IndexService implements IIndexService {
         return searchForConcepts(fieldMap, operator).length;
     }
 
-    public boolean getIndexerRunningStatus() {
+    public boolean isIndexerRunningStatus() {
         return indexerRunningFlag.get();
     }
 
