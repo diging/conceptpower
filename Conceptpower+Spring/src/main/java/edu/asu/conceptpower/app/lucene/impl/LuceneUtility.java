@@ -213,8 +213,18 @@ public class LuceneUtility implements ILuceneUtility {
         for (java.lang.reflect.Field field : fields) {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             field.setAccessible(true);
-            if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
-                field.set(con, d.get(luceneFieldAnnotation.lucenefieldName()));
+            if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null) {
+                if (LuceneFieldNames.ALTERNATIVE_IDS.equalsIgnoreCase(luceneFieldAnnotation.lucenefieldName())) {
+                    String[] alternativeIDs = d.get(luceneFieldAnnotation.lucenefieldName()).split(",");
+                    Set<String> alternativeIdSet = new HashSet<>();
+                    for (String alternativeId : alternativeIDs) {
+                        alternativeIdSet.add(alternativeId);
+                    }
+                    field.set(con, alternativeIdSet);
+                } else {
+                    field.set(con, d.get(luceneFieldAnnotation.lucenefieldName()));
+                }
+            }
         }
         return con;
     }

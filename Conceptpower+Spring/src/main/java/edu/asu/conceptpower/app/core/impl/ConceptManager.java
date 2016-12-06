@@ -95,6 +95,7 @@ public class ConceptManager implements IConceptManager {
         Set<String> alternativeIds = new HashSet<>();
         if (conceptTypesService.getConceptTypeByConceptId(queriedId) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
             alternativeIds.add(queriedId);
+            alternativeIds.add(originalId);
         }
         Map<String, String> fieldMap = new HashMap<>();
         fieldMap.put(SearchFieldNames.ID, originalId);

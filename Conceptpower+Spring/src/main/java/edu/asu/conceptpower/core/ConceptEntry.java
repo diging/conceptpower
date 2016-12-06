@@ -30,7 +30,7 @@ public class ConceptEntry implements Serializable {
 
     @Id
     @SearchField(fieldName = SearchFieldNames.ID)
-    @LuceneField(lucenefieldName = LuceneFieldNames.ID, isIndexable = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.ID, isIndexable = true)
     private String id;
 
     @SearchField(fieldName = SearchFieldNames.WORDNETID)
