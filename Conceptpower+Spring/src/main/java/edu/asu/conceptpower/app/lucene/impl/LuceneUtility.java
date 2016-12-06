@@ -174,7 +174,8 @@ public class LuceneUtility implements ILuceneUtility {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName().toLowerCase(),
                                 String.valueOf(contentOfField), Field.Store.YES));
                     } else if (searchFieldAnnotation.lucenefieldName()
-                            .equalsIgnoreCase(LuceneFieldNames.ALTERNATIVE_IDS)) {
+                            .equalsIgnoreCase(LuceneFieldNames.ALTERNATIVE_IDS)
+                            && ccpAlternativeIdMap.get(String.valueOf(entry.getId())) != null) {
                         // Gets the alternative ids from the map.
                         // CCP Alternative Map contains its own id as value
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
