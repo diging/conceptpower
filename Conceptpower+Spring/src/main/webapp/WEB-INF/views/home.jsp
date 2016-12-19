@@ -21,6 +21,13 @@ $(document).ready(function() {
 			        'bSortable': false
 				},
 				{
+					"targets": [2],
+					'searchable': false,
+					'bSortable': false,
+					'orderable':false,
+					'className': 'dt-body-center'
+				},
+				{
 				   	"targets": [7],
 				   	"sType" : "html",
 				   	"fnRender" : function(o, val) {
@@ -97,21 +104,28 @@ function showFormProcessing() {
 	$('#floatingCirclesG').show();
 }
 
-function mergeConcepts(conceptId) {
-    console.log(conceptId);
-    console.log("Merge column clicked");
-    return false;
+function mergeConcepts() {
+	var conceptIdsToMerge = [];
+    $.each($("input[name='messageCheckbox']:checked"), function(){            
+    	conceptIdsToMerge.push($(this).val());
+    });
+    window.location = '${pageContext.servletContext.contextPath}/prepareMergeConcept?conceptIds=' + conceptIdsToMerge.join(", ");
 }
 
+var conceptsToMerge = "";
 
-function generateCheckBoxes() {
-    console.log('Generate Check bix if user is logged in');
-    <sec:authorize access="isAuthenticated()">
-    	console.log('User is logged in');
-    	console.log('Generate check boxes');
-    </sec:authorize>
+function prepareMergeConcept(conceptId) {
+	var tis = $(this);
+	console.log(tis);
+	var conceptsToMerge = $(this).attr("value");
+	console.log(conceptsToMerge);
+	if(conceptsToMerge != '') {
+		console.log('Inside blank')
+		conceptsToMerge = conceptId;
+	} else {
+		conceptsToMerge = conceptsToMerge + "," + conceptId;	
+	}
 }
-
 
 </script>
 
@@ -143,7 +157,13 @@ function generateCheckBoxes() {
         onclick="showFormProcessing()" onsubmit="hideFormProcessing()">
     </div>
     <div class="col-sm-2">
-      <input type="button" value="Merge Concepts" class="btn btn-action" onclick="generateCheckBoxes();">
+        <c:if test="${not empty conceptSearchBean.foundConcepts}">
+            <input type="button" value="Select to Merge" class="btn btn-action" onclick="mergeConcepts();">
+        </c:if>
+        <c:if test="${empty conceptSearchBean.foundConcepts}">
+            <input disabled type="button" value="Merge Concepts" class="btn btn-action">
+        </c:if>
+      
     </div>
     
   </div>
@@ -182,6 +202,7 @@ function generateCheckBoxes() {
         <sec:authorize access="isAuthenticated()">
           <th></th>
           <th></th>
+          <th>Merge</th>
         </sec:authorize>
         <th>Term</th>
         <th>ID</th>
@@ -228,6 +249,10 @@ function generateCheckBoxes() {
                 </c:otherwise>
               </c:choose></td>
               
+              <td>
+                <input type="checkbox" name="messageCheckbox" value="${concept.entry.id }"/>
+              </td>
+
           </sec:authorize>
           <td align="justify"><font size="2"> <a
               id="${concept.entry.id}" data-toggle="modal"
