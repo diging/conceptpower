@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.web;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +10,14 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
 import edu.asu.conceptpower.app.core.IConceptManager;
+import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
+import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
+import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
+import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.service.IConceptMergeService;
 import edu.asu.conceptpower.core.ConceptEntry;
 
@@ -25,15 +31,23 @@ public class ConceptMergeController {
     private IConceptMergeService conceptMergeService;
 
     @RequestMapping(value = "prepareMergeConcept")
-    public String mergeConcept(ModelMap model, @ModelAttribute("mergeConceptsBean") ConceptsMergeBean mergeConceptsBean,
-            BindingResult result) {
-        System.out.println(mergeConceptsBean.getConceptIds());
+    public String prepareMergeConcept(ModelMap model,
+            @ModelAttribute("conceptsMergeBean") ConceptsMergeBean conceptsMergeBean, BindingResult result) {
         List<ConceptEntry> conceptEntries = new ArrayList<>();
-        for (String id : mergeConceptsBean.getConceptIds()) {
+        for (String id : conceptsMergeBean.getConceptIds()) {
             conceptEntries.add(conceptManager.getConceptEntry(id));
         }
-        model.addAttribute("mergedConcepts", conceptMergeService.mergeConcepts(conceptEntries, mergeConceptsBean));
+        conceptsMergeBean = conceptMergeService.prepareMergeConcepts(conceptEntries, conceptsMergeBean);
 
         return "/auth/conceptMerge";
     }
+
+    @RequestMapping(value = "auth/mergeConcepts", method = RequestMethod.POST)
+    public String mergeConcept(ModelMap model, @ModelAttribute("conceptsMergeBean") ConceptsMergeBean conceptsMergeBean,
+            BindingResult result, Principal principal) throws IllegalAccessException, LuceneException,
+            IndexerRunningException, DictionaryDoesNotExistException, DictionaryModifyException {
+        conceptMergeService.mergeConcepts(conceptsMergeBean, principal.getName());
+        return "redirect:/login";
+    }
+
 }

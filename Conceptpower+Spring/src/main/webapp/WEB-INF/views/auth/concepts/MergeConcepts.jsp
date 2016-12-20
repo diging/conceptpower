@@ -5,13 +5,29 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <head>
 <title>Merge Concept</title>
-<form:form
-    action="${pageContext.servletContext.contextPath}/auth/mergeConcepts"
-    method='post' modelAttribute="mergeConceptsBean">
+<form:form action="${pageContext.servletContext.contextPath}/auth/mergeConcepts" method='post' modelAttribute="conceptsMergeBean">
 
     <h1>Merge concepts</h1>
 
     <table>
+        <tr>
+            <td class="col-sm-1"> Concept Id </td>
+        </tr>
+        <c:forEach var="conceptId" items="${conceptsMergeBean.conceptIds}">
+            <tr>
+                <td class="col-sm-1">
+                    <form:radiobutton path="selectedConceptId" value="${conceptId}" />
+                </td>
+                <td class="col-sm-11"> ${conceptId } </td>
+            </tr>
+        </c:forEach>
+            <tr>
+                <td class="col-sm-1">
+                    <form:radiobutton path="selectedConceptId" value="" /> 
+                    <form:hidden path="conceptIds" />
+                </td>
+                <td class="col-sm-11">Create new id </td>
+            </tr>
         <tr>
             <td class="col-sm-1">Concept</td>
             <td class="col-sm-11"><form:input path="word"
@@ -29,9 +45,7 @@
             <td class="col-sm-1">Concept List</td>
             <td class="col-sm-11"><form:select
                     path="conceptListValue" class="form-control"
-                    items="${conceptsMergeBean.conceptList}"
-                    itemValue="conceptListName"
-                    itemLabel="conceptListName" /></td>
+                    items="${conceptsMergeBean.conceptList}" /></td>
         </tr>
         <tr>
             <td class="col-sm-1">Description</td>
@@ -41,21 +55,8 @@
         <tr>
             <td class="col-sm-1">Synonyms</td>
             <td class="col-sm-11">
-                <div id="addedSynonyms" hidden="true">
-                    <table border="1" width="400"
-                        id="addedSynonymsTable" hidden="true"
-                        class="table table-striped table-bordered">
-                        <tbody>
-                        </tbody>
-                    </table>
-
-                </div>
-
+                <form:textarea path="synonymsids" class="form-control" />
             </td>
-            <td><form:hidden path="synonymsids"></form:hidden> <input
-                type="button" name="synonym" id="addsynonym"
-                data-toggle="modal" data-target="#synonymModal"
-                value="Add Synonym" class="btn-xs btn-primary"></td>
         </tr>
 
         <tr>
@@ -78,13 +79,6 @@
             <td class="col-sm-11"><form:input path="similar"
                     class="form-control" /></td>
         </tr>
-
-        <tr>
-            <td class="col-sm-1">Wordnet</td>
-            <td class="col-sm-11"><form:textarea path="wordnetIds"
-                    id="wordnetIds" class="form-control" /></td>
-        </tr>
-
     </table>
     <br />
     <br />

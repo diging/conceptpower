@@ -106,7 +106,8 @@ function showFormProcessing() {
 
 function mergeConcepts() {
 	var conceptIdsToMerge = [];
-    $.each($("input[name='messageCheckbox']:checked"), function(){            
+	 var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
+    $.each($("input[name='conceptMergeCheckbox']:checked", conceptSearchResultTable.fnGetNodes()), function(){            
     	conceptIdsToMerge.push($(this).val());
     });
     window.location = '${pageContext.servletContext.contextPath}/prepareMergeConcept?conceptIds=' + conceptIdsToMerge.join(", ");
@@ -250,7 +251,7 @@ function prepareMergeConcept(conceptId) {
               </c:choose></td>
               
               <td>
-                <input type="checkbox" name="messageCheckbox" value="${concept.entry.id }"/>
+                <input type="checkbox" name="conceptMergeCheckbox" value="${concept.entry.id }"/>
               </td>
 
           </sec:authorize>

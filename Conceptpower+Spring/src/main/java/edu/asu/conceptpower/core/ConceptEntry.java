@@ -82,6 +82,10 @@ public class ConceptEntry implements Serializable {
     @LuceneField(lucenefieldName = LuceneFieldNames.MODIFIED, isIndexable = false)
     private String modified;
 
+    @SearchField(fieldName = SearchFieldNames.MERGED_IDS)
+    @LuceneField(lucenefieldName = LuceneFieldNames.MERGED_IDS, isIndexable = true)
+    private String mergedIds;
+
     private boolean isDeleted;
     
     private String modifiedUser;
@@ -412,5 +416,13 @@ public class ConceptEntry implements Serializable {
 
     public void setAlternativeIds(Set<String> alternativeIds) {
         this.alternativeIds = alternativeIds;
+    }
+
+    public String getMergedIds() {
+        return mergedIds;
+    }
+
+    public void setMergedIds(String mergedIds) {
+        this.mergedIds = mergedIds;
     }
 }
