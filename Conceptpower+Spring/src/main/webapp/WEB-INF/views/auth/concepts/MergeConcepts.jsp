@@ -44,7 +44,7 @@
         <tr>
             <td class="col-sm-1">Concept List</td>
             <td class="col-sm-11"><form:select
-                    path="conceptListValue" class="form-control"
+                    path="selectedListName" class="form-control"
                     items="${conceptsMergeBean.conceptList}" /></td>
         </tr>
         <tr>

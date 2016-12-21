@@ -15,7 +15,6 @@ public class ConceptsMergeBean {
     private Set<String> word;
     private String selectedPosValue;
     private String selectedListName;
-    private String conceptListValue;
     private Set<String> conceptList;
     private Set<String> description;
     private Set<String> synonymsids;
@@ -62,14 +61,6 @@ public class ConceptsMergeBean {
 
     public void setSelectedListName(String selectedListName) {
         this.selectedListName = selectedListName;
-    }
-
-    public String getConceptListValue() {
-        return conceptListValue;
-    }
-
-    public void setConceptListValue(String conceptListValue) {
-        this.conceptListValue = conceptListValue;
     }
 
     public String getSelectedTypeId() {

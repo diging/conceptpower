@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
+import edu.asu.conceptpower.app.core.ConceptTypesService;
+import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
@@ -32,6 +34,9 @@ public class ConceptMergeService implements IConceptMergeService {
     @Autowired
     private IConceptListManager conceptListManager;
 
+    @Autowired
+    private ConceptTypesService conceptTypesService;
+
     @Override
     public ConceptsMergeBean prepareMergeConcepts(List<ConceptEntry> conceptEntries,
             ConceptsMergeBean conceptsMergeBean) {
@@ -47,7 +52,7 @@ public class ConceptMergeService implements IConceptMergeService {
             }
 
             if (!isNullOrEmpty(entry.getConceptList())) {
-                conceptsMergeBean.setConceptListValue(entry.getConceptList());
+                conceptsMergeBean.setSelectedListName(entry.getConceptList());
             }
 
             if (!isNullOrEmpty(entry.getDescription())) {
@@ -115,7 +120,12 @@ public class ConceptMergeService implements IConceptMergeService {
     private void deleteMergedConcepts(List<String> conceptIds, String userName, String conceptIdToNotDelete)
             throws LuceneException, IndexerRunningException {
         for (String conceptId : conceptIds) {
-            if (!conceptId.equalsIgnoreCase(conceptIdToNotDelete)) {
+            if (!conceptId.equalsIgnoreCase(conceptIdToNotDelete)
+                    && ConceptTypes.SPECIFIC_WORDNET_CONCEPT != conceptTypesService
+                            .getConceptTypeByConceptId(conceptId)) {
+                // Wordnet ids cannot be deleted. So adding the wordnet ids to
+                // the merged concept entry
+                // ingetConceptEntryFromConceptMergeBean()
                 conceptManager.deleteConcept(conceptId, userName);
             }
         }
@@ -175,6 +185,20 @@ public class ConceptMergeService implements IConceptMergeService {
 
         addAlternativeIds(entry, conceptMergeBean);
         addMergedIdsToEntry(entry, conceptMergeBean);
+        addWordNetIdsToEntry(entry, conceptMergeBean);
+    }
+
+    private void addWordNetIdsToEntry(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
+        StringBuilder wordnetBuilder = new StringBuilder();
+        String prefix = "";
+        for (String conceptId : conceptMergeBean.getConceptIds()) {
+            if (ConceptTypes.SPECIFIC_WORDNET_CONCEPT == conceptTypesService.getConceptTypeByConceptId(conceptId)) {
+                wordnetBuilder.append(prefix);
+                wordnetBuilder.append(conceptId);
+                prefix = ",";
+            }
+        }
+        entry.setWordnetId(wordnetBuilder.toString());
     }
 
     private void addAlternativeIds(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
