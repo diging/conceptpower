@@ -25,6 +25,7 @@ $(document).ready(function() {
 					'searchable': false,
 					'bSortable': false,
 					'orderable':false,
+					'bVisible' : false,
 					'className': 'dt-body-center'
 				},
 				{
@@ -94,6 +95,19 @@ $(document).ready(function() {
 					}
 				});
 		});
+	$('#prepareMergeConcept').on('click', function (e) {
+        e.preventDefault();
+        // Get the column API object
+        var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
+        conceptSearchResultTable.fnSetColumnVis(0, false);
+        conceptSearchResultTable.fnSetColumnVis(1, false);
+        conceptSearchResultTable.fnSetColumnVis(2, true);
+        $("#mergeConcept").show();
+        $("#prepareMergeConcept").hide();
+    });
+	
+	$("#mergeConcept").hide();
+	$('#mergeError').hide();
 });
 					
 $(document).ready(hideFormProcessing);
@@ -105,19 +119,24 @@ function showFormProcessing() {
 }
 
 function mergeConcepts() {
+	$('#mergeError').hide();
 	var conceptIdsToMerge = [];
 	 var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
     $.each($("input[name='conceptMergeCheckbox']:checked", conceptSearchResultTable.fnGetNodes()), function(){            
     	conceptIdsToMerge.push($(this).val());
     });
-    window.location = '${pageContext.servletContext.contextPath}/prepareMergeConcept?conceptIds=' + conceptIdsToMerge.join(", ");
+    
+    if(conceptIdsToMerge.length < 2) {
+    	$('#mergeError').show();
+    } else {
+        window.location = '${pageContext.servletContext.contextPath}/prepareMergeConcept?conceptIds=' + conceptIdsToMerge.join(", ");    	
+    }
 }
 
 var conceptsToMerge = "";
 
 function prepareMergeConcept(conceptId) {
 	var tis = $(this);
-	console.log(tis);
 	var conceptsToMerge = $(this).attr("value");
 	console.log(conceptsToMerge);
 	if(conceptsToMerge != '') {
@@ -143,8 +162,13 @@ function prepareMergeConcept(conceptId) {
   action="${pageContext.servletContext.contextPath}/home/conceptsearch"
   method='get' commandName='conceptSearchBean'>
   <form:errors path="luceneError"></form:errors>
+  
+    <div id="mergeError" class="alert alert-danger">
+      Please select atleast two concepts to merge.
+    </div>
+  
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-5">
       <form:input path="word" placeholder="Enter search term"
         class="form-control" />
     </div>
@@ -157,14 +181,17 @@ function prepareMergeConcept(conceptId) {
       <input type="submit" value="Search" class="btn btn-action"
         onclick="showFormProcessing()" onsubmit="hideFormProcessing()">
     </div>
+
     <div class="col-sm-2">
-        <c:if test="${not empty conceptSearchBean.foundConcepts}">
-            <input type="button" value="Select to Merge" class="btn btn-action" onclick="mergeConcepts();">
+      <c:if test="${not empty conceptSearchBean.foundConcepts}">
+            <input type="button" id="prepareMergeConcept" value="Prepare Merge Concepts" class="btn btn-action">
         </c:if>
-        <c:if test="${empty conceptSearchBean.foundConcepts}">
-            <input disabled type="button" value="Merge Concepts" class="btn btn-action">
+    </div>
+        
+    <div class="col-sm-2">
+      <c:if test="${not empty conceptSearchBean.foundConcepts}">
+            <input type="button" id="mergeConcept" value="Merge Concept" class="btn btn-action" onclick="mergeConcepts();">
         </c:if>
-      
     </div>
     
   </div>

@@ -125,7 +125,7 @@ public class ConceptMergeService implements IConceptMergeService {
                             .getConceptTypeByConceptId(conceptId)) {
                 // Wordnet ids cannot be deleted. So adding the wordnet ids to
                 // the merged concept entry
-                // ingetConceptEntryFromConceptMergeBean()
+                // in getConceptEntryFromConceptMergeBean()
                 conceptManager.deleteConcept(conceptId, userName);
             }
         }
