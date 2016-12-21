@@ -95,7 +95,7 @@ $(document).ready(function() {
 					}
 				});
 		});
-	$('#prepareMergeConcept').on('click', function (e) {
+    $('#prepareMergeConcept').on('click', function (e) {
         e.preventDefault();
         // Get the column API object
         var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
@@ -106,8 +106,8 @@ $(document).ready(function() {
         $("#prepareMergeConcept").hide();
     });
 	
-	$("#mergeConcept").hide();
-	$('#mergeError').hide();
+    $("#mergeConcept").hide();
+    $('#mergeError').hide();
 });
 					
 $(document).ready(hideFormProcessing);
@@ -121,7 +121,7 @@ function showFormProcessing() {
 function mergeConcepts() {
 	$('#mergeError').hide();
 	var conceptIdsToMerge = [];
-	 var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
+	var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
     $.each($("input[name='conceptMergeCheckbox']:checked", conceptSearchResultTable.fnGetNodes()), function(){            
     	conceptIdsToMerge.push($(this).val());
     });
@@ -136,15 +136,13 @@ function mergeConcepts() {
 var conceptsToMerge = "";
 
 function prepareMergeConcept(conceptId) {
-	var tis = $(this);
-	var conceptsToMerge = $(this).attr("value");
-	console.log(conceptsToMerge);
-	if(conceptsToMerge != '') {
-		console.log('Inside blank')
-		conceptsToMerge = conceptId;
-	} else {
-		conceptsToMerge = conceptsToMerge + "," + conceptId;	
-	}
+    var tis = $(this);
+    var conceptsToMerge = $(this).attr("value");
+    if(conceptsToMerge != '') {
+        conceptsToMerge = conceptId;
+    } else {
+        conceptsToMerge = conceptsToMerge + "," + conceptId;	
+    }
 }
 
 </script>
