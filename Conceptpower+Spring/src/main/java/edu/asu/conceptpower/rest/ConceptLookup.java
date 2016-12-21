@@ -26,7 +26,7 @@ import edu.asu.conceptpower.app.rdf.RDFMessageFactory;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.IConceptMessage;
-import edu.asu.conceptpower.rest.msg.MessageRegistry;
+import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 
 /**
  * This class provides a method to retrieve all concepts for a given word and
@@ -46,7 +46,7 @@ public class ConceptLookup {
     private TypeDatabaseClient typeManager;
 
     @Autowired
-    private MessageRegistry messageFactory;
+    private IMessageRegistry messageFactory;
 
     @Autowired
     private RDFMessageFactory rdfFactory;
@@ -81,7 +81,7 @@ public class ConceptLookup {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IndexerRunningException ie) {
             logger.info("Indexer running exception", ie);
-            return new ResponseEntity<String>(ie.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<String>(ie.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         Map<ConceptEntry, ConceptType> entryMap = generateEntryMap(entries);
         IConceptMessage conceptMessage = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();

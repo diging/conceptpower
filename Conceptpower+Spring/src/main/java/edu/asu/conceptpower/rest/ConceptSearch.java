@@ -35,7 +35,7 @@ import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.IConceptMessage;
-import edu.asu.conceptpower.rest.msg.MessageRegistry;
+import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.Pagination;
 
 /**
@@ -56,7 +56,7 @@ public class ConceptSearch {
     private TypeDatabaseClient typeManager;
 
     @Autowired
-    private MessageRegistry messageFactory;
+    private IMessageRegistry messageFactory;
 
     @Autowired
     private URIHelper uriHelper;

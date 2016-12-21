@@ -27,7 +27,7 @@ import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.IConceptMessage;
-import edu.asu.conceptpower.rest.msg.MessageRegistry;
+import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 
 /**
  * This class provides a method to query concepts by their id.
@@ -47,7 +47,7 @@ public class ConceptIDLookup {
     private TypeDatabaseClient typeManager;
 
     @Autowired
-    private MessageRegistry messageFactory;
+    private IMessageRegistry messageFactory;
 
     @Autowired
     private IConceptManager conceptManager;

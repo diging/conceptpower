@@ -22,7 +22,7 @@ import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.rest.ConceptIDLookup;
 import edu.asu.conceptpower.rest.msg.IMessageConverter;
-import edu.asu.conceptpower.rest.msg.MessageRegistry;
+import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.xml.XMLConceptMessage;
 import junit.framework.Assert;
 
@@ -35,7 +35,7 @@ public class ConceptIDLookupTest {
     private TypeDatabaseClient typeManager;
 
     @Mock
-    private MessageRegistry messageFactory;
+    private IMessageRegistry messageFactory;
 
     @Mock
     private IConceptManager conceptManager;

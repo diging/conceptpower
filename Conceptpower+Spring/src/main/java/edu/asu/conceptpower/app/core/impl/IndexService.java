@@ -126,8 +126,6 @@ public class IndexService implements IIndexService {
         }
         try {
             luceneUtility.indexConcepts(userName);
-        } catch (IllegalArgumentException | IllegalAccessException | LuceneException e) {
-            throw e;
         } finally {
             indexerRunningFlag.set(false);
         }

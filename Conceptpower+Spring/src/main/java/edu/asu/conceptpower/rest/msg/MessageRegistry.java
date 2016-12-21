@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MessageRegistry {
+public class MessageRegistry implements IMessageRegistry {
 
     @Autowired
     private ApplicationContext ctx;

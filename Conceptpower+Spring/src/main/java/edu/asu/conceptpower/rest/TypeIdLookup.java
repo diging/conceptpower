@@ -17,14 +17,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.ITypeMessage;
-import edu.asu.conceptpower.rest.msg.MessageRegistry;
 import edu.asu.conceptpower.rest.msg.xml.XMLConstants;
 
 /**
- * This class provides a method to query types by their ids. It 
- * answers requests to:
- * "http://[server.url]/conceptpower/rest/Type?id={URI or ID of concept}"
+ * This class provides a method to query types by their ids. It answers requests
+ * to: "http://[server.url]/conceptpower/rest/Type?id={URI or ID of concept}"
  * 
  * @author Julia Damerow, Chetan
  * 
@@ -32,16 +31,16 @@ import edu.asu.conceptpower.rest.msg.xml.XMLConstants;
 @Controller
 public class TypeIdLookup {
 
-	@Autowired
-	private TypeDatabaseClient typeManager;
+    @Autowired
+    private TypeDatabaseClient typeManager;
 
-	@Autowired
-    private MessageRegistry messageFactory;
+    @Autowired
+    private IMessageRegistry messageFactory;
 
-	/**
+    /**
      * This method provides information of a type for a rest interface of the
-     * form
-     * "http://[server.url]/conceptpower/rest/Type?id={URI or ID of concept}"
+     * form "http://[server.url]/conceptpower/rest/Type?id={URI or ID of
+     * concept}"
      * 
      * @param req
      *            Holds HTTP request information
@@ -52,48 +51,45 @@ public class TypeIdLookup {
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody ResponseEntity<String> getTypeById(HttpServletRequest req,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
-                    throws JsonProcessingException {
+            throws JsonProcessingException {
 
-		String id = req.getParameter("id");
-		if (id == null) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		}
-		// get type id if URI is given
-		
-		String[] pathParts = id.split("/");
-		int lastIndex = pathParts.length - 1;
-		String typeId = null;
-		if (lastIndex > -1)
-			typeId = pathParts[lastIndex];
+        String id = req.getParameter("id");
+        if (id == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        // get type id if URI is given
 
-		if (typeId == null) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		}
+        String[] pathParts = id.split("/");
+        int lastIndex = pathParts.length - 1;
+        String typeId = null;
+        if (lastIndex > -1)
+            typeId = pathParts[lastIndex];
+
+        if (typeId == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
 
         if (typeId.startsWith(XMLConstants.TYPE_PREFIX)) {
             typeId = typeId.substring(XMLConstants.TYPE_PREFIX.length());
         }
 
-		ConceptType type = typeManager.getType(typeId);
-		
-        ITypeMessage typeMessage = messageFactory.getMessageFactory(acceptHeader).createTypeMessage();
-		        
-        String entry = null;
-		if (type != null) {
-			ConceptType superType = null;
-			if (type.getSupertypeId() != null
-					&& !type.getSupertypeId().trim().isEmpty())
-				superType = typeManager.getType(type.getSupertypeId().trim());
-            entry = typeMessage.getConceptTypeMessage(type, superType);
-		}
-		else {
-			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-		}
-		
+        ConceptType type = typeManager.getType(typeId);
 
-		HttpHeaders responseHeaders = new HttpHeaders();
+        ITypeMessage typeMessage = messageFactory.getMessageFactory(acceptHeader).createTypeMessage();
+
+        String entry = null;
+        if (type != null) {
+            ConceptType superType = null;
+            if (type.getSupertypeId() != null && !type.getSupertypeId().trim().isEmpty())
+                superType = typeManager.getType(type.getSupertypeId().trim());
+            entry = typeMessage.getConceptTypeMessage(type, superType);
+        } else {
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
+
+        HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-        
+
         return new ResponseEntity<String>(entry, responseHeaders, HttpStatus.OK);
-	}
+    }
 }
