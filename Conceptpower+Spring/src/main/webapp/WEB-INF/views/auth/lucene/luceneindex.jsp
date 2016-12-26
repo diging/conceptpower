@@ -15,8 +15,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             var lastRun = $('#lastRun').val();
-            var d = new Date(lastRun);
-            setDateTime(d.toLocaleString());
+            setDateTime(lastRun);
         });
 
         function setDateTime(lastRun) {
