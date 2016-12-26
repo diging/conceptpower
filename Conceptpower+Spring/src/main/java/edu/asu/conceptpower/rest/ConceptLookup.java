@@ -75,7 +75,7 @@ public class ConceptLookup {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch(IndexerRunningException ie){
             logger.info("Indexer running exception", ie);
-            return new ResponseEntity<String>(ie.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<String>(ie.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
