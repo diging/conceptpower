@@ -90,8 +90,7 @@
                                     var output = "<font color=\"red\">" +
                                         result.message +
                                         "</font>";
-                                    $("#div1").html(
-                                        output);
+                                    $("#div1").html(output);
                                     waitMeClose();
                                 }
                             });
@@ -116,8 +115,7 @@
                                     var output = "<font color=\"red\">" +
                                         responseText.message +
                                         "</font>";
-                                    $("#div1").html(
-                                        output);
+                                    $("#div1").html(output);
                                     waitMeClose();
                                 }
                             });

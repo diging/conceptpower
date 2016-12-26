@@ -11,7 +11,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 
 /**
- * This class acts as an interface for all concept message. Currently concepts
+ * This class acts as an interface for all concept messages. Currently concepts
  * are returned in json and xml format. So we have XmlConceptMessage and
  * JsonConceptMessage implementing this class
  * 
@@ -21,8 +21,8 @@ import edu.asu.conceptpower.core.ConceptType;
 public interface IConceptMessage {
 
     /**
-     * This method checks for the validation errors and calls
-     * getAllConceptEntriesAndPaginationDetails for processing.
+     * This method checks for the validation errors and returns the concept
+     * entries in JSON or XML format.
      * 
      * @param entries
      * @return
@@ -31,8 +31,7 @@ public interface IConceptMessage {
     public String getAllConceptEntries(Map<ConceptEntry, ConceptType> entries) throws JsonProcessingException;
 
     /**
-     * This method fetches the concept entries with the specified pagination. If
-     * pagination is not supplied all the entries are fetched.
+     * This method fetches the concept entries with the specified pagination.
      * 
      * @param entries
      * @param pagination

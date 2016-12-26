@@ -1,7 +1,7 @@
 package edu.asu.conceptpower.rest.msg;
 
 /**
- * This class contians the pagination details. This class will be serialized
+ * This class contains the pagination details. This class will be serialized
  * using Jackson
  * 
  * @author karthikeyanmohan

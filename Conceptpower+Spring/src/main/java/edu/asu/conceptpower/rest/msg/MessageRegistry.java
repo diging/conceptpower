@@ -23,7 +23,9 @@ public class MessageRegistry implements IMessageRegistry {
     private Map<String, IMessageConverter> messageConverterMap;
 
     /**
-     * instantiates all the services under IMessageConverter interface
+     * Instantiates all the message converter services and loads into
+     * messageConverterMap with key as media type and value as the message
+     * converter service object.
      * 
      */
     @PostConstruct
