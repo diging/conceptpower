@@ -30,7 +30,7 @@
             </tr>
         <tr>
             <td class="col-sm-1">Concept</td>
-            <td class="col-sm-11"><form:input path="word"
+            <td class="col-sm-11"><form:input path="words"
                     class="form-control" /></td>
         </tr>
         <tr>
@@ -45,11 +45,11 @@
             <td class="col-sm-1">Concept List</td>
             <td class="col-sm-11"><form:select
                     path="selectedListName" class="form-control"
-                    items="${conceptsMergeBean.conceptList}" /></td>
+                    items="${conceptsMergeBean.conceptListValues}" /></td>
         </tr>
         <tr>
             <td class="col-sm-1">Description</td>
-            <td class="col-sm-11"><form:textarea path="description"
+            <td class="col-sm-11"><form:textarea path="descriptions"
                     rows="7" cols="50" class="form-control" /></td>
         </tr>
         <tr>
@@ -70,13 +70,13 @@
         </tr>
         <tr>
             <td class="col-sm-1">Equals</td>
-            <td class="col-sm-11"><form:textarea path="equals"
+            <td class="col-sm-11"><form:textarea path="equalsValues"
                     class="form-control" />
         </tr>
 
         <tr>
             <td class="col-sm-1">Similar</td>
-            <td class="col-sm-11"><form:input path="similar"
+            <td class="col-sm-11"><form:input path="similarValues"
                     class="form-control" /></td>
         </tr>
     </table>

@@ -3,6 +3,7 @@ package edu.asu.conceptpower.app.service.impl;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,45 +42,26 @@ public class ConceptMergeService implements IConceptMergeService {
     public ConceptsMergeBean prepareMergeConcepts(List<ConceptEntry> conceptEntries,
             ConceptsMergeBean conceptsMergeBean) {
         for (ConceptEntry entry : conceptEntries) {
+            conceptsMergeBean.setSelectedPosValue(entry.getPos().toLowerCase());
 
-            if (!isNullOrEmpty(entry.getPos())) {
-                conceptsMergeBean.setSelectedPosValue(entry.getPos().toLowerCase());
-            }
+            Set wordList = createSet(entry.getWord(), conceptsMergeBean.getWords());
+            conceptsMergeBean.setWords(wordList);
+            conceptsMergeBean.setSelectedListName(entry.getConceptList());
 
-            if (!isNullOrEmpty(entry.getWord())) {
-                Set wordList = createSet(entry.getWord(), conceptsMergeBean.getWord());
-                conceptsMergeBean.setWord(wordList);
-            }
+            Set descriptionList = createSet(entry.getDescription(), conceptsMergeBean.getDescriptions());
+            conceptsMergeBean.setDescriptions(descriptionList);
 
-            if (!isNullOrEmpty(entry.getConceptList())) {
-                conceptsMergeBean.setSelectedListName(entry.getConceptList());
-            }
+            Set<String> synonymIds = combineSynonymIds(conceptsMergeBean.getSynonymsids(), entry.getSynonymIds());
+            conceptsMergeBean.setSynonymsids(synonymIds);
 
-            if (!isNullOrEmpty(entry.getDescription())) {
-                Set descriptionList = createSet(entry.getDescription(), conceptsMergeBean.getDescription());
-                conceptsMergeBean.setDescription(descriptionList);
-            }
+            Set conceptTypeIds = createSet(entry.getTypeId(), conceptsMergeBean.getConceptTypeIdList());
+            conceptsMergeBean.setConceptTypeIdList(conceptTypeIds);
 
-            if (!isNullOrEmpty(entry.getSynonymIds())) {
-                Set<String> synonymIds = combineSynonymIds(conceptsMergeBean.getSynonymsids(), entry.getSynonymIds());
-                conceptsMergeBean.setSynonymsids(synonymIds);
+            Set<String> equalsSet = createSet(entry.getEqualTo(), conceptsMergeBean.getEqualsValues());
+            conceptsMergeBean.setEqualsValues(equalsSet);
 
-            }
-
-            if (!isNullOrEmpty(entry.getTypeId())) {
-                Set conceptTypeIds = createSet(entry.getTypeId(), conceptsMergeBean.getConceptTypeIdList());
-                conceptsMergeBean.setConceptTypeIdList(conceptTypeIds);
-            }
-
-            if (!isNullOrEmpty(entry.getEqualTo())) {
-                Set<String> equalsSet = createSet(entry.getEqualTo(), conceptsMergeBean.getEquals());
-                conceptsMergeBean.setEquals(equalsSet);
-            }
-
-            if (!isNullOrEmpty(entry.getSimilarTo())) {
-                Set<String> similarSet = createSet(entry.getSimilarTo(), conceptsMergeBean.getSimilar());
-                conceptsMergeBean.setSimilar(similarSet);
-            }
+            Set<String> similarSet = createSet(entry.getSimilarTo(), conceptsMergeBean.getSimilarValues());
+            conceptsMergeBean.setSimilarValues(similarSet);
         }
 
         // Fetch the types with the type id
@@ -91,7 +73,7 @@ public class ConceptMergeService implements IConceptMergeService {
         conceptsMergeBean.setSelectedConceptId("");
 
         // Adding all conceptlists
-        conceptsMergeBean.setConceptList(getAllConceptLists());
+        conceptsMergeBean.setConceptListValues(getAllConceptLists());
         return conceptsMergeBean;
     }
 
@@ -132,56 +114,29 @@ public class ConceptMergeService implements IConceptMergeService {
     }
 
     public void getConceptEntryFromConceptMergeBean(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
-        StringBuffer wordBuffer = new StringBuffer();
-        String prefix = "";
-        for (String word : conceptMergeBean.getWord()) {
-            wordBuffer.append(prefix);
-            prefix = ",";
-            wordBuffer.append(word);
-        }
-        entry.setWord(wordBuffer.toString().trim());
-
         entry.setPos(conceptMergeBean.getSelectedPosValue());
         entry.setConceptList(conceptMergeBean.getSelectedListName());
-
-        StringBuffer descriptionBuffer = new StringBuffer();
-        prefix = "";
-        for (String description : conceptMergeBean.getDescription()) {
-            descriptionBuffer.append(prefix);
-            prefix = ",";
-            descriptionBuffer.append(description);
-        }
-
-        entry.setDescription(descriptionBuffer.toString().trim());
-
-        StringBuffer synonymBuffer = new StringBuffer();
-        prefix = "";
-        for (String synonymId : conceptMergeBean.getSynonymsids()) {
-            synonymBuffer.append(prefix);
-            prefix = ",";
-            synonymBuffer.append(synonymId);
-        }
-
-        entry.setSynonymIds(synonymBuffer.toString());
         entry.setTypeId(conceptMergeBean.getSelectedTypeId());
 
-        StringBuffer equalsBuffer = new StringBuffer();
-        prefix = "";
-        for (String equals : conceptMergeBean.getEquals()) {
-            equalsBuffer.append(prefix);
-            prefix = ",";
-            equalsBuffer.append(equals);
-        }
-        entry.setEqualTo(equalsBuffer.toString().trim());
+        String prefix = ",";
+        String words = conceptMergeBean.getWords().stream().map(i -> i.toString()).collect(Collectors.joining(prefix));
+        entry.setWord(words);
 
-        StringBuffer similarBuffer = new StringBuffer();
-        prefix = "";
-        for (String similarTo : conceptMergeBean.getSimilar()) {
-            similarBuffer.append(prefix);
-            prefix = ",";
-            similarBuffer.append(similarTo);
-        }
-        entry.setSimilarTo(similarBuffer.toString().trim());
+        String descriptions = conceptMergeBean.getDescriptions().stream().map(i -> i.toString())
+                .collect(Collectors.joining(prefix));
+        entry.setDescription(descriptions);
+
+        String synonymIds = conceptMergeBean.getSynonymsids().stream().map(i -> i.toString())
+                .collect(Collectors.joining(prefix));
+        entry.setSynonymIds(synonymIds);
+
+        String equals = conceptMergeBean.getEqualsValues().stream().map(i -> i.toString())
+                .collect(Collectors.joining(prefix));
+        entry.setEqualTo(equals);
+
+        String similar = conceptMergeBean.getSimilarValues().stream().map(i -> i.toString())
+                .collect(Collectors.joining(prefix));
+        entry.setSimilarTo(similar);
 
         addAlternativeIds(entry, conceptMergeBean);
         addMergedIdsToEntry(entry, conceptMergeBean);
@@ -244,6 +199,11 @@ public class ConceptMergeService implements IConceptMergeService {
     }
 
     private Set createSet(String value, Set collection) {
+
+        if (isNullOrEmpty(value)) {
+            return null;
+        }
+
         if (collection == null) {
             collection = new HashSet();
         }
