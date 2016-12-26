@@ -10,7 +10,7 @@ import edu.asu.conceptpower.core.ConceptType;
 
 public class ConceptsMergeBean {
 
-    public List<String> conceptIds;
+    private List<String> conceptIds;
     private Map<String, String> posMap = new LinkedHashMap<String, String>();
     private Set<String> words;
     private String selectedPosValue;
@@ -86,16 +86,6 @@ public class ConceptsMergeBean {
     public void setSelectedConceptId(String selectedConceptId) {
         this.selectedConceptId = selectedConceptId;
     }
-
-    public String getWordnetIds() {
-        return wordnetIds;
-    }
-
-    public void setWordnetIds(String wordnetIds) {
-        this.wordnetIds = wordnetIds;
-    }
-
-    private String wordnetIds;
 
     public List<String> getConceptIds() {
         return conceptIds;

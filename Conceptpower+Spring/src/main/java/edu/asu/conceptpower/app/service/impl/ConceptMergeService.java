@@ -74,6 +74,20 @@ public class ConceptMergeService implements IConceptMergeService {
 
         // Adding all conceptlists
         conceptsMergeBean.setConceptListValues(getAllConceptLists());
+
+        // Removing all the wordnet ids from this list. Users can merge into any
+        // of the user defined CCP id or can create a new id for the merging
+        // concepts. As per design cannot merge into wordnet id, because wordnet
+        // id concepts cannot be updated.
+        Set<String> wordnetSet = new HashSet<>();
+        for (String conceptId : conceptsMergeBean.getConceptIds()) {
+            if (ConceptTypes.SPECIFIC_WORDNET_CONCEPT == conceptTypesService.getConceptTypeByConceptId(conceptId)) {
+                wordnetSet.add(conceptId);
+            }
+        }
+
+        conceptsMergeBean.getConceptIds().removeAll(wordnetSet);
+
         return conceptsMergeBean;
     }
 
@@ -100,17 +114,33 @@ public class ConceptMergeService implements IConceptMergeService {
     }
 
     private void deleteMergedConcepts(List<String> conceptIds, String userName, String conceptIdToNotDelete)
-            throws LuceneException, IndexerRunningException {
+            throws LuceneException, IndexerRunningException, IllegalAccessException, DictionaryDoesNotExistException,
+            DictionaryModifyException {
         for (String conceptId : conceptIds) {
-            if (!conceptId.equalsIgnoreCase(conceptIdToNotDelete)
-                    && ConceptTypes.SPECIFIC_WORDNET_CONCEPT != conceptTypesService
+            if (!conceptId.equalsIgnoreCase(conceptIdToNotDelete)) {
+                if (ConceptTypes.SPECIFIC_WORDNET_CONCEPT == conceptTypesService
                             .getConceptTypeByConceptId(conceptId)) {
-                // Wordnet ids cannot be deleted. So adding the wordnet ids to
-                // the merged concept entry
-                // in getConceptEntryFromConceptMergeBean()
-                conceptManager.deleteConcept(conceptId, userName);
+                    // If its a wordnet concept, then create a wrapper and set
+                    // the delete flag to true. This is done in two steps
+                    // because changeevent object needs to be updated for
+                    // deletion correctly.
+                    String conceptWrapperId = createConceptWrapperById(conceptId, userName);
+                    conceptManager.deleteConcept(conceptWrapperId, userName);
+                } else {
+                    // If its a CCP concept, just delete it.
+                    conceptManager.deleteConcept(conceptId, userName);
+                }
             }
         }
+    }
+
+    private String createConceptWrapperById(String conceptId, String userName) throws IllegalAccessException,
+            DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IndexerRunningException {
+        ConceptEntry entry = conceptManager.getConceptEntry(conceptId);
+        entry.setConceptList("MergedConcepts");
+        // Not adding other details of merged concepts. Since its not relevant
+        // to add these details here.
+        return conceptManager.addConceptListEntry(entry, userName);
     }
 
     public void getConceptEntryFromConceptMergeBean(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
@@ -162,9 +192,8 @@ public class ConceptMergeService implements IConceptMergeService {
         Set<String> alternativeIds = new HashSet<>();
 
         for (String conceptId : conceptIds) {
-            if (!conceptId.equalsIgnoreCase(selectedId)) {
-                // Adding current id as alternative id and also its own
-                // alternative ids
+            if (!conceptId.equalsIgnoreCase(selectedId) || ConceptTypes.SPECIFIC_WORDNET_CONCEPT == conceptTypesService
+                    .getConceptTypeByConceptId(selectedId)) {
                 alternativeIds.add(conceptId);
                 ConceptEntry conceptEntry = conceptManager.getConceptEntry(conceptId);
                 alternativeIds.addAll(conceptEntry.getAlternativeIds());
@@ -180,7 +209,10 @@ public class ConceptMergeService implements IConceptMergeService {
         StringBuffer mergedIdsBuffer = new StringBuffer();
         String prefix = "";
         for (String conceptId : conceptIds) {
-            if (!conceptId.equalsIgnoreCase(selectedId)) {
+            if (!conceptId.equalsIgnoreCase(selectedId) || ConceptTypes.SPECIFIC_WORDNET_CONCEPT == conceptTypesService
+                    .getConceptTypeByConceptId(selectedId)) {
+                // If its wordnet add it to mergedIds because for wordnet we
+                // will be creating a new wrapper.
                 mergedIdsBuffer.append(prefix);
                 mergedIdsBuffer.append(conceptId);
                 prefix = ",";
