@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <head>
 <title>Merge Concept</title>
-<form:form action="${pageContext.servletContext.contextPath}/auth/mergeConcepts" method='post' modelAttribute="conceptsMergeBean">
+<form:form action="${pageContext.servletContext.contextPath}/auth/concepts/merge" method='post' modelAttribute="conceptsMergeBean">
 
     <h1>Merge concepts</h1>
 
@@ -25,6 +25,8 @@
                 <td class="col-sm-1">
                     <form:radiobutton path="selectedConceptId" value="" /> 
                     <form:hidden path="conceptIds" />
+                    <form:hidden path="wordnetIds" />
+                    <form:hidden path="synonymsids" />
                 </td>
                 <td class="col-sm-11">Create new id </td>
             </tr>
@@ -52,13 +54,6 @@
             <td class="col-sm-11"><form:textarea path="descriptions"
                     rows="7" cols="50" class="form-control" /></td>
         </tr>
-        <tr>
-            <td class="col-sm-1">Synonyms</td>
-            <td class="col-sm-11">
-                <form:textarea path="synonymsids" class="form-control" />
-            </td>
-        </tr>
-
         <tr>
             <td class="col-sm-1">Concept Type</td>
             <td class="col-sm-11"><form:select

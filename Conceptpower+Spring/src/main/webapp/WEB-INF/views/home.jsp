@@ -129,7 +129,7 @@ function mergeConcepts() {
     if(conceptIdsToMerge.length < 2) {
     	$('#mergeError').show();
     } else {
-        window.location = '${pageContext.servletContext.contextPath}/prepareMergeConcept?conceptIds=' + conceptIdsToMerge.join(", ");    	
+        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge/prepare?conceptIds=' + conceptIdsToMerge.join(", ");    	
     }
 }
 
@@ -162,7 +162,7 @@ function prepareMergeConcept(conceptId) {
   <form:errors path="luceneError"></form:errors>
   
     <div id="mergeError" class="alert alert-danger">
-      Please select atleast two concepts to merge.
+      Please select at least two concepts to merge.
     </div>
   
   <div class="row">
@@ -180,17 +180,19 @@ function prepareMergeConcept(conceptId) {
         onclick="showFormProcessing()" onsubmit="hideFormProcessing()">
     </div>
 
-    <div class="col-sm-2">
-      <c:if test="${not empty conceptSearchBean.foundConcepts}">
-            <input type="button" id="prepareMergeConcept" value="Prepare Merge Concepts" class="btn btn-action">
-        </c:if>
-    </div>
-        
-    <div class="col-sm-2">
-      <c:if test="${not empty conceptSearchBean.foundConcepts}">
-            <input type="button" id="mergeConcept" value="Merge Concept" class="btn btn-action" onclick="mergeConcepts();">
-        </c:if>
-    </div>
+    <sec:authorize access="isAuthenticated()">
+        <div class="col-sm-2">
+          <c:if test="${not empty conceptSearchBean.foundConcepts}">
+                <input type="button" id="prepareMergeConcept" value="Prepare Merge Concepts" class="btn btn-action">
+            </c:if>
+        </div>
+            
+        <div class="col-sm-2">
+          <c:if test="${not empty conceptSearchBean.foundConcepts}">
+                <input type="button" id="mergeConcept" value="Merge Concept" class="btn btn-action" onclick="mergeConcepts();">
+            </c:if>
+        </div>
+    </sec:authorize>
     
   </div>
 

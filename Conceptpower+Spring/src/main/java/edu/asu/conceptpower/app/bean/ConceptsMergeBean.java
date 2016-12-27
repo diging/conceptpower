@@ -25,6 +25,7 @@ public class ConceptsMergeBean {
     private String selectedTypeName;
     private ConceptType[] types;
     private String selectedConceptId;
+    private Set<String> wordnetIds;
 
     public Map<String, String> getPosMap() {
         posMap = new LinkedHashMap<String, String>();
@@ -149,6 +150,14 @@ public class ConceptsMergeBean {
 
     public void setConceptListValues(Set<String> conceptListValues) {
         this.conceptListValues = conceptListValues;
+    }
+
+    public Set<String> getWordnetIds() {
+        return wordnetIds;
+    }
+
+    public void setWordnetIds(Set<String> wordnetIds) {
+        this.wordnetIds = wordnetIds;
     }
 
 }

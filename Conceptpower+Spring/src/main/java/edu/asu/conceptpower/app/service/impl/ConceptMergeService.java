@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.app.service.impl;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,12 +45,12 @@ public class ConceptMergeService implements IConceptMergeService {
         for (ConceptEntry entry : conceptEntries) {
             conceptsMergeBean.setSelectedPosValue(entry.getPos().toLowerCase());
 
-            Set wordList = createSet(entry.getWord(), conceptsMergeBean.getWords());
-            conceptsMergeBean.setWords(wordList);
+            Set words = createSet(entry.getWord(), conceptsMergeBean.getWords());
+            conceptsMergeBean.setWords(words);
             conceptsMergeBean.setSelectedListName(entry.getConceptList());
 
-            Set descriptionList = createSet(entry.getDescription(), conceptsMergeBean.getDescriptions());
-            conceptsMergeBean.setDescriptions(descriptionList);
+            Set descriptions = createSet(entry.getDescription(), conceptsMergeBean.getDescriptions());
+            conceptsMergeBean.setDescriptions(descriptions);
 
             Set<String> synonymIds = combineSynonymIds(conceptsMergeBean.getSynonymsids(), entry.getSynonymIds());
             conceptsMergeBean.setSynonymsids(synonymIds);
@@ -87,7 +88,7 @@ public class ConceptMergeService implements IConceptMergeService {
         }
 
         conceptsMergeBean.getConceptIds().removeAll(wordnetSet);
-
+        conceptsMergeBean.setWordnetIds(wordnetSet);
         return conceptsMergeBean;
     }
 
@@ -97,7 +98,7 @@ public class ConceptMergeService implements IConceptMergeService {
             DictionaryModifyException {
 
         deleteMergedConcepts(conceptsMergeBean.getConceptIds(), userName,
-                conceptsMergeBean.getSelectedConceptId().trim());
+                conceptsMergeBean.getSelectedConceptId().trim(), conceptsMergeBean.getSelectedListName());
 
         if (conceptsMergeBean.getSelectedConceptId().trim().equals("")) {
             // Add
@@ -113,9 +114,9 @@ public class ConceptMergeService implements IConceptMergeService {
 
     }
 
-    private void deleteMergedConcepts(List<String> conceptIds, String userName, String conceptIdToNotDelete)
-            throws LuceneException, IndexerRunningException, IllegalAccessException, DictionaryDoesNotExistException,
-            DictionaryModifyException {
+    private void deleteMergedConcepts(List<String> conceptIds, String userName, String conceptIdToNotDelete,
+            String selectedConceptList) throws LuceneException, IndexerRunningException, IllegalAccessException,
+            DictionaryDoesNotExistException, DictionaryModifyException {
         for (String conceptId : conceptIds) {
             if (!conceptId.equalsIgnoreCase(conceptIdToNotDelete)) {
                 if (ConceptTypes.SPECIFIC_WORDNET_CONCEPT == conceptTypesService
@@ -124,7 +125,7 @@ public class ConceptMergeService implements IConceptMergeService {
                     // the delete flag to true. This is done in two steps
                     // because changeevent object needs to be updated for
                     // deletion correctly.
-                    String conceptWrapperId = createConceptWrapperById(conceptId, userName);
+                    String conceptWrapperId = createConceptWrapperById(conceptId, userName, selectedConceptList);
                     conceptManager.deleteConcept(conceptWrapperId, userName);
                 } else {
                     // If its a CCP concept, just delete it.
@@ -134,10 +135,11 @@ public class ConceptMergeService implements IConceptMergeService {
         }
     }
 
-    private String createConceptWrapperById(String conceptId, String userName) throws IllegalAccessException,
-            DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IndexerRunningException {
+    private String createConceptWrapperById(String conceptId, String userName, String conceptListName)
+            throws IllegalAccessException, DictionaryDoesNotExistException, DictionaryModifyException, LuceneException,
+            IndexerRunningException {
         ConceptEntry entry = conceptManager.getConceptEntry(conceptId);
-        entry.setConceptList("MergedConcepts");
+        entry.setConceptList(conceptListName);
         // Not adding other details of merged concepts. Since its not relevant
         // to add these details here.
         return conceptManager.addConceptListEntry(entry, userName);
@@ -152,9 +154,9 @@ public class ConceptMergeService implements IConceptMergeService {
         String words = conceptMergeBean.getWords().stream().map(i -> i.toString()).collect(Collectors.joining(prefix));
         entry.setWord(words);
 
-        String descriptions = conceptMergeBean.getDescriptions().stream().map(i -> i.toString())
+        String description = conceptMergeBean.getDescriptions().stream().map(i -> i.toString())
                 .collect(Collectors.joining(prefix));
-        entry.setDescription(descriptions);
+        entry.setDescription(description);
 
         String synonymIds = conceptMergeBean.getSynonymsids().stream().map(i -> i.toString())
                 .collect(Collectors.joining(prefix));
@@ -168,25 +170,26 @@ public class ConceptMergeService implements IConceptMergeService {
                 .collect(Collectors.joining(prefix));
         entry.setSimilarTo(similar);
 
-        addAlternativeIds(entry, conceptMergeBean);
+        String wordnetIds = conceptMergeBean.getWordnetIds().stream().map(i -> i.toString())
+                .collect(Collectors.joining(prefix));
+        entry.setWordnetId(wordnetIds);
+
+        addAlternativeIdsToEntry(entry, conceptMergeBean);
         addMergedIdsToEntry(entry, conceptMergeBean);
-        addWordNetIdsToEntry(entry, conceptMergeBean);
     }
 
     private void addWordNetIdsToEntry(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
         StringBuilder wordnetBuilder = new StringBuilder();
         String prefix = "";
         for (String conceptId : conceptMergeBean.getConceptIds()) {
-            if (ConceptTypes.SPECIFIC_WORDNET_CONCEPT == conceptTypesService.getConceptTypeByConceptId(conceptId)) {
-                wordnetBuilder.append(prefix);
-                wordnetBuilder.append(conceptId);
-                prefix = ",";
-            }
+            wordnetBuilder.append(prefix);
+            wordnetBuilder.append(conceptId);
+            prefix = ",";
         }
         entry.setWordnetId(wordnetBuilder.toString());
     }
 
-    private void addAlternativeIds(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
+    private void addAlternativeIdsToEntry(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
         List<String> conceptIds = conceptMergeBean.getConceptIds();
         String selectedId = conceptMergeBean.getSelectedConceptId();
         Set<String> alternativeIds = new HashSet<>();
@@ -231,11 +234,12 @@ public class ConceptMergeService implements IConceptMergeService {
     }
 
     private Set createSet(String value, Set collection) {
-
-        if (isNullOrEmpty(value)) {
+        if (value == null) {
             return null;
         }
-
+        if (value.trim().isEmpty()) {
+            return null;
+        }
         if (collection == null) {
             collection = new HashSet();
         }
@@ -243,47 +247,29 @@ public class ConceptMergeService implements IConceptMergeService {
         return collection;
     }
 
-    private ConceptType[] getTypesByTypeId(Set<String> conceptTypesId) {
-        ConceptType[] types = new ConceptType[conceptTypesId.size()];
+    private ConceptType[] getTypesByTypeId(Set<String> conceptTypesIds) {
+        ConceptType[] types = new ConceptType[conceptTypesIds.size()];
         int i = 0;
-        for (String typeId : conceptTypesId) {
+        for (String typeId : conceptTypesIds) {
             types[i] = conceptTypeManager.getType(typeId);
             i++;
         }
         return types;
     }
 
-    private boolean isNullOrEmpty(String value) {
-        if (value == null) {
-            return true;
+    private Set<String> combineSynonymIds(Set<String> existingSynonymIds, String newSynonymIds) {
+
+        if (newSynonymIds == null || newSynonymIds.trim().isEmpty()) {
+            return existingSynonymIds;
         }
 
-        if (value.trim().isEmpty()) {
-            return true;
-        }
-        return false;
-    }
-
-    private Set<String> combineSynonymIds(Set<String> existingSynonymId, String newSynonymIds) {
-
-        if (newSynonymIds == null) {
-            return existingSynonymId;
-        }
-
-        if (newSynonymIds.trim().isEmpty()) {
-            return existingSynonymId;
+        if (existingSynonymIds == null) {
+            existingSynonymIds = new HashSet<>();
         }
 
         String[] synonymIds = newSynonymIds.split(",");
-
-        for (String synonymId : synonymIds) {
-            if (existingSynonymId == null) {
-                existingSynonymId = new HashSet<>();
-            }
-            existingSynonymId.add(synonymId);
-        }
-
-        return existingSynonymId;
+        existingSynonymIds.addAll(Arrays.asList(synonymIds));
+        return existingSynonymIds;
     }
 
 }

@@ -30,7 +30,7 @@ public class ConceptMergeController {
     @Autowired
     private IConceptMergeService conceptMergeService;
 
-    @RequestMapping(value = "prepareMergeConcept")
+    @RequestMapping(value = "auth/concepts/merge/prepare")
     public String prepareMergeConcept(ModelMap model,
             @ModelAttribute("conceptsMergeBean") ConceptsMergeBean conceptsMergeBean, BindingResult result) {
         List<ConceptEntry> conceptEntries = new ArrayList<>();
@@ -42,7 +42,7 @@ public class ConceptMergeController {
         return "/auth/conceptMerge";
     }
 
-    @RequestMapping(value = "auth/mergeConcepts", method = RequestMethod.POST)
+    @RequestMapping(value = "auth/concepts/merge", method = RequestMethod.POST)
     public String mergeConcept(ModelMap model, @ModelAttribute("conceptsMergeBean") ConceptsMergeBean conceptsMergeBean,
             BindingResult result, Principal principal) throws IllegalAccessException, LuceneException,
             IndexerRunningException, DictionaryDoesNotExistException, DictionaryModifyException {
