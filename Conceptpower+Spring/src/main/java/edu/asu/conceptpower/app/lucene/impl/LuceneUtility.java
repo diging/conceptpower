@@ -294,11 +294,13 @@ public class LuceneUtility implements ILuceneUtility {
         int numberOfIndexedConcepts = 0;
         int numberOfUnindexConcepts = 0;
         for (ConceptEntry entry : conceptEntryList) {
-            try {
-                insertConcept(entry);
-                numberOfIndexedConcepts++;
-            } catch (LuceneException e) {
-                numberOfUnindexConcepts++;
+            if (!entry.isDeleted()) {
+                try {
+                    insertConcept(entry);
+                    numberOfIndexedConcepts++;
+                } catch (LuceneException e) {
+                    numberOfUnindexConcepts++;
+                }
             }
         }
         int[] returnValue = new int[2];
