@@ -18,7 +18,7 @@
                 <td class="col-sm-1">
                     <form:radiobutton path="selectedConceptId" value="${conceptId}" />
                 </td>
-                <td class="col-sm-11"> ${conceptId } </td>
+                <td class="col-sm-11"> ${conceptId} </td>
             </tr>
         </c:forEach>
             <tr>
@@ -40,14 +40,14 @@
             <td class="col-sm-11"><form:select
                     path="selectedPosValue" class="form-control">
                     <form:option value="" />
-                    <form:options items="${conceptsMergeBean.posMap}" />
+                    <form:options items="${posMap}" />
                 </form:select></td>
         </tr>
         <tr>
             <td class="col-sm-1">Concept List</td>
             <td class="col-sm-11"><form:select
                     path="selectedListName" class="form-control"
-                    items="${conceptsMergeBean.conceptListValues}" /></td>
+                    items="${conceptListValues}" /></td>
         </tr>
         <tr>
             <td class="col-sm-1">Description</td>
@@ -59,7 +59,7 @@
             <td class="col-sm-11"><form:select
                     path="selectedTypeId" class="form-control">
                     <form:option value="" />
-                    <form:options items="${conceptsMergeBean.types}"
+                    <form:options items="${types}"
                         itemValue="typeId" itemLabel="typeName" />
                 </form:select></td>
         </tr>

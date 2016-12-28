@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.app.service;
 
 import java.util.List;
+import java.util.Set;
 
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
@@ -15,4 +16,6 @@ public interface IConceptMergeService {
 
     public void mergeConcepts(ConceptsMergeBean conceptsMergeBean, String userName) throws LuceneException,
             IndexerRunningException, IllegalAccessException, DictionaryDoesNotExistException, DictionaryModifyException;
+
+    public Set<String> getAllConceptLists();
 }

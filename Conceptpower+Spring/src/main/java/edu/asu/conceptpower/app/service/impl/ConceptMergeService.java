@@ -22,7 +22,6 @@ import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.service.IConceptMergeService;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.core.ConceptType;
 
 @Service
 public class ConceptMergeService implements IConceptMergeService {
@@ -55,9 +54,6 @@ public class ConceptMergeService implements IConceptMergeService {
             Set<String> synonymIds = combineSynonymIds(conceptsMergeBean.getSynonymsids(), entry.getSynonymIds());
             conceptsMergeBean.setSynonymsids(synonymIds);
 
-            Set conceptTypeIds = createSet(entry.getTypeId(), conceptsMergeBean.getConceptTypeIdList());
-            conceptsMergeBean.setConceptTypeIdList(conceptTypeIds);
-
             Set<String> equalsSet = createSet(entry.getEqualTo(), conceptsMergeBean.getEqualsValues());
             conceptsMergeBean.setEqualsValues(equalsSet);
 
@@ -65,16 +61,8 @@ public class ConceptMergeService implements IConceptMergeService {
             conceptsMergeBean.setSimilarValues(similarSet);
         }
 
-        // Fetch the types with the type id
-        if (conceptsMergeBean.getConceptTypeIdList() != null && !conceptsMergeBean.getConceptTypeIdList().isEmpty()) {
-            conceptsMergeBean.setTypes(getTypesByTypeId(conceptsMergeBean.getConceptTypeIdList()));
-        }
-
         // By default new id will be created
         conceptsMergeBean.setSelectedConceptId("");
-
-        // Adding all conceptlists
-        conceptsMergeBean.setConceptListValues(getAllConceptLists());
 
         // Removing all the wordnet ids from this list. Users can merge into any
         // of the user defined CCP id or can create a new id for the merging
@@ -224,7 +212,8 @@ public class ConceptMergeService implements IConceptMergeService {
         entry.setMergedIds(mergedIdsBuffer.toString());
     }
 
-    private Set<String> getAllConceptLists() {
+    @Override
+    public Set<String> getAllConceptLists() {
         List<ConceptList> allLists = conceptListManager.getAllConceptLists();
         Set<String> conceptLists = new HashSet<>();
         for (ConceptList conceptList : allLists) {
@@ -245,16 +234,6 @@ public class ConceptMergeService implements IConceptMergeService {
         }
         collection.add(value);
         return collection;
-    }
-
-    private ConceptType[] getTypesByTypeId(Set<String> conceptTypesIds) {
-        ConceptType[] types = new ConceptType[conceptTypesIds.size()];
-        int i = 0;
-        for (String typeId : conceptTypesIds) {
-            types[i] = conceptTypeManager.getType(typeId);
-            i++;
-        }
-        return types;
     }
 
     private Set<String> combineSynonymIds(Set<String> existingSynonymIds, String newSynonymIds) {
