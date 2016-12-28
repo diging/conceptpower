@@ -114,7 +114,7 @@ public class ConceptDeleteController {
      * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.POST)
-    public ModelAndView confirmlDelete(@PathVariable("id") String id,
+    public ModelAndView confirmDelete(@PathVariable("id") String id,
             @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete,
             @RequestParam(value = "listName") String listName, Principal principal,
             RedirectAttributes redirectAttributes) throws LuceneException, IndexerRunningException {
