@@ -42,6 +42,12 @@ public class MessageRegistry implements IMessageRegistry {
         }
     }
 
+    /**
+     * This method returns the message converter object based on the media type.
+     * Valid values for media type are accept headers of XML and JSON. Accept
+     * header of XML is application/xml and Accept header of JSON is
+     * application/json.
+     */
     public IMessageConverter getMessageFactory(String mediaType) {
         if (messageConverterMap.get(mediaType) != null) {
             return messageConverterMap.get(mediaType);
