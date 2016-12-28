@@ -154,14 +154,6 @@ public class LuceneUtility implements ILuceneUtility {
                         doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
                         
-                    } else if (searchFieldAnnotation.lucenefieldName()
-                            .equalsIgnoreCase(LuceneFieldNames.CONCEPT_LIST)) {
-                        // Just made as lower case for concept list. This is
-                        // because if we make it lowercase for wordnet id and
-                        // concept id, it creates problem while fetching the
-                        // data from ConceptManager
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName().toLowerCase(),
-                                String.valueOf(contentOfField), Field.Store.YES));
                     } else {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
@@ -423,7 +415,7 @@ public class LuceneUtility implements ILuceneUtility {
                             searchBuffer.append("+");
                         }
                         
-                        searchBuffer.append(term + " ");
+                        searchBuffer.append(QueryParser.escape(term) + " ");
                         
                         if (term.startsWith("\"")) {
                             quoteOpen = true;
