@@ -88,5 +88,5 @@ public class XMLTypeMessage implements ITypeMessage {
         sb.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
 
         return sb.toString();
-	}
+    }
 }

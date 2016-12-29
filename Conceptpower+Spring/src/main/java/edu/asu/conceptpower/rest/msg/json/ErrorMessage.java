@@ -2,7 +2,7 @@ package edu.asu.conceptpower.rest.msg.json;
 
 public class ErrorMessage {
 
-    String message;
+    private String message;
 
     public ErrorMessage(String message) {
         this.message = message;
