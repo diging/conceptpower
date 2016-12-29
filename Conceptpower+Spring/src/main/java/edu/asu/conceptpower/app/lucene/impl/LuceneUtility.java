@@ -239,9 +239,7 @@ public class LuceneUtility implements ILuceneUtility {
 
             for (IWordID wordId : wordIdds) {
                 IWord word = dict.getWord(wordId);
-                if (wordnetIdsOfWrappers.contains(word.getID().toString())) {
-                    logger.debug("Wrapper found for wordnet id" + word.getID());
-                } else {
+                if (!wordnetIdsOfWrappers.contains(word.getID().toString())) {
                     Document doc = createIndividualDocument(dict, wordId);
                     try {
                         numberOfIndexedWords++;

@@ -66,7 +66,7 @@ public class ConceptManager implements IConceptManager {
     @Override
     public ConceptEntry getConceptEntry(String id) {
         ConceptEntry entry = client.getEntry(id);
-        if (entry != null && !entry.isDeleted()) {
+        if (entry != null) {
             fillConceptEntry(entry);
             return entry;
         }
