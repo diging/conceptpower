@@ -51,6 +51,9 @@ public class ConceptsMergeBean {
     }
 
     public String getSelectedConceptId() {
+        if (selectedConceptId == null) {
+            return "";
+        }
         return selectedConceptId;
     }
 

@@ -9,31 +9,16 @@
 
     <h1>Merge concepts</h1>
 
+    <label class="col-sm-1 control-label">Concept Id</label>
+    <div class="col-sm-11">
+        <!-- If none of the values are selected, we create a new concept id for the merged concept -->
+        <form:radiobuttons path="selectedConceptId" items="${conceptsMergeBean.conceptIds}" element="label class='radio-inline'" />
+    </div>
+    
     <table>
         <tr>
-            <td class="col-sm-1"> Concept Id </td>
-        </tr>
-        <c:forEach var="conceptId" items="${conceptsMergeBean.conceptIds}">
-            <tr>
-                <td class="col-sm-1">
-                    <form:radiobutton path="selectedConceptId" value="${conceptId}" />
-                </td>
-                <td class="col-sm-11"> ${conceptId} </td>
-            </tr>
-        </c:forEach>
-            <tr>
-                <td class="col-sm-1">
-                    <form:radiobutton path="selectedConceptId" value="" /> 
-                    <form:hidden path="conceptIds" />
-                    <form:hidden path="wordnetIds" />
-                    <form:hidden path="synonymsids" />
-                </td>
-                <td class="col-sm-11">Create new id </td>
-            </tr>
-        <tr>
             <td class="col-sm-1">Concept</td>
-            <td class="col-sm-11"><form:input path="words"
-                    class="form-control" /></td>
+            <td class="col-sm-11"><form:input path="words" class="form-control" /></td>
         </tr>
         <tr>
             <td class="col-sm-1">POS</td>
@@ -89,4 +74,7 @@
                     class="btn btn-primary"></a></td>
         </tr>
     </table>
+    <form:hidden path="conceptIds" />
+    <form:hidden path="wordnetIds" />
+    <form:hidden path="synonymsids" />
 </form:form>
