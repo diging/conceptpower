@@ -171,12 +171,15 @@ public class XMLConceptMessage implements IConceptMessage {
     public String getErrorMessages(List<ObjectError> errors) {
 
         StringBuilder sb = new StringBuilder();
+        sb.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
+                + XMLConstants.NAMESPACE + "\">");
         for (ObjectError error : errors) {
             sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + " ");
             sb.append(XMLConstants.ERROR_MESSAGE + "=\"" + error.getDefaultMessage() + "\" ");
             sb.append(">");
             sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + ">");
         }
+        sb.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
         return sb.toString();
 
     }
@@ -184,10 +187,13 @@ public class XMLConceptMessage implements IConceptMessage {
     @Override
     public String getErrorMessage(String errorMessage) {
         StringBuilder sb = new StringBuilder();
+        sb.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
+                + XMLConstants.NAMESPACE + "\">");
         sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + " ");
         sb.append(XMLConstants.ERROR_MESSAGE + "=\"" + errorMessage + "\" ");
         sb.append(">");
         sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + ">");
+        sb.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
         return sb.toString();
     }
 

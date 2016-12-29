@@ -3,7 +3,6 @@ package edu.asu.conceptpower.rest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -87,9 +86,6 @@ public class TypeIdLookup {
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
 
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-
-        return new ResponseEntity<String>(entry, responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<String>(entry, HttpStatus.OK);
     }
 }
