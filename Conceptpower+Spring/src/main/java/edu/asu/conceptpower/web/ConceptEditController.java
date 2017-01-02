@@ -3,7 +3,9 @@ package edu.asu.conceptpower.web;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -164,6 +166,15 @@ public class ConceptEditController {
         conceptEntry.setTypeId(conceptEditBean.getSelectedTypeId());
         conceptEntry.setSynonymIds(conceptEditBean.getSynonymsids());
         conceptEntry.setModifiedUser(principal.getName());
+
+        List<String> wordnetIds = Arrays.asList(conceptEntry.getWordnetId().split(","));
+        if (conceptEntry.getAlternativeIds() != null) {
+            conceptEntry.getAlternativeIds().addAll(wordnetIds);
+        } else {
+            Set<String> alternativeIds = new HashSet<>();
+            alternativeIds.addAll(wordnetIds);
+            conceptEntry.setAlternativeIds(alternativeIds);
+        }
 
         String userId = usersManager.findUser(principal.getName()).getUsername();
         conceptEntry.setModified(userId);

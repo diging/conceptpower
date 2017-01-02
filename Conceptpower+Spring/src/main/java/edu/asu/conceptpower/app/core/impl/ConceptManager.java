@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.app.core.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -423,6 +424,9 @@ public class ConceptManager implements IConceptManager {
         entry.setBroadens(broadens);
 
         entry.setId(generateId(CONCEPT_PREFIX));
+        Set<String> alternativeIds = new HashSet<>();
+        alternativeIds.add(entry.getId());
+        entry.setAlternativeIds(alternativeIds);
 
         client.store(entry, DBNames.DICTIONARY_DB);
     }
@@ -450,6 +454,14 @@ public class ConceptManager implements IConceptManager {
         entry.addNewChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
+
+        // Adding alternative ids
+        Set<String> alternativeIds = new HashSet<>();
+        alternativeIds.add(entry.getId());
+        if (entry.getWordnetId() != null) {
+            alternativeIds.addAll(Arrays.asList(entry.getWordnetId().split(",")));
+        }
+        entry.setAlternativeIds(alternativeIds);
 
         client.store(entry, DBNames.DICTIONARY_DB);
         if (entry.getWordnetId() != null) {
