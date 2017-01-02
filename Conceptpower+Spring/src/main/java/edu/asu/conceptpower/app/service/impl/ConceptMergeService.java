@@ -183,7 +183,7 @@ public class ConceptMergeService implements IConceptMergeService {
     }
 
     private Predicate<String> isSpecificWordnetConcept(String selectedId) {
-        return p -> !p.equalsIgnoreCase(selectedId)
+        return id -> !id.equalsIgnoreCase(selectedId)
                 || ConceptTypes.SPECIFIC_WORDNET_CONCEPT == conceptTypesService.getConceptTypeByConceptId(selectedId);
     }
 
