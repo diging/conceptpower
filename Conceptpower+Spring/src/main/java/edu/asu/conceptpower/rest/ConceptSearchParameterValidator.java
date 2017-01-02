@@ -2,7 +2,6 @@ package edu.asu.conceptpower.rest;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import edu.asu.conceptpower.app.core.POS;
@@ -26,13 +25,9 @@ public class ConceptSearchParameterValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         ConceptSearchParameters conceptSearchParameter = (ConceptSearchParameters) target;
-
-        ValidationUtils.rejectIfEmpty(errors, "word", "word", "Word cannot be empty.");
-
         if (conceptSearchParameter.getPos() != null && !POS.posValues.contains(conceptSearchParameter.getPos())) {
             errors.reject("pos", "Please enter correct pos value.");
         }
-
         if (conceptSearchParameter.getOperator() != null) {
             if (!SearchParamters.OP_OR.equalsIgnoreCase(conceptSearchParameter.getOperator())
                     && !SearchParamters.OP_AND.equalsIgnoreCase(conceptSearchParameter.getOperator())) {
