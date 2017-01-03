@@ -12,9 +12,9 @@ import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.users.IUserManager;
+import edu.asu.conceptpower.app.util.IURIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
-import edu.asu.conceptpower.app.xml.IURIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 
 /**
