@@ -1,7 +1,10 @@
 package edu.asu.conceptpower.rest.util;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -9,6 +12,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
+import edu.asu.conceptpower.rest.msg.IConceptMessage;
+import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 
 /**
  * This class handles the exceptions from rest interface calls.
@@ -18,6 +25,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  */
 @ControllerAdvice
 public class RestExceptionHandler {
+
+    @Autowired
+    private IMessageRegistry messageRegistry;
 
     private static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
 
@@ -46,5 +56,13 @@ public class RestExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(value = JsonProcessingException.class)
     public ResponseEntity<String> handleJsonProcessingException(JsonProcessingException ex) {
         return new ResponseEntity<String>("Problems in processing json.", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = IndexerRunningException.class)
+    public ResponseEntity<String> handleIndexerRunningException(HttpServletRequest req, IndexerRunningException ex)
+            throws JsonProcessingException {
+        logger.info("Indexer running exception", ex);
+        IConceptMessage msg = messageRegistry.getMessageFactory(req.getHeader("Accept")).createConceptMessage();
+        return new ResponseEntity<String>(msg.getErrorMessage(ex.getMessage()), HttpStatus.SERVICE_UNAVAILABLE);
     }
 }
