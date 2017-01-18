@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,15 +44,23 @@ public class ConceptMergeController {
     @Autowired
     private IConceptListManager conceptListManager;
 
+    @Autowired
+    private ConceptsMergeBeanValidator validator;
+
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.setValidator(validator);
+    }
+
     @RequestMapping(value = "auth/concepts/merge", method = RequestMethod.GET)
-    public ModelAndView prepareMergeConcept(ModelMap model,
-            @ModelAttribute("conceptsMergeBean") ConceptsMergeBean conceptsMergeBean, BindingResult result,
-            ModelAndView mav) {
+    public ModelAndView prepareMergeConcept(@ModelAttribute("conceptsMergeBean") ConceptsMergeBean conceptsMergeBean,
+            BindingResult result) {
         List<ConceptEntry> conceptEntries = new ArrayList<>();
         for (String id : conceptsMergeBean.getConceptIds()) {
             conceptEntries.add(conceptManager.getConceptEntry(id));
         }
         conceptsMergeBean = conceptMergeService.prepareMergeConcepts(conceptEntries, conceptsMergeBean);
+        ModelAndView mav = new ModelAndView();
         mav.addObject("types", conceptTypesManager.getAllTypes());
         mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
                 .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
@@ -60,11 +70,18 @@ public class ConceptMergeController {
     }
 
     @RequestMapping(value = "auth/concepts/merge", method = RequestMethod.POST)
-    public String mergeConcept(ModelMap model, @ModelAttribute("conceptsMergeBean") ConceptsMergeBean conceptsMergeBean,
-            BindingResult result, Principal principal) throws IllegalAccessException, LuceneException,
-            IndexerRunningException, DictionaryDoesNotExistException, DictionaryModifyException {
+    public ModelAndView mergeConcept(
+            @ModelAttribute("conceptsMergeBean") @Validated ConceptsMergeBean conceptsMergeBean, BindingResult result,
+            Principal principal) throws IllegalAccessException, LuceneException, IndexerRunningException,
+                    DictionaryDoesNotExistException, DictionaryModifyException {
+        ModelAndView mav = new ModelAndView();
+        if (result.hasErrors()) {
+            mav.setViewName("forward:/auth/conceptMerge");
+            return mav;
+        }
         conceptMergeService.mergeConcepts(conceptsMergeBean, principal.getName());
-        return "redirect:/";
+        mav.setViewName("redirect:/");
+        return mav;
     }
 
 }
