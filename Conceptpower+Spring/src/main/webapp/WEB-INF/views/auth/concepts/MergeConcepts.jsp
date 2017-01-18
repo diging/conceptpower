@@ -84,7 +84,7 @@
                 value="Store merged concept" class="btn btn-primary"></td>
 
             <td><a
-                href="${pageContext.servletContext.contextPath}/auth/concepts/canceledit?fromHomeScreen=true"><input
+                href="${pageContext.servletContext.contextPath}/"><input
                     type="button" name="cancel" value="Cancel!"
                     class="btn btn-primary"></a></td>
         </tr>

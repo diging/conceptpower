@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.app.bean;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,13 +11,13 @@ public class ConceptsMergeBean {
     private String selectedTypeId;
     private String selectedTypeName;
     private String selectedConceptId;
-    private Set<String> descriptions;
-    private Set<String> synonymsids;
-    private Set<String> equalsValues;
-    private Set<String> similarValues;
+    private Set<String> descriptions = new HashSet<>();
+    private Set<String> synonymsids = new HashSet<>();
+    private Set<String> equalsValues = new HashSet<>();
+    private Set<String> similarValues = new HashSet<>();
     private Set<String> wordnetIds;
     private List<String> conceptIds;
-    private Set<String> words;
+    private Set<String> words = new HashSet<>();
 
     public String getSelectedPosValue() {
         return selectedPosValue;

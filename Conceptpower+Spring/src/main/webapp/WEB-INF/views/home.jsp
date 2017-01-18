@@ -129,7 +129,7 @@ function mergeConcepts() {
     if(conceptIdsToMerge.length < 2) {
     	$('#mergeError').show();
     } else {
-        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge/prepare?conceptIds=' + conceptIdsToMerge.join(", ");    	
+        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?conceptIds=' + conceptIdsToMerge.join(", ");    	
     }
 }
 
