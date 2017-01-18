@@ -76,12 +76,10 @@ public class ConceptLookup {
             entries = dictManager.getConceptListEntriesForWordPOS(word, pos, null);
         } catch (LuceneException ex) {
             logger.error("Lucene exception", ex);
-            return new ResponseEntity<String>(conceptMessage.getErrorMessage(ex.getMessage()),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
             logger.error("Illegal access exception", e);
-            return new ResponseEntity<String>(conceptMessage.getErrorMessage(e.getMessage()),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         Map<ConceptEntry, ConceptType> entryMap = generateEntryMap(entries);
         IConceptMessage conceptMessage = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
