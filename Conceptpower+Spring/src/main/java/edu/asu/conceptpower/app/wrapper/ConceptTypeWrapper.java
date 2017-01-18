@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import edu.asu.conceptpower.app.xml.URIHelper;
+import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptType;
 
 /**

@@ -28,9 +28,8 @@ public class ConceptSearchParameterValidator implements Validator {
         ConceptSearchParameters conceptSearchParameter = (ConceptSearchParameters) target;
 
         ValidationUtils.rejectIfEmpty(errors, "word", "word", "Word cannot be empty.");
-        ValidationUtils.rejectIfEmpty(errors, "pos", "pos", "Pos cannot be empty.");
 
-        if (!POS.posValues.contains(conceptSearchParameter.getPos())) {
+        if (conceptSearchParameter.getPos() != null && !POS.posValues.contains(conceptSearchParameter.getPos())) {
             errors.reject("pos", "Please enter correct pos value.");
         }
 
