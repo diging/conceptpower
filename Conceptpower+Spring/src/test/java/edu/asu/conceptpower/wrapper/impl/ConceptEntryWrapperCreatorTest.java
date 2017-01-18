@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.util.IURIHelper;
@@ -47,7 +48,7 @@ public class ConceptEntryWrapperCreatorTest {
     ConceptEntry entry = new ConceptEntry();
 
     @Before
-    public void init() throws LuceneException {
+    public void init() throws LuceneException, IllegalAccessException, IndexerRunningException {
 
         ChangeEvent changeEvent = new ChangeEvent();
         changeEvent.setUserName("Test");
@@ -89,7 +90,7 @@ public class ConceptEntryWrapperCreatorTest {
     }
 
     @Test
-    public void createWrappers() throws LuceneException {
+    public void createWrappers() throws LuceneException, IllegalAccessException, IndexerRunningException {
         List<ConceptEntryWrapper> conceptEntryWrapperList = conceptEntryWrapperCreator.createWrappers(entries);
         assertNotNull(conceptEntryWrapperList);
         assertEquals("Type-1", conceptEntryWrapperList.get(0).getType().getTypeId());
@@ -102,7 +103,7 @@ public class ConceptEntryWrapperCreatorTest {
     }
     
     @Test
-    public void createNullWrappers() throws LuceneException{
+    public void createNullWrappers() throws LuceneException, IllegalAccessException, IndexerRunningException {
     	List<ConceptEntryWrapper> conceptEntryWrapperList = conceptEntryWrapperCreator.createWrappers(null);
     	assertNotNull(conceptEntryWrapperList);
     	assertEquals(conceptEntryWrapperList.size(),0);

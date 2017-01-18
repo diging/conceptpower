@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
+import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
@@ -60,12 +61,14 @@ public class SynonymSearch {
      * @param req
      * @return
      * @throws JsonProcessingException
+     * @throws IndexerRunningException
+     * @throws IllegalAccessException
      */
     @RequestMapping(value = "/SynonymSearch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody ResponseEntity<String> getSynonymsForId(HttpServletRequest req,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
-            throws JsonProcessingException {
+                    throws JsonProcessingException, IllegalAccessException, IndexerRunningException {
 
         // construct the URL to the Wordnet dictionary directory
         String id = req.getParameter("id");

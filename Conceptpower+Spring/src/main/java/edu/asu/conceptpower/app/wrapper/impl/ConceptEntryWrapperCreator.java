@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.util.IURIHelper;
@@ -44,9 +45,12 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
      * @param entries
      *            Holds the concept entries to be wrapped
      * @return
+     * @throws IndexerRunningException
+     * @throws IllegalAccessException
      */
     @Override
-    public List<ConceptEntryWrapper> createWrappers(ConceptEntry[] entries) throws LuceneException {
+    public List<ConceptEntryWrapper> createWrappers(ConceptEntry[] entries)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
         List<ConceptEntryWrapper> foundConcepts = new ArrayList<ConceptEntryWrapper>();
 
         if (entries == null)

@@ -23,6 +23,7 @@ import edu.asu.conceptpower.app.core.ConceptTypesService;
 import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
+import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
@@ -57,7 +58,7 @@ public class ConceptIDLookup {
 
     private static final Logger logger = LoggerFactory.getLogger(ConceptIDLookup.class);
 
-    /**
+	/**
      * This method provides concept information for the rest interface of the
      * form
      * "http://[server.url]/conceptpower/rest/Concept?id={URI or ID of concept}"
@@ -66,12 +67,15 @@ public class ConceptIDLookup {
      *            Holds the HTTP request information
      * @return XML containing concept information
      * @throws JsonProcessingException
+     * @throws IndexerRunningException
+     * @throws LuceneException
+     * @throws IllegalAccessException
      */
     @RequestMapping(value = "/Concept", method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody ResponseEntity<String> getConceptById(@RequestParam String id,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
-                    throws JsonProcessingException {
+                    throws JsonProcessingException, IllegalAccessException, LuceneException, IndexerRunningException {
 
         if (id == null || id.trim().isEmpty()) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -107,13 +111,11 @@ public class ConceptIDLookup {
             }
             entryMap.put(entry, type);
         }
-
         return new ResponseEntity<String>(msg.getAllConceptEntries(entryMap), HttpStatus.OK);
-
     }
 
     private ConceptEntry checkAndAddAlternativeIds(String[] pathParts, int lastIndex, ConceptEntry entry)
-            throws LuceneException {
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (conceptTypesService
                 .getConceptTypeByConceptId(pathParts[lastIndex]) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
             entry = conceptManager.getConceptEntry(entry.getId());

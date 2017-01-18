@@ -21,6 +21,7 @@ import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
+import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
@@ -71,11 +72,14 @@ public class ConceptListController {
      *            A generic model holder for Servlet
      * @return Return sting value to redirect user to a particular concept list
      *         page
+     * @throws IndexerRunningException
+     * @throws IllegalAccessException
      */
     @RequestMapping(value = "auth/{listid}/concepts", method = RequestMethod.GET)
     public String getConceptsOfConceptList(@PathVariable("listid") String list, ModelMap model,
             @RequestParam(defaultValue = "1") String page,
-            @RequestParam(defaultValue = IConceptDBManager.DESCENDING + "") String sortDir) throws LuceneException {
+            @RequestParam(defaultValue = IConceptDBManager.DESCENDING + "") String sortDir)
+                    throws LuceneException, IllegalAccessException, IndexerRunningException {
 
         int pageInt = new Integer(page);
         int sortDirInt = new Integer(sortDir);
@@ -107,11 +111,14 @@ public class ConceptListController {
      * @param conceptid
      *            ID of a concept
      * @return Map containing concept details
-     * @throws LuceneException 
+     * @throws LuceneException
+     * @throws IndexerRunningException
+     * @throws IllegalAccessException
      */
     @RequestMapping(method = RequestMethod.GET, value = "conceptDetail", produces = "application/json")
     public @ResponseBody ResponseEntity<String> getConceptDetails(
-            @RequestParam("conceptid") String conceptid) throws LuceneException {
+@RequestParam("conceptid") String conceptid)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry entry = conceptManager.getConceptEntry(conceptid);
         List<ConceptEntryWrapper> wrappers = wrapperCreator.createWrappers(new ConceptEntry[] { entry } );
         ConceptEntryWrapper wrapper = null;

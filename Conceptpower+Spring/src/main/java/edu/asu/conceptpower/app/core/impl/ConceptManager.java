@@ -1,13 +1,16 @@
 package edu.asu.conceptpower.app.core.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +18,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.constants.SearchFieldNames;
+import edu.asu.conceptpower.app.core.ConceptTypesService;
+import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db4o.DBNames;
@@ -52,6 +57,9 @@ public class ConceptManager implements IConceptManager {
     @Autowired
     private WordNetManager wordnetManager;
     
+    @Autowired
+    private ConceptTypesService conceptTypesService;
+
     protected final String CONCEPT_PREFIX = "CON";
 
     @Value("${default_page_size}")
@@ -64,9 +72,11 @@ public class ConceptManager implements IConceptManager {
      * String)
      */
     @Override
-    public ConceptEntry getConceptEntry(String id) {
+    public ConceptEntry getConceptEntry(String id)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
         ConceptEntry entry = client.getEntry(id);
         if (entry != null) {
+            entry.setAlternativeIds(addAlternativeIds(id, entry.getId()));
             fillConceptEntry(entry);
             return entry;
         }
@@ -74,10 +84,28 @@ public class ConceptManager implements IConceptManager {
         entry = wordnetManager.getConcept(id);
         if (entry != null) {
             // client.store(entry, DBNames.WORDNET_CACHE);
+            entry.setAlternativeIds(addAlternativeIds(id, entry.getId()));
             return entry;
         }
 
         return null;
+    }
+
+    public Set<String> addAlternativeIds(String queriedId, String originalId)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
+        Set<String> alternativeIds = new HashSet<>();
+        if (conceptTypesService.getConceptTypeByConceptId(queriedId) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
+            alternativeIds.add(queriedId);
+            alternativeIds.add(originalId);
+        }
+        Map<String, String> fieldMap = new HashMap<>();
+        fieldMap.put(SearchFieldNames.ID, originalId);
+        ConceptEntry[] entries = indexService.searchForConcepts(fieldMap, null);
+
+        for (ConceptEntry entry : entries) {
+            alternativeIds.addAll(entry.getAlternativeIds());
+        }
+        return alternativeIds;
     }
 
     /*
@@ -260,7 +288,8 @@ public class ConceptManager implements IConceptManager {
      * .String)
      */
     @Override
-    public ConceptEntry[] getSynonymsForConcept(String id) throws LuceneException {
+    public ConceptEntry[] getSynonymsForConcept(String id)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
 
         ConceptEntry concept = getConceptEntry(id);
         List<ConceptEntry> allEntries = new ArrayList<ConceptEntry>();
@@ -395,6 +424,9 @@ public class ConceptManager implements IConceptManager {
         entry.setBroadens(broadens);
 
         entry.setId(generateId(CONCEPT_PREFIX));
+        Set<String> alternativeIds = new HashSet<>();
+        alternativeIds.add(entry.getId());
+        entry.setAlternativeIds(alternativeIds);
 
         client.store(entry, DBNames.DICTIONARY_DB);
     }
@@ -422,6 +454,14 @@ public class ConceptManager implements IConceptManager {
         entry.addNewChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
+
+        // Adding alternative ids
+        Set<String> alternativeIds = new HashSet<>();
+        alternativeIds.add(entry.getId());
+        if (entry.getWordnetId() != null) {
+            alternativeIds.addAll(Arrays.asList(entry.getWordnetId().split(",")));
+        }
+        entry.setAlternativeIds(alternativeIds);
 
         client.store(entry, DBNames.DICTIONARY_DB);
         if (entry.getWordnetId() != null) {
@@ -493,7 +533,8 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException {
+    public void deleteConcept(String id, String userName)
+            throws LuceneException, IndexerRunningException, IllegalAccessException {
         ConceptEntry concept = getConceptEntry(id);
         concept.setDeleted(true);
         ChangeEvent changeEvent = new ChangeEvent();

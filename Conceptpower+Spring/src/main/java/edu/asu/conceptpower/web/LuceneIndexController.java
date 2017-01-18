@@ -73,6 +73,7 @@ public class LuceneIndexController {
             bean.setMessage("Indexer Running");
             return new ResponseEntity<IndexingEvent>(bean, HttpStatus.OK);
         } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
+            bean = new IndexingEvent();
             bean.setMessage(ex.getMessage());
             return new ResponseEntity<IndexingEvent>(bean, HttpStatus.INTERNAL_SERVER_ERROR);
         }
