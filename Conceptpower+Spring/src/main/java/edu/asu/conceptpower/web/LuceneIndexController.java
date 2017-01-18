@@ -71,6 +71,7 @@ public class LuceneIndexController {
             bean.setMessage("Indexed successfully");
             return bean;
         } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
+            bean = new IndexingEvent();
             bean.setMessage(ex.getMessage());
             return bean;
         }

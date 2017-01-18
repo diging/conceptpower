@@ -51,7 +51,7 @@ public class ConceptManagerTest {
     private ConceptList list1;
 
     @Before
-    public void init() throws LuceneException {
+    public void init() throws LuceneException, IllegalAccessException, IndexerRunningException {
         conceptManager = Mockito.mock(ConceptManager.class);
 
         ChangeEvent changeEvent = new ChangeEvent();
@@ -115,7 +115,8 @@ public class ConceptManagerTest {
     }
 
     @Test
-    public void testGetConceptEntryForAddedConcept() throws LuceneException {
+    public void testGetConceptEntryForAddedConcept()
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry entry = managerToTest.getConceptEntry("id1");
         Assert.assertEquals(addedConcept, entry);
         // Test for fetching the creatorId from changeEvent
@@ -124,13 +125,15 @@ public class ConceptManagerTest {
     }
 
     @Test
-    public void testGetConceptEntryForWordnetConcept() throws LuceneException {
+    public void testGetConceptEntryForWordnetConcept()
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry entry = managerToTest.getConceptEntry("WID-2");
         Assert.assertEquals(addedConceptsForWordNet, entry);
     }
 
     @Test
-    public void testGetConceptEntryNoExisting() throws LuceneException {
+    public void testGetConceptEntryNoExisting()
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry entry = managerToTest.getConceptEntry("id-non");
         Assert.assertNull(entry);
     }

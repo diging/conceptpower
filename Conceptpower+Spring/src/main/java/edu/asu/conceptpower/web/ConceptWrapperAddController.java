@@ -155,9 +155,11 @@ public class ConceptWrapperAddController {
      * @return String value which redirects user to concept wrapper creation
      *         page
      * @throws IllegalAccessException
+     * @throws IndexerRunningException
      */
     @RequestMapping(value = "/auth/conceptlist/addconceptwrapper/conceptsearch", method = RequestMethod.POST)
-    public String search(HttpServletRequest req, ModelMap model) throws LuceneException, IllegalAccessException {
+    public String search(HttpServletRequest req, ModelMap model)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
 
         String concept = req.getParameter("name");
         String pos = req.getParameter("pos");
