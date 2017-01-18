@@ -146,7 +146,7 @@ public class ConceptManagerTest {
         newConcept.setWordnetId("WID-1");
         String id = managerToTest.addConceptListEntry(newConcept, "testuser");
         Assert.assertNotNull(newConcept.getChangeEvents());
-        Mockito.verify(indexService).insertConcept(newConcept);
+        Mockito.verify(indexService).insertConcept(newConcept, "testuser");
         Assert.assertNotNull(id);
     }
 
