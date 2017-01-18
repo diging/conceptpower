@@ -176,12 +176,21 @@ public class LuceneUtility implements ILuceneUtility {
                     } else if (searchFieldAnnotation.lucenefieldName()
                             .equalsIgnoreCase(LuceneFieldNames.ALTERNATIVE_IDS)
                             && ccpAlternativeIdMap.get(String.valueOf(entry.getId())) != null) {
-                        // Gets the alternative ids from the map.
-                        // CCP Alternative Map contains its own id as value
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
-                                StringUtils.join(ccpAlternativeIdMap.get(String.valueOf(entry.getId())), ','),
-                                Field.Store.YES));
+                        String content = String.valueOf(contentOfField);
+                        /**
+                         * This has been added inorder to prevent all the [ and
+                         * ] which has been added previously due to
+                         * String.valueOf(Set). When a String.valueOf(set) is
+                         * applied. The string value will contain the [ and ]
+                         * characters at the beginging and end respectively
+                         */
+                        content = content.replace("[", "");
+                        content = content.replace("]", "");
 
+                        if (content.contains("[") || content.contains("]")) {
+                            System.out.println("Stop");
+                        }
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), content, Field.Store.YES));
                     } else {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
@@ -595,4 +604,5 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException(ex.getMessage(), ex);
         }
     }
+
 }
