@@ -83,13 +83,15 @@ public class ConceptSearch {
      *            Holds HTTP request information
      * @return
      * @throws JsonProcessingException
+     * @throws IndexerRunningException
      */
     @RequestMapping(value = "/ConceptSearch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody ResponseEntity<String> searchConcept(HttpServletRequest req,
             @Validated ConceptSearchParameters conceptSearchParameters, BindingResult result,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
-                    throws JsonProcessingException, IllegalArgumentException, IllegalAccessException {
+                    throws JsonProcessingException, IllegalArgumentException, IllegalAccessException,
+                    IndexerRunningException {
 
         if (result.hasErrors()) {
             IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
@@ -132,9 +134,6 @@ public class ConceptSearch {
         } catch (LuceneException ex) {
             logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (IndexerRunningException ire) {
-            logger.info("Indexer running exception", ire);
-            return new ResponseEntity<String>(ire.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
 
         if (searchResults.length == 0) {

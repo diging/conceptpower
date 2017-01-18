@@ -63,25 +63,25 @@ public class ConceptLookup {
      *            String value of the POS of concept to be looked
      * @return XML containing information of given concept for given POS
      * @throws JsonProcessingException
+     * @throws IndexerRunningException
      */
     @RequestMapping(value = "/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody ResponseEntity<String> getWordNetEntry(@PathVariable("word") String word,
             @PathVariable("pos") String pos,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
-                    throws JsonProcessingException {
+                    throws JsonProcessingException, IndexerRunningException {
         ConceptEntry[] entries = null;
         try {
             entries = dictManager.getConceptListEntriesForWordPOS(word, pos, null);
         } catch (LuceneException ex) {
             logger.error("Lucene exception", ex);
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(conceptMessage.getErrorMessage(ex.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
             logger.error("Illegal access exception", e);
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (IndexerRunningException ie) {
-            logger.info("Indexer running exception", ie);
-            return new ResponseEntity<String>(ie.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+            return new ResponseEntity<String>(conceptMessage.getErrorMessage(e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
         Map<ConceptEntry, ConceptType> entryMap = generateEntryMap(entries);
         IConceptMessage conceptMessage = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
@@ -107,7 +107,7 @@ public class ConceptLookup {
 
     @RequestMapping(value = "/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/rdf+xml")
     public @ResponseBody ResponseEntity<String> getWordNetEntryInRdf(@PathVariable("word") String word,
-            @PathVariable("pos") String pos) {
+            @PathVariable("pos") String pos) throws IndexerRunningException {
         ConceptEntry[] entries = null;
         try {
             entries = dictManager.getConceptListEntriesForWordPOS(word, pos, null);
@@ -117,9 +117,6 @@ public class ConceptLookup {
         } catch (IllegalAccessException e) {
             logger.error("Illegal access exception", e);
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (IndexerRunningException ir) {
-            logger.info("Indexer running exception", ir);
-            return new ResponseEntity<String>(ir.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
         return new ResponseEntity<String>(rdfFactory.generateRDF(entries), HttpStatus.OK);
     }
