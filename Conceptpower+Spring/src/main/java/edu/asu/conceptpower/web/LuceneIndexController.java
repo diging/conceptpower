@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,25 +58,38 @@ public class LuceneIndexController {
      * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/indexConcepts", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody IndexingEvent indexConcepts(HttpServletRequest req, Principal principal, ModelMap model)
+    public @ResponseBody ResponseEntity<IndexingEvent> indexConcepts(HttpServletRequest req, Principal principal,
+            ModelMap model)
             throws IndexerRunningException {
-        IndexingEvent bean = null;
+        IndexingEvent bean = new IndexingEvent();
         try {
             if (manager.isIndexerRunning()) {
-                bean = manager.getTotalNumberOfWordsIndexed();
                 bean.setMessage(indexerRunning);
-                return bean;
+                return new ResponseEntity<IndexingEvent>(bean, HttpStatus.SERVICE_UNAVAILABLE);
             }
-            manager.deleteIndexes();
-            manager.indexConcepts();
-            bean = manager.getTotalNumberOfWordsIndexed();
-            bean.setMessage("Indexed successfully");
-            return bean;
+
+            manager.deleteIndexes(principal.getName());
+            manager.indexConcepts(principal.getName());
+            bean.setMessage("Indexer Running");
+            return new ResponseEntity<IndexingEvent>(bean, HttpStatus.OK);
         } catch (LuceneException | IllegalArgumentException | IllegalAccessException ex) {
             bean = new IndexingEvent();
             bean.setMessage(ex.getMessage());
-            return bean;
+            return new ResponseEntity<IndexingEvent>(bean, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @RequestMapping(value = "auth/getIndexerStatus", method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody ResponseEntity<IndexingEvent> getIndexerStatus() throws IndexerRunningException {
+
+        IndexingEvent bean = new IndexingEvent();
+        if (!manager.isIndexerRunning()) {
+            bean = manager.getTotalNumberOfWordsIndexed();
+            bean.setMessage("Indexed successfully");
+            return new ResponseEntity<IndexingEvent>(bean, HttpStatus.OK);
+        }
+        bean.setMessage("Indexer Running");
+        return new ResponseEntity<IndexingEvent>(bean, HttpStatus.ACCEPTED);
     }
 
     /**
@@ -96,7 +111,7 @@ public class LuceneIndexController {
                 bean.setMessage(indexerRunning);
                 return bean;
             }
-            manager.deleteIndexes();
+            manager.deleteIndexes(principal.getName());
             bean = manager.getTotalNumberOfWordsIndexed();
             bean.setMessage("Concepts deleted from index successfully");
             return bean;

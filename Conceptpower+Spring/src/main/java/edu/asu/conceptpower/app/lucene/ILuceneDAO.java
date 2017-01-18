@@ -4,7 +4,7 @@ import edu.asu.conceptpower.core.IndexingEvent;
 
 public interface ILuceneDAO {
 
-    public void storeValues(long numberOfIndexedWords,String action);
+    public void storeValues(IndexingEvent bean);
 
     public IndexingEvent getTotalNumberOfWordsIndexed();
 }

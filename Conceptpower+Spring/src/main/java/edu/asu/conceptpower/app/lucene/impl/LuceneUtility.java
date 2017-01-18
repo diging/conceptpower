@@ -7,6 +7,7 @@ import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -134,7 +135,7 @@ public class LuceneUtility implements ILuceneUtility {
      * 
      * @throws LuceneException
      */
-    public void deleteById(String id) throws LuceneException {
+    public void deleteById(String id, String userName) throws LuceneException {
         try {
             writer.deleteDocuments(new Term(LuceneFieldNames.ID, id));
             writer.commit();
@@ -142,7 +143,8 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (IOException ex) {
             throw new LuceneException("Issues in deletion. Please retry", ex);
         }
-        luceneDAO.storeValues(-1, LuceneAction.DELETE);
+        IndexingEvent event = new IndexingEvent(new Date(), -1, LuceneAction.DELETE, userName);
+        luceneDAO.storeValues(event);
     }
 
     /**
@@ -150,7 +152,7 @@ public class LuceneUtility implements ILuceneUtility {
      * values to be stored into lucene index After storing the values in index,
      * index count is increased in tables in lucene database
      */
-    public void insertConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException {
+    public void insertConcept(ConceptEntry entry, String userName) throws LuceneException, IllegalAccessException {
         Document doc = new Document();
 
         java.lang.reflect.Field[] fields = entry.getClass().getDeclaredFields();
@@ -165,14 +167,6 @@ public class LuceneUtility implements ILuceneUtility {
                         doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
                         
-                    } else if (searchFieldAnnotation.lucenefieldName()
-                            .equalsIgnoreCase(LuceneFieldNames.CONCEPT_LIST)) {
-                        // Just made as lower case for concept list. This is
-                        // because if we make it lowercase for wordnet id and
-                        // concept id, it creates problem while fetching the
-                        // data from ConceptManager
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName().toLowerCase(),
-                                String.valueOf(contentOfField), Field.Store.YES));
                     } else if (searchFieldAnnotation.lucenefieldName()
                             .equalsIgnoreCase(LuceneFieldNames.ALTERNATIVE_IDS)
                             && ccpAlternativeIdMap.get(String.valueOf(entry.getId())) != null) {
@@ -206,7 +200,8 @@ public class LuceneUtility implements ILuceneUtility {
         } catch (IOException ex) {
             throw new LuceneException("Cannot insert concept in lucene. Please retry", ex);
         }
-        luceneDAO.storeValues(1, LuceneAction.INSERT);
+        IndexingEvent bean = new IndexingEvent(new Date(), 1, LuceneAction.INSERT, userName);
+        luceneDAO.storeValues(bean);
     }
 
     /**
@@ -244,7 +239,7 @@ public class LuceneUtility implements ILuceneUtility {
      * index count is decremented in table
      */
     @Override
-    public void deleteIndexes() throws LuceneException {
+    public void deleteIndexes(String userName) throws LuceneException {
         try {
             writer.deleteAll();
             writer.commit();
@@ -253,7 +248,9 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Problem in deleting indexes. Please retry", e);
         }
         IndexingEvent bean = luceneDAO.getTotalNumberOfWordsIndexed();
-        luceneDAO.storeValues(-bean.getIndexedWordsCount(), LuceneAction.DELETE);
+        IndexingEvent updatedBean = new IndexingEvent(new Date(), -bean.getIndexedWordsCount(), LuceneAction.DELETE,
+                userName);
+        luceneDAO.storeValues(updatedBean);
     }
 
     /**
@@ -275,9 +272,7 @@ public class LuceneUtility implements ILuceneUtility {
             for (IWordID wordId : wordIdds) {
                 IWord word = dict.getWord(wordId);
                 List<ConceptEntry> entries = databaseClient.getConceptByWordnetId(word.getID().toString());
-                if (entries != null && !entries.isEmpty()) {
-                    logger.debug("Found concept for " + wordId.toString());
-                } else {
+                if (entries == null || entries.isEmpty()) {
                     Document doc = createIndividualDocument(dict, wordId);
                     try {
                         numberOfIndexedWords++;
@@ -343,13 +338,13 @@ public class LuceneUtility implements ILuceneUtility {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    protected int[] createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList)
+    protected int[] createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList, String userName)
             throws IllegalArgumentException, IllegalAccessException {
         int numberOfIndexedConcepts = 0;
         int numberOfUnindexConcepts = 0;
         for (ConceptEntry entry : conceptEntryList) {
             try {
-                insertConcept(entry);
+                insertConcept(entry, userName);
                 numberOfIndexedConcepts++;
             } catch (LuceneException e) {
                 numberOfUnindexConcepts++;
@@ -366,7 +361,8 @@ public class LuceneUtility implements ILuceneUtility {
      * different POS and loads the data into lucene index
      */
     @Override
-    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException {
+    public void indexConcepts(String userName)
+            throws LuceneException, IllegalArgumentException, IllegalAccessException {
 
         loadAlternativeIdsMap();
 
@@ -424,7 +420,7 @@ public class LuceneUtility implements ILuceneUtility {
         List<ConceptEntry> conceptEntriesList = (List<ConceptEntry>) databaseClient
                 .getAllElementsOfType(ConceptEntry.class);
 
-        numberOfWord = createDocumentsFromConceptEntries(conceptEntriesList);
+        numberOfWord = createDocumentsFromConceptEntries(conceptEntriesList, userName);
 
         numberOfIndexedWords += numberOfWord[0];
         numberOfUnIndexedWords += numberOfWord[1];
@@ -436,7 +432,8 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Issues in writing document", e);
         }
 
-        luceneDAO.storeValues(numberOfIndexedWords, LuceneAction.REINDEX);
+        IndexingEvent event = new IndexingEvent(new Date(), numberOfIndexedWords, LuceneAction.REINDEX, userName);
+        luceneDAO.storeValues(event);
 
         if (numberOfUnIndexedWords > 0) {
             throw new LuceneException("Indexing not done for " + numberOfUnIndexedWords);
