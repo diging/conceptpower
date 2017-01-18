@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
-import edu.asu.conceptpower.app.core.POSMessage;
+import edu.asu.conceptpower.app.core.POS;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -36,9 +36,6 @@ public class ConceptMergeController {
     @Autowired
     private IConceptTypeManger conceptTypesManager;
 
-    @Autowired
-    private POSMessage posMessage;
-
     @RequestMapping(value = "auth/concepts/merge/prepare")
     public ModelAndView prepareMergeConcept(ModelMap model,
             @ModelAttribute("conceptsMergeBean") ConceptsMergeBean conceptsMergeBean, BindingResult result,
@@ -51,7 +48,7 @@ public class ConceptMergeController {
 
         mav.addObject("types", conceptTypesManager.getAllTypes());
         mav.addObject("conceptListValues", conceptMergeService.getAllConceptLists());
-        mav.addObject("posMap", posMessage.getPOSMap());
+        mav.addObject("posValues", POS.posValues);
         mav.setViewName("/auth/conceptMerge");
         return mav;
     }

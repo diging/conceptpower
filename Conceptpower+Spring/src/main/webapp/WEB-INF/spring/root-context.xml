@@ -56,7 +56,7 @@
         class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />
         
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basenames" value="validatormessages"></property>
+        <property name="basenames" value="validatormessages,pos"></property>
     </bean>	
 
 	<import resource="spring-security.xml" />

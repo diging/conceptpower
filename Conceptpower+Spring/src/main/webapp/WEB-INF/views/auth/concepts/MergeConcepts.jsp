@@ -8,12 +8,21 @@
 <form:form action="${pageContext.servletContext.contextPath}/auth/concepts/merge" method='post' modelAttribute="conceptsMergeBean">
 
     <h1>Merge concepts</h1>
-
-    <label class="col-sm-1 control-label">Concept Id</label>
-    <div class="col-sm-11">
-        <!-- If none of the values are selected, we create a new concept id for the merged concept -->
-        <form:radiobuttons path="selectedConceptId" items="${conceptsMergeBean.conceptIds}" element="label class='radio-inline'" />
-    </div>
+    
+    <c:choose>
+        <c:when test="${not empty conceptsMergeBean.conceptIds }">
+            <label class="col-sm-1 control-label">Concept Id</label>
+            <div class="col-sm-11">
+                <!-- If none of the values are selected, we create a new concept id for the merged concept -->
+                <form:radiobuttons path="selectedConceptId" items="${conceptsMergeBean.conceptIds}" element="label class='radio-inline'" />
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="col-sm-12">
+                New Id will be generated for merged concepts.
+            </div>
+        </c:otherwise>
+    </c:choose>
     
     <table>
         <tr>
@@ -22,11 +31,17 @@
         </tr>
         <tr>
             <td class="col-sm-1">POS</td>
-            <td class="col-sm-11"><form:select
-                    path="selectedPosValue" class="form-control">
+            <td class="col-sm-11">
+                <form:select path="selectedPosValue" class="form-control">
                     <form:option value="" />
-                    <form:options items="${posMap}" />
-                </form:select></td>
+                    <c:forEach var="posValue" items="${posValues}">
+                      <c:set var="labelVar">
+                          <spring:message code="${posValue}" />
+                      </c:set>
+                      <form:option value="${posValue }" label="${labelVar}" />    
+                    </c:forEach>
+                </form:select>
+            </td>
         </tr>
         <tr>
             <td class="col-sm-1">Concept List</td>
