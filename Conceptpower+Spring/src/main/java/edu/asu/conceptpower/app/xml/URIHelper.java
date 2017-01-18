@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.util;
+package edu.asu.conceptpower.app.xml;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.app.config.XMLConfig;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.rest.msg.xml.XMLConstants;
 
 /**
  * This class creates URIs for concepts and types based on the in xml-config.xml

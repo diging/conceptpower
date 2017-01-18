@@ -1,17 +1,15 @@
-package edu.asu.conceptpower.rest.msg.xml;
+package edu.asu.conceptpower.app.xml;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.springframework.validation.ObjectError;
 
-import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.rest.msg.IConceptMessage;
-import edu.asu.conceptpower.rest.msg.Pagination;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
 /**
@@ -21,7 +19,7 @@ import edu.asu.conceptpower.servlet.core.ChangeEvent;
  * @author Julia Damerow
  *
  */
-public class XMLConceptMessage implements IConceptMessage {
+public class XMLConceptMessage extends AXMLMessage {
 
     private URIHelper uriCreator;
 
@@ -29,33 +27,34 @@ public class XMLConceptMessage implements IConceptMessage {
         this.uriCreator = uriCreator;
     }
 
-    @Override
-    public String getAllConceptEntriesAndPaginationDetails(Map<ConceptEntry, ConceptType> entries,
-            Pagination pagination) {
-        StringBuffer sb = new StringBuffer("");
-        sb.append(getAllConceptEntries(entries));
-        sb.append(appendPaginationDetails(pagination.getTotalNumberOfRecords(), pagination.getPageNumber()));
+    public String appendPaginationDetails(int numberOfRecords, int pageNumber) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + " ");
+        sb.append(XMLConstants.NUMBER_OF_RECORDS + "=\"" + numberOfRecords + "\" ");
+        sb.append(XMLConstants.PAGE_NUMBER + "=\"" + pageNumber + "\" ");
+        sb.append(">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + ">");
         return sb.toString();
     }
 
-    @Override
-    public String getAllConceptEntries(Map<ConceptEntry, ConceptType> entries) {
-
-        if (entries == null || entries.isEmpty()) {
-            return getErrorMessage("No concept entry found.");
-        }
-        StringBuilder xmlEntries = new StringBuilder();
-        xmlEntries.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
-                + XMLConstants.NAMESPACE + "\">");
-
-        for (ConceptEntry entry : entries.keySet())
-            xmlEntries.append(getConceptMessage(entry, entries.get(entry)));
-
-        xmlEntries.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
-        return xmlEntries.toString();
+    public String appendErrorMessage(String errorMessage) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + " ");
+        sb.append(XMLConstants.ERROR_MESSAGE + "=\"" + errorMessage + "\" ");
+        sb.append(">");
+        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + ">");
+        return sb.toString();
     }
 
-    private String getConceptMessage(ConceptEntry entry, ConceptType type) {
+    public List<String> appendEntries(Map<ConceptEntry, ConceptType> entries) {
+        List<String> xmlEntries = new ArrayList<String>();
+        for (ConceptEntry entry : entries.keySet())
+            xmlEntries.add(getEntry(entry, entries.get(entry)));
+
+        return xmlEntries;
+    }
+
+    public String getEntry(ConceptEntry entry, ConceptType type) {
         StringBuffer sb = new StringBuffer();
 
         sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_ENTRY + ">");
@@ -167,43 +166,7 @@ public class XMLConceptMessage implements IConceptMessage {
         return sb.toString();
     }
 
-    @Override
-    public String getErrorMessages(List<ObjectError> errors) {
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
-                + XMLConstants.NAMESPACE + "\">");
-        for (ObjectError error : errors) {
-            sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + " ");
-            sb.append(XMLConstants.ERROR_MESSAGE + "=\"" + error.getDefaultMessage() + "\" ");
-            sb.append(">");
-            sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + ">");
-        }
-        sb.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
-        return sb.toString();
-
-    }
-
-    @Override
-    public String getErrorMessage(String errorMessage) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
-                + XMLConstants.NAMESPACE + "\">");
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + " ");
-        sb.append(XMLConstants.ERROR_MESSAGE + "=\"" + errorMessage + "\" ");
-        sb.append(">");
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ERROR + ">");
-        sb.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
-        return sb.toString();
-    }
-
-    private String appendPaginationDetails(int numberOfRecords, int pageNumber) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + " ");
-        sb.append(XMLConstants.NUMBER_OF_RECORDS + "=\"" + numberOfRecords + "\" ");
-        sb.append(XMLConstants.PAGE_NUMBER + "=\"" + pageNumber + "\" ");
-        sb.append(">");
-        sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + ">");
-        return sb.toString();
+    public void appendDictionaries(List<ConceptList> lists) throws NotImplementedException {
+        throw new NotImplementedException();
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
-import edu.asu.conceptpower.app.util.URIHelper;
+import edu.asu.conceptpower.app.xml.URIHelper;
 import edu.asu.conceptpower.core.ConceptType;
 
 @Component

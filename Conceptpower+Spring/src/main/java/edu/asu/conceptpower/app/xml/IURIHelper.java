@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.util;
+package edu.asu.conceptpower.app.xml;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;

@@ -429,9 +429,9 @@ public class ConceptManager implements IConceptManager {
             if (wordnetId.endsWith(",")) {
                 wordnetId = wordnetId.substring(0, wordnetId.length() - 1);
             }
-            indexService.deleteById(wordnetId, userName);
+            indexService.deleteById(wordnetId);
         }
-        indexService.insertConcept(entry, userName);
+        indexService.insertConcept(entry);
         return id;
     }
     
@@ -452,7 +452,7 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
         entry.addNewChangeEvent(changeEvent);
 
-        indexService.updateConceptEntry(entry, userName);
+        indexService.updateConceptEntry(entry);
 
         client.update(entry, DBNames.DICTIONARY_DB);
     }
@@ -502,7 +502,7 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setUserName(userName);
         concept.addNewChangeEvent(changeEvent);
         client.update(concept, DBNames.DICTIONARY_DB);
-        indexService.deleteById(concept.getId(), userName);
+        indexService.deleteById(concept.getId());
     }
 
     @Override

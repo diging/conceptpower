@@ -12,21 +12,19 @@ public interface IIndexService {
     public ConceptEntry[] searchForConcepts(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException,IndexerRunningException;
 
-    public void insertConcept(ConceptEntry entry, String userName)
-            throws IllegalAccessException, LuceneException, IndexerRunningException;
+    public void insertConcept(ConceptEntry entry) throws IllegalAccessException, LuceneException,IndexerRunningException;
 
-    public void deleteById(String id, String userName) throws LuceneException, IndexerRunningException;
+    public void deleteById(String id) throws LuceneException, IndexerRunningException;
 
-    public void deleteIndexes(String userName) throws LuceneException, IndexerRunningException;
+    public void deleteIndexes() throws LuceneException, IndexerRunningException;
 
-    public void indexConcepts(String userName)
-            throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException;
+    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException, IndexerRunningException;
     
     public boolean isIndexerRunning();
     
     public IndexingEvent getTotalNumberOfWordsIndexed();
 
-    public void updateConceptEntry(ConceptEntry entry, String userName)
+    public void updateConceptEntry(ConceptEntry entry)
             throws LuceneException, IndexerRunningException, IllegalAccessException;
 
     public ConceptEntry[] searchForConceptByPageNumberAndFieldMap(Map<String, String> fieldMap,

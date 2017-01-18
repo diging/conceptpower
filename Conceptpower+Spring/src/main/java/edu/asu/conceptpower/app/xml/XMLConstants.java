@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.rest.msg.xml;
+package edu.asu.conceptpower.app.xml;
 
 public interface XMLConstants {
 
