@@ -7,13 +7,13 @@ import edu.asu.conceptpower.core.ConceptEntry;
 
 public interface ILuceneUtility {
 
-    public void deleteById(String id) throws LuceneException;
+    public void deleteById(String id, String userName) throws LuceneException;
 
-    public void insertConcept(ConceptEntry entry) throws LuceneException, IllegalAccessException;
+    public void insertConcept(ConceptEntry entry, String userName) throws LuceneException, IllegalAccessException;
 
-    public void deleteIndexes() throws LuceneException;
+    public void deleteIndexes(String userName) throws LuceneException;
 
-    public void indexConcepts() throws LuceneException, IllegalArgumentException, IllegalAccessException;
+    public void indexConcepts(String userName) throws LuceneException, IllegalArgumentException, IllegalAccessException;
 
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int pageNumber,
             int numberOfRecordsPerPage) throws LuceneException, IllegalAccessException;

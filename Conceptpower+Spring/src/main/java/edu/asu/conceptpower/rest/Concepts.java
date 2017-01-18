@@ -32,7 +32,7 @@ import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
-import edu.asu.conceptpower.app.xml.URIHelper;
+import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.mit.jwi.item.WordID;
@@ -164,7 +164,7 @@ public class Concepts {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @RequestMapping(value = "concepts/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/concepts/add", method = RequestMethod.POST)
     public ResponseEntity<String> addConcepts(@RequestBody String body, Principal principal)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
         StringReader reader = new StringReader(body);

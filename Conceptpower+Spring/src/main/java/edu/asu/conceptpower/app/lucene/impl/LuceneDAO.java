@@ -6,8 +6,6 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -41,9 +39,7 @@ public class LuceneDAO implements ILuceneDAO {
     /**
      * Stores the number of indexed word count along with the timestamp
      */
-    public void storeValues(long numberOfIndexedWords, String action) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        IndexingEvent bean = new IndexingEvent(new Date(), numberOfIndexedWords, action, auth.getName());
+    public void storeValues(IndexingEvent bean) {
         luceneClient.store(bean);
         luceneClient.commit();
     }
