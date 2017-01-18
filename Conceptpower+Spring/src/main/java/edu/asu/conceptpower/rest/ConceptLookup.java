@@ -1,30 +1,32 @@
 package edu.asu.conceptpower.rest;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.rdf.RDFMessageFactory;
-import edu.asu.conceptpower.app.xml.XMLConceptMessage;
-import edu.asu.conceptpower.app.xml.XMLMessageFactory;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.rest.msg.IConceptMessage;
+import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 
 /**
  * This class provides a method to retrieve all concepts for a given word and
@@ -44,7 +46,7 @@ public class ConceptLookup {
     private TypeDatabaseClient typeManager;
 
     @Autowired
-    private XMLMessageFactory messageFactory;
+    private IMessageRegistry messageFactory;
 
     @Autowired
     private RDFMessageFactory rdfFactory;
@@ -60,10 +62,14 @@ public class ConceptLookup {
      * @param pos
      *            String value of the POS of concept to be looked
      * @return XML containing information of given concept for given POS
+     * @throws JsonProcessingException
      */
-    @RequestMapping(value = "/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/xml")
+    @RequestMapping(value = "/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody ResponseEntity<String> getWordNetEntry(@PathVariable("word") String word,
-            @PathVariable("pos") String pos) {
+            @PathVariable("pos") String pos,
+            @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
+                    throws JsonProcessingException {
         ConceptEntry[] entries = null;
         try {
             entries = dictManager.getConceptListEntriesForWordPOS(word, pos, null);
@@ -73,11 +79,20 @@ public class ConceptLookup {
         } catch (IllegalAccessException e) {
             logger.error("Illegal access exception", e);
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch(IndexerRunningException ie){
+        } catch (IndexerRunningException ie) {
             logger.info("Indexer running exception", ie);
             return new ResponseEntity<String>(ie.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         }
-        
+        Map<ConceptEntry, ConceptType> entryMap = generateEntryMap(entries);
+        IConceptMessage conceptMessage = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
+        String xmlEntries = null;
+        if (entries != null) {
+            xmlEntries = conceptMessage.getAllConceptEntries(entryMap);
+        }
+        return new ResponseEntity<String>(xmlEntries, HttpStatus.OK);
+    }
+
+    private Map<ConceptEntry, ConceptType> generateEntryMap(ConceptEntry[] entries) {
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
         for (ConceptEntry entry : entries) {
@@ -87,17 +102,10 @@ public class ConceptLookup {
             }
             entryMap.put(entry, type);
         }
-
-        XMLConceptMessage returnMsg = messageFactory.createXMLConceptMessage();
-        List<String> xmlEntries = new ArrayList<String>();
-        if (entries != null) {
-            xmlEntries = returnMsg.appendEntries(entryMap);
-        }
-
-        return new ResponseEntity<String>(returnMsg.getXML(xmlEntries), HttpStatus.OK);
+        return entryMap;
     }
 
-    @RequestMapping(value = "ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/rdf+xml")
+    @RequestMapping(value = "/ConceptLookup/{word}/{pos}", method = RequestMethod.GET, produces = "application/rdf+xml")
     public @ResponseBody ResponseEntity<String> getWordNetEntryInRdf(@PathVariable("word") String word,
             @PathVariable("pos") String pos) {
         ConceptEntry[] entries = null;
