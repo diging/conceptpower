@@ -91,7 +91,7 @@ public class ConceptIDLookup {
 
         IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
 
-        if (entry != null && !entry.isDeleted()) {
+        if (entry != null) {
 
             try {
                 // Check if the id used in a generic id. If so fetch the
