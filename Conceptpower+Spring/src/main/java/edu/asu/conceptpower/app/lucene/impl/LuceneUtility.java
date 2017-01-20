@@ -7,14 +7,20 @@ import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -23,6 +29,7 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -76,13 +83,16 @@ public class LuceneUtility implements ILuceneUtility {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private StandardAnalyzer whiteSpaceAnalyzer;
+    private StandardAnalyzer standardAnalyzer;
 
     @Autowired
     private WordNetConfiguration configuration;
 
     @Autowired
     private IConceptDBManager databaseClient;
+
+    @Autowired
+    private WhitespaceAnalyzer whiteSpaceAnalyzer;
 
     @Autowired
     @Qualifier("luceneDAO")
@@ -110,7 +120,7 @@ public class LuceneUtility implements ILuceneUtility {
         try {
             relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             index = FSDirectory.open(relativePath);
-            configWhiteSpace = new IndexWriterConfig(whiteSpaceAnalyzer);
+            configWhiteSpace = new IndexWriterConfig(standardAnalyzer);
             writer = new IndexWriter(index, configWhiteSpace);
             reader = DirectoryReader.open(writer, true);
             searcher = new IndexSearcher(reader);
@@ -152,12 +162,14 @@ public class LuceneUtility implements ILuceneUtility {
             if (searchFieldAnnotation != null) {
                 Object contentOfField = field.get(entry);
                 if (contentOfField != null) {
-                    if (searchFieldAnnotation.isIndexable()) {
+                    if (searchFieldAnnotation.isTokenized()) {
                         doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
                                 Field.Store.YES));
                     } else {
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
-                                Field.Store.YES));
+                        String[] contents = String.valueOf(contentOfField).split(",");
+                        for (String content : contents) {
+                            doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), content, Field.Store.YES));
+                        }
                     }
                 }
             }
@@ -189,7 +201,16 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             field.setAccessible(true);
             if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
-                field.set(con, d.get(luceneFieldAnnotation.lucenefieldName()));
+                if (!luceneFieldAnnotation.isTokenized()) {
+                    IndexableField[] indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName());
+                    String content = Arrays.asList(indexableFields).stream().filter(iF -> iF.stringValue() != null)
+                            .map(iF -> iF.stringValue()).collect(Collectors.joining(","));
+                    field.set(con, content);
+                    
+                } else {
+                    field.set(con, d.get(luceneFieldAnnotation.lucenefieldName()));
+                }
+
         }
         return con;
     }
@@ -390,6 +411,8 @@ public class LuceneUtility implements ILuceneUtility {
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
             int numberOfRecordsPerPage) throws LuceneException, IllegalAccessException {
 
+        Map<String,Analyzer> analyzerPerField = new HashMap<>();
+        
         if (operator == null) {
             operator = SearchParamters.OP_AND;
         }
@@ -436,10 +459,21 @@ public class LuceneUtility implements ILuceneUtility {
                     }
                     searchBuffer.append(")");
                     queryString.append(searchBuffer.toString());
+                    if (!luceneFieldAnnotation.isTokenized()) {
+                        // IF the field is not tokenzied, then the field needs
+                        // to be analyzed using a whitespaceanalyzer, rather
+                        // than standard analyzer. This is because for non
+                        // tokenized strings we need exact matches and not all
+                        // the nearest matches.
+                        analyzerPerField.put(luceneFieldAnnotation.lucenefieldName(), whiteSpaceAnalyzer);
+                    }
                 }
 
             }
         }
+
+        PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(standardAnalyzer,
+                analyzerPerField);
 
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
@@ -464,7 +498,7 @@ public class LuceneUtility implements ILuceneUtility {
                 startIndex = 0;
                 hitsPerPage = numberOfResults;
             }
-            Query q = new QueryParser("", whiteSpaceAnalyzer).parse(queryString.toString());
+            Query q = new QueryParser("", perFieldAnalyzerWrapper).parse(queryString.toString());
             searcher.search(q, collector);
             // If page number is more than the available results, we just pass
             // empty result.
