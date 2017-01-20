@@ -78,12 +78,12 @@ public class ConceptMergeService implements IConceptMergeService {
         if (conceptsMergeBean.getSelectedConceptId().trim().equals("")) {
             // Add
             ConceptEntry entry = new ConceptEntry();
-            createConceptEntryFromConceptsMergeBean(entry, conceptsMergeBean);
+            fillConceptEntry(entry, conceptsMergeBean);
             conceptManager.addConceptListEntry(entry, userName);
         } else {
             // Update
             ConceptEntry entry = conceptManager.getConceptEntry(conceptsMergeBean.getSelectedConceptId());
-            createConceptEntryFromConceptsMergeBean(entry, conceptsMergeBean);
+            fillConceptEntry(entry, conceptsMergeBean);
             conceptManager.storeModifiedConcept(entry, userName);
         }
 
@@ -118,11 +118,11 @@ public class ConceptMergeService implements IConceptMergeService {
         ConceptEntry entry = conceptManager.getConceptEntry(conceptId);
         // Creating concept wrapper with all the values, because in future we
         // will be including manipulations on deleted wrappers as well.
-        createConceptEntryFromConceptsMergeBean(entry, conceptsMergeBean);
+        fillConceptEntry(entry, conceptsMergeBean);
         return conceptManager.addConceptListEntry(entry, userName);
     }
 
-    public void createConceptEntryFromConceptsMergeBean(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
+    public void fillConceptEntry(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
         entry.setPos(conceptMergeBean.getSelectedPosValue());
         entry.setConceptList(conceptMergeBean.getSelectedListName());
         entry.setTypeId(conceptMergeBean.getSelectedTypeId());
