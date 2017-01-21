@@ -32,27 +32,62 @@ public class ConceptMergeService implements IConceptMergeService {
     @Override
     public ConceptsMergeBean prepareMergeConcepts(List<ConceptEntry> conceptEntries,
             ConceptsMergeBean conceptsMergeBean) {
+        boolean typeWarning = false;
+        boolean posWarning = false;
         for (ConceptEntry entry : conceptEntries) {
             if (entry.getWord() != null) {
-                conceptsMergeBean.getWords().add(entry.getWord());
+                conceptsMergeBean.setWord(conceptsMergeBean.getWord() == null
+                        || conceptsMergeBean.getWord().length() < entry.getWord().length() ? entry.getWord()
+                                : conceptsMergeBean.getWord());
+                
             }
-            if (entry.getDescription() != null) {
-                conceptsMergeBean.getDescriptions().add(entry.getDescription());
+
+            if (conceptsMergeBean.getSelectedPosValue() == null) {
+                conceptsMergeBean.setSelectedPosValue(entry.getPos().toLowerCase());
+            } else if (!conceptsMergeBean.getSelectedPosValue().equalsIgnoreCase(entry.getPos())) {
+                posWarning = true;
             }
+
+            if (entry.getDescription() != null && !entry.getDescription().isEmpty()) {
+                StringBuilder builder = new StringBuilder(
+                        conceptsMergeBean.getDescriptions() != null ? conceptsMergeBean.getDescriptions() : "");
+                builder.append("<p>");
+                builder.append(entry.getDescription().trim());
+                builder.append("</p>");
+                conceptsMergeBean.setDescriptions(builder.toString());
+            }
+
             if (entry.getSynonymIds() != null) {
                 conceptsMergeBean.getSynonymsids().addAll(Arrays.asList(entry.getSynonymIds().split(",")));
             }
+
             if (entry.getEqualTo() != null) {
                 conceptsMergeBean.getEqualsValues().add(entry.getEqualTo());
             }
             if (entry.getSimilarTo() != null) {
                 conceptsMergeBean.getSimilarValues().add(entry.getSimilarTo());
             }
+
+            if (entry.getTypeId() != null && conceptsMergeBean.getSelectedTypeId() == null) {
+                conceptsMergeBean.setSelectedTypeId(entry.getTypeId());
+            } else if (entry.getTypeId() != null) {
+                typeWarning = true;
+            }
         }
+
+        StringBuilder errorBuilder = new StringBuilder();
+        if (posWarning) {
+            errorBuilder.append("<p>There are difference in pos within the merging concepts.</p>");
+        }
+
+        if (typeWarning) {
+            errorBuilder.append("<p>Merging concepts have different concept type.</p>");
+        }
+
+        conceptsMergeBean.setErrorMessages(errorBuilder.toString());
 
         // By default new id will be created
         conceptsMergeBean.setSelectedConceptId("");
-        conceptsMergeBean.setSelectedPosValue("");
         conceptsMergeBean.setSelectedListName("");
 
         // Removing all the wordnet ids from this list. Users can merge into any
@@ -128,12 +163,9 @@ public class ConceptMergeService implements IConceptMergeService {
         entry.setTypeId(conceptMergeBean.getSelectedTypeId());
 
         String prefix = ",";
-        String words = conceptMergeBean.getWords().stream().map(i -> i.toString()).collect(Collectors.joining(prefix));
-        entry.setWord(words);
+        entry.setWord(conceptMergeBean.getWord());
 
-        String description = conceptMergeBean.getDescriptions().stream().map(i -> i.toString())
-                .collect(Collectors.joining(prefix));
-        entry.setDescription(description);
+        entry.setDescription(conceptMergeBean.getDescriptions());
 
         String synonymIds = conceptMergeBean.getSynonymsids().stream().map(i -> i.toString())
                 .collect(Collectors.joining(prefix));

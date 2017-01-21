@@ -11,13 +11,14 @@ public class ConceptsMergeBean {
     private String selectedTypeId;
     private String selectedTypeName;
     private String selectedConceptId;
-    private Set<String> descriptions = new HashSet<>();
+    private String descriptions;
     private Set<String> synonymsids = new HashSet<>();
     private Set<String> equalsValues = new HashSet<>();
     private Set<String> similarValues = new HashSet<>();
     private Set<String> wordnetIds;
     private List<String> conceptIds;
-    private Set<String> words = new HashSet<>();
+    private String word;
+    private String errorMessages;
 
     public String getSelectedPosValue() {
         return selectedPosValue;
@@ -78,21 +79,6 @@ public class ConceptsMergeBean {
         this.synonymsids = synonymsids;
     }
 
-    public Set<String> getWords() {
-        return words;
-    }
-
-    public void setWords(Set<String> words) {
-        this.words = words;
-    }
-
-    public Set<String> getDescriptions() {
-        return descriptions;
-    }
-
-    public void setDescriptions(Set<String> descriptions) {
-        this.descriptions = descriptions;
-    }
 
     public Set<String> getEqualsValues() {
         return equalsValues;
@@ -116,6 +102,30 @@ public class ConceptsMergeBean {
 
     public void setWordnetIds(Set<String> wordnetIds) {
         this.wordnetIds = wordnetIds;
+    }
+
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    public String getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(String descriptions) {
+        this.descriptions = descriptions;
+    }
+
+    public String getErrorMessages() {
+        return errorMessages;
+    }
+
+    public void setErrorMessages(String errorMessages) {
+        this.errorMessages = errorMessages;
     }
 
 }

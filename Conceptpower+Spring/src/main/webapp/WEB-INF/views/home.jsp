@@ -166,7 +166,7 @@ function prepareMergeConcept(conceptId) {
     </div>
   
   <div class="row">
-    <div class="col-sm-5">
+    <div class="col-sm-8">
       <form:input path="word" placeholder="Enter search term"
         class="form-control" />
     </div>
@@ -179,21 +179,6 @@ function prepareMergeConcept(conceptId) {
       <input type="submit" value="Search" class="btn btn-action"
         onclick="showFormProcessing()" onsubmit="hideFormProcessing()">
     </div>
-
-    <sec:authorize access="isAuthenticated()">
-        <div class="col-sm-2">
-          <c:if test="${not empty conceptSearchBean.foundConcepts}">
-                <input type="button" id="prepareMergeConcept" value="Prepare Merge Concepts" class="btn btn-action">
-            </c:if>
-        </div>
-            
-        <div class="col-sm-2">
-          <c:if test="${not empty conceptSearchBean.foundConcepts}">
-                <input type="button" id="mergeConcept" value="Merge Concept" class="btn btn-action" onclick="mergeConcepts();">
-            </c:if>
-        </div>
-    </sec:authorize>
-    
   </div>
 
   <div class="row">
@@ -219,10 +204,20 @@ function prepareMergeConcept(conceptId) {
 </form:form>
 
 <hr>
-
+<c:if test="${not empty conceptSearchBean.foundConcepts}">
 <h3>Results</h3>
 
-<c:if test="${not empty conceptSearchBean.foundConcepts}">
+    <sec:authorize access="isAuthenticated()">
+        <div class="row">
+            <div class="col-sm-2">
+                <button id="prepareMergeConcept" class="btn-sm btn-action">Prepare Merge Concepts</button><br/>
+            </div>
+            <div class="col-sm-2">
+                <button id="mergeConcept" class="btn-sm btn-action" onclick="mergeConcepts();">Merge Concepts</button><br/>
+            </div>
+        </div>
+    </sec:authorize>
+
   <table cellpadding="0" cellspacing="0"
     class="table table-striped table-bordered" id="conceptSearchResult">
     <thead>

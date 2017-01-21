@@ -17,7 +17,7 @@ public class ConceptsMergeBeanValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmpty(errors, "words", "words", "Word cannot be empty.");
+        ValidationUtils.rejectIfEmpty(errors, "word", "word", "Word cannot be empty.");
         ValidationUtils.rejectIfEmpty(errors, "selectedPosValue", "selectedPosValue", "POS cannot be empty.");
         ValidationUtils.rejectIfEmpty(errors, "selectedListName", "selectedListName", "Concept List cannot be empty.");
         ValidationUtils.rejectIfEmpty(errors, "selectedTypeId", "selectedTypeId", "Concept Type cannot be empty.");

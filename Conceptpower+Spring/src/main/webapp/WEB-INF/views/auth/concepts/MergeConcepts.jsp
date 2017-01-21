@@ -38,6 +38,12 @@ $(document).ready(function() {
 });
 </script>
 <form:form action="${pageContext.servletContext.contextPath}/auth/concepts/merge" method='post' id="conceptMergeForm" modelAttribute="conceptsMergeBean">
+    
+    <c:if test="${not empty conceptsMergeBean.errorMessages }">
+        <div class="alert alert-warning alert-dismissable">
+            <c:out value="${conceptsMergeBean.errorMessages}" escapeXml="false"/>
+        </div>
+    </c:if>
 
     <h1>Merge concepts</h1>
     
@@ -59,10 +65,10 @@ $(document).ready(function() {
     <table>
         <tr>
             <td class="col-sm-1">Concept</td>
-            <td class="col-sm-9"><form:input path="words" class="form-control" /></td>
+            <td class="col-sm-9"><form:input path="word" class="form-control" /></td>
             <td class="col-sm-2">
                 <div id="wordsError" style="color: red"></div>
-                <form:errors path="words" class="ui-state-error-text"></form:errors>
+                <form:errors path="word" class="ui-state-error-text"></form:errors>
             </td>
         </tr>
         <tr>
@@ -96,7 +102,7 @@ $(document).ready(function() {
         <tr>
             <td class="col-sm-1">Description</td>
             <td class="col-sm-9"><form:textarea path="descriptions"
-                    rows="7" cols="50" class="form-control" /></td>
+                    rows="7" cols="50" class="form-control"  htmlEscape="false" /></td>
         </tr>
         <tr>
             <td class="col-sm-1">Concept Type</td>
