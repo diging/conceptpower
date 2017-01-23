@@ -60,14 +60,14 @@ public class ConceptMergeService implements IConceptMergeService {
                 conceptsMergeBean.setDescriptions(builder.toString());
             }
 
-            if (entry.getSynonymIds() != null) {
+            if (entry.getSynonymIds() != null && !entry.getSynonymIds().isEmpty()) {
                 conceptsMergeBean.getSynonymsids().addAll(Arrays.asList(entry.getSynonymIds().split(",")));
             }
 
-            if (entry.getEqualTo() != null) {
+            if (entry.getEqualTo() != null && !entry.getEqualTo().isEmpty()) {
                 conceptsMergeBean.getEqualsValues().add(entry.getEqualTo());
             }
-            if (entry.getSimilarTo() != null) {
+            if (entry.getSimilarTo() != null && !entry.getSimilarTo().isEmpty()) {
                 conceptsMergeBean.getSimilarValues().add(entry.getSimilarTo());
             }
 
@@ -152,8 +152,8 @@ public class ConceptMergeService implements IConceptMergeService {
 
         for (String conceptId : conceptsMergeBean.getConceptIds()) {
             if (!conceptId.equalsIgnoreCase(conceptsMergeBean.getSelectedConceptId().trim())) {
-                    // If its a CCP concept, just delete it.
-                    conceptManager.deleteConcept(conceptId, userName);
+                // If its a CCP concept, just delete it.
+                conceptManager.deleteConcept(conceptId, userName);
             }
         }
     }
@@ -211,7 +211,9 @@ public class ConceptMergeService implements IConceptMergeService {
         for (String conceptId : conceptIds) {
             alternativeIds.add(conceptId);
             ConceptEntry conceptEntry = conceptManager.getConceptEntry(conceptId);
-            alternativeIds.addAll(conceptEntry.getAlternativeIds());
+            if (conceptEntry.getAlternativeIds() != null) {
+                alternativeIds.addAll(conceptEntry.getAlternativeIds());
+            }
         }
         entry.setAlternativeIds(alternativeIds);
     }
