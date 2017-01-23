@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.app.bean;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,10 +16,18 @@ public class ConceptsMergeBean {
     private Set<String> synonymsids = new HashSet<>();
     private Set<String> equalsValues = new HashSet<>();
     private Set<String> similarValues = new HashSet<>();
-    private Set<String> wordnetIds;
+    /**
+     * Any wordnet id that belongs to a concept will be added to this set.
+     */
+    private Set<String> wordnetIds = new HashSet<>();
     private List<String> conceptIds;
+    private List<String> conceptNamesWithIds = new ArrayList<>();
     private String word;
     private String errorMessages;
+    /**
+     * This variable contains all the wordnet ids that are gettting merged.
+     */
+    private Set<String> conceptWordnetIds = new HashSet<>();
 
     public String getSelectedPosValue() {
         return selectedPosValue;
@@ -128,4 +137,27 @@ public class ConceptsMergeBean {
         this.errorMessages = errorMessages;
     }
 
+    public List<String> getConceptNamesWithIds() {
+        return conceptNamesWithIds;
+    }
+
+    public void setConceptNamesWithIds(List<String> conceptNamesWithIds) {
+        this.conceptNamesWithIds = conceptNamesWithIds;
+    }
+
+    public void clear() {
+        this.getConceptNamesWithIds().clear();
+        this.getSynonymsids().clear();
+        this.getEqualsValues().clear();
+        this.getSimilarValues().clear();
+        this.wordnetIds.clear();
+    }
+
+    public Set<String> getConceptWordnetIds() {
+        return conceptWordnetIds;
+    }
+
+    public void setConceptWordnetIds(Set<String> conceptWordnetIds) {
+        this.conceptWordnetIds = conceptWordnetIds;
+    }
 }

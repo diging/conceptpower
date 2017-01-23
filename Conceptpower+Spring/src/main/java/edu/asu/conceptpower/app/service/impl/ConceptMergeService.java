@@ -34,12 +34,15 @@ public class ConceptMergeService implements IConceptMergeService {
             ConceptsMergeBean conceptsMergeBean) {
         boolean typeWarning = false;
         boolean posWarning = false;
+        conceptsMergeBean.clear();
         for (ConceptEntry entry : conceptEntries) {
-            if (entry.getWord() != null) {
+            if (entry.getWord() != null && !entry.getWord().isEmpty()) {
                 conceptsMergeBean.setWord(conceptsMergeBean.getWord() == null
                         || conceptsMergeBean.getWord().length() < entry.getWord().length() ? entry.getWord()
                                 : conceptsMergeBean.getWord());
                 
+                String conceptIdWithName = entry.getWord().trim() + " -- " + entry.getId();
+                conceptsMergeBean.getConceptNamesWithIds().add(conceptIdWithName);
             }
 
             if (conceptsMergeBean.getSelectedPosValue() == null) {
@@ -53,7 +56,7 @@ public class ConceptMergeService implements IConceptMergeService {
                         conceptsMergeBean.getDescriptions() != null ? conceptsMergeBean.getDescriptions() : "");
                 builder.append("<p>");
                 builder.append(entry.getDescription().trim());
-                builder.append("</p>");
+                builder.append("<p>");
                 conceptsMergeBean.setDescriptions(builder.toString());
             }
 
@@ -72,6 +75,14 @@ public class ConceptMergeService implements IConceptMergeService {
                 conceptsMergeBean.setSelectedTypeId(entry.getTypeId());
             } else if (entry.getTypeId() != null) {
                 typeWarning = true;
+            }
+
+            if (entry.getWordnetId() != null && !entry.getWordnetId().isEmpty()) {
+                String[] wordNetIds = entry.getWordnetId().split(",");
+                conceptsMergeBean.getWordnetIds()
+                        .addAll(Arrays.asList(wordNetIds).stream()
+                                .filter(wordNetId -> !wordNetId.trim().equalsIgnoreCase("")).map(wordNetId -> wordNetId)
+                                .collect(Collectors.toSet()));
             }
         }
 
@@ -101,7 +112,7 @@ public class ConceptMergeService implements IConceptMergeService {
                 .collect(Collectors.toSet());
 
         conceptsMergeBean.getConceptIds().removeAll(wordnetSet);
-        conceptsMergeBean.setWordnetIds(wordnetSet);
+        conceptsMergeBean.setConceptWordnetIds(wordnetSet);
         return conceptsMergeBean;
     }
 
@@ -129,35 +140,41 @@ public class ConceptMergeService implements IConceptMergeService {
     private void deleteMergedConcepts(String userName, ConceptsMergeBean conceptsMergeBean)
             throws LuceneException, IndexerRunningException, IllegalAccessException,
             DictionaryDoesNotExistException, DictionaryModifyException {
+
+        for (String wordnetId : conceptsMergeBean.getConceptWordnetIds()) {
+            // If its a wordnet concept, then create a wrapper and set
+            // the delete flag to true. This is done in two steps
+            // because changeevent object needs to be updated for
+            // deletion correctly.
+            String conceptWrapperId = createConceptWrapperById(wordnetId, userName, conceptsMergeBean);
+            conceptManager.deleteConcept(conceptWrapperId, userName);
+        }
+
         for (String conceptId : conceptsMergeBean.getConceptIds()) {
             if (!conceptId.equalsIgnoreCase(conceptsMergeBean.getSelectedConceptId().trim())) {
-                if (ConceptTypes.SPECIFIC_WORDNET_CONCEPT == conceptTypesService
-                            .getConceptTypeByConceptId(conceptId)) {
-                    // If its a wordnet concept, then create a wrapper and set
-                    // the delete flag to true. This is done in two steps
-                    // because changeevent object needs to be updated for
-                    // deletion correctly.
-                    String conceptWrapperId = createConceptWrapperById(conceptId, userName, conceptsMergeBean);
-                    conceptManager.deleteConcept(conceptWrapperId, userName);
-                } else {
                     // If its a CCP concept, just delete it.
                     conceptManager.deleteConcept(conceptId, userName);
-                }
             }
         }
     }
 
-    private String createConceptWrapperById(String conceptId, String userName, ConceptsMergeBean conceptsMergeBean)
+    private String createConceptWrapperById(String wrapperId, String userName, ConceptsMergeBean conceptsMergeBean)
             throws IllegalAccessException, DictionaryDoesNotExistException, DictionaryModifyException, LuceneException,
             IndexerRunningException {
-        ConceptEntry entry = conceptManager.getConceptEntry(conceptId);
+        ConceptEntry entry = conceptManager.getConceptEntry(wrapperId);
         // Creating concept wrapper with all the values, because in future we
         // will be including manipulations on deleted wrappers as well.
         fillConceptEntry(entry, conceptsMergeBean);
+        // WrapperId has been added to delete the wordnet id. If this wordnet
+        // id is not deleted, then the merged wordnet id will be appearing on
+        // concept search screen. If WID-1 and WID-2 are merged, then each time
+        // we create a wrapper for WID-1 and WID-2, we need to have WID-1 and
+        // WID-2 in wordnet id field to be deleted.
+        entry.setWordnetId(wrapperId);
         return conceptManager.addConceptListEntry(entry, userName);
     }
 
-    public void fillConceptEntry(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
+    private void fillConceptEntry(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
         entry.setPos(conceptMergeBean.getSelectedPosValue());
         entry.setConceptList(conceptMergeBean.getSelectedListName());
         entry.setTypeId(conceptMergeBean.getSelectedTypeId());

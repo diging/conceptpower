@@ -5,6 +5,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <head>
 <title>Merge Concept</title>
+<style type="text/css">
+.descriptionDiv {
+	height: 100%;
+}
+</style>
 <script>
 $(document).ready(function() { 
     $('#conceptMergeForm').submit(function(event) {
@@ -33,6 +38,10 @@ $(document).ready(function() {
         } else {
             $("#selectedTypeIdError").html('');
         }
+        
+        if(ret == true) {
+			$("#descriptions").val($("#descriptionDiv").text().trim());
+        }
         return ret;
     });    
 });
@@ -44,6 +53,15 @@ $(document).ready(function() {
             <c:out value="${conceptsMergeBean.errorMessages}" escapeXml="false"/>
         </div>
     </c:if>
+    
+    <div class="alert alert-info alert-dismissable">
+        The following concepts are being merged.
+        <ul class="list-group">
+            <c:forEach var="conceptIdWithName" items="${conceptsMergeBean.conceptNamesWithIds}">
+                <li class="list-group-item">${conceptIdWithName }</li>
+            </c:forEach>
+        </ul> 
+    </div>
 
     <h1>Merge concepts</h1>
     
@@ -61,6 +79,7 @@ $(document).ready(function() {
             </div>
         </c:otherwise>
     </c:choose>
+    
     
     <table>
         <tr>
@@ -101,8 +120,12 @@ $(document).ready(function() {
         </tr>
         <tr>
             <td class="col-sm-1">Description</td>
-            <td class="col-sm-9"><form:textarea path="descriptions"
-                    rows="7" cols="50" class="form-control"  htmlEscape="false" /></td>
+            <td class="col-sm-9">
+                <div contenteditable="true" id="descriptionDiv" class="descriptionDiv form-control">
+                    <c:out value="${conceptsMergeBean.descriptions }" escapeXml="false" />
+                </div>
+                <form:hidden path="descriptions" />
+            </td>
         </tr>
         <tr>
             <td class="col-sm-1">Concept Type</td>
@@ -145,4 +168,5 @@ $(document).ready(function() {
     <form:hidden path="conceptIds" />
     <form:hidden path="wordnetIds" />
     <form:hidden path="synonymsids" />
+    <form:hidden path="conceptWordnetIds" />
 </form:form>
