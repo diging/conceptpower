@@ -14,7 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import java.util.HashSet;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
@@ -243,7 +244,8 @@ public class LuceneUtility implements ILuceneUtility {
      * @param writer
      * @return
      */
-    protected int[] createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer) {
+    protected int[] createDocuments(Iterator<IIndexWord> iterator, IDictionary dict, IndexWriter writer,
+            Set<String> wordnetIdsOfWrappers) {
         int numberOfIndexedWords = 0;
         int numberOfUnIndexedWords = 0;
         for (; iterator.hasNext();) {
@@ -252,8 +254,7 @@ public class LuceneUtility implements ILuceneUtility {
 
             for (IWordID wordId : wordIdds) {
                 IWord word = dict.getWord(wordId);
-                List<ConceptEntry> entries = databaseClient.getConceptByWordnetId(word.getID().toString());
-                if (entries == null || entries.isEmpty()) {
+                if (!wordnetIdsOfWrappers.contains(word.getID().toString())) {
                     Document doc = createIndividualDocument(dict, wordId);
                     try {
                         numberOfIndexedWords++;
@@ -309,11 +310,13 @@ public class LuceneUtility implements ILuceneUtility {
         int numberOfIndexedConcepts = 0;
         int numberOfUnindexConcepts = 0;
         for (ConceptEntry entry : conceptEntryList) {
-            try {
-                insertConcept(entry, userName);
-                numberOfIndexedConcepts++;
-            } catch (LuceneException e) {
-                numberOfUnindexConcepts++;
+            if (!entry.isDeleted()) {
+                try {
+                    insertConcept(entry, userName);
+                    numberOfIndexedConcepts++;
+                } catch (LuceneException e) {
+                    numberOfUnindexConcepts++;
+                }
             }
         }
         int[] returnValue = new int[2];
@@ -347,27 +350,33 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Issues while opening the dictionary", e);
         }
 
+        // Fetching DB4o Data
+        List<ConceptEntry> conceptEntriesList = (List<ConceptEntry>) databaseClient
+                .getAllElementsOfType(ConceptEntry.class);
+
+        Set<String> wordnetIdsOfWrappers = getWordNetIdsOfWrappers(conceptEntriesList);
+
         // 2. Adding data into
         Iterator<IIndexWord> iterator = dict.getIndexWordIterator(POS.NOUN);
-        int[] numberOfWord = createDocuments(iterator, dict, writer);
+        int[] numberOfWord = createDocuments(iterator, dict, writer, wordnetIdsOfWrappers);
 
         int numberOfIndexedWords = numberOfWord[0];
         int numberOfUnIndexedWords = numberOfWord[1];
 
         iterator = dict.getIndexWordIterator(POS.ADVERB);
-        numberOfWord = createDocuments(iterator, dict, writer);
+        numberOfWord = createDocuments(iterator, dict, writer, wordnetIdsOfWrappers);
 
         numberOfIndexedWords += numberOfWord[0];
         numberOfUnIndexedWords += numberOfWord[1];
 
         iterator = dict.getIndexWordIterator(POS.ADJECTIVE);
-        numberOfWord = createDocuments(iterator, dict, writer);
+        numberOfWord = createDocuments(iterator, dict, writer, wordnetIdsOfWrappers);
 
         numberOfIndexedWords += numberOfWord[0];
         numberOfUnIndexedWords += numberOfWord[1];
 
         iterator = dict.getIndexWordIterator(POS.VERB);
-        numberOfWord = createDocuments(iterator, dict, writer);
+        numberOfWord = createDocuments(iterator, dict, writer, wordnetIdsOfWrappers);
 
         numberOfIndexedWords += numberOfWord[0];
         numberOfUnIndexedWords += numberOfWord[1];
@@ -379,13 +388,8 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Issues in writing document", e);
         }
 
-        // Fetching DB4o Data
-
-        List<ConceptEntry> conceptEntriesList = (List<ConceptEntry>) databaseClient
-                .getAllElementsOfType(ConceptEntry.class);
 
         numberOfWord = createDocumentsFromConceptEntries(conceptEntriesList, userName);
-
         numberOfIndexedWords += numberOfWord[0];
         numberOfUnIndexedWords += numberOfWord[1];
 
@@ -539,6 +543,24 @@ public class LuceneUtility implements ILuceneUtility {
         } else {
             searcher = new IndexSearcher(reader);
         }
+    }
+
+    /**
+     * This method fetches the wordnet ids associated with the concept wrappers.
+     * These wordnet ids will not be indexed using lucene.
+     * 
+     * @param conceptEntries
+     * @return
+     */
+    private Set<String> getWordNetIdsOfWrappers(List<ConceptEntry> conceptEntries) {
+        Set<String> wordnetIds = new HashSet<>();
+        for (ConceptEntry conceptEntry : conceptEntries) {
+            if (conceptEntry.getWordnetId() != null && !conceptEntry.getWordnetId().trim().isEmpty()) {
+                String[] wordNetIds = conceptEntry.getWordnetId().split(",");
+                wordnetIds.addAll(Arrays.asList(wordNetIds));
+            }
+        }
+        return wordnetIds;
     }
 
     @PreDestroy
