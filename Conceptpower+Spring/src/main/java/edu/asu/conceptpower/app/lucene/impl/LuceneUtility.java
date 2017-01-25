@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
@@ -164,13 +165,29 @@ public class LuceneUtility implements ILuceneUtility {
                 Object contentOfField = field.get(entry);
                 if (contentOfField != null) {
                     if (searchFieldAnnotation.isTokenized()) {
-                        doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), String.valueOf(contentOfField),
-                                Field.Store.YES));
-                    } else {
-                        String[] contents = String.valueOf(contentOfField).split(",");
-                        for (String content : contents) {
-                            doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), content, Field.Store.YES));
+                        if (searchFieldAnnotation.isCommaSeperated()) {
+                            String[] contents = String.valueOf(contentOfField).split(",");
+                            for (String content : contents) {
+                                doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), content,
+                                        Field.Store.YES));
+                            }
+                        } else {
+                            doc.add(new TextField(searchFieldAnnotation.lucenefieldName(),
+                                    String.valueOf(contentOfField), Field.Store.YES));
                         }
+                    } else {
+                        // Non tokenized
+                        if (searchFieldAnnotation.isCommaSeperated()) {
+                            String[] contents = String.valueOf(contentOfField).split(",");
+                            for (String content : contents) {
+                                doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), content,
+                                        Field.Store.YES));
+                            }
+                        } else {
+                            doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
+                                    String.valueOf(contentOfField), Field.Store.YES));
+                        }
+
                     }
                 }
             }
@@ -202,7 +219,7 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             field.setAccessible(true);
             if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
-                if (!luceneFieldAnnotation.isTokenized()) {
+                if (!luceneFieldAnnotation.isCommaSeperated()) {
                     IndexableField[] indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName());
                     String content = Arrays.asList(indexableFields).stream().filter(iF -> iF.stringValue() != null)
                             .map(iF -> iF.stringValue()).collect(Collectors.joining(","));
@@ -464,7 +481,7 @@ public class LuceneUtility implements ILuceneUtility {
                     searchBuffer.append(")");
                     queryString.append(searchBuffer.toString());
                     if (!luceneFieldAnnotation.isTokenized()) {
-                        // IF the field is not tokenzied, then the field needs
+                        // If the field is not tokenzied, then the field needs
                         // to be analyzed using a whitespaceanalyzer, rather
                         // than standard analyzer. This is because for non
                         // tokenized strings we need exact matches and not all
