@@ -122,7 +122,11 @@ $(document).ready(function() {
             <td class="col-sm-1">Description</td>
             <td class="col-sm-9">
                 <div contenteditable="true" id="descriptionDiv" class="descriptionDiv form-control">
-                    <c:out value="${conceptsMergeBean.descriptions }" escapeXml="false" />
+                    <c:forEach var="description" items="${conceptsMergeBean.descriptions }">
+                        <p>
+                            <c:out value="${description }" />
+                        </p>
+                    </c:forEach>
                 </div>
                 <form:hidden path="descriptions" />
             </td>

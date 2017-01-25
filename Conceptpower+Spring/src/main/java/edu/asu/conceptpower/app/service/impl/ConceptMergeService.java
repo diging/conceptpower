@@ -52,12 +52,7 @@ public class ConceptMergeService implements IConceptMergeService {
             }
 
             if (entry.getDescription() != null && !entry.getDescription().isEmpty()) {
-                StringBuilder builder = new StringBuilder(
-                        conceptsMergeBean.getDescriptions() != null ? conceptsMergeBean.getDescriptions() : "");
-                builder.append("<p>");
-                builder.append(entry.getDescription().trim());
-                builder.append("<p>");
-                conceptsMergeBean.setDescriptions(builder.toString());
+                conceptsMergeBean.getDescriptions().add(entry.getDescription().trim());
             }
 
             if (entry.getSynonymIds() != null && !entry.getSynonymIds().isEmpty()) {
@@ -182,7 +177,9 @@ public class ConceptMergeService implements IConceptMergeService {
         String prefix = ",";
         entry.setWord(conceptMergeBean.getWord());
 
-        entry.setDescription(conceptMergeBean.getDescriptions());
+        String description = conceptMergeBean.getDescriptions().stream().map(i -> i.toString())
+                .collect(Collectors.joining(" "));
+        entry.setDescription(description);
 
         String synonymIds = conceptMergeBean.getSynonymsids().stream().map(i -> i.toString())
                 .collect(Collectors.joining(prefix));

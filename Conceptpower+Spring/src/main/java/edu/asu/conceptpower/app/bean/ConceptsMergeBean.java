@@ -12,7 +12,7 @@ public class ConceptsMergeBean {
     private String selectedTypeId;
     private String selectedTypeName;
     private String selectedConceptId;
-    private String descriptions;
+    private List<String> descriptions = new ArrayList<>();
     private Set<String> synonymsids = new HashSet<>();
     private Set<String> equalsValues = new HashSet<>();
     private Set<String> similarValues = new HashSet<>();
@@ -121,14 +121,6 @@ public class ConceptsMergeBean {
         this.word = word;
     }
 
-    public String getDescriptions() {
-        return descriptions;
-    }
-
-    public void setDescriptions(String descriptions) {
-        this.descriptions = descriptions;
-    }
-
     public String getErrorMessages() {
         return errorMessages;
     }
@@ -159,5 +151,13 @@ public class ConceptsMergeBean {
 
     public void setConceptWordnetIds(Set<String> conceptWordnetIds) {
         this.conceptWordnetIds = conceptWordnetIds;
+    }
+
+    public List<String> getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(List<String> descriptions) {
+        this.descriptions = descriptions;
     }
 }
