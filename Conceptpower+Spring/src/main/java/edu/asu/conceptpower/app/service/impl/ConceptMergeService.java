@@ -74,7 +74,7 @@ public class ConceptMergeService implements IConceptMergeService {
 
             if (entry.getWordnetId() != null && !entry.getWordnetId().isEmpty()) {
                 String[] wordNetIds = entry.getWordnetId().split(",");
-                conceptsMergeBean.getWordnetIds()
+                conceptsMergeBean.getMergedIds()
                         .addAll(Arrays.asList(wordNetIds).stream()
                                 .filter(wordNetId -> !wordNetId.trim().equalsIgnoreCase("")).map(wordNetId -> wordNetId)
                                 .collect(Collectors.toSet()));
@@ -129,7 +129,6 @@ public class ConceptMergeService implements IConceptMergeService {
         }
 
         deleteMergedConcepts(userName, conceptsMergeBean);
-
     }
 
     private void deleteMergedConcepts(String userName, ConceptsMergeBean conceptsMergeBean)
@@ -159,12 +158,12 @@ public class ConceptMergeService implements IConceptMergeService {
         ConceptEntry entry = conceptManager.getConceptEntry(wrapperId);
         // Creating concept wrapper with all the values, because in future we
         // will be including manipulations on deleted wrappers as well.
-        fillConceptEntry(entry, conceptsMergeBean);
         // WrapperId has been added to delete the wordnet id. If this wordnet
         // id is not deleted, then the merged wordnet id will be appearing on
         // concept search screen. If WID-1 and WID-2 are merged, then each time
         // we create a wrapper for WID-1 and WID-2, we need to have WID-1 and
         // WID-2 in wordnet id field to be deleted.
+        entry.setConceptList(conceptsMergeBean.getSelectedListName());
         entry.setWordnetId(wrapperId);
         return conceptManager.addConceptListEntry(entry, userName);
     }
@@ -193,12 +192,17 @@ public class ConceptMergeService implements IConceptMergeService {
                 .collect(Collectors.joining(prefix));
         entry.setSimilarTo(similar);
 
-        String wordnetIds = conceptMergeBean.getWordnetIds().stream().map(i -> i.toString())
-                .collect(Collectors.joining(prefix));
-        entry.setWordnetId(wordnetIds);
+        StringBuilder mergedIdBuilder = new StringBuilder("");
+        mergedIdBuilder.append(
+                conceptMergeBean.getMergedIds().stream().map(i -> i.toString()).collect(Collectors.joining(prefix)));
+        String conceptIdsToBeMerged = conceptMergeBean.getConceptIds().stream().collect(Collectors.joining(","));
+        if (conceptIdsToBeMerged.length() > 0 && mergedIdBuilder.length() > 0) {
+            mergedIdBuilder.append(",");
+        }
+        mergedIdBuilder.append(conceptIdsToBeMerged);
+        entry.setMergedIds(mergedIdBuilder.toString());
 
         addAlternativeIdsToEntry(entry, conceptMergeBean);
-        entry.setMergedIds(conceptMergeBean.getConceptIds().stream().collect(Collectors.joining(",")));
     }
 
     private void addAlternativeIdsToEntry(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {

@@ -19,7 +19,7 @@ public class ConceptsMergeBean {
     /**
      * Any wordnet id that belongs to a concept will be added to this set.
      */
-    private Set<String> wordnetIds = new HashSet<>();
+    private Set<String> mergedIds = new HashSet<>();
     private List<String> conceptIds;
     private List<String> conceptNamesWithIds = new ArrayList<>();
     private String word;
@@ -105,14 +105,6 @@ public class ConceptsMergeBean {
         this.similarValues = similarValues;
     }
 
-    public Set<String> getWordnetIds() {
-        return wordnetIds;
-    }
-
-    public void setWordnetIds(Set<String> wordnetIds) {
-        this.wordnetIds = wordnetIds;
-    }
-
     public String getWord() {
         return word;
     }
@@ -142,7 +134,7 @@ public class ConceptsMergeBean {
         this.getSynonymsids().clear();
         this.getEqualsValues().clear();
         this.getSimilarValues().clear();
-        this.wordnetIds.clear();
+        this.mergedIds.clear();
     }
 
     public Set<String> getConceptWordnetIds() {
@@ -159,5 +151,13 @@ public class ConceptsMergeBean {
 
     public void setDescriptions(List<String> descriptions) {
         this.descriptions = descriptions;
+    }
+
+    public Set<String> getMergedIds() {
+        return mergedIds;
+    }
+
+    public void setMergedIds(Set<String> mergedIds) {
+        this.mergedIds = mergedIds;
     }
 }

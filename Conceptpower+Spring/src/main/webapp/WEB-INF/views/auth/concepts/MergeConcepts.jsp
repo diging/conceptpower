@@ -170,7 +170,7 @@ $(document).ready(function() {
         </tr>
     </table>
     <form:hidden path="conceptIds" />
-    <form:hidden path="wordnetIds" />
+    <form:hidden path="mergedIds" />
     <form:hidden path="synonymsids" />
     <form:hidden path="conceptWordnetIds" />
 </form:form>
