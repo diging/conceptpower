@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.asu.conceptpower.app.error.CPError;
+
 public class ConceptsMergeBean {
 
     private String selectedPosValue;
@@ -23,7 +25,7 @@ public class ConceptsMergeBean {
     private List<String> conceptIds;
     private List<String> conceptNamesWithIds = new ArrayList<>();
     private String word;
-    private String errorMessages;
+    private List<CPError> errorMessages = new ArrayList<>();
     /**
      * This variable contains all the wordnet ids that are gettting merged.
      */
@@ -113,14 +115,6 @@ public class ConceptsMergeBean {
         this.word = word;
     }
 
-    public String getErrorMessages() {
-        return errorMessages;
-    }
-
-    public void setErrorMessages(String errorMessages) {
-        this.errorMessages = errorMessages;
-    }
-
     public List<String> getConceptNamesWithIds() {
         return conceptNamesWithIds;
     }
@@ -135,6 +129,7 @@ public class ConceptsMergeBean {
         this.getEqualsValues().clear();
         this.getSimilarValues().clear();
         this.mergedIds.clear();
+        this.errorMessages.clear();
     }
 
     public Set<String> getConceptWordnetIds() {
@@ -159,5 +154,13 @@ public class ConceptsMergeBean {
 
     public void setMergedIds(Set<String> mergedIds) {
         this.mergedIds = mergedIds;
+    }
+
+    public List<CPError> getErrorMessages() {
+        return errorMessages;
+    }
+
+    public void setErrorMessages(List<CPError> errorMessages) {
+        this.errorMessages = errorMessages;
     }
 }

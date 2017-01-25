@@ -13,6 +13,7 @@ import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
 import edu.asu.conceptpower.app.core.ConceptTypesService;
 import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.core.IConceptManager;
+import edu.asu.conceptpower.app.error.CPError;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -81,16 +82,17 @@ public class ConceptMergeService implements IConceptMergeService {
             }
         }
 
-        StringBuilder errorBuilder = new StringBuilder();
         if (posWarning) {
-            errorBuilder.append("<p>There are difference in pos within the merging concepts.</p>");
+            CPError errroMessage = new CPError("error_message_101",
+                    "There are difference in pos within the merging concepts.");
+            conceptsMergeBean.getErrorMessages().add(errroMessage);
         }
 
         if (typeWarning) {
-            errorBuilder.append("<p>Merging concepts have different concept type.</p>");
+            CPError errroMessage = new CPError("error_message_102",
+                    "Merging concepts have different concept type.");
+            conceptsMergeBean.getErrorMessages().add(errroMessage);
         }
-
-        conceptsMergeBean.setErrorMessages(errorBuilder.toString());
 
         // By default new id will be created
         conceptsMergeBean.setSelectedConceptId("");

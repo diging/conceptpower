@@ -50,7 +50,11 @@ $(document).ready(function() {
     
     <c:if test="${not empty conceptsMergeBean.errorMessages }">
         <div class="alert alert-warning alert-dismissable">
-            <c:out value="${conceptsMergeBean.errorMessages}" escapeXml="false"/>
+            <c:forEach var="error" items="${conceptsMergeBean.errorMessages }">
+                <p>
+                    <c:out value="${error}"/>
+                </p>
+            </c:forEach>
         </div>
     </c:if>
     
