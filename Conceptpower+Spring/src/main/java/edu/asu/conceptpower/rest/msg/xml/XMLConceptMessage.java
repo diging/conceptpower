@@ -33,8 +33,11 @@ public class XMLConceptMessage implements IConceptMessage {
     public String getAllConceptEntriesAndPaginationDetails(Map<ConceptEntry, ConceptType> entries,
             Pagination pagination) {
         StringBuffer sb = new StringBuffer("");
+        sb.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
+                + XMLConstants.NAMESPACE + "\">");
         sb.append(getAllConceptEntries(entries));
         sb.append(appendPaginationDetails(pagination.getTotalNumberOfRecords(), pagination.getPageNumber()));
+        sb.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
         return sb.toString();
     }
 
@@ -45,13 +48,8 @@ public class XMLConceptMessage implements IConceptMessage {
             return getErrorMessage("No concept entry found.");
         }
         StringBuilder xmlEntries = new StringBuilder();
-        xmlEntries.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
-                + XMLConstants.NAMESPACE + "\">");
-
         for (ConceptEntry entry : entries.keySet())
             xmlEntries.append(getConceptMessage(entry, entries.get(entry)));
-
-        xmlEntries.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
         return xmlEntries.toString();
     }
 
