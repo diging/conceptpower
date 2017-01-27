@@ -29,29 +29,32 @@ public class XMLConceptMessage implements IConceptMessage {
         this.uriCreator = uriCreator;
     }
 
+    /**
+     * This method fetches all the concept entries with the specified pagination
+     * details. If pagination is not specified then only the concept entries
+     * messages are returned.
+     */
     @Override
     public String getAllConceptEntriesAndPaginationDetails(Map<ConceptEntry, ConceptType> entries,
             Pagination pagination) {
         StringBuffer sb = new StringBuffer("");
+        sb.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
+                + XMLConstants.NAMESPACE + "\">");
         sb.append(getAllConceptEntries(entries));
-        sb.append(appendPaginationDetails(pagination.getTotalNumberOfRecords(), pagination.getPageNumber()));
+        if (pagination != null) {
+            sb.append(appendPaginationDetails(pagination.getTotalNumberOfRecords(), pagination.getPageNumber()));
+        }
+        sb.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
         return sb.toString();
     }
 
-    @Override
-    public String getAllConceptEntries(Map<ConceptEntry, ConceptType> entries) {
-
+    private String getAllConceptEntries(Map<ConceptEntry, ConceptType> entries) {
         if (entries == null || entries.isEmpty()) {
             return getErrorMessage("No concept entry found.");
         }
         StringBuilder xmlEntries = new StringBuilder();
-        xmlEntries.append("<" + XMLConstants.CONCEPTPOWER_ANSWER + " xmlns:" + XMLConstants.NAMESPACE_PREFIX + "=\""
-                + XMLConstants.NAMESPACE + "\">");
-
         for (ConceptEntry entry : entries.keySet())
             xmlEntries.append(getConceptMessage(entry, entries.get(entry)));
-
-        xmlEntries.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
         return xmlEntries.toString();
     }
 

@@ -85,7 +85,7 @@ public class ConceptLookup {
         IConceptMessage conceptMessage = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
         String xmlEntries = null;
         if (entries != null) {
-            xmlEntries = conceptMessage.getAllConceptEntries(entryMap);
+            xmlEntries = conceptMessage.getAllConceptEntriesAndPaginationDetails(entryMap, null);
         }
         return new ResponseEntity<String>(xmlEntries, HttpStatus.OK);
     }

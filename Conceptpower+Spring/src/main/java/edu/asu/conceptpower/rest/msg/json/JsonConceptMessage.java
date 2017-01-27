@@ -34,15 +34,6 @@ public class JsonConceptMessage implements IConceptMessage {
         this.uriCreator = uriCreator;
     }
 
-    public String getAllConceptEntries(Map<ConceptEntry, ConceptType> entries) throws JsonProcessingException {
-        if (entries == null || entries.isEmpty()) {
-            ErrorMessage errorMessage = new ErrorMessage("No concept entry found.");
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(errorMessage);
-        }
-        return getAllConceptEntriesAndPaginationDetails(entries, null);
-    }
-
     private ConceptEntryMessage getConceptMessage(ConceptEntry entry, ConceptType type) {
 
         ConceptEntryMessage json = new ConceptEntryMessage();
@@ -117,6 +108,13 @@ public class JsonConceptMessage implements IConceptMessage {
     @Override
     public String getAllConceptEntriesAndPaginationDetails(Map<ConceptEntry, ConceptType> entries,
             Pagination pagination) throws JsonProcessingException {
+
+        if (entries == null || entries.isEmpty()) {
+            ErrorMessage errorMessage = new ErrorMessage("No concept entry found.");
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(errorMessage);
+        }
+
         List<ConceptEntryMessage> conceptMessages = new ArrayList<>();
         for (ConceptEntry entry : entries.keySet()) {
             conceptMessages.add(getConceptMessage(entry, entries.get(entry)));
@@ -124,7 +122,9 @@ public class JsonConceptMessage implements IConceptMessage {
 
         ConceptResult conceptResult = new ConceptResult();
         conceptResult.setConceptEntries(conceptMessages);
-        conceptResult.setPagination(pagination);
+        if (pagination != null) {
+            conceptResult.setPagination(pagination);
+        }
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(conceptResult);
     }
