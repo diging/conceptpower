@@ -100,7 +100,7 @@ public class SynonymSearch {
                 type = typeManager.getType(entry.getTypeId());
             }
             entryMap.put(entry, type);
-            entries = msg.getAllConceptEntries(entryMap);
+            entries = msg.getAllConceptEntriesAndPaginationDetails(entryMap, null);
         }
 
         HttpHeaders responseHeaders = new HttpHeaders();

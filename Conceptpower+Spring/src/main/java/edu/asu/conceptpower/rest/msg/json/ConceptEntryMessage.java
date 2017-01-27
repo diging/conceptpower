@@ -2,6 +2,8 @@ package edu.asu.conceptpower.rest.msg.json;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -11,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author karthikeyanmohan
  *
  */
+@JsonInclude(Include.NON_NULL)
 public class ConceptEntryMessage {
 
     private String id;

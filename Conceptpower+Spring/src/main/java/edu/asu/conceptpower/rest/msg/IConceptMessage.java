@@ -21,16 +21,6 @@ import edu.asu.conceptpower.core.ConceptType;
 public interface IConceptMessage {
 
     /**
-     * This method checks for the validation errors and returns the concept
-     * entries in JSON or XML format.
-     * 
-     * @param entries
-     * @return
-     * @throws JsonProcessingException
-     */
-    public String getAllConceptEntries(Map<ConceptEntry, ConceptType> entries) throws JsonProcessingException;
-
-    /**
      * This method fetches the concept entries with the specified pagination.
      * 
      * @param entries
