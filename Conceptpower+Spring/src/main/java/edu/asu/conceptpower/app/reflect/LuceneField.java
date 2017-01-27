@@ -11,5 +11,5 @@ public @interface LuceneField {
 
 	String lucenefieldName();
 	boolean isTokenized();
-    boolean isCommaSeperated();
+    boolean isMultiple();
 }

@@ -165,7 +165,7 @@ public class LuceneUtility implements ILuceneUtility {
                 Object contentOfField = field.get(entry);
                 if (contentOfField != null) {
                     if (searchFieldAnnotation.isTokenized()) {
-                        if (searchFieldAnnotation.isCommaSeperated()) {
+                        if (searchFieldAnnotation.isMultiple()) {
                             String[] contents = String.valueOf(contentOfField).split(",");
                             for (String content : contents) {
                                 doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), content,
@@ -177,7 +177,7 @@ public class LuceneUtility implements ILuceneUtility {
                         }
                     } else {
                         // Non tokenized
-                        if (searchFieldAnnotation.isCommaSeperated()) {
+                        if (searchFieldAnnotation.isMultiple()) {
                             String[] contents = String.valueOf(contentOfField).split(",");
                             for (String content : contents) {
                                 doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), content,
@@ -219,7 +219,7 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             field.setAccessible(true);
             if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
-                if (!luceneFieldAnnotation.isCommaSeperated()) {
+                if (!luceneFieldAnnotation.isMultiple()) {
                     IndexableField[] indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName());
                     String content = Arrays.asList(indexableFields).stream().filter(iF -> iF.stringValue() != null)
                             .map(iF -> iF.stringValue()).collect(Collectors.joining(","));
