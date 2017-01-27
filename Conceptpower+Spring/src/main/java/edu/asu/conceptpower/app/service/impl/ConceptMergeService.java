@@ -69,7 +69,8 @@ public class ConceptMergeService implements IConceptMergeService {
 
             if (entry.getTypeId() != null && conceptsMergeBean.getSelectedTypeId() == null) {
                 conceptsMergeBean.setSelectedTypeId(entry.getTypeId());
-            } else if (entry.getTypeId() != null) {
+            } else if (entry.getTypeId() != null
+                    && !entry.getTypeId().equalsIgnoreCase(conceptsMergeBean.getSelectedTypeId())) {
                 typeWarning = true;
             }
 
@@ -83,14 +84,12 @@ public class ConceptMergeService implements IConceptMergeService {
         }
 
         if (posWarning) {
-            CPError errroMessage = new CPError("error_message_101",
-                    "There are difference in pos within the merging concepts.");
+            CPError errroMessage = new CPError("error_message_101");
             conceptsMergeBean.getErrorMessages().add(errroMessage);
         }
 
         if (typeWarning) {
-            CPError errroMessage = new CPError("error_message_102",
-                    "Merging concepts have different concept type.");
+            CPError errroMessage = new CPError("error_message_102");
             conceptsMergeBean.getErrorMessages().add(errroMessage);
         }
 

@@ -52,7 +52,7 @@ $(document).ready(function() {
         <div class="alert alert-warning alert-dismissable">
             <c:forEach var="error" items="${conceptsMergeBean.errorMessages }">
                 <p>
-                    <c:out value="${error}"/>
+                    <spring:message code="${error.errorCode}" />
                 </p>
             </c:forEach>
         </div>
