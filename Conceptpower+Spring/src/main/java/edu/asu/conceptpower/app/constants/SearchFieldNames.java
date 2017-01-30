@@ -2,7 +2,7 @@ package edu.asu.conceptpower.app.constants;
 
 public interface SearchFieldNames {
 
-	public final static String EQUALS_TO = "equals_to";
+    public final static String EQUAL_TO = "equal_to";
 	public final static String SIMILAR_TO = "similar_to";
 	public final static String DESCRIPTION = "description";
 	public final static String WORD = "word";
