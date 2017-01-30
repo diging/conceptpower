@@ -1,8 +1,10 @@
 package edu.asu.conceptpower.app.bean;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import edu.asu.conceptpower.app.error.CPError;
@@ -20,7 +22,6 @@ public class ConceptsMergeBean {
     private Set<String> similarValues = new HashSet<>();
     private Set<String> mergedIds = new HashSet<>();
     private List<String> conceptIds;
-    private List<String> conceptNamesWithIds = new ArrayList<>();
     private String word;
     private List<CPError> errorMessages = new ArrayList<>();
     private Set<String> alternativeIds = new HashSet<>();
@@ -28,6 +29,10 @@ public class ConceptsMergeBean {
      * This variable contains all the wordnet ids that are gettting merged.
      */
     private Set<String> conceptWordnetIds = new HashSet<>();
+    /**
+     * key is the id of the concept and value is the word of the concept.
+     */
+    private Map<String, String> conceptIDWordMap = new HashMap<>();
 
     public String getSelectedPosValue() {
         return selectedPosValue;
@@ -113,22 +118,14 @@ public class ConceptsMergeBean {
         this.word = word;
     }
 
-    public List<String> getConceptNamesWithIds() {
-        return conceptNamesWithIds;
-    }
-
-    public void setConceptNamesWithIds(List<String> conceptNamesWithIds) {
-        this.conceptNamesWithIds = conceptNamesWithIds;
-    }
-
     public void clear() {
-        this.getConceptNamesWithIds().clear();
         this.getSynonymsids().clear();
         this.getEqualsValues().clear();
         this.getSimilarValues().clear();
         this.mergedIds.clear();
         this.errorMessages.clear();
         this.alternativeIds.clear();
+        this.conceptIDWordMap.clear();
     }
 
     public Set<String> getConceptWordnetIds() {
@@ -169,5 +166,13 @@ public class ConceptsMergeBean {
 
     public void setAlternativeIds(Set<String> alternativeIds) {
         this.alternativeIds = alternativeIds;
+    }
+
+    public Map<String, String> getConceptIDWordMap() {
+        return conceptIDWordMap;
+    }
+
+    public void setConceptIDWordMap(Map<String, String> conceptIDWordMap) {
+        this.conceptIDWordMap = conceptIDWordMap;
     }
 }

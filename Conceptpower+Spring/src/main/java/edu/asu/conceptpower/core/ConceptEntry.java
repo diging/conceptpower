@@ -411,6 +411,9 @@ public class ConceptEntry implements Serializable {
     }
 
     public Set<String> getAlternativeIds() {
+        if (this.alternativeIds == null) {
+            this.alternativeIds = new HashSet<>();
+        }
         return alternativeIds;
     }
 
