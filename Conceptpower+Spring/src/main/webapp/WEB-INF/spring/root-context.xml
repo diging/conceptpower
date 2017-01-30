@@ -52,7 +52,7 @@
 
     <bean id="analyzer"
         class="org.apache.lucene.analysis.standard.StandardAnalyzer"></bean>
-    <bean id="simpleAnalyzer"
+    <bean id="whiteSpaceAnalyzer"
         class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />
         
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">

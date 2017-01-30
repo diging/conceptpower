@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -116,14 +114,11 @@ public class ConceptDeleteController {
      * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.POST)
-    public ModelAndView confirmlDelete(@PathVariable("id") String id,
+    public ModelAndView confirmDelete(@PathVariable("id") String id,
             @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete,
             @RequestParam(value = "listName") String listName, Principal principal,
-            RedirectAttributes redirectAttributes)
-                    throws LuceneException, IndexerRunningException {
-        List<ConceptEntryWrapper> foundConcepts = null;
+            RedirectAttributes redirectAttributes) throws LuceneException, IndexerRunningException {
         ModelAndView model = new ModelAndView();
-        ConceptEntry concept = conceptManager.getConceptEntry(id);
         // Check if indexer is running
         if (indexService.isIndexerRunning()) {
             model.addObject("show_error_alert", true);
@@ -141,23 +136,4 @@ public class ConceptDeleteController {
         model.setViewName("redirect:/auth/" + listName + "/concepts");
         return model;
     }
-
-    @RequestMapping(value = "auth/conceptlist/deleteconcepts/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteConcept(@PathVariable("id") String id,
-            @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult result,
-            Principal principal) throws LuceneException, IndexerRunningException {
-        ModelAndView model = new ModelAndView();
-        // Check if indexer is running
-        if (indexService.isIndexerRunning()) {
-            model.addObject("show_error_alert", true);
-            model.addObject("error_alert_msg", indexerRunning);
-            // Need to include command Object
-            model.setViewName("welcome");
-            return model;
-        }
-        conceptManager.deleteConcept(id, principal.getName());
-        model.setViewName("welome");
-        return model;
-    }
-
 }

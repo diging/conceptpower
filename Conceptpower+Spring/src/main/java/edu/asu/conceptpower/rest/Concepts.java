@@ -149,8 +149,6 @@ public class Concepts {
         } catch (IllegalAccessException e) {
             logger.error("Error creating concept from REST call.", e);
             return new ResponseEntity<String>("Illegal Access", HttpStatus.BAD_REQUEST);
-        } catch (IndexerRunningException ir) {
-            return new ResponseEntity<String>(jsonObject.toJSONString(), HttpStatus.SERVICE_UNAVAILABLE);
         }
 
         jsonObject.put(JsonFields.ID, conceptEntry.getId());
@@ -223,10 +221,7 @@ public class Concepts {
             } catch (IllegalAccessException e) {
                 logger.error("Error creating concept from REST call.", e);
                 return new ResponseEntity<String>("Illegal Access", HttpStatus.BAD_REQUEST);
-            } catch (IndexerRunningException ir) {
-                return new ResponseEntity<String>(jsonObject.toJSONString(), HttpStatus.SERVICE_UNAVAILABLE);
             }
-
         }
 
         HttpHeaders responseHeaders = new HttpHeaders();

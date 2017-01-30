@@ -108,7 +108,7 @@ public class ConceptIDLookup {
             entryMap.put(entry, type);
         }
 
-        return new ResponseEntity<String>(msg.getAllConceptEntries(entryMap), HttpStatus.OK);
+        return new ResponseEntity<String>(msg.getAllConceptEntriesAndPaginationDetails(entryMap, null), HttpStatus.OK);
 
     }
 

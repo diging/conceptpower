@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
 public @interface LuceneField {
 
 	String lucenefieldName();
-	boolean isIndexable();
+	boolean isTokenized();
+    boolean isMultiple();
 }
