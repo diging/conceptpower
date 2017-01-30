@@ -83,7 +83,7 @@ public class ConceptEntry implements Serializable {
     private String modified;
 
     @SearchField(fieldName = SearchFieldNames.MERGED_IDS)
-    @LuceneField(lucenefieldName = LuceneFieldNames.MERGED_IDS, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.MERGED_IDS, isTokenized = false, isMultiple = true)
     private String mergedIds;
 
     private boolean isDeleted;
