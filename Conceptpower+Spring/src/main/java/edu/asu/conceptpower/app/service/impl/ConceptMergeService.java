@@ -129,9 +129,6 @@ public class ConceptMergeService implements IConceptMergeService {
             // Update
             ConceptEntry entry = conceptManager.getConceptEntry(conceptsMergeBean.getSelectedConceptId());
             fillConceptEntry(entry, conceptsMergeBean);
-            // Wordnet id has been added to alternative ids field. So setting it
-            // to blank
-            entry.setWordnetId("");
             conceptManager.storeModifiedConcept(entry, userName);
         }
 
@@ -170,7 +167,6 @@ public class ConceptMergeService implements IConceptMergeService {
         // we create a wrapper for WID-1 and WID-2, we need to have WID-1 and
         // WID-2 in wordnet id field to be deleted.
         entry.setConceptList(conceptsMergeBean.getSelectedListName());
-        entry.setWordnetId(wrapperId);
         return conceptManager.addConceptListEntry(entry, userName);
     }
 

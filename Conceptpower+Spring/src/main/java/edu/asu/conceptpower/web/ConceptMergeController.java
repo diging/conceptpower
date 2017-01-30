@@ -76,7 +76,12 @@ public class ConceptMergeController {
                     DictionaryDoesNotExistException, DictionaryModifyException {
         ModelAndView mav = new ModelAndView();
         if (result.hasErrors()) {
-            mav.setViewName("forward:/auth/conceptMerge");
+            // Adding all the default value.
+            mav.addObject("types", conceptTypesManager.getAllTypes());
+            mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
+                    .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
+            mav.addObject("posValues", POS.posValues);
+            mav.setViewName("/auth/conceptMerge");
             return mav;
         }
         conceptMergeService.mergeConcepts(conceptsMergeBean, principal.getName());
