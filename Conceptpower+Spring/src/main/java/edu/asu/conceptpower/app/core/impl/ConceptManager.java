@@ -422,6 +422,7 @@ public class ConceptManager implements IConceptManager {
         entry.addNewChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
+        entry.getAlternativeIds().add(id);
 
         client.store(entry, DBNames.DICTIONARY_DB);
         if (entry.getWordnetId() != null) {

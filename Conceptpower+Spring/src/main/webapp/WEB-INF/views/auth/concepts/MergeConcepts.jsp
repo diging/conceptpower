@@ -177,4 +177,5 @@ $(document).ready(function() {
     <form:hidden path="mergedIds" />
     <form:hidden path="synonymsids" />
     <form:hidden path="conceptWordnetIds" />
+    <form:hidden path="alternativeIds" />
 </form:form>

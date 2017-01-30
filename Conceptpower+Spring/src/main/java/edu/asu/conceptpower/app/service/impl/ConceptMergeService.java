@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.app.service.impl;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -74,12 +73,16 @@ public class ConceptMergeService implements IConceptMergeService {
                 typeWarning = true;
             }
 
-            if (entry.getWordnetId() != null && !entry.getWordnetId().isEmpty()) {
-                String[] wordNetIds = entry.getWordnetId().split(",");
-                conceptsMergeBean.getMergedIds()
-                        .addAll(Arrays.asList(wordNetIds).stream()
-                                .filter(wordNetId -> !wordNetId.trim().equalsIgnoreCase("")).map(wordNetId -> wordNetId)
-                                .collect(Collectors.toSet()));
+            conceptsMergeBean.getMergedIds().add(entry.getId());
+
+            if (ConceptTypes.LOCAL_CONCEPT == conceptTypesService.getConceptTypeByConceptId(entry.getId())) {
+                if(entry.getWordnetId() != null) {
+                    conceptsMergeBean.getAlternativeIds().addAll(Arrays.asList(entry.getWordnetId().split(",")));
+                }
+            }
+            conceptsMergeBean.getAlternativeIds().add(entry.getId());
+            if (!entry.getAlternativeIds().isEmpty()) {
+                conceptsMergeBean.getAlternativeIds().addAll(entry.getAlternativeIds());
             }
         }
 
@@ -126,6 +129,9 @@ public class ConceptMergeService implements IConceptMergeService {
             // Update
             ConceptEntry entry = conceptManager.getConceptEntry(conceptsMergeBean.getSelectedConceptId());
             fillConceptEntry(entry, conceptsMergeBean);
+            // Wordnet id has been added to alternative ids field. So setting it
+            // to blank
+            entry.setWordnetId("");
             conceptManager.storeModifiedConcept(entry, userName);
         }
 
@@ -147,7 +153,6 @@ public class ConceptMergeService implements IConceptMergeService {
 
         for (String conceptId : conceptsMergeBean.getConceptIds()) {
             if (!conceptId.equalsIgnoreCase(conceptsMergeBean.getSelectedConceptId().trim())) {
-                // If its a CCP concept, just delete it.
                 conceptManager.deleteConcept(conceptId, userName);
             }
         }
@@ -177,7 +182,7 @@ public class ConceptMergeService implements IConceptMergeService {
         String prefix = ",";
         entry.setWord(conceptMergeBean.getWord());
 
-        String description = conceptMergeBean.getDescriptions().stream().map(i -> i.toString())
+        String description = conceptMergeBean.getDescriptions().stream().map(i -> i.toString().trim())
                 .collect(Collectors.joining(" "));
         entry.setDescription(description);
 
@@ -192,32 +197,15 @@ public class ConceptMergeService implements IConceptMergeService {
         String similar = conceptMergeBean.getSimilarValues().stream().map(i -> i.toString())
                 .collect(Collectors.joining(prefix));
         entry.setSimilarTo(similar);
-
-        StringBuilder mergedIdBuilder = new StringBuilder("");
-        mergedIdBuilder.append(
-                conceptMergeBean.getMergedIds().stream().map(i -> i.toString()).collect(Collectors.joining(prefix)));
-        String conceptIdsToBeMerged = conceptMergeBean.getConceptIds().stream().collect(Collectors.joining(","));
-        if (conceptIdsToBeMerged.length() > 0 && mergedIdBuilder.length() > 0) {
-            mergedIdBuilder.append(",");
+        
+        if (entry.getAlternativeIds() != null) {
+            entry.getAlternativeIds().addAll(conceptMergeBean.getAlternativeIds());
+        } else {
+            entry.setAlternativeIds(conceptMergeBean.getAlternativeIds());
         }
-        mergedIdBuilder.append(conceptIdsToBeMerged);
-        entry.setMergedIds(mergedIdBuilder.toString());
 
-        addAlternativeIdsToEntry(entry, conceptMergeBean);
-    }
-
-    private void addAlternativeIdsToEntry(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
-        List<String> conceptIds = conceptMergeBean.getConceptIds();
-        Set<String> alternativeIds = new HashSet<>();
-
-        for (String conceptId : conceptIds) {
-            alternativeIds.add(conceptId);
-            ConceptEntry conceptEntry = conceptManager.getConceptEntry(conceptId);
-            if (conceptEntry.getAlternativeIds() != null) {
-                alternativeIds.addAll(conceptEntry.getAlternativeIds());
-            }
-        }
-        entry.setAlternativeIds(alternativeIds);
+        entry.setMergedIds(conceptMergeBean.getMergedIds().stream().collect(Collectors.joining(",")));
+        
     }
 
 }

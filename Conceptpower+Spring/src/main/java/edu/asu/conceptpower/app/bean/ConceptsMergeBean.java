@@ -18,14 +18,12 @@ public class ConceptsMergeBean {
     private Set<String> synonymsids = new HashSet<>();
     private Set<String> equalsValues = new HashSet<>();
     private Set<String> similarValues = new HashSet<>();
-    /**
-     * Any wordnet id that belongs to a concept will be added to this set.
-     */
     private Set<String> mergedIds = new HashSet<>();
     private List<String> conceptIds;
     private List<String> conceptNamesWithIds = new ArrayList<>();
     private String word;
     private List<CPError> errorMessages = new ArrayList<>();
+    private Set<String> alternativeIds = new HashSet<>();
     /**
      * This variable contains all the wordnet ids that are gettting merged.
      */
@@ -130,6 +128,7 @@ public class ConceptsMergeBean {
         this.getSimilarValues().clear();
         this.mergedIds.clear();
         this.errorMessages.clear();
+        this.alternativeIds.clear();
     }
 
     public Set<String> getConceptWordnetIds() {
@@ -162,5 +161,13 @@ public class ConceptsMergeBean {
 
     public void setErrorMessages(List<CPError> errorMessages) {
         this.errorMessages = errorMessages;
+    }
+
+    public Set<String> getAlternativeIds() {
+        return alternativeIds;
+    }
+
+    public void setAlternativeIds(Set<String> alternativeIds) {
+        this.alternativeIds = alternativeIds;
     }
 }
