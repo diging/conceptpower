@@ -60,13 +60,13 @@ public class Concepts {
      * Sample input for creating a concept wrapper:
      * 
      * { 
-     *     "wordnetIds": "WID-00450866-N-01-pony-trekking,WID-03981924-N-01-pony_cart",
-     *     "synonymids" : "WID-02380464-N-01-polo_pony,WID-04206225-N-03-pony",
-     *     "conceptlist" : "FirstList-1", 
-     *     "type" :"88bea1dc-1443-4296-8315-715c71128b01", 
-     *     "description" : "Description",
-     *     "equalsTo" : "equals", 
-     *     "similarTo" : "similar" 
+     *      "wordnetIds":
+     *      "WID-00450866-N-01-pony-trekking,WID-03981924-N-01-pony_cart",
+     *      "synonymids" : "WID-02380464-N-01-polo_pony,WID-04206225-N-03-pony",
+     *      "conceptlist" : "FirstList-1", 
+     *      "type" : "88bea1dc-1443-4296-8315-715c71128b01", 
+     *      "description" : "Description",
+     *      "equal_to" : "equals", "similarTo" : "similar" 
      * }
      * 
      * Please note any word or pos passed during concept wrapper creation will
@@ -77,11 +77,11 @@ public class Concepts {
      * Sample input for creating a concept:
      * 
      * { 
-     *    "word": "kitty", 
-     *    "pos": "noun",
-     *    "conceptlist": "mylist", 
-     *    "description": "Soft kitty, sleepy kitty, little ball of fur.",
-     *    "type": "3b755111-545a-4c1c-929c-a2c0d4c3913b" 
+     *      "word": "kitty", 
+     *      "pos": "noun", 
+     *      "conceptlist": "mylist", 
+     *      "description": "Soft kitty, sleepy kitty, little ball of fur.", 
+     *      "type": "3b755111-545a-4c1c-929c-a2c0d4c3913b" 
      * }
      * 
      * @param body
