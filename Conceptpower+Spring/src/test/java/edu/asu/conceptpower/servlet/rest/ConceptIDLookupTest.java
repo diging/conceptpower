@@ -1,11 +1,8 @@
 
 package edu.asu.conceptpower.servlet.rest;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtil;
@@ -18,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import edu.asu.conceptpower.app.core.ConceptTypesService;
@@ -79,7 +75,7 @@ public class ConceptIDLookupTest {
         Mockito.when(dictManager.getConceptEntry(conceptId)).thenReturn(entry);
         ResponseEntity<String> response = conceptIDLookup
                 .getConceptById("http://www.digitalhps.org/concepts/" + conceptId, MediaType.APPLICATION_XML_VALUE);
-        testValidXml(response.getBody());
+        RestTestUtility.testValidXml(response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assert.assertEquals(expectedResponse, response.getBody());
 
@@ -87,7 +83,6 @@ public class ConceptIDLookupTest {
 
     @Test
     public void testGetConcepyByIdWithGenericIDs() throws Exception {
-        System.out.println("Hello");
         String expectedResponse = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("alternativeGenericIds.txt"));
         String wordNetIds = "W-ID01, W-ID02";
@@ -113,14 +108,8 @@ public class ConceptIDLookupTest {
 
         Mockito.when(conceptManager.getConceptEntry("W-ID01")).thenReturn(newEntry);
         ResponseEntity<String> response = conceptIDLookup.getConceptById("W-ID??", MediaType.APPLICATION_XML_VALUE);
-        testValidXml(response.getBody());
+        RestTestUtility.testValidXml(response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assert.assertEquals(expectedResponse, response.getBody());
-    }
-
-    private void testValidXml(String xml) throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        db.parse(new InputSource(new ByteArrayInputStream(xml.getBytes("utf-8"))));
     }
 }
