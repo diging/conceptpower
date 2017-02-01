@@ -40,8 +40,6 @@ public class ConceptMergeService implements IConceptMergeService {
                 conceptsMergeBean.setWord(conceptsMergeBean.getWord() == null
                         || conceptsMergeBean.getWord().length() < entry.getWord().length() ? entry.getWord()
                                 : conceptsMergeBean.getWord());
-
-                conceptsMergeBean.getConceptIDWordMap().put(entry.getId(), entry.getWord().trim());
             }
 
             if (conceptsMergeBean.getSelectedPosValue() == null) {

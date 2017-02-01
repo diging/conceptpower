@@ -61,8 +61,8 @@ $(document).ready(function() {
     <div class="alert alert-info alert-dismissable">
         The following concepts are being merged.
         <ul class="list-group">
-            <c:forEach var="mergeDetail" items="${conceptsMergeBean.conceptIDWordMap}">
-                <li class="list-group-item"><c:out value="${mergeDetail.key}"/> -- <c:out value="${mergeDetail.value}"/></li>
+            <c:forEach var="conceptEntry" items="${conceptEntries}">
+                <li class="list-group-item"><c:out value="${conceptEntry.id}"/> -- <c:out value="${conceptEntry.word}"/></li>
             </c:forEach>
         </ul> 
     </div>

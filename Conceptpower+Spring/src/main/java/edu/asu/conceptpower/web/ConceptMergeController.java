@@ -62,6 +62,7 @@ public class ConceptMergeController {
         conceptsMergeBean = conceptMergeService.prepareMergeConcepts(conceptEntries, conceptsMergeBean);
         ModelAndView mav = new ModelAndView();
         mav.addObject("types", conceptTypesManager.getAllTypes());
+        mav.addObject("conceptEntries", conceptEntries);
         mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
                 .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
         mav.addObject("posValues", POS.posValues);
