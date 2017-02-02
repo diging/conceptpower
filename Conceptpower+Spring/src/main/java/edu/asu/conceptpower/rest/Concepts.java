@@ -115,13 +115,17 @@ public class Concepts {
                     HttpStatus.BAD_REQUEST);
         }
 
+        JsonValidationResult result = checkJsonObject(jsonObject);
+
+        if (!result.isValid()) {
+            return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
         ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
 
-        JsonValidationResult result = null;
+
         if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
             result = checkJsonObjectForWrapper(jsonObject, conceptEntry);
-        } else {
-            result = checkJsonObject(jsonObject, conceptEntry);
         }
 
         if (!result.isValid())
@@ -184,14 +188,17 @@ public class Concepts {
 
             JsonValidationResult result = null;
 
+            result = checkJsonObject(jsonObject);
+
+            if (!result.isValid()) {
+                return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+
             ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
 
             if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
                 result = checkJsonObjectForWrapper(jsonObject, conceptEntry);
-            } else {
-                result = checkJsonObject(jsonObject, conceptEntry);
             }
-
             JSONObject responseObj = new JSONObject();
             responseObj.put(JsonFields.WORD, jsonObject.get(JsonFields.WORD));
             responseObj.put("validation", result.getMessage() != null ? result.getMessage() : "OK");
@@ -232,7 +239,7 @@ public class Concepts {
                 HttpStatus.OK);
     }
 
-    private JsonValidationResult checkJsonObject(JSONObject jsonObject, ConceptEntry entry)
+    private JsonValidationResult checkJsonObject(JSONObject jsonObject)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
         if (jsonObject.get(JsonFields.POS) == null) {
             return new JsonValidationResult("Error parsing request: please provide a POS ('pos' attribute).",
@@ -252,12 +259,6 @@ public class Concepts {
                     false);
         }
 
-        return checkJsonObjectForWrapper(jsonObject, entry);
-    }
-
-    private JsonValidationResult checkJsonObjectForWrapper(JSONObject jsonObject, ConceptEntry entry)
-            throws IllegalAccessException, LuceneException, IndexerRunningException {
-
         if (jsonObject.get(JsonFields.CONCEPT_LIST) == null) {
             return new JsonValidationResult(
                     "Error parsing request: please provide a list name for the concept ('list' attribute).", jsonObject,
@@ -270,11 +271,11 @@ public class Concepts {
                     false);
         }
 
-        if (jsonObject.get(JsonFields.DESCRIPTION) == null) {
-            return new JsonValidationResult(
-                    "Error parsing request: please provide a description for the concept ('description' attribute).",
-                    jsonObject, false);
-        }
+        return new JsonValidationResult(null, jsonObject, true);
+    }
+
+    private JsonValidationResult checkJsonObjectForWrapper(JSONObject jsonObject, ConceptEntry entry)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
 
         // Validation to check if wordnet ids are seperated by comma
         if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
@@ -334,7 +335,8 @@ public class Concepts {
         conceptEntry.setCreatorId(username);
         conceptEntry.setSynonymIds(jsonObject.get(JsonFields.SYNONYM_IDS) != null
                 ? jsonObject.get(JsonFields.SYNONYM_IDS).toString() : "");
-        conceptEntry.setDescription(jsonObject.get(JsonFields.DESCRIPTION).toString());
+        conceptEntry.setDescription(jsonObject.get(JsonFields.DESCRIPTION) != null
+                ? jsonObject.get(JsonFields.DESCRIPTION).toString() : "");
         conceptEntry.setEqualTo(
                 jsonObject.get(JsonFields.EQUALS) != null ? jsonObject.get(JsonFields.EQUALS).toString() : "");
         conceptEntry.setSimilarTo(
