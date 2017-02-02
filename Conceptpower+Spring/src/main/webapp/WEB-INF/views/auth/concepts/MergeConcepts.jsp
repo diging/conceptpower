@@ -56,7 +56,7 @@ $(document).ready(function() {
         </div>
     </c:if>
     
-    <form:errors path="mergedIds" class="ui-state-error-text"></form:errors>    
+    <form:errors path="mergeIds" class="ui-state-error-text"></form:errors>    
     
     <div class="alert alert-info alert-dismissable">
         The following concepts are being merged.
@@ -70,11 +70,11 @@ $(document).ready(function() {
     <h1>Merge concepts</h1>
     
     <c:choose>
-        <c:when test="${not empty conceptsMergeBean.conceptIds }">
+        <c:when test="${not empty localConceptIds }">
             <label class="col-sm-1 control-label">Concept Id</label>
             <div class="col-sm-11">
                 <!-- If none of the values are selected, we create a new concept id for the merged concept -->
-                <form:radiobuttons path="selectedConceptId" items="${conceptsMergeBean.conceptIds}" element="label class='radio-inline'" />
+                <form:radiobuttons path="selectedConceptId" items="${localConceptIds}" element="label class='radio-inline'" />
             </div>
         </c:when>
         <c:otherwise>
@@ -173,9 +173,7 @@ $(document).ready(function() {
                     class="btn btn-primary"></a></td>
         </tr>
     </table>
-    <form:hidden path="conceptIds" />
-    <form:hidden path="mergedIds" />
+    <form:hidden path="mergeIds" />
     <form:hidden path="synonymsids" />
-    <form:hidden path="conceptWordnetIds" />
     <form:hidden path="alternativeIds" />
 </form:form>

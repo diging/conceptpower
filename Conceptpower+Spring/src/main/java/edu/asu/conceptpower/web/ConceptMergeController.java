@@ -3,6 +3,7 @@ package edu.asu.conceptpower.web;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
+import edu.asu.conceptpower.app.core.ConceptTypesService;
+import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
@@ -47,6 +50,9 @@ public class ConceptMergeController {
     @Autowired
     private ConceptsMergeBeanValidator validator;
 
+    @Autowired
+    private ConceptTypesService conceptTypesService;
+
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(validator);
@@ -56,11 +62,18 @@ public class ConceptMergeController {
     public ModelAndView prepareMergeConcept(@ModelAttribute("conceptsMergeBean") ConceptsMergeBean conceptsMergeBean,
             BindingResult result) {
         List<ConceptEntry> conceptEntries = new ArrayList<>();
-        for (String id : conceptsMergeBean.getConceptIds()) {
+        for (String id : conceptsMergeBean.getMergeIds()) {
             conceptEntries.add(conceptManager.getConceptEntry(id));
         }
         conceptsMergeBean = conceptMergeService.prepareMergeConcepts(conceptEntries, conceptsMergeBean);
+
+        Set<String> localConceptIds = conceptsMergeBean.getMergeIds().stream()
+                .filter(conceptId -> ConceptTypes.LOCAL_CONCEPT == conceptTypesService
+                        .getConceptTypeByConceptId(conceptId))
+                .collect(Collectors.toSet());
+
         ModelAndView mav = new ModelAndView();
+        mav.addObject("localConceptIds", localConceptIds);
         mav.addObject("types", conceptTypesManager.getAllTypes());
         mav.addObject("conceptEntries", conceptEntries);
         mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
@@ -78,6 +91,10 @@ public class ConceptMergeController {
         ModelAndView mav = new ModelAndView();
         if (result.hasErrors()) {
             // Adding all the default value.
+            Set<String> localConceptIds = conceptsMergeBean.getMergeIds().stream().filter(
+                    conceptId -> ConceptTypes.LOCAL_CONCEPT == conceptTypesService.getConceptTypeByConceptId(conceptId))
+                    .collect(Collectors.toSet());
+            mav.addObject("localConceptIds", localConceptIds);
             mav.addObject("types", conceptTypesManager.getAllTypes());
             mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
                     .map(ConceptList::getConceptListName).collect(Collectors.toSet()));

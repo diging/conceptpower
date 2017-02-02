@@ -26,8 +26,8 @@ public class ConceptsMergeBeanValidator implements Validator {
                 "Concept Type cannot be empty.");
 
         ConceptsMergeBean conceptMergeBean = (ConceptsMergeBean) target;
-        if (conceptMergeBean.getMergedIds() != null && conceptMergeBean.getMergedIds().size() < 2) {
-            errors.reject("mergedIds", "Merged Id should contain atleast two ids.");
+        if (conceptMergeBean.getMergeIds() != null && conceptMergeBean.getMergeIds().size() < 2) {
+            errors.reject("mergeIds", "Merged Id should contain atleast two ids.");
         }
     }
 

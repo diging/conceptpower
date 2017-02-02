@@ -18,15 +18,10 @@ public class ConceptsMergeBean {
     private Set<String> synonymsids = new HashSet<>();
     private Set<String> equalsValues = new HashSet<>();
     private Set<String> similarValues = new HashSet<>();
-    private Set<String> mergedIds = new HashSet<>();
-    private List<String> conceptIds;
+    private Set<String> mergeIds = new HashSet<>();
     private String word;
     private List<CPError> errorMessages = new ArrayList<>();
     private Set<String> alternativeIds = new HashSet<>();
-    /**
-     * This variable contains all the wordnet ids that are gettting merged.
-     */
-    private Set<String> conceptWordnetIds = new HashSet<>();
 
     public String getSelectedPosValue() {
         return selectedPosValue;
@@ -71,14 +66,6 @@ public class ConceptsMergeBean {
         this.selectedConceptId = selectedConceptId;
     }
 
-    public List<String> getConceptIds() {
-        return conceptIds;
-    }
-
-    public void setConceptIds(List<String> conceptIds) {
-        this.conceptIds = conceptIds;
-    }
-
     public Set<String> getSynonymsids() {
         return synonymsids;
     }
@@ -116,17 +103,9 @@ public class ConceptsMergeBean {
         this.getSynonymsids().clear();
         this.getEqualsValues().clear();
         this.getSimilarValues().clear();
-        this.mergedIds.clear();
+        this.mergeIds.clear();
         this.errorMessages.clear();
         this.alternativeIds.clear();
-    }
-
-    public Set<String> getConceptWordnetIds() {
-        return conceptWordnetIds;
-    }
-
-    public void setConceptWordnetIds(Set<String> conceptWordnetIds) {
-        this.conceptWordnetIds = conceptWordnetIds;
     }
 
     public List<String> getDescriptions() {
@@ -137,12 +116,12 @@ public class ConceptsMergeBean {
         this.descriptions = descriptions;
     }
 
-    public Set<String> getMergedIds() {
-        return mergedIds;
+    public Set<String> getMergeIds() {
+        return mergeIds;
     }
 
-    public void setMergedIds(Set<String> mergedIds) {
-        this.mergedIds = mergedIds;
+    public void setMergeIds(Set<String> mergeIds) {
+        this.mergeIds = mergeIds;
     }
 
     public List<CPError> getErrorMessages() {
