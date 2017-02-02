@@ -5,7 +5,7 @@ public class ConceptSearchParameters {
     private String type_uri;
     private String operator;
     private Integer page;
-    private String equals_to;
+    private String equal_to;
     private String similar_to;
     private String description;
     private String word;
@@ -40,14 +40,6 @@ public class ConceptSearchParameters {
         if (page != null) {
             this.page = page;
         }
-    }
-
-    public String getEquals_to() {
-        return equals_to;
-    }
-
-    public void setEquals_to(String equals_to) {
-        this.equals_to = equals_to;
     }
 
     public String getSimilar_to() {
@@ -122,5 +114,13 @@ public class ConceptSearchParameters {
         if (number_of_records_per_page != null) {
             this.number_of_records_per_page = number_of_records_per_page;
         }
+    }
+
+    public String getEqual_to() {
+        return equal_to;
+    }
+
+    public void setEqual_to(String equal_to) {
+        this.equal_to = equal_to;
     }
 }
