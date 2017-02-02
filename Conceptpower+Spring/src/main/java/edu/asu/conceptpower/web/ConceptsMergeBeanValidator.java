@@ -17,10 +17,18 @@ public class ConceptsMergeBeanValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmpty(errors, "word", "word", "Word cannot be empty.");
-        ValidationUtils.rejectIfEmpty(errors, "selectedPosValue", "selectedPosValue", "POS cannot be empty.");
-        ValidationUtils.rejectIfEmpty(errors, "selectedListName", "selectedListName", "Concept List cannot be empty.");
-        ValidationUtils.rejectIfEmpty(errors, "selectedTypeId", "selectedTypeId", "Concept Type cannot be empty.");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "word", "word", "Word cannot be empty.");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "selectedPosValue", "selectedPosValue",
+                "POS cannot be empty.");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "selectedListName", "selectedListName",
+                "Concept List cannot be empty.");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "selectedTypeId", "selectedTypeId",
+                "Concept Type cannot be empty.");
+
+        ConceptsMergeBean conceptMergeBean = (ConceptsMergeBean) target;
+        if (conceptMergeBean.getMergedIds() != null && conceptMergeBean.getMergedIds().size() < 2) {
+            errors.reject("mergedIds", "Merged Id should contain atleast two ids.");
+        }
     }
 
 }

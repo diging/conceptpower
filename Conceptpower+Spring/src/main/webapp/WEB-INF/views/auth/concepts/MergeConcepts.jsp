@@ -3,8 +3,6 @@
     uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<head>
-<title>Merge Concept</title>
 <style type="text/css">
 .descriptionDiv {
 	height: 100%;
@@ -58,11 +56,13 @@ $(document).ready(function() {
         </div>
     </c:if>
     
+    <form:errors path="mergedIds" class="ui-state-error-text"></form:errors>    
+    
     <div class="alert alert-info alert-dismissable">
         The following concepts are being merged.
         <ul class="list-group">
             <c:forEach var="conceptEntry" items="${conceptEntries}">
-                <li class="list-group-item"><c:out value="${conceptEntry.id}"/> -- <c:out value="${conceptEntry.word}"/></li>
+                <li class="list-group-item" title="${conceptEntry.description}">[<c:out value="${conceptEntry.id}"/>] <c:out value="${conceptEntry.word}"/></li>
             </c:forEach>
         </ul> 
     </div>
@@ -79,7 +79,7 @@ $(document).ready(function() {
         </c:when>
         <c:otherwise>
             <div class="col-sm-12">
-                New Id will be generated for merged concepts.
+                A new id will be generated for the merged concepts.
             </div>
         </c:otherwise>
     </c:choose>

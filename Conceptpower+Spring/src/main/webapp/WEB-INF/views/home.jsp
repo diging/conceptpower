@@ -210,8 +210,8 @@ function prepareMergeConcept(conceptId) {
     <sec:authorize access="isAuthenticated()">
         <div class="row">
             <div class="col-sm-2">
-                <button id="prepareMergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;">Prepare Merge Concepts</button>
-                <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" onclick="mergeConcepts();">Merge Concepts</button>
+                <button id="prepareMergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;">Select concepts to merge.</button>
+                <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" onclick="mergeConcepts();">Merge selected concepts.</button>
             </div>
         </div>
     </sec:authorize>
@@ -223,7 +223,7 @@ function prepareMergeConcept(conceptId) {
         <sec:authorize access="isAuthenticated()">
           <th></th>
           <th></th>
-          <th>Merge</th>
+          <th></th>
         </sec:authorize>
         <th>Term</th>
         <th>ID</th>
