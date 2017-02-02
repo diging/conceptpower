@@ -56,7 +56,7 @@ public class ConceptEntry implements Serializable {
     @LuceneField(lucenefieldName = LuceneFieldNames.TYPE_ID, isTokenized = false, isMultiple = false)
     private String typeId;
 
-    @SearchField(fieldName = SearchFieldNames.EQUALS_TO)
+    @SearchField(fieldName = SearchFieldNames.EQUAL_TO)
     @LuceneField(lucenefieldName = LuceneFieldNames.EQUALS_TO, isTokenized = false, isMultiple = true)
     private String equalTo;
 
