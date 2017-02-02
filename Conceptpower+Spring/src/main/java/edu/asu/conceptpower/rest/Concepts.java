@@ -66,7 +66,8 @@ public class Concepts {
      *      "conceptlist" : "FirstList-1", 
      *      "type" : "88bea1dc-1443-4296-8315-715c71128b01", 
      *      "description" : "Description",
-     *      "equal_to" : "equals", "similarTo" : "similar" 
+     *      "equal_to" : "http://viaf.org/viaf/38882290", 
+     *      "similarTo" : "http://viaf.org/viaf/43723621" 
      * }
      * 
      * Please note any word or pos passed during concept wrapper creation will
