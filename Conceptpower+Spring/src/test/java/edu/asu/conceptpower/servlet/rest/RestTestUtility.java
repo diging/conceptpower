@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.xml.sax.InputSource;
@@ -21,6 +22,10 @@ public class RestTestUtility {
     }
 
     public static void testValidJson(String json) throws JSONException {
-        new JSONObject(json);
+        if (json.startsWith("{")) {
+            new JSONObject(json);
+        } else {
+            new JSONArray(json);
+        }
     }
 }

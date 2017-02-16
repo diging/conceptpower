@@ -103,4 +103,104 @@ public class ConceptsTest {
         RestTestUtility.testValidJson(response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
+
+    @Test
+    public void testForDictionaryException() throws IllegalAccessException, DictionaryDoesNotExistException,
+            DictionaryModifyException, LuceneException, IndexerRunningException {
+        String input = " { \"word\": \"kitty\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\",\"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4f2\"}";
+        ConceptType type = new ConceptType();
+        type.setTypeId("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2");
+        type.setTypeName("Type-Name");
+        type.setDescription("Type Description");
+
+        Mockito.when(typeManager.getType("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2")).thenReturn(type);
+        Mockito.doThrow(new DictionaryDoesNotExistException()).when(conceptManager)
+                .addConceptListEntry(Mockito.isA(ConceptEntry.class), Mockito.eq(principal.getName()));
+
+        ResponseEntity<String> response = concepts.addConcept(input, principal);
+        Assert.assertEquals("Specified concept list does not exist in Conceptpower.", response.getBody());
+        Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void testForDictionaryModifiedException() throws IllegalAccessException, DictionaryDoesNotExistException,
+            DictionaryModifyException, LuceneException, IndexerRunningException {
+        String input = " { \"word\": \"kitty\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\",\"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4f2\"}";
+        ConceptType type = new ConceptType();
+        type.setTypeId("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2");
+        type.setTypeName("Type-Name");
+        type.setDescription("Type Description");
+
+        Mockito.when(typeManager.getType("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2")).thenReturn(type);
+        Mockito.doThrow(new DictionaryModifyException()).when(conceptManager)
+                .addConceptListEntry(Mockito.isA(ConceptEntry.class), Mockito.eq(principal.getName()));
+
+        ResponseEntity<String> response = concepts.addConcept(input, principal);
+        Assert.assertEquals("Specified concept list can't be modified.", response.getBody());
+        Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void testForLuceneException() throws IllegalAccessException, DictionaryDoesNotExistException,
+            DictionaryModifyException, LuceneException, IndexerRunningException {
+        String input = " { \"word\": \"kitty\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\",\"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4f2\"}";
+        ConceptType type = new ConceptType();
+        type.setTypeId("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2");
+        type.setTypeName("Type-Name");
+        type.setDescription("Type Description");
+
+        Mockito.when(typeManager.getType("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2")).thenReturn(type);
+        Mockito.doThrow(new LuceneException()).when(conceptManager)
+                .addConceptListEntry(Mockito.isA(ConceptEntry.class), Mockito.eq(principal.getName()));
+
+        ResponseEntity<String> response = concepts.addConcept(input, principal);
+        Assert.assertEquals("Concept Cannot be added", response.getBody());
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    public void testForIllegalAccessException() throws IllegalAccessException, DictionaryDoesNotExistException,
+            DictionaryModifyException, LuceneException, IndexerRunningException {
+        String input = " { \"word\": \"kitty\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\",\"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4f2\"}";
+        ConceptType type = new ConceptType();
+        type.setTypeId("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2");
+        type.setTypeName("Type-Name");
+        type.setDescription("Type Description");
+
+        Mockito.when(typeManager.getType("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2")).thenReturn(type);
+        Mockito.doThrow(new IllegalAccessException()).when(conceptManager)
+                .addConceptListEntry(Mockito.isA(ConceptEntry.class), Mockito.eq(principal.getName()));
+
+        ResponseEntity<String> response = concepts.addConcept(input, principal);
+        Assert.assertEquals("Illegal Access", response.getBody());
+        Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void addConceptsTest() throws IllegalAccessException, LuceneException, IndexerRunningException,
+            DictionaryDoesNotExistException, DictionaryModifyException, JSONException {
+        
+        String input = "[{ \"word\": \"kitty\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\",\"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4f2\"},{ \"word\": \"pony\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Indian pony.\",\"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4r4\"}]";
+        
+        ConceptType type = new ConceptType();
+        type.setTypeId("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2");
+        type.setTypeName("Type-Name");
+        type.setDescription("Type Description");
+
+        ConceptType type2 = new ConceptType();
+        type2.setTypeId("c7d0bec3-ea90-4cde-8698-3bb08c47d4r4");
+        type.setTypeName("Test-List");
+        type.setDescription("Pony types");
+
+        Mockito.when(typeManager.getType("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2")).thenReturn(type);
+        Mockito.when(typeManager.getType("c7d0bec3-ea90-4cde-8698-3bb08c47d4r4")).thenReturn(type2);
+
+        ResponseEntity<String> output = concepts.addConcepts(input, principal);
+
+        Mockito.verify(conceptManager, Mockito.times(2)).addConceptListEntry(Mockito.isA(ConceptEntry.class),
+                Mockito.eq(principal.getName()));
+
+        RestTestUtility.testValidJson(output.getBody());
+        Assert.assertEquals(HttpStatus.OK, output.getStatusCode());
+    }
 }
