@@ -117,15 +117,17 @@ public class Concepts {
 
         JsonValidationResult result = checkJsonObject(jsonObject);
 
-        if (!result.isValid()) {
-            return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
+        if (result.isValid() && jsonObject.get(JsonFields.WORDNET_ID) != null) {
+            result = checkJsonObjectForWrapper(jsonObject);
         }
+
+        if (!result.isValid())
+            return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
 
         ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
 
-
         if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
-            result = checkJsonObjectForWrapper(jsonObject, conceptEntry);
+            result = checkPOSWithEntry(jsonObject, conceptEntry);
         }
 
         if (!result.isValid())
@@ -189,6 +191,10 @@ public class Concepts {
             JsonValidationResult result = null;
 
             result = checkJsonObject(jsonObject);
+            
+            if (result.isValid() && jsonObject.get(JsonFields.WORDNET_ID) != null) {
+                result = checkJsonObjectForWrapper(jsonObject);
+            }
 
             if (!result.isValid()) {
                 return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
@@ -197,7 +203,7 @@ public class Concepts {
             ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
 
             if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
-                result = checkJsonObjectForWrapper(jsonObject, conceptEntry);
+                checkPOSWithEntry(jsonObject, conceptEntry);
             }
             JSONObject responseObj = new JSONObject();
             responseObj.put(JsonFields.WORD, jsonObject.get(JsonFields.WORD));
@@ -274,7 +280,7 @@ public class Concepts {
         return new JsonValidationResult(null, jsonObject, true);
     }
 
-    private JsonValidationResult checkJsonObjectForWrapper(JSONObject jsonObject, ConceptEntry entry)
+    private JsonValidationResult checkJsonObjectForWrapper(JSONObject jsonObject)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
 
         // Validation to check if wordnet ids are seperated by comma
@@ -304,18 +310,19 @@ public class Concepts {
             }
         }
 
-        // In case user has entered a POS value. Validate whether POS is
-        // same as wordnet POS
-        if (jsonObject.get(JsonFields.POS) != null) {
-            if (!entry.getPos().equalsIgnoreCase(jsonObject.get(JsonFields.POS).toString())) {
-                return new JsonValidationResult(
-                        "Error parsing request: please enter POS that matches with the wordnet POS " +entry.getPos(), jsonObject, false);
-            }
-        }
-
         return new JsonValidationResult(null, jsonObject, true);
     }
 
+    private JsonValidationResult checkPOSWithEntry(JSONObject jsonObject, ConceptEntry entry) {
+        // In case user has entered a POS value. Validate whether POS is
+        // same as wordnet POS
+        if (!entry.getPos().equalsIgnoreCase(jsonObject.get(JsonFields.POS).toString())) {
+            return new JsonValidationResult(
+                    "Error parsing request: please enter POS that matches with the wordnet POS " + entry.getPos(),
+                    jsonObject, false);
+        }
+        return new JsonValidationResult(null, jsonObject, true);
+    }
 
     private ConceptEntry createEntry(JSONObject jsonObject, String username) {
         ConceptEntry conceptEntry = new ConceptEntry();
