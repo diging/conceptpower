@@ -167,7 +167,7 @@ public class ConceptMergeService implements IConceptMergeService {
 
         String description = conceptMergeBean.getDescriptions().stream().map(i -> i.toString().trim())
                 .collect(Collectors.joining(" "));
-        entry.setDescription(description.trim());
+        entry.setDescription(description.trim().replaceAll("\\s+", " "));
 
         String synonymIds = conceptMergeBean.getSynonymsids().stream().map(i -> i.toString())
                 .collect(Collectors.joining(prefix));

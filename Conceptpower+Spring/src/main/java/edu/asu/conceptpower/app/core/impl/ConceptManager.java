@@ -424,6 +424,10 @@ public class ConceptManager implements IConceptManager {
         entry.setId(id);
         entry.getAlternativeIds().add(id);
 
+        // Removing _ from word. This is because wordnet replaces spaces with _
+        // for words
+        entry.setWord(entry.getWord().replace("_", " "));
+
         client.store(entry, DBNames.DICTIONARY_DB);
         if (entry.getWordnetId() != null) {
             String[] wordnetIds = entry.getWordnetId().split(",");
