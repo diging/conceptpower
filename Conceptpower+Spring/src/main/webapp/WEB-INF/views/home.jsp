@@ -129,7 +129,7 @@ function mergeConcepts() {
     if(conceptIdsToMerge.length < 2) {
     	$('#mergeError').show();
     } else {
-        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(", ");    	
+        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(",");    	
     }
 }
 
@@ -210,8 +210,8 @@ function prepareMergeConcept(conceptId) {
     <sec:authorize access="isAuthenticated()">
         <div class="row">
             <div class="col-sm-2">
-                <button id="prepareMergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;">Select concepts to merge.</button>
-                <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" onclick="mergeConcepts();">Merge selected concepts.</button>
+                <button id="prepareMergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;">Select concepts to merge</button>
+                <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" onclick="mergeConcepts();">Merge selected concepts</button>
             </div>
         </div>
     </sec:authorize>

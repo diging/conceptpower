@@ -104,7 +104,7 @@ public class WordNetManager {
         ConceptEntry entry = new ConceptEntry();
         entry.setId(word.getID().toString());
         entry.setWordnetId(word.getID().toString());
-        entry.setWord(word.getLemma());
+        entry.setWord(word.getLemma().replace("_", " "));
         entry.setPos(word.getPOS().name());
         entry.setConceptList(Constants.WORDNET_DICTIONARY);
 
