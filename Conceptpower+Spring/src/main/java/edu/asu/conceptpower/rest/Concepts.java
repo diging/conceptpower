@@ -127,7 +127,7 @@ public class Concepts {
         ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
 
         if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
-            result = checkPOSWithEntry(jsonObject, conceptEntry);
+            result = validatePOS(jsonObject, conceptEntry);
         }
 
         if (!result.isValid())
@@ -203,7 +203,7 @@ public class Concepts {
             ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
 
             if (jsonObject.get(JsonFields.WORDNET_ID) != null) {
-                checkPOSWithEntry(jsonObject, conceptEntry);
+                validatePOS(jsonObject, conceptEntry);
             }
             JSONObject responseObj = new JSONObject();
             responseObj.put(JsonFields.WORD, jsonObject.get(JsonFields.WORD));
@@ -313,7 +313,7 @@ public class Concepts {
         return new JsonValidationResult(null, jsonObject, true);
     }
 
-    private JsonValidationResult checkPOSWithEntry(JSONObject jsonObject, ConceptEntry entry) {
+    private JsonValidationResult validatePOS(JSONObject jsonObject, ConceptEntry entry) {
         // In case user has entered a POS value. Validate whether POS is
         // same as wordnet POS
         if (!entry.getPos().equalsIgnoreCase(jsonObject.get(JsonFields.POS).toString())) {

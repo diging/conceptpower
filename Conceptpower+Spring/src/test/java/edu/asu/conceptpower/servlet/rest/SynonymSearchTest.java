@@ -86,7 +86,7 @@ public class SynonymSearchTest {
     }
 
     @Test
-    public void getSynonymsForNullId() throws JsonProcessingException {
+    public void getSynonymsForInvalidId() throws JsonProcessingException {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn(null);
         ResponseEntity<String> output = synonymSearch.getSynonymsForId(req, MediaType.APPLICATION_XML_VALUE);
@@ -110,6 +110,5 @@ public class SynonymSearchTest {
         RestTestUtility.testValidJson(output.getBody());
         Assert.assertEquals(HttpStatus.OK, output.getStatusCode());
     }
-
 
 }

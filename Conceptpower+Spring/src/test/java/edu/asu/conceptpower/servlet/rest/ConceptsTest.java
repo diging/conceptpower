@@ -38,7 +38,11 @@ public class ConceptsTest {
     @InjectMocks
     private Concepts concepts;
 
-    private Principal principal=new Principal(){public String getName(){return"admin";}};
+    private Principal principal = new Principal() {
+        public String getName() {
+            return "admin";
+        }
+    };
 
     @Before
     public void init() {
@@ -86,7 +90,7 @@ public class ConceptsTest {
     @Test
     public void addConceptTest() throws IllegalAccessException, LuceneException, IndexerRunningException,
             DictionaryDoesNotExistException, DictionaryModifyException, JSONException {
-        
+
         String input = " { \"word\": \"kitty\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\",\"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4f2\"}";
         ConceptType type = new ConceptType();
         type.setTypeId("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2");
@@ -95,10 +99,9 @@ public class ConceptsTest {
 
         Mockito.when(typeManager.getType("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2")).thenReturn(type);
         Mockito.when(
-                conceptManager.addConceptListEntry(Mockito.eq(Mockito.isA(ConceptEntry.class)),
-                principal.getName()))
+                conceptManager.addConceptListEntry(Mockito.eq(Mockito.isA(ConceptEntry.class)), principal.getName()))
                 .thenReturn("id-1");
-        
+
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         RestTestUtility.testValidJson(response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -150,8 +153,8 @@ public class ConceptsTest {
         type.setDescription("Type Description");
 
         Mockito.when(typeManager.getType("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2")).thenReturn(type);
-        Mockito.doThrow(new LuceneException()).when(conceptManager)
-                .addConceptListEntry(Mockito.isA(ConceptEntry.class), Mockito.eq(principal.getName()));
+        Mockito.doThrow(new LuceneException()).when(conceptManager).addConceptListEntry(Mockito.isA(ConceptEntry.class),
+                Mockito.eq(principal.getName()));
 
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         Assert.assertEquals("Concept Cannot be added", response.getBody());
@@ -177,8 +180,7 @@ public class ConceptsTest {
     }
 
     @Test
-    public void testForCheckJsonObjectWrapperWithoutPos()
-            throws IllegalAccessException, LuceneException, IndexerRunningException {
+    public void testForPOSError() throws IllegalAccessException, LuceneException, IndexerRunningException {
         String input = " { \"word\": \"kitty\",\"wordnetIds\" : \"WID-02382750-N-01-Welsh_pony\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\"}";
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         Assert.assertEquals("Error parsing request: please provide a POS ('pos' attribute).", response.getBody());
@@ -187,8 +189,7 @@ public class ConceptsTest {
     }
 
     @Test
-    public void testForCheckJsonObjectWrapperWithoutType()
-            throws IllegalAccessException, LuceneException, IndexerRunningException {
+    public void testForTypeError() throws IllegalAccessException, LuceneException, IndexerRunningException {
         String wordnetId = "WID-02382750-N-01-Welsh_pony";
         String input = " { \"word\": \"kitty\",\"wordnetIds\" : \"" + wordnetId
                 + "\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\"}";
@@ -198,10 +199,9 @@ public class ConceptsTest {
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
     }
-    
+
     @Test
-    public void testForCheckJsonObjectWrapperWithInvalidType()
-            throws IllegalAccessException, LuceneException, IndexerRunningException {
+    public void testForExistingType() throws IllegalAccessException, LuceneException, IndexerRunningException {
         String wordnetId = "WID-02382750-N-01-Welsh_pony";
         String input = " { \"word\": \"kitty\",\"wordnetIds\" : \"" + wordnetId
                 + "\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4f2\"}";
@@ -220,8 +220,7 @@ public class ConceptsTest {
     }
 
     @Test
-    public void testForCheckJsonObjectWrapperWithInvalidWordnet()
-            throws IllegalAccessException, LuceneException, IndexerRunningException {
+    public void testForInvalidWordNetIds() throws IllegalAccessException, LuceneException, IndexerRunningException {
         String wordnetId = "WI-02382750-N-01-Welsh_pony";
         String input = " { \"word\": \"kitty\", \"wordnetIds\" : \"" + wordnetId
                 + "\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4f2\"}";
@@ -243,7 +242,7 @@ public class ConceptsTest {
     }
 
     @Test
-    public void testCheckForPosWithEntry() throws IllegalAccessException, LuceneException, IndexerRunningException {
+    public void testForPOSMismatch() throws IllegalAccessException, LuceneException, IndexerRunningException {
 
         String wordnetId = "WID-02382750-N-01-Welsh_pony";
         String input = " { \"word\": \"kitty\",\"wordnetIds\" : \"" + wordnetId
@@ -274,7 +273,7 @@ public class ConceptsTest {
         entry.setWord("kitty");
         entry.setId(wordnetId);
         entry.setPos("verb");
-        
+
         Mockito.when(conceptManager.getConceptWrappedEntryByWordNetId(wordnetId)).thenReturn(entry);
 
         ResponseEntity<String> response = concepts.addConcept(input, principal);
@@ -284,11 +283,11 @@ public class ConceptsTest {
     }
 
     @Test
-    public void addConceptsTest() throws IllegalAccessException, LuceneException, IndexerRunningException,
+    public void addConceptsTestInJSON() throws IllegalAccessException, LuceneException, IndexerRunningException,
             DictionaryDoesNotExistException, DictionaryModifyException, JSONException {
-        
+
         String input = "[{ \"word\": \"kitty\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\",\"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4f2\"},{ \"word\": \"pony\",  \"pos\": \"noun\", \"conceptlist\": \"mylist\", \"description\": \"Indian pony.\",\"type\": \"c7d0bec3-ea90-4cde-8698-3bb08c47d4r4\"}]";
-        
+
         ConceptType type = new ConceptType();
         type.setTypeId("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2");
         type.setTypeName("Type-Name");

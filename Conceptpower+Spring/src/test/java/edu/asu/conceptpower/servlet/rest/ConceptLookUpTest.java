@@ -82,24 +82,23 @@ public class ConceptLookUpTest {
         entry2.setConceptList("Test List");
         entry2.setTypeId("TYPE-2");
         entries[1] = entry2;
-        
+
         ConceptType type1 = new ConceptType();
         type1.setTypeId(typeId1);
         type1.setDescription("TypeID 1");
         type1.setTypeName("TYPE-1");
-        
+
         ConceptType type2 = new ConceptType();
         type2.setTypeId(typeId2);
         type1.setDescription("TypeID 2");
         type1.setTypeName("TYPE-2");
-        
 
         Mockito.when(dictManager.getConceptListEntriesForWordPOS("pony", POS.NOUN, null)).thenReturn(entries);
         Mockito.when(typeManager.getType(typeId1)).thenReturn(type1);
         Mockito.when(typeManager.getType(typeId2)).thenReturn(type2);
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_XML_VALUE)).thenReturn(xmlMEssageFactory);
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_JSON_VALUE)).thenReturn(jsonMessageFactory);
-        
+
         Mockito.when(xmlMEssageFactory.createConceptMessage()).thenReturn(new XMLConceptMessage(uriCreator));
         Mockito.when(jsonMessageFactory.createConceptMessage()).thenReturn(new JsonConceptMessage(uriCreator));
     }
@@ -114,7 +113,7 @@ public class ConceptLookUpTest {
     }
 
     @Test
-    public void getWordNetEntryTestForJson()
+    public void getWordNetEntryTestInJson()
             throws IndexerRunningException, ParserConfigurationException, SAXException, IOException, JSONException {
 
         ResponseEntity<String> response = conceptLookup.getWordNetEntry("pony", POS.NOUN,
@@ -144,7 +143,7 @@ public class ConceptLookUpTest {
         ResponseEntity<String> response = conceptLookup.getWordNetEntryInRdf("robert", POS.NOUN);
         Mockito.verify(rdfFactory).generateRDF(entries);
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        
+
     }
 
 }

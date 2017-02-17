@@ -61,7 +61,7 @@ public class TypeIdLookupTest {
                 .thenReturn(new JsonTypeMessage(uriCreator));
 
     }
-    
+
     @Test
     public void getTypeIdInXML() throws ParserConfigurationException, SAXException, IOException {
         String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
@@ -74,11 +74,11 @@ public class TypeIdLookupTest {
         type.setSupertypeId(superTypeId);
 
         Mockito.when(typeManager.getType(typeId)).thenReturn(type);
-        
+
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id"))
                 .thenReturn("http://www.digitalhps.org/types/TYPE_0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b");
-        
+
         ResponseEntity<String> typeMessage = typeIdLookup.getTypeById(req, MediaType.APPLICATION_XML_VALUE);
 
         RestTestUtility.testValidXml(typeMessage.getBody());
@@ -125,7 +125,7 @@ public class TypeIdLookupTest {
     }
 
     @Test
-    public void getTypeIdWithoutId() throws ParserConfigurationException, SAXException, IOException {
+    public void testForNullId() throws ParserConfigurationException, SAXException, IOException {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn(null);
 
