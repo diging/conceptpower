@@ -44,11 +44,11 @@ public class ConceptLookUpTest {
     @Mock
     private IMessageRegistry messageFactory;
 
-    @Mock
-    private RDFMessageFactory rdfFactory;
-
     @InjectMocks
     private ConceptLookup conceptLookup;
+
+    @Mock
+    private RDFMessageFactory rdfFactory;
 
     @Mock
     private IMessageConverter xmlMEssageFactory;
@@ -119,9 +119,32 @@ public class ConceptLookUpTest {
 
         ResponseEntity<String> response = conceptLookup.getWordNetEntry("pony", POS.NOUN,
                 MediaType.APPLICATION_JSON_VALUE);
-        System.out.println(response.getBody());
         RestTestUtility.testValidJson(response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-    
     }
+
+    @Test
+    public void getWordNetEntryInRDF() throws IndexerRunningException, IllegalAccessException, LuceneException {
+
+        ConceptEntry[] entries = new ConceptEntry[2];
+        ConceptEntry entry1 = new ConceptEntry();
+        entry1.setWord("robert");
+        entry1.setPos(POS.NOUN);
+        entry1.setId("WID-123");
+
+        ConceptEntry entry2 = new ConceptEntry();
+        entry2.setId("WID-456");
+        entry2.setWord("robert-1");
+        entry1.setPos(POS.NOUN);
+
+        entries[0] = entry1;
+        entries[1] = entry2;
+
+        Mockito.when(dictManager.getConceptListEntriesForWordPOS("robert", POS.NOUN, null)).thenReturn(entries);
+        ResponseEntity<String> response = conceptLookup.getWordNetEntryInRdf("robert", POS.NOUN);
+        Mockito.verify(rdfFactory).generateRDF(entries);
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        
+    }
+
 }
