@@ -82,6 +82,10 @@ public class ConceptEntry implements Serializable {
     @LuceneField(lucenefieldName = LuceneFieldNames.MODIFIED, isTokenized = false, isMultiple = false)
     private String modified;
 
+    @SearchField(fieldName = SearchFieldNames.MERGED_IDS)
+    @LuceneField(lucenefieldName = LuceneFieldNames.MERGED_IDS, isTokenized = false, isMultiple = true)
+    private String mergedIds;
+
     private boolean isDeleted;
     
     private String modifiedUser;
@@ -407,10 +411,21 @@ public class ConceptEntry implements Serializable {
     }
 
     public Set<String> getAlternativeIds() {
+        if (this.alternativeIds == null) {
+            this.alternativeIds = new HashSet<>();
+        }
         return alternativeIds;
     }
 
     public void setAlternativeIds(Set<String> alternativeIds) {
         this.alternativeIds = alternativeIds;
+    }
+
+    public String getMergedIds() {
+        return mergedIds;
+    }
+
+    public void setMergedIds(String mergedIds) {
+        this.mergedIds = mergedIds;
     }
 }
