@@ -25,9 +25,6 @@
         </mvc:message-converters>    
     </mvc:annotation-driven>
 
-	<se:global-method-security
-		pre-post-annotations="enabled" />
-
 	<bean id="jacksonMessageConverter"
 	class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
 	<bean

@@ -29,6 +29,8 @@
 		<lucene.index>/Users/karthikeyanmohan/Software/Conceptpower/indexFiles</lucene.index>
 		<pullrequest></pullrequest>
 		<debug_level>debug</debug_level>
+        <db.test.files.path>/Users/karthikeyanmohan/Software/conceptpower-test/</db.test.files.path>
+        <lucene.test.files.path>/Users/karthikeyanmohan/Software/conceptpower-test/indexFiles</lucene.test.files.path>
 	</properties>
 
 	<repositories>
@@ -55,6 +57,8 @@
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
+                <db.test.path>${db.test.files.path}</db.test.path>
+                <lucene.test.path>${lucene.test.files.path}</lucene.test.path>
 			</properties>
 		</profile>
 		<profile>
@@ -72,6 +76,8 @@
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
+                <db.test.path>${db.test.files.path}</db.test.path>
+                <lucene.test.path>${lucene.test.files.path}</lucene.test.path>
 			</properties>
 		</profile>
 		<profile>
@@ -89,6 +95,8 @@
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
+                <db.test.path>${db.test.files.path}</db.test.path>
+                <lucene.test.path>${lucene.test.files.path}</lucene.test.path>
 			</properties>
 		</profile>
 	</profiles>
@@ -465,6 +473,14 @@
 			<artifactId>spring-security-web</artifactId>
 			<version>${spring-security-version}</version>
 		</dependency>
+        
+        <!-- json path -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path-assert</artifactId>
+            <version>0.8.1</version>
+            <scope>test</scope>
+        </dependency>
 
 		<!-- Apache Lucene -->
 		<dependency>
@@ -625,6 +641,13 @@
 					<include>**/*</include>
 				</includes>
 			</resource>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
 		</resources>
 	</build>
 	<reporting>
