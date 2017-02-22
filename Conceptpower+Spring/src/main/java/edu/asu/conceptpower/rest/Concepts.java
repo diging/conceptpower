@@ -121,8 +121,9 @@ public class Concepts {
             result = checkJsonObjectForWrapper(jsonObject);
         }
 
-        if (!result.isValid())
+        if (!result.isValid()) {
             return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
         ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
 
@@ -130,8 +131,9 @@ public class Concepts {
             result = validatePOS(jsonObject, conceptEntry);
         }
 
-        if (!result.isValid())
+        if (!result.isValid()) {
             return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
         // check type
         String typeId = conceptEntry.getTypeId();
@@ -188,9 +190,7 @@ public class Concepts {
         while (listIt.hasNext()) {
             JSONObject jsonObject = listIt.next();
 
-            JsonValidationResult result = null;
-
-            result = checkJsonObject(jsonObject);
+            JsonValidationResult result = checkJsonObject(jsonObject);
             
             if (result.isValid() && jsonObject.get(JsonFields.WORDNET_ID) != null) {
                 result = checkJsonObjectForWrapper(jsonObject);

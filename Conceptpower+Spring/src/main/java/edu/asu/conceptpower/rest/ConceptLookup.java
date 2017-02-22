@@ -81,6 +81,10 @@ public class ConceptLookup {
             logger.error("Illegal access exception", e);
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        if (entries == null) {
+            return new ResponseEntity<String>("No search results.", HttpStatus.OK);
+        }
         Map<ConceptEntry, ConceptType> entryMap = generateEntryMap(entries);
         IConceptMessage conceptMessage = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
         String xmlEntries = null;

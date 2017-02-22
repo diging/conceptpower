@@ -33,7 +33,7 @@ import edu.asu.conceptpower.rest.msg.json.JsonConceptMessage;
 import edu.asu.conceptpower.rest.msg.xml.XMLConceptMessage;
 import junit.framework.Assert;
 
-public class ConceptLookUpTest {
+public class ConceptLookupTest {
 
     @Mock
     private IConceptManager dictManager;
@@ -59,28 +59,29 @@ public class ConceptLookUpTest {
     @Mock
     private URIHelper uriCreator;
 
+    private String PONY = "pony";
+
     @Before
     public void setup() throws IOException, IllegalAccessException, LuceneException, IndexerRunningException {
         MockitoAnnotations.initMocks(this);
-        String word = "pony";
         String pos = POS.NOUN;
         String typeId1 = "TYPE-1";
         String typeId2 = "TYPE-2";
 
         ConceptEntry[] entries = new ConceptEntry[2];
         ConceptEntry entry = new ConceptEntry();
-        entry.setWord(word);
+        entry.setWord(PONY);
         entry.setPos(pos);
         entry.setId("WID-123");
         entry.setConceptList(Constants.WORDNET_DICTIONARY);
-        entry.setTypeId("TYPE-1");
+        entry.setTypeId(typeId1);
         entries[0] = entry;
 
         ConceptEntry entry2 = new ConceptEntry();
-        entry2.setWord(word);
+        entry2.setWord(PONY);
         entry2.setPos(pos);
         entry2.setConceptList("Test List");
-        entry2.setTypeId("TYPE-2");
+        entry2.setTypeId(typeId1);
         entries[1] = entry2;
 
         ConceptType type1 = new ConceptType();
@@ -90,10 +91,10 @@ public class ConceptLookUpTest {
 
         ConceptType type2 = new ConceptType();
         type2.setTypeId(typeId2);
-        type1.setDescription("TypeID 2");
+        type1.setDescription(typeId2);
         type1.setTypeName("TYPE-2");
 
-        Mockito.when(dictManager.getConceptListEntriesForWordPOS("pony", POS.NOUN, null)).thenReturn(entries);
+        Mockito.when(dictManager.getConceptListEntriesForWordPOS(PONY, POS.NOUN, null)).thenReturn(entries);
         Mockito.when(typeManager.getType(typeId1)).thenReturn(type1);
         Mockito.when(typeManager.getType(typeId2)).thenReturn(type2);
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_XML_VALUE)).thenReturn(xmlMEssageFactory);
@@ -103,44 +104,58 @@ public class ConceptLookUpTest {
         Mockito.when(jsonMessageFactory.createConceptMessage()).thenReturn(new JsonConceptMessage(uriCreator));
     }
 
-    @Test
-    public void getWordNetEntryTest()
+    public void test_getWordNetEntry_successINXML()
             throws IndexerRunningException, ParserConfigurationException, SAXException, IOException {
-        ResponseEntity<String> response = conceptLookup.getWordNetEntry("pony", POS.NOUN,
+        ResponseEntity<String> response = conceptLookup.getWordNetEntry(PONY, POS.NOUN,
                 MediaType.APPLICATION_XML_VALUE);
         RestTestUtility.testValidXml(response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
-    public void getWordNetEntryTestInJson()
+    public void test_getWordNetEntry_emptyResult() throws IndexerRunningException, ParserConfigurationException,
+            SAXException, IOException, IllegalAccessException, LuceneException {
+        String noResult = "noResult";
+        Mockito.when(dictManager.getConceptListEntriesForWordPOS(PONY, POS.NOUN, null)).thenReturn(null);
+        ResponseEntity<String> response = conceptLookup.getWordNetEntry(noResult, POS.NOUN,
+                MediaType.APPLICATION_XML_VALUE);
+        Assert.assertEquals("No search results.", response.getBody());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void test_getWordNetEntryTest_successInJSON()
             throws IndexerRunningException, ParserConfigurationException, SAXException, IOException, JSONException {
 
-        ResponseEntity<String> response = conceptLookup.getWordNetEntry("pony", POS.NOUN,
+        ResponseEntity<String> response = conceptLookup.getWordNetEntry(PONY, POS.NOUN,
                 MediaType.APPLICATION_JSON_VALUE);
         RestTestUtility.testValidJson(response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
-    public void getWordNetEntryInRDF() throws IndexerRunningException, IllegalAccessException, LuceneException {
+    public void test_getWordNetEntry_successInRDF()
+            throws IndexerRunningException, IllegalAccessException, LuceneException {
 
+        String ROBERT = "robert";
+        String ROBERT_1 = "robert-1";
+        
         ConceptEntry[] entries = new ConceptEntry[2];
         ConceptEntry entry1 = new ConceptEntry();
-        entry1.setWord("robert");
+        entry1.setWord(ROBERT);
         entry1.setPos(POS.NOUN);
         entry1.setId("WID-123");
 
         ConceptEntry entry2 = new ConceptEntry();
         entry2.setId("WID-456");
-        entry2.setWord("robert-1");
+        entry2.setWord(ROBERT_1);
         entry1.setPos(POS.NOUN);
 
         entries[0] = entry1;
         entries[1] = entry2;
 
-        Mockito.when(dictManager.getConceptListEntriesForWordPOS("robert", POS.NOUN, null)).thenReturn(entries);
-        ResponseEntity<String> response = conceptLookup.getWordNetEntryInRdf("robert", POS.NOUN);
+        Mockito.when(dictManager.getConceptListEntriesForWordPOS(ROBERT, POS.NOUN, null)).thenReturn(entries);
+        ResponseEntity<String> response = conceptLookup.getWordNetEntryInRdf(ROBERT, POS.NOUN);
         Mockito.verify(rdfFactory).generateRDF(entries);
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
 
