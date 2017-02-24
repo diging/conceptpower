@@ -1,5 +1,5 @@
 
-package edu.asu.conceptpower.servlet.rest;
+package edu.asu.conceptpower.rest;
 
 import java.io.IOException;
 
@@ -23,7 +23,6 @@ import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.rest.ConceptIDLookup;
 import edu.asu.conceptpower.rest.msg.IMessageConverter;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.xml.XMLConceptMessage;
@@ -64,11 +63,14 @@ public class ConceptIDLookupTest {
     }
 
     @Test
-    public void testGetConceptByIdForAlternativeIDs() throws IOException, SAXException, ParserConfigurationException {
-        String expectedResponse = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("alternativeIds.txt"));
-        String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
-        String wordNetIds = "W-ID1, W-ID2";
+    public void test_getConceptEntry_successForWordNetIds()
+            throws IOException, SAXException, ParserConfigurationException {
+        final String expectedResponse = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/alternativeIds.txt"));
+        final String output = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptEntryWithWordnet.xml"));
+        final String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
+        final String wordNetIds = "W-ID1, W-ID2";
         ConceptEntry entry = new ConceptEntry();
         entry.setId(conceptId);
         entry.setWordnetId(wordNetIds);
@@ -76,17 +78,18 @@ public class ConceptIDLookupTest {
         ResponseEntity<String> response = conceptIDLookup
                 .getConceptById("http://www.digitalhps.org/concepts/" + conceptId, MediaType.APPLICATION_XML_VALUE);
         RestTestUtility.testValidXml(response.getBody());
+        Assert.assertEquals(output, response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assert.assertEquals(expectedResponse, response.getBody());
 
     }
 
     @Test
-    public void testGetConcepyByIdWithGenericIDs() throws Exception {
-        String expectedResponse = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("alternativeGenericIds.txt"));
-        String wordNetIds = "W-ID01, W-ID02";
-        String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
+    public void test_getConceptEntry_sucessWithConceptTypes() throws Exception {
+        final String expectedResponse = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/alternativeGenericIds.xml"));
+        final String wordNetIds = "W-ID01, W-ID02";
+        final String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
         ConceptEntry entry = new ConceptEntry();
         entry.setId("W-ID01");
         entry.setWordnetId(wordNetIds);

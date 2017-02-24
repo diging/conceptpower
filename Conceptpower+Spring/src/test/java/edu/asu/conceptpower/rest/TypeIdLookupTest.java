@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.servlet.rest;
+package edu.asu.conceptpower.rest;
 
 import java.io.IOException;
 
@@ -22,7 +22,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.rest.TypeIdLookup;
 import edu.asu.conceptpower.rest.msg.IMessageConverter;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.json.JsonTypeMessage;
@@ -50,7 +49,7 @@ public class TypeIdLookupTest {
     private IMessageConverter jsonMessageFactory;
 
     @Before
-    public void init() {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_XML_VALUE)).thenReturn(xmlMessageFactory);
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_XML_VALUE).createTypeMessage())
@@ -63,9 +62,9 @@ public class TypeIdLookupTest {
     }
 
     @Test
-    public void getTypeIdInXML() throws ParserConfigurationException, SAXException, IOException {
-        String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
-        String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
+    public void test_getTypeById_successInXML() throws ParserConfigurationException, SAXException, IOException {
+        final String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
+        final String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
 
         ConceptType type = new ConceptType();
         type.setTypeId(typeId);
@@ -87,9 +86,9 @@ public class TypeIdLookupTest {
     }
 
     @Test
-    public void getTypeIdInJson() throws JsonProcessingException, JSONException {
-        String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
-        String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
+    public void test_getTypeById_successInJSON() throws JsonProcessingException, JSONException {
+        final String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
+        final String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
 
         ConceptType type = new ConceptType();
         type.setTypeId(typeId);
@@ -111,8 +110,8 @@ public class TypeIdLookupTest {
     }
 
     @Test
-    public void testForTypeNotFound() throws JsonProcessingException {
-        String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0w";
+    public void test_getTypeById_emptyResult() throws JsonProcessingException {
+        final String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0w";
         Mockito.when(typeManager.getType(typeId)).thenReturn(null);
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id"))
@@ -125,7 +124,7 @@ public class TypeIdLookupTest {
     }
 
     @Test
-    public void testForNullId() throws ParserConfigurationException, SAXException, IOException {
+    public void test_getTypeById_nullId() throws ParserConfigurationException, SAXException, IOException {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn(null);
 
@@ -133,4 +132,5 @@ public class TypeIdLookupTest {
         Assert.assertEquals(null, typeMessage.getBody());
         Assert.assertEquals(HttpStatus.BAD_REQUEST, typeMessage.getStatusCode());
     }
+
 }

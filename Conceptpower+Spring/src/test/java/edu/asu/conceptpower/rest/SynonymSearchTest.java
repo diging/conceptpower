@@ -1,6 +1,7 @@
-package edu.asu.conceptpower.servlet.rest;
+package edu.asu.conceptpower.rest;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,7 +26,6 @@ import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.rest.SynonymSearch;
 import edu.asu.conceptpower.rest.msg.IMessageConverter;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.json.JsonConceptMessage;
@@ -55,10 +55,10 @@ public class SynonymSearchTest {
     @Mock(name = "jsonMessageFactory")
     private IMessageConverter jsonMessageFactory;
 
-    private String synonymId = "WID-02084071-N-02-domestic_dog";
+    private final String synonymId = "WID-02084071-N-02-domestic_dog";
 
     @Before
-    public void init() throws LuceneException {
+    public void setup() throws LuceneException {
         MockitoAnnotations.initMocks(this);
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_XML_VALUE)).thenReturn(xmlMessageFactory);
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_XML_VALUE).createConceptMessage())
@@ -70,7 +70,7 @@ public class SynonymSearchTest {
 
         ConceptEntry[] entries = new ConceptEntry[1];
         ConceptEntry entry = new ConceptEntry();
-        entry.setId("WID-02084071-N-02-domestic_dog");
+        entry.setId(synonymId);
         entry.setWord("pony");
         entry.setTypeId("TYPE-123");
         entries[0] = entry;
@@ -86,7 +86,7 @@ public class SynonymSearchTest {
     }
 
     @Test
-    public void getSynonymsForInvalidId() throws JsonProcessingException {
+    public void test_getSynonymsForId_invalidId() throws JsonProcessingException {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn(null);
         ResponseEntity<String> output = synonymSearch.getSynonymsForId(req, MediaType.APPLICATION_XML_VALUE);
@@ -94,7 +94,18 @@ public class SynonymSearchTest {
     }
 
     @Test
-    public void getSynonymForIdInXml() throws ParserConfigurationException, SAXException, IOException {
+    public void test_getSynonymsForId_nonExistingId() throws JsonProcessingException, LuceneException {
+        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+        final String wordnet = "WID-PONY-123";
+        Mockito.when(req.getParameter("id")).thenReturn("http://www.digitalhps.org/concepts/" + wordnet);
+        Mockito.when(dictManager.getSynonymsForConcept(wordnet))
+                .thenReturn(Collections.<ConceptEntry> emptyList().toArray(new ConceptEntry[0]));
+        ResponseEntity<String> output = synonymSearch.getSynonymsForId(req, MediaType.APPLICATION_XML_VALUE);
+        Assert.assertEquals(HttpStatus.OK, output.getStatusCode());
+    }
+
+    @Test
+    public void test_getSynonymsForId_successInXML() throws ParserConfigurationException, SAXException, IOException {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn("http://www.digitalhps.org/concepts/" + synonymId);
         ResponseEntity<String> output = synonymSearch.getSynonymsForId(req, MediaType.APPLICATION_XML_VALUE);
@@ -103,7 +114,7 @@ public class SynonymSearchTest {
     }
 
     @Test
-    public void getSynonymForIdInJson() throws JsonProcessingException, JSONException {
+    public void test_getSynonymsForId_successInJSON() throws JsonProcessingException, JSONException {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn("http://www.digitalhps.org/concepts/" + synonymId);
         ResponseEntity<String> output = synonymSearch.getSynonymsForId(req, MediaType.APPLICATION_JSON_VALUE);

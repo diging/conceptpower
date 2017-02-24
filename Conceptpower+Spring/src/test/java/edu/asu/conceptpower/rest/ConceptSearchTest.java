@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.servlet.rest;
+package edu.asu.conceptpower.rest;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.IOUtil;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,10 +31,6 @@ import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.rest.ConceptSearch;
-import edu.asu.conceptpower.rest.ConceptSearchParameterValidator;
-import edu.asu.conceptpower.rest.ConceptSearchParameters;
-import edu.asu.conceptpower.rest.SearchParamters;
 import edu.asu.conceptpower.rest.msg.IMessageConverter;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.json.JsonConceptMessage;
@@ -74,12 +71,14 @@ public class ConceptSearchTest {
 
     private ConceptSearchParameters conceptSearchParameter;
 
-    private String xmlNoRecordsFoundError = "<conceptpowerReply xmlns:digitalHPS=\"http://www.digitalhps.org/\"><digitalHPS:error error_message=\"No records found for the search condition.\" ></digitalHPS:error></conceptpowerReply>";
     private int numberOfRecordsPerPage = 20;
-    private String jsonNoRecordsFoundError = "{\"message\":\"No records found for the search condition.\"}";
+    private final String conceptListName = "Test-List";
+    private final String pos = "noun";
+    private final String word = "pony";
+    private final String typeId = "TYPE-123";
 
     @Before
-    public void init() throws IllegalAccessException, LuceneException, IndexerRunningException {
+    public void setup() throws IllegalAccessException, LuceneException, IndexerRunningException {
         MockitoAnnotations.initMocks(this);
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_XML_VALUE)).thenReturn(xmlMessageFactory);
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_XML_VALUE).createConceptMessage())
@@ -88,34 +87,35 @@ public class ConceptSearchTest {
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_JSON_VALUE)).thenReturn(jsonMessageFactory);
         Mockito.when(messageFactory.getMessageFactory(MediaType.APPLICATION_JSON_VALUE).createConceptMessage())
                 .thenReturn(new JsonConceptMessage(uriCreator));
+
         conceptSearchParameter = new ConceptSearchParameters();
-        conceptSearchParameter.setPos("noun");
-        conceptSearchParameter.setWord("pony");
-        conceptSearchParameter.setConcept_list("Test-List");
-        conceptSearchParameter.setType_id("TYPE-123");
+        conceptSearchParameter.setPos(pos);
+        conceptSearchParameter.setWord(word);
+        conceptSearchParameter.setConcept_list(conceptListName);
+        conceptSearchParameter.setType_id(typeId);
         conceptSearchParameter.setOperator(SearchParamters.OP_AND);
         conceptSearchParameter.setNumber_of_records_per_page(numberOfRecordsPerPage);
 
-        String typeId = "TYPE-123";
+
 
         ConceptType type = new ConceptType();
         type.setCreatorId("admin");
         type.setDescription("Type-=123 description");
         type.setTypeId(typeId);
-        Mockito.when(typeManager.getType("TYPE-123")).thenReturn(type);
+        Mockito.when(typeManager.getType(typeId)).thenReturn(type);
 
         Map<String, String> map = new HashMap<>();
-        map.put("pos", "noun");
-        map.put("type-id", "TYPE-123");
-        map.put("concept_list", "Test-List");
-        map.put("word", "pony");
+        map.put("pos", pos);
+        map.put("type-id", typeId);
+        map.put("concept_list", conceptListName);
+        map.put("word", word);
 
         ConceptEntry[] entries = new ConceptEntry[1];
         ConceptEntry entry = new ConceptEntry();
-        entry.setPos("noun");
-        entry.setWord("pony");
+        entry.setPos(pos);
+        entry.setWord(word);
         entry.setTypeId(typeId);
-        entry.setConceptList("Test-List");
+        entry.setConceptList(conceptListName);
 
         entries[0] = entry;
 
@@ -130,7 +130,7 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void searchConceptInXMLTest() throws IllegalArgumentException, IllegalAccessException,
+    public void test_searchConcept_successInXML() throws IllegalArgumentException, IllegalAccessException,
             IndexerRunningException, LuceneException, ParserConfigurationException, SAXException, IOException {
 
         Mockito.when(result.hasErrors()).thenReturn(false);
@@ -151,7 +151,8 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void searchConceptInJsonTest() throws IllegalAccessException, LuceneException, IndexerRunningException,
+    public void test_searchConcept_successInJson() throws IllegalAccessException, LuceneException,
+            IndexerRunningException,
             JsonProcessingException, IllegalArgumentException, JSONException {
 
         Mockito.when(result.hasErrors()).thenReturn(false);
@@ -172,15 +173,17 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void searchConceptForNoResultInJSONTest() throws IllegalAccessException, LuceneException,
-            IndexerRunningException, JsonProcessingException, IllegalArgumentException, JSONException {
+    public void test_searchConcept_noRecordsFoundInJSON() throws IllegalAccessException, LuceneException,
+            IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
+        final String jsonNoRecordsFoundError = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/jsonRecordsNotFoundError.txt"));
         Mockito.when(result.hasErrors()).thenReturn(false);
         Map<String, String> map = new HashMap<>();
-        map.put("pos", "noun");
-        map.put("type-id", "TYPE-123");
-        map.put("concept_list", "Test-List");
-        map.put("word", "pony");
+        map.put("pos", pos);
+        map.put("type-id", typeId);
+        map.put("concept_list", conceptListName);
+        map.put("word", word);
 
         int numberOfResults = 100;
 
@@ -204,15 +207,18 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void searchConceptForNoResultInXMLTest() throws IllegalAccessException, LuceneException,
-            IndexerRunningException, JsonProcessingException, IllegalArgumentException, JSONException {
+    public void test_searchConcept_noRecordsFoundInXML() throws IllegalAccessException, LuceneException,
+            IndexerRunningException, IllegalArgumentException, JSONException, IOException {
+
+        final String xmlNoRecordsFoundError = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/xmlNoRecordsFound.txt"));
 
         Mockito.when(result.hasErrors()).thenReturn(false);
         Map<String, String> map = new HashMap<>();
-        map.put("pos", "noun");
-        map.put("type-id", "TYPE-123");
-        map.put("concept_list", "Test-List");
-        map.put("word", "pony");
+        map.put("pos", pos);
+        map.put("type-id", typeId);
+        map.put("concept_list", conceptListName);
+        map.put("word", word);
 
         int numberOfResults = 100;
 
@@ -236,19 +242,19 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void testForPOSError()
+    public void test_searchConcept_invalidPOS()
             throws JsonProcessingException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
 
-        String posError = "Please enter correct pos value.";
+        final String posError = "Please enter correct pos value.";
 
         ConceptSearchParameters conceptSearchparam = new ConceptSearchParameters();
-        conceptSearchparam.setPos("");
+        conceptSearchparam.setPos("subject");
 
         BindingResult result = new BindException(conceptSearchparam, "ConceptSearchParameters");
         ObjectError error = new ObjectError("pos", posError);
         result.addError(error);
 
-        String returnErrorMessage = "<conceptpowerReply xmlns:digitalHPS=\"http://www.digitalhps.org/\"><digitalHPS:error error_message=\""
+        final String returnErrorMessage = "<conceptpowerReply xmlns:digitalHPS=\"http://www.digitalhps.org/\"><digitalHPS:error error_message=\""
                 + posError + "\" ></digitalHPS:error></conceptpowerReply>";
 
         ResponseEntity<String> output = conceptSearch.searchConcept(conceptSearchparam, result,

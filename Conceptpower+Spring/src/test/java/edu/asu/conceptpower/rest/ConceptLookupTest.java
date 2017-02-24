@@ -1,9 +1,10 @@
-package edu.asu.conceptpower.servlet.rest;
+package edu.asu.conceptpower.rest;
 
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.IOUtil;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,6 @@ import edu.asu.conceptpower.app.rdf.RDFMessageFactory;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.rest.ConceptLookup;
 import edu.asu.conceptpower.rest.msg.IMessageConverter;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.json.JsonConceptMessage;
@@ -59,14 +59,15 @@ public class ConceptLookupTest {
     @Mock
     private URIHelper uriCreator;
 
-    private String PONY = "pony";
+    private final String PONY = "pony";
+    private final String typeId1 = "TYPE-1";
+    private final String typeId2 = "TYPE-2";
 
     @Before
     public void setup() throws IOException, IllegalAccessException, LuceneException, IndexerRunningException {
         MockitoAnnotations.initMocks(this);
-        String pos = POS.NOUN;
-        String typeId1 = "TYPE-1";
-        String typeId2 = "TYPE-2";
+        final String pos = POS.NOUN;
+
 
         ConceptEntry[] entries = new ConceptEntry[2];
         ConceptEntry entry = new ConceptEntry();
@@ -104,22 +105,59 @@ public class ConceptLookupTest {
         Mockito.when(jsonMessageFactory.createConceptMessage()).thenReturn(new JsonConceptMessage(uriCreator));
     }
 
+    @Test
     public void test_getWordNetEntry_successINXML()
             throws IndexerRunningException, ParserConfigurationException, SAXException, IOException {
+        final String expectedResponse = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetEntry.xml"));
         ResponseEntity<String> response = conceptLookup.getWordNetEntry(PONY, POS.NOUN,
                 MediaType.APPLICATION_XML_VALUE);
         RestTestUtility.testValidXml(response.getBody());
+        Assert.assertEquals(expectedResponse, response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     public void test_getWordNetEntry_emptyResult() throws IndexerRunningException, ParserConfigurationException,
             SAXException, IOException, IllegalAccessException, LuceneException {
-        String noResult = "noResult";
+        final String noResult = "noResult";
         Mockito.when(dictManager.getConceptListEntriesForWordPOS(PONY, POS.NOUN, null)).thenReturn(null);
         ResponseEntity<String> response = conceptLookup.getWordNetEntry(noResult, POS.NOUN,
                 MediaType.APPLICATION_XML_VALUE);
         Assert.assertEquals("No search results.", response.getBody());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void test_getWordNetEntry_resultWithSpecialCharacters()
+            throws IndexerRunningException, JSONException, IllegalAccessException, LuceneException, IOException {
+        final String expectedResponse = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/wordNetEntryWithSpecialCharacters.json"));
+        final String word = "einstein@albert";
+        final String posNoun = POS.NOUN;
+
+        ConceptEntry[] entries = new ConceptEntry[2];
+        ConceptEntry entry = new ConceptEntry();
+        entry.setWord(word);
+        entry.setPos(posNoun);
+        entry.setId("WID-123");
+        entry.setConceptList(Constants.WORDNET_DICTIONARY);
+        entry.setTypeId(typeId1);
+        entries[0] = entry;
+
+        ConceptEntry entry2 = new ConceptEntry();
+        entry2.setWord("einstein");
+        entry2.setPos(posNoun);
+        entry2.setConceptList("Test List");
+        entry2.setTypeId(typeId1);
+        entries[1] = entry2;
+
+        Mockito.when(dictManager.getConceptListEntriesForWordPOS(word, POS.NOUN, null)).thenReturn(entries);
+
+        ResponseEntity<String> response = conceptLookup.getWordNetEntry(word, posNoun,
+                MediaType.APPLICATION_JSON_VALUE);
+        RestTestUtility.testValidJson(response.getBody());
+        Assert.assertEquals(expectedResponse, response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -129,7 +167,10 @@ public class ConceptLookupTest {
 
         ResponseEntity<String> response = conceptLookup.getWordNetEntry(PONY, POS.NOUN,
                 MediaType.APPLICATION_JSON_VALUE);
+        final String expectedResponse = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordnetEntry.json"));
         RestTestUtility.testValidJson(response.getBody());
+        Assert.assertEquals(expectedResponse, response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
@@ -137,8 +178,8 @@ public class ConceptLookupTest {
     public void test_getWordNetEntry_successInRDF()
             throws IndexerRunningException, IllegalAccessException, LuceneException {
 
-        String ROBERT = "robert";
-        String ROBERT_1 = "robert-1";
+        final String ROBERT = "robert";
+        final String ROBERT_1 = "robert-1";
         
         ConceptEntry[] entries = new ConceptEntry[2];
         ConceptEntry entry1 = new ConceptEntry();
