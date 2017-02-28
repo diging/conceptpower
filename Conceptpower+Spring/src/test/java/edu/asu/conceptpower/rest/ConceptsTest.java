@@ -273,8 +273,8 @@ public class ConceptsTest {
         final String wordnetId = "WID-02382750-N-01-Welsh_pony";
         final String word = "kitty";
         final String pos = "verb";
-        final String input = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/mismatchPOSInput.txt"));
+        final String input = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("input/conceptWrapperWithmismatchPOS.json"));
 
         ConceptEntry entry = new ConceptEntry();
         entry.setWord(word);

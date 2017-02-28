@@ -178,7 +178,7 @@ public class ConceptSearchTest {
             IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
         final String jsonNoRecordsFoundError = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/jsonRecordsNotFoundError.txt"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/recordsNotFound.json"));
         Mockito.when(result.hasErrors()).thenReturn(false);
         Map<String, String> map = new HashMap<>();
         map.put("pos", pos);
@@ -212,7 +212,7 @@ public class ConceptSearchTest {
             IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
         final String xmlNoRecordsFoundError = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/xmlNoRecordsFound.txt"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/recordsNotFound.xml"));
 
         Mockito.when(result.hasErrors()).thenReturn(false);
         Map<String, String> map = new HashMap<>();

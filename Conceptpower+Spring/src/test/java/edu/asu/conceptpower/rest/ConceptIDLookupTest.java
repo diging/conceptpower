@@ -66,7 +66,7 @@ public class ConceptIDLookupTest {
     public void test_getConceptEntry_successForWordNetIds()
             throws IOException, SAXException, ParserConfigurationException {
         final String expectedResponse = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/alternativeIds.txt"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithalternativeIds.xml"));
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptEntryWithWordnet.xml"));
         final String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
