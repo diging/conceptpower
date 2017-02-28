@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.servlet.rest;
+package edu.asu.conceptpower.rest;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

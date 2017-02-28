@@ -2,9 +2,7 @@ package edu.asu.conceptpower;
 
 import java.security.Principal;
 
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,9 +23,9 @@ import org.springframework.web.context.WebApplicationContext;
         @ContextConfiguration(locations = { "classpath:/servlet-context-test.xml",
                 "classpath:/rest-context-test.xml" }) })
 @WebAppConfiguration
-public class IntegrationTest {
+public abstract class IntegrationTest {
 
-    private static boolean setUpIsDone = false;
+    private static boolean isSetupDone = false;
 
     @Autowired
     protected WebApplicationContext wac;
@@ -41,22 +39,17 @@ public class IntegrationTest {
     };
 
     @Before
-    public void init() throws Exception {
+    public void setup() throws Exception {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        if (!setUpIsDone) {
+        if (!isSetupDone) {
             this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/indexConcepts").principal(principal));
             MvcResult mr = null;
             do {
                 mr = this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/getIndexerStatus")).andReturn();
             } while (mr.getResponse().getStatus() != HttpStatus.OK.value());
-            setUpIsDone = true;
+            isSetupDone = true;
         }
-
     }
 
-    @Test
-    public void test1() {
-        Assert.assertEquals("test", "test");
-    }
 }

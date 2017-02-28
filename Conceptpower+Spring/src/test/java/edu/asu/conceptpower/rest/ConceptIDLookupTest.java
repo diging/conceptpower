@@ -1,5 +1,5 @@
 
-package edu.asu.conceptpower.servlet.rest;
+package edu.asu.conceptpower.rest;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

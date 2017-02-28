@@ -474,12 +474,10 @@
 			<version>${spring-security-version}</version>
 		</dependency>
         
-        <!-- json path -->
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path-assert</artifactId>
-            <version>0.8.1</version>
-            <scope>test</scope>
+            <artifactId>json-path</artifactId>
+            <version>2.1.0</version>
         </dependency>
 
 		<!-- Apache Lucene -->
