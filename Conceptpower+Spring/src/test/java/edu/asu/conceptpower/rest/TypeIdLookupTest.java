@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.IOUtil;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,6 +67,9 @@ public class TypeIdLookupTest {
         final String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
         final String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
 
+        final String expectedOutput = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptType.xml"));
+
         ConceptType type = new ConceptType();
         type.setTypeId(typeId);
         type.setDescription("Type Description");
@@ -81,14 +85,18 @@ public class TypeIdLookupTest {
         ResponseEntity<String> typeMessage = typeIdLookup.getTypeById(req, MediaType.APPLICATION_XML_VALUE);
 
         RestTestUtility.testValidXml(typeMessage.getBody());
+        Assert.assertEquals(expectedOutput, typeMessage.getBody());
         Assert.assertEquals(HttpStatus.OK, typeMessage.getStatusCode());
 
     }
 
     @Test
-    public void test_getTypeById_successInJSON() throws JsonProcessingException, JSONException {
+    public void test_getTypeById_successInJSON() throws JSONException, IOException {
         final String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
         final String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
+
+        final String expectedOutput = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptType.json"));
 
         ConceptType type = new ConceptType();
         type.setTypeId(typeId);
@@ -105,6 +113,7 @@ public class TypeIdLookupTest {
         ResponseEntity<String> typeMessage = typeIdLookup.getTypeById(req, MediaType.APPLICATION_JSON_VALUE);
 
         RestTestUtility.testValidJson(typeMessage.getBody());
+        Assert.assertEquals(expectedOutput, typeMessage.getBody());
         Assert.assertEquals(HttpStatus.OK, typeMessage.getStatusCode());
 
     }

@@ -6,6 +6,7 @@ import java.util.Collections;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.IOUtil;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -106,19 +107,25 @@ public class SynonymSearchTest {
 
     @Test
     public void test_getSynonymsForId_successInXML() throws ParserConfigurationException, SAXException, IOException {
+        final String expectedOutput = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/synonym.xml"));
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn("http://www.digitalhps.org/concepts/" + synonymId);
         ResponseEntity<String> output = synonymSearch.getSynonymsForId(req, MediaType.APPLICATION_XML_VALUE);
         RestTestUtility.testValidXml(output.getBody());
+        Assert.assertEquals(expectedOutput, output.getBody());
         Assert.assertEquals(HttpStatus.OK, output.getStatusCode());
     }
 
     @Test
-    public void test_getSynonymsForId_successInJSON() throws JsonProcessingException, JSONException {
+    public void test_getSynonymsForId_successInJSON() throws JSONException, IOException {
+        final String expectedOutput = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/synonym.json"));
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn("http://www.digitalhps.org/concepts/" + synonymId);
         ResponseEntity<String> output = synonymSearch.getSynonymsForId(req, MediaType.APPLICATION_JSON_VALUE);
         RestTestUtility.testValidJson(output.getBody());
+        Assert.assertEquals(expectedOutput, output.getBody());
         Assert.assertEquals(HttpStatus.OK, output.getStatusCode());
     }
 

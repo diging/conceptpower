@@ -152,9 +152,10 @@ public class ConceptSearchTest {
 
     @Test
     public void test_searchConcept_successInJson() throws IllegalAccessException, LuceneException,
-            IndexerRunningException,
-            JsonProcessingException, IllegalArgumentException, JSONException {
+            IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
+        final String expectedOutput = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptSearch.json"));
         Mockito.when(result.hasErrors()).thenReturn(false);
 
         ResponseEntity<String> output = conceptSearch.searchConcept(conceptSearchParameter, result,
@@ -167,7 +168,7 @@ public class ConceptSearchTest {
                 Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage));
 
         RestTestUtility.testValidJson(output.getBody());
-
+        Assert.assertEquals(expectedOutput, output.getBody());
         Assert.assertEquals(HttpStatus.OK, output.getStatusCode());
 
     }
@@ -177,7 +178,7 @@ public class ConceptSearchTest {
             IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
         final String jsonNoRecordsFoundError = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/jsonRecordsNotFoundError.txt"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/jsonRecordsNotFoundError.txt"));
         Mockito.when(result.hasErrors()).thenReturn(false);
         Map<String, String> map = new HashMap<>();
         map.put("pos", pos);
@@ -211,7 +212,7 @@ public class ConceptSearchTest {
             IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
         final String xmlNoRecordsFoundError = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/xmlNoRecordsFound.txt"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/xmlNoRecordsFound.txt"));
 
         Mockito.when(result.hasErrors()).thenReturn(false);
         Map<String, String> map = new HashMap<>();
