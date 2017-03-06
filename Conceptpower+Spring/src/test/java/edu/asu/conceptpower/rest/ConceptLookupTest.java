@@ -76,6 +76,7 @@ public class ConceptLookupTest {
         entry.setId("WID-123");
         entry.setConceptList(Constants.WORDNET_DICTIONARY);
         entry.setTypeId(typeId1);
+        entry.setDescription("WordnetID-123 !!@?#$%^&*()+=/.,';[]}{:\"<>?");
         entries[0] = entry;
 
         ConceptEntry entry2 = new ConceptEntry();
@@ -83,16 +84,18 @@ public class ConceptLookupTest {
         entry2.setPos(pos);
         entry2.setConceptList("Test List");
         entry2.setTypeId(typeId1);
+        entry2.setId("CCP - 123");
+        entry2.setDescription("WordnetID-123 !!@?#$%^&*()+=/.,';[]}{:\"<>?");
         entries[1] = entry2;
 
         ConceptType type1 = new ConceptType();
         type1.setTypeId(typeId1);
-        type1.setDescription("TypeID 1");
+        type1.setDescription("TypeID 1!!@?#$%^&*()+=/.,';[]}{:\"<>?");
         type1.setTypeName("TYPE-1");
 
         ConceptType type2 = new ConceptType();
         type2.setTypeId(typeId2);
-        type1.setDescription(typeId2);
+        type1.setDescription("TypeID 2!!@?#$%^&*()+=/.,';[]}{:\"<>?");
         type1.setTypeName("TYPE-2");
 
         Mockito.when(dictManager.getConceptListEntriesForWordPOS(PONY, POS.NOUN, null)).thenReturn(entries);
@@ -106,7 +109,7 @@ public class ConceptLookupTest {
     }
 
     @Test
-    public void test_getWordNetEntry_successINXML()
+    public void test_getWordNetEntry_successINXml()
             throws IndexerRunningException, ParserConfigurationException, SAXException, IOException {
         final String expectedResponse = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetEntry.xml"));
@@ -129,7 +132,7 @@ public class ConceptLookupTest {
     }
 
     @Test
-    public void test_getWordNetEntry_resultWithSpecialCharacters()
+    public void test_getWordNetEntry_resultWithSpecialCharactersInJson()
             throws IndexerRunningException, JSONException, IllegalAccessException, LuceneException, IOException {
         final String expectedResponse = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/wordNetEntryWithSpecialCharacters.json"));
@@ -143,6 +146,7 @@ public class ConceptLookupTest {
         entry.setId("WID-123");
         entry.setConceptList(Constants.WORDNET_DICTIONARY);
         entry.setTypeId(typeId1);
+        entry.setDescription("WordnetID-123 !!@?#$%^&*()+=/.,';[]}{:\"<>?");
         entries[0] = entry;
 
         ConceptEntry entry2 = new ConceptEntry();
@@ -150,6 +154,7 @@ public class ConceptLookupTest {
         entry2.setPos(posNoun);
         entry2.setConceptList("Test List");
         entry2.setTypeId(typeId1);
+        entry2.setDescription("WordnetID-123 !!@?#$%^&*()+=/.,';[]}{:\"<>?");
         entries[1] = entry2;
 
         Mockito.when(dictManager.getConceptListEntriesForWordPOS(word, POS.NOUN, null)).thenReturn(entries);
@@ -162,7 +167,41 @@ public class ConceptLookupTest {
     }
 
     @Test
-    public void test_getWordNetEntryTest_successInJSON()
+    public void test_getWordNetEntry_resultWithSpecialCharactersInXml() throws IOException, IllegalAccessException,
+            LuceneException, IndexerRunningException, ParserConfigurationException, SAXException {
+        final String expectedResponse = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/wordNetEntryWithSpecialCharacters.xml"));
+        final String word = "einstein@albert";
+        final String posNoun = POS.NOUN;
+
+        ConceptEntry[] entries = new ConceptEntry[2];
+        ConceptEntry entry = new ConceptEntry();
+        entry.setWord(word);
+        entry.setPos(posNoun);
+        entry.setId("WID-123");
+        entry.setConceptList(Constants.WORDNET_DICTIONARY);
+        entry.setTypeId(typeId1);
+        entry.setDescription("WordnetID-123 !!@?#$%^&*()+=/.,';[]}{:\"<>?");
+        entries[0] = entry;
+
+        ConceptEntry entry2 = new ConceptEntry();
+        entry2.setWord("einstein");
+        entry2.setPos(posNoun);
+        entry2.setConceptList("Test List");
+        entry2.setTypeId(typeId1);
+        entry2.setDescription("WordnetID-123 !!@?#$%^&*()+=/.,';[]}{:\"<>?");
+        entries[1] = entry2;
+
+        Mockito.when(dictManager.getConceptListEntriesForWordPOS(word, POS.NOUN, null)).thenReturn(entries);
+
+        ResponseEntity<String> response = conceptLookup.getWordNetEntry(word, posNoun, MediaType.APPLICATION_XML_VALUE);
+        RestTestUtility.testValidXml(response.getBody());
+        Assert.assertEquals(expectedResponse, response.getBody());
+        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void test_getWordNetEntryTest_successInJson()
             throws IndexerRunningException, ParserConfigurationException, SAXException, IOException, JSONException {
 
         ResponseEntity<String> response = conceptLookup.getWordNetEntry(PONY, POS.NOUN,
@@ -175,7 +214,7 @@ public class ConceptLookupTest {
     }
 
     @Test
-    public void test_getWordNetEntry_successInRDF()
+    public void test_getWordNetEntry_successInRdf()
             throws IndexerRunningException, IllegalAccessException, LuceneException {
 
         final String ROBERT = "robert";

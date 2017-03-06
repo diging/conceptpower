@@ -102,6 +102,7 @@ public class SynonymSearchTest {
         Mockito.when(dictManager.getSynonymsForConcept(wordnet))
                 .thenReturn(Collections.<ConceptEntry> emptyList().toArray(new ConceptEntry[0]));
         ResponseEntity<String> output = synonymSearch.getSynonymsForId(req, MediaType.APPLICATION_XML_VALUE);
+        Assert.assertEquals(null, output.getBody());
         Assert.assertEquals(HttpStatus.OK, output.getStatusCode());
     }
 

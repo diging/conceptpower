@@ -130,11 +130,12 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void test_searchConcept_successInXML() throws IllegalArgumentException, IllegalAccessException,
+    public void test_searchConcept_successInXml() throws IllegalArgumentException, IllegalAccessException,
             IndexerRunningException, LuceneException, ParserConfigurationException, SAXException, IOException {
 
+        final String expectedOutput = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptSearch.xml"));
         Mockito.when(result.hasErrors()).thenReturn(false);
-
         ResponseEntity<String> output = conceptSearch.searchConcept(conceptSearchParameter, result,
                 MediaType.APPLICATION_XML_VALUE);
 
@@ -145,7 +146,7 @@ public class ConceptSearchTest {
                 Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage));
 
         RestTestUtility.testValidXml(output.getBody());
-
+        Assert.assertEquals(expectedOutput, output.getBody());
         Assert.assertEquals(HttpStatus.OK, output.getStatusCode());
 
     }
@@ -186,7 +187,7 @@ public class ConceptSearchTest {
         map.put("concept_list", conceptListName);
         map.put("word", word);
 
-        int numberOfResults = 100;
+        int numberOfResults = 0;
 
         Mockito.when(manager.getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString())).thenReturn(numberOfResults);
@@ -221,7 +222,7 @@ public class ConceptSearchTest {
         map.put("concept_list", conceptListName);
         map.put("word", word);
 
-        int numberOfResults = 100;
+        int numberOfResults = 0;
 
         Mockito.when(manager.getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString())).thenReturn(numberOfResults);
