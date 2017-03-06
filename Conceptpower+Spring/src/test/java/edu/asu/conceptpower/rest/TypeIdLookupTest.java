@@ -63,7 +63,7 @@ public class TypeIdLookupTest {
     }
 
     @Test
-    public void test_getTypeById_successInXML() throws ParserConfigurationException, SAXException, IOException {
+    public void test_getTypeById_successInXml() throws ParserConfigurationException, SAXException, IOException {
         final String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
         final String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
 
@@ -91,7 +91,7 @@ public class TypeIdLookupTest {
     }
 
     @Test
-    public void test_getTypeById_successInJSON() throws JSONException, IOException {
+    public void test_getTypeById_successInJson() throws JSONException, IOException {
         final String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
         final String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
 

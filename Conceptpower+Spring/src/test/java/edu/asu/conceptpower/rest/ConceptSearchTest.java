@@ -175,7 +175,7 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void test_searchConcept_noRecordsFoundInJSON() throws IllegalAccessException, LuceneException,
+    public void test_searchConcept_noRecordsFoundInJson() throws IllegalAccessException, LuceneException,
             IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
         final String jsonNoRecordsFoundError = IOUtil
@@ -209,7 +209,7 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void test_searchConcept_noRecordsFoundInXML() throws IllegalAccessException, LuceneException,
+    public void test_searchConcept_noRecordsFoundInXml() throws IllegalAccessException, LuceneException,
             IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
         final String xmlNoRecordsFoundError = IOUtil
@@ -244,7 +244,7 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void test_searchConcept_invalidPOS()
+    public void test_searchConcept_invalidPos()
             throws JsonProcessingException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
 
         final String posError = "Please enter correct pos value.";

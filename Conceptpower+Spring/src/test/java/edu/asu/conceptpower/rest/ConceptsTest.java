@@ -61,7 +61,7 @@ public class ConceptsTest {
     }
 
     @Test
-    public void test_addConcept_invalidPOS()
+    public void test_addConcept_invalidPos()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/invalidPOS.json"));
@@ -93,7 +93,7 @@ public class ConceptsTest {
     }
 
     @Test
-    public void test_addConcept_successInJSON() throws IllegalAccessException, LuceneException, IndexerRunningException,
+    public void test_addConcept_successInJson() throws IllegalAccessException, LuceneException, IndexerRunningException,
             DictionaryDoesNotExistException, DictionaryModifyException, JSONException, IOException {
         final String input = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcept.json"));
@@ -201,7 +201,7 @@ public class ConceptsTest {
     }
 
     @Test
-    public void test_addConcept_emptyPOS()
+    public void test_addConcept_emptyPos()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("input/conceptWithWordnetAndInvalidPos.json"));
@@ -314,7 +314,7 @@ public class ConceptsTest {
     }
 
     @Test
-    public void test_addConcepts_successInJSONWithMultipleTypes()
+    public void test_addConcepts_successInJsonWithMultipleTypes()
             throws IllegalAccessException, LuceneException, IndexerRunningException, DictionaryDoesNotExistException,
             DictionaryModifyException, JSONException, IOException {
 

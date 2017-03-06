@@ -91,6 +91,7 @@ public class SynonymSearchTest {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn(null);
         ResponseEntity<String> output = synonymSearch.getSynonymsForId(req, MediaType.APPLICATION_XML_VALUE);
+        Assert.assertEquals(null, output.getBody());
         Assert.assertEquals(HttpStatus.BAD_REQUEST, output.getStatusCode());
     }
 
@@ -107,7 +108,7 @@ public class SynonymSearchTest {
     }
 
     @Test
-    public void test_getSynonymsForId_successInXML() throws ParserConfigurationException, SAXException, IOException {
+    public void test_getSynonymsForId_successInXml() throws ParserConfigurationException, SAXException, IOException {
         final String expectedOutput = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/synonym.xml"));
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -119,7 +120,7 @@ public class SynonymSearchTest {
     }
 
     @Test
-    public void test_getSynonymsForId_successInJSON() throws JSONException, IOException {
+    public void test_getSynonymsForId_successInJson() throws JSONException, IOException {
         final String expectedOutput = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/synonym.json"));
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
