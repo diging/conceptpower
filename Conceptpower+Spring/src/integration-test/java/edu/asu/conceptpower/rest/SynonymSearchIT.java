@@ -22,8 +22,7 @@ public class SynonymSearchIT extends IntegrationTest {
                         request.setParameter("id", "WID-02382039-N-02-Indian_pony");
                         return request;
                     }
-                })).andExpect(status().isOk())
-                .andExpect(jsonPath("$.conceptEntries[0].lemma", is("pony synonym")))
+                })).andExpect(status().isOk()).andExpect(jsonPath("$.conceptEntries[0].lemma", is("pony synonym")))
                 .andExpect(jsonPath("$.conceptEntries[0].pos", is("verb")))
                 .andExpect(jsonPath("$.conceptEntries[1].id", is("WID-02382039-N-01-cayuse")))
                 .andExpect(jsonPath("$.conceptEntries[1].lemma", is("cayuse")))

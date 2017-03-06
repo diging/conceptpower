@@ -14,12 +14,9 @@ public class ConceptsIT extends IntegrationTest {
 
     public void addConcept() throws Exception {
         String input = "{ \"word\": \"kitty\", \"pos\": \"noun\", \"conceptlist\": \"TestList\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\"}";
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(input).principal(principal))
-
-.andExpect(jsonPath("$.id", isA(String.class)))
-                .andExpect(status().isOk());
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(input).principal(principal))
+                .andExpect(jsonPath("$.id", isA(String.class))).andExpect(status().isOk());
     }
 
     @Test
@@ -29,8 +26,8 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andExpect(jsonPath("$[0].id", isA(String.class)))
-                .andExpect(jsonPath("$[1].id", isA(String.class))).andExpect(status().isOk());
+                .andExpect(jsonPath("$[0].id", isA(String.class))).andExpect(jsonPath("$[1].id", isA(String.class)))
+                .andExpect(status().isOk());
     }
 
 }

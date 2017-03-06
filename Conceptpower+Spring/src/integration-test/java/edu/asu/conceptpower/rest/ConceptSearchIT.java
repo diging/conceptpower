@@ -15,11 +15,8 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordAndPos() throws Exception {
 
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
-                        .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_JSON_VALUE))
-
-
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
+                .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("WID-10954498-N-01-Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].lemma", is("einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].pos", is("noun")))
@@ -31,7 +28,6 @@ public class ConceptSearchIT extends IntegrationTest {
                         is("http://www.digitalhps.org/concepts/WID-10954498-N-01-Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].synonym_ids", is("WID-10954498-N-02-Albert_Einstein,")))
                 .andExpect(jsonPath("$.conceptEntries[0].wordnet_id", is("WID-10954498-N-01-Einstein")))
-
                 .andExpect(jsonPath("$.conceptEntries[1].id", is("WID-10126926-N-05-Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[1].lemma", is("einstein")))
                 .andExpect(jsonPath("$.conceptEntries[1].pos", is("noun")))
@@ -44,10 +40,8 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.conceptEntries[1].synonym_ids",
                         is("WID-10126926-N-01-genius,WID-10126926-N-02-mastermind,WID-10126926-N-03-brain,WID-10126926-N-04-brainiac,")))
                 .andExpect(jsonPath("$.conceptEntries[1].wordnet_id", is("WID-10126926-N-05-Einstein")))
-
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(4)))
-
                 .andExpect(status().isOk());
 
     }
@@ -76,7 +70,6 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.conceptEntries[0].wordnet_id", is("WID-11105945-N-03-Gustav_Robert_Kirchhoff")))
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
-
                 .andExpect(status().isOk());
 
     }
@@ -105,7 +98,6 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.conceptEntries[0].wordnet_id", is("WID-11105945-N-03-Gustav_Robert_Kirchhoff")))
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
-
                 .andExpect(status().isOk());
 
     }
@@ -134,19 +126,15 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.conceptEntries[0].wordnet_id", is("WID-11105945-N-03-Gustav_Robert_Kirchhoff")))
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
-
                 .andExpect(status().isOk());
     }
 
     @Test
     public void test_searchConcept_searchWithWordPosAndPagination() throws Exception {
 
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
-                        .param("number_of_records_per_page", "2").param("page", "1")
-                        .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_JSON_VALUE))
-                
-
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
+                .param("number_of_records_per_page", "2").param("page", "1").param("operator", SearchParamters.OP_AND)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.conceptEntries.length()", is(2)))
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("WID-10954498-N-01-Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].lemma", is("einstein")))
@@ -159,7 +147,6 @@ public class ConceptSearchIT extends IntegrationTest {
                         is("http://www.digitalhps.org/concepts/WID-10954498-N-01-Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].synonym_ids", is("WID-10954498-N-02-Albert_Einstein,")))
                 .andExpect(jsonPath("$.conceptEntries[0].wordnet_id", is("WID-10954498-N-01-Einstein")))
-
                 .andExpect(jsonPath("$.conceptEntries[1].id", is("WID-10126926-N-05-Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[1].lemma", is("einstein")))
                 .andExpect(jsonPath("$.conceptEntries[1].pos", is("noun")))
@@ -172,18 +159,13 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.conceptEntries[1].synonym_ids",
                         is("WID-10126926-N-01-genius,WID-10126926-N-02-mastermind,WID-10126926-N-03-brain,WID-10126926-N-04-brainiac,")))
                 .andExpect(jsonPath("$.conceptEntries[1].wordnet_id", is("WID-10126926-N-05-Einstein")))
-
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(4)))
-
                 .andExpect(status().isOk());
 
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
-                        .param("number_of_records_per_page", "2").param("page", "2")
-                        .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_JSON_VALUE))
-                
-
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
+                .param("number_of_records_per_page", "2").param("page", "2").param("operator", SearchParamters.OP_AND)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.conceptEntries.length()", is(2)))
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("WID-10954498-N-02-Albert_Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].lemma", is("albert einstein")))
@@ -196,7 +178,6 @@ public class ConceptSearchIT extends IntegrationTest {
                         is("http://www.digitalhps.org/concepts/WID-10954498-N-02-Albert_Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].synonym_ids", is("WID-10954498-N-01-Einstein,")))
                 .andExpect(jsonPath("$.conceptEntries[0].wordnet_id", is("WID-10954498-N-02-Albert_Einstein")))
-
                 .andExpect(jsonPath("$.conceptEntries[1].id", is("WID-05875723-N-01-Bose-Einstein_statistics")))
                 .andExpect(jsonPath("$.conceptEntries[1].lemma", is("bose-einstein statistics")))
                 .andExpect(jsonPath("$.conceptEntries[1].pos", is("noun")))
@@ -207,10 +188,8 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.conceptEntries[1].concept_uri",
                         is("http://www.digitalhps.org/concepts/WID-05875723-N-01-Bose-Einstein_statistics")))
                 .andExpect(jsonPath("$.conceptEntries[1].wordnet_id", is("WID-05875723-N-01-Bose-Einstein_statistics")))
-
                 .andExpect(jsonPath("$.pagination.pageNumber", is(2)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(4)))
-
                 .andExpect(status().isOk());
 
     }
@@ -240,7 +219,6 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.conceptEntries[0].wordnet_id", is("WID-11105945-N-03-Gustav_Robert_Kirchhoff")))
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
-
                 .andExpect(status().isOk());
 
     }
@@ -271,7 +249,6 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.conceptEntries[0].wordnet_id", is("WID-11105945-N-03-Gustav_Robert_Kirchhoff")))
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
-
                 .andExpect(status().isOk());
 
     }
@@ -301,7 +278,6 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.conceptEntries[0].wordnet_id", is("WID-11105945-N-03-Gustav_Robert_Kirchhoff")))
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
-
                 .andExpect(status().isOk());
 
     }
