@@ -109,7 +109,7 @@ public class ConceptLookupTest {
     }
 
     @Test
-    public void test_getWordNetEntry_successINXml()
+    public void test_getWordNetEntry_successInXml()
             throws IndexerRunningException, ParserConfigurationException, SAXException, IOException {
         final String expectedResponse = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetEntry.xml"));
