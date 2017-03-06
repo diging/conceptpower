@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.rest;
 
 import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,6 +35,15 @@ public class ConceptLookupIT extends IntegrationTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void test_getWordNetEntry_noResults() throws Exception {
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Gustav Robert Kirchhoff/verb")
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print()).andExpect(jsonPath("$.message", is("No concept entry found.")))
+                .andExpect(status().isOk());
+    }
     @Test
     public void test_getWordNetEntry_successForMultipleEntry() throws Exception {
         this.mockMvc

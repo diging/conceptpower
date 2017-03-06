@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.rest;
 
 import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,6 +29,37 @@ public class ConceptIDLookupIT extends IntegrationTest {
                 .andExpect(
                         jsonPath("$.conceptEntries[0].alternativeIds[0].concept_id", is("WID-02380464-N-01-polo_pony")))
                 .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void test_getConceptById_successForGenericWordNetId() throws Exception {
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/Concept").param("id", "WID-02380464-N-??-polo_pony")
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(jsonPath("$.conceptEntries[0].id", is("WID-02380464-N-01-polo_pony")))
+                .andExpect(jsonPath("$.conceptEntries[0].description",
+                        is("a small agile horse specially bred and trained for playing polo")))
+                .andExpect(jsonPath("$.conceptEntries[0].conceptList", is("WordNet")))
+                .andExpect(jsonPath("$.conceptEntries[0].lemma", is("polo pony")))
+                .andExpect(jsonPath("$.conceptEntries[0].deleted", is(false)))
+                .andExpect(jsonPath("$.conceptEntries[0].pos", is("NOUN")))
+                .andExpect(jsonPath("$.conceptEntries[0].concept_uri",
+                        is("http://www.digitalhps.org/concepts/WID-02380464-N-01-polo_pony")))
+                .andExpect(
+                        jsonPath("$.conceptEntries[0].alternativeIds[0].concept_id", is("WID-02380464-N-??-polo_pony")))
+                .andExpect(
+                        jsonPath("$.conceptEntries[0].alternativeIds[1].concept_id", is("WID-02380464-N-01-polo_pony")))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void test_getConceptById_invalidWordNetId() throws Exception {
+        this.mockMvc.perform(
+                MockMvcRequestBuilders.get("/Concept").param("id", null).accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest());
 
     }
 

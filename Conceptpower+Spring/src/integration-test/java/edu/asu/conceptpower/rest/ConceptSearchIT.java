@@ -75,6 +75,17 @@ public class ConceptSearchIT extends IntegrationTest {
     }
 
     @Test
+    public void test_searchConcept_noResults() throws Exception {
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Gustav Robert Kirchhoff")
+                .param("pos", "verb").param("concept_list", "TestList").param("operator", SearchParamters.OP_AND)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.message", is("No records found for the search condition.")))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
     public void test_searchConcept_searchWithWordAndPosAndEqualTo() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Gustav Robert Kirchhoff")
