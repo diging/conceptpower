@@ -119,7 +119,7 @@ public class ConceptSearchTest {
 
         entries[0] = entry;
 
-        int numberOfResults = 100;
+        int numberOfResults = 2;
 
         Mockito.when(manager.getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString())).thenReturn(numberOfResults);
