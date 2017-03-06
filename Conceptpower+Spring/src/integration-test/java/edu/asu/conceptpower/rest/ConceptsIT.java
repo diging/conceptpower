@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import edu.asu.conceptpower.IntegrationTest;
 
@@ -18,7 +17,7 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andDo(MockMvcResultHandlers.print())
+
 .andExpect(jsonPath("$.id", isA(String.class)))
                 .andExpect(status().isOk());
     }
@@ -30,7 +29,7 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andDo(MockMvcResultHandlers.print()).andExpect(jsonPath("$[0].id", isA(String.class)))
+                .andExpect(jsonPath("$[0].id", isA(String.class)))
                 .andExpect(jsonPath("$[1].id", isA(String.class))).andExpect(status().isOk());
     }
 

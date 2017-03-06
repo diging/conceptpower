@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import edu.asu.conceptpower.IntegrationTest;
 
@@ -19,7 +18,7 @@ public class ConceptSearchIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(MockMvcResultHandlers.print())
+
 
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("WID-10954498-N-01-Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].lemma", is("einstein")))
@@ -78,7 +77,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
 
-                .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+                .andExpect(status().isOk());
 
     }
 
@@ -107,7 +106,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
 
-                .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+                .andExpect(status().isOk());
 
     }
 
@@ -136,7 +135,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
 
-                .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -146,9 +145,9 @@ public class ConceptSearchIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
                         .param("number_of_records_per_page", "2").param("page", "1")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(MockMvcResultHandlers.print())
+                
 
-                .andDo(MockMvcResultHandlers.print()).andExpect(jsonPath("$.conceptEntries.length()", is(2)))
+                .andExpect(jsonPath("$.conceptEntries.length()", is(2)))
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("WID-10954498-N-01-Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].lemma", is("einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].pos", is("noun")))
@@ -183,9 +182,9 @@ public class ConceptSearchIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
                         .param("number_of_records_per_page", "2").param("page", "2")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(MockMvcResultHandlers.print())
+                
 
-                .andDo(MockMvcResultHandlers.print()).andExpect(jsonPath("$.conceptEntries.length()", is(2)))
+                .andExpect(jsonPath("$.conceptEntries.length()", is(2)))
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("WID-10954498-N-02-Albert_Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].lemma", is("albert einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].pos", is("noun")))
@@ -242,7 +241,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
 
-                .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+                .andExpect(status().isOk());
 
     }
 
@@ -273,7 +272,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
 
-                .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+                .andExpect(status().isOk());
 
     }
 
@@ -303,7 +302,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(jsonPath("$.pagination.pageNumber", is(1)))
                 .andExpect(jsonPath("$.pagination.totalNumberOfRecords", is(1)))
 
-                .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+                .andExpect(status().isOk());
 
     }
 

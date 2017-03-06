@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import edu.asu.conceptpower.IntegrationTest;
 
@@ -18,7 +17,7 @@ public class ConceptLookupIT extends IntegrationTest {
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptLookup/Gustav Robert Kirchhoff/noun")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(MockMvcResultHandlers.print())
+
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("CONzpOmUhTDbJV4")))
                 .andExpect(jsonPath("$.conceptEntries[0].description", is("Gustav Robert Kirchhoff wrapper")))
                 .andExpect(jsonPath("$.conceptEntries[0].pos", is("noun")))
@@ -41,7 +40,7 @@ public class ConceptLookupIT extends IntegrationTest {
                 .perform(
                 MockMvcRequestBuilders.get("/ConceptLookup/einstein/noun")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(MockMvcResultHandlers.print()).andExpect(jsonPath("$.conceptEntries.length()", is(4)))
+                .andExpect(jsonPath("$.conceptEntries.length()", is(4)))
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("WID-10954498-N-02-Albert_Einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].lemma", is("albert einstein")))
                 .andExpect(jsonPath("$.conceptEntries[0].pos", is("noun")))

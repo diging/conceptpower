@@ -29,8 +29,8 @@
 		<lucene.index>/Users/karthikeyanmohan/Software/Conceptpower/indexFiles</lucene.index>
 		<pullrequest></pullrequest>
 		<debug_level>debug</debug_level>
-        <db.test.files.path>/Users/karthikeyanmohan/Software/conceptpower-test/</db.test.files.path>
-        <lucene.test.files.path>/Users/karthikeyanmohan/Software/conceptpower-test/indexFiles</lucene.test.files.path>
+        <skip.integration.tests>false</skip.integration.tests>
+        <skip.unit.tests>false</skip.unit.tests>
 	</properties>
 
 	<repositories>
@@ -57,8 +57,6 @@
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
-                <db.test.path>${db.test.files.path}</db.test.path>
-                <lucene.test.path>${lucene.test.files.path}</lucene.test.path>
 			</properties>
 		</profile>
 		<profile>
@@ -76,8 +74,6 @@
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
-                <db.test.path>${db.test.files.path}</db.test.path>
-                <lucene.test.path>${lucene.test.files.path}</lucene.test.path>
 			</properties>
 		</profile>
 		<profile>
@@ -95,10 +91,25 @@
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
-                <db.test.path>${db.test.files.path}</db.test.path>
-                <lucene.test.path>${lucene.test.files.path}</lucene.test.path>
 			</properties>
 		</profile>
+        <profile>
+            <id>integration-test</id>
+            <!-- Integration Test Properties -->
+            <properties>
+                <db.path>${db.files.path}</db.path>
+                <deploy.path>${deploy.path.test}</deploy.path>
+                <tomcat.path>${tomcat.deploy.path}</tomcat.path>
+                <email.user>${email.username}</email.user>
+                <email.pw>${email.password}</email.pw>
+                <email.port>${email.server.port}</email.port>
+                <email.host>${email.server.host}</email.host>
+                <admin.user>${admin.username}</admin.user>
+                <admin.pw>${admin.password}</admin.pw>
+                <wordnet.install.path>${wordnet.path}</wordnet.install.path>
+                <lucene.path>${lucene.index}</lucene.path>
+            </properties>
+        </profile>
 	</profiles>
 
 	<dependencies>
@@ -630,6 +641,86 @@
 					<format>#{0} ({1,date,yyyy-MM-dd HH:mm:ss})</format>
 				</configuration>
 			</plugin>
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <!-- Add a new source directory to our build -->
+                    <execution>
+                        <id>add-integration-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Configures the source directory of our integration tests -->
+                            <sources>
+                                <source>src/integration-test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <!-- Add a new resource directory to our build -->
+                    <execution>
+                        <id>add-integration-test-resources</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>add-test-resource</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Configures the resource directory of our integration tests -->
+                            <resources>
+                                <resource>
+                                    <filtering>true</filtering>
+                                    <directory>src/integration-test/resources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                                        
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18</version>
+                <configuration>
+                    <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+                    <skipTests>${skip.unit.tests}</skipTests>
+                    <!-- Excludes integration tests when unit tests are run -->
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.18</version>
+                <executions>
+                    <!--
+                        Invokes both the integration-test and the verify goals of the
+                        Failsafe Maven plugin
+                    -->
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <!--
+                                Skips integration tests if the value of skip.integration.tests
+                                property is true
+                            -->
+                            <skipTests>${skip.integration.tests}</skipTests>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 		<resources>
 			<resource>
@@ -642,6 +733,13 @@
             <resource>
                 <filtering>true</filtering>
                 <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/integration-test/resources</directory>
                 <includes>
                     <include>**/*</include>
                 </includes>

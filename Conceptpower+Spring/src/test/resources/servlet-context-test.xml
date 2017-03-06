@@ -11,18 +11,6 @@
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 
-	<!-- DispatcherServlet Context: defines this servlet's request-processing 
-		infrastructure -->
-
-	<!-- Enables the Spring MVC @Controller programming model -->
-	<mvc:annotation-driven>
-        <mvc:message-converters register-defaults="true">
-            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                <constructor-arg index="0" name="defaultCharset" value="UTF-8"/>
-            </bean>
-        </mvc:message-converters>    
-    </mvc:annotation-driven>
-
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
 	<mvc:resources mapping="/resources/**" location="/resources/" />
@@ -41,21 +29,6 @@
 		</beans:property>
 	</beans:bean>
     
-    <beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-        <beans:property name="basenames" value="validatormessages"></beans:property>
-    </beans:bean>
-
-	<bean id="jacksonMessageConverter"
-	class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
-	<bean
-		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-		<property name="messageConverters">
-			<list>
-				<ref bean="jacksonMessageConverter" />
-			</list>
-		</property>
-	</bean>
-
 	<context:component-scan base-package="edu.asu.conceptpower.web" />
     
 </beans:beans>

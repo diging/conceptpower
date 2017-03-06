@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import edu.asu.conceptpower.IntegrationTest;
 
@@ -18,7 +17,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "WID-02380464-N-01-polo_pony")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(MockMvcResultHandlers.print())
+
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("WID-02380464-N-01-polo_pony")))
                 .andExpect(jsonPath("$.conceptEntries[0].description",
                         is("a small agile horse specially bred and trained for playing polo")))
@@ -40,7 +39,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONIHJWnURicfA3")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(MockMvcResultHandlers.print())
+
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("CONIHJWnURicfA3")))
                 .andExpect(jsonPath("$.conceptEntries[0].description", is("pony test description")))
                 .andExpect(jsonPath("$.conceptEntries[0].conceptList", is("TestList")))
@@ -57,7 +56,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONzpOmUhTDbJV4")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(MockMvcResultHandlers.print())
+
                 .andExpect(jsonPath("$.conceptEntries[0].id", is("CONzpOmUhTDbJV4")))
                 .andExpect(jsonPath("$.conceptEntries[0].description", is("Gustav Robert Kirchhoff wrapper")))
                 .andExpect(jsonPath("$.conceptEntries[0].type.type_id", is("7c8745be-d06f-4feb-b749-910efa1b986d")))
