@@ -65,8 +65,6 @@ public class ConceptIDLookupTest {
     @Test
     public void test_getConceptEntry_successForWordNetIds()
             throws IOException, SAXException, ParserConfigurationException {
-        final String expectedResponse = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithalternativeIds.xml"));
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptEntryWithWordnet.xml"));
         final String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
@@ -80,8 +78,6 @@ public class ConceptIDLookupTest {
         RestTestUtility.testValidXml(response.getBody());
         Assert.assertEquals(output, response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assert.assertEquals(expectedResponse, response.getBody());
-
     }
 
     @Test
