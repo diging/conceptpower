@@ -57,6 +57,9 @@ public class ConceptManager implements IConceptManager {
     @Value("${default_page_size}")
     private Integer defaultPageSize;
 
+    @Autowired
+    private AlternativeIdService alternativeIdService;
+
     /*
      * (non-Javadoc)
      * 
@@ -68,12 +71,14 @@ public class ConceptManager implements IConceptManager {
         ConceptEntry entry = client.getEntry(id);
         if (entry != null) {
             fillConceptEntry(entry);
+            alternativeIdService.addAlternativeIds(id, entry);
             return entry;
         }
 
         entry = wordnetManager.getConcept(id);
         if (entry != null) {
             // client.store(entry, DBNames.WORDNET_CACHE);
+            alternativeIdService.addAlternativeIds(id, entry);
             return entry;
         }
 
@@ -205,7 +210,7 @@ public class ConceptManager implements IConceptManager {
                 }
             }
         }
-
+        alternativeIdService.addAlternativeIds(results);
         return results.toArray(new ConceptEntry[results.size()]);
     }
 
@@ -248,7 +253,7 @@ public class ConceptManager implements IConceptManager {
             }
             results = filteredResults;
         }
-
+        alternativeIdService.addAlternativeIds(results);
         return results.toArray(new ConceptEntry[results.size()]);
     }
 
@@ -308,7 +313,9 @@ public class ConceptManager implements IConceptManager {
     public ConceptEntry[] getConceptListEntriesForWord(String word) throws LuceneException, IllegalAccessException, IndexerRunningException {
         Map<String,String> fieldMap = new HashMap<String,String>();
         fieldMap.put(SearchFieldNames.WORD, word);
-        return indexService.searchForConcepts(fieldMap, null);
+        ConceptEntry[] entries = indexService.searchForConcepts(fieldMap, null);
+        alternativeIdService.addAlternativeIds(entries);
+        return entries;
     }
 
     /*
@@ -357,6 +364,7 @@ public class ConceptManager implements IConceptManager {
                 notDeletedEntries.add(entry);
             }
         }
+        alternativeIdService.addAlternativeIds(notDeletedEntries);
         return notDeletedEntries;
     }
 
@@ -534,11 +542,15 @@ public class ConceptManager implements IConceptManager {
 
     @Override
     public List<ConceptEntry> getConceptEntryByTypeId(String typeId) {
-        return client.getAllEntriesByTypeId(typeId);
+        List<ConceptEntry> conceptEntries = client.getAllEntriesByTypeId(typeId);
+        alternativeIdService.addAlternativeIds(conceptEntries);
+        return conceptEntries;
     }
 
     @Override
     public List<ConceptEntry> getConceptEntriedByConceptListName(String conceptListName) {
-        return client.getAllEntriesFromList(conceptListName);
+        List<ConceptEntry> conceptEntries = client.getAllEntriesFromList(conceptListName);
+        alternativeIdService.addAlternativeIds(conceptEntries);
+        return conceptEntries;
     }
 }

@@ -37,6 +37,9 @@ public class IndexService implements IIndexService {
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
 
+    @Autowired
+    private AlternativeIdService alternativeIdService;
+
     /**
      * This field makes sure indexer runs only once when two different admins
      * gives index command at same time
@@ -71,7 +74,9 @@ public class IndexService implements IIndexService {
             throw new IndexerRunningException(indexerRunning);
         }
 
-        return luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage);
+        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage);
+        alternativeIdService.addAlternativeIds(entries);
+        return entries;
     }
 
     /**

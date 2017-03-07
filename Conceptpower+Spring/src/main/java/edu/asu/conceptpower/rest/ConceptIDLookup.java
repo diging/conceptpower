@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.rest;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -20,10 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.conceptpower.app.core.ConceptTypesService;
-import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
-import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.IConceptMessage;
@@ -41,16 +38,13 @@ import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 public class ConceptIDLookup {
 
     @Autowired
-    private IConceptManager dictManager;
+    private IConceptManager conceptManager;
 
     @Autowired
     private TypeDatabaseClient typeManager;
 
     @Autowired
     private IMessageRegistry messageFactory;
-
-    @Autowired
-    private IConceptManager conceptManager;
 
     @Autowired
     private ConceptTypesService conceptTypesService;
@@ -86,21 +80,13 @@ public class ConceptIDLookup {
         if (wordnetId == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
-        ConceptEntry entry = dictManager.getConceptEntry(wordnetId);
+        ConceptEntry entry = conceptManager.getConceptEntry(wordnetId);
         Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
 
         IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
 
         if (entry != null) {
 
-            try {
-                // Check if the id used in a generic id. If so fetch the
-                // concept wrapper id for the generic wordnet id
-                entry = checkAndAddAlternativeIds(pathParts, lastIndex, entry);
-            } catch (LuceneException e) {
-                logger.error("Lucene Exception", e);
-                return new ResponseEntity<String>("Lucene exception.", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
             ConceptType type = null;
             if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
                 type = typeManager.getType(entry.getTypeId());
@@ -112,35 +98,4 @@ public class ConceptIDLookup {
 
     }
 
-    private ConceptEntry checkAndAddAlternativeIds(String[] pathParts, int lastIndex, ConceptEntry entry)
-            throws LuceneException {
-        if (conceptTypesService
-                .getConceptTypeByConceptId(pathParts[lastIndex]) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
-            entry = conceptManager.getConceptEntry(entry.getId());
-        }
-        addAlternativeIds(pathParts[lastIndex], entry);
-        return entry;
-    }
-
-    private void addAlternativeIds(String id, ConceptEntry entry) throws LuceneException {
-        if (entry.getAlternativeIds() == null) {
-            entry.setAlternativeIds(new HashSet<String>());
-        }
-        if (conceptTypesService
-                .getConceptTypeByConceptId(id) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
-            entry.getAlternativeIds().add(id);
-        }
-        if (conceptTypesService
-                .getConceptTypeByConceptId(id) != ConceptTypes.SPECIFIC_WORDNET_CONCEPT) {
-            // Added for generic wordnet and specific local concept
-            entry.getAlternativeIds().add(entry.getId());
-        }
-        // Specific Wordnet id is added irrespective of what is queried for
-        if (entry.getWordnetId() != null) {
-            String[] wordNetIds = entry.getWordnetId().split(",");
-            for (String wordNetId : wordNetIds) {
-                entry.getAlternativeIds().add(wordNetId);
-            }
-        }
-    }
 }
