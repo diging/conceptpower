@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +85,7 @@ public class ConceptSearch {
      */
     @RequestMapping(value = "/ConceptSearch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody ResponseEntity<String> searchConcept(HttpServletRequest req,
+    public @ResponseBody ResponseEntity<String> searchConcept(
             @Validated ConceptSearchParameters conceptSearchParameters, BindingResult result,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
                     throws JsonProcessingException, IllegalArgumentException, IllegalAccessException,
@@ -136,7 +134,7 @@ public class ConceptSearch {
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (searchResults.length == 0) {
+        if (searchResults == null || searchResults.length == 0) {
             // Data is not found but still returning OK as per review comments
             IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
             return new ResponseEntity<String>(msg.getErrorMessage("No records found for the search condition."),
