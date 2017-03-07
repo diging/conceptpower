@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.apache.commons.io.IOUtil;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -14,8 +15,10 @@ import edu.asu.conceptpower.IntegrationTest;
 
 public class ConceptsIT extends IntegrationTest {
 
+    @Test
     public void test_addConcept_success() throws Exception {
-        String input = "{ \"word\": \"kitty\", \"pos\": \"noun\", \"conceptlist\": \"TestList\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\"}";
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcept.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -24,8 +27,8 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcepts_success() throws Exception {
-        String input = "[{\"word\": \"kitty\", \"pos\": \"noun\", \"conceptlist\": \"TestList\", \"description\": \"Soft kitty, sleepy kitty.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\"},"
-                + "{\"word\": \"kitty-2\", \"pos\": \"noun\", \"conceptlist\": \"TestList\", \"description\": \"Soft kitty, sleepy kitty - 2.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\"}]";
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcepts.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -35,8 +38,8 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcepts_invalidConceptList() throws Exception {
-        String input = "[{\"word\": \"kitty\", \"pos\": \"noun\", \"conceptlist\": \"ConceptListInvalid\", \"description\": \"Soft kitty, sleepy kitty.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\"},"
-                + "{\"word\": \"kitty-2\", \"pos\": \"noun\", \"conceptlist\": \"ConceptListInvalid\", \"description\": \"Soft kitty, sleepy kitty - 2.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\"}]";
+        final String input = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("input/addConceptsWithInvalidConceptList.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -48,7 +51,8 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_invalidConceptList() throws Exception {
-        String input = "{ \"word\": \"kitty\", \"pos\": \"noun\", \"conceptlist\": \"ConceptListInvalid\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\"}";
+        final String input = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidConceptList.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -58,7 +62,8 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_invalidPos() throws Exception {
-        String input = "{ \"word\": \"kitty\", \"pos\": \"noun2\", \"conceptlist\": \"TestList\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\"}";
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidPos.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -69,7 +74,8 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_nullWord() throws Exception {
-        String input = "{\"pos\": \"noun\", \"conceptlist\": \"TestList\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\"}";
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithNullWord.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -81,8 +87,8 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_emptyConceptList() throws Exception {
-
-        String input = "{ \"word\": \"kitty\", \"pos\": \"noun\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\"}";
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithEmptyList.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -94,8 +100,8 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_emptyType() throws Exception {
-
-        String input = "{ \"word\": \"kitty\", \"pos\": \"noun\", \"conceptlist\": \"TestList\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\"}";
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithEmptyType.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -107,25 +113,23 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_invalidWordnetIds() throws Exception {
-        String wordnetId1 = "WORDNET-123";
-        String wordnetId2 = "WORDNET-456";
-        String input = "{ \"word\": \"kitty\", \"pos\": \"noun\", \"conceptlist\": \"TestList\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\",\"wordnetIds\":\""
-                + wordnetId1 + "," + wordnetId2 + " \"}";
+        String wordnetId = "WORDNET-123";
+        final String input = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidWordNetIds.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
                 .andExpect(content()
                         .string("Error parsing request: please provide a valid list of wordnet ids seperated by commas. Wordnet id "
-                                + wordnetId1 + " doesn't exist."))
+                                + wordnetId + " doesn't exist."))
                 .andExpect(status().isBadRequest());
 
     }
 
     @Test
-    public void test_addConcept_wrappedWordnetIds() throws Exception {
-        String wordnetId1 = "WID-11105945-N-03-Gustav_Robert_Kirchhoff";
-        String input = "{ \"word\": \"kitty\", \"pos\": \"noun\", \"conceptlist\": \"TestList\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\",\"wordnetIds\": \""
-                + wordnetId1 + "\"}";
+    public void test_addConcept_existingwrappedWordnetIds() throws Exception {
+        final String input = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithExistingWrappedIds.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -137,9 +141,8 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_posMismatch() throws Exception {
-        String wordnetId1 = "WID-02380335-N-01-pony";
-        String input = "{ \"word\": \"pony\", \"pos\": \"verb\", \"conceptlist\": \"TestList\", \"description\": \"Soft kitty, sleepy kitty, little ball of fur.\", \"type\": \"7c8745be-d06f-4feb-b749-910efa1b986d\",\"wordnetIds\": \""
-                + wordnetId1 + "\"}";
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithPosMisMatch.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
