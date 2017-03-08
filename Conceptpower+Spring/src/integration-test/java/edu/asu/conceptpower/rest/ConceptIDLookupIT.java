@@ -1,6 +1,5 @@
 package edu.asu.conceptpower.rest;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,7 +47,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForLocalId.json"));
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONIHJWnURicfA3")
+                .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());
     }
@@ -58,7 +57,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWrapper.json"));
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONzpOmUhTDbJV4")
+                .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONe7fbf694-5609-4691-bca8-916526c2ba6a")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());
     }
@@ -98,7 +97,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForLocalId.xml"));
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONIHJWnURicfA3")
+                .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a")
                         .accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());
     }
@@ -108,9 +107,9 @@ public class ConceptIDLookupIT extends IntegrationTest {
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWrapper.xml"));
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONzpOmUhTDbJV4")
+                .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONe7fbf694-5609-4691-bca8-916526c2ba6a")
                         .accept(MediaType.APPLICATION_XML_VALUE))
-                .andDo(print()).andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(content().string(output)).andExpect(status().isOk());
     }
 
 }

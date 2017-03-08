@@ -22,7 +22,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_JSON_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
-                        request.setParameter("id", "7c8745be-d06f-4feb-b749-910efa1b986d");
+                        request.setParameter("id", "986a7cc9-c0c1-4720-b344-853f08c136ab");
                         return request;
                     }
                 })).andExpect(content().string(output)).andExpect(status().isOk());
@@ -35,7 +35,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_JSON_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
-                        request.setParameter("id", XMLConstants.TYPE_PREFIX + "7c8745be-d06f-4feb-b749-910efa1b986d");
+                        request.setParameter("id", XMLConstants.TYPE_PREFIX + "986a7cc9-c0c1-4720-b344-853f08c136ab");
                         return request;
                     }
                 })).andExpect(content().string(output)).andExpect(status().isOk());
@@ -80,7 +80,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
-                        request.setParameter("id", "7c8745be-d06f-4feb-b749-910efa1b986d");
+                        request.setParameter("id", "c7d2e910-1ba9-4ee5-a05e-cfe74029b25f");
                         return request;
                     }
                 })).andExpect(content().string(output)).andExpect(status().isOk());
@@ -92,7 +92,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
-                        request.setParameter("id", XMLConstants.TYPE_PREFIX + "7c8745be-d06f-4feb-b749-910efa1b986d");
+                        request.setParameter("id", XMLConstants.TYPE_PREFIX + "c7d2e910-1ba9-4ee5-a05e-cfe74029b25f");
                         return request;
                     }
                 })).andExpect(content().string(output)).andExpect(status().isOk());
