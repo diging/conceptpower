@@ -15,34 +15,62 @@ import edu.asu.conceptpower.IntegrationTest;
 public class ConceptLookupIT extends IntegrationTest {
 
     @Test
-    public void test_getWordNetEntry_successForSingleEntry() throws Exception {
+    public void test_getWordNetEntry_successForSingleEntryInJson() throws Exception {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpWordNetEntry.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Gustav Robert Kirchhoff/noun")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(content().string(output))
-                .andExpect(status().isOk());
+                .andExpect(content().string(output)).andExpect(status().isOk());
     }
 
     @Test
-    public void test_getWordNetEntry_noResults() throws Exception {
+    public void test_getWordNetEntry_noResultsInJson() throws Exception {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Gustav Robert Kirchhoff/verb")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.message", is("No concept entry found.")))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$.message", is("No concept entry found."))).andExpect(status().isOk());
     }
+
     @Test
-    public void test_getWordNetEntry_successForMultipleEntry() throws Exception {
+    public void test_getWordNetEntry_successForMultipleEntryInJson() throws Exception {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpForMultipletEntry.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/einstein/noun")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(content().string(output))
-                .andExpect(status().isOk());
+                .andExpect(content().string(output)).andExpect(status().isOk());
+    }
+
+    @Test
+    public void test_getWordNetEntry_successForSingleEntryInXml() throws Exception {
+        final String output = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpWordNetEntry.xml"));
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Gustav Robert Kirchhoff/noun")
+                        .accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(content().string(output)).andExpect(status().isOk());
+    }
+
+    @Test
+    public void test_getWordNetEntry_noResultsInXml() throws Exception {
+        final String output = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptEntryNotFound.xml"));
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Gustav Robert Kirchhoff/verb")
+                        .accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(content().string(output)).andExpect(status().isOk());
+    }
+
+    @Test
+    public void test_getWordNetEntry_successForMultipleEntryInXml() throws Exception {
+        final String output = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpForMultipletEntry.xml"));
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/ConceptLookup/einstein/noun")
+                        .accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(content().string(output)).andExpect(status().isOk());
     }
 
 }
