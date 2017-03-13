@@ -17,8 +17,8 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordAndPosInJson() throws Exception {
 
-        final String output = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.json"));
+        final String output = IOUtil.toString(
+this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.json"));
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
@@ -145,8 +145,8 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordAndPosInXml() throws Exception {
 
-        final String output = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.xml"));
+        final String output = IOUtil.toString(
+this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.xml"));
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
@@ -170,8 +170,8 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_noResultsInXml() throws Exception {
 
-        final String output = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/noResults.xml"));
+        final String output = IOUtil.toString(
+this.getClass().getClassLoader().getResourceAsStream("output/noResults.xml"));
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Gustav Robert Kirchhoff")

@@ -14,6 +14,11 @@
     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
     http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
+
+    <bean id="copyFiles" class="edu.asu.conceptpower.web.DownloadFilesUtility" init-method="setUp">
+        <property name="toLocation" value="${dbTestPath}" />
+    </bean>
+    
 	<import resource="db4o-config-test.xml" />
 	<import resource="xml-config-test.xml" />
 	<context:component-scan base-package="edu.asu.conceptpower.app" />
@@ -23,7 +28,7 @@
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
 	<bean id="luceneDAO" class="edu.asu.conceptpower.app.lucene.impl.LuceneDAO" init-method="init">
-		<property name="dbPath" value="/Users/karthikeyanmohan/Software/conceptpower-test/lucene.db" />
+		<property name="dbPath" value="${dbTestPath}/lucene.db" />
 	</bean>
     
     <context:property-placeholder location="classpath*:config.properties" />
