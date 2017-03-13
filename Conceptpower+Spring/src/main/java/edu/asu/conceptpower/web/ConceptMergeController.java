@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
-import edu.asu.conceptpower.app.core.ConceptTypesService;
-import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypesService;
 import edu.asu.conceptpower.app.core.POS;
+import edu.asu.conceptpower.app.core.impl.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -51,7 +51,7 @@ public class ConceptMergeController {
     private ConceptsMergeBeanValidator validator;
 
     @Autowired
-    private ConceptTypesService conceptTypesService;
+    private IConceptTypesService conceptTypesService;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {

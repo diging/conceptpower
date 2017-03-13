@@ -15,6 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.constants.SearchFieldNames;
+import edu.asu.conceptpower.app.core.IAlternativeIdService;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db4o.DBNames;
@@ -58,7 +59,7 @@ public class ConceptManager implements IConceptManager {
     private Integer defaultPageSize;
 
     @Autowired
-    private AlternativeIdService alternativeIdService;
+    private IAlternativeIdService alternativeIdService;
 
     /*
      * (non-Javadoc)

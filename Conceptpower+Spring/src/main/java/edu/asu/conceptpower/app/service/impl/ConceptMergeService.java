@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
-import edu.asu.conceptpower.app.core.ConceptTypesService;
-import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.core.IConceptManager;
+import edu.asu.conceptpower.app.core.IConceptTypesService;
+import edu.asu.conceptpower.app.core.impl.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.error.CPError;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
@@ -26,7 +26,7 @@ public class ConceptMergeService implements IConceptMergeService {
     private IConceptManager conceptManager;
 
     @Autowired
-    private ConceptTypesService conceptTypesService;
+    private IConceptTypesService conceptTypesService;
 
     @Override
     public ConceptsMergeBean prepareMergeConcepts(List<ConceptEntry> conceptEntries,

@@ -1,9 +1,11 @@
-package edu.asu.conceptpower.app.core;
+package edu.asu.conceptpower.app.core.impl;
 
 import org.springframework.stereotype.Service;
 
+import edu.asu.conceptpower.app.core.IConceptTypesService;
+
 @Service
-public class ConceptTypesService {
+public class ConceptTypesService implements IConceptTypesService {
     
     public enum ConceptTypes {
         GENERIC_WORDNET_CONCEPT, SPECIFIC_WORDNET_CONCEPT, LOCAL_CONCEPT

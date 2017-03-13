@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.asu.conceptpower.app.core.ConceptTypesService;
 import edu.asu.conceptpower.app.core.IConceptManager;
+import edu.asu.conceptpower.app.core.IConceptTypesService;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
@@ -47,7 +47,7 @@ public class ConceptIDLookup {
     private IMessageRegistry messageFactory;
 
     @Autowired
-    private ConceptTypesService conceptTypesService;
+    private IConceptTypesService conceptTypesService;
 
     private static final Logger logger = LoggerFactory.getLogger(ConceptIDLookup.class);
 
