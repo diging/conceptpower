@@ -31,6 +31,11 @@
 		<debug_level>debug</debug_level>
         <skip.integration.tests>false</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
+        <concept.list.url>https://www.dropbox.com/s/t2g2kclkwglv2lp/conceptLists.db?raw=1</concept.list.url>
+        <concept.types.url>https://www.dropbox.com/s/n4er1qbfk4d641z/conceptTypes.db?raw=1</concept.types.url>
+        <lucene.url>https://www.dropbox.com/s/idvg1f9y8k3es5i/lucene.db?raw=1</lucene.url>
+        <users.url>https://www.dropbox.com/s/v371ww5hqnxxjek/users.db?raw=1</users.url>
+        <wordnet.url>https://www.dropbox.com/s/s2wss0ujzxrwn9c/wordnetCache.db?raw=1</wordnet.url>
 	</properties>
 
 	<repositories>
@@ -108,6 +113,11 @@
                 <admin.pw>${admin.password}</admin.pw>
                 <wordnet.install.path>${wordnet.path}</wordnet.install.path>
                 <lucene.path>${lucene.index}</lucene.path>
+                <conceptList.url>${concept.list.url}</conceptList.url>
+                <conceptTypes.url>${concept.types.url}</conceptTypes.url>
+                <luceneUrl>${lucene.url}</luceneUrl>
+                <usersUrl>${users.url}</usersUrl>
+                <wordnetCache.url>${wordnet.url}</wordnetCache.url>
             </properties>
         </profile>
 	</profiles>

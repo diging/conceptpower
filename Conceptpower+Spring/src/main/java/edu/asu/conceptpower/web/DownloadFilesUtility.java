@@ -13,13 +13,28 @@ public class DownloadFilesUtility {
     @Value("${dbTestPath}")
     private String toLocation;
 
+    @Value("${conceptListUrl}")
+    private String conceptListUrl;
+
+    @Value("${conceptTypesUrl}")
+    private String conceptTypesUrl;
+
+    @Value("${luceneUrl}")
+    private String luceneUrl;
+
+    @Value("${usersUrl}")
+    private String usersUrl;
+
+    @Value("${wordnetUrl}")
+    private String wordnetCacheUrl;
+
     public void setUp() throws IOException {
 
         ReadableByteChannel rbc = null;
         FileOutputStream fos = null;
         URL website = null;
         try {
-            website = new URL("https://www.dropbox.com/s/t2g2kclkwglv2lp/conceptLists.db?raw=1");
+            website = new URL(conceptListUrl);
             rbc = Channels.newChannel(website.openStream());
             fos = new FileOutputStream(toLocation + "/conceptLists.db");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -29,7 +44,7 @@ public class DownloadFilesUtility {
         }
 
         try {
-            website = new URL("https://www.dropbox.com/s/n4er1qbfk4d641z/conceptTypes.db?raw=1");
+            website = new URL(conceptTypesUrl);
             rbc = Channels.newChannel(website.openStream());
             fos = new FileOutputStream(toLocation + "/conceptTypes.db");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -39,7 +54,7 @@ public class DownloadFilesUtility {
         }
 
         try {
-            website = new URL("https://www.dropbox.com/s/idvg1f9y8k3es5i/lucene.db?raw=1");
+            website = new URL(luceneUrl);
             rbc = Channels.newChannel(website.openStream());
             fos = new FileOutputStream(toLocation + "/lucene.db");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -49,7 +64,7 @@ public class DownloadFilesUtility {
         }
 
         try {
-            website = new URL("https://www.dropbox.com/s/v371ww5hqnxxjek/users.db?raw=1");
+            website = new URL(usersUrl);
             rbc = Channels.newChannel(website.openStream());
             fos = new FileOutputStream(toLocation + "/users.db");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -59,7 +74,7 @@ public class DownloadFilesUtility {
         }
 
         try {
-            website = new URL("https://www.dropbox.com/s/s2wss0ujzxrwn9c/wordnetCache.db?raw=1");
+            website = new URL(wordnetCacheUrl);
             rbc = Channels.newChannel(website.openStream());
             fos = new FileOutputStream(toLocation + "/wordnetCache.db");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
