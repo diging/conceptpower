@@ -8,6 +8,13 @@ import java.nio.channels.ReadableByteChannel;
 
 import org.springframework.beans.factory.annotation.Value;
 
+/**
+ * This class is used for downloading the database file for integration tests
+ * from dropbox.
+ * 
+ * @author karthikeyanmohan
+ *
+ */
 public class DownloadFilesUtility {
 
     @Value("${dbTestPath}")
@@ -19,15 +26,22 @@ public class DownloadFilesUtility {
     @Value("${conceptTypesUrl}")
     private String conceptTypesUrl;
 
-    @Value("${luceneUrl}")
-    private String luceneUrl;
-
     @Value("${usersUrl}")
     private String usersUrl;
 
     @Value("${wordnetUrl}")
     private String wordnetCacheUrl;
 
+    /**
+     * This method is called while creating DownloadFilesUtility bean. This
+     * method fetches the conceptLists.db, conceptTypes.db, users.db and
+     * wordnetCache.db from dropbox. The database files fetched from dropbox
+     * location will be placed based on the value of "toLocation" variable,
+     * which is configured in pom.xml. The dropbox urls are also configured in
+     * pom.xml
+     * 
+     * @throws IOException
+     */
     public void setUp() throws IOException {
 
         ReadableByteChannel rbc = null;
@@ -47,16 +61,6 @@ public class DownloadFilesUtility {
             website = new URL(conceptTypesUrl);
             rbc = Channels.newChannel(website.openStream());
             fos = new FileOutputStream(toLocation + "/conceptTypes.db");
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-        } finally {
-            rbc.close();
-            fos.close();
-        }
-
-        try {
-            website = new URL(luceneUrl);
-            rbc = Channels.newChannel(website.openStream());
-            fos = new FileOutputStream(toLocation + "/lucene.db");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         } finally {
             rbc.close();
