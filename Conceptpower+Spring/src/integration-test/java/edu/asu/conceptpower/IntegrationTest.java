@@ -5,7 +5,6 @@ import java.security.Principal;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.TestPropertySource;
@@ -42,12 +41,10 @@ public abstract class IntegrationTest {
     public void setup() throws Exception {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
         if (!isSetupDone) {
             this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/indexConcepts").principal(principal));
-            MvcResult mr = null;
-            do {
-                mr = this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/getIndexerStatus")).andReturn();
-            } while (mr.getResponse().getStatus() != HttpStatus.OK.value());
+            MvcResult mr = this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/getIndexerStatus")).andReturn();
             isSetupDone = true;
         }
     }

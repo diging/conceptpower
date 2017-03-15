@@ -21,13 +21,13 @@
     
 	<import resource="db4o-config-test.xml" />
 	<import resource="xml-config-test.xml" />
-	<context:component-scan base-package="edu.asu.conceptpower.app" />
+	<context:component-scan base-package="edu.asu.conceptpower.root" />
     
     <task:executor id="indexExecutor" pool-size="1" />      
     <task:annotation-driven executor="indexExecutor"/>
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
-	<bean id="luceneDAO" class="edu.asu.conceptpower.app.lucene.impl.LuceneDAO" init-method="init">
+	<bean id="luceneDAO" class="edu.asu.conceptpower.servlet.lucene.impl.LuceneDAO" init-method="init">
 		<property name="dbPath" value="${dbTestPath}/lucene.db" />
 	</bean>
     
