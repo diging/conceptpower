@@ -114,6 +114,7 @@
                 <conceptList.url>${concept.list.url}</conceptList.url>
                 <conceptTypes.url>${concept.types.url}</conceptTypes.url>
                 <usersUrl>${users.url}</usersUrl>
+                <debug_level>debug</debug_level>
             </properties>
         </profile>
 	</profiles>
