@@ -23,12 +23,15 @@ public class AlternativeIdService implements IAlternativeIdService {
     private IConceptTypesService conceptTypesService;
 
     /**
-     * This method adds the alternative ids provided concept entry and the id
-     * with which the entry is queried is passed as parameter.
+     * This method adds all alternative ids to the given concept entry including
+     * the id that was used to search for a concept (passed as method
+     * parameter).
      * 
-     * Alternative ids comprises of wordnet ids, local concept id, merged id and
-     * generic wordnet id(if concept entry is queried with generic wordnet id
-     * ??)
+     * If the id passed as a method parameter is null then null value is added
+     * to alternative ids
+     * 
+     * @param queriedId
+     * @param entry
      */
     public void addAlternativeIds(String queriedId, ConceptEntry entry) {
         if (conceptTypesService.getConceptTypeByConceptId(queriedId) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
@@ -54,8 +57,10 @@ public class AlternativeIdService implements IAlternativeIdService {
     }
 
     /**
-     * This method in turn calls the addAlternativeIds(String queriedId,
-     * ConceptEntry entry) to add the alternative id
+     * This method adds the alternative ids to each of the concept entry in the
+     * Collection<ConceptEntry> which is passed as a parameter.
+     * 
+     * @param conceptEntries
      */
     public void addAlternativeIds(Collection<ConceptEntry> conceptEntries) {
         for (ConceptEntry entry : conceptEntries) {
@@ -64,8 +69,10 @@ public class AlternativeIdService implements IAlternativeIdService {
     }
 
     /**
-     * This method in turn calls the addAlternativeIds(String queriedId,
-     * ConceptEntry entry) to add the alternative id
+     * This method adds the alternative ids to each of the concept entry in the
+     * ConceptEntry[] which is passed as a parameter.
+     * 
+     * @param conceptEntries
      */
     public void addAlternativeIds(ConceptEntry[] conceptEntries) {
         for (ConceptEntry entry : conceptEntries) {
