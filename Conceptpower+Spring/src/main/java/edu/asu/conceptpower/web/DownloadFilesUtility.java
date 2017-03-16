@@ -59,27 +59,23 @@ public class DownloadFilesUtility {
             File conceptListFile = new File(toLocation + "/conceptLists.db");
             conceptListFile.createNewFile(); // if file already exists will do
                                              // nothing
-            fos = new FileOutputStream(toLocation + "/conceptLists.db", false);
+            fos = new FileOutputStream(conceptListFile, false);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for concept lists database.");
         } catch (MalformedURLException e) {
-            logger.debug("MalformedUrlException error for concept lists", e);
+            logger.error("MalformedUrlException error for concept lists", e);
         } catch (FileNotFoundException fne) {
-            logger.debug("FileNotFoundException error for concept lists", fne);
+            logger.error("FileNotFoundException error for concept lists", fne);
         } catch (IOException ioE) {
-            logger.debug("IOException error for concept lists", ioE);
+            logger.error("IOException error for concept lists", ioE);
         } finally {
             logger.debug("Closing resources for concept lists database.");
             try {
-                logger.debug("Closing rbc resource for concept lists database.");
+                logger.error("Closing rbc resource for concept lists database.");
                 rbc.close();
-            } catch (IOException e) {
-                logger.debug("IOException for concept lists database.", e);
-            }
-            try {
                 fos.close();
             } catch (IOException e) {
-                logger.debug("Closing fos resources for concept lists database.", e);
+                logger.error("IOException for concept lists database.", e);
             }
         }
 
@@ -90,7 +86,7 @@ public class DownloadFilesUtility {
             File conceptypesFile = new File(toLocation + "/conceptTypes.db");
             conceptypesFile.createNewFile(); // if file already exists will do
                                              // nothing
-            fos = new FileOutputStream(toLocation + "/conceptTypes.db", false);
+            fos = new FileOutputStream(conceptypesFile, false);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for concept types database.");
         } catch (MalformedURLException e) {
@@ -101,13 +97,9 @@ public class DownloadFilesUtility {
             logger.debug("Closing resources for concept types database.");
             try {
                 rbc.close();
-            } catch (IOException e) {
-                logger.debug("IOException for concept types database.", e);
-            }
-            try {
                 fos.close();
             } catch (IOException e) {
-                logger.debug("Closing fos resources for concept types database.", e);
+                logger.debug("IOException for concept types database.", e);
             }
         }
 
@@ -118,24 +110,20 @@ public class DownloadFilesUtility {
             File userFile = new File(toLocation + "/users.db");
             userFile.createNewFile(); // if file already exists will do
                                              // nothing
-            fos = new FileOutputStream(toLocation + "/users.db", false);
+            fos = new FileOutputStream(userFile, false);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for users database.");
         } catch (MalformedURLException e) {
-            logger.debug("MalformedUrlException error for users", e);
+            logger.error("MalformedUrlException error for users", e);
         } catch (IOException e) {
-            logger.debug("IOException error for users", e);
+            logger.error("IOException error for users", e);
         } finally {
             logger.debug("Closing resources for users database.");
             try {
                 rbc.close();
-            } catch (IOException e) {
-                logger.debug("IOException for users database.", e);
-            }
-            try {
                 fos.close();
             } catch (IOException e) {
-                logger.debug("Closing fos resources for users database.", e);
+                logger.error("IOException for users database.", e);
             }
         }
 
