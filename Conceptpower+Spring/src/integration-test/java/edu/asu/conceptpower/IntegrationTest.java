@@ -53,8 +53,8 @@ public abstract class IntegrationTest {
     public void setup() throws Exception {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        setSecurityContext();
         if (!isSetupDone) {
+            setSecurityContext();
             logger.debug("Started with lucene indexing for integration tests.");
             this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/indexConcepts").principal(principal));
             isSetupDone = true;
