@@ -15,7 +15,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     @Test
     public void test_getConceptById_successForWordNetIdInXml() throws Exception {
         final String output = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordnetConcept.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetConcept.xml"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/rest/Concept").param("id", "WID-02380464-N-01-polo_pony")
                         .accept(MediaType.APPLICATION_XML_VALUE))
