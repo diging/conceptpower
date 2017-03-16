@@ -29,16 +29,12 @@ public class DownloadFilesUtility {
     @Value("${usersUrl}")
     private String usersUrl;
 
-    @Value("${wordnetUrl}")
-    private String wordnetCacheUrl;
-
     /**
      * This method is called while creating DownloadFilesUtility bean. This
-     * method fetches the conceptLists.db, conceptTypes.db, users.db and
-     * wordnetCache.db from dropbox. The database files fetched from dropbox
-     * location will be placed based on the value of "toLocation" variable,
-     * which is configured in pom.xml. The dropbox urls are also configured in
-     * pom.xml
+     * method fetches the conceptLists.db, conceptTypes.db and users.db from
+     * dropbox. The database files fetched from dropbox location will be placed
+     * based on the value of "toLocation" variable, which is configured in
+     * pom.xml. The dropbox urls are also configured in pom.xml
      * 
      * @throws IOException
      */
@@ -77,15 +73,6 @@ public class DownloadFilesUtility {
             fos.close();
         }
 
-        try {
-            website = new URL(wordnetCacheUrl);
-            rbc = Channels.newChannel(website.openStream());
-            fos = new FileOutputStream(toLocation + "/wordnetCache.db");
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-        } finally {
-            rbc.close();
-            fos.close();
-        }
     }
 
     public String getToLocation() {

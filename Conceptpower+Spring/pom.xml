@@ -34,7 +34,6 @@
         <concept.list.url>https://www.dropbox.com/s/48gftjus29qyp2q/conceptLists.db?raw=1</concept.list.url>
         <concept.types.url>https://www.dropbox.com/s/mla61f63fgfil3y/conceptTypes.db?raw=1</concept.types.url>
         <users.url>https://www.dropbox.com/s/n0vgpc5ow1xko4v/users.db?raw=1</users.url>
-        <wordnet.url>https://www.dropbox.com/s/szh5gxb01jn6lp8/wordnetCache.db?raw=1</wordnet.url>
 	</properties>
 
 	<repositories>
@@ -115,7 +114,6 @@
                 <conceptList.url>${concept.list.url}</conceptList.url>
                 <conceptTypes.url>${concept.types.url}</conceptTypes.url>
                 <usersUrl>${users.url}</usersUrl>
-                <wordnetCache.url>${wordnet.url}</wordnetCache.url>
             </properties>
         </profile>
 	</profiles>
