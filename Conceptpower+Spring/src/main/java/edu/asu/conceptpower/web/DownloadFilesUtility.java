@@ -1,7 +1,9 @@
 package edu.asu.conceptpower.web;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -42,7 +44,7 @@ public class DownloadFilesUtility {
      * 
      * @throws IOException
      */
-    public void setUp() throws IOException {
+    public void setUp() {
 
         logger.debug("Starting with loading files from dropbox to " + toLocation + ".");
 
@@ -56,10 +58,25 @@ public class DownloadFilesUtility {
             fos = new FileOutputStream(toLocation + "/conceptLists.db");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for concept lists database.");
+        } catch (MalformedURLException e) {
+            logger.debug("MalformedUrlException error for concept lists", e);
+        } catch (FileNotFoundException fne) {
+            logger.debug("FileNotFoundException error for concept lists", fne);
+        } catch (IOException ioE) {
+            logger.debug("IOException error for concept lists", ioE);
         } finally {
             logger.debug("Closing resources for concept lists database.");
-            rbc.close();
-            fos.close();
+            try {
+                logger.debug("Closing rbc resource for concept lists database.");
+                rbc.close();
+            } catch (IOException e) {
+                logger.debug("IOException for concept lists database.", e);
+            }
+            try {
+                fos.close();
+            } catch (IOException e) {
+                logger.debug("Closing fos resources for concept lists database.", e);
+            }
         }
 
         try {
@@ -69,10 +86,22 @@ public class DownloadFilesUtility {
             fos = new FileOutputStream(toLocation + "/conceptTypes.db");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for concept types database.");
+        } catch (MalformedURLException e) {
+            logger.debug("MalformedUrlException error for concept types", e);
+        } catch (IOException e) {
+            logger.debug("IOException error for concept type", e);
         } finally {
             logger.debug("Closing resources for concept types database.");
-            rbc.close();
-            fos.close();
+            try {
+                rbc.close();
+            } catch (IOException e) {
+                logger.debug("IOException for concept types database.", e);
+            }
+            try {
+                fos.close();
+            } catch (IOException e) {
+                logger.debug("Closing fos resources for concept types database.", e);
+            }
         }
 
         try {
@@ -82,10 +111,22 @@ public class DownloadFilesUtility {
             fos = new FileOutputStream(toLocation + "/users.db");
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for users database.");
+        } catch (MalformedURLException e) {
+            logger.debug("MalformedUrlException error for users", e);
+        } catch (IOException e) {
+            logger.debug("IOException error for users", e);
         } finally {
             logger.debug("Closing resources for users database.");
-            rbc.close();
-            fos.close();
+            try {
+                rbc.close();
+            } catch (IOException e) {
+                logger.debug("IOException for users database.", e);
+            }
+            try {
+                fos.close();
+            } catch (IOException e) {
+                logger.debug("Closing fos resources for users database.", e);
+            }
         }
 
     }
