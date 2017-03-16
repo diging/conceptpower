@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.web;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -55,7 +56,10 @@ public class DownloadFilesUtility {
             logger.debug("Loading concept lists database from : " + conceptListUrl);
             website = new URL(conceptListUrl);
             rbc = Channels.newChannel(website.openStream());
-            fos = new FileOutputStream(toLocation + "/conceptLists.db");
+            File conceptListFile = new File(toLocation + "/conceptLists.db");
+            conceptListFile.createNewFile(); // if file already exists will do
+                                             // nothing
+            fos = new FileOutputStream(toLocation + "/conceptLists.db", false);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for concept lists database.");
         } catch (MalformedURLException e) {
@@ -83,7 +87,10 @@ public class DownloadFilesUtility {
             logger.debug("Loading concept types database from : " + conceptTypesUrl);
             website = new URL(conceptTypesUrl);
             rbc = Channels.newChannel(website.openStream());
-            fos = new FileOutputStream(toLocation + "/conceptTypes.db");
+            File conceptypesFile = new File(toLocation + "/conceptTypes.db");
+            conceptypesFile.createNewFile(); // if file already exists will do
+                                             // nothing
+            fos = new FileOutputStream(toLocation + "/conceptTypes.db", false);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for concept types database.");
         } catch (MalformedURLException e) {
@@ -108,7 +115,10 @@ public class DownloadFilesUtility {
             logger.debug("Loading users database from : " + usersUrl);
             website = new URL(usersUrl);
             rbc = Channels.newChannel(website.openStream());
-            fos = new FileOutputStream(toLocation + "/users.db");
+            File userFile = new File(toLocation + "/users.db");
+            userFile.createNewFile(); // if file already exists will do
+                                             // nothing
+            fos = new FileOutputStream(toLocation + "/users.db", false);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for users database.");
         } catch (MalformedURLException e) {
