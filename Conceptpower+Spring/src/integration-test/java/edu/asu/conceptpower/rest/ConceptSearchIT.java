@@ -23,9 +23,8 @@ public class ConceptSearchIT extends IntegrationTest {
         this.mockMvc
                 .perform(
                         MockMvcRequestBuilders.get("/rest/ConceptSearch").param("word", "einstein").param("pos", "noun")
-                        .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
+                                .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());
-
     }
 
     @Test
@@ -74,8 +73,8 @@ public class ConceptSearchIT extends IntegrationTest {
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndSimilarTo.xml"));
 
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/rest/ConceptSearch").param("word", "Douglas Weiner")
-                        .param("pos", "noun").param("similar_to", "http://viaf.org/viaf/248802520")
+                .perform(MockMvcRequestBuilders.get("/rest/ConceptSearch").param("word", "Douglas").param("pos", "NOUN")
+                        .param("similar_to", "http://viaf.org/viaf/248802520")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());
     }

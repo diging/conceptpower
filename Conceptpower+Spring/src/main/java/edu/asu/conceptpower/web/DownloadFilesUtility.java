@@ -48,7 +48,6 @@ public class DownloadFilesUtility {
     public void setUp() {
 
         logger.debug("Starting with loading files from dropbox to " + toLocation + ".");
-
         ReadableByteChannel rbc = null;
         FileOutputStream fos = null;
         URL website = null;
@@ -57,7 +56,8 @@ public class DownloadFilesUtility {
             website = new URL(conceptListUrl);
             rbc = Channels.newChannel(website.openStream());
             File conceptListFile = new File(toLocation + "/conceptLists.db");
-            conceptListFile.createNewFile(); // if file already exists will do
+            conceptListFile.createNewFile(); // if file already exists will
+                                             // do
                                              // nothing
             fos = new FileOutputStream(conceptListFile, false);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -84,7 +84,8 @@ public class DownloadFilesUtility {
             website = new URL(conceptTypesUrl);
             rbc = Channels.newChannel(website.openStream());
             File conceptypesFile = new File(toLocation + "/conceptTypes.db");
-            conceptypesFile.createNewFile(); // if file already exists will do
+            conceptypesFile.createNewFile(); // if file already exists will
+                                             // do
                                              // nothing
             fos = new FileOutputStream(conceptypesFile, false);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -109,7 +110,7 @@ public class DownloadFilesUtility {
             rbc = Channels.newChannel(website.openStream());
             File userFile = new File(toLocation + "/users.db");
             userFile.createNewFile(); // if file already exists will do
-                                             // nothing
+                                      // nothing
             fos = new FileOutputStream(userFile, false);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for users database.");
@@ -126,7 +127,6 @@ public class DownloadFilesUtility {
                 logger.error("IOException for users database.", e);
             }
         }
-
     }
 
     public String getToLocation() {
