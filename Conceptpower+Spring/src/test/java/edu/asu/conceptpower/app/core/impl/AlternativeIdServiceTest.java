@@ -31,6 +31,13 @@ public class AlternativeIdServiceTest {
     }
 
     @Test
+    public void test_addAlternativeIds_successQueriedParameterIsNull() {
+        String queriedId = null;
+        Mockito.when(conceptTypesService.getConceptTypeByConceptId(queriedId)).thenReturn(null);
+        alternativeIdService.addAlternativeIds(queriedId, null);
+    }
+
+    @Test
     public void test_addAlternativeIds_successQueriedByGenericWordnetIdWithoutMergedId() {
         String queriedId = "WID-05562015-N-??-shank's_pony";
         ConceptEntry entry = new ConceptEntry();

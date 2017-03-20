@@ -27,13 +27,21 @@ public class AlternativeIdService implements IAlternativeIdService {
      * the id that was used to search for a concept (passed as method
      * parameter).
      * 
-     * If the id passed as a method parameter is null then null value is added
-     * to alternative ids
+     * If id or concept entry passed to the method is null, then method just
+     * returns and no changes are made.
+     * 
+     * The queriedId parameter will be added to the alternative id list if the
+     * queriedId is of Generic wordnet concept type.
      * 
      * @param queriedId
      * @param entry
      */
     public void addAlternativeIds(String queriedId, ConceptEntry entry) {
+
+        if (entry == null) {
+            return;
+        }
+
         if (conceptTypesService.getConceptTypeByConceptId(queriedId) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
             entry.getAlternativeIds().add(queriedId);
         }
