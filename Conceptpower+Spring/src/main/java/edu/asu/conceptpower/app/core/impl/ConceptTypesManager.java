@@ -1,8 +1,10 @@
 package edu.asu.conceptpower.app.core.impl;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
@@ -14,6 +16,9 @@ public class ConceptTypesManager implements IConceptTypeManger {
 
 	@Autowired
 	private TypeDatabaseClient client;
+
+    @Value("${default_page_size}")
+    private Integer defaultPageSize;
 
 	/* (non-Javadoc)
 	 * @see edu.asu.conceptpower.core.IConceptTypeManger#addConceptType(edu.asu.conceptpower.core.ConceptType)
@@ -65,5 +70,51 @@ public class ConceptTypesManager implements IConceptTypeManger {
 	public void deleteType(String id){
 		client.deleteType(id);
 	}
+
+    @Override
+    public int getPageCount() {
+        ConceptType[] types = getAllTypes();
+        return (int) Math.ceil(new Double(types.length) / new Double(defaultPageSize));
+    }
+
+    /**
+     * Returns the concept types based on page number, page size, sort by column
+     * and sort direction.
+     * 
+     * If page size is -1 then default page size is set as page size.
+     * 
+     * If page number is less than 1 or null, then page number is set as 1.
+     * 
+     * @param pageNo
+     * @param pageSize
+     * @param sortBy
+     * @param sortDirection
+     * @return
+     * @throws NoSuchFieldException
+     * @throws SecurityException
+     */
+    @Override
+    public List<ConceptType> getConceptTypes(int page, int pageSize, String sortBy, int sortDirection)
+            throws NoSuchFieldException, SecurityException {
+
+        if (pageSize == -1) {
+            pageSize = defaultPageSize;
+        }
+        if (page < 1) {
+            page = 1;
+        }
+        int pageCount = getTotalNumberOfConceptTypes();
+        pageCount = pageCount > 0 ? pageCount : 1;
+        if (page > pageCount) {
+            page = pageCount;
+        }
+
+        return client.getAllTypes(page, pageSize, sortBy, sortDirection);
+    }
+
+    private int getTotalNumberOfConceptTypes() {
+        ConceptType[] types = client.getAllTypes();
+        return types.length;
+    }
 
 }
