@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.core.IConceptTypesService;
-import edu.asu.conceptpower.app.core.impl.ConceptTypesService.ConceptTypes;
+import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.core.ConceptEntry;
 import junit.framework.Assert;
 
@@ -33,8 +33,12 @@ public class AlternativeIdServiceTest {
     @Test
     public void test_addAlternativeIds_successQueriedParameterIsNull() {
         String queriedId = null;
+        ConceptEntry entry = null;
         Mockito.when(conceptTypesService.getConceptTypeByConceptId(queriedId)).thenReturn(null);
-        alternativeIdService.addAlternativeIds(queriedId, null);
+        alternativeIdService.addAlternativeIds(queriedId, entry);
+        // There should not be any change to the concept entry when entry is
+        // null.
+        Assert.assertEquals(null, entry);
     }
 
     @Test
@@ -45,7 +49,7 @@ public class AlternativeIdServiceTest {
         entry.setWordnetId("WID-05562015-N-03-shank's_pony, WID-05562015-N-05-shank's_pony");
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId(queriedId))
-                .thenReturn(ConceptTypes.GENERIC_WORDNET_CONCEPT);
+                .thenReturn(IdType.GENERIC_WORDNET_CONCEPT_ID);
 
         alternativeIdService.addAlternativeIds(queriedId, entry);
 
@@ -67,7 +71,7 @@ public class AlternativeIdServiceTest {
         entry.setMergedIds("WID-05562015-N-03-shank's_pony, WID-05562015-N-05-shank's_pony");
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId(queriedId))
-                .thenReturn(ConceptTypes.GENERIC_WORDNET_CONCEPT);
+                .thenReturn(IdType.GENERIC_WORDNET_CONCEPT_ID);
 
         alternativeIdService.addAlternativeIds(queriedId, entry);
 
@@ -90,7 +94,7 @@ public class AlternativeIdServiceTest {
         entry.setMergedIds("WID-05562015-N-05-shank's_pony");
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId(queriedId))
-                .thenReturn(ConceptTypes.GENERIC_WORDNET_CONCEPT);
+                .thenReturn(IdType.GENERIC_WORDNET_CONCEPT_ID);
 
         alternativeIdService.addAlternativeIds(queriedId, entry);
 
@@ -113,7 +117,7 @@ public class AlternativeIdServiceTest {
         entry.setMergedIds("WID-05562015-N-05-shank's_pony");
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId(queriedId))
-                .thenReturn(ConceptTypes.GENERIC_WORDNET_CONCEPT);
+                .thenReturn(IdType.GENERIC_WORDNET_CONCEPT_ID);
 
         alternativeIdService.addAlternativeIds(queriedId, entry);
 
@@ -134,7 +138,7 @@ public class AlternativeIdServiceTest {
         entry.setWordnetId("WID-05562015-N-05-shank's_pony");
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId(queriedId))
-                .thenReturn(ConceptTypes.GENERIC_WORDNET_CONCEPT);
+                .thenReturn(IdType.GENERIC_WORDNET_CONCEPT_ID);
 
         alternativeIdService.addAlternativeIds(queriedId, entry);
 
@@ -155,7 +159,7 @@ public class AlternativeIdServiceTest {
         entry.setMergedIds("WID-05562015-N-05-shank's_pony,WID-05562015-N-03-shank's_pony");
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId(queriedId))
-                .thenReturn(ConceptTypes.GENERIC_WORDNET_CONCEPT);
+                .thenReturn(IdType.GENERIC_WORDNET_CONCEPT_ID);
 
         alternativeIdService.addAlternativeIds(queriedId, entry);
 
@@ -179,7 +183,7 @@ public class AlternativeIdServiceTest {
         entry.setAlternativeIds(null);
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId(queriedId))
-                .thenReturn(ConceptTypes.GENERIC_WORDNET_CONCEPT);
+                .thenReturn(IdType.GENERIC_WORDNET_CONCEPT_ID);
 
         alternativeIdService.addAlternativeIds(queriedId, entry);
 
@@ -209,10 +213,10 @@ public class AlternativeIdServiceTest {
         conceptEntries.add(entry2);
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId("WID-05562015-N-05-shank's_pony"))
-                .thenReturn(ConceptTypes.SPECIFIC_WORDNET_CONCEPT);
+                .thenReturn(IdType.SPECIFIC_WORDNET_CONCEPT_ID);
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId("CONc3405898-074b-4b97-9a43-b4f869e59e82"))
-                .thenReturn(ConceptTypes.LOCAL_CONCEPT);
+                .thenReturn(IdType.LOCAL_CONCEPT_ID);
 
         alternativeIdService.addAlternativeIds(conceptEntries);
 
@@ -250,10 +254,10 @@ public class AlternativeIdServiceTest {
         conceptEntries[1] = entry2;
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId("WID-05562015-N-05-shank's_pony"))
-                .thenReturn(ConceptTypes.SPECIFIC_WORDNET_CONCEPT);
+                .thenReturn(IdType.SPECIFIC_WORDNET_CONCEPT_ID);
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId("CONc3405898-074b-4b97-9a43-b4f869e59e82"))
-                .thenReturn(ConceptTypes.LOCAL_CONCEPT);
+                .thenReturn(IdType.LOCAL_CONCEPT_ID);
 
         alternativeIdService.addAlternativeIds(conceptEntries);
 

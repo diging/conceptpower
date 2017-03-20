@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
-import edu.asu.conceptpower.app.core.impl.ConceptTypesService.ConceptTypes;
+import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.error.CPError;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
@@ -71,7 +71,7 @@ public class ConceptMergeService implements IConceptMergeService {
 
             conceptsMergeBean.getMergeIds().add(entry.getId());
 
-            if (ConceptTypes.LOCAL_CONCEPT == conceptTypesService.getConceptTypeByConceptId(entry.getId())) {
+            if (IdType.LOCAL_CONCEPT_ID == conceptTypesService.getConceptTypeByConceptId(entry.getId())) {
                 if(entry.getWordnetId() != null) {
                     conceptsMergeBean.getAlternativeIds().addAll(Arrays.asList(entry.getWordnetId().split(",")));
                 }
@@ -129,7 +129,7 @@ public class ConceptMergeService implements IConceptMergeService {
             DictionaryDoesNotExistException, DictionaryModifyException {
 
         for (String id : conceptsMergeBean.getMergeIds()) {
-            if (ConceptTypes.SPECIFIC_WORDNET_CONCEPT == conceptTypesService.getConceptTypeByConceptId(id)) {
+            if (IdType.SPECIFIC_WORDNET_CONCEPT_ID == conceptTypesService.getConceptTypeByConceptId(id)) {
                 // If its a wordnet concept, then create a wrapper and set
                 // the delete flag to true. This is done in two steps
                 // because changeevent object needs to be updated for

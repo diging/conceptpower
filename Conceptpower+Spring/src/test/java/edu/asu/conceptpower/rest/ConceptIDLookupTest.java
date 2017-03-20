@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
-import edu.asu.conceptpower.app.core.impl.ConceptTypesService.ConceptTypes;
+import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -85,7 +85,7 @@ public class ConceptIDLookupTest {
         final String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId("W-ID??"))
-                .thenReturn(ConceptTypes.GENERIC_WORDNET_CONCEPT);
+                .thenReturn(IdType.GENERIC_WORDNET_CONCEPT_ID);
 
         ConceptEntry entry = new ConceptEntry();
 

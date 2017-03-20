@@ -7,8 +7,12 @@ import edu.asu.conceptpower.core.ConceptEntry;
 public interface IAlternativeIdService {
 
     /**
-     * This method adds the alternative ids to the concept entry which is passed
-     * as a method parameter.
+     * This method adds all alternative ids to the given concept entry.
+     * 
+     * Alternative ids comprise queriedId, if the queriedId is of
+     * GENERIC_WORDNET_CONCEPT_ID type, specific wordnet ids from the worndet id
+     * field of the concept, the id of the concept itself, if the id is of type
+     * LOCAL_CONCEPT_ID type and the merged ids.
      * 
      * @param queriedId
      *            - Id with which the concept entry is queried by the user.

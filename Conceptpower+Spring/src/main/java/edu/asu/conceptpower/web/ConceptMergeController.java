@@ -22,8 +22,8 @@ import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
+import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.core.POS;
-import edu.asu.conceptpower.app.core.impl.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -68,7 +68,7 @@ public class ConceptMergeController {
         conceptsMergeBean = conceptMergeService.prepareMergeConcepts(conceptEntries, conceptsMergeBean);
 
         Set<String> localConceptIds = conceptsMergeBean.getMergeIds().stream()
-                .filter(conceptId -> ConceptTypes.LOCAL_CONCEPT == conceptTypesService
+                .filter(conceptId -> IdType.LOCAL_CONCEPT_ID == conceptTypesService
                         .getConceptTypeByConceptId(conceptId))
                 .collect(Collectors.toSet());
 
@@ -92,7 +92,7 @@ public class ConceptMergeController {
         if (result.hasErrors()) {
             // Adding all the default value.
             Set<String> localConceptIds = conceptsMergeBean.getMergeIds().stream().filter(
-                    conceptId -> ConceptTypes.LOCAL_CONCEPT == conceptTypesService.getConceptTypeByConceptId(conceptId))
+                    conceptId -> IdType.LOCAL_CONCEPT_ID == conceptTypesService.getConceptTypeByConceptId(conceptId))
                     .collect(Collectors.toSet());
             mav.addObject("localConceptIds", localConceptIds);
             mav.addObject("types", conceptTypesManager.getAllTypes());

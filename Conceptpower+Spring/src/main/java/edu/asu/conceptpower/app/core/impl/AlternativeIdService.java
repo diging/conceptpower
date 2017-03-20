@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IAlternativeIdService;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
-import edu.asu.conceptpower.app.core.impl.ConceptTypesService.ConceptTypes;
+import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.core.ConceptEntry;
 
 /**
@@ -23,15 +23,8 @@ public class AlternativeIdService implements IAlternativeIdService {
     private IConceptTypesService conceptTypesService;
 
     /**
-     * This method adds all alternative ids to the given concept entry including
-     * the id that was used to search for a concept (passed as method
-     * parameter).
-     * 
      * If id or concept entry passed to the method is null, then method just
      * returns and no changes are made.
-     * 
-     * The queriedId parameter will be added to the alternative id list if the
-     * queriedId is of Generic wordnet concept type.
      * 
      * @param queriedId
      * @param entry
@@ -42,7 +35,7 @@ public class AlternativeIdService implements IAlternativeIdService {
             return;
         }
 
-        if (conceptTypesService.getConceptTypeByConceptId(queriedId) == ConceptTypes.GENERIC_WORDNET_CONCEPT) {
+        if (conceptTypesService.getConceptTypeByConceptId(queriedId) == IdType.GENERIC_WORDNET_CONCEPT_ID) {
             entry.getAlternativeIds().add(queriedId);
         }
         // Specific Wordnet id is added irrespective of what is queried for
