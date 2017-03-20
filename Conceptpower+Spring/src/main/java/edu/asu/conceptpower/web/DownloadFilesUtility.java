@@ -91,16 +91,16 @@ public class DownloadFilesUtility {
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             logger.debug("Finished loading files from dropbox for concept types database.");
         } catch (MalformedURLException e) {
-            logger.debug("MalformedUrlException error for concept types", e);
+            logger.error("MalformedUrlException error for concept types", e);
         } catch (IOException e) {
-            logger.debug("IOException error for concept type", e);
+            logger.error("IOException error for concept type", e);
         } finally {
             logger.debug("Closing resources for concept types database.");
             try {
                 rbc.close();
                 fos.close();
             } catch (IOException e) {
-                logger.debug("IOException for concept types database.", e);
+                logger.error("IOException for concept types database.", e);
             }
         }
 
