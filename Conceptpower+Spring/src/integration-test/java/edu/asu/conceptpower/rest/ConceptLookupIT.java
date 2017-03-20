@@ -17,7 +17,7 @@ public class ConceptLookupIT extends IntegrationTest {
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpWordNetEntry.xml"));
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/rest/ConceptLookup/Douglas Weiner/noun")
+                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas Weiner/noun")
                         .accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());
     }
@@ -27,7 +27,7 @@ public class ConceptLookupIT extends IntegrationTest {
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptEntryNotFound.xml"));
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/rest/ConceptLookup/Gustav Robert Kirchhoff/verb")
+                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Gustav Robert Kirchhoff/verb")
                         .accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());
     }
@@ -37,7 +37,7 @@ public class ConceptLookupIT extends IntegrationTest {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpForMultipletEntry.xml"));
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/rest/ConceptLookup/Douglas/noun")
+                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas/noun")
                         .accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());
     }

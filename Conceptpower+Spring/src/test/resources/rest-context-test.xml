@@ -40,6 +40,6 @@
         <beans:property name="basenames" value="validatormessages"></beans:property>
     </beans:bean>
     
-    <context:component-scan base-package="edu.asu.conceptpower.servlet.rest" />
+    <context:component-scan base-package="edu.asu.conceptpower.rest" />
 	
 </beans:beans>

@@ -11,14 +11,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import edu.asu.conceptpower.IntegrationTest;
-import edu.asu.conceptpower.servlet.xml.XMLConstants;
+import edu.asu.conceptpower.rest.msg.xml.XMLConstants;
 
 public class TypeIdLookUpIT extends IntegrationTest {
 
     @Test
     public void test_getTypeById_successWithIdInXml() throws Exception {
         final String output = IOUtil.toString(this.getClass().getClassLoader().getResourceAsStream("output/types.xml"));
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/rest/Type").accept(MediaType.APPLICATION_XML_VALUE)
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
                         request.setParameter("id", "c7d2e910-1ba9-4ee5-a05e-cfe74029b25f");
@@ -30,7 +30,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
     @Test
     public void test_getTypeById_successWithTypeIdInXml() throws Exception {
         final String output = IOUtil.toString(this.getClass().getClassLoader().getResourceAsStream("output/types.xml"));
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/rest/Type").accept(MediaType.APPLICATION_XML_VALUE)
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
                         request.setParameter("id", XMLConstants.TYPE_PREFIX + "c7d2e910-1ba9-4ee5-a05e-cfe74029b25f");
@@ -41,7 +41,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
 
     @Test
     public void test_getTypeById_emptyResultInXml() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/rest/Type").accept(MediaType.APPLICATION_XML_VALUE)
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
                         request.setParameter("id", XMLConstants.TYPE_PREFIX + "7c8745be-d06f-4feb-b749-910efa1b986e");
@@ -52,7 +52,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
 
     @Test
     public void test_getTypeById_nullTypeIdInXml() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/rest/Type").accept(MediaType.APPLICATION_XML_VALUE)
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
                         return request;
@@ -63,7 +63,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
 
     @Test
     public void test_getTypeById_emptyTypeIdInXml() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/rest/Type").accept(MediaType.APPLICATION_XML_VALUE)
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
                         request.setParameter("id", "");

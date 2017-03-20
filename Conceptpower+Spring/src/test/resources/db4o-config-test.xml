@@ -5,23 +5,20 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<!-- This can be loaded from property file -->
-	<bean id="userDatabaseManager" class="edu.asu.conceptpower.root.DatabaseManager" init-method="init" destroy-method="close">
+	<bean id="userDatabaseManager" class="edu.asu.conceptpower.app.db.DatabaseManager" init-method="init" destroy-method="close">
 		<property name="databasePath" value="${dbTestPath}/users.db" />
 	</bean>
 	
-	<bean id="conceptDatabaseManager" class="edu.asu.conceptpower.root.DatabaseManager" init-method="init" destroy-method="close">
+	<bean id="conceptDatabaseManager" class="edu.asu.conceptpower.app.db.DatabaseManager" init-method="init" destroy-method="close">
 		<property name="databasePath" value="${dbTestPath}/conceptLists.db" />
 	</bean>
 	
-	<bean id="typesDatabaseManager" class="edu.asu.conceptpower.root.DatabaseManager" init-method="init" destroy-method="close">
+	<bean id="typesDatabaseManager" class="edu.asu.conceptpower.app.db.DatabaseManager" init-method="init" destroy-method="close">
 		<property name="databasePath" value="${dbTestPath}/conceptTypes.db" />
 	</bean>
 	
-	<bean id="luceneDatabaseManager" class="edu.asu.conceptpower.root.DatabaseManager" init-method="init" destroy-method="close">
+	<bean id="luceneDatabaseManager" class="edu.asu.conceptpower.app.db.DatabaseManager" init-method="init" destroy-method="close">
 		<property name="databasePath" value="${dbTestPath}/lucene.db" />
 	</bean>
     
-    <bean id="wordnetCacheDatabaseManager" class="edu.asu.conceptpower.root.DatabaseManager" init-method="init" destroy-method="close">
-        <property name="databasePath" value="${dbTestPath}/wordnetCache.db" />
-    </bean>
 </beans>
