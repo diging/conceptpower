@@ -134,7 +134,7 @@ public class ConceptSearchTest {
             IndexerRunningException, LuceneException, ParserConfigurationException, SAXException, IOException {
 
         final String expectedOutput = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptSearch.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptSearch.xml"));
         Mockito.when(result.hasErrors()).thenReturn(false);
         ResponseEntity<String> output = conceptSearch.searchConcept(conceptSearchParameter, result,
                 MediaType.APPLICATION_XML_VALUE);
@@ -156,7 +156,7 @@ public class ConceptSearchTest {
             IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
         final String expectedOutput = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptSearch.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptSearch.json"));
         Mockito.when(result.hasErrors()).thenReturn(false);
 
         ResponseEntity<String> output = conceptSearch.searchConcept(conceptSearchParameter, result,
@@ -179,7 +179,7 @@ public class ConceptSearchTest {
             IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
         final String jsonNoRecordsFoundError = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/recordsNotFound.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/recordsNotFound.json"));
         Mockito.when(result.hasErrors()).thenReturn(false);
         Map<String, String> map = new HashMap<>();
         map.put("pos", pos);
@@ -213,7 +213,7 @@ public class ConceptSearchTest {
             IndexerRunningException, IllegalArgumentException, JSONException, IOException {
 
         final String xmlNoRecordsFoundError = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/recordsNotFound.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/recordsNotFound.xml"));
 
         Mockito.when(result.hasErrors()).thenReturn(false);
         Map<String, String> map = new HashMap<>();

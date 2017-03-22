@@ -65,8 +65,8 @@ public class ConceptIDLookupTest {
     @Test
     public void test_getConceptEntry_successForWordNetIds()
             throws IOException, SAXException, ParserConfigurationException {
-        final String output = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptEntryWithWordnet.xml"));
+        final String output = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptEntryWithWordnet.xml"));
         final String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
         final String wordNetIds = "W-ID1, W-ID2";
         ConceptEntry entry = new ConceptEntry();
@@ -82,8 +82,8 @@ public class ConceptIDLookupTest {
 
     @Test
     public void test_getConceptEntry_sucessWithConceptTypes() throws Exception {
-        final String expectedResponse = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/alternativeGenericIds.xml"));
+        final String expectedResponse = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/alternativeGenericIds.xml"));
         final String wordNetIds = "W-ID01, W-ID02";
         final String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
         ConceptEntry entry = new ConceptEntry();
