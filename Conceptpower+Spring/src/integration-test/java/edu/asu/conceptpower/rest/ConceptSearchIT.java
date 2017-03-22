@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.rest;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,20 +21,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.xml"));
 
         this.mockMvc
-                .perform(
-MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
-                                .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
-    }
-
-    @Test
-    public void test_searchConcept_searchWithWordAndPosAndConceptListInXml() throws Exception {
-        final String output = IOUtil.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndConceptList.xml"));
-
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Douglas Weiner")
-                        .param("pos", "noun").param("concept_list", "VogonWeb Concepts")
+                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());
     }
@@ -72,7 +60,7 @@ MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("po
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndSimilarTo.xml"));
 
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Douglas").param("pos", "NOUN")
+                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Douglas").param("pos", "noun")
                         .param("similar_to", "http://viaf.org/viaf/248802520")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());

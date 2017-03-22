@@ -68,7 +68,8 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andExpect(content().string("POS 'noun2' does not exist.")).andExpect(status().isBadRequest());
+                .andExpect(content().string("Error parsing request: please provide a valid POS ('pos' attribute)."))
+                .andExpect(status().isBadRequest());
 
     }
 
@@ -93,7 +94,7 @@ public class ConceptsIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
                 .andExpect(content()
-                        .string("Error parsing request: please provide a concept list for the concept ('conceptlist' attribute)."))
+                        .string("Error parsing request: please provide a list name for the concept ('list' attribute)."))
                 .andExpect(status().isBadRequest());
 
     }
