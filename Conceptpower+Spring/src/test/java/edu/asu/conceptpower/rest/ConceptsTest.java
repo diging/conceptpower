@@ -96,10 +96,10 @@ public class ConceptsTest {
     public void test_addConcept_successInJson() throws IllegalAccessException, LuceneException, IndexerRunningException,
             DictionaryDoesNotExistException, DictionaryModifyException, JSONException, IOException {
         final String input = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcept.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptUnitTest.json"));
 
         final String expectedOutput = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/addConcept.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/addConceptUnitTest.json"));
 
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
         ConceptType type = new ConceptType();

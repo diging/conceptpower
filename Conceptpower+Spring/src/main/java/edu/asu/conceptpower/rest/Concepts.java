@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IConceptManager;
@@ -95,7 +96,7 @@ public class Concepts {
      */
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/concept/add", method = RequestMethod.POST)
-    public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal)
+    public @ResponseBody ResponseEntity<String> addConcept(@RequestBody String body, Principal principal)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
 
         StringReader reader = new StringReader(body);

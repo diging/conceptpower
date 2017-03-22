@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:se="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.2.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+
+    <bean id="copyFiles" class="edu.asu.conceptpower.web.DownloadFilesUtility" init-method="setUp">
+        <property name="toLocation" value="${dbTestPath}" />
+    </bean>
+    
+	<import resource="db4o-config-test.xml" />
+	<import resource="xml-config-test.xml" />
+	<context:component-scan base-package="edu.asu.conceptpower.app" />
+    
+    <task:executor id="indexExecutor" pool-size="1" />      
+    <task:annotation-driven executor="indexExecutor"/>
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<bean id="luceneDAO" class="edu.asu.conceptpower.app.lucene.impl.LuceneDAO" init-method="init">
+		<property name="dbPath" value="${dbTestPath}/lucene.db" />
+	</bean>
+    
+    <context:property-placeholder location="classpath*:config.properties" />
+
+    <bean id="mailSender"
+        class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="diging.com" />
+        <property name="port" value="8080" />
+        <property name="username" value="admin@diging.com" />
+        <property name="password" value="admin" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- You can have some pre-configured messagess also which are ready to 
+        send -->
+    <bean id="preConfiguredMessage" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="admin@diging.com"></property>
+    </bean>
+
+    <bean id="analyzer"
+        class="org.apache.lucene.analysis.standard.StandardAnalyzer"></bean>
+    <bean id="whiteSpaceAnalyzer"
+        class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />
+        
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames" value="validatormessages,pos"></property>
+    </bean>	
+
+    <import resource="wordnet-config-test.xml" />
+    <import resource="rest-service-test.xml" />
+
+	<util:properties id="messages"
+		location="classpath:/locale/messages_en_US.properties" />
+	<util:properties id="config" location="classpath:/config.properties" />
+    
+</beans>
+    
