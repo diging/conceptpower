@@ -68,7 +68,7 @@ public class TypeIdLookupTest {
         final String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
 
         final String expectedOutput = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptType.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptType.xml"));
 
         ConceptType type = new ConceptType();
         type.setTypeId(typeId);
@@ -96,7 +96,7 @@ public class TypeIdLookupTest {
         final String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
 
         final String expectedOutput = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptType.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptType.json"));
 
         ConceptType type = new ConceptType();
         type.setTypeId(typeId);

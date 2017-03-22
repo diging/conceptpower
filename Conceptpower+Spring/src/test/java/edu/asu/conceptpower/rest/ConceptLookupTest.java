@@ -112,7 +112,7 @@ public class ConceptLookupTest {
     public void test_getWordNetEntry_successInXml()
             throws IndexerRunningException, ParserConfigurationException, SAXException, IOException {
         final String expectedResponse = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetEntry.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/wordNetEntry.xml"));
         ResponseEntity<String> response = conceptLookup.getWordNetEntry(PONY, POS.NOUN,
                 MediaType.APPLICATION_XML_VALUE);
         RestTestUtility.testValidXml(response.getBody());
@@ -134,8 +134,8 @@ public class ConceptLookupTest {
     @Test
     public void test_getWordNetEntry_resultWithSpecialCharactersInJson()
             throws IndexerRunningException, JSONException, IllegalAccessException, LuceneException, IOException {
-        final String expectedResponse = IOUtil.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/wordNetEntryWithSpecialCharacters.json"));
+        final String expectedResponse = IOUtil.toString(this.getClass().getClassLoader()
+                .getResourceAsStream("unitTestOutput/wordNetEntryWithSpecialCharacters.json"));
         final String word = "einstein@albert";
         final String posNoun = POS.NOUN;
 
@@ -169,8 +169,8 @@ public class ConceptLookupTest {
     @Test
     public void test_getWordNetEntry_resultWithSpecialCharactersInXml() throws IOException, IllegalAccessException,
             LuceneException, IndexerRunningException, ParserConfigurationException, SAXException {
-        final String expectedResponse = IOUtil.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/wordNetEntryWithSpecialCharacters.xml"));
+        final String expectedResponse = IOUtil.toString(this.getClass().getClassLoader()
+                .getResourceAsStream("unitTestOutput/wordNetEntryWithSpecialCharacters.xml"));
         final String word = "einstein@albert";
         final String posNoun = POS.NOUN;
 
@@ -207,7 +207,7 @@ public class ConceptLookupTest {
         ResponseEntity<String> response = conceptLookup.getWordNetEntry(PONY, POS.NOUN,
                 MediaType.APPLICATION_JSON_VALUE);
         final String expectedResponse = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordnetEntry.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/wordnetEntry.json"));
         RestTestUtility.testValidJson(response.getBody());
         Assert.assertEquals(expectedResponse, response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
