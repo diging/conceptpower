@@ -59,6 +59,5 @@
 		</property>
 	</bean>
 
-	<context:component-scan base-package="edu.asu.conceptpower.app" />
-    
+    <context:component-scan base-package="edu.asu.conceptpower.web" />
 </beans:beans>

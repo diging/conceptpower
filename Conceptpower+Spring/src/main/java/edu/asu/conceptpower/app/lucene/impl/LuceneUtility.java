@@ -46,8 +46,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
@@ -79,7 +79,7 @@ import edu.mit.jwi.item.POS;
  *
  */
 @Component
-@PropertySource("classpath:config.properties")
+@PropertySource("classpath:/config.properties")
 public class LuceneUtility implements ILuceneUtility {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -97,13 +97,14 @@ public class LuceneUtility implements ILuceneUtility {
     private WhitespaceAnalyzer whiteSpaceAnalyzer;
 
     @Autowired
+    private Environment env;
+
+    @Autowired
     @Qualifier("luceneDAO")
     private ILuceneDAO luceneDAO;
 
-    @Value("${lucenePath}")
     private String lucenePath;
 
-    @Value("${numberOfLuceneResults}")
     private int numberOfResults;
 
     private IndexWriter writer = null;
@@ -119,6 +120,8 @@ public class LuceneUtility implements ILuceneUtility {
      */
     @PostConstruct
     public void init() throws LuceneException {
+        lucenePath = env.getProperty("lucenePath");
+        numberOfResults = Integer.parseInt(env.getProperty("numberOfLuceneResults"));
         try {
             relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
             index = FSDirectory.open(relativePath);

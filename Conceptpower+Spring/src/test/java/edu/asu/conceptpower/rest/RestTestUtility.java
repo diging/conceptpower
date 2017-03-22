@@ -22,10 +22,10 @@ public class RestTestUtility {
     }
 
     public static void testValidJson(String json) throws JSONException {
-        if (json.startsWith("{")) {
-            new JSONObject(json);
-        } else {
+        if (json.startsWith("[")) {
             new JSONArray(json);
+        } else {
+            new JSONObject(json);
         }
     }
 }
