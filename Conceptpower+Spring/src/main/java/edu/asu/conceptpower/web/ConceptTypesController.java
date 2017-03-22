@@ -35,15 +35,14 @@ public class ConceptTypesController {
 	 * @throws NoSuchFieldException 
 	 */
 	@RequestMapping(value = "auth/concepttype")
-    public String prepateShowConceptTypes(ModelMap model, @RequestParam(defaultValue = "1") String page,
-            @RequestParam(defaultValue = IConceptDBManager.DESCENDING + "") String sortDir,
-            @RequestParam(defaultValue = "typeId") String sortColumn) throws NoSuchFieldException, SecurityException {
+    public String prepareShowConceptTypes(ModelMap model, @RequestParam(defaultValue = "1") String page,
+            @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
+            @RequestParam(defaultValue = "typeName") String sortColumn) throws NoSuchFieldException, SecurityException {
 
 		ConceptType[] types = conceptTypesManager.getAllTypes();
 
 		int pageInt = new Integer(page);
         int sortDirInt = new Integer(sortDir);
-        int pageCount = conceptTypesManager.getPageCount();
         
         List<ConceptType> conceptTypes = conceptTypesManager.getConceptTypes(pageInt, -1, sortColumn, sortDirInt);
 
@@ -61,6 +60,8 @@ public class ConceptTypesController {
         if (pageInt < 1) {
             pageInt = 1;
         }
+
+        int pageCount = conceptTypesManager.getPageCount();
         if (pageInt > pageCount) {
             pageInt = pageCount;
         }
