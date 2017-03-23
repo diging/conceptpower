@@ -58,7 +58,17 @@ public class ConceptSearchParameters {
         this.description = description;
     }
 
+    /**
+     * This method returns the search term for the field 
+     * <code>word</word>. The method automatically lowercases the
+     * search term.
+     * 
+     * @return
+     */
     public String getWord() {
+        if (word != null) {
+            return word.toLowerCase();
+        }
         return word;
     }
 
@@ -66,7 +76,15 @@ public class ConceptSearchParameters {
         this.word = word;
     }
 
+    /**
+     * This method return the search term for the field <code>pos</code>
+     * (part of speech). It automatically lowercases the search term.
+     * @return
+     */
     public String getPos() {
+        if (pos != null) {
+            return pos.toLowerCase();
+        }
         return pos;
     }
 

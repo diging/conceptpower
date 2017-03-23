@@ -25,7 +25,7 @@ public class ConceptSearchParameterValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         ConceptSearchParameters conceptSearchParameter = (ConceptSearchParameters) target;
-        if (conceptSearchParameter.getPos() != null && !POS.posValues.contains(conceptSearchParameter.getPos())) {
+        if (conceptSearchParameter.getPos() != null && !POS.posValues.contains(conceptSearchParameter.getPos().toLowerCase())) {
             errors.reject("pos", "Please enter correct pos value.");
         }
         if (conceptSearchParameter.getOperator() != null) {
