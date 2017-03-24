@@ -15,7 +15,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     @Test
     public void test_getConceptById_successForWordNetIdInJson() throws Exception {
         final String output = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordnetConcept.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetConcept.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "WID-02380464-N-01-polo_pony")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
