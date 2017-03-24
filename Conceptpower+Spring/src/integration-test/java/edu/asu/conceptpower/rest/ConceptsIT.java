@@ -27,6 +27,16 @@ public class ConceptsIT extends IntegrationTest {
     }
 
     @Test
+    public void test_addConcept_successForConceptWrapper() throws Exception {
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWrapper.json"));
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(input).principal(principal))
+                .andExpect(jsonPath("$.id", isA(String.class))).andExpect(status().isOk());
+    }
+
+    @Test
     public void test_addConcepts_success() throws Exception {
         final String input = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcepts.json"));
@@ -129,8 +139,8 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_existingwrappedWordnetIds() throws Exception {
-        final String input = IOUtil.toString(
-                this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithExistingWrappedIds.json"));
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWrapper.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))

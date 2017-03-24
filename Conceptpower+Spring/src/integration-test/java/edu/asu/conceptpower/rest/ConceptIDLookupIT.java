@@ -1,6 +1,5 @@
 package edu.asu.conceptpower.rest;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -69,7 +68,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "WID-02380464-N-01-polo_pony")
                         .accept(MediaType.APPLICATION_XML_VALUE))
-                .andDo(print()).andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(content().string(output)).andExpect(status().isOk());
 
     }
 
