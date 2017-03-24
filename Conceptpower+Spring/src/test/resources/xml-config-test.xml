@@ -9,5 +9,4 @@
 		<property name="uriPrefix" value="http://www.digitalhps.org/concepts/" />
 		<property name="xmlNamespace" value="http://www.digitalhps.org/" />
 	</bean>
-		
 </beans>

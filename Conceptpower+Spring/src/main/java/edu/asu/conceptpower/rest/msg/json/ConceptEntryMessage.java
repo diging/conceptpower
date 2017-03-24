@@ -48,6 +48,7 @@ public class ConceptEntryMessage {
     @JsonProperty("wordnet_id")
     private String wordnetId;
 
+    @JsonProperty("alternativeIds")
     private List<AlternativeId> alternativeIds;
 
     public String getId() {

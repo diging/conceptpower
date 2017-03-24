@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.rest;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.Is.isA;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -32,8 +33,8 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andExpect(jsonPath("$[0].id", isA(String.class))).andExpect(jsonPath("$[1].id", isA(String.class)))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$[0].id", is(instanceOf(String.class))))
+                .andExpect(jsonPath("$[1].id", is(instanceOf(String.class)))).andExpect(status().isOk());
     }
 
     @Test

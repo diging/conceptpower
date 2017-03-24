@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import edu.asu.conceptpower.app.core.IAlternativeIdService;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
@@ -36,6 +37,9 @@ public class IndexService implements IIndexService {
 
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
+
+    @Autowired
+    private IAlternativeIdService alternativeIdService;
 
     /**
      * This field makes sure indexer runs only once when two different admins
@@ -71,7 +75,9 @@ public class IndexService implements IIndexService {
             throw new IndexerRunningException(indexerRunning);
         }
 
-        return luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage);
+        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage);
+        alternativeIdService.addAlternativeIds(entries);
+        return entries;
     }
 
     /**

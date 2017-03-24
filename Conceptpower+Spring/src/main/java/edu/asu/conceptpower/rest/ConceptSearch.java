@@ -97,7 +97,7 @@ public class ConceptSearch {
             return new ResponseEntity<String>(errorMessage, HttpStatus.BAD_REQUEST);
         }
         Map<String, String> searchFields = new HashMap<String, String>();
-        String operator = SearchParamters.OP_OR;
+        String operator = SearchParamters.OP_AND;
 
         int page = 1;
 
@@ -119,7 +119,7 @@ public class ConceptSearch {
                 numberOfRecordsPerPage = field.get(conceptSearchParameters) != null
                         ? (Integer) field.get(conceptSearchParameters) : numberOfRecordsPerPage;
             } else if (field.get(conceptSearchParameters) != null) {
-                searchFields.put(field.getName().trim(), String.valueOf(field.get(conceptSearchParameters)));
+                searchFields.put(field.getName().trim(), String.valueOf(field.get(conceptSearchParameters)).trim());
             }
         }
 

@@ -40,7 +40,6 @@ public abstract class IntegrationTest {
 
     @Before
     public void setup() throws Exception {
-
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         if (!isSetupDone) {
             this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/indexConcepts").principal(principal));
@@ -51,5 +50,4 @@ public abstract class IntegrationTest {
             isSetupDone = true;
         }
     }
-
 }

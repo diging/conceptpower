@@ -72,4 +72,3 @@
 	<util:properties id="config" location="classpath:/config.properties" />
     
 </beans>
-    

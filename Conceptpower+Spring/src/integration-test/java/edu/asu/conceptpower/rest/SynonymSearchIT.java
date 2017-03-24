@@ -82,5 +82,4 @@ public class SynonymSearchIT extends IntegrationTest {
                 })).andExpect(status().isBadRequest());
     }
 
-
 }

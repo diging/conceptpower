@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import edu.asu.conceptpower.app.core.IAlternativeIdService;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.core.impl.ConceptManager;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
@@ -42,6 +43,9 @@ public class ConceptManagerTest {
 
     @Mock
     private IIndexService indexService;
+
+    @Mock
+    private IAlternativeIdService alternativeIdService;
 
     private ConceptEntry addedConcept;
 

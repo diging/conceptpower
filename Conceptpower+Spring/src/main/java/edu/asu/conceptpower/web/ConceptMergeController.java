@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
-import edu.asu.conceptpower.app.core.ConceptTypesService;
-import edu.asu.conceptpower.app.core.ConceptTypesService.ConceptTypes;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypesService;
+import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.core.POS;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
@@ -51,7 +51,7 @@ public class ConceptMergeController {
     private ConceptsMergeBeanValidator validator;
 
     @Autowired
-    private ConceptTypesService conceptTypesService;
+    private IConceptTypesService conceptTypesService;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
@@ -68,7 +68,7 @@ public class ConceptMergeController {
         conceptsMergeBean = conceptMergeService.prepareMergeConcepts(conceptEntries, conceptsMergeBean);
 
         Set<String> localConceptIds = conceptsMergeBean.getMergeIds().stream()
-                .filter(conceptId -> ConceptTypes.LOCAL_CONCEPT == conceptTypesService
+                .filter(conceptId -> IdType.LOCAL_CONCEPT_ID == conceptTypesService
                         .getConceptTypeByConceptId(conceptId))
                 .collect(Collectors.toSet());
 
@@ -92,7 +92,7 @@ public class ConceptMergeController {
         if (result.hasErrors()) {
             // Adding all the default value.
             Set<String> localConceptIds = conceptsMergeBean.getMergeIds().stream().filter(
-                    conceptId -> ConceptTypes.LOCAL_CONCEPT == conceptTypesService.getConceptTypeByConceptId(conceptId))
+                    conceptId -> IdType.LOCAL_CONCEPT_ID == conceptTypesService.getConceptTypeByConceptId(conceptId))
                     .collect(Collectors.toSet());
             mav.addObject("localConceptIds", localConceptIds);
             mav.addObject("types", conceptTypesManager.getAllTypes());
