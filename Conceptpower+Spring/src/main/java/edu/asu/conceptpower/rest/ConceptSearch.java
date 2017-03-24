@@ -118,6 +118,11 @@ public class ConceptSearch {
             } else if (SearchParamters.NUMBER_OF_RECORDS_PER_PAGE.equalsIgnoreCase(field.getName())) {
                 numberOfRecordsPerPage = field.get(conceptSearchParameters) != null
                         ? (Integer) field.get(conceptSearchParameters) : numberOfRecordsPerPage;
+            } else if (field.get(conceptSearchParameters) != null
+                    && (SearchParamters.EQUAL_TO.equalsIgnoreCase(field.getName())
+                            || SearchParamters.SIMILAR_TO.equalsIgnoreCase(field.getName()))) {
+                searchFields.put(field.getName().trim(),
+                        removeTrailingBackSlash(String.valueOf(field.get(conceptSearchParameters)).trim()));
             } else if (field.get(conceptSearchParameters) != null) {
                 searchFields.put(field.getName().trim(), String.valueOf(field.get(conceptSearchParameters)).trim());
             }
@@ -156,5 +161,12 @@ public class ConceptSearch {
             }
             entryMap.put(entry, type);
         }
+    }
+
+    private String removeTrailingBackSlash(String val) {
+        if (val.endsWith("/")) {
+            return val.substring(0, val.length() - 1);
+        }
+        return val;
     }
 }

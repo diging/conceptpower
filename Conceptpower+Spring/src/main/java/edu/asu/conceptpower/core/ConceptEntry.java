@@ -199,11 +199,12 @@ public class ConceptEntry implements Serializable {
      * 
      * @param equalTo
      */
-    public void setEqualTo(String equalTo) {
-        if (equalTo.endsWith("/")) {
-            this.equalTo = this.equalTo.substring(0, this.equalTo.length() - 1);
+    public void setEqualTo(String equal) {
+        if (equal != null && equal.endsWith("/")) {
+            this.equalTo = equal.substring(0, equal.length() - 1);
+        } else {
+            this.equalTo = equal;
         }
-        this.equalTo = equalTo;
     }
 
     /**
@@ -294,11 +295,12 @@ public class ConceptEntry implements Serializable {
      * 
      * @param similarTo
      */
-    public void setSimilarTo(String similarTo) {
-        if (similarTo.endsWith("/")) {
-            this.similarTo = this.similarTo.substring(0, this.similarTo.length() - 1);
+    public void setSimilarTo(String similar) {
+        if (similar != null && similar.endsWith("/")) {
+            this.similarTo = similar.substring(0, similar.length() - 1);
+        } else {
+            this.similarTo = similar;
         }
-        this.similarTo = similarTo;
     }
 
     /**
