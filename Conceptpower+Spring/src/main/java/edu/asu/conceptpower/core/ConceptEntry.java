@@ -192,10 +192,10 @@ public class ConceptEntry implements Serializable {
     }
 
     /**
-     * If a slash "/" is present at the end of the equalTo, this method removes
-     * the slash from end of equalTo and assigns the value to equalTo. For
-     * example if equalTo="http://viaf.org/viaf/110275452/", then this method
-     * assigns "http://viaf.org/viaf/110275452" to equalTo
+     * If a slash "/" is present at the end of the equal, this method removes
+     * the slash from end of equal and assigns the value to equalTo. For example
+     * if equal="http://viaf.org/viaf/110275452/", then this method assigns
+     * "http://viaf.org/viaf/110275452" to equalTo
      * 
      * @param equalTo
      */
@@ -288,10 +288,10 @@ public class ConceptEntry implements Serializable {
     }
 
     /**
-     * If a slash "/" is present at the end of the similarTo, this method
-     * removes the slash from end of similarTo and assigns the value to
-     * similarTo. For example if similarTo="http://viaf.org/viaf/110275452/",
-     * then this method assigns similarTo to "http://viaf.org/viaf/110275452"
+     * If a slash "/" is present at the end of the similar, this method removes
+     * the slash from end of similar and assigns the value to similarTo. For
+     * example if similar="http://viaf.org/viaf/110275452/", then this method
+     * assigns similarTo to "http://viaf.org/viaf/110275452"
      * 
      * @param similarTo
      */
