@@ -28,18 +28,6 @@ public class ConceptSearchIT extends IntegrationTest {
     }
 
     @Test
-    public void test_searchConcept_searchWithWordAndPosAndConceptListInJson() throws Exception {
-        final String output = IOUtil.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndConceptList.json"));
-
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Douglas Weiner")
-                        .param("pos", "noun").param("concept_list", "VogonWeb Concepts")
-                        .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
-    }
-
-    @Test
     public void test_searchConcept_noResultsInJson() throws Exception {
 
         this.mockMvc
