@@ -185,12 +185,24 @@ public class ConceptEntry implements Serializable {
     /**
      * A string containing URIs of authority file records or control vocabulary
      * entries that are equal to an entry.
+     * 
      */
     public String getEqualTo() {
         return equalTo;
     }
 
+    /**
+     * If a slash "/" is present at the end of the equalTo, this method removes
+     * the slash from end of equalTo and assigns the value to equalTo. For
+     * example if equalTo="http://viaf.org/viaf/110275452/", then this method
+     * assigns "http://viaf.org/viaf/110275452" to equalTo
+     * 
+     * @param equalTo
+     */
     public void setEqualTo(String equalTo) {
+        if (equalTo.endsWith("/")) {
+            this.equalTo = this.equalTo.substring(0, this.equalTo.length() - 1);
+        }
         this.equalTo = equalTo;
     }
 
@@ -268,12 +280,24 @@ public class ConceptEntry implements Serializable {
     /**
      * A string containing URIs of authority file records or control vocabulary
      * entries that are similar to an entry.
+     * 
      */
     public String getSimilarTo() {
         return similarTo;
     }
 
+    /**
+     * If a slash "/" is present at the end of the similarTo, this method
+     * removes the slash from end of similarTo and assigns the value to
+     * similarTo. For example if similarTo="http://viaf.org/viaf/110275452/",
+     * then this method assigns similarTo to "http://viaf.org/viaf/110275452"
+     * 
+     * @param similarTo
+     */
     public void setSimilarTo(String similarTo) {
+        if (similarTo.endsWith("/")) {
+            this.similarTo = this.similarTo.substring(0, this.similarTo.length() - 1);
+        }
         this.similarTo = similarTo;
     }
 
