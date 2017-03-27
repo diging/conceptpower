@@ -28,6 +28,19 @@ public class ConceptSearchIT extends IntegrationTest {
     }
 
     @Test
+    public void test_searchConcept_successWithDefaultOperator() throws Exception {
+
+        final String output = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.json"));
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(content().string(output)).andExpect(status().isOk());
+
+    }
+
+    @Test
     public void test_searchConcept_noResultsInJson() throws Exception {
 
         this.mockMvc
