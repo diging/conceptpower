@@ -36,10 +36,10 @@
 		</property>
 	</bean>
     
+	<context:component-scan base-package="edu.asu.conceptpower.rest" />
+    
     <beans:bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <beans:property name="basenames" value="validatormessages"></beans:property>
     </beans:bean>
-    
-    <context:component-scan base-package="edu.asu.conceptpower.rest" />
-	
+
 </beans:beans>

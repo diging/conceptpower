@@ -2,6 +2,7 @@ package edu.asu.conceptpower.rest;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.Is.isA;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,7 +23,17 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andExpect(jsonPath("$.id", is(instanceOf(String.class)))).andExpect(status().isOk());
+                .andExpect(jsonPath("$.id", isA(String.class))).andExpect(status().isOk());
+    }
+
+    @Test
+    public void test_addConcept_successForConceptWrapper() throws Exception {
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWrapper.json"));
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(input).principal(principal))
+                .andExpect(jsonPath("$.id", isA(String.class))).andExpect(status().isOk());
     }
 
     @Test
@@ -33,8 +44,7 @@ public class ConceptsIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
                 .andExpect(jsonPath("$[0].id", is(instanceOf(String.class))))
-                .andExpect(jsonPath("$[1].id", is(instanceOf(String.class))))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("$[1].id", is(instanceOf(String.class)))).andExpect(status().isOk());
     }
 
     @Test
@@ -108,6 +118,47 @@ public class ConceptsIT extends IntegrationTest {
                         .content(input).principal(principal))
                 .andExpect(content()
                         .string("Error parsing request: please provide a type for the concept ('type' attribute)."))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void test_addConcept_invalidWordnetIds() throws Exception {
+        String wordnetId = "WORDNET-123";
+        final String input = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidWordNetIds.json"));
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(input).principal(principal))
+                .andExpect(content()
+                        .string("Error parsing request: please provide a valid list of wordnet ids seperated by commas. Wordnet id "
+                                + wordnetId + " doesn't exist."))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void test_addConcept_existingwrappedWordnetIds() throws Exception {
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWrapper.json"));
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(input).principal(principal))
+                .andExpect(content()
+                        .string("Error parsing request: the WordNet concept you are trying to wrap is already wrapped."))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void test_addConcept_posMismatch() throws Exception {
+        final String input = IOUtil
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithPosMisMatch.json"));
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(input).principal(principal))
+                .andExpect(content()
+                        .string("Error parsing request: please enter POS that matches with the wordnet POS NOUN"))
                 .andExpect(status().isBadRequest());
 
     }

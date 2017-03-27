@@ -4,8 +4,6 @@ import java.security.Principal;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,8 +24,6 @@ import org.springframework.web.context.WebApplicationContext;
                 "classpath:/rest-context-test.xml" }) })
 @WebAppConfiguration
 public abstract class IntegrationTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
 
     private static boolean isSetupDone = false;
 
