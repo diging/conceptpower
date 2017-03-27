@@ -3,6 +3,7 @@ package edu.asu.conceptpower.wrapper.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -12,15 +13,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import edu.asu.conceptpower.app.core.IConceptManager;
+import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.users.IUserManager;
+import edu.asu.conceptpower.app.util.IURIHelper;
+import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
+import edu.asu.conceptpower.app.wrapper.impl.ConceptEntryWrapperCreator;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.root.IURIHelper;
-import edu.asu.conceptpower.servlet.core.IConceptManager;
-import edu.asu.conceptpower.servlet.core.IConceptTypeManger;
-import edu.asu.conceptpower.servlet.exceptions.LuceneException;
-import edu.asu.conceptpower.servlet.users.IUserManager;
-import edu.asu.conceptpower.servlet.wrapper.ConceptEntryWrapper;
-import edu.asu.conceptpower.servlet.wrapper.impl.ConceptEntryWrapperCreator;
+import edu.asu.conceptpower.servlet.core.ChangeEvent;
+import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.users.User;
 
 public class ConceptEntryWrapperCreatorTest {
@@ -46,7 +49,14 @@ public class ConceptEntryWrapperCreatorTest {
     @Before
     public void init() throws LuceneException {
 
+        ChangeEvent changeEvent = new ChangeEvent();
+        changeEvent.setUserName("Test");
+        changeEvent.setType(ChangeEventTypes.CREATION);
+        changeEvent.setDate(new Date());
+
         entry.setTypeId("Type-1");
+        entry.addNewChangeEvent(changeEvent);
+
         entry.setCreatorId("Test");
         entry.setWordnetId("WNET_1");
         entry.setSynonymIds("SYN_1");

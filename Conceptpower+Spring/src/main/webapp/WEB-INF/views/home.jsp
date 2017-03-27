@@ -13,6 +13,7 @@ $(document).ready(function() {
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
 		"bAutoWidth" : false,
+		"aaSorting" : [],
 		"aoColumnDefs" : [ 
 				<sec:authorize access="isAuthenticated()">
 			    {
@@ -20,9 +21,17 @@ $(document).ready(function() {
 			        'bSortable': false
 				},
 				{
+					"targets": [2],
+					'searchable': false,
+					'bSortable': false,
+					'orderable':false,
+					'bVisible' : false,
+					'className': 'dt-body-center'
+				},
+				{
 				   	"targets": [7],
 				   	"sType" : "html",
-				   	"render" : function(o, val) {
+				   	"fnRender" : function(o, val) {
   				  		if (o.startsWith("&lt;br/&gt;")) {
   				   			o = o.substring(11,o.length);
   				   		}
@@ -34,7 +43,7 @@ $(document).ready(function() {
   			    {
   			    	"targets": [5],
   			    	"sType" : "html",
-  			    	"render" : function(o, val) {
+  			    	"fnRender" : function(o, val) {
       			   		if (o.startsWith("&lt;br/&gt;")) {
       			   			o = o.substring(11,o.length);
       			   		}
@@ -42,14 +51,7 @@ $(document).ready(function() {
   			    	}
   			    }
   				</sec:authorize>
-		],
-				
-		<sec:authorize access="isAuthenticated()">
-			"order": [[ 2, "desc" ]]
-		</sec:authorize>
-		<sec:authorize access="not isAuthenticated()">
-			"order": [[ 0, "desc" ]]
-		</sec:authorize>
+		]
 	});
 	$('#viafSearchResult').dataTable({
 		"bJQueryUI" : true,
@@ -93,6 +95,19 @@ $(document).ready(function() {
 					}
 				});
 		});
+    $('#prepareMergeConcept').on('click', function (e) {
+        e.preventDefault();
+        // Get the column API object
+        var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
+        conceptSearchResultTable.fnSetColumnVis(0, false);
+        conceptSearchResultTable.fnSetColumnVis(1, false);
+        conceptSearchResultTable.fnSetColumnVis(2, true);
+        $("#mergeConcept").show();
+        $("#prepareMergeConcept").hide();
+    });
+	
+    $("#mergeConcept").hide();
+    $('#mergeError').hide();
 });
 					
 $(document).ready(hideFormProcessing);
@@ -102,6 +117,34 @@ function hideFormProcessing() {
 function showFormProcessing() {
 	$('#floatingCirclesG').show();
 }
+
+function mergeConcepts() {
+	$('#mergeError').hide();
+	var conceptIdsToMerge = [];
+	var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
+    $.each($("input[name='conceptMergeCheckbox']:checked", conceptSearchResultTable.fnGetNodes()), function(){            
+    	conceptIdsToMerge.push($(this).val());
+    });
+    
+    if(conceptIdsToMerge.length < 2) {
+    	$('#mergeError').show();
+    } else {
+        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(",");    	
+    }
+}
+
+var conceptsToMerge = "";
+
+function prepareMergeConcept(conceptId) {
+    var tis = $(this);
+    var conceptsToMerge = $(this).attr("value");
+    if(conceptsToMerge != '') {
+        conceptsToMerge = conceptId;
+    } else {
+        conceptsToMerge = conceptsToMerge + "," + conceptId;	
+    }
+}
+
 </script>
 
 <header class="page-header">
@@ -117,12 +160,17 @@ function showFormProcessing() {
   action="${pageContext.servletContext.contextPath}/home/conceptsearch"
   method='get' commandName='conceptSearchBean'>
   <form:errors path="luceneError"></form:errors>
+  
+    <div id="mergeError" class="alert alert-danger">
+      Please select at least two concepts to merge.
+    </div>
+  
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-8">
       <form:input path="word" placeholder="Enter search term"
         class="form-control" />
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-2">
       <form:select path="pos" name="pos" class="form-control">
         <form:options items="${conceptSearchBean.posMap}" />
       </form:select>
@@ -156,15 +204,24 @@ function showFormProcessing() {
 </form:form>
 
 <hr>
-
+<c:if test="${not empty conceptSearchBean.foundConcepts}">
 <h3>Results</h3>
 
-<c:if test="${not empty conceptSearchBean.foundConcepts}">
+    <sec:authorize access="isAuthenticated()">
+        <div class="row">
+            <div class="col-sm-2">
+                <button id="prepareMergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;">Select concepts to merge</button>
+                <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" onclick="mergeConcepts();">Merge selected concepts</button>
+            </div>
+        </div>
+    </sec:authorize>
+
   <table cellpadding="0" cellspacing="0"
     class="table table-striped table-bordered" id="conceptSearchResult">
     <thead>
       <tr>
         <sec:authorize access="isAuthenticated()">
+          <th></th>
           <th></th>
           <th></th>
         </sec:authorize>
@@ -212,6 +269,11 @@ function showFormProcessing() {
                     class="fa fa-trash disabled"></i>
                 </c:otherwise>
               </c:choose></td>
+              
+              <td>
+                <input type="checkbox" name="conceptMergeCheckbox" value="${concept.entry.id }"/>
+              </td>
+
           </sec:authorize>
           <td align="justify"><font size="2"> <a
               id="${concept.entry.id}" data-toggle="modal"
@@ -226,8 +288,11 @@ function showFormProcessing() {
                 value="${concept.entry.pos}"></c:out></font></td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.entry.conceptList}"></c:out></font></td>
-          <td align="justify"><c:out
-              value="${concept.description}"></c:out></td>
+          <td align="justify">
+                <div class="scrollable" style="max-height: 100px; max-width: 400px;">
+                    <c:out value="${concept.description}" escapeXml="false"></c:out>
+                </div>
+          </td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
         </tr>

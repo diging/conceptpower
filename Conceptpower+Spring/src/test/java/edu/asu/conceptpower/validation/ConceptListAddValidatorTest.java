@@ -10,10 +10,10 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
-import edu.asu.conceptpower.servlet.core.IConceptListManager;
-import edu.asu.conceptpower.servlet.validation.ConceptListAddValidator;
-import edu.asu.conceptpower.servlet.web.ConceptListAddForm;
-import edu.asu.conceptpower.servlet.wordnet.Constants;
+import edu.asu.conceptpower.app.core.IConceptListManager;
+import edu.asu.conceptpower.app.validation.ConceptListAddValidator;
+import edu.asu.conceptpower.app.wordnet.Constants;
+import edu.asu.conceptpower.web.ConceptListAddForm;
 import junit.framework.Assert;
 
 public class ConceptListAddValidatorTest {
@@ -83,7 +83,7 @@ public class ConceptListAddValidatorTest {
         ValidationUtils.invokeValidator(conceptListAddValidator, wordNetConcepts, errors);
         Assert.assertEquals(1, errors.getFieldErrorCount());
         Assert.assertNull(errors.getFieldError("description"));
-        Assert.assertEquals(errors.getFieldError("listName").getCode(), "concept_name.wordnet");
+        Assert.assertEquals(errors.getFieldError("listName").getCode(), "concept_list_name.wordnet");
     }
 
     @Test

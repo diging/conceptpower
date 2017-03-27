@@ -5,9 +5,8 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
-	<bean id="xmlConfiguration" class="edu.asu.conceptpower.root.XMLConfig">
+	<bean id="xmlConfiguration" class="edu.asu.conceptpower.app.config.XMLConfig">
 		<property name="uriPrefix" value="http://www.digitalhps.org/concepts/" />
 		<property name="xmlNamespace" value="http://www.digitalhps.org/" />
 	</bean>
-
 </beans>

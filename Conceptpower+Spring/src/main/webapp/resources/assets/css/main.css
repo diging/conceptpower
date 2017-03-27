@@ -113,4 +113,17 @@ img.pull-left { margin-right: 10px; }
 .error {
 	color: darkred;
 }
-		
+
+div.scrollable {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    word-wrap: break-word;
+}
+
+.synonym-modal-body {
+    overflow-y: auto;
+    max-height: 250px;
+}

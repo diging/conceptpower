@@ -136,5 +136,4 @@ public class DownloadFilesUtility {
     public void setToLocation(String toLocation) {
         this.toLocation = toLocation;
     }
-
 }

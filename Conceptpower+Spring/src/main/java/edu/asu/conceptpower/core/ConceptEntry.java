@@ -1,14 +1,21 @@
 package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import edu.asu.conceptpower.servlet.reflect.LuceneField;
-import edu.asu.conceptpower.servlet.reflect.SearchField;
-import edu.asu.conceptpower.servlet.rest.LuceneFieldNames;
-import edu.asu.conceptpower.servlet.rest.SearchFieldNames;
+import edu.asu.conceptpower.app.constants.LuceneFieldNames;
+import edu.asu.conceptpower.app.constants.SearchFieldNames;
+import edu.asu.conceptpower.app.reflect.LuceneField;
+import edu.asu.conceptpower.app.reflect.SearchField;
+import edu.asu.conceptpower.servlet.core.ChangeEvent;
+import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 
 /**
  * This class represents one entry in the authority file.
@@ -22,43 +29,43 @@ public class ConceptEntry implements Serializable {
     private static final long serialVersionUID = 4569090620671054560L;
 
     @Id
-    @LuceneField(lucenefieldName = LuceneFieldNames.ID, isIndexable = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.ID, isTokenized = false, isMultiple = false)
     private String id;
 
     @SearchField(fieldName = SearchFieldNames.WORDNETID)
-    @LuceneField(lucenefieldName = LuceneFieldNames.WORDNETID, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORDNETID, isTokenized = false, isMultiple = true)
     private String wordnetId;
 
     @SearchField(fieldName = SearchFieldNames.WORD)
-    @LuceneField(lucenefieldName = LuceneFieldNames.WORD, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORD, isTokenized = true, isMultiple = false)
     private String word;
 
     @SearchField(fieldName = SearchFieldNames.DESCRIPTION)
-    @LuceneField(lucenefieldName = LuceneFieldNames.DESCRIPTION, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.DESCRIPTION, isTokenized = true, isMultiple = false)
     private String description;
 
     @SearchField(fieldName = SearchFieldNames.POS)
-    @LuceneField(lucenefieldName = LuceneFieldNames.POS, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.POS, isTokenized = true, isMultiple = false)
     private String pos;
 
     @SearchField(fieldName = SearchFieldNames.CONCEPT_LIST)
-    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isTokenized = false, isMultiple = false)
     private String conceptList;
 
     @SearchField(fieldName = SearchFieldNames.TYPE_ID)
-    @LuceneField(lucenefieldName = LuceneFieldNames.TYPE_ID, isIndexable = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.TYPE_ID, isTokenized = false, isMultiple = false)
     private String typeId;
 
-    @SearchField(fieldName = SearchFieldNames.EQUALS_TO)
-    @LuceneField(lucenefieldName = LuceneFieldNames.EQUALS_TO, isIndexable = true)
+    @SearchField(fieldName = SearchFieldNames.EQUAL_TO)
+    @LuceneField(lucenefieldName = LuceneFieldNames.EQUALS_TO, isTokenized = false, isMultiple = true)
     private String equalTo;
 
     @SearchField(fieldName = SearchFieldNames.SIMILAR_TO)
-    @LuceneField(lucenefieldName = LuceneFieldNames.SIMILAR_TO, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.SIMILAR_TO, isTokenized = false, isMultiple = true)
     private String similarTo;
 
     @SearchField(fieldName=SearchFieldNames.SYNONYM_ID)
-    @LuceneField(lucenefieldName = LuceneFieldNames.SYNONYMID, isIndexable = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.SYNONYMID, isTokenized = false, isMultiple = true)
     private String synonymIds;
 
     private String synsetIds;
@@ -68,16 +75,24 @@ public class ConceptEntry implements Serializable {
     private String broadens;
 
     @SearchField(fieldName = SearchFieldNames.CREATOR)
-    @LuceneField(lucenefieldName = LuceneFieldNames.CREATOR, isIndexable = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.CREATOR, isTokenized = false, isMultiple = false)
     private String creatorId;
 
     @SearchField(fieldName = SearchFieldNames.MODIFIED)
-    @LuceneField(lucenefieldName = LuceneFieldNames.MODIFIED, isIndexable = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.MODIFIED, isTokenized = false, isMultiple = false)
     private String modified;
+
+    @SearchField(fieldName = SearchFieldNames.MERGED_IDS)
+    @LuceneField(lucenefieldName = LuceneFieldNames.MERGED_IDS, isTokenized = false, isMultiple = true)
+    private String mergedIds;
 
     private boolean isDeleted;
     
     private String modifiedUser;
+
+    private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
+
+    private Set<String> alternativeIds = new HashSet<>();
 
     public ConceptEntry() {
     }
@@ -91,10 +106,28 @@ public class ConceptEntry implements Serializable {
     /**
      * A string containing the id of the user who created an entry.
      * 
+     * First check if creator is in change event list. If so fetch it Else fetch
+     * it from old db
+     * 
      * @return the id of the user who created an entry
      */
     public String getCreatorId() {
+        // This check has been introduced to make sure the existing concepts
+        // work fine. For existing concepts changeevents will be null in D/B. So
+        // if changevent is null in DB fetch creatorId directly
+        if (this.changeEvents != null && this.changeEvents.size() > 0) {
+            Collections.sort(this.changeEvents);
+            // Since the list is sorted, the first event will be a creation
+            // event. If the first event is not creation event, then it means
+            // some existing concept has been modified with this new change. So
+            // changevents will contain only the modified user id. In that case
+            // fetch from the creatorId itself as per the old design
+            if (ChangeEventTypes.CREATION == changeEvents.get(0).getType()) {
+                return changeEvents.get(0).getUserName();
+            }
+        }
         return creatorId;
+
     }
 
     public void setCreatorId(String creatorId) {
@@ -104,7 +137,7 @@ public class ConceptEntry implements Serializable {
     /**
      * A string containing the ids of other conceptpower entries that are
      * synonyms for an entry. The synonym ids are speparated by
-     * {@link edu.asu.conceptpower.servlet.core.Constants.SYNONYM_SEPARATOR}.
+     * {@link edu.asu.conceptpower.app.core.Constants.SYNONYM_SEPARATOR}.
      */
     public String getSynonymIds() {
         return synonymIds;
@@ -264,6 +297,12 @@ public class ConceptEntry implements Serializable {
      * A string containing a string describing who modified a concept and when.
      */
     public String getModified() {
+        if (this.changeEvents != null && this.changeEvents.size() > 0) {
+            Collections.sort(this.changeEvents);
+            if (ChangeEventTypes.CREATION == changeEvents.get(changeEvents.size() - 1).getType()) {
+                return changeEvents.get(0).getUserName();
+            }
+        }
         return modified;
     }
 
@@ -340,6 +379,29 @@ public class ConceptEntry implements Serializable {
         return true;
     }
 
+    public List<ChangeEvent> getChangeEvents() {
+        // Creates a copy of changeevent
+        if (this.changeEvents != null) {
+            return new ArrayList<>(this.changeEvents);
+        }
+        return null;
+    }
+
+    /**
+     * This method add the changeevent to the end of the list. The first element
+     * will always be a creator
+     * 
+     * @param event
+     */
+    public void addNewChangeEvent(ChangeEvent event) {
+
+        if (changeEvents == null) {
+            this.changeEvents = new ArrayList<ChangeEvent>();
+        }
+        // Appends to the end of the list
+        this.changeEvents.add(event);
+    }
+
     public String getModifiedUser() {
         return modifiedUser;
     }
@@ -348,4 +410,22 @@ public class ConceptEntry implements Serializable {
         this.modifiedUser = modifiedUser;
     }
 
+    public Set<String> getAlternativeIds() {
+        if (this.alternativeIds == null) {
+            this.alternativeIds = new HashSet<>();
+        }
+        return alternativeIds;
+    }
+
+    public void setAlternativeIds(Set<String> alternativeIds) {
+        this.alternativeIds = alternativeIds;
+    }
+
+    public String getMergedIds() {
+        return mergedIds;
+    }
+
+    public void setMergedIds(String mergedIds) {
+        this.mergedIds = mergedIds;
+    }
 }

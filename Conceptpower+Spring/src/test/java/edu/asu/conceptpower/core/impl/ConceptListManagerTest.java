@@ -17,10 +17,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import edu.asu.conceptpower.app.core.impl.ConceptListManager;
+import edu.asu.conceptpower.app.db4o.DBNames;
+import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.servlet.core.impl.ConceptListManager;
-import edu.asu.conceptpower.servlet.db4o.DBNames;
-import edu.asu.conceptpower.servlet.db4o.IConceptDBManager;
 
 public class ConceptListManagerTest {
 
