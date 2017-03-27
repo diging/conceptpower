@@ -4,7 +4,6 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -75,6 +74,7 @@ public class ConceptSearch {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(ConceptSearch.class);
+    private static final Object[] EMPTY_OBJECT = new Object[] {};
 
     /**
      * This method provides information of a concept for a rest interface of the
@@ -109,18 +109,15 @@ public class ConceptSearch {
 
         preprocessConceptSearchParameterBean(conceptSearchParameters);
 
-        PropertyDescriptor pageDescriptor = new PropertyDescriptor("page", ConceptSearchParameters.class, "getPage",
-                "setPage");
-        if (pageDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {}) != null) {
-            page = Integer.parseInt(
-                    String.valueOf(pageDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {})));
+        if (conceptSearchParameters.getPage() != null) {
+            page = conceptSearchParameters.getPage();
         }
 
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
             PropertyDescriptor descriptor = new PropertyDescriptor(field.getName(), ConceptSearchParameters.class);
-            if (descriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {}) != null) {
+            if (descriptor.getReadMethod().invoke(conceptSearchParameters, EMPTY_OBJECT) != null) {
                 searchFields.put(field.getName().trim(),
-                        String.valueOf(descriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {})));
+                        String.valueOf(descriptor.getReadMethod().invoke(conceptSearchParameters, EMPTY_OBJECT)));
             }
         }
 
@@ -155,35 +152,15 @@ public class ConceptSearch {
      * parameters.
      * 
      * @param conceptSearchParameters
-     * @param page
      * @return
-     * @throws IntrospectionException
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
-     * @throws InvocationTargetException
-     * @throws NumberFormatException
      */
-    private void preprocessConceptSearchParameterBean(ConceptSearchParameters conceptSearchParameters)
-            throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-
-        PropertyDescriptor typeUriDescriptor = new PropertyDescriptor("type_uri", ConceptSearchParameters.class);
-        Method typeUriReadMethod = typeUriDescriptor.getReadMethod();
-        Object typeUri = typeUriReadMethod.invoke(conceptSearchParameters, new Object[] {});
-        if (typeUri != null) {
-            PropertyDescriptor typeIdDescriptor = new PropertyDescriptor("type_id", ConceptSearchParameters.class);
-            Method typeIdWriteMethod = typeIdDescriptor.getWriteMethod();
-            typeIdWriteMethod.invoke(conceptSearchParameters,
-                    new Object[] { uriHelper.getTypeId(String.valueOf(typeUri)) });
+    private void preprocessConceptSearchParameterBean(ConceptSearchParameters conceptSearchParameters) {
+        if (conceptSearchParameters.getType_uri() != null) {
+            conceptSearchParameters.setType_id(uriHelper.getTypeId(conceptSearchParameters.getType_uri()));
         }
-
-        PropertyDescriptor numberOfRecordsDescriptor = new PropertyDescriptor(
-                SearchParamters.NUMBER_OF_RECORDS_PER_PAGE, ConceptSearchParameters.class);
-        if (numberOfRecordsDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {}) != null) {
-            numberOfRecordsPerPage = Integer.parseInt(String.valueOf(
-                    numberOfRecordsDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {})));
+        if (conceptSearchParameters.getNumber_of_records_per_page() != null) {
+            numberOfRecordsPerPage = conceptSearchParameters.getNumber_of_records_per_page();
         }
-
-
     }
 
     private void createEntryMap(ConceptEntry[] searchResults, Map<ConceptEntry, ConceptType> entryMap) {
