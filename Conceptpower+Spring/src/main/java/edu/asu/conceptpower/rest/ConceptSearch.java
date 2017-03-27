@@ -1,9 +1,16 @@
 package edu.asu.conceptpower.rest;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +89,8 @@ public class ConceptSearch {
      * @return
      * @throws JsonProcessingException
      * @throws IndexerRunningException
+     * @throws IntrospectionException
+     * @throws InvocationTargetException
      */
     @RequestMapping(value = "/ConceptSearch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE })
@@ -89,7 +98,7 @@ public class ConceptSearch {
             @Validated ConceptSearchParameters conceptSearchParameters, BindingResult result,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
                     throws JsonProcessingException, IllegalArgumentException, IllegalAccessException,
-                    IndexerRunningException {
+                    IndexerRunningException, IntrospectionException, InvocationTargetException {
 
         if (result.hasErrors()) {
             IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
@@ -103,29 +112,15 @@ public class ConceptSearch {
 
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
             field.setAccessible(true);
-            if (field.getName().equalsIgnoreCase("type_uri")) {
-                if (field.get(conceptSearchParameters) != null) {
-                    searchFields.put("type_id",
-                            uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
-                }
-            } else if (SearchParamters.OPERATOR.equalsIgnoreCase(field.getName())) {
-                // If the value is null, then operator will be OR by default
-                if (field.get(conceptSearchParameters) != null) {
-                    operator = String.valueOf(field.get(conceptSearchParameters)).toUpperCase();
-                }
-            } else if (SearchParamters.PAGE.equalsIgnoreCase(field.getName())) {
-                page = field.get(conceptSearchParameters) != null ? (Integer) field.get(conceptSearchParameters) : page;
-            } else if (SearchParamters.NUMBER_OF_RECORDS_PER_PAGE.equalsIgnoreCase(field.getName())) {
-                numberOfRecordsPerPage = field.get(conceptSearchParameters) != null
-                        ? (Integer) field.get(conceptSearchParameters) : numberOfRecordsPerPage;
-            } else if (field.get(conceptSearchParameters) != null
-                    && (SearchParamters.EQUAL_TO.equalsIgnoreCase(field.getName())
-                            || SearchParamters.SIMILAR_TO.equalsIgnoreCase(field.getName()))) {
-                searchFields.put(field.getName().trim(),
-                        removeTrailingBackSlash(String.valueOf(field.get(conceptSearchParameters)).trim()));
-            } else if (field.get(conceptSearchParameters) != null) {
-                searchFields.put(field.getName().trim(), String.valueOf(field.get(conceptSearchParameters)).trim());
-            }
+            searchFields.put(field.getName().trim(), String.valueOf(field.get(conceptSearchParameters)).trim());
+        }
+
+        preprocessConceptSearchParameterBean(conceptSearchParameters);
+        PropertyDescriptor pageDescriptor = new PropertyDescriptor("page", ConceptSearchParameters.class, "getPage",
+                "setPage");
+        if (pageDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {}) != null) {
+            page = Integer.parseInt(
+                    String.valueOf(pageDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {})));
         }
 
         ConceptEntry[] searchResults = null;
@@ -151,6 +146,75 @@ public class ConceptSearch {
         Pagination pagination = new Pagination(page, totalNumberOfRecords);
         return new ResponseEntity<String>(msg.getAllConceptEntriesAndPaginationDetails(entryMap, pagination),
                 HttpStatus.OK);
+    }
+
+    /**
+     * 
+     * This method is used for setting the correct values for concept search
+     * parameters.
+     * 
+     * @param conceptSearchParameters
+     * @param page
+     * @return
+     * @throws IntrospectionException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     * @throws NumberFormatException
+     */
+    private void preprocessConceptSearchParameterBean(ConceptSearchParameters conceptSearchParameters)
+            throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            NumberFormatException {
+
+        PropertyDescriptor typeUriDescriptor = new PropertyDescriptor("type_uri", ConceptSearchParameters.class,
+                "getType_uri", "setType_uri");
+        Method typeUriReadMethod = typeUriDescriptor.getReadMethod();
+        Object typeUri = typeUriReadMethod.invoke(conceptSearchParameters, new Object[] {});
+        if (typeUri != null) {
+            PropertyDescriptor typeIdDescriptor = new PropertyDescriptor("type_id", ConceptSearchParameters.class,
+                    "getType_id", "setType_id");
+            Method typeIdWriteMethod = typeIdDescriptor.getWriteMethod();
+            typeIdWriteMethod.invoke(conceptSearchParameters,
+                    new Object[] { uriHelper.getTypeId(String.valueOf(typeUri)) });
+        }
+
+        PropertyDescriptor operatorDescriptor = new PropertyDescriptor(SearchParamters.OPERATOR,
+                ConceptSearchParameters.class, "getOperator", "setOperator");
+        if (operatorDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {}) == null) {
+            operatorDescriptor.getWriteMethod().invoke(conceptSearchParameters,
+                    new Object[] { SearchParamters.OP_AND });
+        }
+
+        PropertyDescriptor numberOfRecordsDescriptor = new PropertyDescriptor(
+                SearchParamters.NUMBER_OF_RECORDS_PER_PAGE, ConceptSearchParameters.class,
+                "getNumber_of_records_per_page", "setNumber_of_records_per_page");
+        if (numberOfRecordsDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {}) != null) {
+            numberOfRecordsPerPage = Integer.parseInt(String.valueOf(
+                    numberOfRecordsDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {})));
+        }
+
+        PropertyDescriptor equalToDescriptor = new PropertyDescriptor(SearchParamters.EQUAL_TO,
+                ConceptSearchParameters.class, "getEqual_to", "setEqual_to");
+        if (equalToDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {}) != null) {
+            String[] equalTo = String
+                    .valueOf(equalToDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {}))
+                    .split(",");
+            List<String> equalsList = Arrays.asList(equalTo);
+            String equalsTo = equalsList.stream().map(i -> removeTrailingBackSlash(i)).collect(Collectors.joining(","));
+            equalToDescriptor.getWriteMethod().invoke(conceptSearchParameters, new Object[] { equalsTo });
+        }
+
+        PropertyDescriptor similarToDescriptor = new PropertyDescriptor(SearchParamters.EQUAL_TO,
+                ConceptSearchParameters.class, "getSimilar_to", "setSimilar_to");
+        if (similarToDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {}) != null) {
+            String[] similarTo = String
+                    .valueOf(equalToDescriptor.getReadMethod().invoke(conceptSearchParameters, new Object[] {}))
+                    .split(",");
+            List<String> similarList = Arrays.asList(similarTo);
+            String similarToString = similarList.stream().map(i -> removeTrailingBackSlash(i))
+                    .collect(Collectors.joining(","));
+            similarToDescriptor.getWriteMethod().invoke(conceptSearchParameters, new Object[] { similarToString });
+        }
     }
 
     private void createEntryMap(ConceptEntry[] searchResults, Map<ConceptEntry, ConceptType> entryMap) {

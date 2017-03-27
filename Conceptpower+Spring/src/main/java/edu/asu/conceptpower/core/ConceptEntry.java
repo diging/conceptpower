@@ -2,10 +2,12 @@ package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -200,8 +202,9 @@ public class ConceptEntry implements Serializable {
      * @param equalTo
      */
     public void setEqualTo(String equal) {
-        if (equal != null && equal.endsWith("/")) {
-            this.equalTo = equal.substring(0, equal.length() - 1);
+        if (equal != null) {
+            List<String> equalsTo = Arrays.asList(equal.split(","));
+            this.equalTo = equalsTo.stream().map(i -> removeTrailingBackSlash(i)).collect(Collectors.joining(","));
         } else {
             this.equalTo = equal;
         }
@@ -297,7 +300,9 @@ public class ConceptEntry implements Serializable {
      */
     public void setSimilarTo(String similar) {
         if (similar != null && similar.endsWith("/")) {
-            this.similarTo = similar.substring(0, similar.length() - 1);
+            List<String> similarToList = Arrays.asList(similar.split(","));
+            this.similarTo = similarToList.stream().map(i -> removeTrailingBackSlash(i))
+                    .collect(Collectors.joining(","));
         } else {
             this.similarTo = similar;
         }
@@ -453,5 +458,12 @@ public class ConceptEntry implements Serializable {
 
     public void setMergedIds(String mergedIds) {
         this.mergedIds = mergedIds;
+    }
+
+    private String removeTrailingBackSlash(String val) {
+        if (val.endsWith("/")) {
+            return val.substring(0, val.length() - 1);
+        }
+        return val;
     }
 }
