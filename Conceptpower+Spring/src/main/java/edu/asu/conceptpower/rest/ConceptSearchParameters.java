@@ -1,5 +1,9 @@
 package edu.asu.conceptpower.rest;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ConceptSearchParameters {
 
     private String type_uri;
@@ -25,6 +29,9 @@ public class ConceptSearchParameters {
     }
 
     public String getOperator() {
+        if (this.operator == null) {
+            return SearchParamters.OP_AND;
+        }
         return operator;
     }
 
@@ -43,6 +50,10 @@ public class ConceptSearchParameters {
     }
 
     public String getSimilar_to() {
+        if (this.similar_to != null) {
+            List<String> similarList = Arrays.asList(this.similar_to.split(","));
+            return similarList.stream().map(i -> removeTrailingBackSlash(i)).collect(Collectors.joining(","));
+        }
         return similar_to;
     }
 
@@ -135,10 +146,21 @@ public class ConceptSearchParameters {
     }
 
     public String getEqual_to() {
+        if (this.equal_to != null) {
+            List<String> equalsList = Arrays.asList(this.equal_to.split(","));
+            return equalsList.stream().map(i -> removeTrailingBackSlash(i)).collect(Collectors.joining(","));
+        }
         return equal_to;
     }
 
     public void setEqual_to(String equal_to) {
         this.equal_to = equal_to;
+    }
+
+    private String removeTrailingBackSlash(String val) {
+        if (val.endsWith("/")) {
+            return val.substring(0, val.length() - 1);
+        }
+        return val;
     }
 }
