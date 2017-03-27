@@ -7,5 +7,4 @@
 		<property name="wordnetPath" value="${wordnetPath}" />
 		<property name="dictFolder" value="dict" />
 	</bean>
-    
 </beans>
