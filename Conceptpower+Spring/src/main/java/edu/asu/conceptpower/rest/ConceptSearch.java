@@ -102,17 +102,14 @@ public class ConceptSearch {
             String errorMessage = msg.getErrorMessages(result.getAllErrors());
             return new ResponseEntity<String>(errorMessage, HttpStatus.BAD_REQUEST);
         }
-        Map<String, String> searchFields = new HashMap<String, String>();
-        String operator = SearchParamters.OP_AND;
-
-        int page = 1;
 
         preprocessConceptSearchParameterBean(conceptSearchParameters);
-
+        int page = 1;
         if (conceptSearchParameters.getPage() != null) {
             page = conceptSearchParameters.getPage();
         }
 
+        Map<String, String> searchFields = new HashMap<String, String>();
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
             PropertyDescriptor descriptor = new PropertyDescriptor(field.getName(), ConceptSearchParameters.class);
             if (descriptor.getReadMethod().invoke(conceptSearchParameters, EMPTY_OBJECT) != null) {
@@ -124,9 +121,11 @@ public class ConceptSearch {
         ConceptEntry[] searchResults = null;
         int totalNumberOfRecords = 0;
         try {
-            totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields, operator);
-            searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields, operator, page,
-                    numberOfRecordsPerPage);
+            totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields,
+                    conceptSearchParameters.getOperator());
+            searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields,
+                    conceptSearchParameters.getOperator(), page,
+                    getNumberOfRecordsPerPage(conceptSearchParameters));
         } catch (LuceneException ex) {
             logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -158,9 +157,13 @@ public class ConceptSearch {
         if (conceptSearchParameters.getType_uri() != null) {
             conceptSearchParameters.setType_id(uriHelper.getTypeId(conceptSearchParameters.getType_uri()));
         }
+    }
+
+    private int getNumberOfRecordsPerPage(ConceptSearchParameters conceptSearchParameters) {
         if (conceptSearchParameters.getNumber_of_records_per_page() != null) {
-            numberOfRecordsPerPage = conceptSearchParameters.getNumber_of_records_per_page();
+            return conceptSearchParameters.getNumber_of_records_per_page();
         }
+        return numberOfRecordsPerPage;
     }
 
     private void createEntryMap(ConceptEntry[] searchResults, Map<ConceptEntry, ConceptType> entryMap) {
