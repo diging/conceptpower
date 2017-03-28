@@ -69,6 +69,14 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public ConceptEntry getConceptEntry(String id) {
+
+        ConceptEntry[] entries = client.getEntriesByFieldContains(SearchFieldNames.MERGED_IDS, id);
+        if (entries != null && entries.length > 0) {
+            fillConceptEntry(entries[0]);
+            alternativeIdService.addAlternativeIds(id, entries[0]);
+            return entries[0];
+        }
+
         ConceptEntry entry = client.getEntry(id);
         if (entry != null) {
             fillConceptEntry(entry);
