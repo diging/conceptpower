@@ -4,6 +4,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -111,10 +112,12 @@ public class ConceptSearch {
 
         Map<String, String> searchFields = new HashMap<String, String>();
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
-            PropertyDescriptor descriptor = new PropertyDescriptor(field.getName(), ConceptSearchParameters.class);
-            if (descriptor.getReadMethod().invoke(conceptSearchParameters, EMPTY_OBJECT) != null) {
-                searchFields.put(field.getName().trim(),
-                        String.valueOf(descriptor.getReadMethod().invoke(conceptSearchParameters, EMPTY_OBJECT)));
+            if (!Modifier.isTransient(field.getModifiers())) {
+                PropertyDescriptor descriptor = new PropertyDescriptor(field.getName(), ConceptSearchParameters.class);
+                if (descriptor.getReadMethod().invoke(conceptSearchParameters, EMPTY_OBJECT) != null) {
+                    searchFields.put(field.getName().trim(),
+                            String.valueOf(descriptor.getReadMethod().invoke(conceptSearchParameters, EMPTY_OBJECT)));
+                }
             }
         }
 
