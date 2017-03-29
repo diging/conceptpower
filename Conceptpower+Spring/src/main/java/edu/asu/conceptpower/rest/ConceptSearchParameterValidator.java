@@ -21,7 +21,7 @@ import edu.asu.conceptpower.app.core.POS;
 @Component
 public class ConceptSearchParameterValidator implements Validator {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConceptSearchParameterValidator.class);
+    private final Logger logger = LoggerFactory.getLogger(ConceptSearchParameterValidator.class);
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -33,7 +33,7 @@ public class ConceptSearchParameterValidator implements Validator {
         ConceptSearchParameters conceptSearchParameter = (ConceptSearchParameters) target;
 
         if (!hasAtLeastOneNonEmpty(conceptSearchParameter)) {
-            errors.reject("validSearch", "No valid search parameters present.");
+            errors.reject("invalidSearch", "No valid search parameters present.");
         }
         if (conceptSearchParameter.getPos() != null && !POS.posValues.contains(conceptSearchParameter.getPos().toLowerCase())) {
             errors.reject("pos", "Please enter correct pos value.");
@@ -54,8 +54,10 @@ public class ConceptSearchParameterValidator implements Validator {
                 if (field.get(conceptSearchParameters) != null) {
                     return true;
                 }
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                logger.error(e.getMessage());
+            } catch (IllegalArgumentException e) {
+                logger.error("IllegalArgumentException", e);
+            } catch (IllegalAccessException ie) {
+                logger.error("IllegalAccessException", ie);
             }
         }
         return false;
