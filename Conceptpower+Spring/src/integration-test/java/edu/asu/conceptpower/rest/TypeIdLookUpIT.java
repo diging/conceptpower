@@ -25,7 +25,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
                         request.setParameter("id", "986a7cc9-c0c1-4720-b344-853f08c136ab");
                         return request;
                     }
-                })).andExpect(content().string(output)).andExpect(status().isOk());
+                })).andExpect(content().json(output, false)).andExpect(status().isOk());
     }
 
     @Test
@@ -38,7 +38,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
                         request.setParameter("id", XMLConstants.TYPE_PREFIX + "986a7cc9-c0c1-4720-b344-853f08c136ab");
                         return request;
                     }
-                })).andExpect(content().string(output)).andExpect(status().isOk());
+                })).andExpect(content().json(output, false)).andExpect(status().isOk());
     }
 
     @Test
