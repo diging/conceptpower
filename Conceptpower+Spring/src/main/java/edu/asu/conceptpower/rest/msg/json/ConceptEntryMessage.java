@@ -51,6 +51,9 @@ public class ConceptEntryMessage {
     @JsonProperty("alternativeIds")
     private List<AlternativeId> alternativeIds;
 
+    @JsonProperty("mergedIds")
+    private List<MergedId> mergedIds;
+
     public String getId() {
         return id;
     }
@@ -169,6 +172,14 @@ public class ConceptEntryMessage {
 
     public void setConceptUri(String conceptUri) {
         this.conceptUri = conceptUri;
+    }
+
+    public List<MergedId> getMergedIds() {
+        return mergedIds;
+    }
+
+    public void setMergedIds(List<MergedId> mergedIds) {
+        this.mergedIds = mergedIds;
     }
 
 }
