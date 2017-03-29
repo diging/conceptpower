@@ -1,7 +1,9 @@
 package edu.asu.conceptpower.rest.msg.json;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -82,6 +84,21 @@ public class JsonConceptMessage implements IConceptMessage {
                     alternativeIds.add(alternativeId);
                 }
                 json.setAlternativeIds(alternativeIds);
+            }
+        }
+
+        if (entry.getMergedIds() != null && !entry.getMergedIds().isEmpty()) {
+            Map<String, String> uriMap = uriCreator
+                    .getUrisBasedOnIds(new HashSet<String>(Arrays.asList(entry.getMergedIds())));
+            if (uriMap != null && !uriMap.isEmpty()) {
+                List<MergedId> mergedIds = new ArrayList<>();
+                for (Map.Entry<String, String> uri : uriMap.entrySet()) {
+                    MergedId mergedId = new MergedId();
+                    mergedId.setConceptId(uri.getKey());
+                    mergedId.setConceptUri(uri.getValue());
+                    mergedIds.add(mergedId);
+                }
+                json.setMergedIds(mergedIds);
             }
         }
         return json;
