@@ -20,5 +20,4 @@
 	<bean id="luceneDatabaseManager" class="edu.asu.conceptpower.app.db.DatabaseManager" init-method="init" destroy-method="close">
 		<property name="databasePath" value="${dbTestPath}/lucene.db" />
 	</bean>
-
 </beans>

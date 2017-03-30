@@ -123,11 +123,14 @@ public class ConceptLookupTest {
     @Test
     public void test_getWordNetEntry_emptyResult() throws IndexerRunningException, ParserConfigurationException,
             SAXException, IOException, IllegalAccessException, LuceneException {
+
         final String noResult = "noResult";
+        final String expectedResponse = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptLookupNoResult.xml"));
         Mockito.when(dictManager.getConceptListEntriesForWordPOS(PONY, POS.NOUN, null)).thenReturn(null);
         ResponseEntity<String> response = conceptLookup.getWordNetEntry(noResult, POS.NOUN,
                 MediaType.APPLICATION_XML_VALUE);
-        Assert.assertEquals("No search results.", response.getBody());
+        Assert.assertEquals(expectedResponse, response.getBody());
         Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
