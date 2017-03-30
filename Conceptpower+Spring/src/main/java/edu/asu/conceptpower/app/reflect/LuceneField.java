@@ -12,4 +12,14 @@ public @interface LuceneField {
 	String lucenefieldName();
 	boolean isTokenized();
     boolean isMultiple();
+
+    /**
+     * This will be set to true if we need to index the field twice (first
+     * tokenized, second non tokenized) to support short word search.
+     * 
+     * @return
+     */
+    boolean isShortWordSearchAllowed() default false;
+
+    String luceneShortFieldName() default "";
 }

@@ -192,6 +192,11 @@ public class LuceneUtility implements ILuceneUtility {
                         }
 
                     }
+
+                    if (searchFieldAnnotation.isShortWordSearchAllowed()) {
+                        doc.add(new StringField(searchFieldAnnotation.luceneShortFieldName(),
+                                String.valueOf(contentOfField), Field.Store.YES));
+                    }
                 }
             }
         }
@@ -490,6 +495,42 @@ public class LuceneUtility implements ILuceneUtility {
                         // the nearest matches.
                         analyzerPerField.put(luceneFieldAnnotation.lucenefieldName(), whiteSpaceAnalyzer);
                     }
+
+
+                    if (luceneFieldAnnotation.isShortWordSearchAllowed()) {
+                        analyzerPerField.put(luceneFieldAnnotation.luceneShortFieldName(), whiteSpaceAnalyzer);
+                        queryString.append(" OR ");
+                        queryString.append(luceneFieldAnnotation.luceneShortFieldName() + ":");
+
+                        StringBuffer shortSearchBuffer = new StringBuffer("(");
+                        String[] shortSearchParts = searchString.split(" ");
+
+                        quoteOpen = false;
+                        for (String term : shortSearchParts) {
+                            if (!quoteOpen && !term.trim().isEmpty()) {
+                                shortSearchBuffer.append("+");
+                            }
+
+                            shortSearchBuffer.append(QueryParser.escape(term) + " ");
+
+                            if (term.startsWith("\"")) {
+                                quoteOpen = true;
+                            }
+
+                            if (term.endsWith("\"")) {
+                                quoteOpen = false;
+                            }
+                        }
+
+                        if (quoteOpen) {
+                            int idxLastQuote = shortSearchBuffer.lastIndexOf("\"");
+                            shortSearchBuffer.replace(idxLastQuote, idxLastQuote + 1, "");
+                        }
+                        shortSearchBuffer.append(")");
+                        queryString.append(shortSearchBuffer.toString());
+
+                    }
+
                 }
 
             }
@@ -521,6 +562,7 @@ public class LuceneUtility implements ILuceneUtility {
                 startIndex = 0;
                 hitsPerPage = numberOfResults;
             }
+            queryString = new StringBuffer("(word:(+be ) OR short_word :(+be ))  AND pos:(+verb )");
             Query q = new QueryParser("", perFieldAnalyzerWrapper).parse(queryString.toString());
             searcher.search(q, collector);
             // If page number is more than the available results, we just pass
