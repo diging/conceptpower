@@ -9,6 +9,7 @@ import org.apache.commons.io.IOUtil;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import edu.asu.conceptpower.IntegrationTest;
 
@@ -21,7 +22,7 @@ public class ConceptLookupIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas Weiner/noun")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(content().json(output, false)).andExpect(status().isOk());
     }
 
     @Test
@@ -40,7 +41,7 @@ public class ConceptLookupIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas/noun")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(MockMvcResultMatchers.content().json(output, false)).andExpect(status().isOk());
     }
 
     @Test
@@ -70,7 +71,7 @@ public class ConceptLookupIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas/noun")
                         .accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(content().xml(output)).andExpect(status().isOk());
     }
 
 }

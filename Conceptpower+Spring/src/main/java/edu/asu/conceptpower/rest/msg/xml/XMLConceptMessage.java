@@ -1,6 +1,8 @@
 package edu.asu.conceptpower.rest.msg.xml;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -163,6 +165,24 @@ public class XMLConceptMessage implements IConceptMessage {
                 sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ALTERNATIVE_IDS + ">");
             }
 
+        }
+
+        // Adding merged ids and their corresponding uris.
+        if (entry.getMergedIds() != null && !entry.getMergedIds().isEmpty()) {
+            sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.MERGED_IDS + ">");
+            String[] mergedIds = entry.getMergedIds().split(",");
+            Map<String, String> uriMap = uriCreator.getUrisBasedOnIds(new HashSet<String>(Arrays.asList(mergedIds)));
+
+            for (Map.Entry<String, String> uri : uriMap.entrySet()) {
+                sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + " ");
+                sb.append(XMLConstants.CONCEPT_ID + "=\"" + uri.getKey() + "\" ");
+                sb.append(XMLConstants.CONCEPT_URI + "=\"" + uri.getValue() + "\"");
+                sb.append(">");
+                sb.append(uri.getValue());
+                sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.ID + ">");
+            }
+
+            sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.MERGED_IDS + ">");
         }
 
         sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_ENTRY + ">");
