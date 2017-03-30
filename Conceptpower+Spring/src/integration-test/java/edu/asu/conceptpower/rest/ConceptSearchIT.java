@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.rest;
 
 import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -257,6 +258,27 @@ public class ConceptSearchIT extends IntegrationTest {
                         .param("pos", "noun").param("description", "American 20th century environmentalist")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(content().string(output)).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void test_searchConcept_failureNoValidSearchParametersInXml() throws Exception {
+        final String output = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.xml"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(content().string(output)).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void test_searchConcept_failureNoValidSearchParametersInJson() throws Exception {
+        final String output = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.json"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(content().string(output)).andExpect(status().isBadRequest());
 
     }
 
