@@ -82,11 +82,12 @@ public class ConceptLookup {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (entries == null) {
-            return new ResponseEntity<String>("No search results.", HttpStatus.OK);
+        IConceptMessage conceptMessage = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
+        if (entries == null || entries.length == 0) {
+            return new ResponseEntity<String>(conceptMessage.getErrorMessage("No concept entry found."),
+                    HttpStatus.OK);
         }
         Map<ConceptEntry, ConceptType> entryMap = generateEntryMap(entries);
-        IConceptMessage conceptMessage = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
         String xmlEntries = null;
         if (entries != null) {
             xmlEntries = conceptMessage.getAllConceptEntriesAndPaginationDetails(entryMap, null);
