@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LuceneField {
 
-	String lucenefieldName();
-	boolean isTokenized();
+    String lucenefieldName();
+    boolean isTokenized();
     boolean isMultiple();
 
     /**
