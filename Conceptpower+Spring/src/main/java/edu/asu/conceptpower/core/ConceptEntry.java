@@ -204,7 +204,8 @@ public class ConceptEntry implements Serializable {
     public void setEqualTo(String equal) {
         if (equal != null) {
             List<String> equalsTo = Arrays.asList(equal.split(","));
-            this.equalTo = equalsTo.stream().map(i -> removeTrailingBackSlash(i)).collect(Collectors.joining(","));
+            this.equalTo = equalsTo.stream().map(i -> removeTrailingBackSlashAndTrim(i))
+                    .collect(Collectors.joining(","));
         } else {
             this.equalTo = equal;
         }
@@ -299,9 +300,9 @@ public class ConceptEntry implements Serializable {
      * @param similarTo
      */
     public void setSimilarTo(String similar) {
-        if (similar != null && similar.endsWith("/")) {
+        if (similar != null) {
             List<String> similarToList = Arrays.asList(similar.split(","));
-            this.similarTo = similarToList.stream().map(i -> removeTrailingBackSlash(i))
+            this.similarTo = similarToList.stream().map(i -> removeTrailingBackSlashAndTrim(i))
                     .collect(Collectors.joining(","));
         } else {
             this.similarTo = similar;
@@ -460,10 +461,10 @@ public class ConceptEntry implements Serializable {
         this.mergedIds = mergedIds;
     }
 
-    private String removeTrailingBackSlash(String val) {
+    private String removeTrailingBackSlashAndTrim(String val) {
         if (val.endsWith("/")) {
-            return val.substring(0, val.length() - 1);
+            return val.substring(0, val.length() - 1).trim();
         }
-        return val;
+        return val.trim();
     }
 }

@@ -29,10 +29,7 @@ public class ConceptSearchParameters {
     }
 
     public String getOperator() {
-        if (this.operator == null) {
-            return SearchParamters.OP_AND;
-        }
-        return operator;
+        return this.operator == null ? SearchParamters.OP_AND : this.operator;
     }
 
     public void setOperator(String operator) {
@@ -93,10 +90,7 @@ public class ConceptSearchParameters {
      * @return
      */
     public String getPos() {
-        if (pos != null) {
-            return pos.toLowerCase();
-        }
-        return pos;
+        return this.pos != null ? this.pos.toLowerCase() : this.pos;
     }
 
     public void setPos(String pos) {

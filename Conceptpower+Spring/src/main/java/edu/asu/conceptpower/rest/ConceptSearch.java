@@ -105,10 +105,7 @@ public class ConceptSearch {
         }
 
         preprocessConceptSearchParameterBean(conceptSearchParameters);
-        int page = 1;
-        if (conceptSearchParameters.getPage() != null) {
-            page = conceptSearchParameters.getPage();
-        }
+        int page = conceptSearchParameters.getPage() != null ? conceptSearchParameters.getPage() : 1;
 
         Map<String, String> searchFields = new HashMap<String, String>();
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
