@@ -298,6 +298,7 @@ public class LuceneUtility implements ILuceneUtility {
         Document doc = new Document();
         String lemma = wordId.getLemma().replace("_", " ");
         doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.SHORT_WORD, lemma, Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
@@ -454,64 +455,24 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
+                if (searchString != null && firstEntry != 1) {
+                    queryString.append(" " + operator + " ");
+                }
+                if (!luceneFieldAnnotation.isShortWordSearchAllowed()) {
+                    if (searchString != null) {
+                        firstEntry++;
+                        queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
 
-                if(searchString != null){
-                    if (firstEntry != 1)
-                        queryString.append(" " + operator + " ");
-                    firstEntry++;
-                    queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
+                        StringBuffer searchBuffer = new StringBuffer("(");
+                        String[] searchParts = searchString.split(" ");
 
-                    StringBuffer searchBuffer = new StringBuffer("(");
-                    String[] searchParts = searchString.split(" ");
-                    
-                    boolean quoteOpen = false;
-                    for (String term : searchParts) {
-                        if (!quoteOpen && !term.trim().isEmpty()) {
-                            searchBuffer.append("+");
-                        }
-                        
-                        searchBuffer.append(QueryParser.escape(term) + " ");
-                        
-                        if (term.startsWith("\"")) {
-                            quoteOpen = true;
-                        }
-                        
-                        if (term.endsWith("\"")) {
-                            quoteOpen = false;
-                        }
-                    }
-                    
-                    if (quoteOpen) {
-                        int idxLastQuote = searchBuffer.lastIndexOf("\"");
-                        searchBuffer.replace(idxLastQuote, idxLastQuote+1, "");
-                    }
-                    searchBuffer.append(")");
-                    queryString.append(searchBuffer.toString());
-                    if (!luceneFieldAnnotation.isTokenized()) {
-                        // If the field is not tokenzied, then the field needs
-                        // to be analyzed using a whitespaceanalyzer, rather
-                        // than standard analyzer. This is because for non
-                        // tokenized strings we need exact matches and not all
-                        // the nearest matches.
-                        analyzerPerField.put(luceneFieldAnnotation.lucenefieldName(), whiteSpaceAnalyzer);
-                    }
-
-
-                    if (luceneFieldAnnotation.isShortWordSearchAllowed()) {
-                        analyzerPerField.put(luceneFieldAnnotation.luceneShortFieldName(), whiteSpaceAnalyzer);
-                        queryString.append(" OR ");
-                        queryString.append(luceneFieldAnnotation.luceneShortFieldName() + ":");
-
-                        StringBuffer shortSearchBuffer = new StringBuffer("(");
-                        String[] shortSearchParts = searchString.split(" ");
-
-                        quoteOpen = false;
-                        for (String term : shortSearchParts) {
+                        boolean quoteOpen = false;
+                        for (String term : searchParts) {
                             if (!quoteOpen && !term.trim().isEmpty()) {
-                                shortSearchBuffer.append("+");
+                                searchBuffer.append("+");
                             }
 
-                            shortSearchBuffer.append(QueryParser.escape(term) + " ");
+                            searchBuffer.append(QueryParser.escape(term) + " ");
 
                             if (term.startsWith("\"")) {
                                 quoteOpen = true;
@@ -521,14 +482,48 @@ public class LuceneUtility implements ILuceneUtility {
                                 quoteOpen = false;
                             }
                         }
-
+                        
                         if (quoteOpen) {
-                            int idxLastQuote = shortSearchBuffer.lastIndexOf("\"");
-                            shortSearchBuffer.replace(idxLastQuote, idxLastQuote + 1, "");
+                            int idxLastQuote = searchBuffer.lastIndexOf("\"");
+                            searchBuffer.replace(idxLastQuote, idxLastQuote + 1, "");
                         }
-                        shortSearchBuffer.append(")");
-                        queryString.append(shortSearchBuffer.toString());
+                        searchBuffer.append(")");
+                        queryString.append(searchBuffer.toString());
+                        if (!luceneFieldAnnotation.isTokenized()) {
+                            // If the field is not tokenzied, then the field
+                            // needs
+                            // to be analyzed using a whitespaceanalyzer, rather
+                            // than standard analyzer. This is because for non
+                            // tokenized strings we need exact matches and not
+                            // all
+                            // the nearest matches.
+                            analyzerPerField.put(luceneFieldAnnotation.lucenefieldName(), whiteSpaceAnalyzer);
+                        }
+                    }
 
+                } else {
+                    // Short words are allowed so index two times.
+                    // 1. Index with a String Field so that it is not tokenized
+                    // 2. Index with Text Field so that it is tokenized.
+                    if (searchString != null) {
+                        // Always analyze the short field name with whitespace
+                        // for non tokenized.
+                        analyzerPerField.put(luceneFieldAnnotation.luceneShortFieldName(), whiteSpaceAnalyzer);
+                        StringBuffer query = new StringBuffer("");
+                        query.append("(" + luceneFieldAnnotation.lucenefieldName()+":(+");
+                        query.append(searchString);
+                        query.append(" )");
+                        
+                        query.append(" OR ");
+                        
+                        // Second part of the query for short word. Exact match
+                        query.append(luceneFieldAnnotation.luceneShortFieldName() + ":");
+                        query.append("(+");
+                        query.append(searchString);
+                        query.append(" ))");
+
+                        queryString.append(query.toString());
+                        firstEntry++;
                     }
 
                 }
@@ -562,7 +557,7 @@ public class LuceneUtility implements ILuceneUtility {
                 startIndex = 0;
                 hitsPerPage = numberOfResults;
             }
-            queryString = new StringBuffer("(word:(+be ) OR short_word :(+be ))  AND pos:(+verb )");
+
             Query q = new QueryParser("", perFieldAnalyzerWrapper).parse(queryString.toString());
             searcher.search(q, collector);
             // If page number is more than the available results, we just pass
