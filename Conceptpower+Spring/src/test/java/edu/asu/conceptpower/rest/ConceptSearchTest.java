@@ -1,6 +1,8 @@
 package edu.asu.conceptpower.rest;
 
+import java.beans.IntrospectionException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -131,7 +133,8 @@ public class ConceptSearchTest {
 
     @Test
     public void test_searchConcept_successInXml() throws IllegalArgumentException, IllegalAccessException,
-            IndexerRunningException, LuceneException, ParserConfigurationException, SAXException, IOException {
+ IndexerRunningException, LuceneException,
+            ParserConfigurationException, SAXException, IOException, InvocationTargetException, IntrospectionException {
 
         final String expectedOutput = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptSearch.xml"));
@@ -153,7 +156,8 @@ public class ConceptSearchTest {
 
     @Test
     public void test_searchConcept_successInJson() throws IllegalAccessException, LuceneException,
-            IndexerRunningException, IllegalArgumentException, JSONException, IOException {
+ IndexerRunningException, IllegalArgumentException,
+            JSONException, IOException, InvocationTargetException, IntrospectionException {
 
         final String expectedOutput = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptSearch.json"));
@@ -176,7 +180,8 @@ public class ConceptSearchTest {
 
     @Test
     public void test_searchConcept_noRecordsFoundInJson() throws IllegalAccessException, LuceneException,
-            IndexerRunningException, IllegalArgumentException, JSONException, IOException {
+ IndexerRunningException, IllegalArgumentException,
+            JSONException, IOException, InvocationTargetException, IntrospectionException {
 
         final String jsonNoRecordsFoundError = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/recordsNotFound.json"));
@@ -210,7 +215,8 @@ public class ConceptSearchTest {
 
     @Test
     public void test_searchConcept_noRecordsFoundInXml() throws IllegalAccessException, LuceneException,
-            IndexerRunningException, IllegalArgumentException, JSONException, IOException {
+ IndexerRunningException, IllegalArgumentException,
+            JSONException, IOException, InvocationTargetException, IntrospectionException {
 
         final String xmlNoRecordsFoundError = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/recordsNotFound.xml"));
@@ -245,7 +251,8 @@ public class ConceptSearchTest {
 
     @Test
     public void test_searchConcept_invalidPos()
-            throws JsonProcessingException, IllegalArgumentException, IllegalAccessException, IndexerRunningException {
+ throws JsonProcessingException, IllegalArgumentException,
+            IllegalAccessException, IndexerRunningException, InvocationTargetException, IntrospectionException {
 
         final String posError = "Please enter correct pos value.";
 
