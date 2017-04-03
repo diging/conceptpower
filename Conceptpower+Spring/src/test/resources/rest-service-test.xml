@@ -76,7 +76,6 @@
 	<bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
 		<property name="classesToBeBound">
 			<list>
-
 				<value>edu.asu.conceptpower.app.profile.impl.ViafReply
 				</value>
 
