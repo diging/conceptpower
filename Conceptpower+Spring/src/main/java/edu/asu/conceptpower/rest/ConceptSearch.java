@@ -109,6 +109,16 @@ public class ConceptSearch {
 
         Map<String, String> searchFields = new HashMap<String, String>();
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
+            /**
+             * Cobertura adds the below field to keep track of which code has
+             * been accessed.
+             * 
+             * public static final transient int[] __cobertura_counters;
+             * 
+             * In order to avoid iterating this transient field we are checking
+             * for the modifier type before adding the fields to the searchField
+             * map.
+             */
             if (!Modifier.isTransient(field.getModifiers())) {
                 PropertyDescriptor descriptor = new PropertyDescriptor(field.getName(), ConceptSearchParameters.class);
                 if (descriptor.getReadMethod().invoke(conceptSearchParameters, EMPTY_OBJECT) != null) {
@@ -160,10 +170,8 @@ public class ConceptSearch {
     }
 
     private int getNumberOfRecordsPerPage(ConceptSearchParameters conceptSearchParameters) {
-        if (conceptSearchParameters.getNumber_of_records_per_page() != null) {
-            return conceptSearchParameters.getNumber_of_records_per_page();
-        }
-        return numberOfRecordsPerPage;
+        return conceptSearchParameters.getNumber_of_records_per_page() != null
+                ? conceptSearchParameters.getNumber_of_records_per_page() : numberOfRecordsPerPage;
     }
 
     private void createEntryMap(ConceptEntry[] searchResults, Map<ConceptEntry, ConceptType> entryMap) {
