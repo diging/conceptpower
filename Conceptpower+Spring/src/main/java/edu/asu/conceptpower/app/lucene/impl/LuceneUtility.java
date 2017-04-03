@@ -194,7 +194,7 @@ public class LuceneUtility implements ILuceneUtility {
 
                     }
 
-                    if (searchFieldAnnotation.isShortWordSearchAllowed()) {
+                    if (searchFieldAnnotation.isShortPhraseSearchable()) {
                         doc.add(new StringField(searchFieldAnnotation.luceneShortFieldName(),
                                 String.valueOf(contentOfField), Field.Store.YES));
                     }
@@ -447,15 +447,12 @@ public class LuceneUtility implements ILuceneUtility {
             occur = BooleanClause.Occur.MUST;
         }
 
-        StringBuffer queryString = new StringBuffer();
-        int firstEntry = 1;
-
         java.lang.reflect.Field[] fields = ConceptEntry.class.getDeclaredFields();
 
         for (java.lang.reflect.Field field : fields) {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (luceneFieldAnnotation != null) {
-                if (!luceneFieldAnnotation.isShortWordSearchAllowed() && !luceneFieldAnnotation.isTokenized()) {
+                if (!luceneFieldAnnotation.isShortPhraseSearchable() && !luceneFieldAnnotation.isTokenized()) {
                     // If the field is not tokenzied, then the field needs to be
                     // analyzed using a whitespaceanalyzer, rather than standard
                     // analyzer. This is because for non tokenized strings we
@@ -482,15 +479,16 @@ public class LuceneUtility implements ILuceneUtility {
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
                 if (searchString != null) {
-                    if (!luceneFieldAnnotation.isShortWordSearchAllowed()) {
+                    if (!luceneFieldAnnotation.isShortPhraseSearchable()) {
                         Query q = qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
                         builder.add(q, occur);
                     } else {
-                        QueryBuilder tempQueryBuilder = new QueryBuilder(perFieldAnalyzerWrapper);
+                        QueryBuilder shortTermsQueryBuilder = new QueryBuilder(perFieldAnalyzerWrapper);
                         BooleanQuery.Builder tempBuilder = new BooleanQuery.Builder();
-                        Query q1 = tempQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
+                        Query q1 = shortTermsQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
                                 searchString);
-                        Query q2 = tempQueryBuilder.createBooleanQuery(luceneFieldAnnotation.luceneShortFieldName(),
+                        Query q2 = shortTermsQueryBuilder
+                                .createBooleanQuery(luceneFieldAnnotation.luceneShortFieldName(),
                                 searchString);
                         if (q1 != null) {
                             // Q1 can be null when the search string is very

@@ -39,7 +39,7 @@ public class ConceptEntry implements Serializable {
     private String wordnetId;
 
     @SearchField(fieldName = SearchFieldNames.WORD)
-    @LuceneField(lucenefieldName = LuceneFieldNames.WORD, isTokenized = true, isMultiple = false, isShortWordSearchAllowed = true, luceneShortFieldName = LuceneFieldNames.SHORT_WORD)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORD, isTokenized = true, isMultiple = false, isShortPhraseSearchable = true, luceneShortFieldName = LuceneFieldNames.SHORT_WORD)
     private String word;
 
     @SearchField(fieldName = SearchFieldNames.DESCRIPTION)

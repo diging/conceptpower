@@ -15,11 +15,12 @@ public @interface LuceneField {
 
     /**
      * This will be set to true if we need to index the field twice (first
-     * tokenized, second non tokenized) to support short word search.
+     * tokenized, second non tokenized) to support short phrase search such as
+     * "be".
      * 
      * @return
      */
-    boolean isShortWordSearchAllowed() default false;
+    boolean isShortPhraseSearchable() default false;
 
     String luceneShortFieldName() default "";
 }
