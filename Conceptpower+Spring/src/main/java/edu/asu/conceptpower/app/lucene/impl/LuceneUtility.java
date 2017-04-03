@@ -299,7 +299,7 @@ public class LuceneUtility implements ILuceneUtility {
         Document doc = new Document();
         String lemma = wordId.getLemma().replace("_", " ");
         doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.SHORT_WORD, lemma, Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.UNTOKENIZED_WORD, lemma, Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
@@ -484,7 +484,7 @@ public class LuceneUtility implements ILuceneUtility {
                         builder.add(q, occur);
                     } else {
                         QueryBuilder shortTermsQueryBuilder = new QueryBuilder(perFieldAnalyzerWrapper);
-                        BooleanQuery.Builder tempBuilder = new BooleanQuery.Builder();
+                        BooleanQuery.Builder shortTermBooleanQueryBuilder = new BooleanQuery.Builder();
                         Query q1 = shortTermsQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
                                 searchString);
                         Query q2 = shortTermsQueryBuilder.createBooleanQuery(
@@ -493,10 +493,10 @@ public class LuceneUtility implements ILuceneUtility {
                             // Q1 can be null when the search string is very
                             // short such as "be", but the search can be
                             // performed using the BooleanQuery q2.
-                            tempBuilder.add(q1, BooleanClause.Occur.SHOULD);
+                            shortTermBooleanQueryBuilder.add(q1, BooleanClause.Occur.SHOULD);
                         }
-                        tempBuilder.add(q2, BooleanClause.Occur.SHOULD);
-                        builder.add(tempBuilder.build(), occur);
+                        shortTermBooleanQueryBuilder.add(q2, BooleanClause.Occur.SHOULD);
+                        builder.add(shortTermBooleanQueryBuilder.build(), occur);
                     }
                 }
             }
