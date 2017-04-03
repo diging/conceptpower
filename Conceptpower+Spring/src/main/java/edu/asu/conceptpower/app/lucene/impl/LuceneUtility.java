@@ -487,9 +487,8 @@ public class LuceneUtility implements ILuceneUtility {
                         BooleanQuery.Builder tempBuilder = new BooleanQuery.Builder();
                         Query q1 = shortTermsQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
                                 searchString);
-                        Query q2 = shortTermsQueryBuilder
-                                .createBooleanQuery(luceneFieldAnnotation.luceneShortFieldName(),
-                                searchString);
+                        Query q2 = shortTermsQueryBuilder.createBooleanQuery(
+                                luceneFieldAnnotation.luceneShortFieldName(), searchString.replaceAll(" ", ""));
                         if (q1 != null) {
                             // Q1 can be null when the search string is very
                             // short such as "be", but the search can be
