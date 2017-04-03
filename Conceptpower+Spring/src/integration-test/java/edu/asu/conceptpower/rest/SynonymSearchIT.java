@@ -24,7 +24,7 @@ public class SynonymSearchIT extends IntegrationTest {
                         request.setParameter("id", "WID-02382039-N-02-Indian_pony");
                         return request;
                     }
-                })).andExpect(content().string(output)).andExpect(status().isOk());
+                })).andExpect(content().json(output, false)).andExpect(status().isOk());
     }
 
     @Test
@@ -81,5 +81,4 @@ public class SynonymSearchIT extends IntegrationTest {
                     }
                 })).andExpect(status().isBadRequest());
     }
-
 }
