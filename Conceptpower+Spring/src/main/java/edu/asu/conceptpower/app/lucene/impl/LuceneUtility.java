@@ -33,8 +33,8 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -42,6 +42,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -441,98 +442,68 @@ public class LuceneUtility implements ILuceneUtility {
             int numberOfRecordsPerPage) throws LuceneException, IllegalAccessException {
 
         Map<String,Analyzer> analyzerPerField = new HashMap<>();
-        
-        if (operator == null) {
-            operator = SearchParamters.OP_AND;
+        BooleanClause.Occur occur = BooleanClause.Occur.SHOULD;
+        if (operator == null || operator.equalsIgnoreCase(SearchParamters.OP_AND)) {
+            occur = BooleanClause.Occur.MUST;
         }
 
         StringBuffer queryString = new StringBuffer();
         int firstEntry = 1;
 
         java.lang.reflect.Field[] fields = ConceptEntry.class.getDeclaredFields();
+
+        for (java.lang.reflect.Field field : fields) {
+            LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
+            if (luceneFieldAnnotation != null) {
+                if (!luceneFieldAnnotation.isShortWordSearchAllowed() && !luceneFieldAnnotation.isTokenized()) {
+                    // If the field is not tokenzied, then the field needs to be
+                    // analyzed using a whitespaceanalyzer, rather than standard
+                    // analyzer. This is because for non tokenized strings we
+                    // need exact matches and not all the nearest matches.
+                    analyzerPerField.put(luceneFieldAnnotation.lucenefieldName(), whiteSpaceAnalyzer);
+                } else {
+                    // Always analyze the short field name with whitespace
+                    // for non tokenized.
+                    analyzerPerField.put(luceneFieldAnnotation.luceneShortFieldName(), whiteSpaceAnalyzer);
+                }
+            }
+
+        }
+
+        PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(standardAnalyzer,
+                analyzerPerField);
+
+        QueryBuilder qBuild = new QueryBuilder(perFieldAnalyzerWrapper);
+        BooleanQuery.Builder builder = new BooleanQuery.Builder();
+
         for (java.lang.reflect.Field field : fields) {
             SearchField search = field.getAnnotation(SearchField.class);
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
-                if (searchString != null && firstEntry != 1) {
-                    queryString.append(" " + operator + " ");
-                }
-                if (!luceneFieldAnnotation.isShortWordSearchAllowed()) {
-                    if (searchString != null) {
-                        firstEntry++;
-                        queryString.append(luceneFieldAnnotation.lucenefieldName() + ":");
-
-                        StringBuffer searchBuffer = new StringBuffer("(");
-                        String[] searchParts = searchString.split(" ");
-
-                        boolean quoteOpen = false;
-                        for (String term : searchParts) {
-                            if (!quoteOpen && !term.trim().isEmpty()) {
-                                searchBuffer.append("+");
-                            }
-
-                            searchBuffer.append(QueryParser.escape(term) + " ");
-
-                            if (term.startsWith("\"")) {
-                                quoteOpen = true;
-                            }
-
-                            if (term.endsWith("\"")) {
-                                quoteOpen = false;
-                            }
+                if (searchString != null) {
+                    if (!luceneFieldAnnotation.isShortWordSearchAllowed()) {
+                        Query q = qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
+                        builder.add(q, occur);
+                    } else {
+                        QueryBuilder tempQueryBuilder = new QueryBuilder(perFieldAnalyzerWrapper);
+                        BooleanQuery.Builder tempBuilder = new BooleanQuery.Builder();
+                        Query q1 = tempQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
+                                searchString);
+                        Query q2 = tempQueryBuilder.createBooleanQuery(luceneFieldAnnotation.luceneShortFieldName(),
+                                searchString);
+                        if (q1 != null) {
+                            // Q1 can be null when the search string is very
+                            // short such as "be", but the search can be
+                            // performed using the BooleanQuery q2.
+                            tempBuilder.add(q1, BooleanClause.Occur.SHOULD);
                         }
-                        
-                        if (quoteOpen) {
-                            int idxLastQuote = searchBuffer.lastIndexOf("\"");
-                            searchBuffer.replace(idxLastQuote, idxLastQuote + 1, "");
-                        }
-                        searchBuffer.append(")");
-                        queryString.append(searchBuffer.toString());
-                        if (!luceneFieldAnnotation.isTokenized()) {
-                            // If the field is not tokenzied, then the field
-                            // needs
-                            // to be analyzed using a whitespaceanalyzer, rather
-                            // than standard analyzer. This is because for non
-                            // tokenized strings we need exact matches and not
-                            // all
-                            // the nearest matches.
-                            analyzerPerField.put(luceneFieldAnnotation.lucenefieldName(), whiteSpaceAnalyzer);
-                        }
+                        tempBuilder.add(q2, BooleanClause.Occur.SHOULD);
+                        builder.add(tempBuilder.build(), occur);
                     }
-
-                } else {
-                    // Short words are allowed so index two times.
-                    // 1. Index with a String Field so that it is not tokenized
-                    // 2. Index with Text Field so that it is tokenized.
-                    if (searchString != null) {
-                        // Always analyze the short field name with whitespace
-                        // for non tokenized.
-                        analyzerPerField.put(luceneFieldAnnotation.luceneShortFieldName(), whiteSpaceAnalyzer);
-                        StringBuffer query = new StringBuffer("");
-                        query.append("(" + luceneFieldAnnotation.lucenefieldName()+":(+");
-                        query.append(searchString);
-                        query.append(" )");
-                        
-                        query.append(" OR ");
-                        
-                        // Second part of the query for short word. Exact match
-                        query.append(luceneFieldAnnotation.luceneShortFieldName() + ":");
-                        query.append("(+");
-                        query.append(searchString);
-                        query.append(" ))");
-
-                        queryString.append(query.toString());
-                        firstEntry++;
-                    }
-
                 }
-
             }
         }
-
-        PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(standardAnalyzer,
-                analyzerPerField);
 
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
@@ -558,8 +529,9 @@ public class LuceneUtility implements ILuceneUtility {
                 hitsPerPage = numberOfResults;
             }
 
-            Query q = new QueryParser("", perFieldAnalyzerWrapper).parse(queryString.toString());
-            searcher.search(q, collector);
+            // Query q = new QueryParser("",
+            // perFieldAnalyzerWrapper).parse(queryString.toString());
+            searcher.search(builder.build(), collector);
             // If page number is more than the available results, we just pass
             // empty result.
             TopDocs topDocs = collector.topDocs(startIndex, hitsPerPage);
@@ -574,8 +546,6 @@ public class LuceneUtility implements ILuceneUtility {
 
         catch (IOException ex) {
             throw new LuceneException("Issues in querying lucene index. Please retry", ex);
-        } catch (ParseException e) {
-            throw new LuceneException("Issues in framing the query", e);
         }
         logger.debug("Number of concepts retrieved from lucene = " + concepts.size());
         return concepts.toArray(new ConceptEntry[concepts.size()]);
