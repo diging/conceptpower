@@ -135,7 +135,8 @@ public class ConceptSearch {
                     conceptSearchParameters.getOperator());
             searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields,
                     conceptSearchParameters.getOperator(), page,
-                    getNumberOfRecordsPerPage(conceptSearchParameters));
+                    conceptSearchParameters.getNumber_of_records_per_page() != null
+                            ? conceptSearchParameters.getNumber_of_records_per_page() : numberOfRecordsPerPage);
         } catch (LuceneException ex) {
             logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -167,11 +168,6 @@ public class ConceptSearch {
         if (conceptSearchParameters.getType_uri() != null) {
             conceptSearchParameters.setType_id(uriHelper.getTypeId(conceptSearchParameters.getType_uri()));
         }
-    }
-
-    private int getNumberOfRecordsPerPage(ConceptSearchParameters conceptSearchParameters) {
-        return conceptSearchParameters.getNumber_of_records_per_page() != null
-                ? conceptSearchParameters.getNumber_of_records_per_page() : numberOfRecordsPerPage;
     }
 
     private void createEntryMap(ConceptEntry[] searchResults, Map<ConceptEntry, ConceptType> entryMap) {
