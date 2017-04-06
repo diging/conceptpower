@@ -51,7 +51,7 @@ public class ConceptLookupIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas Weiner/noun")
                         .accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(content().xml(output)).andExpect(status().isOk());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ConceptLookupIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Gustav Robert Kirchhoff/verb")
                         .accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(content().xml(output)).andExpect(status().isOk());
     }
 
     @Test
