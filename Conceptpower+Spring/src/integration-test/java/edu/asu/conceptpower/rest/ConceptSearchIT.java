@@ -166,7 +166,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Gustav Robert Kirchhoff")
                         .param("pos", "verb").param("concept_list", "VogonWeb Concepts")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().xml(output)).andExpect(status().isOk());
+                .andExpect(content().string(output)).andExpect(status().isOk());
 
     }
 
