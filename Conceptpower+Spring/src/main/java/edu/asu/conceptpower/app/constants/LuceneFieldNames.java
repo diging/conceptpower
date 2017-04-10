@@ -16,4 +16,5 @@ public interface LuceneFieldNames {
     public final static String WORDNETID = "wordnetid";
     public final static String CONCEPTTYPE = "conceptType";
     public final static String MERGED_IDS = "mergedIds";
+    public final static String UNTOKENIZED = "_untokenized";
 }

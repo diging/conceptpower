@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -96,6 +97,9 @@ public class LuceneUtility implements ILuceneUtility {
 
     @Autowired
     private WhitespaceAnalyzer whiteSpaceAnalyzer;
+
+    @Autowired
+    private KeywordAnalyzer keywordAnalyzer;
 
     @Autowired
     private Environment env;
@@ -195,7 +199,7 @@ public class LuceneUtility implements ILuceneUtility {
                     }
 
                     if (searchFieldAnnotation.isShortPhraseSearchable()) {
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + "_untokenized",
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED,
                                 String.valueOf(contentOfField), Field.Store.YES));
                     }
                 }
@@ -299,7 +303,7 @@ public class LuceneUtility implements ILuceneUtility {
         Document doc = new Document();
         String lemma = wordId.getLemma().replace("_", " ");
         doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.WORD + "_untokenized", lemma, Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.WORD + LuceneFieldNames.UNTOKENIZED, lemma, Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
@@ -458,6 +462,9 @@ public class LuceneUtility implements ILuceneUtility {
                     // analyzer. This is because for non tokenized strings we
                     // need exact matches and not all the nearest matches.
                     analyzerPerField.put(luceneFieldAnnotation.lucenefieldName(), whiteSpaceAnalyzer);
+                } if(luceneFieldAnnotation.isShortPhraseSearchable()) {
+                    analyzerPerField.put(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED,
+                            keywordAnalyzer);
                 }
             }
 
@@ -478,8 +485,8 @@ public class LuceneUtility implements ILuceneUtility {
                     if (!luceneFieldAnnotation.isShortPhraseSearchable() && luceneFieldAnnotation.isTokenized()) {
                         Query q = qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
                         builder.add(q, occur);
-                    }
-                    if (!luceneFieldAnnotation.isShortPhraseSearchable() && !luceneFieldAnnotation.isTokenized()) {
+                    } else if (!luceneFieldAnnotation.isShortPhraseSearchable()
+                            && !luceneFieldAnnotation.isTokenized()) {
                         Query q = qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
                         builder.add(q, occur);
 
@@ -489,7 +496,8 @@ public class LuceneUtility implements ILuceneUtility {
                         Query q1 = shortTermsQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
                                 searchString);
                         Query q2 = shortTermsQueryBuilder.createBooleanQuery(
-                                luceneFieldAnnotation.lucenefieldName() + "_untokenized", searchString);
+                                luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED,
+                                searchString.replace(" ", ""));
                         if (q1 != null) {
                             // Q1 can be null when the search string is very
                             // short such as "be", but the search can be
