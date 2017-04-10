@@ -67,7 +67,7 @@
                 var description = aData[5];
                 if (conceptID === wordnetID) {
                     var wrapperids = '';
-                    if (!$(this).hasClass('row_selected')) {
+                    if (!$(this).hasClass('selected')) {
                         wrapperids = $("#wrapperids").val();
                         wrapperids += (conceptID + ',');
                         $("#wrapperids").val(wrapperids);
@@ -96,7 +96,7 @@
                     else
                         $('#createwrapper').prop('disabled', true);
 
-                    $(this).toggleClass('row_selected');
+                    $(this).toggleClass('selected');
                 }
             }
 
@@ -314,7 +314,7 @@
 
     <c:if test="${not empty result}">
         <table cellpadding="0" cellspacing="0"
-            class="table table-striped table-bordered"
+            class="table table-bordered"
             id="conceptSearch">
             <thead>
                 <tr>

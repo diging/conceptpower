@@ -37,6 +37,9 @@
 	href="${pageContext.servletContext.contextPath}/resources/js/datatable/css/dataTables.bootstrap.min.css" />
 
 <link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/js/datatable/css/jquery.dataTables.min.css" />
+
+<link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
