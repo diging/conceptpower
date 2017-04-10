@@ -458,10 +458,6 @@ public class LuceneUtility implements ILuceneUtility {
                     // analyzer. This is because for non tokenized strings we
                     // need exact matches and not all the nearest matches.
                     analyzerPerField.put(luceneFieldAnnotation.lucenefieldName(), whiteSpaceAnalyzer);
-                } else {
-                    // Always analyze the short field name with whitespace
-                    // for non tokenized.
-                    analyzerPerField.put(luceneFieldAnnotation.luceneShortFieldName(), whiteSpaceAnalyzer);
                 }
             }
 
