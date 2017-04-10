@@ -475,9 +475,14 @@ public class LuceneUtility implements ILuceneUtility {
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
                 if (searchString != null) {
-                    if (!luceneFieldAnnotation.isShortPhraseSearchable()) {
+                    if (!luceneFieldAnnotation.isShortPhraseSearchable() && luceneFieldAnnotation.isTokenized()) {
                         Query q = qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
                         builder.add(q, occur);
+                    }
+                    if (!luceneFieldAnnotation.isShortPhraseSearchable() && !luceneFieldAnnotation.isTokenized()) {
+                        Query q = qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
+                        builder.add(q, occur);
+
                     } else {
                         QueryBuilder shortTermsQueryBuilder = new QueryBuilder(perFieldAnalyzerWrapper);
                         BooleanQuery.Builder shortTermBooleanQueryBuilder = new BooleanQuery.Builder();
@@ -522,8 +527,6 @@ public class LuceneUtility implements ILuceneUtility {
                 hitsPerPage = numberOfResults;
             }
 
-            // Query q = new QueryParser("",
-            // perFieldAnalyzerWrapper).parse(queryString.toString());
             searcher.search(builder.build(), collector);
             // If page number is more than the available results, we just pass
             // empty result.
