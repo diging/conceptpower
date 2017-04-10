@@ -195,7 +195,7 @@ public class LuceneUtility implements ILuceneUtility {
                     }
 
                     if (searchFieldAnnotation.isShortPhraseSearchable()) {
-                        doc.add(new StringField(searchFieldAnnotation.luceneShortFieldName(),
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + "_untokenized",
                                 String.valueOf(contentOfField), Field.Store.YES));
                     }
                 }
@@ -299,7 +299,7 @@ public class LuceneUtility implements ILuceneUtility {
         Document doc = new Document();
         String lemma = wordId.getLemma().replace("_", " ");
         doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.UNTOKENIZED_WORD, lemma, Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.WORD + "_untokenized", lemma, Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
@@ -488,8 +488,8 @@ public class LuceneUtility implements ILuceneUtility {
                         BooleanQuery.Builder shortTermBooleanQueryBuilder = new BooleanQuery.Builder();
                         Query q1 = shortTermsQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
                                 searchString);
-                        Query q2 = shortTermsQueryBuilder
-                                .createBooleanQuery(luceneFieldAnnotation.luceneShortFieldName(), searchString);
+                        Query q2 = shortTermsQueryBuilder.createBooleanQuery(
+                                luceneFieldAnnotation.lucenefieldName() + "_untokenized", searchString);
                         if (q1 != null) {
                             // Q1 can be null when the search string is very
                             // short such as "be", but the search can be

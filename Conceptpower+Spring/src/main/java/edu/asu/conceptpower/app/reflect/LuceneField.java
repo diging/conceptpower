@@ -21,6 +21,4 @@ public @interface LuceneField {
      * @return
      */
     boolean isShortPhraseSearchable() default false;
-
-    String luceneShortFieldName() default "";
 }
