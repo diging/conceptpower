@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.rest;
 
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -277,7 +276,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.json"));
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(print()).andExpect(content().json(output)).andExpect(status().isBadRequest());
+                .andExpect(content().json(output)).andExpect(status().isBadRequest());
 
     }
 

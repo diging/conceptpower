@@ -499,17 +499,24 @@ public class LuceneUtility implements ILuceneUtility {
                     } else {
                         QueryBuilder shortTermsQueryBuilder = new QueryBuilder(perFieldAnalyzerWrapper);
                         BooleanQuery.Builder shortTermBooleanQueryBuilder = new BooleanQuery.Builder();
-                        Query q1 = shortTermsQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
-                                searchString);
+
+                        String[] searchStrings = searchString.split(" ");
+                        for (String searchValue : searchStrings) {
+                            Query q1 = shortTermsQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
+                                    searchValue);
+                            if (q1 != null) {
+                                // Q1 can be null when the search string is very
+                                // short such as "be", but the search can be
+                                // performed using the BooleanQuery q2.
+                                shortTermBooleanQueryBuilder.add(q1, BooleanClause.Occur.SHOULD);
+                            }
+
+                        }
+
                         Query q2 = shortTermsQueryBuilder.createBooleanQuery(
                                 luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
-                                searchString.replace(" ", ""));
-                        if (q1 != null) {
-                            // Q1 can be null when the search string is very
-                            // short such as "be", but the search can be
-                            // performed using the BooleanQuery q2.
-                            shortTermBooleanQueryBuilder.add(q1, BooleanClause.Occur.SHOULD);
-                        }
+                                searchString);
+
                         shortTermBooleanQueryBuilder.add(q2, BooleanClause.Occur.SHOULD);
                         builder.add(shortTermBooleanQueryBuilder.build(), occur);
                     }

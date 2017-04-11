@@ -1,1 +1,54 @@
-{"conceptEntries":[{"id":"CONe40a6b36-dbaa-46c7-96ea-2c6a1cb080a4","lemma":"Douglas Weiner","pos":"noun","description":"American 20th century environmentalist","conceptList":"VogonWeb Concepts","deleted":false,"alternativeIds":[{"concept_id":"","concept_uri":"http://www.digitalhps.org/concepts/"},{"concept_id":"CONe40a6b36-dbaa-46c7-96ea-2c6a1cb080a4","concept_uri":"http://www.digitalhps.org/concepts/CONe40a6b36-dbaa-46c7-96ea-2c6a1cb080a4"}],"concept_uri":"http://www.digitalhps.org/concepts/CONe40a6b36-dbaa-46c7-96ea-2c6a1cb080a4","creator_id":"test","equal_to":"http://viaf.org/viaf/283748929","modified_by":"admin","similar_to":"http://viaf.org/viaf/248802520","synonym_ids":"[]","wordnet_id":""}],"pagination":{"pageNumber":1,"totalNumberOfRecords":1}}
+{
+	"conceptEntries": [{
+		"id": "CONe40a6b36-dbaa-46c7-96ea-2c6a1cb080a4",
+		"lemma": "Douglas Weiner",
+		"pos": "noun",
+		"description": "American 20th century environmentalist",
+		"conceptList": "VogonWeb Concepts",
+		"deleted": false,
+		"concept_uri": "http://www.digitalhps.org/concepts/CONe40a6b36-dbaa-46c7-96ea-2c6a1cb080a4",
+		"creator_id": "test",
+		"equal_to": "http://viaf.org/viaf/283748929",
+		"modified_by": "admin",
+		"similar_to": "http://viaf.org/viaf/248802520",
+		"synonym_ids": "[]",
+		"wordnet_id": "",
+		"alternativeIds": [{
+			"concept_id": "",
+			"concept_uri": "http://www.digitalhps.org/concepts/"
+		}, {
+			"concept_id": "CONe40a6b36-dbaa-46c7-96ea-2c6a1cb080a4",
+			"concept_uri": "http://www.digitalhps.org/concepts/CONe40a6b36-dbaa-46c7-96ea-2c6a1cb080a4"
+		}]
+	}, {
+		"id": "CON0252cf48-4233-495d-94ae-42480b0fd82b",
+		"lemma": "Douglas",
+		"pos": "NOUN",
+		"description": "Similar to concept",
+		"conceptList": "VogonWeb Concepts",
+		"type": {
+			"type_id": "986a7cc9-c0c1-4720-b344-853f08c136ab",
+			"type_uri": "http://www.digitalhps.org/types/TYPE_986a7cc9-c0c1-4720-b344-853f08c136ab",
+			"type_name": "E21 Person"
+		},
+		"deleted": false,
+		"concept_uri": "http://www.digitalhps.org/concepts/CON0252cf48-4233-495d-94ae-42480b0fd82b",
+		"creator_id": "admin",
+		"equal_to": "",
+		"modified_by": "",
+		"similar_to": "http://viaf.org/viaf/248802520",
+		"synonym_ids": "",
+		"wordnet_id": "WID-10941206-N-01-Douglas",
+		"alternativeIds": [{
+			"concept_id": "CON0252cf48-4233-495d-94ae-42480b0fd82b",
+			"concept_uri": "http://www.digitalhps.org/concepts/CON0252cf48-4233-495d-94ae-42480b0fd82b"
+		}, {
+			"concept_id": "WID-10941206-N-01-Douglas",
+			"concept_uri": "http://www.digitalhps.org/concepts/WID-10941206-N-01-Douglas"
+		}]
+	}],
+	"pagination": {
+		"pageNumber": 1,
+		"totalNumberOfRecords": 2
+	}
+}
