@@ -74,4 +74,23 @@ public class ConceptLookupIT extends IntegrationTest {
                 .andExpect(content().xml(output)).andExpect(status().isOk());
     }
 
+    @Test
+    public void test_getWordNetEntry_searchWithWildCardOneOrMoreCharactersInXml() throws Exception {
+        final String output = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/wildCardSearchConceptLookUp1.xml"));
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Dougl*/noun")
+                        .accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(content().xml(output)).andExpect(status().isOk());
+    }
+
+    @Test
+    public void test_getWordNetEntry_searchWithWildCardOneOrMoreCharactersInJson() throws Exception {
+        final String output = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/wildCardSearchConceptLookUp1.json"));
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Dougl*/noun")
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(content().json(output)).andExpect(status().isOk());
+    }
 }

@@ -37,6 +37,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.MultiTermQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
@@ -484,9 +485,11 @@ public class LuceneUtility implements ILuceneUtility {
                 String searchString = fieldMap.get(search.fieldName());
                 if (searchString != null) {
                     if (containsWildCardCharacters(searchString)) {
-                        Term t = new Term(luceneFieldAnnotation.lucenefieldName(), searchString);
-                        Query q = new WildcardQuery(t);
+                        Term t = new Term(luceneFieldAnnotation.lucenefieldName(), searchString.toLowerCase());
+                        WildcardQuery q = new WildcardQuery(t);
+                        q.setRewriteMethod(MultiTermQuery.SCORING_BOOLEAN_REWRITE);
                         builder.add(q, occur);
+
                     } else if (!luceneFieldAnnotation.isShortPhraseSearchable()
                             && luceneFieldAnnotation.isTokenized()) {
                         Query q = qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
