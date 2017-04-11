@@ -56,6 +56,8 @@
             }
         });
 
+        var words = [];
+        
         //ajax call to add the concept selected for wrappping
         $('body').delegate('#conceptSearch tbody tr', "click", function() {
             var aData = oTable.fnGetData(this); // get datarow
@@ -65,6 +67,7 @@
                 var conceptID = aData[1];
                 var wordnetID = aData[2];
                 var description = aData[5];
+                var wordField  =$( '#'+conceptID ).text();
                 if (conceptID === wordnetID) {
                     var wrapperids = '';
                     if (!$(this).hasClass('selected')) {
@@ -77,6 +80,13 @@
                         html += '<p>' + description + '</p></div>';
 
                         $("#selectedconcepts").append(html);
+                        
+                        words.push(wordField);
+                        if($('#word').val().length < wordField.length) {
+                            console.log('Set the value of wordField');
+                            $('#word').val(wordField);
+                        }
+                        
                     } else {
                         wrapperids = $("#wrapperids").val();
                         wrapperids = wrapperids.replace(wordnetID + ',', '');
@@ -85,6 +95,27 @@
                         // remove the div element 
                         var x = document.getElementById(wordnetID + 'div');
                         x.parentNode.removeChild(x);
+                        
+                        var index = 0;
+                        for (var i = 0; i < words.length; i++) {
+                            // Remove the word from array (words)
+                            if(words[i] == wordField) {
+                                index = i;
+                            }
+                        }
+                        words.splice(index, 1);
+                        
+                        // Set the correct word in word field.
+                        var maxLength = 0;
+                        var maxWord = '';
+                        for(var i=0; i< words.length; i++) {
+                            if(words[i].length > maxLength) {
+                                maxLength = words[i].length;
+                                maxWord = words[i];
+                            }
+                        }
+                        $('#word').val(maxWord);
+                        
 
                     }
 
