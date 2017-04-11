@@ -1,14 +1,17 @@
 package edu.asu.conceptpower.rest;
 
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.apache.commons.io.IOUtil;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -52,7 +55,6 @@ public class ConceptLookupIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas Weiner/noun")
                         .accept(MediaType.APPLICATION_XML_VALUE))
-                .andDo(print())
                 .andExpect(content().xml(output)).andExpect(status().isOk());
     }
 
@@ -70,20 +72,28 @@ public class ConceptLookupIT extends IntegrationTest {
     public void test_getWordNetEntry_successForMultipleEntryInXml() throws Exception {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpForMultipletEntry.xml"));
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas/noun")
-                        .accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().xml(output)).andExpect(status().isOk());
+        MvcResult result = this.mockMvc.perform(
+                MockMvcRequestBuilders.get("/ConceptLookup/Douglas/noun").accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(status().isOk()).andReturn();
+        Diff myDiff = new Diff(output, result.getResponse().getContentAsString());
+        myDiff.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_getWordNetEntry_successForMultipleEntryInXml", myDiff,
+                true);
     }
 
     @Test
     public void test_getWordNetEntry_searchWithWildCardOneOrMoreCharactersInXml() throws Exception {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/wildCardSearchConceptLookUp1.xml"));
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Dougl*/noun")
-                        .accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().xml(output)).andExpect(status().isOk());
+        MvcResult result = this.mockMvc.perform(
+                MockMvcRequestBuilders.get("/ConceptLookup/Dougl*/noun").accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(status().isOk()).andReturn();
+
+        Diff myDiff = new Diff(output, result.getResponse().getContentAsString());
+        myDiff.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual(
+                "Similarlity failed in test_getWordNetEntry_searchWithWildCardOneOrMoreCharactersInXml", myDiff,
+                true);
     }
 
     @Test
