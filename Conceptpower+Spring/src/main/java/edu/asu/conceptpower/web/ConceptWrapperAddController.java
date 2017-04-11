@@ -115,6 +115,10 @@ public class ConceptWrapperAddController {
     public String addConcept(HttpServletRequest req, Principal principal, Model model)
             throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
 
+        if (req.getParameter("word") == null || req.getParameter("word").trim().isEmpty()) {
+            req.setAttribute("errormsg", "You have to enter a word.");
+            return "forward:/auth/conceptlist/addconceptwrapper";
+        }
         if (req.getParameter("lists") == null || req.getParameter("lists").trim().isEmpty()) {
             req.setAttribute("errormsg", "You have to select a concept list.");
             return "forward:/auth/conceptlist/addconceptwrapper";
@@ -122,7 +126,7 @@ public class ConceptWrapperAddController {
         String[] wrappers = req.getParameter("wrapperids").split(Constants.CONCEPT_SEPARATOR);
 		if (wrappers.length > 0) {
 			ConceptEntry conceptEntry = new ConceptEntry();
-			conceptEntry.setWord(conceptManager.getConceptEntry(wrappers[0]).getWord().replace("_", " "));
+            conceptEntry.setWord(req.getParameter("word"));
 			conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
 			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
 			conceptEntry.setWordnetId(req.getParameter("wrapperids"));

@@ -118,7 +118,7 @@
                     $("#conceptTerm").text(details.name);
                     $("#detailsid").text(details.id);
                     $("#detailsuri").text(details.uri);
-                    $("#detailswordnetid").text(details.wordnetId);
+                    $("#detailswordnetid").text(details.wordnetid);
                     $("#detailspos").text(details.pos);
                     $("#detailsconceptlist").text(details.conceptlist);
                     $("#detailstypeid").text(details.type);
@@ -369,6 +369,12 @@
     <p>Selected Wordnet concept:</p>
 
     <table class="table-striped table-bordered">
+
+        <tr>
+            <td>Word</td>
+            <td><input type='text' id="word" name="word" class='form-control'/></td>
+            <td></td>
+        </tr>
 
         <tr>
             <td>Concept List</td>
