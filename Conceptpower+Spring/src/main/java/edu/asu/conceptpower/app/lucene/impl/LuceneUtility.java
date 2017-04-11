@@ -41,6 +41,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.QueryBuilder;
@@ -482,7 +483,12 @@ public class LuceneUtility implements ILuceneUtility {
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
                 if (searchString != null) {
-                    if (!luceneFieldAnnotation.isShortPhraseSearchable() && luceneFieldAnnotation.isTokenized()) {
+                    if (containsWildCardCharacters(searchString)) {
+                        Term t = new Term(luceneFieldAnnotation.lucenefieldName(), searchString);
+                        Query q = new WildcardQuery(t);
+                        builder.add(q, occur);
+                    } else if (!luceneFieldAnnotation.isShortPhraseSearchable()
+                            && luceneFieldAnnotation.isTokenized()) {
                         Query q = qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
                         builder.add(q, occur);
                     } else if (!luceneFieldAnnotation.isShortPhraseSearchable()
@@ -591,6 +597,10 @@ public class LuceneUtility implements ILuceneUtility {
             }
         }
         return wordnetIds;
+    }
+
+    private boolean containsWildCardCharacters(String searchString) {
+        return (searchString.contains("?") || searchString.contains("*"));
     }
 
     @PreDestroy
