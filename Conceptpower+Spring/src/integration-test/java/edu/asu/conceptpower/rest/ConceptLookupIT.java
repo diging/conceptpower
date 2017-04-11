@@ -52,48 +52,53 @@ public class ConceptLookupIT extends IntegrationTest {
     public void test_getWordNetEntry_successForSingleEntryInXml() throws Exception {
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpWordNetEntry.xml"));
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas Weiner/noun")
-                        .accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().xml(output)).andExpect(status().isOk());
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas Weiner/noun")
+                .accept(MediaType.APPLICATION_XML_VALUE)).andExpect(status().isOk()).andReturn();
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_getWordNetEntry_successForSingleEntryInXml",
+                xmlDifference,
+                true);
     }
 
     @Test
     public void test_getWordNetEntry_noResultsInXml() throws Exception {
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptEntryNotFound.xml"));
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptLookup/Gustav Robert Kirchhoff/verb")
-                        .accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().xml(output)).andExpect(status().isOk());
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders
+                .get("/ConceptLookup/Gustav Robert Kirchhoff/verb").accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(status().isOk()).andReturn();
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_getWordNetEntry_noResultsInXml",
+                xmlDifference, true);
     }
 
     @Test
     public void test_getWordNetEntry_successForMultipleEntryInXml() throws Exception {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpForMultipletEntry.xml"));
-        MvcResult result = this.mockMvc.perform(
+        MvcResult mvcResult = this.mockMvc.perform(
                 MockMvcRequestBuilders.get("/ConceptLookup/Douglas/noun").accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(status().isOk()).andReturn();
-        Diff myDiff = new Diff(output, result.getResponse().getContentAsString());
-        myDiff.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
-        XMLAssert.assertXMLEqual("Similarlity failed in test_getWordNetEntry_successForMultipleEntryInXml", myDiff,
-                true);
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_getWordNetEntry_successForMultipleEntryInXml",
+                xmlDifference, true);
     }
 
     @Test
     public void test_getWordNetEntry_searchWithWildCardOneOrMoreCharactersInXml() throws Exception {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/wildCardSearchConceptLookUp1.xml"));
-        MvcResult result = this.mockMvc.perform(
+        MvcResult mvcResult = this.mockMvc.perform(
                 MockMvcRequestBuilders.get("/ConceptLookup/Dougl*/noun").accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(status().isOk()).andReturn();
 
-        Diff myDiff = new Diff(output, result.getResponse().getContentAsString());
-        myDiff.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
-        XMLAssert.assertXMLEqual(
-                "Similarlity failed in test_getWordNetEntry_searchWithWildCardOneOrMoreCharactersInXml", myDiff,
-                true);
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_getWordNetEntry_searchWithWildCardOneOrMoreCharactersInXml",
+                xmlDifference, true);
     }
 
     @Test
