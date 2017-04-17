@@ -109,8 +109,6 @@ public class ConceptMergeService implements IConceptMergeService {
             throws LuceneException, IndexerRunningException, IllegalAccessException, DictionaryDoesNotExistException,
             DictionaryModifyException {
 
-        deleteMergedConcepts(userName, conceptsMergeBean);
-
         if (conceptsMergeBean.getSelectedConceptId().trim().equals("")) {
             // Add
             ConceptEntry entry = new ConceptEntry();
@@ -122,6 +120,8 @@ public class ConceptMergeService implements IConceptMergeService {
             fillConceptEntry(entry, conceptsMergeBean);
             conceptManager.storeModifiedConcept(entry, userName);
         }
+
+        deleteMergedConcepts(userName, conceptsMergeBean);
     }
 
     private void deleteMergedConcepts(String userName, ConceptsMergeBean conceptsMergeBean)
@@ -137,7 +137,7 @@ public class ConceptMergeService implements IConceptMergeService {
                 String conceptWrapperId = createConceptWrapperById(id, userName, conceptsMergeBean);
                 conceptManager.deleteConcept(conceptWrapperId, userName);
             } else if (!id.equalsIgnoreCase(conceptsMergeBean.getSelectedConceptId().trim())) {
-                conceptManager.deleteConcept(id, userName);
+                conceptManager.deleteNonMergedConcept(id, userName);
             }
         }
     }
@@ -145,7 +145,7 @@ public class ConceptMergeService implements IConceptMergeService {
     private String createConceptWrapperById(String wrapperId, String userName, ConceptsMergeBean conceptsMergeBean)
             throws IllegalAccessException, DictionaryDoesNotExistException, DictionaryModifyException, LuceneException,
             IndexerRunningException {
-        ConceptEntry entry = conceptManager.getConceptEntry(wrapperId);
+        ConceptEntry entry = conceptManager.getWordnetConceptEntry(wrapperId);
         // Creating concept wrapper with all the values, because in future we
         // will be including manipulations on deleted wrappers as well.
         // WrapperId has been added to delete the wordnet id. If this wordnet

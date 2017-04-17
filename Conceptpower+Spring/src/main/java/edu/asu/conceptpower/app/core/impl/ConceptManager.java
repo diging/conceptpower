@@ -524,6 +524,18 @@ public class ConceptManager implements IConceptManager {
         indexService.deleteById(concept.getId(), userName);
     }
 
+    public void deleteNonMergedConcept(String id, String userName) throws LuceneException, IndexerRunningException {
+        ConceptEntry concept = client.getEntry(id);
+        concept.setDeleted(true);
+        ChangeEvent changeEvent = new ChangeEvent();
+        changeEvent.setType(ChangeEventTypes.DELETION);
+        changeEvent.setDate(new Date());
+        changeEvent.setUserName(userName);
+        concept.addNewChangeEvent(changeEvent);
+        client.update(concept, DBNames.DICTIONARY_DB);
+        indexService.deleteById(concept.getId(), userName);
+    }
+
     @Override
     public ConceptEntry getConceptWrappedEntryByWordNetId(String wordNetID)
             throws IllegalAccessException, LuceneException, IndexerRunningException {

@@ -168,4 +168,14 @@ public interface IConceptManager {
             int page, int numberOfRecordsPerPage)
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
 
+    /**
+     * This method deletes the concept that is not a merged concept.
+     * 
+     * @param id
+     * @param userName
+     * @throws LuceneException
+     * @throws IndexerRunningException
+     */
+    public void deleteNonMergedConcept(String id, String userName) throws LuceneException, IndexerRunningException;
+
 }
