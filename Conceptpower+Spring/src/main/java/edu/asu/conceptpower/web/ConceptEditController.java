@@ -32,6 +32,7 @@ import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.service.IConceptEditService;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
@@ -65,6 +66,9 @@ public class ConceptEditController {
 
     @Autowired
     private IIndexService indexService;
+
+    @Autowired
+    private IConceptEditService conceptEditService;
 
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
@@ -112,6 +116,7 @@ public class ConceptEditController {
         conceptEditBean.setConceptId(concept.getId());
         conceptEditBean.setConceptEntryList(new ArrayList());
         conceptEditBean.setWordnetIds(concept.getWordnetId());
+        conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
         return "/auth/conceptlist/editconcept";
     }
@@ -181,7 +186,7 @@ public class ConceptEditController {
             return model;
         }
 
-        conceptManager.storeModifiedConcept(conceptEntry, principal.getName());
+        conceptEditService.editConcepts(conceptEntry, conceptEditBean, principal.getName());
 
         if (conceptEditBean.isFromHomeScreen()) {
             model.setViewName("redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="

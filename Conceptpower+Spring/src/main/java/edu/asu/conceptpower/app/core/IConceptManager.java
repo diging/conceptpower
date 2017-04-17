@@ -168,4 +168,13 @@ public interface IConceptManager {
             int page, int numberOfRecordsPerPage)
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
 
+    /**
+     * This method adds the entry to the wordnet concept list.
+     * 
+     * @param entry
+     * @param userName
+     */
+    public void addWordnetConceptEntry(ConceptEntry entry, String userName)
+            throws IllegalAccessException, LuceneException, IndexerRunningException;
+
 }

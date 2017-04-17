@@ -470,7 +470,6 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
         entry.addNewChangeEvent(changeEvent);
-
         indexService.updateConceptEntry(entry, userName);
 
         client.update(entry, DBNames.DICTIONARY_DB);
@@ -561,5 +560,12 @@ public class ConceptManager implements IConceptManager {
         List<ConceptEntry> conceptEntries = client.getAllEntriesFromList(conceptListName);
         alternativeIdService.addAlternativeIds(conceptEntries);
         return conceptEntries;
+    }
+
+    @Override
+    public void addWordnetConceptEntry(ConceptEntry entry, String userName)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
+        entry.setConceptList(Constants.WORDNET_DICTIONARY);
+        indexService.insertConcept(entry, userName);
     }
 }
