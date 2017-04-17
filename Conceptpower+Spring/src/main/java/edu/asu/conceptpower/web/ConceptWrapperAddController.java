@@ -124,19 +124,19 @@ public class ConceptWrapperAddController {
             return "forward:/auth/conceptlist/addconceptwrapper";
         }
         String[] wrappers = req.getParameter("wrapperids").split(Constants.CONCEPT_SEPARATOR);
-		if (wrappers.length > 0) {
-			ConceptEntry conceptEntry = new ConceptEntry();
+        if (wrappers.length > 0) {
+            ConceptEntry conceptEntry = new ConceptEntry();
             conceptEntry.setWord(req.getParameter("word"));
-			conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
-			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-			conceptEntry.setWordnetId(req.getParameter("wrapperids"));
-			conceptEntry.setConceptList(req.getParameter("lists"));
-			conceptEntry.setDescription(req.getParameter("description"));
-			conceptEntry.setEqualTo(req.getParameter("equals"));
-			conceptEntry.setSimilarTo(req.getParameter("similar"));
-			conceptEntry.setTypeId(req.getParameter("types"));
-			conceptEntry.setCreatorId(principal.getName());
-			
+            conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
+            conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
+            conceptEntry.setWordnetId(req.getParameter("wrapperids"));
+            conceptEntry.setConceptList(req.getParameter("lists"));
+            conceptEntry.setDescription(req.getParameter("description"));
+            conceptEntry.setEqualTo(req.getParameter("equals"));
+            conceptEntry.setSimilarTo(req.getParameter("similar"));
+            conceptEntry.setTypeId(req.getParameter("types"));
+            conceptEntry.setCreatorId(principal.getName());
+
             if (indexService.isIndexerRunning()) {
                 model.addAttribute("show_error_alert", true);
                 model.addAttribute("error_alert_msg", indexerRunning);
@@ -144,7 +144,7 @@ public class ConceptWrapperAddController {
                 return "forward:/auth/conceptlist/addconceptwrapper";
             }
             conceptManager.addConceptListEntry(conceptEntry, principal.getName());
-		}
+        }
 
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
     }
