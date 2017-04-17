@@ -56,6 +56,8 @@
             }
         });
 
+        var words = [];
+        
         //ajax call to add the concept selected for wrappping
         $('body').delegate('#conceptSearch tbody tr', "click", function() {
             var aData = oTable.fnGetData(this); // get datarow
@@ -65,9 +67,10 @@
                 var conceptID = aData[1];
                 var wordnetID = aData[2];
                 var description = aData[5];
+                var wordField  =$( '#'+conceptID ).text();
                 if (conceptID === wordnetID) {
                     var wrapperids = '';
-                    if (!$(this).hasClass('row_selected')) {
+                    if (!$(this).hasClass('selected')) {
                         wrapperids = $("#wrapperids").val();
                         wrapperids += (conceptID + ',');
                         $("#wrapperids").val(wrapperids);
@@ -77,6 +80,13 @@
                         html += '<p>' + description + '</p></div>';
 
                         $("#selectedconcepts").append(html);
+                        
+                        words.push(wordField);
+                        if($('#word').val().length < wordField.length) {
+                            console.log('Set the value of wordField');
+                            $('#word').val(wordField);
+                        }
+                        
                     } else {
                         wrapperids = $("#wrapperids").val();
                         wrapperids = wrapperids.replace(wordnetID + ',', '');
@@ -85,6 +95,27 @@
                         // remove the div element 
                         var x = document.getElementById(wordnetID + 'div');
                         x.parentNode.removeChild(x);
+                        
+                        var index = 0;
+                        for (var i = 0; i < words.length; i++) {
+                            // Remove the word from array (words)
+                            if(words[i] == wordField) {
+                                index = i;
+                            }
+                        }
+                        words.splice(index, 1);
+                        
+                        // Set the correct word in word field.
+                        var maxLength = 0;
+                        var maxWord = '';
+                        for(var i=0; i< words.length; i++) {
+                            if(words[i].length > maxLength) {
+                                maxLength = words[i].length;
+                                maxWord = words[i];
+                            }
+                        }
+                        $('#word').val(maxWord);
+                        
 
                     }
 
@@ -96,7 +127,7 @@
                     else
                         $('#createwrapper').prop('disabled', true);
 
-                    $(this).toggleClass('row_selected');
+                    $(this).toggleClass('selected');
                 }
             }
 
@@ -118,7 +149,7 @@
                     $("#conceptTerm").text(details.name);
                     $("#detailsid").text(details.id);
                     $("#detailsuri").text(details.uri);
-                    $("#detailswordnetid").text(details.wordnetId);
+                    $("#detailswordnetid").text(details.wordnetid);
                     $("#detailspos").text(details.pos);
                     $("#detailsconceptlist").text(details.conceptlist);
                     $("#detailstypeid").text(details.type);
@@ -314,7 +345,7 @@
 
     <c:if test="${not empty result}">
         <table cellpadding="0" cellspacing="0"
-            class="table table-striped table-bordered"
+            class="table table-bordered"
             id="conceptSearch">
             <thead>
                 <tr>
@@ -369,6 +400,12 @@
     <p>Selected Wordnet concept:</p>
 
     <table class="table-striped table-bordered">
+
+        <tr>
+            <td>Word</td>
+            <td><input type='text' id="word" name="word" class='form-control'/></td>
+            <td></td>
+        </tr>
 
         <tr>
             <td>Concept List</td>

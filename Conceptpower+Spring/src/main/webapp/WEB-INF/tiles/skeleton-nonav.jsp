@@ -35,6 +35,9 @@
 <link rel="stylesheet"
 	href="${pageContext.servletContext.contextPath}/resources/js/datatable/css/dataTables.bootstrap.min.css" />
 
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/js/datatable/css/jquery.dataTables.min.css" />
+
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
 	<script src="${pageContext.servletContext.contextPath}/resources/assets/js/html5shiv.js"></script>

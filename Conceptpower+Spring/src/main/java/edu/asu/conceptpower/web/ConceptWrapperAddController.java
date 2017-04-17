@@ -115,24 +115,28 @@ public class ConceptWrapperAddController {
     public String addConcept(HttpServletRequest req, Principal principal, Model model)
             throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
 
+        if (req.getParameter("word") == null || req.getParameter("word").trim().isEmpty()) {
+            req.setAttribute("errormsg", "You have to enter a word.");
+            return "forward:/auth/conceptlist/addconceptwrapper";
+        }
         if (req.getParameter("lists") == null || req.getParameter("lists").trim().isEmpty()) {
             req.setAttribute("errormsg", "You have to select a concept list.");
             return "forward:/auth/conceptlist/addconceptwrapper";
         }
         String[] wrappers = req.getParameter("wrapperids").split(Constants.CONCEPT_SEPARATOR);
-		if (wrappers.length > 0) {
-			ConceptEntry conceptEntry = new ConceptEntry();
-			conceptEntry.setWord(conceptManager.getConceptEntry(wrappers[0]).getWord().replace("_", " "));
-			conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
-			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-			conceptEntry.setWordnetId(req.getParameter("wrapperids"));
-			conceptEntry.setConceptList(req.getParameter("lists"));
-			conceptEntry.setDescription(req.getParameter("description"));
-			conceptEntry.setEqualTo(req.getParameter("equals"));
-			conceptEntry.setSimilarTo(req.getParameter("similar"));
-			conceptEntry.setTypeId(req.getParameter("types"));
-			conceptEntry.setCreatorId(principal.getName());
-			
+        if (wrappers.length > 0) {
+            ConceptEntry conceptEntry = new ConceptEntry();
+            conceptEntry.setWord(req.getParameter("word"));
+            conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
+            conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
+            conceptEntry.setWordnetId(req.getParameter("wrapperids"));
+            conceptEntry.setConceptList(req.getParameter("lists"));
+            conceptEntry.setDescription(req.getParameter("description"));
+            conceptEntry.setEqualTo(req.getParameter("equals"));
+            conceptEntry.setSimilarTo(req.getParameter("similar"));
+            conceptEntry.setTypeId(req.getParameter("types"));
+            conceptEntry.setCreatorId(principal.getName());
+
             if (indexService.isIndexerRunning()) {
                 model.addAttribute("show_error_alert", true);
                 model.addAttribute("error_alert_msg", indexerRunning);
@@ -140,7 +144,7 @@ public class ConceptWrapperAddController {
                 return "forward:/auth/conceptlist/addconceptwrapper";
             }
             conceptManager.addConceptListEntry(conceptEntry, principal.getName());
-		}
+        }
 
         return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
     }
