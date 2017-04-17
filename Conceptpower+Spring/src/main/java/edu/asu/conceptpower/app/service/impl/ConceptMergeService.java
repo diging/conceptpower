@@ -109,6 +109,8 @@ public class ConceptMergeService implements IConceptMergeService {
             throws LuceneException, IndexerRunningException, IllegalAccessException, DictionaryDoesNotExistException,
             DictionaryModifyException {
 
+        deleteMergedConcepts(userName, conceptsMergeBean);
+
         if (conceptsMergeBean.getSelectedConceptId().trim().equals("")) {
             // Add
             ConceptEntry entry = new ConceptEntry();
@@ -120,8 +122,6 @@ public class ConceptMergeService implements IConceptMergeService {
             fillConceptEntry(entry, conceptsMergeBean);
             conceptManager.storeModifiedConcept(entry, userName);
         }
-
-        deleteMergedConcepts(userName, conceptsMergeBean);
     }
 
     private void deleteMergedConcepts(String userName, ConceptsMergeBean conceptsMergeBean)
