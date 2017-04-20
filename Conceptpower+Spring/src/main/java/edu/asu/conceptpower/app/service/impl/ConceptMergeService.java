@@ -137,7 +137,7 @@ public class ConceptMergeService implements IConceptMergeService {
                 String conceptWrapperId = createConceptWrapperById(id, userName, conceptsMergeBean);
                 conceptManager.deleteConcept(conceptWrapperId, userName);
             } else if (!id.equalsIgnoreCase(conceptsMergeBean.getSelectedConceptId().trim())) {
-                conceptManager.deleteNonMergedConcept(id, userName);
+                conceptManager.deleteConcept(conceptManager.getLocalConceptEntry(id), userName);
             }
         }
     }
