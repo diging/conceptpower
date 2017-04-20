@@ -8,7 +8,11 @@ import edu.asu.conceptpower.core.ConceptEntry;
 public interface IConceptEditService {
 
     /**
-     * This method edits the concept.
+     * This method edits the concept by updating the concept in the database and
+     * lucene index.
+     * 
+     * Apart from updating the concept, this method adds and removes the wordnet
+     * entries from the lucene index and database.
      * 
      * @param conceptEntry
      * @param conceptEditBean

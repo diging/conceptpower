@@ -21,14 +21,19 @@ public class ConceptEditService implements IConceptEditService {
     private IConceptManager conceptManager;
 
     /**
-     * This method adds all the wordnet concepts that are removed from wordnet
-     * id field of wrapper. The next step is to remove all the wordnet concepts
-     * that are added to the wordnet id field of the wrapper. Finally the
-     * concept is updated.
+     * This method adds all the wordnet concepts to the database and lucene
+     * index that are removed from wordnet id field of wrapper. The next step is
+     * to remove all the wordnet concepts from database and lucene index that
+     * are added to the wordnet id field of the wrapper. Finally the concept is
+     * updated in the lucene index and database.
      * 
      * 
      * If conceptEntry or conceptEditBean is null, this method just returns
-     * without editing the concept.
+     * without editing the concept. Else the concept entry is updated in the
+     * database and lucene index.
+     * 
+     * Concept Edit bean is used for fetching the wordnet ids that are added and
+     * removed from the concept.
      * 
      */
     @Override
