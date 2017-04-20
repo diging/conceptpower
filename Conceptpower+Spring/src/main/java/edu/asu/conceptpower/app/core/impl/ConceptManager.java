@@ -516,34 +516,21 @@ public class ConceptManager implements IConceptManager {
         return builder.toString();
     }
 
-    @Override
-    public void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException {
-        ConceptEntry concept = getConceptEntry(id);
-        concept.setDeleted(true);
-        ChangeEvent changeEvent = new ChangeEvent();
-        changeEvent.setType(ChangeEventTypes.DELETION);
-        changeEvent.setDate(new Date());
-        changeEvent.setUserName(userName);
-        concept.addNewChangeEvent(changeEvent);
-        client.update(concept, DBNames.DICTIONARY_DB);
-        indexService.deleteById(concept.getId(), userName);
-    }
-
     /**
-     * This method deletes the concept that is passed as a parameter. If the
-     * concept entry is null, then this method does nothing.
+     * This method deletes the concept that is passed as a parameter. If a null
+     * value is passed as a concept, this method does nothing.
      */
     @Override
-    public void deleteConcept(ConceptEntry entry, String userName) throws LuceneException, IndexerRunningException {
-        if (entry != null) {
-            entry.setDeleted(true);
+    public void deleteConcept(ConceptEntry concept, String userName) throws LuceneException, IndexerRunningException {
+        if (concept != null) {
+            concept.setDeleted(true);
             ChangeEvent changeEvent = new ChangeEvent();
             changeEvent.setType(ChangeEventTypes.DELETION);
             changeEvent.setDate(new Date());
             changeEvent.setUserName(userName);
-            entry.addNewChangeEvent(changeEvent);
-            client.update(entry, DBNames.DICTIONARY_DB);
-            indexService.deleteById(entry.getId(), userName);
+            concept.addNewChangeEvent(changeEvent);
+            client.update(concept, DBNames.DICTIONARY_DB);
+            indexService.deleteById(concept.getId(), userName);
         }
     }
 

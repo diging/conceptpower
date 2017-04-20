@@ -121,8 +121,6 @@ public interface IConceptManager {
     public abstract void storeModifiedConcept(ConceptEntry entry, String userName)
             throws LuceneException, IllegalAccessException, IndexerRunningException;
 
-    public abstract void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException;
-
     /**
      * Fetches the concept wrapped entries based on the wordnet id
      * 

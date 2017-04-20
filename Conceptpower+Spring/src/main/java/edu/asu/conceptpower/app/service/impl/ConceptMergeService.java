@@ -135,7 +135,7 @@ public class ConceptMergeService implements IConceptMergeService {
                 // because changeevent object needs to be updated for
                 // deletion correctly.
                 String conceptWrapperId = createConceptWrapperById(id, userName, conceptsMergeBean);
-                conceptManager.deleteConcept(conceptWrapperId, userName);
+                conceptManager.deleteConcept(conceptManager.getConceptEntry(conceptWrapperId), userName);
             } else if (!id.equalsIgnoreCase(conceptsMergeBean.getSelectedConceptId().trim())) {
                 conceptManager.deleteConcept(conceptManager.getLocalConceptEntry(id), userName);
             }
