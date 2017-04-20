@@ -35,11 +35,13 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MultiTermQuery;
-import org.apache.lucene.search.Query;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.WildcardQuery;
@@ -537,39 +539,33 @@ public class LuceneUtility implements ILuceneUtility {
     private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,
             QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, String searchString) {
         if (luceneFieldAnnotation.isTokenized()) {
-            QueryBuilder shortTermsQueryBuilder = new QueryBuilder(perFieldAnalyzerWrapper);
-            BooleanQuery.Builder shortTermBooleanQueryBuilder = new BooleanQuery.Builder();
-            String[] searchStrings = searchString.split(" ");
-            for (String searchValue : searchStrings) {
-                Query q1 = shortTermsQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
-                        searchValue);
-                if (q1 != null) {
-                    // Q1 can be null when the search string is very
-                    // short such as "be", but the search can be
-                    // performed using the BooleanQuery q2.
-                    if (luceneFieldAnnotation.isShortPhraseSearchable()) {
-                        shortTermBooleanQueryBuilder.add(q1, BooleanClause.Occur.SHOULD);
-                    } else {
-                        shortTermBooleanQueryBuilder.add(q1, occur);
-                    }
-
+            BooleanQuery.Builder tokenizedQueryBuilder = new BooleanQuery.Builder();
+            for (String searchValue : searchString.split(" ")) {
+                if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
+                    createWildCardSearchQuery(luceneFieldAnnotation, searchValue, tokenizedQueryBuilder, Occur.MUST);
+                } else {
+                    tokenizedQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchValue),
+                            Occur.MUST);
                 }
+
             }
 
             if (luceneFieldAnnotation.isShortPhraseSearchable()) {
-                Query q2 = shortTermsQueryBuilder.createBooleanQuery(
-                        luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
-                        searchString);
-                shortTermBooleanQueryBuilder.add(q2, BooleanClause.Occur.SHOULD);
-
+                tokenizedQueryBuilder.add(
+                        new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
+                                searchString),
+                        Occur.SHOULD);
             }
-            createWildCardSearchQuery(luceneFieldAnnotation, searchString, shortTermBooleanQueryBuilder);
-            builder.add(shortTermBooleanQueryBuilder.build(), occur);
-        } else if (!luceneFieldAnnotation.isShortPhraseSearchable()
-                && !luceneFieldAnnotation.isTokenized()) {
-            Query q = qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
-            builder.add(q, occur);
-            createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder);
+
+            builder.add(tokenizedQueryBuilder.build(), occur);
+
+        } else {
+            if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
+                createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder, occur);
+            } else {
+                builder.add(new BooleanClause(
+                        new TermQuery(new Term(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
+            }
         }
     }
 
@@ -583,12 +579,12 @@ public class LuceneUtility implements ILuceneUtility {
      * @param queryBuilder
      */
     private void createWildCardSearchQuery(LuceneField luceneFieldAnnotation, String searchString,
-            BooleanQuery.Builder queryBuilder) {
+            BooleanQuery.Builder queryBuilder, Occur occur) {
         if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
             Term t = new Term(luceneFieldAnnotation.lucenefieldName(), searchString.toLowerCase());
             WildcardQuery wildCardQuery = new WildcardQuery(t);
             wildCardQuery.setRewriteMethod(MultiTermQuery.SCORING_BOOLEAN_REWRITE);
-            queryBuilder.add(wildCardQuery, BooleanClause.Occur.SHOULD);
+            queryBuilder.add(wildCardQuery, occur);
         }
     }
 
