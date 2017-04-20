@@ -484,38 +484,7 @@ public class LuceneUtility implements ILuceneUtility {
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
                 if (searchString != null) {
-
-                    if (!luceneFieldAnnotation.isShortPhraseSearchable() && luceneFieldAnnotation.isTokenized()) {
-                        Query q = qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
-                        builder.add(q, occur);
-                        createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder);
-                    } else if (!luceneFieldAnnotation.isShortPhraseSearchable()
-                            && !luceneFieldAnnotation.isTokenized()) {
-                        Query q = qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
-                        builder.add(q, occur);
-                        createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder);
-                    } else {
-                        QueryBuilder shortTermsQueryBuilder = new QueryBuilder(perFieldAnalyzerWrapper);
-                        BooleanQuery.Builder shortTermBooleanQueryBuilder = new BooleanQuery.Builder();
-
-                        String[] searchStrings = searchString.split(" ");
-                        for (String searchValue : searchStrings) {
-                            Query q1 = shortTermsQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
-                                    searchValue);
-                            if (q1 != null) {
-                                // Q1 can be null when the search string is very
-                                // short such as "be", but the search can be
-                                // performed using the BooleanQuery q2.
-                                shortTermBooleanQueryBuilder.add(q1, BooleanClause.Occur.SHOULD);
-                            }
-                        }
-                        Query q2 = shortTermsQueryBuilder.createBooleanQuery(
-                                luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
-                                searchString);
-                        shortTermBooleanQueryBuilder.add(q2, BooleanClause.Occur.SHOULD);
-                        createWildCardSearchQuery(luceneFieldAnnotation, searchString, shortTermBooleanQueryBuilder);
-                        builder.add(shortTermBooleanQueryBuilder.build(), occur);
-                    }
+                    buildQuery(occur, perFieldAnalyzerWrapper, qBuild, builder, luceneFieldAnnotation, searchString);
                 }
             }
         }
@@ -565,6 +534,54 @@ public class LuceneUtility implements ILuceneUtility {
 
     }
 
+    private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,
+            QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, String searchString) {
+        if (luceneFieldAnnotation.isTokenized()) {
+            QueryBuilder shortTermsQueryBuilder = new QueryBuilder(perFieldAnalyzerWrapper);
+            BooleanQuery.Builder shortTermBooleanQueryBuilder = new BooleanQuery.Builder();
+            String[] searchStrings = searchString.split(" ");
+            for (String searchValue : searchStrings) {
+                Query q1 = shortTermsQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(),
+                        searchValue);
+                if (q1 != null) {
+                    // Q1 can be null when the search string is very
+                    // short such as "be", but the search can be
+                    // performed using the BooleanQuery q2.
+                    if (luceneFieldAnnotation.isShortPhraseSearchable()) {
+                        shortTermBooleanQueryBuilder.add(q1, BooleanClause.Occur.SHOULD);
+                    } else {
+                        shortTermBooleanQueryBuilder.add(q1, occur);
+                    }
+
+                }
+            }
+
+            if (luceneFieldAnnotation.isShortPhraseSearchable()) {
+                Query q2 = shortTermsQueryBuilder.createBooleanQuery(
+                        luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
+                        searchString);
+                shortTermBooleanQueryBuilder.add(q2, BooleanClause.Occur.SHOULD);
+
+            }
+            createWildCardSearchQuery(luceneFieldAnnotation, searchString, shortTermBooleanQueryBuilder);
+            builder.add(shortTermBooleanQueryBuilder.build(), occur);
+        } else if (!luceneFieldAnnotation.isShortPhraseSearchable()
+                && !luceneFieldAnnotation.isTokenized()) {
+            Query q = qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString);
+            builder.add(q, occur);
+            createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder);
+        }
+    }
+
+    /**
+     * This method adds the wild card query to the query builder when the
+     * luceneFieldAnnotation has enabled wild card search. This wild card query
+     * is added with an 'OR' condition in the queryBuilder.
+     * 
+     * @param luceneFieldAnnotation
+     * @param searchString
+     * @param queryBuilder
+     */
     private void createWildCardSearchQuery(LuceneField luceneFieldAnnotation, String searchString,
             BooleanQuery.Builder queryBuilder) {
         if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
