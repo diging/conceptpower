@@ -186,7 +186,8 @@ public class ConceptEditController {
             return model;
         }
 
-        conceptEditService.editConcepts(conceptEntry, conceptEditBean, principal.getName());
+        conceptEditService.editConcepts(conceptEntry, conceptEditBean.getExistingWordnetIds(),
+                conceptEditBean.getWordnetIds(), principal.getName());
 
         if (conceptEditBean.isFromHomeScreen()) {
             model.setViewName("redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="

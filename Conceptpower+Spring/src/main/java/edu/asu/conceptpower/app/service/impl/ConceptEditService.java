@@ -7,7 +7,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.app.bean.ConceptEditBean;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
@@ -28,27 +27,23 @@ public class ConceptEditService implements IConceptEditService {
      * updated in the lucene index and database.
      * 
      * 
-     * If conceptEntry or conceptEditBean is null, this method just returns
-     * without editing the concept. Else the concept entry is updated in the
-     * database and lucene index.
-     * 
-     * Concept Edit bean is used for fetching the wordnet ids that are added and
-     * removed from the concept.
+     * If conceptEntry is null, this method just returns without editing the
+     * concept. Else the concept entry is updated in the database and lucene
+     * index.
      * 
      */
     @Override
-    public void editConcepts(ConceptEntry conceptEntry, ConceptEditBean conceptEditBean, String userName)
+    public void editConcepts(ConceptEntry conceptEntry, String oldWordnetIds, String updatedWordnetIds, String userName)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
 
-        if (conceptEntry == null || conceptEditBean == null) {
+        if (conceptEntry == null) {
             return;
         }
 
-        Set<String> oldWordnetIds = new HashSet<String>(
-                Arrays.asList(conceptEditBean.getExistingWordnetIds().split(",")));
-        Set<String> updatedWordnetIds = new HashSet<String>(Arrays.asList(conceptEditBean.getWordnetIds().split(",")));
-        oldWordnetIds.removeAll(updatedWordnetIds);
-        addWordNetConcepts(oldWordnetIds, userName);
+        Set<String> oldWordnetIdsSet = new HashSet<String>(Arrays.asList(oldWordnetIds.split(",")));
+        Set<String> updatedWordnetIdsSet = new HashSet<String>(Arrays.asList(updatedWordnetIds.split(",")));
+        oldWordnetIdsSet.removeAll(updatedWordnetIdsSet);
+        addWordNetConcepts(oldWordnetIdsSet, userName);
         deleteWordNetConcepts(conceptEntry.getWordnetId(), userName);
         conceptManager.storeModifiedConcept(conceptEntry, userName);
     }
