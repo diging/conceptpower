@@ -538,33 +538,48 @@ public class LuceneUtility implements ILuceneUtility {
 
     private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,
             QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, String searchString) {
-        if (luceneFieldAnnotation.isTokenized()) {
+        if (luceneFieldAnnotation.isTokenized() && luceneFieldAnnotation.isShortPhraseSearchable()) {
+            BooleanQuery.Builder rootQueryBuilder = new BooleanQuery.Builder();
             BooleanQuery.Builder tokenizedQueryBuilder = new BooleanQuery.Builder();
-            for (String searchValue : searchString.split(" ")) {
-                if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
-                    createWildCardSearchQuery(luceneFieldAnnotation, searchValue, tokenizedQueryBuilder, Occur.MUST);
-                } else {
-                    tokenizedQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchValue),
-                            Occur.MUST);
-                }
+            buildTokenizedOrWildCardQuery(luceneFieldAnnotation, searchString, tokenizedQueryBuilder);
+            rootQueryBuilder.add(tokenizedQueryBuilder.build(), Occur.SHOULD);
 
-            }
+            // Short word searching
+            BooleanQuery.Builder shortWordSearchQueryBuilder = new BooleanQuery.Builder();
+            shortWordSearchQueryBuilder
+                    .add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
+                            searchString), Occur.SHOULD);
+            rootQueryBuilder.add(shortWordSearchQueryBuilder.build(), Occur.SHOULD);
+            // Adding both tokenized and untokenized queries to main query
+            // builder.
+            builder.add(rootQueryBuilder.build(), occur);
+        }
 
-            if (luceneFieldAnnotation.isShortPhraseSearchable()) {
-                tokenizedQueryBuilder.add(
-                        new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
-                                searchString),
-                        Occur.SHOULD);
-            }
-
+        else if (luceneFieldAnnotation.isTokenized()) {
+            // Tokenized and not short word searchable
+            BooleanQuery.Builder tokenizedQueryBuilder = new BooleanQuery.Builder();
+            buildTokenizedOrWildCardQuery(luceneFieldAnnotation, searchString, tokenizedQueryBuilder);
             builder.add(tokenizedQueryBuilder.build(), occur);
+        }
 
-        } else {
+        else {
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder, occur);
             } else {
                 builder.add(new BooleanClause(
                         new TermQuery(new Term(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
+            }
+        }
+    }
+
+    private void buildTokenizedOrWildCardQuery(LuceneField luceneFieldAnnotation, String searchString,
+            BooleanQuery.Builder tokenizedQueryBuilder) {
+        for (String searchValue : searchString.split(" ")) {
+            if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
+                createWildCardSearchQuery(luceneFieldAnnotation, searchValue, tokenizedQueryBuilder, Occur.MUST);
+            } else {
+                tokenizedQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchValue),
+                        Occur.MUST);
             }
         }
     }
