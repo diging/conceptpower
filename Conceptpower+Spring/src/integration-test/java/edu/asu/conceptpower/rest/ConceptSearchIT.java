@@ -134,6 +134,20 @@ public class ConceptSearchIT extends IntegrationTest {
     }
 
     @Test
+    public void test_searchConcept_searchWithWordPosAndDescriptionInJson() throws Exception {
+
+        final String output = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndDescription.json"));
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "indian pony").param("pos", "noun")
+                        .param("description", "small native range horse").param("operator", SearchParamters.OP_AND)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(content().json(output, false)).andExpect(status().isOk());
+
+    }
+
+    @Test
     public void test_searchConcept_searchWithWordAndPosInXml() throws Exception {
 
         final String output = IOUtil
@@ -270,6 +284,24 @@ public class ConceptSearchIT extends IntegrationTest {
         Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
         xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
         XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordPosAndTypeUriInXml",
+                xmlDifference, true);
+
+    }
+
+    @Test
+    public void test_searchConcept_searchWithWordPosAndDescriptionInXml() throws Exception {
+
+        final String output = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndDescription.xml"));
+
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch")
+                .param("word", "indian pony").param("pos", "noun").param("description", "small native range horse")
+                .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(status().isOk()).andReturn();
+
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordPosAndDescriptionInXml",
                 xmlDifference, true);
 
     }
