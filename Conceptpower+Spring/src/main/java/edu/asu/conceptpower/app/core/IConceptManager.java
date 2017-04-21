@@ -187,4 +187,7 @@ public interface IConceptManager {
      */
     public ConceptEntry getLocalConceptEntry(String conceptId);
 
+    public void addWordnetConceptEntry(ConceptEntry entry, String userName)
+            throws IllegalAccessException, LuceneException, IndexerRunningException;
+
 }

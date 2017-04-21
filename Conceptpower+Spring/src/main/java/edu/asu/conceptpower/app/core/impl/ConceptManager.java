@@ -578,9 +578,4 @@ public class ConceptManager implements IConceptManager {
         entry.setConceptList(Constants.WORDNET_DICTIONARY);
         indexService.insertConcept(entry, userName);
     }
-
-    @Override
-    public void deleteConceptById(String id, String userName) throws LuceneException, IndexerRunningException {
-        indexService.deleteById(id, userName);
-    }
 }
