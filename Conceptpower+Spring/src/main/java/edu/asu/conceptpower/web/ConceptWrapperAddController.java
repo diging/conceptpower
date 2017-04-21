@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +37,7 @@ import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.web.backing.ConceptWrapperAddBean;
 
 /**
  * This class provides methods required for creating concept wrappers
@@ -75,7 +77,8 @@ public class ConceptWrapperAddController {
      *         page
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
-    public String prepareConceptWrapperAdd(HttpServletRequest req, ModelMap model) {
+    public String prepareConceptWrapperAdd(@ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean,
+            HttpServletRequest req, ModelMap model) {
 
         if (req.getAttribute("errormsg") != null)
             model.addAttribute("errormsg", req.getAttribute("errormsg"));
@@ -94,6 +97,7 @@ public class ConceptWrapperAddController {
             lists.put(conceptList.getConceptListName(), conceptList.getConceptListName());
         }
         model.addAttribute("lists", lists);
+        model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
         return "/auth/conceptlist/addconceptwrapper";
     }
 
@@ -112,41 +116,45 @@ public class ConceptWrapperAddController {
      * @throws IndexerRunningException 
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper/add", method = RequestMethod.POST)
-    public String addConcept(HttpServletRequest req, Principal principal, Model model)
-            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
+    public String addConcept(@ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean, HttpServletRequest request,
+            Principal principal, Model model) throws DictionaryDoesNotExistException, DictionaryModifyException,
+                    LuceneException, IllegalAccessException, IndexerRunningException {
 
-        if (req.getParameter("word") == null || req.getParameter("word").trim().isEmpty()) {
-            req.setAttribute("errormsg", "You have to enter a word.");
+        request.getAttribute("selectedconcepts");
+        if (conceptWrapperAddBean.getWord() == null || conceptWrapperAddBean.getWord().trim().isEmpty()) {
+            request.setAttribute("errormsg", "You have to enter a word.");
             return "forward:/auth/conceptlist/addconceptwrapper";
         }
-        if (req.getParameter("lists") == null || req.getParameter("lists").trim().isEmpty()) {
-            req.setAttribute("errormsg", "You have to select a concept list.");
+
+        if (conceptWrapperAddBean.getSelectedConceptList() == null
+                || conceptWrapperAddBean.getSelectedConceptList().trim().isEmpty()) {
+            request.setAttribute("errormsg", "You have to select a concept list.");
             return "forward:/auth/conceptlist/addconceptwrapper";
         }
-        String[] wrappers = req.getParameter("wrapperids").split(Constants.CONCEPT_SEPARATOR);
+        
+        String[] wrappers = conceptWrapperAddBean.getWrapperids().split(Constants.CONCEPT_SEPARATOR);
         if (wrappers.length > 0) {
             ConceptEntry conceptEntry = new ConceptEntry();
-            conceptEntry.setWord(req.getParameter("word"));
+            conceptEntry.setWord(conceptWrapperAddBean.getWord());
             conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
-            conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-            conceptEntry.setWordnetId(req.getParameter("wrapperids"));
-            conceptEntry.setConceptList(req.getParameter("lists"));
-            conceptEntry.setDescription(req.getParameter("description"));
-            conceptEntry.setEqualTo(req.getParameter("equals"));
-            conceptEntry.setSimilarTo(req.getParameter("similar"));
-            conceptEntry.setTypeId(req.getParameter("types"));
+            conceptEntry.setSynonymIds(conceptWrapperAddBean.getSynonymids());
+            conceptEntry.setWordnetId(conceptWrapperAddBean.getWrapperids());
+            conceptEntry.setConceptList(conceptWrapperAddBean.getSelectedConceptList());
+            conceptEntry.setDescription(conceptWrapperAddBean.getDescription());
+            conceptEntry.setEqualTo(conceptWrapperAddBean.getEquals());
+            conceptEntry.setSimilarTo(conceptWrapperAddBean.getSimilar());
+            conceptEntry.setTypeId(conceptWrapperAddBean.getSelectedType());
             conceptEntry.setCreatorId(principal.getName());
 
             if (indexService.isIndexerRunning()) {
                 model.addAttribute("show_error_alert", true);
                 model.addAttribute("error_alert_msg", indexerRunning);
-                // Need to include command Object
                 return "forward:/auth/conceptlist/addconceptwrapper";
             }
             conceptManager.addConceptListEntry(conceptEntry, principal.getName());
         }
 
-        return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
+        return "redirect:/auth/" + conceptWrapperAddBean.getSelectedConceptList() + "/concepts";
     }
 
     /**
@@ -161,7 +169,8 @@ public class ConceptWrapperAddController {
      * @throws IllegalAccessException
      */
     @RequestMapping(value = "/auth/conceptlist/addconceptwrapper/conceptsearch", method = RequestMethod.POST)
-    public String search(HttpServletRequest req, ModelMap model) throws LuceneException, IllegalAccessException {
+    public String search(@ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean, HttpServletRequest req,
+            ModelMap model) throws LuceneException, IllegalAccessException {
 
         String concept = req.getParameter("name");
         String pos = req.getParameter("pos");
