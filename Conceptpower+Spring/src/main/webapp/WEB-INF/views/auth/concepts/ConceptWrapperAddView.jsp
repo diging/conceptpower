@@ -448,7 +448,9 @@
             <td>
                 <form:input path="word" class='form-control'/>
             </td>
-            <td></td>
+            <td>
+                <form:errors path="word"  class="ui-state-error-text" />
+            </td>
         </tr>
 
         <tr>
@@ -459,8 +461,9 @@
                     <form:option value="" label="Select concept list" />
                     <form:options items="${lists}" />
                 </form:select></td>
-            <td />
-
+            <td>
+                <form:errors path="selectedConceptList"  class="ui-state-error-text" />
+            </td>
         </tr>
         <tr>
             <td>Description</td>
@@ -486,7 +489,9 @@
                     <form:option value="" label="Select one" />
                     <form:options items="${types}" />
                 </form:select></td>
-            <td></td>
+            <td>
+                <form:errors path="selectedType"  class="ui-state-error-text" />
+            </td>
         </tr>
         <tr>
             <td>Equals</td>
