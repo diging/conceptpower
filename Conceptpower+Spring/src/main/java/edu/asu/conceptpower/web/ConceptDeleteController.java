@@ -128,7 +128,7 @@ public class ConceptDeleteController {
             return model;
         }
 
-        conceptManager.deleteConcept(id, principal.getName());
+        conceptManager.deleteConcept(conceptManager.getConceptEntry(id), principal.getName());
         if (fromHomeScreenDelete.equalsIgnoreCase("true")) {
             model.setViewName("redirect:/login");
             return model;
