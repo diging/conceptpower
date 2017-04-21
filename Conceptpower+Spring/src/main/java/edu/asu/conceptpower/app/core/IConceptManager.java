@@ -122,18 +122,6 @@ public interface IConceptManager {
             throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
-     * 
-     * This method fetches the concept entry based on the id and deletes the
-     * concept entry.
-     * 
-     * @param id
-     * @param userName
-     * @throws LuceneException
-     * @throws IndexerRunningException
-     */
-    public abstract void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException;
-
-    /**
      * Fetches the concept wrapped entries based on the wordnet id
      * 
      * @param wordNetID
@@ -179,23 +167,24 @@ public interface IConceptManager {
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
-     * This method adds the entry to the wordnet concept list.
+     * 
+     * This method deletes the concept that is passed as a parameter.
      * 
      * @param entry
      * @param userName
-     */
-    public void addWordnetConceptEntry(ConceptEntry entry, String userName)
-            throws IllegalAccessException, LuceneException, IndexerRunningException;
-
-    /**
-     * This method deletes the concept based on the id provided.
-     * 
-     * @param id
-     * @param userName
-     * @throws IllegalAccessException
      * @throws LuceneException
      * @throws IndexerRunningException
      */
-    public void deleteConceptById(String id, String userName) throws LuceneException, IndexerRunningException;
+    public void deleteConcept(ConceptEntry entry, String userName) throws LuceneException, IndexerRunningException;
+
+    /**
+     * This method fetches the local CCP concept entries. It could be a local
+     * concept entry or a wrapped concept entry. It does not fetch the merged
+     * concept entries.
+     * 
+     * @param conceptId
+     * @return
+     */
+    public ConceptEntry getLocalConceptEntry(String conceptId);
 
 }
