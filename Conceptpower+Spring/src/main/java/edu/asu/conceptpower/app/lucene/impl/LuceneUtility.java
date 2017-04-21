@@ -548,19 +548,9 @@ public class LuceneUtility implements ILuceneUtility {
 
             // Short word searching
             BooleanQuery.Builder shortWordSearchQueryBuilder = new BooleanQuery.Builder();
-
-            if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
-                // Wild card search as well as short term search. So searching
-                // on untokenized field with a wildcard query
-                createWildCardSearchQuery(luceneFieldAnnotation, searchString, shortWordSearchQueryBuilder,
-                        Occur.SHOULD);
-            } else {
-                // No wild card search. Just short term search
-                shortWordSearchQueryBuilder.add(
-                        new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
-                                searchString),
-                        Occur.SHOULD);
-            }
+            shortWordSearchQueryBuilder
+                    .add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
+                            searchString), Occur.SHOULD);
 
             rootQueryBuilder.add(shortWordSearchQueryBuilder.build(), Occur.SHOULD);
             // Adding both tokenized and untokenized queries to main query
