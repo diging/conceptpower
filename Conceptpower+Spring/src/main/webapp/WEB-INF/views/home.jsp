@@ -118,6 +118,18 @@ $(document).ready(function() {
     $("#conceptSearchResult input[name='createWrapper']").click(function(){
       var conceptId = $('input:radio[name=createWrapper]:checked').val());
       // Need to do an ajax call to fetch the data and then call auth/conceptlist/addconceptwrapper with corresponding values.  
+      $.ajax({
+          type : "GET",
+          url : "${pageContext.servletContext.contextPath}/Concept",
+          data : {
+            id : conceptId
+          },
+          success : function(details) {
+            details = $.parseJSON(details);
+            var url = ${pageContext.servletContext.contextPath} + "?word=" + details.word + "&selectedConceptList=" + details.conceptlist + "&description=" + details.description + "&selectedType" + details.type + "&wrapperids" + detials.id;
+            console.log(url);
+          }
+        });
   });
 
 });
