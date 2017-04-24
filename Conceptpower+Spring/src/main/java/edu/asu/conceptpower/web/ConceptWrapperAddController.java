@@ -2,9 +2,7 @@ package edu.asu.conceptpower.web;
 
 import java.security.Principal;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,24 +16,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.service.IConceptWrapperService;
+import edu.asu.conceptpower.app.validation.ConceptWrapperAddBeanValidator;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.web.backing.ConceptWrapperAddBean;
 
 /**
  * This class provides methods required for creating concept wrappers
@@ -53,18 +55,23 @@ public class ConceptWrapperAddController {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptListManager conceptListManager;
-
-    @Autowired
-    private IConceptTypeManger conceptTypesManager;
+    private IIndexService indexService;
     
     @Autowired
-    private IIndexService indexService;
+    private IConceptWrapperService conceptWrapperService;
     
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
 
+    @Autowired
+    private ConceptWrapperAddBeanValidator conceptWrapperAddBeanValidator;
+
     private static final Logger logger = LoggerFactory.getLogger(ConceptWrapperAddController.class);
+
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.setValidator(conceptWrapperAddBeanValidator);
+    }
 
     /**
      * This method provides required information for concept wrapper creation
@@ -75,25 +82,11 @@ public class ConceptWrapperAddController {
      *         page
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
-    public String prepareConceptWrapperAdd(HttpServletRequest req, ModelMap model) {
-
-        if (req.getAttribute("errormsg") != null)
-            model.addAttribute("errormsg", req.getAttribute("errormsg"));
-
-        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-        Map<String, String> types = new LinkedHashMap<String, String>();
-        for (ConceptType conceptType : allTypes) {
-            types.put(conceptType.getTypeId(), conceptType.getTypeName());
-        }
-
-        model.addAttribute("types", types);
-
-        List<ConceptList> allLists = conceptListManager.getAllConceptLists();
-        Map<String, String> lists = new LinkedHashMap<String, String>();
-        for (ConceptList conceptList : allLists) {
-            lists.put(conceptList.getConceptListName(), conceptList.getConceptListName());
-        }
-        model.addAttribute("lists", lists);
+    public String prepareConceptWrapperAdd(@ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean,
+            HttpServletRequest req, ModelMap model) {
+        model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
+        model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
+        model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
         return "/auth/conceptlist/addconceptwrapper";
     }
 
@@ -112,37 +105,39 @@ public class ConceptWrapperAddController {
      * @throws IndexerRunningException 
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper/add", method = RequestMethod.POST)
-    public String addConcept(HttpServletRequest req, Principal principal, Model model)
-            throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
+    public String addConcept(@Validated @ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean,
+            BindingResult result, Principal principal, Model model) throws DictionaryDoesNotExistException,
+                    DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
 
-        if (req.getParameter("lists") == null || req.getParameter("lists").trim().isEmpty()) {
-            req.setAttribute("errormsg", "You have to select a concept list.");
-            return "forward:/auth/conceptlist/addconceptwrapper";
+        if (result.hasErrors()) {
+            model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
+            model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
+            return "/auth/conceptlist/addconceptwrapper";
         }
-        String[] wrappers = req.getParameter("wrapperids").split(Constants.CONCEPT_SEPARATOR);
-		if (wrappers.length > 0) {
-			ConceptEntry conceptEntry = new ConceptEntry();
-			conceptEntry.setWord(conceptManager.getConceptEntry(wrappers[0]).getWord().replace("_", " "));
-			conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
-			conceptEntry.setSynonymIds(req.getParameter("synonymsids"));
-			conceptEntry.setWordnetId(req.getParameter("wrapperids"));
-			conceptEntry.setConceptList(req.getParameter("lists"));
-			conceptEntry.setDescription(req.getParameter("description"));
-			conceptEntry.setEqualTo(req.getParameter("equals"));
-			conceptEntry.setSimilarTo(req.getParameter("similar"));
-			conceptEntry.setTypeId(req.getParameter("types"));
-			conceptEntry.setCreatorId(principal.getName());
-			
+        
+        String[] wrappers = conceptWrapperAddBean.getWrapperids().split(Constants.CONCEPT_SEPARATOR);
+        if (wrappers.length > 0) {
+            ConceptEntry conceptEntry = new ConceptEntry();
+            conceptEntry.setWord(conceptWrapperAddBean.getWord());
+            conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
+            conceptEntry.setSynonymIds(conceptWrapperAddBean.getSynonymids());
+            conceptEntry.setWordnetId(conceptWrapperAddBean.getWrapperids());
+            conceptEntry.setConceptList(conceptWrapperAddBean.getSelectedConceptList());
+            conceptEntry.setDescription(conceptWrapperAddBean.getDescription());
+            conceptEntry.setEqualTo(conceptWrapperAddBean.getEquals());
+            conceptEntry.setSimilarTo(conceptWrapperAddBean.getSimilar());
+            conceptEntry.setTypeId(conceptWrapperAddBean.getSelectedType());
+            conceptEntry.setCreatorId(principal.getName());
+
             if (indexService.isIndexerRunning()) {
                 model.addAttribute("show_error_alert", true);
                 model.addAttribute("error_alert_msg", indexerRunning);
-                // Need to include command Object
                 return "forward:/auth/conceptlist/addconceptwrapper";
             }
             conceptManager.addConceptListEntry(conceptEntry, principal.getName());
-		}
+        }
 
-        return "redirect:/auth/" + req.getParameter("lists") + "/concepts";
+        return "redirect:/auth/" + conceptWrapperAddBean.getSelectedConceptList() + "/concepts";
     }
 
     /**
@@ -157,7 +152,8 @@ public class ConceptWrapperAddController {
      * @throws IllegalAccessException
      */
     @RequestMapping(value = "/auth/conceptlist/addconceptwrapper/conceptsearch", method = RequestMethod.POST)
-    public String search(HttpServletRequest req, ModelMap model) throws LuceneException, IllegalAccessException {
+    public String search(@ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean, HttpServletRequest req,
+            ModelMap model) throws LuceneException, IllegalAccessException {
 
         String concept = req.getParameter("name");
         String pos = req.getParameter("pos");
@@ -182,20 +178,9 @@ public class ConceptWrapperAddController {
             List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
             model.addAttribute("result", foundConcepts);
         }
-        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-        Map<String, String> types = new LinkedHashMap<String, String>();
-        for (ConceptType conceptType : allTypes) {
-            types.put(conceptType.getTypeId(), conceptType.getTypeName());
-        }
-
-        model.addAttribute("types", types);
-
-        List<ConceptList> allLists = conceptListManager.getAllConceptLists();
-        Map<String, String> lists = new LinkedHashMap<String, String>();
-        for (ConceptList conceptList : allLists) {
-            lists.put(conceptList.getConceptListName(), conceptList.getConceptListName());
-        }
-        model.addAttribute("lists", lists);
+        model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
+        model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
+        model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
 
         return "/auth/conceptlist/addconceptwrapper";
     }

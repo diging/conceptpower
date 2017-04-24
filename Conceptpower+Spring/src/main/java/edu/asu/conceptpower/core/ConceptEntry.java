@@ -2,10 +2,12 @@ package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -37,7 +39,7 @@ public class ConceptEntry implements Serializable {
     private String wordnetId;
 
     @SearchField(fieldName = SearchFieldNames.WORD)
-    @LuceneField(lucenefieldName = LuceneFieldNames.WORD, isTokenized = true, isMultiple = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORD, isTokenized = true, isMultiple = false, isShortPhraseSearchable = true, isWildCardSearchEnabled = true)
     private String word;
 
     @SearchField(fieldName = SearchFieldNames.DESCRIPTION)
@@ -185,13 +187,28 @@ public class ConceptEntry implements Serializable {
     /**
      * A string containing URIs of authority file records or control vocabulary
      * entries that are equal to an entry.
+     * 
      */
     public String getEqualTo() {
         return equalTo;
     }
 
-    public void setEqualTo(String equalTo) {
-        this.equalTo = equalTo;
+    /**
+     * If a slash "/" is present at the end of the equal, this method removes
+     * the slash from end of equal and assigns the value to equalTo. For example
+     * if equal="http://viaf.org/viaf/110275452/", then this method assigns
+     * "http://viaf.org/viaf/110275452" to equalTo
+     * 
+     * @param equalTo
+     */
+    public void setEqualTo(String equal) {
+        if (equal != null) {
+            List<String> equalsTo = Arrays.asList(equal.split(","));
+            this.equalTo = equalsTo.stream().map(i -> removeTrailingBackSlashAndTrim(i))
+                    .collect(Collectors.joining(","));
+        } else {
+            this.equalTo = equal;
+        }
     }
 
     /**
@@ -268,13 +285,28 @@ public class ConceptEntry implements Serializable {
     /**
      * A string containing URIs of authority file records or control vocabulary
      * entries that are similar to an entry.
+     * 
      */
     public String getSimilarTo() {
         return similarTo;
     }
 
-    public void setSimilarTo(String similarTo) {
-        this.similarTo = similarTo;
+    /**
+     * If a slash "/" is present at the end of the similar, this method removes
+     * the slash from end of similar and assigns the value to similarTo. For
+     * example if similar="http://viaf.org/viaf/110275452/", then this method
+     * assigns similarTo to "http://viaf.org/viaf/110275452"
+     * 
+     * @param similarTo
+     */
+    public void setSimilarTo(String similar) {
+        if (similar != null) {
+            List<String> similarToList = Arrays.asList(similar.split(","));
+            this.similarTo = similarToList.stream().map(i -> removeTrailingBackSlashAndTrim(i))
+                    .collect(Collectors.joining(","));
+        } else {
+            this.similarTo = similar;
+        }
     }
 
     /**
@@ -427,5 +459,12 @@ public class ConceptEntry implements Serializable {
 
     public void setMergedIds(String mergedIds) {
         this.mergedIds = mergedIds;
+    }
+
+    private String removeTrailingBackSlashAndTrim(String val) {
+        if (val.endsWith("/")) {
+            return val.substring(0, val.length() - 1).trim();
+        }
+        return val.trim();
     }
 }

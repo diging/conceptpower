@@ -368,7 +368,10 @@ $(document).ready(function() {
         
         <tr>
             <td class="col-sm-1">Wordnet</td>
-            <td class="col-sm-11"><form:textarea path="wordnetIds" id="wordnetIds" class="form-control"/></td>
+            <td class="col-sm-11">
+                <form:textarea path="wordnetIds" id="wordnetIds" class="form-control"/>
+                <form:hidden path="existingWordnetIds" />
+            </td>
         </tr>
         
         <tr>

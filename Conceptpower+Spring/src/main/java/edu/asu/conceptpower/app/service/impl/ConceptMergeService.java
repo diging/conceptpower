@@ -1,7 +1,10 @@
 package edu.asu.conceptpower.app.service.impl;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,6 +112,9 @@ public class ConceptMergeService implements IConceptMergeService {
             throws LuceneException, IndexerRunningException, IllegalAccessException, DictionaryDoesNotExistException,
             DictionaryModifyException {
 
+        Map<String, ConceptEntry> localCCPConceptMap = fetchLocalCCPConcepts(conceptsMergeBean.getMergeIds(),
+                conceptsMergeBean.getSelectedConceptId());
+
         if (conceptsMergeBean.getSelectedConceptId().trim().equals("")) {
             // Add
             ConceptEntry entry = new ConceptEntry();
@@ -121,12 +127,23 @@ public class ConceptMergeService implements IConceptMergeService {
             conceptManager.storeModifiedConcept(entry, userName);
         }
 
-        deleteMergedConcepts(userName, conceptsMergeBean);
+        deleteMergedConcepts(userName, conceptsMergeBean, localCCPConceptMap);
     }
 
-    private void deleteMergedConcepts(String userName, ConceptsMergeBean conceptsMergeBean)
-            throws LuceneException, IndexerRunningException, IllegalAccessException,
-            DictionaryDoesNotExistException, DictionaryModifyException {
+    private Map<String, ConceptEntry> fetchLocalCCPConcepts(Set<String> mergeIds,String selectedConceptId) {
+        Map<String, ConceptEntry> localCCPConceptMap = new HashMap<>();
+        for (String id : mergeIds) {
+            if (IdType.SPECIFIC_WORDNET_CONCEPT_ID != conceptTypesService.getConceptTypeByConceptId(id)
+                    && !id.equalsIgnoreCase(selectedConceptId.trim())) {
+                localCCPConceptMap.put(id, conceptManager.getConceptEntry(id));
+            }
+        }
+        return localCCPConceptMap;
+    }
+
+    private void deleteMergedConcepts(String userName, ConceptsMergeBean conceptsMergeBean,
+            Map<String, ConceptEntry> localCCPConceptMap) throws LuceneException, IndexerRunningException,
+                    IllegalAccessException, DictionaryDoesNotExistException, DictionaryModifyException {
 
         for (String id : conceptsMergeBean.getMergeIds()) {
             if (IdType.SPECIFIC_WORDNET_CONCEPT_ID == conceptTypesService.getConceptTypeByConceptId(id)) {
@@ -135,9 +152,9 @@ public class ConceptMergeService implements IConceptMergeService {
                 // because changeevent object needs to be updated for
                 // deletion correctly.
                 String conceptWrapperId = createConceptWrapperById(id, userName, conceptsMergeBean);
-                conceptManager.deleteConcept(conceptWrapperId, userName);
+                conceptManager.deleteConcept(conceptManager.getConceptEntry(conceptWrapperId), userName);
             } else if (!id.equalsIgnoreCase(conceptsMergeBean.getSelectedConceptId().trim())) {
-                conceptManager.deleteConcept(id, userName);
+                conceptManager.deleteConcept(localCCPConceptMap.get(id), userName);
             }
         }
     }
@@ -145,7 +162,7 @@ public class ConceptMergeService implements IConceptMergeService {
     private String createConceptWrapperById(String wrapperId, String userName, ConceptsMergeBean conceptsMergeBean)
             throws IllegalAccessException, DictionaryDoesNotExistException, DictionaryModifyException, LuceneException,
             IndexerRunningException {
-        ConceptEntry entry = conceptManager.getConceptEntry(wrapperId);
+        ConceptEntry entry = conceptManager.getWordnetConceptEntry(wrapperId);
         // Creating concept wrapper with all the values, because in future we
         // will be including manipulations on deleted wrappers as well.
         // WrapperId has been added to delete the wordnet id. If this wordnet

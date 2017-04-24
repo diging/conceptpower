@@ -121,8 +121,6 @@ public interface IConceptManager {
     public abstract void storeModifiedConcept(ConceptEntry entry, String userName)
             throws LuceneException, IllegalAccessException, IndexerRunningException;
 
-    public abstract void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException;
-
     /**
      * Fetches the concept wrapped entries based on the wordnet id
      * 
@@ -167,5 +165,21 @@ public interface IConceptManager {
     public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList,
             int page, int numberOfRecordsPerPage)
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
+
+    /**
+     * 
+     * This method deletes the concept that is passed as a parameter.
+     * 
+     * @param entry
+     * @param userName
+     * @throws LuceneException
+     * @throws IndexerRunningException
+     */
+    public void deleteConcept(ConceptEntry entry, String userName) throws LuceneException, IndexerRunningException;
+
+    public void updateIndex(ConceptEntry entry, String userName)
+            throws IllegalAccessException, LuceneException, IndexerRunningException;
+
+    public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException;
 
 }

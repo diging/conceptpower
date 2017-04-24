@@ -1,6 +1,10 @@
 package edu.asu.conceptpower.rest;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -71,6 +75,7 @@ public class ConceptSearch {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(ConceptSearch.class);
+    private static final Object[] EMPTY_OBJECT = new Object[] {};
 
     /**
      * This method provides information of a concept for a rest interface of the
@@ -82,6 +87,8 @@ public class ConceptSearch {
      * @return
      * @throws JsonProcessingException
      * @throws IndexerRunningException
+     * @throws IntrospectionException
+     * @throws InvocationTargetException
      */
     @RequestMapping(value = "/ConceptSearch", method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE,
             MediaType.APPLICATION_JSON_VALUE })
@@ -89,46 +96,47 @@ public class ConceptSearch {
             @Validated ConceptSearchParameters conceptSearchParameters, BindingResult result,
             @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
                     throws JsonProcessingException, IllegalArgumentException, IllegalAccessException,
-                    IndexerRunningException {
+                    IndexerRunningException, IntrospectionException, InvocationTargetException {
 
         if (result.hasErrors()) {
             IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
             String errorMessage = msg.getErrorMessages(result.getAllErrors());
             return new ResponseEntity<String>(errorMessage, HttpStatus.BAD_REQUEST);
         }
+
+        preprocessConceptSearchParameterBean(conceptSearchParameters);
+        int page = conceptSearchParameters.getPage() != null ? conceptSearchParameters.getPage() : 1;
+
         Map<String, String> searchFields = new HashMap<String, String>();
-        String operator = SearchParamters.OP_AND;
-
-        int page = 1;
-
         for (Field field : conceptSearchParameters.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            if (field.getName().equalsIgnoreCase("type_uri")) {
-                if (field.get(conceptSearchParameters) != null) {
-                    searchFields.put("type_id",
-                            uriHelper.getTypeId(String.valueOf(field.get(conceptSearchParameters))));
+            /**
+             * Cobertura adds the below field to keep track of which code has
+             * been accessed.
+             * 
+             * public static final transient int[] __cobertura_counters;
+             * 
+             * In order to avoid iterating this transient field we are checking
+             * for the modifier type before adding the fields to the searchField
+             * map.
+             */
+            if (!Modifier.isTransient(field.getModifiers())) {
+                PropertyDescriptor descriptor = new PropertyDescriptor(field.getName(), ConceptSearchParameters.class);
+                if (descriptor.getReadMethod().invoke(conceptSearchParameters, EMPTY_OBJECT) != null) {
+                    searchFields.put(field.getName().trim(),
+                            String.valueOf(descriptor.getReadMethod().invoke(conceptSearchParameters, EMPTY_OBJECT)));
                 }
-            } else if (SearchParamters.OPERATOR.equalsIgnoreCase(field.getName())) {
-                // If the value is null, then operator will be OR by default
-                if (field.get(conceptSearchParameters) != null) {
-                    operator = String.valueOf(field.get(conceptSearchParameters)).toUpperCase();
-                }
-            } else if (SearchParamters.PAGE.equalsIgnoreCase(field.getName())) {
-                page = field.get(conceptSearchParameters) != null ? (Integer) field.get(conceptSearchParameters) : page;
-            } else if (SearchParamters.NUMBER_OF_RECORDS_PER_PAGE.equalsIgnoreCase(field.getName())) {
-                numberOfRecordsPerPage = field.get(conceptSearchParameters) != null
-                        ? (Integer) field.get(conceptSearchParameters) : numberOfRecordsPerPage;
-            } else if (field.get(conceptSearchParameters) != null) {
-                searchFields.put(field.getName().trim(), String.valueOf(field.get(conceptSearchParameters)).trim());
             }
         }
 
         ConceptEntry[] searchResults = null;
         int totalNumberOfRecords = 0;
         try {
-            totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields, operator);
-            searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields, operator, page,
-                    numberOfRecordsPerPage);
+            totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields,
+                    conceptSearchParameters.getOperator());
+            searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields,
+                    conceptSearchParameters.getOperator(), page,
+                    conceptSearchParameters.getNumber_of_records_per_page() != null
+                            ? conceptSearchParameters.getNumber_of_records_per_page() : numberOfRecordsPerPage);
         } catch (LuceneException ex) {
             logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -146,6 +154,20 @@ public class ConceptSearch {
         Pagination pagination = new Pagination(page, totalNumberOfRecords);
         return new ResponseEntity<String>(msg.getAllConceptEntriesAndPaginationDetails(entryMap, pagination),
                 HttpStatus.OK);
+    }
+
+    /**
+     * 
+     * This method is used for setting the correct values for concept search
+     * parameters.
+     * 
+     * @param conceptSearchParameters
+     * @return
+     */
+    private void preprocessConceptSearchParameterBean(ConceptSearchParameters conceptSearchParameters) {
+        if (conceptSearchParameters.getType_uri() != null) {
+            conceptSearchParameters.setType_id(uriHelper.getTypeId(conceptSearchParameters.getType_uri()));
+        }
     }
 
     private void createEntryMap(ConceptEntry[] searchResults, Map<ConceptEntry, ConceptType> entryMap) {

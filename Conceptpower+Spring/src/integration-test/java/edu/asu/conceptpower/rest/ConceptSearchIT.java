@@ -6,8 +6,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.apache.commons.io.IOUtil;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import edu.asu.conceptpower.IntegrationTest;
@@ -136,9 +140,9 @@ public class ConceptSearchIT extends IntegrationTest {
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndDescription.json"));
 
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Douglas Weiner")
-                        .param("pos", "noun").param("description", "American 20th century environmentalist")
-                        .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_JSON_VALUE))
+                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "indian pony").param("pos", "noun")
+                        .param("description", "small native range horse").param("operator", SearchParamters.OP_AND)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json(output, false)).andExpect(status().isOk());
 
     }
@@ -149,10 +153,15 @@ public class ConceptSearchIT extends IntegrationTest {
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.xml"));
 
-        this.mockMvc
+        MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
+
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordAndPosInXml",
+                xmlDifference, true);
     }
 
     @Test
@@ -161,11 +170,14 @@ public class ConceptSearchIT extends IntegrationTest {
         final String output = IOUtil
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/noResults.xml"));
 
-        this.mockMvc
+        MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Gustav Robert Kirchhoff")
                         .param("pos", "verb").param("concept_list", "VogonWeb Concepts")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_noResultsInXml", xmlDifference, true);
 
     }
 
@@ -174,11 +186,16 @@ public class ConceptSearchIT extends IntegrationTest {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndEqualTo.xml"));
 
-        this.mockMvc
+        MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Abbott Henderson Thayer")
                         .param("pos", "noun").param("equal_to", "http://viaf.org/viaf/55043769")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
+
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordAndPosAndEqualToInXml",
+                xmlDifference, true);
 
     }
 
@@ -188,11 +205,16 @@ public class ConceptSearchIT extends IntegrationTest {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndSimilarTo.xml"));
 
-        this.mockMvc
+        MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Douglas Weiner")
                         .param("pos", "noun").param("similar_to", "http://viaf.org/viaf/248802520")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
+
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordAndPosAndSimilarToInXml",
+                xmlDifference, true);
     }
 
     @Test
@@ -200,20 +222,30 @@ public class ConceptSearchIT extends IntegrationTest {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination1.xml"));
 
-        this.mockMvc
+        MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
                         .param("number_of_records_per_page", "2").param("page", "1")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
+
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordPosAndPaginationInXml",
+                xmlDifference, true);
 
         final String output2 = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination2.xml"));
 
-        this.mockMvc
+        mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
                         .param("number_of_records_per_page", "2").param("page", "2")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output2)).andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
+
+        xmlDifference = new Diff(output2, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordPosAndPaginationInXml",
+                xmlDifference, true);
 
     }
 
@@ -223,11 +255,16 @@ public class ConceptSearchIT extends IntegrationTest {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeId.xml"));
 
-        this.mockMvc
+        MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Almira Hart Lincoln Phelps")
                         .param("pos", "noun").param("type_id", "986a7cc9-c0c1-4720-b344-853f08c136ab")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
+
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordPosAndTypeIdInXml",
+                xmlDifference, true);
 
     }
 
@@ -237,12 +274,17 @@ public class ConceptSearchIT extends IntegrationTest {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeUri.xml"));
 
-        this.mockMvc
+        MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Almira Hart Lincoln Phelps")
                         .param("pos", "noun")
                         .param("type_uri", "http://www.digitalhps.org/types/TYPE_986a7cc9-c0c1-4720-b344-853f08c136ab")
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
+
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordPosAndTypeUriInXml",
+                xmlDifference, true);
 
     }
 
@@ -252,11 +294,35 @@ public class ConceptSearchIT extends IntegrationTest {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndDescription.xml"));
 
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Douglas Weiner")
-                        .param("pos", "noun").param("description", "American 20th century environmentalist")
-                        .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().string(output)).andExpect(status().isOk());
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch")
+                .param("word", "indian pony").param("pos", "noun").param("description", "small native range horse")
+                .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(status().isOk()).andReturn();
+
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordPosAndDescriptionInXml",
+                xmlDifference, true);
+
+    }
+
+    @Test
+    public void test_searchConcept_failureNoValidSearchParametersInXml() throws Exception {
+        final String output = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.xml"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(content().xml(output)).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void test_searchConcept_failureNoValidSearchParametersInJson() throws Exception {
+        final String output = IOUtil.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.json"));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(content().json(output)).andExpect(status().isBadRequest());
 
     }
 
