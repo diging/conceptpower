@@ -2,17 +2,11 @@ package edu.asu.conceptpower.app.db.objectdb;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import edu.asu.conceptpower.app.db.IDatabaseManager;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 
 public class ConceptDBManager implements IConceptDBManager {
-
-	@Autowired
-	private IDatabaseManager dbManager;
 
 	@Override
 	public ConceptEntry getEntry(String id) {
@@ -106,6 +100,12 @@ public class ConceptDBManager implements IConceptDBManager {
 
     @Override
     public List<ConceptEntry> getAllEntriesByTypeId(String typeId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ConceptEntry getWrapperEntryByWordnetId(String wordnetId) {
         // TODO Auto-generated method stub
         return null;
     }

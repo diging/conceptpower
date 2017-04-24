@@ -77,7 +77,14 @@ public class ConceptManager implements IConceptManager {
             return entries[0];
         }
 
-        ConceptEntry entry = client.getEntry(id);
+        ConceptEntry entry = client.getWrapperEntryByWordnetId(id);
+        if (entry != null) {
+            fillConceptEntry(entry);
+            alternativeIdService.addAlternativeIds(id, entry);
+            return entry;
+        }
+
+        entry = client.getEntry(id);
         if (entry != null) {
             fillConceptEntry(entry);
             alternativeIdService.addAlternativeIds(id, entry);
@@ -109,6 +116,10 @@ public class ConceptManager implements IConceptManager {
 
     @Override
     public ConceptEntry getLocalConceptEntry(String conceptId) {
+        ConceptEntry entry = client.getWrapperEntryByWordnetId(conceptId);
+        if (entry != null) {
+            return entry;
+        }
         return client.getEntry(conceptId);
     }
 
