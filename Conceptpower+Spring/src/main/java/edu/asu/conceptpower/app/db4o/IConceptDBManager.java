@@ -45,12 +45,10 @@ public interface IConceptDBManager {
 	public abstract void update(ConceptList list, String listname,
 			String databasename);
 
-    List<ConceptEntry> getConceptByWordnetId(String wordnetId);
-
     public List<ConceptEntry> getAllEntriesFromList(String listname);
 
     public List<ConceptEntry> getAllEntriesByTypeId(String typeId);
 
-    public ConceptEntry getWrapperEntryByWordnetId(String wordnetId);
+    public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId);
 
 }

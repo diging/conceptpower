@@ -105,7 +105,7 @@ public class ConceptDBManager implements IConceptDBManager {
     }
 
     @Override
-    public ConceptEntry getWrapperEntryByWordnetId(String wordnetId) {
+    public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId) {
         // TODO Auto-generated method stub
         return null;
     }

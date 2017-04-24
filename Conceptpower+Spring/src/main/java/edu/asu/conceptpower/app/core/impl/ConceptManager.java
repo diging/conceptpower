@@ -77,14 +77,15 @@ public class ConceptManager implements IConceptManager {
             return entries[0];
         }
 
-        ConceptEntry entry = client.getWrapperEntryByWordnetId(id);
-        if (entry != null) {
-            fillConceptEntry(entry);
-            alternativeIdService.addAlternativeIds(id, entry);
-            return entry;
+        List<ConceptEntry> entriesList = client.getWrapperEntryByWordnetId(id);
+        if (entriesList != null && !entriesList.isEmpty()) {
+            ConceptEntry conceptEntry = entriesList.get(0);
+            fillConceptEntry(conceptEntry);
+            alternativeIdService.addAlternativeIds(id, conceptEntry);
+            return conceptEntry;
         }
 
-        entry = client.getEntry(id);
+        ConceptEntry entry = client.getEntry(id);
         if (entry != null) {
             fillConceptEntry(entry);
             alternativeIdService.addAlternativeIds(id, entry);
@@ -112,15 +113,6 @@ public class ConceptManager implements IConceptManager {
     public ConceptEntry getWordnetConceptEntry(String wordnetId) throws LuceneException {
         ConceptEntry entry = wordnetManager.getConcept(wordnetId);
         return entry;
-    }
-
-    @Override
-    public ConceptEntry getLocalConceptEntry(String conceptId) {
-        ConceptEntry entry = client.getWrapperEntryByWordnetId(conceptId);
-        if (entry != null) {
-            return entry;
-        }
-        return client.getEntry(conceptId);
     }
 
     /*
@@ -547,7 +539,7 @@ public class ConceptManager implements IConceptManager {
     @Override
     public ConceptEntry getConceptWrappedEntryByWordNetId(String wordNetID)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
-        List<ConceptEntry> conceptEntries = client.getConceptByWordnetId(wordNetID);
+        List<ConceptEntry> conceptEntries = client.getWrapperEntryByWordnetId(wordNetID);
         for (ConceptEntry entry : conceptEntries) {
             // Wordnet is also added because lucene doesn't do an exact search
             // on fields

@@ -2,6 +2,7 @@ package edu.asu.conceptpower.app.db;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -59,24 +60,10 @@ public class DatabaseClient implements IConceptDBManager {
     }
 
     @Override
-    public ConceptEntry getWrapperEntryByWordnetId(String wordnetId) {
+    public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId) {
         ConceptEntry exampleEntry = new ConceptEntry();
         exampleEntry.setWordnetId(wordnetId);
-        ConceptEntry[] results = getEntriesByFieldContains("wordnetid", wordnetId);
-        if (results.length == 1) {
-            return results[0];
-        }
-
-        return null;
-    }
-
-    @Override
-    public List<ConceptEntry> getConceptByWordnetId(String wordnetId) {
-        ConceptEntry entry = new ConceptEntry();
-        entry.setWordnetId(wordnetId);
-
-        ObjectSet<ConceptEntry> entries = dictionaryClient.queryByExample(entry);
-        return entries;
+        return Arrays.asList(getEntriesByFieldContains("wordnetid", wordnetId));
     }
 
     /*
@@ -372,7 +359,7 @@ public class DatabaseClient implements IConceptDBManager {
         if (databasename.equals(DBNames.DICTIONARY_DB)) {
             ConceptEntry toBeUpdated = getEntry(entry.getId());
             if (toBeUpdated == null) {
-                toBeUpdated = getWrapperEntryByWordnetId(entry.getId());
+                toBeUpdated = getWrapperEntryByWordnetId(entry.getId()).get(0);
             }
             toBeUpdated.setBroadens(entry.getBroadens());
             toBeUpdated.setConceptList(entry.getConceptList());
