@@ -11,6 +11,7 @@ import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.service.IConceptEditService;
+import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.core.ConceptEntry;
 
 @Service
@@ -43,17 +44,18 @@ public class ConceptEditService implements IConceptEditService {
         Set<String> oldWordnetIdsSet = new HashSet<String>(Arrays.asList(oldWordnetIds.split(",")));
         Set<String> updatedWordnetIdsSet = new HashSet<String>(Arrays.asList(updatedWordnetIds.split(",")));
         oldWordnetIdsSet.removeAll(updatedWordnetIdsSet);
-        addWordNetConcepts(oldWordnetIdsSet, userName);
+        updateWordnetConcepts(oldWordnetIdsSet, userName);
         deleteWordNetConcepts(conceptEntry.getWordnetId(), userName);
         conceptManager.storeModifiedConcept(conceptEntry, userName);
     }
 
-    private void addWordNetConcepts(Set<String> oldWordnetIds, String userName)
+    private void updateWordnetConcepts(Set<String> oldWordnetIds, String userName)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
         for (String wordnetId : oldWordnetIds) {
             if (!wordnetId.trim().equalsIgnoreCase("")) {
                 ConceptEntry entry = conceptManager.getWordnetConceptEntry(wordnetId);
-                conceptManager.addWordnetConceptEntry(entry, userName);
+                entry.setConceptList(Constants.WORDNET_DICTIONARY);
+                conceptManager.updateWordnetConceptInIndex(entry, userName);
             }
         }
     }

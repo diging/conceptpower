@@ -358,9 +358,6 @@ public class DatabaseClient implements IConceptDBManager {
     public void update(ConceptEntry entry, String databasename) {
         if (databasename.equals(DBNames.DICTIONARY_DB)) {
             ConceptEntry toBeUpdated = getEntry(entry.getId());
-            if (toBeUpdated == null) {
-                toBeUpdated = getWrapperEntryByWordnetId(entry.getId()).get(0);
-            }
             toBeUpdated.setBroadens(entry.getBroadens());
             toBeUpdated.setConceptList(entry.getConceptList());
             toBeUpdated.setDescription(entry.getDescription());
