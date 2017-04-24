@@ -107,6 +107,11 @@ public class ConceptManager implements IConceptManager {
         return entry;
     }
 
+    @Override
+    public ConceptEntry getLocalConceptEntry(String conceptId) {
+        return client.getEntry(conceptId);
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -511,17 +516,22 @@ public class ConceptManager implements IConceptManager {
         return builder.toString();
     }
 
+    /**
+     * This method deletes the concept that is passed as a parameter. If a null
+     * value is passed as a concept, this method does nothing.
+     */
     @Override
-    public void deleteConcept(String id, String userName) throws LuceneException, IndexerRunningException {
-        ConceptEntry concept = getConceptEntry(id);
-        concept.setDeleted(true);
-        ChangeEvent changeEvent = new ChangeEvent();
-        changeEvent.setType(ChangeEventTypes.DELETION);
-        changeEvent.setDate(new Date());
-        changeEvent.setUserName(userName);
-        concept.addNewChangeEvent(changeEvent);
-        client.update(concept, DBNames.DICTIONARY_DB);
-        indexService.deleteById(concept.getId(), userName);
+    public void deleteConcept(ConceptEntry concept, String userName) throws LuceneException, IndexerRunningException {
+        if (concept != null) {
+            concept.setDeleted(true);
+            ChangeEvent changeEvent = new ChangeEvent();
+            changeEvent.setType(ChangeEventTypes.DELETION);
+            changeEvent.setDate(new Date());
+            changeEvent.setUserName(userName);
+            concept.addNewChangeEvent(changeEvent);
+            client.update(concept, DBNames.DICTIONARY_DB);
+            indexService.deleteById(concept.getId(), userName);
+        }
     }
 
     @Override
