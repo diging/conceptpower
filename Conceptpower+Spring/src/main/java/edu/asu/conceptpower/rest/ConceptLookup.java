@@ -1,6 +1,6 @@
 package edu.asu.conceptpower.rest;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -96,7 +96,7 @@ public class ConceptLookup {
     }
 
     private Map<ConceptEntry, ConceptType> generateEntryMap(ConceptEntry[] entries) {
-        Map<ConceptEntry, ConceptType> entryMap = new HashMap<ConceptEntry, ConceptType>();
+        Map<ConceptEntry, ConceptType> entryMap = new LinkedHashMap<ConceptEntry, ConceptType>();
 
         for (ConceptEntry entry : entries) {
             ConceptType type = null;
