@@ -34,7 +34,7 @@ public class ConceptWrapperServiceTest {
     }
 
     @Test
-    public void test_fetchAllConceptTypes_successForConceptLists() {
+    public void test_fetchAllConceptLists_successForConceptLists() {
 
         ConceptList firstConceptList = new ConceptList();
         firstConceptList.setConceptListName("First Concept List");
@@ -58,7 +58,7 @@ public class ConceptWrapperServiceTest {
     }
 
     @Test
-    public void test_fetchAllConceptTypes_successForConceptListWithASingleEntry() {
+    public void test_fetchAllConceptLists_successForConceptListWithASingleEntry() {
 
         ConceptList firstConceptList = new ConceptList();
         firstConceptList.setConceptListName("First Concept List");
@@ -77,7 +77,7 @@ public class ConceptWrapperServiceTest {
     }
 
     @Test
-    public void test_fetchAllConceptTypes_successForEmptyConceptList() {
+    public void test_fetchAllConceptLists_successForEmptyConceptList() {
         Mockito.when(conceptListManager.getAllConceptLists()).thenReturn(null);
         Map<String, String> conceptListMap = conceptWrapperService.fetchAllConceptLists();
         Mockito.verify(conceptListManager).getAllConceptLists();

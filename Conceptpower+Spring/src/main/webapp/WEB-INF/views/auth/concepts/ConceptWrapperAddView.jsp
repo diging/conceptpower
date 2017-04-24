@@ -324,8 +324,7 @@
                         
                         html += '<h5> [' + conceptEntry.id + ']' + '</h5>';
                         html += '<p>' + conceptEntry.description + '</p></div>';     
-                    });             
-                    console.log(html);
+                    });
                     $("#selectedconcepts").append(html); 
                 }
             });
