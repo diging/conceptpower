@@ -66,10 +66,9 @@ public class ConceptEditService implements IConceptEditService {
             String[] wordnetIdArray = wordnetIds.split(",");
             for (String wordnetId : wordnetIdArray) {
                 if (!wordnetId.trim().equalsIgnoreCase("")) {
-                    conceptManager.deleteConcept(conceptManager.getConceptEntry(wordnetId), userName);
+                    conceptManager.deleteIndex(wordnetId, userName);
                 }
             }
-
         }
     }
 

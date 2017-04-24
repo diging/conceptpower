@@ -111,8 +111,7 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public ConceptEntry getWordnetConceptEntry(String wordnetId) throws LuceneException {
-        ConceptEntry entry = wordnetManager.getConcept(wordnetId);
-        return entry;
+        return wordnetManager.getConcept(wordnetId);
     }
 
     /*
@@ -579,5 +578,10 @@ public class ConceptManager implements IConceptManager {
     public void updateIndex(ConceptEntry entry, String userName)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
         indexService.updateConceptEntry(entry, userName);
+    }
+
+    @Override
+    public void deleteIndex(String id, String userName) throws LuceneException, IndexerRunningException {
+        indexService.deleteById(id, userName);
     }
 }
