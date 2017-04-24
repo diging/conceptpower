@@ -180,6 +180,6 @@ public interface IConceptManager {
     public void updateIndex(ConceptEntry entry, String userName)
             throws IllegalAccessException, LuceneException, IndexerRunningException;
 
-    public void deleteIndex(String id, String userName) throws LuceneException, IndexerRunningException;
+    public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException;
 
 }

@@ -581,7 +581,7 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public void deleteIndex(String id, String userName) throws LuceneException, IndexerRunningException {
+    public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException {
         indexService.deleteById(id, userName);
     }
 }
