@@ -67,7 +67,7 @@
                 var conceptID = aData[1];
                 var wordnetID = aData[2];
                 var description = aData[5];
-                var wordField  =$( '#'+conceptID ).text();
+                var wordField  =$('#'+conceptID).text();
                 if (conceptID === wordnetID) {
                     var wrapperids = '';
                     if (!$(this).hasClass('selected')) {
@@ -83,7 +83,6 @@
                         
                         words.push(wordField);
                         if($('#word').val().length < wordField.length) {
-                            console.log('Set the value of wordField');
                             $('#word').val(wordField);
                         }
                         
@@ -291,6 +290,50 @@
         $("#synonymsids").val(synonyms);
         $('#addedSynonnym').val(synonyms);
     };
+
+    // This has been added to populate the selected wordnet ids
+    $(window).load(function($) {
+        populateWordnetids();
+    });
+
+    var populateWordnetids = function() {
+        var wrappers = $('#wrapperids').val();
+        var len = wrappers.length;
+
+        if (len > 1) {
+            var html = '';
+            $('#createwrapper').prop('disabled', false);
+            $.ajax({
+                headers: {          
+                    Accept: "application/json",         
+                } ,
+                type : "GET",
+                url : "${pageContext.servletContext.contextPath}/rest/Concepts",
+                data : {
+                    ids : wrappers
+                },
+                success : function(details) {
+                    $.each(details.conceptEntries, function (index, conceptEntry) {
+
+                        html += '<div id="'+ conceptEntry.id +'div">';
+                        
+                        html += '<a id=' +conceptEntry.id + ' data-toggle=\"modal\" data-target=\"#detailsModal\"';
+                        html += 'data-conceptid=' + conceptEntry.id +'>'; 
+                        html += '<h5>' + conceptEntry.lemma + '</h5>';
+                        html += "</a>";
+                        
+                        html += '<h5> [' + conceptEntry.id + ']' + '</h5>';
+                        html += '<p>' + conceptEntry.description + '</p></div>';     
+                    });
+                    $("#selectedconcepts").append(html); 
+                }
+            });
+            
+        } else {
+            $('#createwrapper').prop('disabled', true);
+        }
+
+    }
 </script>
 
 
@@ -334,9 +377,7 @@
     <input type="submit" value="Search" class="btn btn-primary">
 </form>
 
-<form
-    action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper/add"
-    method='post'>
+<form:form action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper/add" method='post' commandName='conceptWrapperAddBean'>
     <h2>2. Select Wordnet concept from search results</h2>
 
     <h4>The following concepts were found:</h4>
@@ -403,27 +444,31 @@
 
         <tr>
             <td>Word</td>
-            <td><input type='text' id="word" name="word" class='form-control'/></td>
-            <td></td>
+            <td>
+                <form:input path="word" class='form-control'/>
+            </td>
+            <td>
+                <form:errors path="word"  class="ui-state-error-text" />
+            </td>
         </tr>
 
         <tr>
             <td>Concept List</td>
 
-            <td><form:select path="lists" name="lists"
+            <td><form:select path="selectedConceptList" name="lists"
                     class="form-control">
                     <form:option value="" label="Select concept list" />
                     <form:options items="${lists}" />
                 </form:select></td>
-            <td />
-
+            <td>
+                <form:errors path="selectedConceptList"  class="ui-state-error-text" />
+            </td>
         </tr>
         <tr>
             <td>Description</td>
             <td>
                 <div>
-                    <textarea id="description" cols="60"
-                        name="description"></textarea>
+                    <form:textarea path='description' cols='60' />
                 </div>
             </td>
             <td />
@@ -438,36 +483,44 @@
         </tr>
         <tr>
             <td>Concept Type</td>
-            <td><form:select path="types" name="types"
+            <td><form:select path="selectedType" name="types"
                     class="form-control">
                     <form:option value="" label="Select one" />
                     <form:options items="${types}" />
                 </form:select></td>
-            <td />
+            <td>
+                <form:errors path="selectedType"  class="ui-state-error-text" />
+            </td>
         </tr>
         <tr>
             <td>Equals</td>
-            <td><input type="text" name="equals" id="equals"></td>
+            <td>
+                <form:input path='equals' id='equals' />
+            </td>
             <td />
         </tr>
         <tr>
             <td>Similar to</td>
-            <td><input type="text" name="similar" id="similar"></td>
+            <td>
+                <form:input path='similar' id='similar' />
+            </td>
             <td />
         </tr>
         <tr hidden="true">
-            <td><input type="text" name="synonymsids"
-                id="synonymsids"></td>
+            <td>
+                <form:input path='synonymids' id='synonymids' />
+            </td>
         </tr>
         <tr hidden="true">
-            <td><input type="text" name="wrapperids"
-                id="wrapperids"></td>
+            <td>
+                <form:hidden path='wrapperids' id='wrapperids' name='wrapperids' />
+            </td>
         </tr>
 
     </table>
     <br /> <input type="submit" disabled="disabled" id="createwrapper"
         value="Create Wordnet concept wrapper" class="btn btn-primary">
-</form>
+</form:form>
 
 <form>
 
