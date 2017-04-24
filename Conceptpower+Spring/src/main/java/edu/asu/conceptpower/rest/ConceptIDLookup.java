@@ -1,7 +1,10 @@
 package edu.asu.conceptpower.rest;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +95,55 @@ public class ConceptIDLookup {
                 type = typeManager.getType(entry.getTypeId());
             }
             entryMap.put(entry, type);
+        }
+
+        return new ResponseEntity<String>(msg.getAllConceptEntriesAndPaginationDetails(entryMap, null), HttpStatus.OK);
+
+    }
+
+    /**
+     * This method provides concept information for the rest interface of the
+     * form
+     * "http://[server.url]/conceptpower/rest/Concept?id={IDs of concept seperated by ,}"
+     * 
+     * @param req
+     *            Holds the HTTP request information
+     * @return XML containing concept information
+     * @throws JsonProcessingException
+     */
+    @RequestMapping(value = "/Concepts", method = RequestMethod.GET, produces = { MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody ResponseEntity<String> getConceptByIds(@RequestParam String ids,
+            @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
+                    throws JsonProcessingException {
+
+        if (ids == null || ids.trim().isEmpty()) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+        String[] wordnetIds = ids.split(",");
+
+        if (wordnetIds == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+        Set<ConceptEntry> conceptEntries = new HashSet<>();
+        for (String wordnetId : wordnetIds) {
+            if (!wordnetId.trim().equalsIgnoreCase("")) {
+                conceptEntries.add(conceptManager.getConceptEntry(wordnetId));
+            }
+        }
+
+        IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
+        Map<ConceptEntry, ConceptType> entryMap = new LinkedHashMap<>();
+        if (conceptEntries != null && !conceptEntries.isEmpty()) {
+            for (ConceptEntry entry : conceptEntries) {
+                ConceptType type = null;
+                if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
+                    type = typeManager.getType(entry.getTypeId());
+                }
+                entryMap.put(entry, type);
+            }
         }
 
         return new ResponseEntity<String>(msg.getAllConceptEntriesAndPaginationDetails(entryMap, null), HttpStatus.OK);
