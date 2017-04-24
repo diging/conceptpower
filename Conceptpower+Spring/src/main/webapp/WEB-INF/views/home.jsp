@@ -108,8 +108,20 @@ $(document).ready(function() {
 	
     $("#mergeConcept").hide();
     $('#mergeError').hide();
+
+    $('#createWrapper').click(function(event) {
+        console.log('Create wrapper clicked');
+        var wordnetId = event.target.value;
+
+    });
+
+    $("#conceptSearchResult input[name='createWrapper']").click(function(){
+      var conceptId = $('input:radio[name=createWrapper]:checked').val());
+      // Need to do an ajax call to fetch the data and then call auth/conceptlist/addconceptwrapper with corresponding values.  
+  });
+
 });
-					
+
 $(document).ready(hideFormProcessing);
 function hideFormProcessing() {
 	$('#floatingCirclesG').hide();
@@ -156,9 +168,7 @@ function prepareMergeConcept(conceptId) {
   <font color="red">${IndexerStatus}</font>
 </center>
 
-<form:form
-  action="${pageContext.servletContext.contextPath}/home/conceptsearch"
-  method='get' commandName='conceptSearchBean'>
+<form:form action="${pageContext.servletContext.contextPath}/home/conceptsearch" method='get' commandName='conceptSearchBean'>
   <form:errors path="luceneError"></form:errors>
   
     <div id="mergeError" class="alert alert-danger">
@@ -224,6 +234,7 @@ function prepareMergeConcept(conceptId) {
           <th></th>
           <th></th>
           <th></th>
+          <th>Create Wrapper</th>
         </sec:authorize>
         <th>Term</th>
         <th>ID</th>
@@ -272,6 +283,17 @@ function prepareMergeConcept(conceptId) {
               
               <td>
                 <input type="checkbox" name="conceptMergeCheckbox" value="${concept.entry.id }"/>
+              </td>
+
+              <td>
+                <c:choose>
+                  <c:when test="${fn:startsWith(concept.entry.id, 'WID')}">
+                    <input type="radio" name="createWrapper" value="${concept.entry.id}"/>
+                  </c:when>
+                  <c:otherwise>
+                    <input type="radio" name="createWrapper" value="${concept.entry.id}" disabled/>
+                  </c:otherwise>     
+                </c:choose>
               </td>
 
           </sec:authorize>
