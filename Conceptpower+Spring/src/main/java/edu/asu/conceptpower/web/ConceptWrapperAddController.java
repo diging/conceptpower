@@ -31,7 +31,7 @@ import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
-import edu.asu.conceptpower.app.service.IConceptWrapperAddService;
+import edu.asu.conceptpower.app.service.IConceptWrapperService;
 import edu.asu.conceptpower.app.validation.ConceptWrapperAddBeanValidator;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
@@ -58,7 +58,7 @@ public class ConceptWrapperAddController {
     private IIndexService indexService;
     
     @Autowired
-    private IConceptWrapperAddService conceptWrapperAddService;
+    private IConceptWrapperService conceptWrapperService;
     
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
@@ -84,8 +84,8 @@ public class ConceptWrapperAddController {
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
     public String prepareConceptWrapperAdd(@ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean,
             HttpServletRequest req, ModelMap model) {
-        model.addAttribute("types", conceptWrapperAddService.fetchAllConceptTypes());
-        model.addAttribute("lists", conceptWrapperAddService.fetchAllConceptLists());
+        model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
+        model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
         return "/auth/conceptlist/addconceptwrapper";
     }
@@ -106,13 +106,12 @@ public class ConceptWrapperAddController {
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper/add", method = RequestMethod.POST)
     public String addConcept(@Validated @ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean,
-            BindingResult result, HttpServletRequest request, Principal principal, Model model)
-                    throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException,
-                    IllegalAccessException, IndexerRunningException {
+            BindingResult result, Principal principal, Model model) throws DictionaryDoesNotExistException,
+                    DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
 
         if (result.hasErrors()) {
-            model.addAttribute("types", conceptWrapperAddService.fetchAllConceptTypes());
-            model.addAttribute("lists", conceptWrapperAddService.fetchAllConceptLists());
+            model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
+            model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
             return "/auth/conceptlist/addconceptwrapper";
         }
         
@@ -179,8 +178,9 @@ public class ConceptWrapperAddController {
             List<ConceptEntryWrapper> foundConcepts = wrapperCreator.createWrappers(found);
             model.addAttribute("result", foundConcepts);
         }
-        model.addAttribute("types", conceptWrapperAddService.fetchAllConceptTypes());
-        model.addAttribute("lists", conceptWrapperAddService.fetchAllConceptLists());
+        model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
+        model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
+        model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
 
         return "/auth/conceptlist/addconceptwrapper";
     }

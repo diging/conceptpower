@@ -291,7 +291,7 @@
         $('#addedSynonnym').val(synonyms);
     };
 
-    <!-- This has been added to populate the selected wordnet ids-->
+    // This has been added to populate the selected wordnet ids
     $(window).load(function($) {
         populateWordnetids();
     });
