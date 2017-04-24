@@ -33,6 +33,7 @@ public class ConceptEditBean {
     private boolean fromHomeScreen;
     private String luceneError;
     private String wordnetIds;
+    private String existingWordnetIds;
 
     public String getConcept() {
         return concept;
@@ -204,5 +205,13 @@ public class ConceptEditBean {
 
     public void setWordnetIds(String wordnetIds) {
         this.wordnetIds = wordnetIds;
+    }
+
+    public String getExistingWordnetIds() {
+        return existingWordnetIds;
+    }
+
+    public void setExistingWordnetIds(String existingWordnetIds) {
+        this.existingWordnetIds = existingWordnetIds;
     }
 }

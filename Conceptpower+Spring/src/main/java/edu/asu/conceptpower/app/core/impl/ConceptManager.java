@@ -77,6 +77,14 @@ public class ConceptManager implements IConceptManager {
             return entries[0];
         }
 
+        List<ConceptEntry> entriesList = client.getWrapperEntryByWordnetId(id);
+        if (entriesList != null && !entriesList.isEmpty()) {
+            ConceptEntry conceptEntry = entriesList.get(0);
+            fillConceptEntry(conceptEntry);
+            alternativeIdService.addAlternativeIds(id, conceptEntry);
+            return conceptEntry;
+        }
+
         ConceptEntry entry = client.getEntry(id);
         if (entry != null) {
             fillConceptEntry(entry);
@@ -103,13 +111,7 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public ConceptEntry getWordnetConceptEntry(String wordnetId) throws LuceneException {
-        ConceptEntry entry = wordnetManager.getConcept(wordnetId);
-        return entry;
-    }
-
-    @Override
-    public ConceptEntry getLocalConceptEntry(String conceptId) {
-        return client.getEntry(conceptId);
+        return wordnetManager.getConcept(wordnetId);
     }
 
     /*
@@ -475,7 +477,6 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
         entry.addNewChangeEvent(changeEvent);
-
         indexService.updateConceptEntry(entry, userName);
 
         client.update(entry, DBNames.DICTIONARY_DB);
@@ -537,7 +538,7 @@ public class ConceptManager implements IConceptManager {
     @Override
     public ConceptEntry getConceptWrappedEntryByWordNetId(String wordNetID)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
-        List<ConceptEntry> conceptEntries = client.getConceptByWordnetId(wordNetID);
+        List<ConceptEntry> conceptEntries = client.getWrapperEntryByWordnetId(wordNetID);
         for (ConceptEntry entry : conceptEntries) {
             // Wordnet is also added because lucene doesn't do an exact search
             // on fields
@@ -571,5 +572,16 @@ public class ConceptManager implements IConceptManager {
         List<ConceptEntry> conceptEntries = client.getAllEntriesFromList(conceptListName);
         alternativeIdService.addAlternativeIds(conceptEntries);
         return conceptEntries;
+    }
+
+    @Override
+    public void updateIndex(ConceptEntry entry, String userName)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
+        indexService.updateConceptEntry(entry, userName);
+    }
+
+    @Override
+    public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException {
+        indexService.deleteById(id, userName);
     }
 }

@@ -177,14 +177,9 @@ public interface IConceptManager {
      */
     public void deleteConcept(ConceptEntry entry, String userName) throws LuceneException, IndexerRunningException;
 
-    /**
-     * This method fetches the local CCP concept entries. It could be a local
-     * concept entry or a wrapped concept entry. It does not fetch the merged
-     * concept entries.
-     * 
-     * @param conceptId
-     * @return
-     */
-    public ConceptEntry getLocalConceptEntry(String conceptId);
+    public void updateIndex(ConceptEntry entry, String userName)
+            throws IllegalAccessException, LuceneException, IndexerRunningException;
+
+    public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException;
 
 }

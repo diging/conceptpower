@@ -2,6 +2,7 @@ package edu.asu.conceptpower.app.db;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -49,25 +50,7 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     public ConceptEntry getEntry(String id) {
         ConceptEntry exampleEntry = new ConceptEntry();
-
-        // check if there is a wrapper for wordnet entry
-        exampleEntry.setId(null);
-        exampleEntry.setWordnetId(id);
-
-        ConceptEntry[] dictionaryResults = getEntriesByFieldContains("wordnetid", id);
-        // ObjectSet<ConceptEntry> results = dictionaryClient
-        // .queryByExample(exampleEntry);
-
-        // there should only be exactly one object with this id
-        if (dictionaryResults.length == 1)
-            return dictionaryResults[0];
-
         exampleEntry.setId(id);
-        exampleEntry.setWordnetId(null);
-
-        /*
-         * check if there is a concept with this id
-         */
         ObjectSet<ConceptEntry> results = dictionaryClient.queryByExample(exampleEntry);
         // there should only be exactly one object with this id
         if (results.size() == 1)
@@ -77,12 +60,8 @@ public class DatabaseClient implements IConceptDBManager {
     }
 
     @Override
-    public List<ConceptEntry> getConceptByWordnetId(String wordnetId) {
-        ConceptEntry entry = new ConceptEntry();
-        entry.setWordnetId(wordnetId);
-
-        ObjectSet<ConceptEntry> entries = dictionaryClient.queryByExample(entry);
-        return entries;
+    public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId) {
+        return Arrays.asList(getEntriesByFieldContains("wordnetid", wordnetId));
     }
 
     /*
