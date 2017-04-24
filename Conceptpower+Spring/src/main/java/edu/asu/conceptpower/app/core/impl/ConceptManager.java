@@ -576,8 +576,8 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public void updateWordnetConceptInIndex(ConceptEntry entry, String userName)
+    public void updateIndex(ConceptEntry entry, String userName)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
-        indexService.insertConcept(entry, userName);
+        indexService.updateConceptEntry(entry, userName);
     }
 }

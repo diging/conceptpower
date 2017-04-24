@@ -61,8 +61,6 @@ public class DatabaseClient implements IConceptDBManager {
 
     @Override
     public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId) {
-        ConceptEntry exampleEntry = new ConceptEntry();
-        exampleEntry.setWordnetId(wordnetId);
         return Arrays.asList(getEntriesByFieldContains("wordnetid", wordnetId));
     }
 

@@ -177,7 +177,7 @@ public interface IConceptManager {
      */
     public void deleteConcept(ConceptEntry entry, String userName) throws LuceneException, IndexerRunningException;
 
-    public void updateWordnetConceptInIndex(ConceptEntry entry, String userName)
+    public void updateIndex(ConceptEntry entry, String userName)
             throws IllegalAccessException, LuceneException, IndexerRunningException;
 
 }

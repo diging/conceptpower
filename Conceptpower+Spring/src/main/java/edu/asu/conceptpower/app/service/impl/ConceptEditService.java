@@ -55,7 +55,7 @@ public class ConceptEditService implements IConceptEditService {
             if (!wordnetId.trim().equalsIgnoreCase("")) {
                 ConceptEntry entry = conceptManager.getWordnetConceptEntry(wordnetId);
                 entry.setConceptList(Constants.WORDNET_DICTIONARY);
-                conceptManager.updateWordnetConceptInIndex(entry, userName);
+                conceptManager.updateIndex(entry, userName);
             }
         }
     }
