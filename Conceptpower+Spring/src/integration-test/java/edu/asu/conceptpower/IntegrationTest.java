@@ -1,6 +1,8 @@
 package edu.asu.conceptpower;
 
 import java.security.Principal;
+
+import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,7 @@ public abstract class IntegrationTest {
     @Before
     public void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        XMLUnit.setIgnoreAttributeOrder(true);
         if (!isSetupDone) {
             this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/indexConcepts").principal(principal));
             MvcResult mr = null;

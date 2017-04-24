@@ -9,7 +9,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LuceneField {
 
-	String lucenefieldName();
-	boolean isTokenized();
+    String lucenefieldName();
+    boolean isTokenized();
     boolean isMultiple();
+
+    /**
+     * This will be set to true if we need to index the field twice (first
+     * tokenized, second non tokenized) to support short phrase search such as
+     * "be".
+     * 
+     * @return
+     */
+    boolean isShortPhraseSearchable() default false;
+
+    boolean isWildCardSearchEnabled() default false;
 }
