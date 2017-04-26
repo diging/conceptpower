@@ -2,8 +2,6 @@ package edu.asu.conceptpower.web;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -64,17 +62,21 @@ public class ConceptSearchController {
     }
 
     /**
-     * This method is searches concepts a specific term and pos
+     * This method is searches concepts a specific term, pos based on the
+     * pagination details.
      * 
-     * @param req
-     *            Holds the HTTP request information
      * @param model
-     *            Generic model holder for servlet
-     * @return Returns a string value to redirect user to concept search page
-     * @throws IllegalAccessException 
+     * @param page
+     * @param sortDir
+     * @param sortColumn
+     * @param conceptSearchBean
+     * @param results
+     * @return
+     * @throws LuceneException
+     * @throws IllegalAccessException
      */
     @RequestMapping(value = "/home/conceptsearch", method = RequestMethod.GET)
-    public String search(HttpServletRequest req, ModelMap model, @RequestParam(defaultValue = "1") String page,
+    public String search(ModelMap model, @RequestParam(defaultValue = "1") String page,
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(defaultValue = "word") String sortColumn,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results)

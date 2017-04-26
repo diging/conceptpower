@@ -9,7 +9,7 @@
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
-   $('#conceptSearchResult').dataTable({
+   /*$('#conceptSearchResult').dataTable({
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
 		"bAutoWidth" : false,
@@ -52,7 +52,7 @@ $(document).ready(function() {
   			    }
   				</sec:authorize>
 		]
-	});
+	});*/
 	$('#viafSearchResult').dataTable({
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
@@ -303,15 +303,15 @@ function prepareMergeConcept(conceptId) {
   <nav aria-label="Page navigation">
       <ul class="pagination">
         <li <c:if test="${page == 1}">class="disabled"</c:if>>
-          <a <c:if test="${page > 1}">href="<c:url value="/home/conceptsearch?page=${page - 1}&sortDir=${sortDir}&sortColumn=${sortColumn}&word=${word}&pos=${pos}" />"</c:if> aria-label="Previous">
+          <a <c:if test="${page > 1}">href="<c:url value="/home/conceptsearch?page=${page - 1}&sortDir=${sortDir}&sortColumn=${sortColumn}&word=${conceptSearchBean.word}&pos=${conceptSearchBean.pos}" />"</c:if> aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
     <c:forEach begin="1" end="${count}" var="val">
-        <li <c:if test="${val == page}">class="active"</c:if>><a href="<c:url value="/home/conceptsearch?page=${val}&sortDir=${sortDir}&sortColumn=${sortColumn}&word=${word}&pos=${pos}" />"><c:out value="${val}"/></a></li>
+        <li <c:if test="${val == page}">class="active"</c:if>><a href="<c:url value="/home/conceptsearch?page=${val}&sortDir=${sortDir}&sortColumn=${sortColumn}&word=${conceptSearchBean.word}&pos=${conceptSearchBean.pos}" />"><c:out value="${val}"/></a></li>
     </c:forEach>
         <li <c:if test="${page == count}">class="disabled"</c:if>>
-          <a <c:if test="${page < count}">href="<c:url value="/home/conceptsearch?page=${page + 1}&sortDir=${sortDir}&sortColumn=${sortColumn}&word=${word}&pos=${pos}" />"</c:if> aria-label="Next">
+          <a <c:if test="${page < count}">href="<c:url value="/home/conceptsearch?page=${page + 1}&sortDir=${sortDir}&sortColumn=${sortColumn}&word=${conceptSearchBean.word}&pos=${conceptSearchBean.pos}" />"</c:if> aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
