@@ -9,92 +9,119 @@
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
+
+  $("#conceptSearchResult input[name='createWrapper']").click(function(){
+      var conceptId = $('input:radio[name=createWrapper]:checked').val();
+     
+      $.ajax({
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          type : "GET",
+          url : "${pageContext.servletContext.contextPath}/rest/Concept",
+          data : {
+            id : conceptId
+          },
+          success : function(details) {
+            
+            $.each(details.conceptEntries, function (index, conceptEntry) {
+              console.log(conceptEntry);
+              window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + conceptEntry.lemma + '&selectedConceptList=' + conceptEntry.conceptList + '&description=' + conceptEntry.description + '&selectedType=' + conceptEntry.type + '&wrapperids=' + conceptEntry.id;
+            });
+
+            
+          }
+        });
+    });
+
+
    $('#conceptSearchResult').dataTable({
-		"bJQueryUI" : true,
-		"sPaginationType" : "full_numbers",
-		"bAutoWidth" : false,
-		"aaSorting" : [],
-		"aoColumnDefs" : [ 
-				<sec:authorize access="isAuthenticated()">
-			    {
-		            "targets": [0,1],
-			        'bSortable': false
-				},
-				{
-					"targets": [2],
-					'searchable': false,
-					'bSortable': false,
-					'orderable':false,
-					'bVisible' : false,
-					'className': 'dt-body-center'
-				},
-				{
-				   	"targets": [7],
-				   	"sType" : "html",
-				   	"fnRender" : function(o, val) {
-  				  		if (o.startsWith("&lt;br/&gt;")) {
-  				   			o = o.substring(11,o.length);
-  				   		}
-  						return $("<div/>").html(o).text();
-					}
-		    	},
-		    	</sec:authorize>
-  			  	<sec:authorize access="not isAuthenticated()">
-  			    {
-  			    	"targets": [5],
-  			    	"sType" : "html",
-  			    	"fnRender" : function(o, val) {
-      			   		if (o.startsWith("&lt;br/&gt;")) {
-      			   			o = o.substring(11,o.length);
-      			   		}
-  						return $("<div/>").html(o).text();
-  			    	}
-  			    }
-  				</sec:authorize>
-		]
-	});
-	$('#viafSearchResult').dataTable({
-		"bJQueryUI" : true,
-		"sPaginationType" : "full_numbers",
-		"bAutoWidth" : false,
-		"aoColumnDefs" : [ {
-			"aTargets" : [ 2 ],
-			"sType" : "html",
-			"fnRender" : function(o, val) {
-				return $("<div/>").html(o.aData[2]).text();
-			}
-		 } ],
-	});
-	$('#detailsModal')
-		.on(
-			'show.bs.modal',
-			function(event) {
-				var button = $(event.relatedTarget); // ` that triggered the modal
-				var conceptid = button.data('conceptid'); // Extract info from data-* attributes
-				// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-				// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-				$.ajax({
-					type : "GET",
-					url : "${pageContext.servletContext.contextPath}/conceptDetail",
-					data : {
-						conceptid : conceptid
-					},
-					success : function(details) {
-						details = $.parseJSON(details);
-						$("#conceptTerm").text(details.name);
-						$("#detailsid").text(details.id);
-						$("#detailsuri").text(details.uri);
-						$("#detailswordnetid").text(details.wordnetid);
-						$("#detailspos").text(details.pos);
-						$("#detailsconceptlist").text(details.conceptlist);
-						$("#detailstypeid").text(details.type);
-						$("#detailsequalto").text(details.equalto);
-						$("#detailssimilarto").text(details.similarto);
-						$("#detailscreator").text(details.creator);
-						$("#detailsdescription").html(details.description);
-					}
-				});
-		});
+        "bJQueryUI" : true,
+        "sPaginationType" : "full_numbers",
+        "bAutoWidth" : false,
+        "aaSorting" : [],
+        "aoColumnDefs" : [ 
+                <sec:authorize access="isAuthenticated()">
+                {
+                    "targets": [0,1],
+                    'bSortable': false
+                },
+                {
+                    "targets": [2],
+                    'searchable': false,
+                    'bSortable': false,
+                    'orderable':false,
+                    'bVisible' : false,
+                    'className': 'dt-body-center'
+                },
+                {
+                    "targets": [7],
+                    "sType" : "html",
+                    "fnRender" : function(o, val) {
+                        if (o.startsWith("&lt;br/&gt;")) {
+                            o = o.substring(11,o.length);
+                        }
+                        return $("<div/>").html(o).text();
+                    }
+                },
+                </sec:authorize>
+                <sec:authorize access="not isAuthenticated()">
+                {
+                    "targets": [5],
+                    "sType" : "html",
+                    "fnRender" : function(o, val) {
+                        if (o.startsWith("&lt;br/&gt;")) {
+                            o = o.substring(11,o.length);
+                        }
+                        return $("<div/>").html(o).text();
+                    }
+                }
+                </sec:authorize>
+        ]
+    });
+    $('#viafSearchResult').dataTable({
+        "bJQueryUI" : true,
+        "sPaginationType" : "full_numbers",
+        "bAutoWidth" : false,
+        "aoColumnDefs" : [ {
+            "aTargets" : [ 2 ],
+            "sType" : "html",
+            "fnRender" : function(o, val) {
+                return $("<div/>").html(o.aData[2]).text();
+            }
+         } ],
+    });
+    $('#detailsModal')
+        .on(
+            'show.bs.modal',
+            function(event) {
+                var button = $(event.relatedTarget); // ` that triggered the modal
+                var conceptid = button.data('conceptid'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                $.ajax({
+                    type : "GET",
+                    url : "${pageContext.servletContext.contextPath}/conceptDetail",
+                    data : {
+                        conceptid : conceptid
+                    },
+                    success : function(details) {
+                        details = $.parseJSON(details);
+                        $("#conceptTerm").text(details.name);
+                        $("#detailsid").text(details.id);
+                        $("#detailsuri").text(details.uri);
+                        $("#detailswordnetid").text(details.wordnetid);
+                        $("#detailspos").text(details.pos);
+                        $("#detailsconceptlist").text(details.conceptlist);
+                        $("#detailstypeid").text(details.type);
+                        $("#detailsequalto").text(details.equalto);
+                        $("#detailssimilarto").text(details.similarto);
+                        $("#detailscreator").text(details.creator);
+                        $("#detailsdescription").html(details.description);
+                    }
+                });
+        });
     $('#prepareMergeConcept').on('click', function (e) {
         e.preventDefault();
         // Get the column API object
@@ -105,55 +132,31 @@ $(document).ready(function() {
         $("#mergeConcept").show();
         $("#prepareMergeConcept").hide();
     });
-	
+    
     $("#mergeConcept").hide();
     $('#mergeError').hide();
-
-    $('#createWrapper').click(function(event) {
-        console.log('Create wrapper clicked');
-        var wordnetId = event.target.value;
-
-    });
-
-    $("#conceptSearchResult input[name='createWrapper']").click(function(){
-      var conceptId = $('input:radio[name=createWrapper]:checked').val());
-      // Need to do an ajax call to fetch the data and then call auth/conceptlist/addconceptwrapper with corresponding values.  
-      $.ajax({
-          type : "GET",
-          url : "${pageContext.servletContext.contextPath}/Concept",
-          data : {
-            id : conceptId
-          },
-          success : function(details) {
-            details = $.parseJSON(details);
-            var url = ${pageContext.servletContext.contextPath} + "?word=" + details.word + "&selectedConceptList=" + details.conceptlist + "&description=" + details.description + "&selectedType" + details.type + "&wrapperids" + detials.id;
-            console.log(url);
-          }
-        });
-  });
-
 });
-
+                    
 $(document).ready(hideFormProcessing);
 function hideFormProcessing() {
-	$('#floatingCirclesG').hide();
+    $('#floatingCirclesG').hide();
 }
 function showFormProcessing() {
-	$('#floatingCirclesG').show();
+    $('#floatingCirclesG').show();
 }
 
 function mergeConcepts() {
-	$('#mergeError').hide();
-	var conceptIdsToMerge = [];
-	var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
+    $('#mergeError').hide();
+    var conceptIdsToMerge = [];
+    var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
     $.each($("input[name='conceptMergeCheckbox']:checked", conceptSearchResultTable.fnGetNodes()), function(){            
-    	conceptIdsToMerge.push($(this).val());
+        conceptIdsToMerge.push($(this).val());
     });
     
     if(conceptIdsToMerge.length < 2) {
-    	$('#mergeError').show();
+        $('#mergeError').show();
     } else {
-        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(",");    	
+        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(",");      
     }
 }
 
@@ -165,7 +168,7 @@ function prepareMergeConcept(conceptId) {
     if(conceptsToMerge != '') {
         conceptsToMerge = conceptId;
     } else {
-        conceptsToMerge = conceptsToMerge + "," + conceptId;	
+        conceptsToMerge = conceptsToMerge + "," + conceptId;    
     }
 }
 
@@ -180,7 +183,9 @@ function prepareMergeConcept(conceptId) {
   <font color="red">${IndexerStatus}</font>
 </center>
 
-<form:form action="${pageContext.servletContext.contextPath}/home/conceptsearch" method='get' commandName='conceptSearchBean'>
+<form:form
+  action="${pageContext.servletContext.contextPath}/home/conceptsearch"
+  method='get' commandName='conceptSearchBean'>
   <form:errors path="luceneError"></form:errors>
   
     <div id="mergeError" class="alert alert-danger">
@@ -246,7 +251,7 @@ function prepareMergeConcept(conceptId) {
           <th></th>
           <th></th>
           <th></th>
-          <th>Create Wrapper</th>
+          <th></th>
         </sec:authorize>
         <th>Term</th>
         <th>ID</th>
@@ -300,7 +305,7 @@ function prepareMergeConcept(conceptId) {
               <td>
                 <c:choose>
                   <c:when test="${fn:startsWith(concept.entry.id, 'WID')}">
-                    <input type="radio" name="createWrapper" value="${concept.entry.id}"/>
+                    <input type="radio" name="createWrapper" value="${concept.entry.id}" title='Click to create wrapper.'/>
                   </c:when>
                   <c:otherwise>
                     <input type="radio" name="createWrapper" value="${concept.entry.id}" disabled/>
