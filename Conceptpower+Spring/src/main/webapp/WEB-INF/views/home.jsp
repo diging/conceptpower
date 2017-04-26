@@ -51,6 +51,11 @@ $(document).ready(function() {
                     'className': 'dt-body-center'
                 },
                 {
+                    "targets": [3],
+                    "bSortable": false,
+                    'searchable' : false
+                },
+                {
                     "targets": [7],
                     "sType" : "html",
                     "fnRender" : function(o, val) {
@@ -124,6 +129,7 @@ $(document).ready(function() {
         conceptSearchResultTable.fnSetColumnVis(0, false);
         conceptSearchResultTable.fnSetColumnVis(1, false);
         conceptSearchResultTable.fnSetColumnVis(2, true);
+        conceptSearchResultTable.fnSetColumnVis(3, false);
         $("#mergeConcept").show();
         $("#prepareMergeConcept").hide();
     });
