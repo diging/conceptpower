@@ -149,6 +149,12 @@ public class ConceptManager implements IConceptManager {
         return indexService.searchForConceptByPageNumberAndFieldMap(fieldMap, null, page, numberOfRecordsPerPage);
     }
 
+    @Override
+    public int getPageCountForConceptEntries(String word, String pos, String conceptList) throws IllegalAccessException, LuceneException, IndexerRunningException {
+        int totalEntries =  getConceptListEntriesForWordPOS(word, pos, conceptList, -1, -1).length;
+        return (int) Math.ceil(new Double(totalEntries) / new Double(defaultPageSize));
+    }
+
     /**
      * If a concept entry does not wrap a concept from Wordnet then this method
      * does nothing. If a concept does wrap concepts from Wordnet (id and

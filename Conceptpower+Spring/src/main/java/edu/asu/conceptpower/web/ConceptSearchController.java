@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.validation.ConceptSearchValidator;
@@ -53,6 +55,9 @@ public class ConceptSearchController {
     @Value("#{messages['INDEXERSTATUS']}")
     private String indexerStatus;
 
+    @Value("${default_page_size}")
+    private Integer defaultPageSize;
+
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(validator);
@@ -69,7 +74,9 @@ public class ConceptSearchController {
      * @throws IllegalAccessException 
      */
     @RequestMapping(value = "/home/conceptsearch", method = RequestMethod.GET)
-    public String search(HttpServletRequest req, ModelMap model,
+    public String search(HttpServletRequest req, ModelMap model, @RequestParam(defaultValue = "1") String page,
+            @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
+            @RequestParam(defaultValue = "word") String sortColumn,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results)
                     throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
@@ -84,19 +91,40 @@ public class ConceptSearchController {
             // Need to include command Object
             return "conceptsearch";
         }
-        
+        int pageInt = new Integer(page);
+        int sortDirInt = new Integer(sortDir);
+        int pageCount = 0;
         try {
+            // found =
+            // conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
+            // conceptSearchBean.getPos().toString().toLowerCase().trim(),
+            // null);
+
             found = conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
+                    conceptSearchBean.getPos(), null, pageInt, defaultPageSize);
+            pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
+                    conceptSearchBean.getPos(), null);
         } catch (IndexerRunningException e) {
             model.addAttribute(indexerStatus, e.getMessage());
             return "conceptsearch";
         }
         foundConcepts = wrapperCreator.createWrappers(found);
         conceptSearchBean.setFoundConcepts(foundConcepts);
+        if (pageInt < 1) {
+            pageInt = 1;
+        }
+
+        if (pageInt > pageCount) {
+            pageInt = pageCount;
+        }
+
         if (CollectionUtils.isEmpty(foundConcepts)) {
             results.rejectValue("foundConcepts", "no.searchResults");
         }
+        model.addAttribute("page", pageInt);
+        model.addAttribute("count", pageCount);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("sortColumn", sortColumn);
 
         return "conceptsearch";
     }
