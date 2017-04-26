@@ -146,24 +146,23 @@ function prepareMergeConcept(conceptId) {
     }
 }
 
-var createWrapperFunction = function(conceptId) {
-      console.log(conceptId);
-      $.ajax({
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          type : "GET",
-          url : "${pageContext.servletContext.contextPath}/rest/Concept",
-          data : {
-            id : conceptId
-          },
-          success : function(details) {
-            $.each(details.conceptEntries, function (index, conceptEntry) {
-              window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + conceptEntry.lemma + '&selectedConceptList=' + conceptEntry.conceptList + '&description=' + conceptEntry.description + '&selectedType=' + conceptEntry.type + '&wrapperids=' + conceptEntry.id;
-            });
-          }
-      });
+var createWrapper = function(conceptId) {
+  $.ajax({
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      type : "GET",
+      url : "${pageContext.servletContext.contextPath}/rest/Concept",
+      data : {
+        id : conceptId
+      },
+      success : function(details) {
+        $.each(details.conceptEntries, function (index, conceptEntry) {
+          window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + conceptEntry.lemma + '&selectedConceptList=' + conceptEntry.conceptList + '&description=' + conceptEntry.description + '&selectedType=' + conceptEntry.type + '&wrapperids=' + conceptEntry.id;
+        });
+      }
+  });
 }
 
 </script>
@@ -270,7 +269,7 @@ var createWrapperFunction = function(conceptId) {
                   </a>
                 </c:when>
                 <c:otherwise>
-                  <a href="#" onclick="createWrapperFunction('${concept.entry.id}');">
+                  <a href="#" onclick="createWrapper('${concept.entry.id}');">
                     <i title='Create wrapper' class="fa fa-pencil-square-o"></i>
                   </a>
                 </c:otherwise>
