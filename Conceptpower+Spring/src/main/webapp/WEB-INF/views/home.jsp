@@ -12,7 +12,6 @@ $(document).ready(function() {
 
   $("#conceptSearchResult input[name='createWrapper']").click(function(){
       var conceptId = $('input:radio[name=createWrapper]:checked').val();
-     
       $.ajax({
           headers: {
             Accept: "application/json",
@@ -24,13 +23,9 @@ $(document).ready(function() {
             id : conceptId
           },
           success : function(details) {
-            
             $.each(details.conceptEntries, function (index, conceptEntry) {
-              console.log(conceptEntry);
               window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + conceptEntry.lemma + '&selectedConceptList=' + conceptEntry.conceptList + '&description=' + conceptEntry.description + '&selectedType=' + conceptEntry.type + '&wrapperids=' + conceptEntry.id;
             });
-
-            
           }
         });
     });
@@ -308,7 +303,7 @@ function prepareMergeConcept(conceptId) {
                     <input type="radio" name="createWrapper" value="${concept.entry.id}" title='Click to create wrapper.'/>
                   </c:when>
                   <c:otherwise>
-                    <input type="radio" name="createWrapper" value="${concept.entry.id}" disabled/>
+                    <input type="radio" name="createWrapper" value="${concept.entry.id}" disabled title='Cannot create wrapper for Conceptpower local concepts.'/>
                   </c:otherwise>     
                 </c:choose>
               </td>
