@@ -10,27 +10,6 @@
 //# sourceURL=details.js
 $(document).ready(function() {
 
-  $("#conceptSearchResult input[name='createWrapper']").click(function(){
-      var conceptId = $('input:radio[name=createWrapper]:checked').val();
-      $.ajax({
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          type : "GET",
-          url : "${pageContext.servletContext.contextPath}/rest/Concept",
-          data : {
-            id : conceptId
-          },
-          success : function(details) {
-            $.each(details.conceptEntries, function (index, conceptEntry) {
-              window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + conceptEntry.lemma + '&selectedConceptList=' + conceptEntry.conceptList + '&description=' + conceptEntry.description + '&selectedType=' + conceptEntry.type + '&wrapperids=' + conceptEntry.id;
-            });
-          }
-        });
-    });
-
-
    $('#conceptSearchResult').dataTable({
         "bJQueryUI" : true,
         "sPaginationType" : "full_numbers",
@@ -49,11 +28,6 @@ $(document).ready(function() {
                     'orderable':false,
                     'bVisible' : false,
                     'className': 'dt-body-center'
-                },
-                {
-                    "targets": [3],
-                    "bSortable": false,
-                    'searchable' : false
                 },
                 {
                     "targets": [7],
@@ -129,7 +103,6 @@ $(document).ready(function() {
         conceptSearchResultTable.fnSetColumnVis(0, false);
         conceptSearchResultTable.fnSetColumnVis(1, false);
         conceptSearchResultTable.fnSetColumnVis(2, true);
-        conceptSearchResultTable.fnSetColumnVis(3, false);
         $("#mergeConcept").show();
         $("#prepareMergeConcept").hide();
     });
@@ -171,6 +144,26 @@ function prepareMergeConcept(conceptId) {
     } else {
         conceptsToMerge = conceptsToMerge + "," + conceptId;    
     }
+}
+
+var createWrapperFunction = function(conceptId) {
+      console.log(conceptId);
+      $.ajax({
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          type : "GET",
+          url : "${pageContext.servletContext.contextPath}/rest/Concept",
+          data : {
+            id : conceptId
+          },
+          success : function(details) {
+            $.each(details.conceptEntries, function (index, conceptEntry) {
+              window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + conceptEntry.lemma + '&selectedConceptList=' + conceptEntry.conceptList + '&description=' + conceptEntry.description + '&selectedType=' + conceptEntry.type + '&wrapperids=' + conceptEntry.id;
+            });
+          }
+      });
 }
 
 </script>
@@ -252,7 +245,6 @@ function prepareMergeConcept(conceptId) {
           <th></th>
           <th></th>
           <th></th>
-          <th></th>
         </sec:authorize>
         <th>Term</th>
         <th>ID</th>
@@ -278,8 +270,9 @@ function prepareMergeConcept(conceptId) {
                   </a>
                 </c:when>
                 <c:otherwise>
-                  <i title="Cannot edit Word Net concepts"
-                    class="fa fa-pencil-square-o disabled"></i>
+                  <a href="#" onclick="createWrapperFunction('${concept.entry.id}');">
+                    <i title='Create wrapper' class="fa fa-pencil-square-o"></i>
+                  </a>
                 </c:otherwise>
               </c:choose></td>
 
@@ -297,22 +290,12 @@ function prepareMergeConcept(conceptId) {
                   <i title="Cannot delete WordNet concepts"
                     class="fa fa-trash disabled"></i>
                 </c:otherwise>
-              </c:choose></td>
+              </c:choose>
+            </td>
               
-              <td>
-                <input type="checkbox" name="conceptMergeCheckbox" value="${concept.entry.id }"/>
-              </td>
-
-              <td>
-                <c:choose>
-                  <c:when test="${fn:startsWith(concept.entry.id, 'WID')}">
-                    <input type="radio" name="createWrapper" value="${concept.entry.id}" title='Click to create wrapper.'/>
-                  </c:when>
-                  <c:otherwise>
-                    <input type="radio" name="createWrapper" value="${concept.entry.id}" disabled title='Cannot create wrapper for Conceptpower local concepts.'/>
-                  </c:otherwise>     
-                </c:choose>
-              </td>
+            <td>
+              <input type="checkbox" name="conceptMergeCheckbox" value="${concept.entry.id }"/>
+            </td>
 
           </sec:authorize>
           <td align="justify"><font size="2"> <a
