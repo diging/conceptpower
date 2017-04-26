@@ -2,6 +2,8 @@ package edu.asu.conceptpower.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -76,7 +78,7 @@ public class ConceptSearchController {
      * @throws IllegalAccessException
      */
     @RequestMapping(value = "/home/conceptsearch", method = RequestMethod.GET)
-    public String search(ModelMap model, @RequestParam(defaultValue = "1") String page,
+    public String search(HttpServletRequest req, ModelMap model, @RequestParam(defaultValue = "1") String page,
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(defaultValue = "word") String sortColumn,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results)
@@ -84,6 +86,11 @@ public class ConceptSearchController {
         if (results.hasErrors()) {
             return "conceptsearch";
         }
+        
+        if(req.getAttribute("conceptIdsToMerge") != null) {
+            model.addAttribute("conceptIdsToMerge", req.getAttribute("conceptIdsToMerge"));
+        }
+
         List<ConceptEntryWrapper> foundConcepts = null;
         ConceptEntry[] found = null;
         

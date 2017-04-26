@@ -9,50 +9,21 @@
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
-   /*$('#conceptSearchResult').dataTable({
-		"bJQueryUI" : true,
-		"sPaginationType" : "full_numbers",
-		"bAutoWidth" : false,
-		"aaSorting" : [],
-		"aoColumnDefs" : [ 
-				<sec:authorize access="isAuthenticated()">
-			    {
-		            "targets": [0,1],
-			        'bSortable': false
-				},
-				{
-					"targets": [2],
-					'searchable': false,
-					'bSortable': false,
-					'orderable':false,
-					'bVisible' : false,
-					'className': 'dt-body-center'
-				},
-				{
-				   	"targets": [7],
-				   	"sType" : "html",
-				   	"fnRender" : function(o, val) {
-  				  		if (o.startsWith("&lt;br/&gt;")) {
-  				   			o = o.substring(11,o.length);
-  				   		}
-  						return $("<div/>").html(o).text();
-					}
-		    	},
-		    	</sec:authorize>
-  			  	<sec:authorize access="not isAuthenticated()">
-  			    {
-  			    	"targets": [5],
-  			    	"sType" : "html",
-  			    	"fnRender" : function(o, val) {
-      			   		if (o.startsWith("&lt;br/&gt;")) {
-      			   			o = o.substring(11,o.length);
-      			   		}
-  						return $("<div/>").html(o).text();
-  			    	}
-  			    }
-  				</sec:authorize>
-		]
-	});*/
+
+  function removeColumnFromTable(str) {
+    var target = $('table').find('th[data-name="' + str +'"]');
+    var index = (target).index();
+     $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).remove();
+  }
+
+  function checkCheckBoxForMergeConcepts() {
+    var conceptsToBeMerged = $('#conceptIdsToMerge').val();
+    console.log(conceptsToBeMerged);
+  }
+
+  removeColumnFromTable('delete');
+  checkCheckBoxForMergeConcepts();
+
 	$('#viafSearchResult').dataTable({
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
@@ -98,13 +69,52 @@ $(document).ready(function() {
     $('#prepareMergeConcept').on('click', function (e) {
         e.preventDefault();
         // Get the column API object
-        var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
-        conceptSearchResultTable.fnSetColumnVis(0, false);
-        conceptSearchResultTable.fnSetColumnVis(1, false);
-        conceptSearchResultTable.fnSetColumnVis(2, true);
-        $("#mergeConcept").show();
+        removeColumnFromTable('edit');
+        removeColumnFromTable('delete');
+        $("#mergeConcept").show('merge', 'conceptSearchResult');
         $("#prepareMergeConcept").hide();
     });
+
+    $(':checkbox').change(function(e) {
+        if(this.checked) {
+          console.log($(this).val());
+          mergeConcepts($(this).val())
+        } else {
+          console.log($(this).val());
+          removeMergedConcepts($(this).val());
+        }
+    });
+    
+    function mergeConcepts(conceptId) {
+      $('#mergeError').hide();
+      
+      var conceptsToMerge = $('#conceptIdsToMerge').val(); //retrieve array
+      if(conceptsToMerge != '') {
+        console.log(conceptsToMerge);
+        conceptsToMerge = JSON.parse(conceptsToMerge);  
+      } else {
+        conceptsToMerge = [];
+        console.log('Created a new array');
+      }
+      conceptsToMerge.push(conceptId);
+
+      $('#conceptIdsToMerge').val(JSON.stringify(conceptsToMerge));
+      console.log(JSON.stringify(conceptsToMerge));
+
+      /*var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
+        $.each($("input[name='conceptMergeCheckbox']:checked", conceptSearchResultTable.fnGetNodes()), function(){            
+          conceptIdsToMerge.push($(this).val());
+        });*/
+        
+    }    
+
+    function removeMergedConcepts(conceptId) {
+        var conceptsToMerge = $('#conceptIdsToMerge').val();
+        conceptsToMerge = JSON.parse(conceptsToMerge);  
+        conceptsToMerge.splice($.inArray(conceptId, conceptsToMerge), 1);
+        $('#conceptIdsToMerge').val(JSON.stringify(conceptsToMerge));
+        console.log(JSON.stringify(conceptsToMerge));
+    }
 	
     $("#mergeConcept").hide();
     $('#mergeError').hide();
@@ -118,18 +128,15 @@ function showFormProcessing() {
 	$('#floatingCirclesG').show();
 }
 
-function mergeConcepts() {
-	$('#mergeError').hide();
-	var conceptIdsToMerge = [];
-	var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
-    $.each($("input[name='conceptMergeCheckbox']:checked", conceptSearchResultTable.fnGetNodes()), function(){            
-    	conceptIdsToMerge.push($(this).val());
-    });
-    
-    if(conceptIdsToMerge.length < 2) {
-    	$('#mergeError').show();
+function finalizeMerge() {
+  var conceptIdsToMerge = $('#conceptIdsToMerge').val();
+  conceptIdsToMerge = JSON.parse(conceptIdsToMerge);
+  if(conceptIdsToMerge.length < 2) {
+      $('#mergeError').show();
     } else {
-        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(",");    	
+        console.log(conceptIdsToMerge);
+        console.log(conceptIdsToMerge.join(","));
+        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(",");      
     }
 }
 
@@ -143,6 +150,14 @@ function prepareMergeConcept(conceptId) {
     } else {
         conceptsToMerge = conceptsToMerge + "," + conceptId;	
     }
+}
+
+function paginate(page,sortDir,sortColumn,word,pos) {
+  console.log('Pagination called');
+  var conceptIdsToMerge = $('#conceptIdsToMerge').val();
+  console.log(conceptIdsToMerge);
+  console.log('${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + ${page - 1} + '&sortDir=' + ${sortDir} + '&sortColumn=' + ${sortColumn} + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge);
+  window.location = '${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + ${page - 1} + '&sortDir=' + ${sortDir} + '&sortColumn=' + ${sortColumn} + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;
 }
 
 </script>
@@ -211,7 +226,7 @@ function prepareMergeConcept(conceptId) {
         <div class="row">
             <div class="col-sm-2">
                 <button id="prepareMergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;">Select concepts to merge</button>
-                <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" onclick="mergeConcepts();">Merge selected concepts</button>
+                <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" onclick="finalizeMerge();">Merge selected concepts</button>
             </div>
         </div>
     </sec:authorize>
@@ -221,9 +236,9 @@ function prepareMergeConcept(conceptId) {
     <thead>
       <tr>
         <sec:authorize access="isAuthenticated()">
-          <th></th>
-          <th></th>
-          <th></th>
+          <th data-name='edit'></th>
+          <th data-name='delete'></th>
+          <th data-name='merge'></th>
         </sec:authorize>
         <th>Term</th>
         <th>ID</th>
@@ -271,7 +286,7 @@ function prepareMergeConcept(conceptId) {
               </c:choose></td>
               
               <td>
-                <input type="checkbox" name="conceptMergeCheckbox" value="${concept.entry.id }"/>
+                <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" value="${concept.entry.id }" />
               </td>
 
           </sec:authorize>
@@ -300,18 +315,19 @@ function prepareMergeConcept(conceptId) {
     </tbody>
   </table>
 
+  <input:hidden value='' name='conceptIdsToMerge' id='conceptIdsToMerge' />
   <nav aria-label="Page navigation">
       <ul class="pagination">
         <li <c:if test="${page == 1}">class="disabled"</c:if>>
-          <a <c:if test="${page > 1}">href="<c:url value="/home/conceptsearch?page=${page - 1}&sortDir=${sortDir}&sortColumn=${sortColumn}&word=${conceptSearchBean.word}&pos=${conceptSearchBean.pos}" />"</c:if> aria-label="Previous">
+          <a <c:if test="${page > 1}"> href="#" onclick="paginate('${page - 1}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');"</c:if> aria-label="Previous" >
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
     <c:forEach begin="1" end="${count}" var="val">
-        <li <c:if test="${val == page}">class="active"</c:if>><a href="<c:url value="/home/conceptsearch?page=${val}&sortDir=${sortDir}&sortColumn=${sortColumn}&word=${conceptSearchBean.word}&pos=${conceptSearchBean.pos}" />"><c:out value="${val}"/></a></li>
+        <li <c:if test="${val == page}">class="active"</c:if>><a href="#" onclick="paginate('${val}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" ><c:out value="${val}"/></a></li>
     </c:forEach>
         <li <c:if test="${page == count}">class="disabled"</c:if>>
-          <a <c:if test="${page < count}">href="<c:url value="/home/conceptsearch?page=${page + 1}&sortDir=${sortDir}&sortColumn=${sortColumn}&word=${conceptSearchBean.word}&pos=${conceptSearchBean.pos}" />"</c:if> aria-label="Next">
+          <a <c:if test="${page < count}"> href="#" onclick="paginate('${page + 1}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');"</c:if> aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
