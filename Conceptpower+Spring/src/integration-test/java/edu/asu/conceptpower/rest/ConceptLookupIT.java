@@ -78,6 +78,7 @@ public class ConceptLookupIT extends IntegrationTest {
     public void test_getWordNetEntry_successForMultipleEntryInXml() throws Exception {
         final String output = IOUtil.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpForMultipletEntry.xml"));
+
         MvcResult mvcResult = this.mockMvc.perform(
                 MockMvcRequestBuilders.get("/ConceptLookup/Douglas/noun").accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(status().isOk()).andReturn();
