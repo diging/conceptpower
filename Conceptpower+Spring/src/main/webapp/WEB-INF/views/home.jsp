@@ -66,6 +66,7 @@ $(document).ready(function() {
 					}
 				});
 		});
+
     $('#prepareMergeConcept').on('click', function (e) {
         e.preventDefault();
         // Get the column API object
@@ -119,14 +120,15 @@ $(document).ready(function() {
     $("#mergeConcept").hide();
     $('#mergeError').hide();
 });
-					
+                    
 $(document).ready(hideFormProcessing);
 function hideFormProcessing() {
-	$('#floatingCirclesG').hide();
+    $('#floatingCirclesG').hide();
 }
 function showFormProcessing() {
-	$('#floatingCirclesG').show();
+    $('#floatingCirclesG').show();
 }
+
 
 function finalizeMerge() {
   var conceptIdsToMerge = $('#conceptIdsToMerge').val();
@@ -159,8 +161,12 @@ function prepareMergeConcept(conceptId) {
     if(conceptsToMerge != '') {
         conceptsToMerge = conceptId;
     } else {
-        conceptsToMerge = conceptsToMerge + "," + conceptId;	
+        conceptsToMerge = conceptsToMerge + "," + conceptId;    
     }
+}
+
+var createWrapper = function(word, pos, conceptList, description, conceptType, wrapperId) {
+  window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + word + '&selectedConceptList=' + conceptList + '&description=' + description + '&selectedType=' + conceptType + '&wrapperids=' + wrapperId;
 }
 
 </script>
@@ -267,8 +273,9 @@ function prepareMergeConcept(conceptId) {
                   </a>
                 </c:when>
                 <c:otherwise>
-                  <i title="Cannot edit Word Net concepts"
-                    class="fa fa-pencil-square-o disabled"></i>
+                  <a href="#" onclick="createWrapper('${concept.entry.word}', '${concept.entry.pos}', '${concept.entry.conceptList}', '${concept.entry.description}', '${concept.entry.typeId}', '${concept.entry.id}');">
+                    <i title='Create wrapper' class="fa fa-pencil-square-o"></i>
+                  </a>
                 </c:otherwise>
               </c:choose></td>
 
@@ -286,11 +293,12 @@ function prepareMergeConcept(conceptId) {
                   <i title="Cannot delete WordNet concepts"
                     class="fa fa-trash disabled"></i>
                 </c:otherwise>
-              </c:choose></td>
-              
-              <td>
-                <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" value="${concept.entry.id }" />
-              </td>
+              </c:choose>
+            </td>
+
+            <td>
+              <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" value="${concept.entry.id }" />
+            </td>
 
           </sec:authorize>
           <td align="justify"><font size="2"> <a
