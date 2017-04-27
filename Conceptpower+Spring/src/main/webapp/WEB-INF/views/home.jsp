@@ -115,7 +115,7 @@ $(document).ready(function() {
         $('#conceptIdsToMerge').val(JSON.stringify(conceptsToMerge));
         console.log(JSON.stringify(conceptsToMerge));
     }
-	
+
     $("#mergeConcept").hide();
     $('#mergeError').hide();
 });
@@ -130,6 +130,8 @@ function showFormProcessing() {
 
 function finalizeMerge() {
   var conceptIdsToMerge = $('#conceptIdsToMerge').val();
+  var test = document.getElementById('conceptIdsToMerge');
+  console.log(test);
   conceptIdsToMerge = JSON.parse(conceptIdsToMerge);
   if(conceptIdsToMerge.length < 2) {
       $('#mergeError').show();
@@ -139,6 +141,15 @@ function finalizeMerge() {
         window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(",");      
     }
 }
+
+function paginate(page, sortDir, sortColumn, word, pos) {
+      console.log('Pagination called');
+      var conceptIdsToMerge = $('#conceptIdsToMerge').val();
+      conceptIdsToMerge = JSON.parse(conceptIdsToMerge);
+      console.log(conceptIdsToMerge);
+      window.location = '${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + ${page - 1} + '&sortDir=' + ${sortDir} + '&sortColumn=' + ${sortColumn} + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;
+    }
+
 
 var conceptsToMerge = "";
 
@@ -150,14 +161,6 @@ function prepareMergeConcept(conceptId) {
     } else {
         conceptsToMerge = conceptsToMerge + "," + conceptId;	
     }
-}
-
-function paginate(page,sortDir,sortColumn,word,pos) {
-  console.log('Pagination called');
-  var conceptIdsToMerge = $('#conceptIdsToMerge').val();
-  console.log(conceptIdsToMerge);
-  console.log('${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + ${page - 1} + '&sortDir=' + ${sortDir} + '&sortColumn=' + ${sortColumn} + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge);
-  window.location = '${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + ${page - 1} + '&sortDir=' + ${sortDir} + '&sortColumn=' + ${sortColumn} + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;
 }
 
 </script>

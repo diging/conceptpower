@@ -81,13 +81,14 @@ public class ConceptSearchController {
     public String search(HttpServletRequest req, ModelMap model, @RequestParam(defaultValue = "1") String page,
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(defaultValue = "word") String sortColumn,
+ @RequestParam() List<String> conceptIdsToMerge,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results)
                     throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
             return "conceptsearch";
         }
         
-        if(req.getAttribute("conceptIdsToMerge") != null) {
+        if (conceptIdsToMerge != null && !conceptIdsToMerge.isEmpty()) {
             model.addAttribute("conceptIdsToMerge", req.getAttribute("conceptIdsToMerge"));
         }
 
