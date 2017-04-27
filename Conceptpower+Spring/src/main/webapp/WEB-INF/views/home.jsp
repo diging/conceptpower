@@ -9,92 +9,93 @@
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
+
    $('#conceptSearchResult').dataTable({
-		"bJQueryUI" : true,
-		"sPaginationType" : "full_numbers",
-		"bAutoWidth" : false,
-		"aaSorting" : [],
-		"aoColumnDefs" : [ 
-				<sec:authorize access="isAuthenticated()">
-			    {
-		            "targets": [0,1],
-			        'bSortable': false
-				},
-				{
-					"targets": [2],
-					'searchable': false,
-					'bSortable': false,
-					'orderable':false,
-					'bVisible' : false,
-					'className': 'dt-body-center'
-				},
-				{
-				   	"targets": [7],
-				   	"sType" : "html",
-				   	"fnRender" : function(o, val) {
-  				  		if (o.startsWith("&lt;br/&gt;")) {
-  				   			o = o.substring(11,o.length);
-  				   		}
-  						return $("<div/>").html(o).text();
-					}
-		    	},
-		    	</sec:authorize>
-  			  	<sec:authorize access="not isAuthenticated()">
-  			    {
-  			    	"targets": [5],
-  			    	"sType" : "html",
-  			    	"fnRender" : function(o, val) {
-      			   		if (o.startsWith("&lt;br/&gt;")) {
-      			   			o = o.substring(11,o.length);
-      			   		}
-  						return $("<div/>").html(o).text();
-  			    	}
-  			    }
-  				</sec:authorize>
-		]
-	});
-	$('#viafSearchResult').dataTable({
-		"bJQueryUI" : true,
-		"sPaginationType" : "full_numbers",
-		"bAutoWidth" : false,
-		"aoColumnDefs" : [ {
-			"aTargets" : [ 2 ],
-			"sType" : "html",
-			"fnRender" : function(o, val) {
-				return $("<div/>").html(o.aData[2]).text();
-			}
-		 } ],
-	});
-	$('#detailsModal')
-		.on(
-			'show.bs.modal',
-			function(event) {
-				var button = $(event.relatedTarget); // ` that triggered the modal
-				var conceptid = button.data('conceptid'); // Extract info from data-* attributes
-				// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-				// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-				$.ajax({
-					type : "GET",
-					url : "${pageContext.servletContext.contextPath}/conceptDetail",
-					data : {
-						conceptid : conceptid
-					},
-					success : function(details) {
-						details = $.parseJSON(details);
-						$("#conceptTerm").text(details.name);
-						$("#detailsid").text(details.id);
-						$("#detailsuri").text(details.uri);
-						$("#detailswordnetid").text(details.wordnetid);
-						$("#detailspos").text(details.pos);
-						$("#detailsconceptlist").text(details.conceptlist);
-						$("#detailstypeid").text(details.type);
-						$("#detailsequalto").text(details.equalto);
-						$("#detailssimilarto").text(details.similarto);
-						$("#detailscreator").text(details.creator);
-						$("#detailsdescription").html(details.description);
-					}
-				});
-		});
+        "bJQueryUI" : true,
+        "sPaginationType" : "full_numbers",
+        "bAutoWidth" : false,
+        "aaSorting" : [],
+        "aoColumnDefs" : [ 
+                <sec:authorize access="isAuthenticated()">
+                {
+                    "targets": [0,1],
+                    'bSortable': false
+                },
+                {
+                    "targets": [2],
+                    'searchable': false,
+                    'bSortable': false,
+                    'orderable':false,
+                    'bVisible' : false,
+                    'className': 'dt-body-center'
+                },
+                {
+                    "targets": [7],
+                    "sType" : "html",
+                    "fnRender" : function(o, val) {
+                        if (o.startsWith("&lt;br/&gt;")) {
+                            o = o.substring(11,o.length);
+                        }
+                        return $("<div/>").html(o).text();
+                    }
+                },
+                </sec:authorize>
+                <sec:authorize access="not isAuthenticated()">
+                {
+                    "targets": [5],
+                    "sType" : "html",
+                    "fnRender" : function(o, val) {
+                        if (o.startsWith("&lt;br/&gt;")) {
+                            o = o.substring(11,o.length);
+                        }
+                        return $("<div/>").html(o).text();
+                    }
+                }
+                </sec:authorize>
+        ]
+    });
+    $('#viafSearchResult').dataTable({
+        "bJQueryUI" : true,
+        "sPaginationType" : "full_numbers",
+        "bAutoWidth" : false,
+        "aoColumnDefs" : [ {
+            "aTargets" : [ 2 ],
+            "sType" : "html",
+            "fnRender" : function(o, val) {
+                return $("<div/>").html(o.aData[2]).text();
+            }
+         } ],
+    });
+    $('#detailsModal')
+        .on(
+            'show.bs.modal',
+            function(event) {
+                var button = $(event.relatedTarget); // ` that triggered the modal
+                var conceptid = button.data('conceptid'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                $.ajax({
+                    type : "GET",
+                    url : "${pageContext.servletContext.contextPath}/conceptDetail",
+                    data : {
+                        conceptid : conceptid
+                    },
+                    success : function(details) {
+                        details = $.parseJSON(details);
+                        $("#conceptTerm").text(details.name);
+                        $("#detailsid").text(details.id);
+                        $("#detailsuri").text(details.uri);
+                        $("#detailswordnetid").text(details.wordnetid);
+                        $("#detailspos").text(details.pos);
+                        $("#detailsconceptlist").text(details.conceptlist);
+                        $("#detailstypeid").text(details.type);
+                        $("#detailsequalto").text(details.equalto);
+                        $("#detailssimilarto").text(details.similarto);
+                        $("#detailscreator").text(details.creator);
+                        $("#detailsdescription").html(details.description);
+                    }
+                });
+        });
     $('#prepareMergeConcept').on('click', function (e) {
         e.preventDefault();
         // Get the column API object
@@ -105,31 +106,31 @@ $(document).ready(function() {
         $("#mergeConcept").show();
         $("#prepareMergeConcept").hide();
     });
-	
+    
     $("#mergeConcept").hide();
     $('#mergeError').hide();
 });
-					
+                    
 $(document).ready(hideFormProcessing);
 function hideFormProcessing() {
-	$('#floatingCirclesG').hide();
+    $('#floatingCirclesG').hide();
 }
 function showFormProcessing() {
-	$('#floatingCirclesG').show();
+    $('#floatingCirclesG').show();
 }
 
 function mergeConcepts() {
-	$('#mergeError').hide();
-	var conceptIdsToMerge = [];
-	var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
+    $('#mergeError').hide();
+    var conceptIdsToMerge = [];
+    var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
     $.each($("input[name='conceptMergeCheckbox']:checked", conceptSearchResultTable.fnGetNodes()), function(){            
-    	conceptIdsToMerge.push($(this).val());
+        conceptIdsToMerge.push($(this).val());
     });
     
     if(conceptIdsToMerge.length < 2) {
-    	$('#mergeError').show();
+        $('#mergeError').show();
     } else {
-        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(",");    	
+        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(",");      
     }
 }
 
@@ -141,8 +142,12 @@ function prepareMergeConcept(conceptId) {
     if(conceptsToMerge != '') {
         conceptsToMerge = conceptId;
     } else {
-        conceptsToMerge = conceptsToMerge + "," + conceptId;	
+        conceptsToMerge = conceptsToMerge + "," + conceptId;    
     }
+}
+
+var createWrapper = function(word, pos, conceptList, description, conceptType, wrapperId) {
+  window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + word + '&selectedConceptList=' + conceptList + '&description=' + description + '&selectedType=' + conceptType + '&wrapperids=' + wrapperId;
 }
 
 </script>
@@ -249,8 +254,9 @@ function prepareMergeConcept(conceptId) {
                   </a>
                 </c:when>
                 <c:otherwise>
-                  <i title="Cannot edit Word Net concepts"
-                    class="fa fa-pencil-square-o disabled"></i>
+                  <a href="#" onclick="createWrapper('${concept.entry.word}', '${concept.entry.pos}', '${concept.entry.conceptList}', '${concept.entry.description}', '${concept.entry.typeId}', '${concept.entry.id}');">
+                    <i title='Create wrapper' class="fa fa-pencil-square-o"></i>
+                  </a>
                 </c:otherwise>
               </c:choose></td>
 
@@ -268,11 +274,12 @@ function prepareMergeConcept(conceptId) {
                   <i title="Cannot delete WordNet concepts"
                     class="fa fa-trash disabled"></i>
                 </c:otherwise>
-              </c:choose></td>
+              </c:choose>
+            </td>
               
-              <td>
-                <input type="checkbox" name="conceptMergeCheckbox" value="${concept.entry.id }"/>
-              </td>
+            <td>
+              <input type="checkbox" name="conceptMergeCheckbox" value="${concept.entry.id }"/>
+            </td>
 
           </sec:authorize>
           <td align="justify"><font size="2"> <a
