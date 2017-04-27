@@ -134,7 +134,6 @@ $(document).ready(function() {
         }
     }
 
-    $("#mergeConcept").hide();
     $('#mergeError').hide();
 });
                     

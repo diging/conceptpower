@@ -105,11 +105,6 @@ public class ConceptSearchController {
         int sortDirInt = new Integer(sortDir);
         int pageCount = 0;
         try {
-            // found =
-            // conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
-            // conceptSearchBean.getPos().toString().toLowerCase().trim(),
-            // null);
-
             found = conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
                     conceptSearchBean.getPos(), null, pageInt, defaultPageSize);
             pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
