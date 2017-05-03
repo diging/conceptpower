@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -674,7 +675,8 @@ public class LuceneUtility implements ILuceneUtility {
     }
 
     private String processStringForSorting(String str) {
-        return Jsoup.parse(str).text().trim().toLowerCase().replaceAll("[^\\x00-\\x7F]", "");
+        return Normalizer.normalize(Jsoup.parse(str).text().trim().toLowerCase(), Normalizer.Form.NFKD)
+                .replaceAll("\\p{M}", "");
     }
 
     @PreDestroy
