@@ -80,7 +80,7 @@ public class ConceptSearchController {
     @RequestMapping(value = "/home/conceptsearch", method = RequestMethod.GET)
     public String search(HttpServletRequest req, ModelMap model, @RequestParam(defaultValue = "1") String page,
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
-            @RequestParam(defaultValue = "word") String sortColumn,
+            @RequestParam(required = false) String sortColumn,
             @RequestParam(required = false) String conceptIdsToMerge,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results)
                     throws LuceneException, IllegalAccessException {

@@ -49,7 +49,6 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopDocsCollector;
 import org.apache.lucene.search.TopFieldCollector;
-import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -551,7 +550,7 @@ public class LuceneUtility implements ILuceneUtility {
                 Sort sort = new Sort(sortField);
                 collector = TopFieldCollector.create(sort, numberOfResults, true, false, false);
             } else {
-                collector = TopScoreDocCollector.create(numberOfResults);
+                collector = TopFieldCollector.create(Sort.RELEVANCE, numberOfResults, true, false, false);
             }
 
             searcher.search(builder.build(), collector);
