@@ -30,7 +30,7 @@ public interface IIndexService {
     public void updateConceptEntry(ConceptEntry entry, String userName)
             throws LuceneException, IndexerRunningException, IllegalAccessException;
 
-    public ConceptEntry[] searchForConceptByPageNumberFieldMapAndSort(Map<String, String> fieldMap, String operator,
+    public ConceptEntry[] searchForConceptByPageNumberAndFieldMap(Map<String, String> fieldMap, String operator,
             int pageNumber, int numberOfRecordsPerPage, CCPSort sort)
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
 

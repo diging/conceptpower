@@ -125,7 +125,7 @@ public class ConceptSearchTest {
         Mockito.when(manager.getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString())).thenReturn(numberOfResults);
 
-        Mockito.when(manager.searchForConceptByPageNumberFieldMapAndSort(Mockito.anyMapOf(String.class, String.class),
+        Mockito.when(manager.searchForConceptByPageNumberAndFieldMap(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage), Mockito.eq(null)))
                 .thenReturn(entries);
 
@@ -145,7 +145,7 @@ public class ConceptSearchTest {
         Mockito.verify(manager).getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString());
 
-        Mockito.verify(manager).searchForConceptByPageNumberFieldMapAndSort(
+        Mockito.verify(manager).searchForConceptByPageNumberAndFieldMap(
                 Mockito.anyMapOf(String.class, String.class), Mockito.anyString(), Mockito.eq(1),
                 Mockito.eq(numberOfRecordsPerPage), Mockito.isNull(CCPSort.class));
 
@@ -170,7 +170,7 @@ public class ConceptSearchTest {
         Mockito.verify(manager).getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString());
 
-        Mockito.verify(manager).searchForConceptByPageNumberFieldMapAndSort(
+        Mockito.verify(manager).searchForConceptByPageNumberAndFieldMap(
                 Mockito.anyMapOf(String.class, String.class), Mockito.anyString(), Mockito.eq(1),
                 Mockito.eq(numberOfRecordsPerPage), Mockito.isNull(CCPSort.class));
 
@@ -199,7 +199,7 @@ public class ConceptSearchTest {
         Mockito.when(manager.getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString())).thenReturn(numberOfResults);
 
-        Mockito.when(manager.searchForConceptByPageNumberFieldMapAndSort(Mockito.anyMapOf(String.class, String.class),
+        Mockito.when(manager.searchForConceptByPageNumberAndFieldMap(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage), Mockito.eq(null)))
                 .thenReturn(null);
 
@@ -209,7 +209,7 @@ public class ConceptSearchTest {
         Mockito.verify(manager).getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString());
 
-        Mockito.verify(manager).searchForConceptByPageNumberFieldMapAndSort(
+        Mockito.verify(manager).searchForConceptByPageNumberAndFieldMap(
                 Mockito.anyMapOf(String.class, String.class), Mockito.anyString(), Mockito.eq(1),
                 Mockito.eq(numberOfRecordsPerPage), Mockito.isNull(CCPSort.class));
 
@@ -237,7 +237,7 @@ public class ConceptSearchTest {
         Mockito.when(manager.getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString())).thenReturn(numberOfResults);
 
-        Mockito.when(manager.searchForConceptByPageNumberFieldMapAndSort(Mockito.anyMapOf(String.class, String.class),
+        Mockito.when(manager.searchForConceptByPageNumberAndFieldMap(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage), Mockito.eq(null)))
                 .thenReturn(null);
 
@@ -247,7 +247,7 @@ public class ConceptSearchTest {
         Mockito.verify(manager).getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString());
 
-        Mockito.verify(manager).searchForConceptByPageNumberFieldMapAndSort(
+        Mockito.verify(manager).searchForConceptByPageNumberAndFieldMap(
                 Mockito.anyMapOf(String.class, String.class), Mockito.anyString(), Mockito.eq(1),
                 Mockito.eq(numberOfRecordsPerPage), Mockito.isNull(CCPSort.class));
 

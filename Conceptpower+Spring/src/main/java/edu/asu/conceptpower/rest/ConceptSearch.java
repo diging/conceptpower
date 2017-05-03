@@ -143,7 +143,7 @@ public class ConceptSearch {
                         sortDirection == IConceptDBManager.ASCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING);
             }
             searchResults = manager
-                    .searchForConceptByPageNumberFieldMapAndSort(searchFields, conceptSearchParameters.getOperator(),
+                    .searchForConceptByPageNumberAndFieldMap(searchFields, conceptSearchParameters.getOperator(),
                             page,
                             conceptSearchParameters.getNumber_of_records_per_page() != null
                                     ? conceptSearchParameters.getNumber_of_records_per_page() : numberOfRecordsPerPage,

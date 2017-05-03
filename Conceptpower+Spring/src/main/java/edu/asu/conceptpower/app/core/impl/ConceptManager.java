@@ -153,7 +153,7 @@ public class ConceptManager implements IConceptManager {
         if (sortField != null) {
             ccpSort = new CCPSort(sortField, sortOrder == -1 ? SortOrder.DESCENDING : SortOrder.ASCENDING);
         }
-        return indexService.searchForConceptByPageNumberFieldMapAndSort(fieldMap, null, page, numberOfRecordsPerPage,
+        return indexService.searchForConceptByPageNumberAndFieldMap(fieldMap, null, page, numberOfRecordsPerPage,
                 ccpSort);
     }
 

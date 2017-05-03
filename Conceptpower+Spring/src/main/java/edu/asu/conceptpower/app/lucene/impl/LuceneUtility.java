@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
@@ -55,6 +54,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.QueryBuilder;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -217,12 +217,9 @@ public class LuceneUtility implements ILuceneUtility {
                     }
 
                     if (searchFieldAnnotation.isSortAllowed()) {
-                        String value = StringEscapeUtils
-                                .unescapeHtml4(String.valueOf(contentOfField).replaceAll("\\s", "")).trim()
-                                .toLowerCase();
                         doc.add(new SortedDocValuesField(
                                 searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.SORT_SUFFIX,
-                                new BytesRef(value)));
+                                new BytesRef(processStringForSorting(String.valueOf(contentOfField)))));
                     }
                 }
             }
@@ -346,18 +343,18 @@ public class LuceneUtility implements ILuceneUtility {
         doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
 
         // Fields for performing sorting
-        doc.add(new SortedDocValuesField(LuceneFieldNames.ID + LuceneFieldNames.SORT_SUFFIX, new BytesRef(
-                StringEscapeUtils.unescapeHtml4(word.getID().toString().replaceAll("\\s", "")).toLowerCase())));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.ID + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(word.getID().toString()))));
         doc.add(new SortedDocValuesField(LuceneFieldNames.WORD + LuceneFieldNames.SORT_SUFFIX,
-                new BytesRef(StringEscapeUtils.unescapeHtml4(lemma.replaceAll("\\s", "")).toLowerCase())));
-        doc.add(new SortedDocValuesField(LuceneFieldNames.WORDNETID + LuceneFieldNames.SORT_SUFFIX, new BytesRef(
-                StringEscapeUtils.unescapeHtml4(word.getID().toString().replaceAll("\\s", "")).toLowerCase())));
-        doc.add(new SortedDocValuesField(LuceneFieldNames.POS + LuceneFieldNames.SORT_SUFFIX, new BytesRef(
-                StringEscapeUtils.unescapeHtml4(wordId.getPOS().toString().replaceAll("\\s", "")).toLowerCase())));
-        doc.add(new SortedDocValuesField(LuceneFieldNames.CONCEPT_LIST + LuceneFieldNames.SORT_SUFFIX, new BytesRef(
-                StringEscapeUtils.unescapeHtml4(Constants.WORDNET_DICTIONARY.replaceAll("\\s", "")).toLowerCase())));
-        doc.add(new SortedDocValuesField(LuceneFieldNames.DESCRIPTION + LuceneFieldNames.SORT_SUFFIX, new BytesRef(
-                StringEscapeUtils.unescapeHtml4(word.getSynset().getGloss().replaceAll("\\s", "")).toLowerCase())));
+                new BytesRef(processStringForSorting(lemma))));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.WORDNETID + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(word.getID().toString()))));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.POS + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(wordId.getPOS().toString()))));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.CONCEPT_LIST + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(Constants.WORDNET_DICTIONARY))));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.DESCRIPTION + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(word.getSynset().getGloss()))));
         return doc;
     }
 
@@ -674,6 +671,10 @@ public class LuceneUtility implements ILuceneUtility {
             }
         }
         return wordnetIds;
+    }
+
+    private String processStringForSorting(String str) {
+        return Jsoup.parse(str).text().trim().toLowerCase().replaceAll("[^\\x00-\\x7F]", "");
     }
 
     @PreDestroy
