@@ -312,6 +312,8 @@ public class LuceneUtility implements ILuceneUtility {
 
         IWord word = dict.getWord(wordId);
         doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.DESCRIPTION + LuceneFieldNames.UNTOKENIZED_SUFFIX,
+                word.getSynset().getGloss(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
 
