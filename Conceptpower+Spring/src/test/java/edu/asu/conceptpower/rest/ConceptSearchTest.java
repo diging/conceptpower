@@ -30,6 +30,7 @@ import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.util.CCPSort;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
@@ -98,8 +99,6 @@ public class ConceptSearchTest {
         conceptSearchParameter.setOperator(SearchParamters.OP_AND);
         conceptSearchParameter.setNumber_of_records_per_page(numberOfRecordsPerPage);
 
-
-
         ConceptType type = new ConceptType();
         type.setCreatorId("admin");
         type.setDescription("Type-=123 description");
@@ -126,14 +125,15 @@ public class ConceptSearchTest {
         Mockito.when(manager.getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString())).thenReturn(numberOfResults);
 
-        Mockito.when(manager.searchForConceptByPageNumberAndFieldMap(Mockito.anyMapOf(String.class, String.class),
-                Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage))).thenReturn(entries);
+        Mockito.when(manager.searchForConceptByPageNumberFieldMapAndSort(Mockito.anyMapOf(String.class, String.class),
+                Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage), Mockito.eq(null)))
+                .thenReturn(entries);
 
     }
 
     @Test
-    public void test_searchConcept_successInXml() throws IllegalArgumentException, IllegalAccessException,
- IndexerRunningException, LuceneException,
+    public void test_searchConcept_successInXml()
+            throws IllegalArgumentException, IllegalAccessException, IndexerRunningException, LuceneException,
             ParserConfigurationException, SAXException, IOException, InvocationTargetException, IntrospectionException {
 
         final String expectedOutput = IOUtil
@@ -145,8 +145,9 @@ public class ConceptSearchTest {
         Mockito.verify(manager).getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString());
 
-        Mockito.verify(manager).searchForConceptByPageNumberAndFieldMap(Mockito.anyMapOf(String.class, String.class),
-                Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage));
+        Mockito.verify(manager).searchForConceptByPageNumberFieldMapAndSort(
+                Mockito.anyMapOf(String.class, String.class), Mockito.anyString(), Mockito.eq(1),
+                Mockito.eq(numberOfRecordsPerPage), Mockito.isNull(CCPSort.class));
 
         RestTestUtility.testValidXml(output.getBody());
         Assert.assertEquals(expectedOutput, output.getBody());
@@ -155,8 +156,8 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void test_searchConcept_successInJson() throws IllegalAccessException, LuceneException,
- IndexerRunningException, IllegalArgumentException,
+    public void test_searchConcept_successInJson()
+            throws IllegalAccessException, LuceneException, IndexerRunningException, IllegalArgumentException,
             JSONException, IOException, InvocationTargetException, IntrospectionException {
 
         final String expectedOutput = IOUtil
@@ -169,8 +170,9 @@ public class ConceptSearchTest {
         Mockito.verify(manager).getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString());
 
-        Mockito.verify(manager).searchForConceptByPageNumberAndFieldMap(Mockito.anyMapOf(String.class, String.class),
-                Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage));
+        Mockito.verify(manager).searchForConceptByPageNumberFieldMapAndSort(
+                Mockito.anyMapOf(String.class, String.class), Mockito.anyString(), Mockito.eq(1),
+                Mockito.eq(numberOfRecordsPerPage), Mockito.isNull(CCPSort.class));
 
         RestTestUtility.testValidJson(output.getBody());
         Assert.assertEquals(expectedOutput, output.getBody());
@@ -179,8 +181,8 @@ public class ConceptSearchTest {
     }
 
     @Test
-    public void test_searchConcept_noRecordsFoundInJson() throws IllegalAccessException, LuceneException,
- IndexerRunningException, IllegalArgumentException,
+    public void test_searchConcept_noRecordsFoundInJson()
+            throws IllegalAccessException, LuceneException, IndexerRunningException, IllegalArgumentException,
             JSONException, IOException, InvocationTargetException, IntrospectionException {
 
         final String jsonNoRecordsFoundError = IOUtil
@@ -197,8 +199,9 @@ public class ConceptSearchTest {
         Mockito.when(manager.getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString())).thenReturn(numberOfResults);
 
-        Mockito.when(manager.searchForConceptByPageNumberAndFieldMap(Mockito.anyMapOf(String.class, String.class),
-                Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage))).thenReturn(null);
+        Mockito.when(manager.searchForConceptByPageNumberFieldMapAndSort(Mockito.anyMapOf(String.class, String.class),
+                Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage), Mockito.eq(null)))
+                .thenReturn(null);
 
         ResponseEntity<String> output = conceptSearch.searchConcept(conceptSearchParameter, result,
                 MediaType.APPLICATION_JSON_VALUE);
@@ -206,16 +209,17 @@ public class ConceptSearchTest {
         Mockito.verify(manager).getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString());
 
-        Mockito.verify(manager).searchForConceptByPageNumberAndFieldMap(Mockito.anyMapOf(String.class, String.class),
-                Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage));
+        Mockito.verify(manager).searchForConceptByPageNumberFieldMapAndSort(
+                Mockito.anyMapOf(String.class, String.class), Mockito.anyString(), Mockito.eq(1),
+                Mockito.eq(numberOfRecordsPerPage), Mockito.isNull(CCPSort.class));
 
         Assert.assertEquals(HttpStatus.OK, output.getStatusCode());
         Assert.assertEquals(jsonNoRecordsFoundError, output.getBody());
     }
 
     @Test
-    public void test_searchConcept_noRecordsFoundInXml() throws IllegalAccessException, LuceneException,
- IndexerRunningException, IllegalArgumentException,
+    public void test_searchConcept_noRecordsFoundInXml()
+            throws IllegalAccessException, LuceneException, IndexerRunningException, IllegalArgumentException,
             JSONException, IOException, InvocationTargetException, IntrospectionException {
 
         final String xmlNoRecordsFoundError = IOUtil
@@ -233,8 +237,9 @@ public class ConceptSearchTest {
         Mockito.when(manager.getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString())).thenReturn(numberOfResults);
 
-        Mockito.when(manager.searchForConceptByPageNumberAndFieldMap(Mockito.anyMapOf(String.class, String.class),
-                Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage))).thenReturn(null);
+        Mockito.when(manager.searchForConceptByPageNumberFieldMapAndSort(Mockito.anyMapOf(String.class, String.class),
+                Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage), Mockito.eq(null)))
+                .thenReturn(null);
 
         ResponseEntity<String> output = conceptSearch.searchConcept(conceptSearchParameter, result,
                 MediaType.APPLICATION_XML_VALUE);
@@ -242,16 +247,16 @@ public class ConceptSearchTest {
         Mockito.verify(manager).getTotalNumberOfRecordsForSearch(Mockito.anyMapOf(String.class, String.class),
                 Mockito.anyString());
 
-        Mockito.verify(manager).searchForConceptByPageNumberAndFieldMap(Mockito.anyMapOf(String.class, String.class),
-                Mockito.anyString(), Mockito.eq(1), Mockito.eq(numberOfRecordsPerPage));
+        Mockito.verify(manager).searchForConceptByPageNumberFieldMapAndSort(
+                Mockito.anyMapOf(String.class, String.class), Mockito.anyString(), Mockito.eq(1),
+                Mockito.eq(numberOfRecordsPerPage), Mockito.isNull(CCPSort.class));
 
         Assert.assertEquals(HttpStatus.OK, output.getStatusCode());
         Assert.assertEquals(xmlNoRecordsFoundError, output.getBody());
     }
 
     @Test
-    public void test_searchConcept_invalidPos()
- throws JsonProcessingException, IllegalArgumentException,
+    public void test_searchConcept_invalidPos() throws JsonProcessingException, IllegalArgumentException,
             IllegalAccessException, IndexerRunningException, InvocationTargetException, IntrospectionException {
 
         final String posError = "Please enter correct pos value.";

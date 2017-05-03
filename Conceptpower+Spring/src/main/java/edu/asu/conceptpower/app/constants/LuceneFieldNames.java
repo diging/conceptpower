@@ -17,4 +17,5 @@ public interface LuceneFieldNames {
     public final static String CONCEPTTYPE = "conceptType";
     public final static String MERGED_IDS = "mergedIds";
     public final static String UNTOKENIZED_SUFFIX = "_untokenized";
+    public final static String SORT_SUFFIX = "_sorted";
 }

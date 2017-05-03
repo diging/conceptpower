@@ -4,6 +4,7 @@ import java.util.Map;
 
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.util.CCPSort;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IndexingEvent;
 
@@ -29,8 +30,8 @@ public interface IIndexService {
     public void updateConceptEntry(ConceptEntry entry, String userName)
             throws LuceneException, IndexerRunningException, IllegalAccessException;
 
-    public ConceptEntry[] searchForConceptByPageNumberAndFieldMap(Map<String, String> fieldMap,
-            String operator, int pageNumber, int numberOfRecordsPerPage)
+    public ConceptEntry[] searchForConceptByPageNumberFieldMapAndSort(Map<String, String> fieldMap, String operator,
+            int pageNumber, int numberOfRecordsPerPage, CCPSort sort)
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     public int getTotalNumberOfRecordsForSearch(Map<String, String> fieldMap, String operator)

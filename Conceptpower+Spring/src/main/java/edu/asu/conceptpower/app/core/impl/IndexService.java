@@ -15,6 +15,7 @@ import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
 import edu.asu.conceptpower.app.lucene.ILuceneUtility;
+import edu.asu.conceptpower.app.util.CCPSort;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IndexingEvent;
 
@@ -59,7 +60,7 @@ public class IndexService implements IIndexService {
             throw new IndexerRunningException(indexerRunning);
         }
         // Fetches all the pages
-        return luceneUtility.queryIndex(fieldMap, operator, 0, -1);
+        return luceneUtility.queryIndex(fieldMap, operator, 0, -1, null);
     }
 
     /**
@@ -67,15 +68,15 @@ public class IndexService implements IIndexService {
      * fieldMap
      */
     @Override
-    public ConceptEntry[] searchForConceptByPageNumberAndFieldMap(Map<String, String> fieldMap, String operator,
-            int pageNumber, int numberOfRecordsPerPage)
+    public ConceptEntry[] searchForConceptByPageNumberFieldMapAndSort(Map<String, String> fieldMap, String operator,
+            int pageNumber, int numberOfRecordsPerPage, CCPSort sort)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
 
         if (indexerRunningFlag.get()) {
             throw new IndexerRunningException(indexerRunning);
         }
 
-        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage);
+        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort);
         alternativeIdService.addAlternativeIds(entries);
         return entries;
     }

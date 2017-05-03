@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import edu.asu.conceptpower.app.db4o.IConceptDBManager;
+
 public class ConceptSearchParameters {
 
     private String type_uri;
@@ -19,6 +21,8 @@ public class ConceptSearchParameters {
     private String creator;
     private String modified_by;
     private Integer number_of_records_per_page;
+    private String sortField;
+    private String sortDirection;
 
     public String getType_uri() {
         return type_uri;
@@ -156,5 +160,24 @@ public class ConceptSearchParameters {
             return val.substring(0, val.length() - 1);
         }
         return val;
+    }
+
+    public String getSortField() {
+        return sortField;
+    }
+
+    public void setSortField(String sortField) {
+        this.sortField = sortField;
+    }
+
+    public String getSortDirection() {
+        if (sortDirection == null) {
+            return IConceptDBManager.ASCENDING + "";
+        }
+        return sortDirection;
+    }
+
+    public void setSortDirection(String sortDirection) {
+        this.sortDirection = sortDirection;
     }
 }

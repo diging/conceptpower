@@ -106,7 +106,7 @@ public class ConceptSearchController {
         int pageCount = 0;
         try {
             found = conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos(), null, pageInt, defaultPageSize);
+                    conceptSearchBean.getPos(), null, pageInt, defaultPageSize, sortColumn, sortDirInt);
             pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
                     conceptSearchBean.getPos(), null);
         } catch (IndexerRunningException e) {

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
@@ -27,6 +28,7 @@ import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.SortedDocValuesField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -41,12 +43,17 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MultiTermQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopDocsCollector;
+import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +71,8 @@ import edu.asu.conceptpower.app.lucene.ILuceneUtility;
 import edu.asu.conceptpower.app.lucene.LuceneAction;
 import edu.asu.conceptpower.app.reflect.LuceneField;
 import edu.asu.conceptpower.app.reflect.SearchField;
+import edu.asu.conceptpower.app.util.CCPSort;
+import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetConfiguration;
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -206,6 +215,15 @@ public class LuceneUtility implements ILuceneUtility {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
                                 String.valueOf(contentOfField), Field.Store.YES));
                     }
+
+                    if (searchFieldAnnotation.isSortAllowed()) {
+                        String value = StringEscapeUtils
+                                .unescapeHtml4(String.valueOf(contentOfField).replaceAll("\\s", "")).trim()
+                                .toLowerCase();
+                        doc.add(new SortedDocValuesField(
+                                searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.SORT_SUFFIX,
+                                new BytesRef(value)));
+                    }
                 }
             }
         }
@@ -326,6 +344,20 @@ public class LuceneUtility implements ILuceneUtility {
         // Adding this new data to delete only wordnet concepts while
         // adding all wordnet concepts from jwi.
         doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
+
+        // Fields for performing sorting
+        doc.add(new SortedDocValuesField(LuceneFieldNames.ID + LuceneFieldNames.SORT_SUFFIX, new BytesRef(
+                StringEscapeUtils.unescapeHtml4(word.getID().toString().replaceAll("\\s", "")).toLowerCase())));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.WORD + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(StringEscapeUtils.unescapeHtml4(lemma.replaceAll("\\s", "")).toLowerCase())));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.WORDNETID + LuceneFieldNames.SORT_SUFFIX, new BytesRef(
+                StringEscapeUtils.unescapeHtml4(word.getID().toString().replaceAll("\\s", "")).toLowerCase())));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.POS + LuceneFieldNames.SORT_SUFFIX, new BytesRef(
+                StringEscapeUtils.unescapeHtml4(wordId.getPOS().toString().replaceAll("\\s", "")).toLowerCase())));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.CONCEPT_LIST + LuceneFieldNames.SORT_SUFFIX, new BytesRef(
+                StringEscapeUtils.unescapeHtml4(Constants.WORDNET_DICTIONARY.replaceAll("\\s", "")).toLowerCase())));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.DESCRIPTION + LuceneFieldNames.SORT_SUFFIX, new BytesRef(
+                StringEscapeUtils.unescapeHtml4(word.getSynset().getGloss().replaceAll("\\s", "")).toLowerCase())));
         return doc;
     }
 
@@ -447,7 +479,7 @@ public class LuceneUtility implements ILuceneUtility {
      * fieldMap contains the search criteria
      */
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
-            int numberOfRecordsPerPage) throws LuceneException, IllegalAccessException {
+            int numberOfRecordsPerPage, CCPSort ccpSort) throws LuceneException, IllegalAccessException {
 
         Map<String,Analyzer> analyzerPerField = new HashMap<>();
         BooleanClause.Occur occur = BooleanClause.Occur.SHOULD;
@@ -494,7 +526,6 @@ public class LuceneUtility implements ILuceneUtility {
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
         try {
-            TopScoreDocCollector collector = TopScoreDocCollector.create(numberOfResults);
             int startIndex = 0;
             int hitsPerPage = 0;
             if (page > 0) {
@@ -513,6 +544,16 @@ public class LuceneUtility implements ILuceneUtility {
                 // records)
                 startIndex = 0;
                 hitsPerPage = numberOfResults;
+            }
+
+            TopDocsCollector collector = null;
+            if (ccpSort != null) {
+                SortField sortField = new SortField(ccpSort.getSortField() + LuceneFieldNames.SORT_SUFFIX,
+                        SortField.Type.STRING, ccpSort.getSortOrder() == SortOrder.DESCENDING ? false : true);
+                Sort sort = new Sort(sortField);
+                collector = TopFieldCollector.create(sort, numberOfResults, true, false, false);
+            } else {
+                collector = TopScoreDocCollector.create(numberOfResults);
             }
 
             searcher.search(builder.build(), collector);

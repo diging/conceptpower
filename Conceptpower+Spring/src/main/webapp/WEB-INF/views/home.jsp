@@ -254,6 +254,15 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
         </div>
     </sec:authorize>
 
+  <c:choose>
+    <c:when test="${sortDir == -1}">
+      <c:set var="sortDirection" value="${1}"/>
+    </c:when>
+    <c:otherwise>
+      <c:set var="sortDirection" value="${-1}"/>
+    </c:otherwise>
+  </c:choose>
+
   <table cellpadding="0" cellspacing="0"
     class="table table-striped table-bordered" id="conceptSearchResult">
     <thead>
@@ -263,13 +272,13 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
           <th data-name='delete'></th>
           <th data-name='merge'></th>
         </sec:authorize>
-        <th>Term</th>
-        <th>ID</th>
-        <th>Wordnet ID</th>
-        <th>POS</th>
-        <th>Concept List</th>
-        <th>Description</th>
-        <th>Type</th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Term </a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />ID</a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Wordnet ID</a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />POS</a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Concept List</a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Description</a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Type</a></th>
       </tr>
     </thead>
     <tbody>
