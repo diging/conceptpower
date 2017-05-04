@@ -85,6 +85,34 @@ $(document).ready(function() {
 						$("#detailssimilarto").text(details.similarto);
 						$("#detailscreator").text(details.creator);
 						$("#detailsdescription").html(details.description);
+
+            if(details.mergedIds) {
+              $.ajax({
+                url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
+                type: 'GET',
+                headers: {          
+                    Accept: "application/json",         
+                },
+                data: {
+                  ids: details.mergedIds
+                },
+              })
+              .success(function(originalConcepts) {
+                var mergedIdsHtml = '';
+                $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
+                    console.log(conceptEntry.lemma);
+                    console.log(conceptEntry.description);
+                    if(mergedIdsHtml) {
+                      mergedIdsHtml += ",";
+                    }
+                    mergedIdsHtml += "<span title =  "+ conceptEntry.lemma + ',' + conceptEntry.type + ',' +conceptEntry.description +" >";
+                    mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
+                    mergedIdsHtml += "</span>";
+
+                });
+                $("#detailsmergedIds").html(mergedIdsHtml);  
+              });              
+            }
 					}
 				});
 		});
@@ -425,6 +453,10 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
         <div class="row row-even">
           <div class="col-sm-3">Creator:</div>
           <div id="detailscreator" class="col-sm-9"></div>
+        </div>
+        <div class="row row-odd">
+          <div class="col-sm-3">Merged Ids:</div>
+          <div id="detailsmergedIds" class="col-sm-9"></div>
         </div>
 
       </div>
