@@ -25,7 +25,6 @@ import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -58,7 +57,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
-import edu.asu.conceptpower.app.constants.SearchFieldNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
@@ -92,6 +90,7 @@ public class LuceneUtility implements ILuceneUtility {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Autowired
     private StandardAnalyzer standardAnalyzer;
 
     @Autowired
@@ -130,7 +129,6 @@ public class LuceneUtility implements ILuceneUtility {
      */
     @PostConstruct
     public void init() throws LuceneException {
-        standardAnalyzer = new StandardAnalyzer(CharArraySet.EMPTY_SET);
         lucenePath = env.getProperty("lucenePath");
         numberOfResults = Integer.parseInt(env.getProperty("numberOfLuceneResults"));
         try {
@@ -314,8 +312,6 @@ public class LuceneUtility implements ILuceneUtility {
 
         IWord word = dict.getWord(wordId);
         doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.DESCRIPTION + LuceneFieldNames.UNTOKENIZED_SUFFIX,
-                word.getSynset().getGloss(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
 
@@ -577,7 +573,7 @@ public class LuceneUtility implements ILuceneUtility {
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchValue, tokenizedQueryBuilder, Occur.MUST);
             } else {
-                tokenizedQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchValue),
+                tokenizedQueryBuilder.add(new TermQuery(new Term(luceneFieldAnnotation.lucenefieldName(), searchValue)),
                         Occur.MUST);
             }
         }
