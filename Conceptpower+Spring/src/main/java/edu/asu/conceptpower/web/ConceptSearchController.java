@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.validation.ConceptSearchValidator;
@@ -53,28 +55,43 @@ public class ConceptSearchController {
     @Value("#{messages['INDEXERSTATUS']}")
     private String indexerStatus;
 
+    @Value("${default_page_size}")
+    private Integer defaultPageSize;
+
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(validator);
     }
 
     /**
-     * This method is searches concepts a specific term and pos
+     * This method is searches concepts a specific term, pos based on the
+     * pagination details.
      * 
-     * @param req
-     *            Holds the HTTP request information
      * @param model
-     *            Generic model holder for servlet
-     * @return Returns a string value to redirect user to concept search page
-     * @throws IllegalAccessException 
+     * @param page
+     * @param sortDir
+     * @param sortColumn
+     * @param conceptSearchBean
+     * @param results
+     * @return
+     * @throws LuceneException
+     * @throws IllegalAccessException
      */
     @RequestMapping(value = "/home/conceptsearch", method = RequestMethod.GET)
-    public String search(HttpServletRequest req, ModelMap model,
+    public String search(HttpServletRequest req, ModelMap model, @RequestParam(defaultValue = "1") String page,
+            @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
+            @RequestParam(required = false) String sortColumn,
+            @RequestParam(required = false) String conceptIdsToMerge,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results)
                     throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
             return "conceptsearch";
         }
+        
+        if (conceptIdsToMerge != null) {
+            model.addAttribute("conceptIdsToMerge", conceptIdsToMerge);
+        }
+
         List<ConceptEntryWrapper> foundConcepts = null;
         ConceptEntry[] found = null;
         
@@ -84,19 +101,35 @@ public class ConceptSearchController {
             // Need to include command Object
             return "conceptsearch";
         }
-        
+        int pageInt = new Integer(page);
+        int sortDirInt = new Integer(sortDir);
+        int pageCount = 0;
         try {
             found = conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos().toString().toLowerCase().trim(), null);
+                    conceptSearchBean.getPos(), null, pageInt, defaultPageSize, sortColumn, sortDirInt);
+            pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
+                    conceptSearchBean.getPos(), null);
         } catch (IndexerRunningException e) {
             model.addAttribute(indexerStatus, e.getMessage());
             return "conceptsearch";
         }
         foundConcepts = wrapperCreator.createWrappers(found);
         conceptSearchBean.setFoundConcepts(foundConcepts);
+        if (pageInt < 1) {
+            pageInt = 1;
+        }
+
+        if (pageInt > pageCount) {
+            pageInt = pageCount;
+        }
+
         if (CollectionUtils.isEmpty(foundConcepts)) {
             results.rejectValue("foundConcepts", "no.searchResults");
         }
+        model.addAttribute("page", pageInt);
+        model.addAttribute("count", pageCount);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("sortColumn", sortColumn);
 
         return "conceptsearch";
     }

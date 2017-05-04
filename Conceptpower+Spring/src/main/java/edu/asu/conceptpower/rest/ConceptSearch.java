@@ -31,8 +31,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
+import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.util.CCPSort;
+import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
@@ -133,10 +136,18 @@ public class ConceptSearch {
         try {
             totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields,
                     conceptSearchParameters.getOperator());
-            searchResults = manager.searchForConceptByPageNumberAndFieldMap(searchFields,
-                    conceptSearchParameters.getOperator(), page,
-                    conceptSearchParameters.getNumber_of_records_per_page() != null
-                            ? conceptSearchParameters.getNumber_of_records_per_page() : numberOfRecordsPerPage);
+            CCPSort sort = null;
+            if (conceptSearchParameters.getSortField() != null) {
+                Integer sortDirection = Integer.parseInt(conceptSearchParameters.getSortDirection());
+                sort = new CCPSort(conceptSearchParameters.getSortField(),
+                        sortDirection == IConceptDBManager.ASCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING);
+            }
+            searchResults = manager
+                    .searchForConceptByPageNumberAndFieldMap(searchFields, conceptSearchParameters.getOperator(),
+                            page,
+                            conceptSearchParameters.getNumber_of_records_per_page() != null
+                                    ? conceptSearchParameters.getNumber_of_records_per_page() : numberOfRecordsPerPage,
+                    sort);
         } catch (LuceneException ex) {
             logger.error("Lucene Exception", ex);
             return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -23,4 +23,6 @@ public @interface LuceneField {
     boolean isShortPhraseSearchable() default false;
 
     boolean isWildCardSearchEnabled() default false;
+
+    boolean isSortAllowed() default false;
 }
