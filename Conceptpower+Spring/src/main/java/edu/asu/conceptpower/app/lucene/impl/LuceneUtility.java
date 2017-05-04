@@ -25,6 +25,7 @@ import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -57,6 +58,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
+import edu.asu.conceptpower.app.constants.SearchFieldNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
@@ -90,7 +92,6 @@ public class LuceneUtility implements ILuceneUtility {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
     private StandardAnalyzer standardAnalyzer;
 
     @Autowired
@@ -129,6 +130,7 @@ public class LuceneUtility implements ILuceneUtility {
      */
     @PostConstruct
     public void init() throws LuceneException {
+        standardAnalyzer = new StandardAnalyzer(CharArraySet.EMPTY_SET);
         lucenePath = env.getProperty("lucenePath");
         numberOfResults = Integer.parseInt(env.getProperty("numberOfLuceneResults"));
         try {
