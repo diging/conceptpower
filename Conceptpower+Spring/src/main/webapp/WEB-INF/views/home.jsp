@@ -100,12 +100,10 @@ $(document).ready(function() {
               .success(function(originalConcepts) {
                 var mergedIdsHtml = '';
                 $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
-                    console.log(conceptEntry.lemma);
-                    console.log(conceptEntry.description);
                     if(mergedIdsHtml) {
                       mergedIdsHtml += ",";
                     }
-                    mergedIdsHtml += "<span title =  "+ conceptEntry.lemma + ',' + conceptEntry.type + ',' +conceptEntry.description +" >";
+                    mergedIdsHtml += '<span title =  "word: '+ conceptEntry.lemma + ' Description : ' + conceptEntry.description + '">';
                     mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
                     mergedIdsHtml += "</span>";
 
