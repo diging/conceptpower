@@ -23,7 +23,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IConceptManager;
@@ -92,12 +94,13 @@ public class Concepts {
      * @throws IndexerRunningException
      * @throws LuceneException
      * @throws IllegalAccessException
+     * @throws JsonProcessingException
      * @throws POSMismatchException
      */
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/concept/add", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<String> addConcept(@RequestBody String body, Principal principal)
-            throws IllegalAccessException, LuceneException, IndexerRunningException {
+    public ResponseEntity<String> addConcept(@RequestBody String body, Principal principal)
+            throws IllegalAccessException, LuceneException, IndexerRunningException, JsonProcessingException {
 
         StringReader reader = new StringReader(body);
         JSONParser jsonParser = new JSONParser();
@@ -107,12 +110,12 @@ public class Concepts {
             jsonObject = (JSONObject) jsonParser.parse(reader);
         } catch (IOException | ParseException e1) {
             logger.error("Error parsing request.", e1);
-            return new ResponseEntity<String>("Error parsing request: " + e1,
+            return new ResponseEntity<String>(getObjectMapper().writeValueAsString("Error parsing request: " + e1),
                     HttpStatus.BAD_REQUEST);
         } catch (ClassCastException ex) {
             logger.error("Couldn't cast object.", ex);
             return new ResponseEntity<String>(
-                    "It looks like you are not submitting a JSON Object.",
+                    getObjectMapper().writeValueAsString("It looks like you are not submitting a JSON Object."),
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -123,7 +126,8 @@ public class Concepts {
         }
 
         if (!result.isValid()) {
-            return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(getObjectMapper().writeValueAsString(result.getMessage()),
+                    HttpStatus.BAD_REQUEST);
         }
 
         ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
@@ -133,14 +137,17 @@ public class Concepts {
         }
 
         if (!result.isValid()) {
-            return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(getObjectMapper().writeValueAsString(result.getMessage()),
+                    HttpStatus.BAD_REQUEST);
         }
 
         // check type
         String typeId = conceptEntry.getTypeId();
         ConceptType type = typeManager.getType(typeId);
         if (type == null) {
-            return new ResponseEntity<String>("The type id you are submitting doesn't " + "match any existing type.",
+            return new ResponseEntity<String>(
+                    getObjectMapper()
+                            .writeValueAsString("The type id you are submitting doesn't " + "match any existing type."),
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -148,17 +155,22 @@ public class Concepts {
             conceptEntry.setId(conceptManager.addConceptListEntry(conceptEntry, principal.getName()).getId());
         } catch (DictionaryDoesNotExistException e) {
             logger.error("Error creating concept from REST call.", e);
-            return new ResponseEntity<String>("Specified concept list does not exist in Conceptpower.",
+            return new ResponseEntity<String>(
+                    getObjectMapper().writeValueAsString("Specified concept list does not exist in Conceptpower."),
                     HttpStatus.BAD_REQUEST);
         } catch (DictionaryModifyException e) {
             logger.error("Error creating concept from REST call.", e);
-            return new ResponseEntity<String>("Specified concept list can't be modified.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(
+                    getObjectMapper().writeValueAsString("Specified concept list can't be modified."),
+                    HttpStatus.BAD_REQUEST);
         } catch (LuceneException le) {
             logger.error("Error creating concept from REST call.", le);
-            return new ResponseEntity<String>("Concept Cannot be added", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(getObjectMapper().writeValueAsString("Concept Cannot be added"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
             logger.error("Error creating concept from REST call.", e);
-            return new ResponseEntity<String>("Illegal Access", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(getObjectMapper().writeValueAsString("Illegal Access"),
+                    HttpStatus.BAD_REQUEST);
         }
 
         jsonObject.put(JsonFields.ID, conceptEntry.getId());
@@ -167,14 +179,13 @@ public class Concepts {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8");
         
-        return new ResponseEntity<String>(jsonObject.toJSONString(), responseHeaders,
-                HttpStatus.OK);
+        return new ResponseEntity<String>(jsonObject.toJSONString(), responseHeaders, HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/concepts/add", method = RequestMethod.POST)
     public ResponseEntity<String> addConcepts(@RequestBody String body, Principal principal)
-            throws IllegalAccessException, LuceneException, IndexerRunningException {
+            throws IllegalAccessException, LuceneException, IndexerRunningException, JsonProcessingException {
         StringReader reader = new StringReader(body);
         JSONParser jsonParser = new JSONParser();
 
@@ -183,7 +194,8 @@ public class Concepts {
             jsonArray = (JSONArray) jsonParser.parse(reader);
         } catch (IOException | ParseException | ClassCastException e1) {
             logger.error("Error parsing request.", e1);
-            return new ResponseEntity<String>("Error parsing request: " + e1, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(getObjectMapper().writeValueAsString("Error parsing request: " + e1),
+                    HttpStatus.BAD_REQUEST);
         }
 
         ListIterator<JSONObject> listIt = jsonArray.listIterator();
@@ -198,7 +210,8 @@ public class Concepts {
             }
 
             if (!result.isValid()) {
-                return new ResponseEntity<String>(result.getMessage(), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<String>(getObjectMapper().writeValueAsString(result.getMessage()),
+                        HttpStatus.BAD_REQUEST);
             }
 
             ConceptEntry conceptEntry = createEntry(jsonObject, principal.getName());
@@ -232,10 +245,12 @@ public class Concepts {
                 responseObj.put("error_message", "Specified dictionary can't be modified.");
             } catch (LuceneException le) {
                 logger.error("Error creating concept from REST call.", le);
-                return new ResponseEntity<String>("Concept Cannot be added", HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<String>(getObjectMapper().writeValueAsString("Concept Cannot be added"),
+                        HttpStatus.INTERNAL_SERVER_ERROR);
             } catch (IllegalAccessException e) {
                 logger.error("Error creating concept from REST call.", e);
-                return new ResponseEntity<String>("Illegal Access", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<String>(getObjectMapper().writeValueAsString("Illegal Access"),
+                        HttpStatus.BAD_REQUEST);
             }
         }
 
@@ -352,6 +367,10 @@ public class Concepts {
         conceptEntry.setTypeId(jsonObject.get(JsonFields.TYPE).toString());
 
         return conceptEntry;
+    }
+
+    private ObjectMapper getObjectMapper() {
+        return new ObjectMapper();
     }
 
     class JsonValidationResult {
