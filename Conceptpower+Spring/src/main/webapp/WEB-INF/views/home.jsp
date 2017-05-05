@@ -101,9 +101,9 @@ $(document).ready(function() {
                 var mergedIdsHtml = '';
                 $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
                     if(mergedIdsHtml) {
-                      mergedIdsHtml += ",";
+                      mergedIdsHtml += ", ";
                     }
-                    mergedIdsHtml += '<span title =  "word: '+ conceptEntry.lemma + ' Description : ' + conceptEntry.description + '">';
+                    mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description : ' + conceptEntry.description + '">';
                     mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
                     mergedIdsHtml += "</span>";
 
