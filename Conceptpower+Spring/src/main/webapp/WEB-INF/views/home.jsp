@@ -103,7 +103,7 @@ $(document).ready(function() {
                     if(mergedIdsHtml) {
                       mergedIdsHtml += ", ";
                     }
-                    mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description : ' + conceptEntry.description + '">';
+                    mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
                     mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
                     mergedIdsHtml += "</span>";
 
