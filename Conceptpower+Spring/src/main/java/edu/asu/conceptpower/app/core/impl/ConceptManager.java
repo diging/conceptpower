@@ -598,4 +598,23 @@ public class ConceptManager implements IConceptManager {
     public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException {
         indexService.deleteById(id, userName);
     }
+
+    @Override
+    public ConceptEntry getOriginalConceptEntry(String id) {
+
+        ConceptEntry entry = wordnetManager.getConcept(id);
+        if (entry != null) {
+            fillConceptEntry(entry);
+            alternativeIdService.addAlternativeIds(id, entry);
+            return entry;
+        }
+
+        entry = client.getEntry(id);
+        if (entry != null) {
+            alternativeIdService.addAlternativeIds(id, entry);
+            return entry;
+        }
+
+        return null;
+    }
 }

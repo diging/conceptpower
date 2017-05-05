@@ -150,6 +150,7 @@ public class ConceptListController {
         details.put("creator",
                 wrapper.getEntry().getCreatorId() == null ? ""
                         : wrapper.getEntry().getCreatorId());
+        details.put("mergedIds", wrapper.getEntry().getMergedIds() == null ? "" : wrapper.getEntry().getMergedIds());
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "text/html; charset=utf-8");

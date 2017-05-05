@@ -187,4 +187,13 @@ public interface IConceptManager {
 
     public int getPageCountForConceptEntries(String word, String pos, String conceptList)
             throws IllegalAccessException, LuceneException, IndexerRunningException;
+
+    /**
+     * This method fetches the original concept entry and not the merged concept
+     * entry.
+     * 
+     * @param id
+     * @return
+     */
+    public ConceptEntry getOriginalConceptEntry(String id);
 }
