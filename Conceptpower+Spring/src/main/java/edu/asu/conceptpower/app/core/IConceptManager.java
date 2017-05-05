@@ -44,8 +44,8 @@ public interface IConceptManager {
      *            Part of speech of word (noun, verb, adjective, adverb).
      * @return matching concepts
      */
-    public abstract ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos,
-            String conceptList) throws LuceneException, IllegalAccessException, IndexerRunningException;
+    public abstract ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList)
+            throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
      * Searches in all additional concepts for in the given fields for the given
@@ -149,12 +149,13 @@ public interface IConceptManager {
     public List<ConceptEntry> getConceptEntriedByConceptListName(String conceptListName);
 
     /**
-     * This method fetches the concept entry details based on word, pos and
-     * concept list values. This method also accepts parameters for pagination
-     * and sorting.
+     * This method fetches the concept entry details based on word, pos,
+     * description and concept list values. This method also accepts parameters
+     * for pagination and sorting.
      * 
      * @param word
      * @param pos
+     * @param description
      * @param conceptList
      * @param page
      * @param numberOfRecordsPerPage
@@ -165,8 +166,8 @@ public interface IConceptManager {
      * @throws IllegalAccessException
      * @throws IndexerRunningException
      */
-    public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList, int page,
-            int numberOfRecordsPerPage, String sortField, int sortOrder)
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos, String description,
+            String conceptList, int page, int numberOfRecordsPerPage, String sortField, int sortOrder)
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
@@ -185,6 +186,6 @@ public interface IConceptManager {
 
     public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException;
 
-    public int getPageCountForConceptEntries(String word, String pos, String conceptList)
+    public int getPageCountForConceptEntries(String word, String pos, String description, String conceptList)
             throws IllegalAccessException, LuceneException, IndexerRunningException;
 }

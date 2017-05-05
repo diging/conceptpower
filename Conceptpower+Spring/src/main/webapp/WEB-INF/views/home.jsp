@@ -204,7 +204,7 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
     </div>
   
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-7">
       <form:input path="word" placeholder="Enter search term"
         class="form-control" />
     </div>
@@ -212,6 +212,9 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
       <form:select path="pos" name="pos" class="form-control">
         <form:options items="${conceptSearchBean.posMap}" />
       </form:select>
+    </div>
+    <div class='col-sm-1'>
+      <form:checkbox path='searchOnDescription' name='searchOnDescription' title='Search on description' />
     </div>
     <div class="col-sm-2">
       <input type="submit" value="Search" class="btn btn-action"

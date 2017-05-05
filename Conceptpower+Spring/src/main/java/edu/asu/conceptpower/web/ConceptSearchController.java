@@ -105,10 +105,13 @@ public class ConceptSearchController {
         int sortDirInt = new Integer(sortDir);
         int pageCount = 0;
         try {
-            found = conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos(), null, pageInt, defaultPageSize, sortColumn, sortDirInt);
+            found = conceptManager.getConceptListEntriesForWordPOSDescription(conceptSearchBean.getWord(),
+                    conceptSearchBean.getPos(),
+                    conceptSearchBean.isSearchOnDescription() ? conceptSearchBean.getWord() : null, null, pageInt,
+                    defaultPageSize, sortColumn, sortDirInt);
             pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos(), null);
+                    conceptSearchBean.getPos(),
+                    conceptSearchBean.isSearchOnDescription() ? conceptSearchBean.getWord() : null, null);
         } catch (IndexerRunningException e) {
             model.addAttribute(indexerStatus, e.getMessage());
             return "conceptsearch";
