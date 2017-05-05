@@ -107,14 +107,14 @@ public interface IConceptManager {
      * 
      * @param entry
      *            the {@link ConceptEntry} to be stored.
-     * @return Id of stored entry.
+     * @return ConceptEntry along with the id and alternative id details.
      * @throws DictionaryDoesNotExistException
      *             If the entry has a concept list specified that doesn't exist.
      * @throws DictionaryModifyException
      *             If the specified concept list in the concept is the Wordnet
      *             list.
      */
-    public abstract String addConceptListEntry(ConceptEntry entry, String userName)
+    public abstract ConceptEntry addConceptListEntry(ConceptEntry entry, String userName)
             throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException,
             IndexerRunningException;
 
@@ -187,4 +187,13 @@ public interface IConceptManager {
 
     public int getPageCountForConceptEntries(String word, String pos, String conceptList)
             throws IllegalAccessException, LuceneException, IndexerRunningException;
+
+    /**
+     * This method fetches the original concept entry and not the merged concept
+     * entry.
+     * 
+     * @param id
+     * @return
+     */
+    public ConceptEntry getOriginalConceptEntry(String id);
 }

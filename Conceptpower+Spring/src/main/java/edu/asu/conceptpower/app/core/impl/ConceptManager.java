@@ -445,7 +445,7 @@ public class ConceptManager implements IConceptManager {
      * conceptpower.core.ConceptEntry)
      */
     @Override
-    public String addConceptListEntry(ConceptEntry entry, String userName) throws DictionaryDoesNotExistException,
+    public ConceptEntry addConceptListEntry(ConceptEntry entry, String userName) throws DictionaryDoesNotExistException,
             DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptList dict = client.getConceptList(entry.getConceptList());
         if (dict == null)
@@ -472,7 +472,7 @@ public class ConceptManager implements IConceptManager {
 
         }
         indexService.insertConcept(entry, userName);
-        return id;
+        return entry;
     }
     
 
@@ -597,5 +597,24 @@ public class ConceptManager implements IConceptManager {
     @Override
     public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException {
         indexService.deleteById(id, userName);
+    }
+
+    @Override
+    public ConceptEntry getOriginalConceptEntry(String id) {
+
+        ConceptEntry entry = wordnetManager.getConcept(id);
+        if (entry != null) {
+            fillConceptEntry(entry);
+            alternativeIdService.addAlternativeIds(id, entry);
+            return entry;
+        }
+
+        entry = client.getEntry(id);
+        if (entry != null) {
+            alternativeIdService.addAlternativeIds(id, entry);
+            return entry;
+        }
+
+        return null;
     }
 }
