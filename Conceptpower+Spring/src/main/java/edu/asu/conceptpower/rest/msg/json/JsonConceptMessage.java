@@ -42,7 +42,7 @@ public class JsonConceptMessage implements IConceptMessage {
         ConceptEntryMessage json = new ConceptEntryMessage();
 
         json.setId(StringEscapeUtils.escapeJson(entry.getId()));
-        json.setConceptUri(StringEscapeUtils.escapeJson(uriCreator.getURI(entry)));
+        json.setConceptUri(uriCreator.getURI(entry));
         json.setLemma(StringEscapeUtils.escapeJson(entry.getWord()));
         json.setPos(StringEscapeUtils.escapeJson(entry.getPos()));
         json.setDescription(StringEscapeUtils.escapeJson(entry.getDescription()));
@@ -58,17 +58,16 @@ public class JsonConceptMessage implements IConceptMessage {
                     StringEscapeUtils.escapeJson(entry.getCreatorId() != null ? entry.getCreatorId().trim() : ""));
         }
 
-        json.setEqualTo(StringEscapeUtils.escapeJson(entry.getEqualTo() != null ? entry.getEqualTo().trim() : ""));
+        json.setEqualTo(entry.getEqualTo() != null ? entry.getEqualTo().trim() : "");
         json.setModifiedBy(StringEscapeUtils.escapeJson(entry.getModified() != null ? entry.getModified().trim() : ""));
-        json.setSimilarTo(
-                StringEscapeUtils.escapeJson(entry.getSimilarTo() != null ? entry.getSimilarTo().trim() : ""));
+        json.setSimilarTo(entry.getSimilarTo() != null ? entry.getSimilarTo().trim() : "");
         json.setSynonymIds(
                 StringEscapeUtils.escapeJson(entry.getSynonymIds() != null ? entry.getSynonymIds().trim() : ""));
 
         if (type != null) {
             ConceptTypeMessage jsonType = new ConceptTypeMessage();
             jsonType.setTypeId(StringEscapeUtils.escapeJson(type.getTypeId()));
-            jsonType.setTypeUri(StringEscapeUtils.escapeJson(uriCreator.getTypeURI(type)));
+            jsonType.setTypeUri(uriCreator.getTypeURI(type));
             jsonType.setTypeName(StringEscapeUtils.escapeJson(type.getTypeName()));
 
             json.setType(jsonType);
