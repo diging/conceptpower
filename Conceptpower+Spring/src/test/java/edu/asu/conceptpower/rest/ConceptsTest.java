@@ -107,10 +107,13 @@ public class ConceptsTest {
         type.setTypeName("Type-Name");
         type.setDescription("Type Description");
 
+        ConceptEntry newConceptEntry = new ConceptEntry();
+        newConceptEntry.setId("id-1");
+
         Mockito.when(typeManager.getType(typeId)).thenReturn(type);
         Mockito.when(
                 conceptManager.addConceptListEntry(Mockito.eq(Mockito.isA(ConceptEntry.class)), principal.getName()))
-                .thenReturn("id-1");
+                .thenReturn(newConceptEntry);
 
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         RestTestUtility.testValidJson(response.getBody());

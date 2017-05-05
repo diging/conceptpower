@@ -41,6 +41,7 @@ import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.profile.impl.ServiceRegistry;
+import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.app.validation.ConceptAddValidator;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
@@ -72,6 +73,9 @@ public class ConceptAddController {
 
     @Autowired
     private IIndexService indexService;
+
+    @Autowired
+    private URIHelper uriHelper;
 
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
@@ -130,8 +134,8 @@ public class ConceptAddController {
      */
     @RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
     public String addConcept(HttpServletRequest req, Principal principal,
-            @Validated @ModelAttribute("conceptAddBean") ConceptAddBean conceptAddBean, ModelMap model,
-            BindingResult result) throws LuceneException, DictionaryDoesNotExistException, DictionaryModifyException,
+            @Validated @ModelAttribute("conceptAddBean") ConceptAddBean conceptAddBean, BindingResult result,
+            ModelMap model) throws LuceneException, DictionaryDoesNotExistException, DictionaryModifyException,
                     IllegalAccessException, IndexerRunningException {
         if (result.hasErrors()) {
             return "/auth/conceptlist/addconcept";
@@ -154,7 +158,7 @@ public class ConceptAddController {
                 model.addAttribute("error_alert_msg", indexerRunning);
                 return "forward:/auth/conceptlist/addconcept";
             }
-            conceptManager.addConceptListEntry(conceptEntry, principal.getName());
+            conceptEntry = conceptManager.addConceptListEntry(conceptEntry, principal.getName());
 
         } catch (DictionaryDoesNotExistException e) {
             logger.warn("Dictionary does not exists", e);
@@ -167,7 +171,9 @@ public class ConceptAddController {
             model.addAttribute("error_alert_msg", "Concept couldn't be added. Please try again.");
             return "forward:/auth/conceptlist/addconcept";
         }
-        return "redirect:/auth/" + conceptAddBean.getSelectedList() + "/concepts";
+        model.addAttribute("entry", conceptEntry);
+        model.addAttribute("uri", uriHelper.getURI(conceptEntry));
+        return "/auth/conceptDetails";
     }
 
     /**

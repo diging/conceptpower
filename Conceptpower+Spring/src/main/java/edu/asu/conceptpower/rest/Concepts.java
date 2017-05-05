@@ -145,7 +145,7 @@ public class Concepts {
         }
 
         try {
-            conceptEntry.setId(conceptManager.addConceptListEntry(conceptEntry, principal.getName()));
+            conceptEntry.setId(conceptManager.addConceptListEntry(conceptEntry, principal.getName()).getId());
         } catch (DictionaryDoesNotExistException e) {
             logger.error("Error creating concept from REST call.", e);
             return new ResponseEntity<String>("Specified concept list does not exist in Conceptpower.",
@@ -218,7 +218,7 @@ public class Concepts {
             }
 
             try {
-                conceptEntry.setId(conceptManager.addConceptListEntry(conceptEntry, principal.getName()));
+                conceptEntry.setId(conceptManager.addConceptListEntry(conceptEntry, principal.getName()).getId());
                 responseObj.put(JsonFields.ID, conceptEntry.getId());
                 responseObj.put(JsonFields.URI, uriHelper.getURI(conceptEntry));
                 responseObj.put("success", true);

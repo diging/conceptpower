@@ -445,7 +445,7 @@ public class ConceptManager implements IConceptManager {
      * conceptpower.core.ConceptEntry)
      */
     @Override
-    public String addConceptListEntry(ConceptEntry entry, String userName) throws DictionaryDoesNotExistException,
+    public ConceptEntry addConceptListEntry(ConceptEntry entry, String userName) throws DictionaryDoesNotExistException,
             DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptList dict = client.getConceptList(entry.getConceptList());
         if (dict == null)
@@ -472,7 +472,7 @@ public class ConceptManager implements IConceptManager {
 
         }
         indexService.insertConcept(entry, userName);
-        return id;
+        return entry;
     }
     
 

@@ -171,7 +171,7 @@ public class ConceptMergeService implements IConceptMergeService {
         // we create a wrapper for WID-1 and WID-2, we need to have WID-1 and
         // WID-2 in wordnet id field to be deleted.
         entry.setConceptList(conceptsMergeBean.getSelectedListName());
-        return conceptManager.addConceptListEntry(entry, userName);
+        return conceptManager.addConceptListEntry(entry, userName).getId();
     }
 
     private void fillConceptEntry(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {

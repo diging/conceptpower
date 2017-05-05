@@ -148,7 +148,7 @@ public class ConceptManagerTest {
         newConcept.setPos("noun");
         newConcept.setWord("test new");
         newConcept.setWordnetId("WID-1");
-        String id = managerToTest.addConceptListEntry(newConcept, "testuser");
+        String id = managerToTest.addConceptListEntry(newConcept, "testuser").getId();
         Assert.assertNotNull(newConcept.getChangeEvents());
         Mockito.verify(indexService).insertConcept(newConcept, "testuser");
         Assert.assertNotNull(id);
@@ -165,7 +165,7 @@ public class ConceptManagerTest {
         newConcept.setWordnetId("WID-1");
 
         String id = null;
-        id = managerToTest.addConceptListEntry(newConcept, "testuser");
+        id = managerToTest.addConceptListEntry(newConcept, "testuser").getId();
 
         Assert.assertNull(id);
     }
@@ -181,7 +181,7 @@ public class ConceptManagerTest {
         newConcept.setWordnetId("WID-1");
 
         String id = null;
-        id = managerToTest.addConceptListEntry(newConcept, "testuser");
+        id = managerToTest.addConceptListEntry(newConcept, "testuser").getId();
 
         Assert.assertNull(id);
     }
