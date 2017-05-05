@@ -246,6 +246,15 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
   </div>
 
   <div class="row">
+    <div class='col-sm-2 form-check'>
+       <label class="form-check-label">
+          <form:checkbox path='searchOnDescription' name='searchOnDescription' title='Search on description' class="form-check-input" />
+          Search on description.
+        </label>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-sm-12">
       <form:errors path="foundConcepts" class="ui-state-error-text"></form:errors>
     </div>

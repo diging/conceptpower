@@ -611,7 +611,7 @@ public class LuceneUtility implements ILuceneUtility {
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchValue, tokenizedQueryBuilder, Occur.MUST);
             } else {
-                tokenizedQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchValue),
+                tokenizedQueryBuilder.add(new TermQuery(new Term(luceneFieldAnnotation.lucenefieldName(), searchValue)),
                         Occur.MUST);
             }
         }
