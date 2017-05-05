@@ -8,6 +8,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -107,10 +108,13 @@ public class ConceptsTest {
         type.setTypeName("Type-Name");
         type.setDescription("Type Description");
 
+        ConceptEntry newConceptEntry = new ConceptEntry();
+        newConceptEntry.setId("id-1");
+
         Mockito.when(typeManager.getType(typeId)).thenReturn(type);
         Mockito.when(
-                conceptManager.addConceptListEntry(Mockito.eq(Mockito.isA(ConceptEntry.class)), principal.getName()))
-                .thenReturn("id-1");
+                conceptManager.addConceptListEntry(Mockito.isA(ConceptEntry.class), Matchers.eq(principal.getName())))
+                .thenReturn(newConceptEntry);
 
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         RestTestUtility.testValidJson(response.getBody());
@@ -339,6 +343,13 @@ public class ConceptsTest {
 
         Mockito.when(typeManager.getType(typeId1)).thenReturn(type);
         Mockito.when(typeManager.getType(typeId2)).thenReturn(type2);
+
+        ConceptEntry newConceptEntry = new ConceptEntry();
+        newConceptEntry.setId("CCP-1");
+
+        Mockito.when(
+                conceptManager.addConceptListEntry(Mockito.isA(ConceptEntry.class), Matchers.eq(principal.getName())))
+                .thenReturn(newConceptEntry);
 
         ResponseEntity<String> output = concepts.addConcepts(input, principal);
 
