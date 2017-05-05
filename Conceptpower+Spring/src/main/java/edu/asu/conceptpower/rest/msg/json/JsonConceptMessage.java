@@ -41,10 +41,10 @@ public class JsonConceptMessage implements IConceptMessage {
 
         ConceptEntryMessage json = new ConceptEntryMessage();
 
-        json.setId(StringEscapeUtils.escapeJson(entry.getId()));
+        json.setId(entry.getId());
         json.setConceptUri(uriCreator.getURI(entry));
         json.setLemma(StringEscapeUtils.escapeJson(entry.getWord()));
-        json.setPos(StringEscapeUtils.escapeJson(entry.getPos()));
+        json.setPos(entry.getPos());
         json.setDescription(StringEscapeUtils.escapeJson(entry.getDescription()));
         json.setConceptList(StringEscapeUtils.escapeJson(entry.getConceptList()));
 
@@ -66,7 +66,7 @@ public class JsonConceptMessage implements IConceptMessage {
 
         if (type != null) {
             ConceptTypeMessage jsonType = new ConceptTypeMessage();
-            jsonType.setTypeId(StringEscapeUtils.escapeJson(type.getTypeId()));
+            jsonType.setTypeId(type.getTypeId());
             jsonType.setTypeUri(uriCreator.getTypeURI(type));
             jsonType.setTypeName(StringEscapeUtils.escapeJson(type.getTypeName()));
 

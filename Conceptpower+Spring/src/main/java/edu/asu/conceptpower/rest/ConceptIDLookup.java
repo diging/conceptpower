@@ -174,30 +174,28 @@ public class ConceptIDLookup {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
-        String[] wordnetIds = ids.split(",");
+        String[] conceptIds = ids.split(",");
 
-        if (wordnetIds == null) {
+        if (conceptIds == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
         Set<ConceptEntry> conceptEntries = new HashSet<>();
-        for (String wordnetId : wordnetIds) {
-            if (!wordnetId.trim().equalsIgnoreCase("")) {
-                ConceptEntry entry = conceptManager.getOriginalConceptEntry(wordnetId);
+        for (String conceptId : conceptIds) {
+            if (!conceptId.trim().isEmpty()) {
+                ConceptEntry entry = conceptManager.getOriginalConceptEntry(conceptId);
                 conceptEntries.add(entry);
             }
         }
 
         IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
         Map<ConceptEntry, ConceptType> entryMap = new LinkedHashMap<>();
-        if (conceptEntries != null && !conceptEntries.isEmpty()) {
-            for (ConceptEntry entry : conceptEntries) {
-                ConceptType type = null;
-                if (typeManager != null && entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
-                    type = typeManager.getType(entry.getTypeId());
-                }
-                entryMap.put(entry, type);
+        for (ConceptEntry entry : conceptEntries) {
+            ConceptType type = null;
+            if (entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
+                type = typeManager.getType(entry.getTypeId());
             }
+            entryMap.put(entry, type);
         }
 
         return new ResponseEntity<String>(msg.getAllConceptEntriesAndPaginationDetails(entryMap, null), HttpStatus.OK);
