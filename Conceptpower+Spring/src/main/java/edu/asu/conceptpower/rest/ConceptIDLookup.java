@@ -151,13 +151,17 @@ public class ConceptIDLookup {
     }
 
     /**
+     *
      * This method provides original concept information for the rest interface
      * of the form
      * "http://[server.url]/conceptpower/rest/Concept?id={IDs of concept seperated by ,}"
      * 
-     * @param req
-     *            Holds the HTTP request information
-     * @return XML containing concept information
+     * @param ids
+     *            - Ids based on which concepts will be fetched.
+     * @param acceptHeader
+     *            - Decides the type of response. Can be application/xml or
+     *            application/json. Default value is application/xml.
+     * @return
      * @throws JsonProcessingException
      */
     @RequestMapping(value = "/OriginalConcepts", method = RequestMethod.GET, produces = {
