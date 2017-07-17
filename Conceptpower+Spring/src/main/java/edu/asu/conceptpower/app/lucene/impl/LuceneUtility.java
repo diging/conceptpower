@@ -64,6 +64,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
+import edu.asu.conceptpower.app.constants.SearchFieldNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
@@ -183,43 +184,47 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField searchFieldAnnotation = field.getAnnotation(LuceneField.class);
             field.setAccessible(true);
             if (searchFieldAnnotation != null) {
-                Object contentOfField = field.get(entry);
+                String contentOfField = field.get(entry) != null ? String.valueOf(field.get(entry)) : null;
                 if (contentOfField != null) {
                     if (searchFieldAnnotation.isTokenized()) {
                         if (searchFieldAnnotation.isMultiple()) {
-                            String[] contents = String.valueOf(contentOfField).split(",");
+                            String[] contents = contentOfField.split(",");
                             for (String content : contents) {
                                 doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), content,
                                         Field.Store.YES));
                             }
                         } else {
                             doc.add(new TextField(searchFieldAnnotation.lucenefieldName(),
-                                    String.valueOf(contentOfField), Field.Store.YES));
+                                    contentOfField.toLowerCase(), Field.Store.YES));
+                            doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED, 
+                                    contentOfField, Field.Store.YES));
                         }
                     } else {
                         // Non tokenized
                         if (searchFieldAnnotation.isMultiple()) {
-                            String[] contents = String.valueOf(contentOfField).split(",");
+                            String[] contents = contentOfField.split(",");
                             for (String content : contents) {
                                 doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), content,
                                         Field.Store.YES));
                             }
                         } else {
                             doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
-                                    String.valueOf(contentOfField), Field.Store.YES));
+                                    contentOfField, Field.Store.YES));
                         }
 
                     }
 
                     if (searchFieldAnnotation.isShortPhraseSearchable()) {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
-                                String.valueOf(contentOfField), Field.Store.YES));
+                                contentOfField.toLowerCase(), Field.Store.YES));
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX + LuceneFieldNames.NOT_LOWERCASED,
+                                contentOfField, Field.Store.YES));
                     }
 
                     if (searchFieldAnnotation.isSortAllowed()) {
                         doc.add(new SortedDocValuesField(
                                 searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.SORT_SUFFIX,
-                                new BytesRef(processStringForSorting(String.valueOf(contentOfField)))));
+                                new BytesRef(processStringForSorting(contentOfField))));
                     }
                 }
             }
@@ -252,13 +257,20 @@ public class LuceneUtility implements ILuceneUtility {
             field.setAccessible(true);
             if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
                 if (!luceneFieldAnnotation.isMultiple()) {
-                    IndexableField[] indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName());
+                    IndexableField[] indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED);
+                    if (indexableFields == null || indexableFields.length == 0) {
+                        indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName());
+                    }
                     String content = Arrays.asList(indexableFields).stream().filter(iF -> iF.stringValue() != null)
                             .map(iF -> iF.stringValue()).collect(Collectors.joining(","));
                     field.set(con, content);
                     
                 } else {
-                    field.set(con, d.get(luceneFieldAnnotation.lucenefieldName()));
+                    String fieldContent = d.get(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED);
+                    if (fieldContent == null || fieldContent.isEmpty()) {
+                        fieldContent = d.get(luceneFieldAnnotation.lucenefieldName());
+                    }
+                    field.set(con, fieldContent);
                 }
 
         }
@@ -321,12 +333,14 @@ public class LuceneUtility implements ILuceneUtility {
     private Document createIndividualDocument(IDictionary dict, IWordID wordId) {
         Document doc = new Document();
         String lemma = wordId.getLemma().replace("_", " ");
-        doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.WORD, lemma.toLowerCase(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.WORD + LuceneFieldNames.UNTOKENIZED_SUFFIX, lemma, Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.WORD + LuceneFieldNames.NOT_LOWERCASED, lemma, Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString().toLowerCase(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
-        doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss().toLowerCase(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.DESCRIPTION + LuceneFieldNames.NOT_LOWERCASED, word.getSynset().getGloss(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
 
@@ -515,6 +529,7 @@ public class LuceneUtility implements ILuceneUtility {
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
                 if (searchString != null) {
+                    searchString = searchString.toLowerCase();
                     buildQuery(occur, perFieldAnalyzerWrapper, qBuild, builder, luceneFieldAnnotation, searchString);
                 }
             }
