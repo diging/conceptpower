@@ -150,4 +150,56 @@ public class ConceptIDLookup {
 
     }
 
+    /**
+     *
+     * This method provides original concept information for the rest interface
+     * of the form
+     * "http://[server.url]/conceptpower/rest/Concept?id={IDs of concept seperated by ,}"
+     * 
+     * @param ids
+     *            - Ids based on which concepts will be fetched.
+     * @param acceptHeader
+     *            - Decides the type of response. Can be application/xml or
+     *            application/json. Default value is application/xml.
+     * @return
+     * @throws JsonProcessingException
+     */
+    @RequestMapping(value = "/OriginalConcepts", method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody ResponseEntity<String> getOriginalConceptById(@RequestParam String ids,
+            @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_XML_VALUE) String acceptHeader)
+                    throws JsonProcessingException {
+
+        if (ids == null || ids.trim().isEmpty()) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+        String[] conceptIds = ids.split(",");
+
+        if (conceptIds == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+        Set<ConceptEntry> conceptEntries = new HashSet<>();
+        for (String conceptId : conceptIds) {
+            if (!conceptId.trim().isEmpty()) {
+                ConceptEntry entry = conceptManager.getOriginalConceptEntry(conceptId);
+                conceptEntries.add(entry);
+            }
+        }
+
+        IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
+        Map<ConceptEntry, ConceptType> entryMap = new LinkedHashMap<>();
+        for (ConceptEntry entry : conceptEntries) {
+            ConceptType type = null;
+            if (entry.getTypeId() != null && !entry.getTypeId().trim().isEmpty()) {
+                type = typeManager.getType(entry.getTypeId());
+            }
+            entryMap.put(entry, type);
+        }
+
+        return new ResponseEntity<String>(msg.getAllConceptEntriesAndPaginationDetails(entryMap, null), HttpStatus.OK);
+
+    }
+
 }

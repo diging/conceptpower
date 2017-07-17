@@ -25,6 +25,8 @@ import edu.asu.conceptpower.app.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.util.CCPSort;
+import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -124,7 +126,7 @@ public class ConceptManager implements IConceptManager {
     @Override
     public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
-        return getConceptListEntriesForWordPOS(word, pos, conceptList, -1, -1);
+        return getConceptListEntriesForWordPOS(word, pos, conceptList, -1, -1, null, 0);
     }
 
     /*
@@ -136,9 +138,9 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList,
-            int page, int numberOfRecordsPerPage)
-            throws LuceneException, IllegalAccessException, IndexerRunningException {
+    public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList, int page,
+            int numberOfRecordsPerPage, String sortField, int sortOrder)
+                    throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)
             return null;
 
@@ -146,7 +148,19 @@ public class ConceptManager implements IConceptManager {
         fieldMap.put(SearchFieldNames.WORD, word);
         fieldMap.put(SearchFieldNames.POS, pos);
         fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
-        return indexService.searchForConceptByPageNumberAndFieldMap(fieldMap, null, page, numberOfRecordsPerPage);
+
+        CCPSort ccpSort = null;
+        if (sortField != null) {
+            ccpSort = new CCPSort(sortField, sortOrder == -1 ? SortOrder.DESCENDING : SortOrder.ASCENDING);
+        }
+        return indexService.searchForConceptByPageNumberAndFieldMap(fieldMap, null, page, numberOfRecordsPerPage,
+                ccpSort);
+    }
+
+    @Override
+    public int getPageCountForConceptEntries(String word, String pos, String conceptList) throws IllegalAccessException, LuceneException, IndexerRunningException {
+        int totalEntries = getConceptListEntriesForWordPOS(word, pos, conceptList, -1, -1, null, 0).length;
+        return (int) Math.ceil(new Double(totalEntries) / new Double(defaultPageSize));
     }
 
     /**
@@ -431,7 +445,7 @@ public class ConceptManager implements IConceptManager {
      * conceptpower.core.ConceptEntry)
      */
     @Override
-    public String addConceptListEntry(ConceptEntry entry, String userName) throws DictionaryDoesNotExistException,
+    public ConceptEntry addConceptListEntry(ConceptEntry entry, String userName) throws DictionaryDoesNotExistException,
             DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptList dict = client.getConceptList(entry.getConceptList());
         if (dict == null)
@@ -458,7 +472,7 @@ public class ConceptManager implements IConceptManager {
 
         }
         indexService.insertConcept(entry, userName);
-        return id;
+        return entry;
     }
     
 
@@ -583,5 +597,24 @@ public class ConceptManager implements IConceptManager {
     @Override
     public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException {
         indexService.deleteById(id, userName);
+    }
+
+    @Override
+    public ConceptEntry getOriginalConceptEntry(String id) {
+
+        ConceptEntry entry = wordnetManager.getConcept(id);
+        if (entry != null) {
+            fillConceptEntry(entry);
+            alternativeIdService.addAlternativeIds(id, entry);
+            return entry;
+        }
+
+        entry = client.getEntry(id);
+        if (entry != null) {
+            alternativeIdService.addAlternativeIds(id, entry);
+            return entry;
+        }
+
+        return null;
     }
 }

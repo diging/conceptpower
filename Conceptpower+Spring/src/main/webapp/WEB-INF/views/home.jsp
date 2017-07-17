@@ -9,50 +9,43 @@
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
-   $('#conceptSearchResult').dataTable({
-		"bJQueryUI" : true,
-		"sPaginationType" : "full_numbers",
-		"bAutoWidth" : false,
-		"aaSorting" : [],
-		"aoColumnDefs" : [ 
-				<sec:authorize access="isAuthenticated()">
-			    {
-		            "targets": [0,1],
-			        'bSortable': false
-				},
-				{
-					"targets": [2],
-					'searchable': false,
-					'bSortable': false,
-					'orderable':false,
-					'bVisible' : false,
-					'className': 'dt-body-center'
-				},
-				{
-				   	"targets": [7],
-				   	"sType" : "html",
-				   	"fnRender" : function(o, val) {
-  				  		if (o.startsWith("&lt;br/&gt;")) {
-  				   			o = o.substring(11,o.length);
-  				   		}
-  						return $("<div/>").html(o).text();
-					}
-		    	},
-		    	</sec:authorize>
-  			  	<sec:authorize access="not isAuthenticated()">
-  			    {
-  			    	"targets": [5],
-  			    	"sType" : "html",
-  			    	"fnRender" : function(o, val) {
-      			   		if (o.startsWith("&lt;br/&gt;")) {
-      			   			o = o.substring(11,o.length);
-      			   		}
-  						return $("<div/>").html(o).text();
-  			    	}
-  			    }
-  				</sec:authorize>
-		]
-	});
+
+  function removeColumnFromTable(str) {
+    var target = $('table').find('th[data-name="' + str +'"]');
+    var index = (target).index();
+     $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).hide();
+  }
+
+  function showColumnFromTable(str) {
+    var target = $('table').find('th[data-name="' + str +'"]');
+    var index = (target).index();
+     $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).show();
+  }
+
+  function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
+    var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
+    if(conceptsToBeMerged) {
+      removeColumnFromTable('delete');    
+      removeColumnFromTable('edit');    
+      $("#mergeConcept").show();
+      $("#prepareMergeConcept").hide();
+      // Check the checkboxes
+
+      var conceptIds = conceptsToBeMerged.split(',');
+      for(var i = 0; i<conceptIds.length; i++){
+        $("input[value='" + conceptIds[i] + "']").prop('checked', true);
+      }
+
+      $('#conceptIdsToMerge').val(conceptsToBeMerged);
+    } else {
+      removeColumnFromTable('merge');    
+      $("#mergeConcept").hide();
+      $("#prepareMergeConcept").show();
+    }
+  }
+
+  checkCheckBoxAndRemoveColumnsForMergeConcepts();
+
 	$('#viafSearchResult').dataTable({
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
@@ -92,46 +85,113 @@ $(document).ready(function() {
 						$("#detailssimilarto").text(details.similarto);
 						$("#detailscreator").text(details.creator);
 						$("#detailsdescription").html(details.description);
+
+            if(details.mergedIds) {
+              $.ajax({
+                url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
+                type: 'GET',
+                headers: {          
+                    Accept: "application/json",         
+                },
+                data: {
+                  ids: details.mergedIds
+                },
+              })
+              .success(function(originalConcepts) {
+                var mergedIdsHtml = '';
+                $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
+                    if(mergedIdsHtml) {
+                      mergedIdsHtml += ", ";
+                    }
+                    mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
+                    mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
+                    mergedIdsHtml += "</span>";
+
+                });
+                $("#detailsmergedIds").html(mergedIdsHtml);  
+              });              
+            }
 					}
 				});
 		});
+
     $('#prepareMergeConcept').on('click', function (e) {
         e.preventDefault();
         // Get the column API object
-        var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
-        conceptSearchResultTable.fnSetColumnVis(0, false);
-        conceptSearchResultTable.fnSetColumnVis(1, false);
-        conceptSearchResultTable.fnSetColumnVis(2, true);
+        removeColumnFromTable('edit');
+        removeColumnFromTable('delete');
+        showColumnFromTable('merge');
         $("#mergeConcept").show();
         $("#prepareMergeConcept").hide();
     });
-	
-    $("#mergeConcept").hide();
-    $('#mergeError').hide();
-});
-					
-$(document).ready(hideFormProcessing);
-function hideFormProcessing() {
-	$('#floatingCirclesG').hide();
-}
-function showFormProcessing() {
-	$('#floatingCirclesG').show();
-}
 
-function mergeConcepts() {
-	$('#mergeError').hide();
-	var conceptIdsToMerge = [];
-	var conceptSearchResultTable = $('#conceptSearchResult').dataTable();
-    $.each($("input[name='conceptMergeCheckbox']:checked", conceptSearchResultTable.fnGetNodes()), function(){            
-    	conceptIdsToMerge.push($(this).val());
+    $(':checkbox').change(function(e) {
+        if(this.checked) {
+          mergeConcepts($(this).val())
+        } else {
+          removeMergedConcepts($(this).val());
+        }
     });
     
-    if(conceptIdsToMerge.length < 2) {
-    	$('#mergeError').show();
+    function mergeConcepts(conceptId) {
+      $('#mergeError').hide();
+      var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+      if(conceptsToMerge) {
+        conceptsToMerge = conceptsToMerge + ',' + conceptId;
+      } else {
+        conceptsToMerge = conceptId;
+      }
+      $('#conceptIdsToMerge').val(conceptsToMerge);  
+    }    
+
+    function removeMergedConcepts(conceptId) {
+        var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+        var conceptIds = conceptsToMerge.split(',');
+        var updatedConceptIds = '';
+        for(var i=0; i<conceptIds.length; i++) {
+          if(conceptIds[i] != conceptId) {
+            updatedConceptIds = updatedConceptIds + conceptIds[i] + ",";
+          }
+        }
+        if(updatedConceptIds != '') {
+          $('#conceptIdsToMerge').val(updatedConceptIds.substring(0, updatedConceptIds.length - 1));      
+        } else { 
+          $('#conceptIdsToMerge').val(updatedConceptIds);      
+        }
+    }
+
+    $('#mergeError').hide();
+});
+                    
+$(document).ready(hideFormProcessing);
+function hideFormProcessing() {
+    $('#floatingCirclesG').hide();
+}
+function showFormProcessing() {
+    $('#floatingCirclesG').show();
+}
+
+
+function finalizeMerge() {
+  var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+  var conceptIdsToBeMerged = conceptIdsToMerge.split(',');
+  if(conceptIdsToBeMerged.length < 2) {
+      $('#mergeError').show();
     } else {
-        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge.join(",");    	
+        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;      
     }
 }
+
+function paginate(page, sortDir, sortColumn, word, pos) {
+      var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+      if(conceptIdsToMerge) {
+        window.location = '${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;  
+      } else {
+        window.location = '${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos;  
+      }
+      
+    }
+
 
 var conceptsToMerge = "";
 
@@ -141,8 +201,12 @@ function prepareMergeConcept(conceptId) {
     if(conceptsToMerge != '') {
         conceptsToMerge = conceptId;
     } else {
-        conceptsToMerge = conceptsToMerge + "," + conceptId;	
+        conceptsToMerge = conceptsToMerge + "," + conceptId;    
     }
+}
+
+var createWrapper = function(word, pos, conceptList, description, conceptType, wrapperId) {
+  window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + word + '&selectedConceptList=' + conceptList + '&description=' + description + '&selectedType=' + conceptType + '&wrapperids=' + wrapperId;
 }
 
 </script>
@@ -160,7 +224,7 @@ function prepareMergeConcept(conceptId) {
   action="${pageContext.servletContext.contextPath}/home/conceptsearch"
   method='get' commandName='conceptSearchBean'>
   <form:errors path="luceneError"></form:errors>
-  
+  <input type='hidden' id='conceptIdsToMerge' value='${conceptIdsToMerge}' />
     <div id="mergeError" class="alert alert-danger">
       Please select at least two concepts to merge.
     </div>
@@ -211,27 +275,38 @@ function prepareMergeConcept(conceptId) {
         <div class="row">
             <div class="col-sm-2">
                 <button id="prepareMergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;">Select concepts to merge</button>
-                <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" onclick="mergeConcepts();">Merge selected concepts</button>
+                <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" onclick="finalizeMerge();">Merge selected concepts</button>
             </div>
         </div>
     </sec:authorize>
+
+  <c:choose>
+    <c:when test="${sortDir == -1}">
+      <c:set var="sortDirection" value="${1}"/>
+    </c:when>
+    <c:otherwise>
+      <c:set var="sortDirection" value="${-1}"/>
+    </c:otherwise>
+  </c:choose>
 
   <table cellpadding="0" cellspacing="0"
     class="table table-striped table-bordered" id="conceptSearchResult">
     <thead>
       <tr>
         <sec:authorize access="isAuthenticated()">
-          <th></th>
-          <th></th>
-          <th></th>
+          <th data-name='edit'></th>
+          <th data-name='delete'></th>
+          <th data-name='merge'></th>
         </sec:authorize>
-        <th>Term</th>
-        <th>ID</th>
-        <th>Wordnet ID</th>
-        <th>POS</th>
-        <th>Concept List</th>
-        <th>Description</th>
-        <th>Type</th>
+        <th>
+          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
+          </a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
       </tr>
     </thead>
     <tbody>
@@ -249,8 +324,9 @@ function prepareMergeConcept(conceptId) {
                   </a>
                 </c:when>
                 <c:otherwise>
-                  <i title="Cannot edit Word Net concepts"
-                    class="fa fa-pencil-square-o disabled"></i>
+                  <a href="#" onclick="createWrapper('${concept.entry.word}', '${concept.entry.pos}', '${concept.entry.conceptList}', '${concept.entry.description}', '${concept.entry.typeId}', '${concept.entry.id}');">
+                    <i title='Create wrapper' class="fa fa-pencil-square-o"></i>
+                  </a>
                 </c:otherwise>
               </c:choose></td>
 
@@ -268,11 +344,12 @@ function prepareMergeConcept(conceptId) {
                   <i title="Cannot delete WordNet concepts"
                     class="fa fa-trash disabled"></i>
                 </c:otherwise>
-              </c:choose></td>
-              
-              <td>
-                <input type="checkbox" name="conceptMergeCheckbox" value="${concept.entry.id }"/>
-              </td>
+              </c:choose>
+            </td>
+
+            <td>
+              <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" value="${concept.entry.id }" />
+            </td>
 
           </sec:authorize>
           <td align="justify"><font size="2"> <a
@@ -299,6 +376,24 @@ function prepareMergeConcept(conceptId) {
       </c:forEach>
     </tbody>
   </table>
+
+  <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li <c:if test="${page == 1}">class="disabled"</c:if>>
+          <a <c:if test="${page > 1}"> href="#" onclick="paginate('${page - 1}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');"</c:if> aria-label="Previous" >
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+    <c:forEach begin="1" end="${count}" var="val">
+        <li <c:if test="${val == page}">class="active"</c:if>><a href="#" onclick="paginate('${val}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" ><c:out value="${val}"/></a></li>
+    </c:forEach>
+        <li <c:if test="${page == count}">class="disabled"</c:if>>
+          <a <c:if test="${page < count}"> href="#" onclick="paginate('${page + 1}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');"</c:if> aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
 </c:if>
 
@@ -356,6 +451,10 @@ function prepareMergeConcept(conceptId) {
         <div class="row row-even">
           <div class="col-sm-3">Creator:</div>
           <div id="detailscreator" class="col-sm-9"></div>
+        </div>
+        <div class="row row-odd">
+          <div class="col-sm-3">Merged Ids:</div>
+          <div id="detailsmergedIds" class="col-sm-9"></div>
         </div>
 
       </div>

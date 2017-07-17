@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.validation.ObjectError;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,30 +43,32 @@ public class JsonConceptMessage implements IConceptMessage {
 
         json.setId(entry.getId());
         json.setConceptUri(uriCreator.getURI(entry));
-        json.setLemma(entry.getWord());
+        json.setLemma(StringEscapeUtils.escapeJson(entry.getWord()));
         json.setPos(entry.getPos());
-        json.setDescription(entry.getDescription());
-        json.setConceptList(entry.getConceptList());
+        json.setDescription(StringEscapeUtils.escapeJson(entry.getDescription()));
+        json.setConceptList(StringEscapeUtils.escapeJson(entry.getConceptList()));
 
         if (entry.getChangeEvents() != null && !entry.getChangeEvents().isEmpty()) {
             List<ChangeEvent> changeEvents = entry.getChangeEvents();
             Collections.sort(changeEvents);
-            json.setCreatorId(
-                    changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : "");
+            json.setCreatorId(StringEscapeUtils.escapeJson(
+                    changeEvents.get(0).getUserName() != null ? changeEvents.get(0).getUserName().trim() : ""));
         } else {
-            json.setCreatorId(entry.getCreatorId() != null ? entry.getCreatorId().trim() : "");
+            json.setCreatorId(
+                    StringEscapeUtils.escapeJson(entry.getCreatorId() != null ? entry.getCreatorId().trim() : ""));
         }
 
         json.setEqualTo(entry.getEqualTo() != null ? entry.getEqualTo().trim() : "");
-        json.setModifiedBy(entry.getModified() != null ? entry.getModified().trim() : "");
+        json.setModifiedBy(StringEscapeUtils.escapeJson(entry.getModified() != null ? entry.getModified().trim() : ""));
         json.setSimilarTo(entry.getSimilarTo() != null ? entry.getSimilarTo().trim() : "");
-        json.setSynonymIds(entry.getSynonymIds() != null ? entry.getSynonymIds().trim() : "");
+        json.setSynonymIds(
+                StringEscapeUtils.escapeJson(entry.getSynonymIds() != null ? entry.getSynonymIds().trim() : ""));
 
         if (type != null) {
             ConceptTypeMessage jsonType = new ConceptTypeMessage();
             jsonType.setTypeId(type.getTypeId());
             jsonType.setTypeUri(uriCreator.getTypeURI(type));
-            jsonType.setTypeName(type.getTypeName());
+            jsonType.setTypeName(StringEscapeUtils.escapeJson(type.getTypeName()));
 
             json.setType(jsonType);
         }

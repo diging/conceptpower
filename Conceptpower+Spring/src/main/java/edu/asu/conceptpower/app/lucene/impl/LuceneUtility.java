@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -27,6 +28,7 @@ import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.SortedDocValuesField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -41,13 +43,18 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MultiTermQuery;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.TopDocsCollector;
+import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.QueryBuilder;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +64,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
+import edu.asu.conceptpower.app.constants.SearchFieldNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
@@ -64,6 +72,8 @@ import edu.asu.conceptpower.app.lucene.ILuceneUtility;
 import edu.asu.conceptpower.app.lucene.LuceneAction;
 import edu.asu.conceptpower.app.reflect.LuceneField;
 import edu.asu.conceptpower.app.reflect.SearchField;
+import edu.asu.conceptpower.app.util.CCPSort;
+import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetConfiguration;
 import edu.asu.conceptpower.core.ConceptEntry;
@@ -174,37 +184,47 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField searchFieldAnnotation = field.getAnnotation(LuceneField.class);
             field.setAccessible(true);
             if (searchFieldAnnotation != null) {
-                Object contentOfField = field.get(entry);
+                String contentOfField = field.get(entry) != null ? String.valueOf(field.get(entry)) : null;
                 if (contentOfField != null) {
                     if (searchFieldAnnotation.isTokenized()) {
                         if (searchFieldAnnotation.isMultiple()) {
-                            String[] contents = String.valueOf(contentOfField).split(",");
+                            String[] contents = contentOfField.split(",");
                             for (String content : contents) {
                                 doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), content,
                                         Field.Store.YES));
                             }
                         } else {
                             doc.add(new TextField(searchFieldAnnotation.lucenefieldName(),
-                                    String.valueOf(contentOfField), Field.Store.YES));
+                                    contentOfField.toLowerCase(), Field.Store.YES));
+                            doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED, 
+                                    contentOfField, Field.Store.YES));
                         }
                     } else {
                         // Non tokenized
                         if (searchFieldAnnotation.isMultiple()) {
-                            String[] contents = String.valueOf(contentOfField).split(",");
+                            String[] contents = contentOfField.split(",");
                             for (String content : contents) {
                                 doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), content,
                                         Field.Store.YES));
                             }
                         } else {
                             doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
-                                    String.valueOf(contentOfField), Field.Store.YES));
+                                    contentOfField, Field.Store.YES));
                         }
 
                     }
 
                     if (searchFieldAnnotation.isShortPhraseSearchable()) {
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
-                                String.valueOf(contentOfField), Field.Store.YES));
+                                contentOfField.toLowerCase(), Field.Store.YES));
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX + LuceneFieldNames.NOT_LOWERCASED,
+                                contentOfField, Field.Store.YES));
+                    }
+
+                    if (searchFieldAnnotation.isSortAllowed()) {
+                        doc.add(new SortedDocValuesField(
+                                searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.SORT_SUFFIX,
+                                new BytesRef(processStringForSorting(contentOfField))));
                     }
                 }
             }
@@ -237,13 +257,20 @@ public class LuceneUtility implements ILuceneUtility {
             field.setAccessible(true);
             if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
                 if (!luceneFieldAnnotation.isMultiple()) {
-                    IndexableField[] indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName());
+                    IndexableField[] indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED);
+                    if (indexableFields == null || indexableFields.length == 0) {
+                        indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName());
+                    }
                     String content = Arrays.asList(indexableFields).stream().filter(iF -> iF.stringValue() != null)
                             .map(iF -> iF.stringValue()).collect(Collectors.joining(","));
                     field.set(con, content);
                     
                 } else {
-                    field.set(con, d.get(luceneFieldAnnotation.lucenefieldName()));
+                    String fieldContent = d.get(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED);
+                    if (fieldContent == null || fieldContent.isEmpty()) {
+                        fieldContent = d.get(luceneFieldAnnotation.lucenefieldName());
+                    }
+                    field.set(con, fieldContent);
                 }
 
         }
@@ -306,12 +333,14 @@ public class LuceneUtility implements ILuceneUtility {
     private Document createIndividualDocument(IDictionary dict, IWordID wordId) {
         Document doc = new Document();
         String lemma = wordId.getLemma().replace("_", " ");
-        doc.add(new TextField(LuceneFieldNames.WORD, lemma, Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.WORD, lemma.toLowerCase(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.WORD + LuceneFieldNames.UNTOKENIZED_SUFFIX, lemma, Field.Store.YES));
-        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.WORD + LuceneFieldNames.NOT_LOWERCASED, lemma, Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString().toLowerCase(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
-        doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss().toLowerCase(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.DESCRIPTION + LuceneFieldNames.NOT_LOWERCASED, word.getSynset().getGloss(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
 
@@ -326,6 +355,20 @@ public class LuceneUtility implements ILuceneUtility {
         // Adding this new data to delete only wordnet concepts while
         // adding all wordnet concepts from jwi.
         doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY, Field.Store.YES));
+
+        // Fields for performing sorting
+        doc.add(new SortedDocValuesField(LuceneFieldNames.ID + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(word.getID().toString()))));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.WORD + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(lemma))));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.WORDNETID + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(word.getID().toString()))));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.POS + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(wordId.getPOS().toString()))));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.CONCEPT_LIST + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(Constants.WORDNET_DICTIONARY))));
+        doc.add(new SortedDocValuesField(LuceneFieldNames.DESCRIPTION + LuceneFieldNames.SORT_SUFFIX,
+                new BytesRef(processStringForSorting(word.getSynset().getGloss()))));
         return doc;
     }
 
@@ -447,7 +490,7 @@ public class LuceneUtility implements ILuceneUtility {
      * fieldMap contains the search criteria
      */
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
-            int numberOfRecordsPerPage) throws LuceneException, IllegalAccessException {
+            int numberOfRecordsPerPage, CCPSort ccpSort) throws LuceneException, IllegalAccessException {
 
         Map<String,Analyzer> analyzerPerField = new HashMap<>();
         BooleanClause.Occur occur = BooleanClause.Occur.SHOULD;
@@ -486,6 +529,7 @@ public class LuceneUtility implements ILuceneUtility {
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
                 if (searchString != null) {
+                    searchString = searchString.toLowerCase();
                     buildQuery(occur, perFieldAnalyzerWrapper, qBuild, builder, luceneFieldAnnotation, searchString);
                 }
             }
@@ -494,7 +538,6 @@ public class LuceneUtility implements ILuceneUtility {
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
         try {
-            TopScoreDocCollector collector = TopScoreDocCollector.create(numberOfResults);
             int startIndex = 0;
             int hitsPerPage = 0;
             if (page > 0) {
@@ -513,6 +556,16 @@ public class LuceneUtility implements ILuceneUtility {
                 // records)
                 startIndex = 0;
                 hitsPerPage = numberOfResults;
+            }
+
+            TopDocsCollector collector = null;
+            if (ccpSort != null) {
+                SortField sortField = new SortField(ccpSort.getSortField() + LuceneFieldNames.SORT_SUFFIX,
+                        SortField.Type.STRING, ccpSort.getSortOrder() == SortOrder.DESCENDING ? false : true);
+                Sort sort = new Sort(sortField);
+                collector = TopFieldCollector.create(sort, numberOfResults, true, false, false);
+            } else {
+                collector = TopFieldCollector.create(Sort.RELEVANCE, numberOfResults, true, false, false);
             }
 
             searcher.search(builder.build(), collector);
@@ -633,6 +686,11 @@ public class LuceneUtility implements ILuceneUtility {
             }
         }
         return wordnetIds;
+    }
+
+    private String processStringForSorting(String str) {
+        return Normalizer.normalize(Jsoup.parse(str).text().trim().toLowerCase(), Normalizer.Form.NFKD)
+                .replaceAll("\\p{M}", "");
     }
 
     @PreDestroy

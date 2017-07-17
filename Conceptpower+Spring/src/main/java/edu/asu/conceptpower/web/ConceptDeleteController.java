@@ -100,6 +100,7 @@ public class ConceptDeleteController {
                 .createWrappers(founds != null ? founds.toArray(new ConceptEntry[founds.size()]) : new ConceptEntry[0]);
 
         model.addAttribute("result", foundConcepts);
+        model.addAttribute("listid", conceptList);
         return "/auth/conceptlist/concepts";
     }
 

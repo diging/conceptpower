@@ -31,31 +31,31 @@ public class ConceptEntry implements Serializable {
     private static final long serialVersionUID = 4569090620671054560L;
 
     @Id
-    @LuceneField(lucenefieldName = LuceneFieldNames.ID, isTokenized = false, isMultiple = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.ID, isTokenized = false, isMultiple = false, isSortAllowed = true)
     private String id;
 
     @SearchField(fieldName = SearchFieldNames.WORDNETID)
-    @LuceneField(lucenefieldName = LuceneFieldNames.WORDNETID, isTokenized = false, isMultiple = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORDNETID, isTokenized = false, isMultiple = true, isSortAllowed = true)
     private String wordnetId;
 
     @SearchField(fieldName = SearchFieldNames.WORD)
-    @LuceneField(lucenefieldName = LuceneFieldNames.WORD, isTokenized = true, isMultiple = false, isShortPhraseSearchable = true, isWildCardSearchEnabled = true)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORD, isTokenized = true, isMultiple = false, isShortPhraseSearchable = true, isWildCardSearchEnabled = true, isSortAllowed = true)
     private String word;
 
     @SearchField(fieldName = SearchFieldNames.DESCRIPTION)
-    @LuceneField(lucenefieldName = LuceneFieldNames.DESCRIPTION, isTokenized = true, isMultiple = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.DESCRIPTION, isTokenized = true, isMultiple = false, isSortAllowed = true)
     private String description;
 
     @SearchField(fieldName = SearchFieldNames.POS)
-    @LuceneField(lucenefieldName = LuceneFieldNames.POS, isTokenized = true, isMultiple = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.POS, isTokenized = true, isMultiple = false, isSortAllowed = true)
     private String pos;
 
     @SearchField(fieldName = SearchFieldNames.CONCEPT_LIST)
-    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isTokenized = false, isMultiple = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isTokenized = false, isMultiple = false, isSortAllowed = true)
     private String conceptList;
 
     @SearchField(fieldName = SearchFieldNames.TYPE_ID)
-    @LuceneField(lucenefieldName = LuceneFieldNames.TYPE_ID, isTokenized = false, isMultiple = false)
+    @LuceneField(lucenefieldName = LuceneFieldNames.TYPE_ID, isTokenized = false, isMultiple = false, isSortAllowed = true)
     private String typeId;
 
     @SearchField(fieldName = SearchFieldNames.EQUAL_TO)

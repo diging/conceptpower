@@ -59,6 +59,10 @@ public class WordNetManager {
 	}
     
     public ConceptEntry getConcept(String id) {
+        
+        if (id == null || id.equals("null")) {
+            return null;
+        }
 
         IWordID wordId = null;
         try {

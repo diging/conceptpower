@@ -37,7 +37,7 @@
     });
 </script>
 
-<h1>Concept list</h1>
+<h1>Concept list: ${listid} </h1>
 <p>Here you find all stored concept list in the selected concept
     list.</p>
 

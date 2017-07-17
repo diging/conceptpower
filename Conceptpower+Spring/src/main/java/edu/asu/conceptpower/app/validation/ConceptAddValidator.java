@@ -7,6 +7,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import edu.asu.conceptpower.app.profile.impl.ServiceBackBean;
+import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.web.backing.ConceptAddBean;
 
 @Component
@@ -14,7 +15,8 @@ public class ConceptAddValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> arg0) {
-        return arg0.isAssignableFrom(ConceptAddBean.class) || arg0.isAssignableFrom(ServiceBackBean.class);
+        return arg0.isAssignableFrom(ConceptAddBean.class) || arg0.isAssignableFrom(ServiceBackBean.class)
+                || arg0.isAssignableFrom(ConceptEntry.class);
     }
 
     @Override
