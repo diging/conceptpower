@@ -50,6 +50,8 @@ public class Concepts {
     @Autowired
     private URIHelper uriHelper;
 
+    private JSONObject jsonObject;
+
     private static final Logger logger = LoggerFactory.getLogger(Concepts.class);
 
     /**
@@ -57,28 +59,28 @@ public class Concepts {
      * based on the request parameter. If the request parameter contains one or
      * more wordnet ids then concept wrapper is created else a new concept is
      * created.
-     * 
+     *
      * Sample input for creating a concept wrapper:
-     * 
-     * { "wordnetIds":
-     * "WID-00450866-N-01-pony-trekking,WID-03981924-N-01-pony_cart",
-     * "synonymids" : "WID-02380464-N-01-polo_pony,WID-04206225-N-03-pony",
-     * "conceptlist" : "FirstList-1", "type" :
-     * "88bea1dc-1443-4296-8315-715c71128b01", "description" : "Description",
-     * "equal_to" : "http://viaf.org/viaf/38882290", "similarTo" :
-     * "http://viaf.org/viaf/43723621" }
-     * 
+     *
+     * {    "wordnetIds":
+     *      "WID-00450866-N-01-pony-trekking,WID-03981924-N-01-pony_cart",
+     *      "synonymids" : "WID-02380464-N-01-polo_pony,WID-04206225-N-03-pony",
+     *      "conceptlist" : "FirstList-1", "type" :
+     *      "88bea1dc-1443-4296-8315-715c71128b01", "description" : "Description",
+     *      "equal_to" : "http://viaf.org/viaf/38882290", "similarTo" :
+     *      "http://viaf.org/viaf/43723621" }
+     *
      * Please note any word or pos passed during concept wrapper creation will
      * be ignored. Word and pos details are fetched from wordnet. In case POS is
      * entered by user, the code validates with the wordnet POS and throws an
      * error if POS is not matching with wordnet
-     * 
+     *
      * Sample input for creating a concept:
-     * 
+     *
      * { "word": "kitty", "pos": "noun", "conceptlist": "mylist", "description":
-     * "Soft kitty, sleepy kitty, little ball of fur.", "type":
-     * "3b755111-545a-4c1c-929c-a2c0d4c3913b" }
-     * 
+     *      "Soft kitty, sleepy kitty, little ball of fur.", "type":
+     *      "3b755111-545a-4c1c-929c-a2c0d4c3913b" }
+     *
      * @param conceptEntryMessage
      * @param principal
      * @return
@@ -96,23 +98,23 @@ public class Concepts {
         JsonValidationResult result = checkConceptEntryMessage(conceptEntryMessage);
 
         if (result.isValid() && conceptEntryMessage.getWordnetId() != null) {
-            result = checkJsonObjectForWrapper(conceptEntryMessage);
+                        result = checkJsonObjectForWrapper(conceptEntryMessage);
         }
 
         if (!result.isValid()) {
             return new ResponseEntity<String>(getObjectMapper().writeValueAsString(result.getMessage()),
-                    HttpStatus.BAD_REQUEST);
+                                        HttpStatus.BAD_REQUEST);
         }
 
         ConceptEntry conceptEntry = createEntry(conceptEntryMessage, principal.getName());
 
         if (conceptEntryMessage.getWordnetId() != null) {
-            result = validatePOS(conceptEntryMessage, conceptEntry);
+                        result = validatePOS(conceptEntryMessage, conceptEntry);
         }
 
         if (!result.isValid()) {
             return new ResponseEntity<String>(getObjectMapper().writeValueAsString(result.getMessage()),
-                    HttpStatus.BAD_REQUEST);
+                                        HttpStatus.BAD_REQUEST);
         }
 
         // check type
@@ -120,8 +122,8 @@ public class Concepts {
         ConceptType type = typeManager.getType(typeId);
         if (type == null) {
             return new ResponseEntity<String>(
-                    getObjectMapper()
-                            .writeValueAsString("The type id you are submitting doesn't " + "match any existing type."),
+                                getObjectMapper()
+                                                .writeValueAsString("The type id you are submitting doesn't " + "match any existing type."),
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -130,86 +132,86 @@ public class Concepts {
         } catch (DictionaryDoesNotExistException e) {
             logger.error("Error creating concept from REST call.", e);
             return new ResponseEntity<String>(
-                    getObjectMapper().writeValueAsString("Specified concept list does not exist in Conceptpower."),
+                                        getObjectMapper().writeValueAsString("Specified concept list does not exist in Conceptpower."),
                     HttpStatus.BAD_REQUEST);
         } catch (DictionaryModifyException e) {
             logger.error("Error creating concept from REST call.", e);
             return new ResponseEntity<String>(
-                    getObjectMapper().writeValueAsString("Specified concept list can't be modified."),
-                    HttpStatus.BAD_REQUEST);
+                                        getObjectMapper().writeValueAsString("Specified concept list can't be modified."),
+                                        HttpStatus.BAD_REQUEST);
         } catch (LuceneException le) {
             logger.error("Error creating concept from REST call.", le);
             return new ResponseEntity<String>(getObjectMapper().writeValueAsString("Concept Cannot be added"),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+                                        HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalAccessException e) {
             logger.error("Error creating concept from REST call.", e);
             return new ResponseEntity<String>(getObjectMapper().writeValueAsString("Illegal Access"),
-                    HttpStatus.BAD_REQUEST);
+                                        HttpStatus.BAD_REQUEST);
         }
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8");
         JsonConceptMessage jsonConceptMessage = new JsonConceptMessage(uriHelper);
-        Map<ConceptEntry, ConceptType> entryTypeMap = new HashMap<>();
-        entryTypeMap.put(conceptEntry, type);
+                Map<ConceptEntry, ConceptType> entryTypeMap = new HashMap<>();
+                entryTypeMap.put(conceptEntry, type);
 
-        return new ResponseEntity<String>(
-                jsonConceptMessage.getAllConceptEntriesAndPaginationDetails(entryTypeMap, null), responseHeaders,
-                HttpStatus.OK);
+                return new ResponseEntity<String>(
+                        jsonConceptMessage.getAllConceptEntriesAndPaginationDetails(entryTypeMap, null), responseHeaders,
+                        HttpStatus.OK);
     }
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/concepts/add", method = RequestMethod.POST)
     public ResponseEntity<String> addConcepts(@RequestBody List<ConceptEntryMessage> conceptEntryMessages,
-            Principal principal)
+                        Principal principal)
             throws IllegalAccessException, LuceneException, IndexerRunningException, JsonProcessingException {
 
         Map<ConceptEntry, ConceptType> entryTypeMap = new HashMap<>();
-        for (ConceptEntryMessage conceptEntryMessage : conceptEntryMessages) {
+                for (ConceptEntryMessage conceptEntryMessage : conceptEntryMessages) {
 
-            JsonValidationResult result = checkConceptEntryMessage(conceptEntryMessage);
-            
-            if (result.isValid() && conceptEntryMessage.getWordnetId() != null) {
-                result = checkJsonObjectForWrapper(conceptEntryMessage);
+                    JsonValidationResult result = checkConceptEntryMessage(conceptEntryMessage);
+
+                    if (result.isValid() && conceptEntryMessage.getWordnetId() != null) {
+                                        result = checkJsonObjectForWrapper(conceptEntryMessage);
             }
 
             if (!result.isValid()) {
                 return new ResponseEntity<String>(getObjectMapper().writeValueAsString(result.getMessage()),
-                        HttpStatus.BAD_REQUEST);
+                                                HttpStatus.BAD_REQUEST);
             }
 
             ConceptEntry conceptEntry = createEntry(conceptEntryMessage, principal.getName());
 
             if (conceptEntryMessage.getWordnetId() != null) {
-                validatePOS(conceptEntryMessage, conceptEntry);
+                                validatePOS(conceptEntryMessage, conceptEntry);
             }
 
             if (!result.isValid()) {
-                // responseObj.put("success", false);
+             // responseObj.put("success", false);
                 continue;
             }
 
             try {
                 ConceptEntry entry = conceptManager.addConceptListEntry(conceptEntry, principal.getName());
-                entryTypeMap.put(entry, typeManager.getType(entry.getTypeId()));
+                                entryTypeMap.put(entry, typeManager.getType(entry.getTypeId()));
             } catch (DictionaryDoesNotExistException e) {
                 logger.error("Error creating concept from REST call.", e);
-                // responseObj.put("success", false);
-                // responseObj.put("error_message", "Specified dictionary does
-                // not exist in Conceptpower.");
+             // responseObj.put("success", false);
+             // responseObj.put("error_message", "Specified dictionary does
+             // not exist in Conceptpower.");
             } catch (DictionaryModifyException e) {
                 logger.error("Error creating concept from REST call.", e);
-                // responseObj.put("success", false);
-                // responseObj.put("error_message", "Specified dictionary can't
-                // be modified.");
+             // responseObj.put("success", false);
+             // responseObj.put("error_message", "Specified dictionary can't
+             // be modified.");
             } catch (LuceneException le) {
                 logger.error("Error creating concept from REST call.", le);
                 return new ResponseEntity<String>(getObjectMapper().writeValueAsString("Concept Cannot be added"),
-                        HttpStatus.INTERNAL_SERVER_ERROR);
+                                                HttpStatus.INTERNAL_SERVER_ERROR);
             } catch (IllegalAccessException e) {
                 logger.error("Error creating concept from REST call.", e);
                 return new ResponseEntity<String>(getObjectMapper().writeValueAsString("Illegal Access"),
-                        HttpStatus.BAD_REQUEST);
+                                                HttpStatus.BAD_REQUEST);
             }
         }
 
@@ -264,7 +266,7 @@ public class Concepts {
             List<String> wordnetIdsList = Arrays
                     .asList(conceptEntryMessage.getWordnetId().split("\\s*" + Constants.CONCEPT_SEPARATOR + "\\s*"));
             for (String wordNetId : wordnetIdsList) {
-                try{ 
+                try{
                     WordID.parseWordID(wordNetId);
                 } catch (IllegalArgumentException ex) {
                     return new JsonValidationResult(
@@ -302,8 +304,8 @@ public class Concepts {
     private ConceptEntry createEntry(ConceptEntryMessage conceptEntryMessage, String username) {
         ConceptEntry conceptEntry = new ConceptEntry();
         if (conceptEntryMessage.getWordnetId() != null) {
-            conceptEntry.setWordnetId(conceptEntryMessage.getWordnetId());
-            String[] wrappers = conceptEntryMessage.getWordnetId().split(Constants.CONCEPT_SEPARATOR);
+           conceptEntry.setWordnetId(conceptEntryMessage.getWordnetId());
+           String[] wrappers = conceptEntryMessage.getWordnetId().split(Constants.CONCEPT_SEPARATOR);
             if (wrappers.length > 0) {
                 ConceptEntry existingConceptEntry = conceptManager.getConceptEntry(wrappers[0]);
                 conceptEntry.setWord(existingConceptEntry.getWord().replace("_", " "));
@@ -316,19 +318,18 @@ public class Concepts {
         conceptEntry.setConceptList(conceptEntryMessage.getConceptList());
         conceptEntry.setCreatorId(username);
         conceptEntry
-                .setSynonymIds(conceptEntryMessage.getSynonymIds() != null ? conceptEntryMessage.getSynonymIds() : "");
-        conceptEntry.setDescription(conceptEntry.getDescription() != null ? conceptEntry.getDescription() : "");
-        conceptEntry.setEqualTo(conceptEntryMessage.getEqualTo() != null ? conceptEntryMessage.getEqualTo() : "");
-        conceptEntry.setSimilarTo(conceptEntryMessage.getSimilarTo() != null ? conceptEntryMessage.getSimilarTo() : "");
-        conceptEntry.setTypeId(conceptEntryMessage.getType().getTypeId());
+                        .setSynonymIds(conceptEntryMessage.getSynonymIds() != null ? conceptEntryMessage.getSynonymIds() : "");
+                conceptEntry.setDescription(conceptEntry.getDescription() != null ? conceptEntry.getDescription() : "");
+                conceptEntry.setEqualTo(conceptEntryMessage.getEqualTo() != null ? conceptEntryMessage.getEqualTo() : "");
+                conceptEntry.setSimilarTo(conceptEntryMessage.getSimilarTo() != null ? conceptEntryMessage.getSimilarTo() : "");
+                conceptEntry.setTypeId(conceptEntryMessage.getType().getTypeId());
 
         return conceptEntry;
     }
 
     private ObjectMapper getObjectMapper() {
-        return new ObjectMapper();
-    }
-
+                return new ObjectMapper();
+            }
     class JsonValidationResult {
         private String message;
         private JSONObject jsonObject;
@@ -363,6 +364,5 @@ public class Concepts {
         public void setValid(boolean valid) {
             this.valid = valid;
         }
-
     }
 }
