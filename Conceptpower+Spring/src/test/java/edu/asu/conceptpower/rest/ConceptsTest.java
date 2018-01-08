@@ -29,6 +29,7 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.json.ConceptEntryMessage;
 import junit.framework.Assert;
 
+@SuppressWarnings("deprecation")
 public class ConceptsTest {
 
     @Mock
@@ -215,7 +216,7 @@ public class ConceptsTest {
         type.setTypeId(typeId);
         type.setTypeName("Type-Name");
         type.setDescription("Type Description");
-
+  
         Mockito.when(typeManager.getType(typeId)).thenReturn(type);
         Mockito.doThrow(new IllegalAccessException()).when(conceptManager)
                 .addConceptListEntry(Mockito.isA(ConceptEntry.class), Mockito.eq(principal.getName()));
@@ -343,6 +344,7 @@ public class ConceptsTest {
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void test_addConcepts_successInJsonWithMultipleTypes()
             throws IllegalAccessException, LuceneException, IndexerRunningException, DictionaryDoesNotExistException,
