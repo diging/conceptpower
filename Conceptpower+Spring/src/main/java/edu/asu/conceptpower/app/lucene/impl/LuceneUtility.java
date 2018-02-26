@@ -622,7 +622,9 @@ public class LuceneUtility implements ILuceneUtility {
 
     private void buildTokenizedOrWildCardQuery(LuceneField luceneFieldAnnotation, String searchString,
             BooleanQuery.Builder tokenizedQueryBuilder) {
-        for (String searchValue : searchString.split(" ")) {
+        String hypSearchStr = new String(searchString);
+        hypSearchStr = searchString.replace('-', ' ');
+        for (String searchValue : hypSearchStr.split(" ")) {
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchValue, tokenizedQueryBuilder, Occur.MUST);
             } else {
