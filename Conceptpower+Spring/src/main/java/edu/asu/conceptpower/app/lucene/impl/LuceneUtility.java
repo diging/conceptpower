@@ -622,15 +622,19 @@ public class LuceneUtility implements ILuceneUtility {
 
     private void buildTokenizedOrWildCardQuery(LuceneField luceneFieldAnnotation, String searchString,
             BooleanQuery.Builder tokenizedQueryBuilder) {
-        for (String searchValue : searchString.split(" ")) {
+        String hypSearchStr = new String(searchString);
+        hypSearchStr = searchString.replace('-', ' ');
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
+                for (String searchValue : hypSearchStr.split(" ")) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchValue, tokenizedQueryBuilder, Occur.MUST);
+                }
             } else {
+                for (String searchValue : hypSearchStr.split(" ")) {
                 tokenizedQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchValue),
                         Occur.MUST);
+                }
             }
         }
-    }
 
     /**
      * This method adds the wild card query to the query builder when the
