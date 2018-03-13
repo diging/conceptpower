@@ -148,7 +148,6 @@ public class LuceneUtility implements ILuceneUtility {
     private Directory index;
     private Path relativePath = null;
     private IndexSearcher searcher = null;
-    //CustomAnalyzer customAnalyzer = new CustomAnalyzer(); 
     private Analyzer customAnalyzer() throws IOException{
         return CustomAnalyzer.builder().withTokenizer("standard").addTokenFilter("asciifolding").
                 addTokenFilter("lowercase").build();
@@ -550,8 +549,6 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (search != null) {
                 String searchString = fieldMap.get(search.fieldName());
-                //QueryParser parser = new QueryParser("word",customAnalyzer());
-                //Query q= parser.parse(string);
                 if (searchString != null) {
                     searchString = searchString.toLowerCase();
                     TokenStream normalizedValue = customAnalyzer().tokenStream("fieldName", searchString);
@@ -670,30 +667,6 @@ public class LuceneUtility implements ILuceneUtility {
             }
         }
 
-    /*public class CustomAnalyzer extends Analyzer {
-        public CustomAnalyzer(Version matchVersion) {
-        public TokenStream tokenStream(String searchString, Reader reader) {
-            TokenStream result = new StandardTokenizer();
-            ((Tokenizer) result).setReader(new StringReader(searchString));
-            result = new StandardFilter(result);
-            result = new LowerCaseFilter(result);
-            result = new ASCIIFoldingFilter(result);
-            System.out.println("the result is " + result);
-            return result;
-          }
-
-        @Override
-        protected TokenStreamComponents createComponents(String fieldName) {
-            final Tokenizer source = new StandardTokenizer(matchVersion, reader);
-
-            TokenStream tokenStream = source;
-            tokenStream = new StandardFilter(matchVersion, tokenStream);
-            tokenStream = new LowerCaseFilter(tokenStream);
-            tokenStream = new StopFilter(matchVersion, tokenStream, getStopwordSet());
-            tokenStream = new ASCIIFoldingFilter(tokenStream);
-            return new TokenStreamComponents(source, tokenStream);
-        }
-    }*/
 
     /**
      * This method adds the wild card query to the query builder when the
@@ -707,14 +680,6 @@ public class LuceneUtility implements ILuceneUtility {
     private void createWildCardSearchQuery(LuceneField luceneFieldAnnotation, String searchString,
             BooleanQuery.Builder queryBuilder, Occur occur) {
         if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
-            /*StringBuilder sb = new StringBuilder(searchString.length());
-            String str;
-            searchString = Normalizer.normalize(searchString, Normalizer.Form.NFD);
-            for (char c : searchString.toCharArray()) {
-                if (c <= '\u007F') sb.append(c);
-            }
-            str = sb.toString();
-            System.out.println("The normalized search string is: "+ str);*/
             Term t = new Term(luceneFieldAnnotation.lucenefieldName(), searchString.toLowerCase());
             WildcardQuery wildCardQuery = new WildcardQuery(t);
             wildCardQuery.setRewriteMethod(MultiTermQuery.SCORING_BOOLEAN_REWRITE);
