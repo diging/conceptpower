@@ -516,7 +516,7 @@ public class LuceneUtility implements ILuceneUtility {
         if (operator == null || operator.equalsIgnoreCase(SearchParamters.OP_AND)) {
             occur = BooleanClause.Occur.MUST;
         }
-        try {
+        
         java.lang.reflect.Field[] fields = ConceptEntry.class.getDeclaredFields();
 
         for (java.lang.reflect.Field field : fields) {
@@ -556,7 +556,7 @@ public class LuceneUtility implements ILuceneUtility {
 
         List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
 
-        
+        try {
             int startIndex = 0;
             int hitsPerPage = 0;
             if (page > 0) {
