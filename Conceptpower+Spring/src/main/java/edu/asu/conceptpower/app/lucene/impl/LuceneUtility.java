@@ -256,7 +256,7 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             field.setAccessible(true);
             if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
-                if (!luceneFieldAnnotation.isMultiple()) {
+                if (luceneFieldAnnotation.isMultiple()) {
                     IndexableField[] indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED);
                     if (indexableFields == null || indexableFields.length == 0) {
                         indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName());
