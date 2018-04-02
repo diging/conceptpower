@@ -16,24 +16,24 @@
 		<deploy.path.dev>conceptpower</deploy.path.dev>
 		<deploy.path.test>conceptpower-test</deploy.path.test>
 		<deploy.path.prod>conceptpower</deploy.path.prod>
-		<db.files.path>/Users/jdamerow/Software/Conceptpower/db_files</db.files.path>
+		<db.files.path>/Users/skistams/Documents/testdatabase</db.files.path>
 		<email.username></email.username>
 		<email.password></email.password>
-		<email.server.port></email.server.port>
+		<email.server.port>8081</email.server.port>
 		<email.server.host></email.server.host>
 		<email.from></email.from>
 		<admin.username>admin</admin.username>
 		<admin.password>admin</admin.password>
 		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
 		<spring-security-version>3.2.8.RELEASE</spring-security-version>
-		<lucene.index>/Users/karthikeyanmohan/Software/Conceptpower/indexFiles</lucene.index>
+		<lucene.index>/Users/skistams/Documents/indexFiles</lucene.index>
 		<pullrequest></pullrequest>
 		<debug_level>debug</debug_level>
 		<skip.integration.tests>false</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
-		<concept.list.url>https://www.dropbox.com/s/48gftjus29qyp2q/conceptLists.db?raw=1</concept.list.url>
-		<concept.types.url>https://www.dropbox.com/s/mla61f63fgfil3y/conceptTypes.db?raw=1</concept.types.url>
-		<users.url>https://www.dropbox.com/s/n0vgpc5ow1xko4v/users.db?raw=1</users.url>
+		<concept.list.url>https://www.dropbox.com/s/r82nymnt2247zz4/conceptLists.db?raw=1</concept.list.url>
+		<concept.types.url>https://www.dropbox.com/s/nwn15s84fzz37s5/conceptTypes.db?raw=1</concept.types.url>
+		<users.url>https://www.dropbox.com/s/p6h3974hmlouq0i/users.db?raw=1</users.url>
 	</properties>
 
 	<repositories>
