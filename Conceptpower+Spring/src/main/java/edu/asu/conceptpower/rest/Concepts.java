@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -167,7 +168,7 @@ public class Concepts {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8");
         
-        return new ResponseEntity<String>(jsonObject.toJSONString(), responseHeaders,
+        return new ResponseEntity<String>(StringEscapeUtils.unescapeJson(jsonObject.toJSONString()), responseHeaders,
                 HttpStatus.OK);
     }
 
@@ -242,7 +243,7 @@ public class Concepts {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8");
         
-        return new ResponseEntity<String>(responseArray.toJSONString(), responseHeaders,
+        return new ResponseEntity<String>(StringEscapeUtils.unescapeJson(responseArray.toJSONString()), responseHeaders,
                 HttpStatus.OK);
     }
 
