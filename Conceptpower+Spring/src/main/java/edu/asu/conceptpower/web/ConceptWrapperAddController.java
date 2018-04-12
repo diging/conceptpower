@@ -91,9 +91,6 @@ public class ConceptWrapperAddController {
         ConceptEntry entry = conceptManager.getWordnetConceptEntry(wrapperId);
         conceptWrapperAddBean.setDescription(entry.getDescription());
         conceptWrapperAddBean.setWord(entry.getWord());
-        /*String word = conceptWrapperAddBean.getWord();
-        ConceptEntry[] entries = null;
-        entries = conceptmanager.getConceptListEntriesForWord(word);*/
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
         return "/auth/conceptlist/addconceptwrapper";
     }
