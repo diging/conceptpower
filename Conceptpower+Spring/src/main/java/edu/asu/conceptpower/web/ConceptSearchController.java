@@ -87,8 +87,6 @@ public class ConceptSearchController {
         if (results.hasErrors()) {
             return "conceptsearch";
         }
-        String str = conceptSearchBean.getWord().trim();
-        conceptSearchBean.setWord(str);
         
         if (conceptIdsToMerge != null) {
             model.addAttribute("conceptIdsToMerge", conceptIdsToMerge);
