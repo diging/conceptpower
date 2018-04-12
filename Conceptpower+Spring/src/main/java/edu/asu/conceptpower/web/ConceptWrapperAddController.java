@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.core.impl.ConceptManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -83,9 +84,16 @@ public class ConceptWrapperAddController {
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
     public String prepareConceptWrapperAdd(@ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean,
-            HttpServletRequest req, ModelMap model) {
+            HttpServletRequest req, ModelMap model) throws LuceneException, IllegalAccessException, IndexerRunningException{
         model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
         model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
+        String wrapperId = conceptWrapperAddBean.getWrapperids();
+        ConceptEntry entry = conceptManager.getWordnetConceptEntry(wrapperId);
+        conceptWrapperAddBean.setDescription(entry.getDescription());
+        conceptWrapperAddBean.setWord(entry.getWord());
+        /*String word = conceptWrapperAddBean.getWord();
+        ConceptEntry[] entries = null;
+        entries = conceptmanager.getConceptListEntriesForWord(word);*/
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
         return "/auth/conceptlist/addconceptwrapper";
     }
