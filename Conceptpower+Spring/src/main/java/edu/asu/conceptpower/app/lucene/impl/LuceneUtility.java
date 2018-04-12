@@ -537,7 +537,7 @@ public class LuceneUtility implements ILuceneUtility {
         
         PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(standardAnalyzer,
                     analyzerPerField);
-        QueryBuilder qBuild = new QueryBuilder(perFieldAnalyzerWrapper);
+        QueryBuilder qBuild = new QueryBuilder(customAnalyzer);
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
 
         for (java.lang.reflect.Field field : fields) {
