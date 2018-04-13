@@ -621,13 +621,12 @@ public class LuceneUtility implements ILuceneUtility {
             }
             builder.add(tokenizedQueryBuilder.build(), occur);
 
-        } 
-        else {
+        } else {
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder, occur);
             }
             builder.add(new BooleanClause((qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
-        }
+        }        
     }
 
     private void buildTokenizedOrWildCardQuery(LuceneField luceneFieldAnnotation, String searchString, QueryBuilder qBuild,
