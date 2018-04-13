@@ -535,9 +535,8 @@ public class LuceneUtility implements ILuceneUtility {
         }
 
         
-        PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(standardAnalyzer,
-                    analyzerPerField);
-        QueryBuilder qBuild = new QueryBuilder(customAnalyzer);
+        PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(customAnalyzer, analyzerPerField);
+        QueryBuilder qBuild = new QueryBuilder(perFieldAnalyzerWrapper);
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
 
         for (java.lang.reflect.Field field : fields) {
@@ -616,21 +615,18 @@ public class LuceneUtility implements ILuceneUtility {
                 rootQueryBuilder.add(tokenizedQueryBuilder.build(), Occur.SHOULD);
                 // Short word searching
                 BooleanQuery.Builder shortWordSearchQueryBuilder = new BooleanQuery.Builder();
-                shortWordSearchQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
-                        searchString),
-                Occur.SHOULD);
-
+                shortWordSearchQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX, searchString), Occur.SHOULD);
                 rootQueryBuilder.add(shortWordSearchQueryBuilder.build(), Occur.SHOULD);
                 tokenizedQueryBuilder = rootQueryBuilder;
             }
             builder.add(tokenizedQueryBuilder.build(), occur);
 
-        } else {
+        } 
+        else {
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder, occur);
             }
-                builder.add(new BooleanClause(
-                        (qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
+            builder.add(new BooleanClause((qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
         }
     }
 
