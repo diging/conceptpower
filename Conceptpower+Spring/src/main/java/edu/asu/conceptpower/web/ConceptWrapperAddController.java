@@ -83,14 +83,16 @@ public class ConceptWrapperAddController {
      *         page
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
-    public String prepareConceptWrapperAdd(@ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean,
+    public String prepareConceptWrapperAdd(@RequestParam(value = "wrapperId", required = false) String wrapperId, @ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean,
             HttpServletRequest req, ModelMap model) throws LuceneException, IllegalAccessException, IndexerRunningException{
         model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
         model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
-        String wrapperId = conceptWrapperAddBean.getWrapperids();
+        //String wrapperId = conceptWrapperAddBean.getWrapperids();
         ConceptEntry entry = conceptManager.getWordnetConceptEntry(wrapperId);
         conceptWrapperAddBean.setDescription(entry.getDescription());
         conceptWrapperAddBean.setWord(entry.getWord());
+        conceptWrapperAddBean.setSelectedConceptList(entry.getConceptList());
+        conceptWrapperAddBean.setPos(entry.getPos());
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
         return "/auth/conceptlist/addconceptwrapper";
     }
