@@ -146,7 +146,8 @@ public class LuceneUtility implements ILuceneUtility {
     private Path relativePath = null;
     private IndexSearcher searcher = null;
     private Analyzer customAnalyzer = null;
-            
+    private Analyzer customAnalyzer2 = null;    
+    private PerFieldAnalyzerWrapper bothCustomAnalyzers = null;
     /**
      * 
      * @throws LuceneException
@@ -157,11 +158,15 @@ public class LuceneUtility implements ILuceneUtility {
                 addTokenFilter("lowercase").build();
         lucenePath = env.getProperty("lucenePath");
         numberOfResults = Integer.parseInt(env.getProperty("numberOfLuceneResults"));
+        customAnalyzer2 = CustomAnalyzer.builder().withTokenizer("keyword").addTokenFilter("lowercase").build();
+        Map<String, Analyzer> perFieldAnalyzer = new HashMap<>();
+        perFieldAnalyzer.put("wordtest", customAnalyzer2);
+        bothCustomAnalyzers = new PerFieldAnalyzerWrapper(customAnalyzer, perFieldAnalyzer);
         try {
             relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
              
             index = FSDirectory.open(relativePath);
-            configWhiteSpace = new IndexWriterConfig(customAnalyzer);
+            configWhiteSpace = new IndexWriterConfig(bothCustomAnalyzers);
             writer = new IndexWriter(index, configWhiteSpace);
             reader = DirectoryReader.open(writer, true);
             searcher = new IndexSearcher(reader);
@@ -232,6 +237,8 @@ public class LuceneUtility implements ILuceneUtility {
                     }
 
                     if (searchFieldAnnotation.isShortPhraseSearchable()) {
+                        doc.add(new TextField(searchFieldAnnotation.lucenefieldName() + "test",
+                                contentOfField.toLowerCase(), Field.Store.YES));
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
                                 contentOfField.toLowerCase(), Field.Store.YES));
                         doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX + LuceneFieldNames.NOT_LOWERCASED,
@@ -351,6 +358,7 @@ public class LuceneUtility implements ILuceneUtility {
         Document doc = new Document();
         String lemma = wordId.getLemma().replace("_", " ");
         doc.add(new TextField(LuceneFieldNames.WORD, lemma.toLowerCase(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.WORD + "test", lemma.toLowerCase(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.WORD + LuceneFieldNames.UNTOKENIZED_SUFFIX, lemma, Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.WORD + LuceneFieldNames.NOT_LOWERCASED, lemma, Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString().toLowerCase(), Field.Store.YES));
@@ -527,7 +535,7 @@ public class LuceneUtility implements ILuceneUtility {
                     // need exact matches and not all the nearest matches.
                     analyzerPerField.put(luceneFieldAnnotation.lucenefieldName(), whiteSpaceAnalyzer);
                 } if(luceneFieldAnnotation.isShortPhraseSearchable()) {
-                    analyzerPerField.put(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
+                    analyzerPerField.put(luceneFieldAnnotation.lucenefieldName() + "test",
                             keywordAnalyzer);
                 }
             }
@@ -653,13 +661,22 @@ public class LuceneUtility implements ILuceneUtility {
      * @param searchString
      * @param queryBuilder
      */
-    private void createWildCardSearchQuery(LuceneField luceneFieldAnnotation, String searchString,
+    private void createWildCardSearchQuery(LuceneField luceneFieldAnnotation, String searchString, 
             BooleanQuery.Builder queryBuilder, Occur occur) {
         if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
             Term t = new Term(luceneFieldAnnotation.lucenefieldName(), searchString.toLowerCase());
             WildcardQuery wildCardQuery = new WildcardQuery(t);
             wildCardQuery.setRewriteMethod(MultiTermQuery.SCORING_BOOLEAN_REWRITE);
-            queryBuilder.add(wildCardQuery, occur);
+            
+            QueryBuilder wildCardQueryBuilder = new QueryBuilder(customAnalyzer2);
+            BooleanQuery.Builder wildCardBooleanBuilder = new BooleanQuery.Builder();
+            wildCardBooleanBuilder.add(new BooleanClause(
+                    (wildCardQueryBuilder.createPhraseQuery(luceneFieldAnnotation.lucenefieldName() + "test", searchString.toLowerCase())), Occur.SHOULD));
+            queryBuilder.add(wildCardBooleanBuilder.build(), Occur.SHOULD);
+            Term t2 = new Term(luceneFieldAnnotation.lucenefieldName() + "test", searchString.toLowerCase());
+            WildcardQuery wildCardQuery2 = new WildcardQuery(t2);
+            wildCardQuery2.setRewriteMethod(MultiTermQuery.SCORING_BOOLEAN_REWRITE);
+            queryBuilder.add(wildCardQuery2, occur);
         }
     }
 
