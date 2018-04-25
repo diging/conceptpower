@@ -84,10 +84,15 @@ public class ConceptWrapperAddController {
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
     public String prepareConceptWrapperAdd(@RequestParam(value = "wrapperId", required = false) String wrapperId,
-            HttpServletRequest req, ModelMap model) throws LuceneException{
+            HttpServletRequest req, ModelMap model){
         model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
         model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
-        ConceptEntry entry = conceptManager.getWordnetConceptEntry(wrapperId);
+        ConceptEntry entry = null;
+        try {
+            entry = conceptManager.getWordnetConceptEntry(wrapperId);
+        } catch (LuceneException e) {
+            e.printStackTrace();
+        }
         ConceptWrapperAddBean conceptWrapperAddBean = new ConceptWrapperAddBean();
         conceptWrapperAddBean.setDescription(entry.getDescription());
         conceptWrapperAddBean.setWord(entry.getWord());
