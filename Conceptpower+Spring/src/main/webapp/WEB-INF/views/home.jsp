@@ -205,8 +205,8 @@ function prepareMergeConcept(conceptId) {
     }
 }
 
-var createWrapper = function(word, pos, conceptList, description, conceptType, wrapperId) {
-  window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + word + '&selectedConceptList=' + conceptList + '&description=' + description + '&selectedType=' + conceptType + '&wrapperids=' + wrapperId;
+function createWrapper(wrapperId) {
+  window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
 
 </script>
@@ -324,7 +324,7 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
                   </a>
                 </c:when>
                 <c:otherwise>
-                  <a href="#" onclick="createWrapper('${concept.entry.word}', '${concept.entry.pos}', '${concept.entry.conceptList}', '${concept.entry.description}', '${concept.entry.typeId}', '${concept.entry.id}');">
+                  <a href="#" onclick="createWrapper('${concept.entry.id}');">
                     <i title='Create wrapper' class="fa fa-pencil-square-o"></i>
                   </a>
                 </c:otherwise>
