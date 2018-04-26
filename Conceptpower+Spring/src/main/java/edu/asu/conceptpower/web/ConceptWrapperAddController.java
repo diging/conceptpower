@@ -99,6 +99,7 @@ public class ConceptWrapperAddController {
         conceptWrapperAddBean.setWord(entry.getWord());
         conceptWrapperAddBean.setSelectedConceptList(entry.getConceptList());
         conceptWrapperAddBean.setPos(entry.getPos());
+        conceptWrapperAddBean.setWrapperids(wrapperId);
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
         return "/auth/conceptlist/addconceptwrapper";
     }
