@@ -90,8 +90,9 @@ public class ConceptWrapperAddController {
         ConceptEntry entry = null;
         try {
             entry = conceptManager.getWordnetConceptEntry(wrapperId);
-        } catch (LuceneException e) {
-            e.printStackTrace();
+        } catch (LuceneException ex) {
+            logger.error("Error while fetching concepts based on concept id", ex);
+            return "/auth/conceptlist/addconceptwrapper";
         }
         ConceptWrapperAddBean conceptWrapperAddBean = new ConceptWrapperAddBean();
         conceptWrapperAddBean.setDescription(entry.getDescription());
