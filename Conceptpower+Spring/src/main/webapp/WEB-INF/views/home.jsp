@@ -86,6 +86,7 @@ $(document).ready(function() {
 						$("#detailscreator").text(details.creator);
 						$("#detailsdescription").html(details.description);
 
+
             if(details.mergedIds) {
               $.ajax({
                 url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
@@ -307,8 +308,9 @@ function createWrapper(wrapperId) {
         <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
         <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
         <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'review', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Review  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-      
+      	<th>Needs Review</th><td><input type="checkbox" name="selected" value=""></td>
+      	<th>Review Status</th></td>
+      	
       </tr>
     </thead>
     <tbody>
@@ -374,6 +376,9 @@ function createWrapper(wrapperId) {
           </td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
+          <td><input type="checkbox" name="choice" value="whatever"  onclick="doSomething('${row.index}')" >${reg.someProperty}</td>
+           <td align="justify"><font size="2"><c:out
+                value="something"></c:out></font></td>
         </tr>
       </c:forEach>
     </tbody>
