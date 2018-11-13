@@ -216,6 +216,13 @@ function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
 
+function populateValues() {
+		$("#reviewform input[name=comments]").val('Hello World!');
+		$("#reviewform input[name=resolver]").val('Hello World!');
+		$("#reviewform input[name=concept_link]").val('Hello World!');
+		$("#reviewform input[name=comments]").val('Hello World!');
+}
+
 </script>
 
 <header class="page-header">
@@ -380,7 +387,7 @@ function createWrapper(wrapperId) {
           </td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
-          <td><button type="button" style="height:35px; width:50px" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Review</button></td>
+          <td><button type="button" style="height:35px; width:50px" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" onclick="populateValues()">Review</button></td>
         </tr>
       </c:forEach>
     </tbody>
@@ -482,12 +489,13 @@ function createWrapper(wrapperId) {
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Details</h4>
         </div>
+	<form action="" method ="post" id="reviewform" name ="reviewform" >
         <div class="modal-body">
           <p><p>Please fill in the details.</p>
     <hr>
 
     <label for="comment"><b>Comments   : </b></label>
-    <input type="text" placeholder="Enter Comments" name="comment" required>
+    <input type="text" placeholder="Enter Comments" name="comments" id="comments" required>
 	<br>
 	
 	 <label for="statuslabel"><b>Status  : </b></label>
@@ -499,7 +507,9 @@ function createWrapper(wrapperId) {
 
 	<br>
     <label for="requester"><b>Requester   : </b></label>
-    <input type="text" placeholder="Enter requester" name="requester" required>
+    <sec:authorize access="isAuthenticated()">
+    <input type="text" value="<sec:authentication property="principal.username" />" name="requester"  disabled="disabled" >
+    </sec:authorize>
 
 	<br>
     <label for="resolver"><b>Resolver    : </b></label>
@@ -510,6 +520,7 @@ function createWrapper(wrapperId) {
     <input type="text" placeholder="Enter concept link" name="concept_link" required>
     <hr>
         </div>
+	</form>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Submit</button>
         </div>
