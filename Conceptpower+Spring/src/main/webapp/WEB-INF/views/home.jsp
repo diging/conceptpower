@@ -486,28 +486,28 @@ function createWrapper(wrapperId) {
           <p><p>Please fill in the details.</p>
     <hr>
 
-    <label for="comment"><b>Comments</b></label>
+    <label for="comment"><b>Comments   : </b></label>
     <input type="text" placeholder="Enter Comments" name="comment" required>
 	<br>
 	
-	 <label for="statuslabel"><b>Status</b></label>
+	 <label for="statuslabel"><b>Status  : </b></label>
 	<select name="status">
   		<option value="open">Open</option>
   		<option value="resolved">Resolved</option>
   		<option value="rejected">Rejected</option>
-	</select></p>
+	</select>
 
 	<br>
-    <label for="requester"><b>Requester</b></label>
+    <label for="requester"><b>Requester   : </b></label>
     <input type="text" placeholder="Enter requester" name="requester" required>
 
 	<br>
-    <label for="resolver"><b>Resolver</b></label>
-    <input type="resolver" placeholder="Enter resolver" name="resolver" required>
+    <label for="resolver"><b>Resolver    : </b></label>
+    <input type="text" placeholder="Enter resolver" name="resolver" required>
     
     <br>
-    <label for="concept_link"><b>Concept Link</b></label>
-    <input type="concept_link" placeholder="Enter concept link" name="concept_link" required>
+    <label for="concept_link"><b>Concept Link    : </b></label>
+    <input type="text" placeholder="Enter concept link" name="concept_link" required>
     <hr>
         </div>
         <div class="modal-footer">
