@@ -391,22 +391,24 @@ function hideForm(){
   <style>
 div.floatingform {
     position: absolute;
-    left: 1700px;
-    top: 219px;
+    left: 1725px;
+    top: 200px;
 }
 </style>
-<form:form action="${pageContext.servletContext.contextPath}/home/addComment" method="post" modelAttribute="ReviewRequest">
- <div class="floatingform">
-    <span id="loginForm">        
-        <span class="form-elements">
-            <span class="form-label">Comments:</span>
-           		 <span class="form-field"><textarea name="comment" rows="4" cols="30"></textarea></span>                        
-            </span>         
-        	<span class="form-elements">
-            	<span class="submit-btn"><input type="submit" value="Submit" /></span>     
-       		 </span>
-    </span>          
-</div>
+<form:form action="${pageContext.servletContext.contextPath}/addComment" method="post" modelAttribute="reviewrequest">
+ 
+<div class="floatingform">
+  <div id="loginForm" >
+    <div class="form-label"><b>Comments</b></div>
+    <div class="form-field">
+        <!--    <input type="text" id="comment" path="comment"/>-->
+      <form:textarea name="comment" rows="4" cols="30" placeholder="Enter Comments"  path="comment"/>
+    </div>
+    <div class="form-elements">
+            	<div class="submit-btn"><input type="submit" value="Submit" /></div>     
+       		 </div>
+   </div>
+  </div>
 </form:form>
   <nav aria-label="Page navigation">
       <ul class="pagination">
