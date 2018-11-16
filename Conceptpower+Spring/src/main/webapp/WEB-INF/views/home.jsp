@@ -5,13 +5,8 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page session="false"%>
-<!--  <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head> -->
+
+
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
@@ -216,11 +211,12 @@ function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
 
-function populateValues() {
-		$("#reviewform input[name=comments]").val('Hello World!');
-		$("#reviewform input[name=resolver]").val('Hello World!');
-		$("#reviewform input[name=concept_link]").val('Hello World!');
-		$("#reviewform input[name=comments]").val('Hello World!');
+function showForm(){
+    document.getElementById('loginForm').style.display = "block";
+}
+
+function hideForm(){
+    document.getElementById('loginForm').style.display = "none";
 }
 
 </script>
@@ -321,7 +317,7 @@ function populateValues() {
         <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
         <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
         <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-      	<th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Review Status  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+      	<th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'reviewStatus', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Review Status  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
       </tr>
     </thead>
     <tbody>
@@ -387,12 +383,31 @@ function populateValues() {
           </td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
-          <td><button type="button" style="height:35px; width:50px" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" onclick="populateValues()">Review</button></td>
+         <td onclick="hideForm();"><div class="fa fa-filter" onmouseover="showForm();" ></div></td> 
         </tr>
       </c:forEach>
     </tbody>
   </table>
-
+  <style>
+div.floatingform {
+    position: absolute;
+    left: 1700px;
+    top: 219px;
+}
+</style>
+<form:form action="${pageContext.servletContext.contextPath}/home/addComment" method="post" modelAttribute="ReviewRequest">
+ <div class="floatingform">
+    <span id="loginForm">        
+        <span class="form-elements">
+            <span class="form-label">Comments:</span>
+           		 <span class="form-field"><textarea name="comment" rows="4" cols="30"></textarea></span>                        
+            </span>         
+        	<span class="form-elements">
+            	<span class="submit-btn"><input type="submit" value="Submit" /></span>     
+       		 </span>
+    </span>          
+</div>
+</form:form>
   <nav aria-label="Page navigation">
       <ul class="pagination">
         <li <c:if test="${page == 1}">class="disabled"</c:if>>
@@ -478,55 +493,3 @@ function populateValues() {
   </div>
   </div>
   
-  <div class="container">
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Details</h4>
-        </div>
-	<form action="" method ="post" id="reviewform" name ="reviewform" >
-        <div class="modal-body">
-          <p><p>Please fill in the details.</p>
-    <hr>
-
-    <label for="comment"><b>Comments   : </b></label>
-    <input type="text" placeholder="Enter Comments" name="comments" id="comments" required>
-	<br>
-	
-	 <label for="statuslabel"><b>Status  : </b></label>
-	<select name="status">
-  		<option value="open">Open</option>
-  		<option value="resolved">Resolved</option>
-  		<option value="rejected">Rejected</option>
-	</select>
-
-	<br>
-    <label for="requester"><b>Requester   : </b></label>
-    <sec:authorize access="isAuthenticated()">
-    <input type="text" value="<sec:authentication property="principal.username" />" name="requester"  disabled="disabled" >
-    </sec:authorize>
-
-	<br>
-    <label for="resolver"><b>Resolver    : </b></label>
-    <input type="text" placeholder="Enter resolver" name="resolver" required>
-    
-    <br>
-    <label for="concept_link"><b>Concept Link    : </b></label>
-    <input type="text" placeholder="Enter concept link" name="concept_link" required>
-    <hr>
-        </div>
-	</form>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Submit</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-  
-</div>

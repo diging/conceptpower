@@ -4,6 +4,10 @@ public class ReviewRequest {
 
     private String comment;
 
+    public ReviewRequest() {
+
+    }
+
     enum Status {
         Opened, Resolved, Rejected;
     }
