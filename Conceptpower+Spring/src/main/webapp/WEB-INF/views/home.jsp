@@ -389,27 +389,40 @@ function hideForm(){
     </tbody>
   </table>
   <style>
-div.floatingform {
-    position: absolute;
+
+/* div.floatingform {
+    position: relative;
     left: 1725px;
-    top: 200px;
+     top:178px;
+       resize: both;
+    overflow: auto;
+} */
+div.floatingform {
+ position: absolute;
+right: 220px;
+top:190px;
+width:5%;
+margin:0 auto;
+height: auto;
 }
 </style>
-<form:form action="${pageContext.servletContext.contextPath}/addComment" method="post" modelAttribute="reviewrequest">
- 
+<form action="${pageContext.servletContext.contextPath}/addComment" method="POST">
+
 <div class="floatingform">
   <div id="loginForm" >
     <div class="form-label"><b>Comments</b></div>
     <div class="form-field">
         <!--    <input type="text" id="comment" path="comment"/>-->
-      <form:textarea name="comment" rows="4" cols="30" placeholder="Enter Comments"  path="comment"/>
+      <textarea name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
+      <input type="hidden" name="conceptId" value="xx">
     </div>
     <div class="form-elements">
-            	<div class="submit-btn"><input type="submit" value="Submit" /></div>     
-       		 </div>
+    	<div class="submit-btn"><input type="submit" value="Submit" /></div>     
+	 </div>
    </div>
   </div>
-</form:form>
+</form>
+
   <nav aria-label="Page navigation">
       <ul class="pagination">
         <li <c:if test="${page == 1}">class="disabled"</c:if>>

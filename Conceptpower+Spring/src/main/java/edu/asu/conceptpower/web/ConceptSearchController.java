@@ -60,7 +60,7 @@ public class ConceptSearchController {
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
-        binder.setValidator(validator);
+        binder.setValidator(this.validator);
     }
 
     /**
