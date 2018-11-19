@@ -24,6 +24,7 @@ import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.reflect.SearchField;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.core.ReviewRequest;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
 @Component
@@ -412,6 +413,19 @@ public class DatabaseClient implements IConceptDBManager {
             toBeUpdated.setConceptListName(list.getConceptListName());
             toBeUpdated.setDescription(list.getDescription());
             dictionaryClient.store(list);
+            dictionaryClient.commit();
+        }
+    }
+    
+    
+    
+    public void deleteComment(String conceptId) {
+        ReviewRequest newRequest = new ReviewRequest();
+        newRequest.setConceptLink(conceptId);
+
+        ObjectSet<ReviewRequest> results = dictionaryClient.queryByExample(newRequest);
+        for (ReviewRequest res : results) {
+            dictionaryClient.delete(res);
             dictionaryClient.commit();
         }
     }
