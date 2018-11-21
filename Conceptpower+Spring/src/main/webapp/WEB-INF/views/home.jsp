@@ -419,7 +419,7 @@ height: auto;
 <form action="${pageContext.servletContext.contextPath}/addComment" method="POST">
 
 <div class="floatingform">
-  <div id="loginForm" style="display: none;" >
+  <div id="loginForm" >
     <div class="form-label"><b>Comments</b></div>
     <div class="form-field">
         <!--    <input type="text" id="comment" path="comment"/>-->
