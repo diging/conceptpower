@@ -3,18 +3,21 @@ package edu.asu.conceptpower.core;
 public class ReviewRequest {
 
     private String comment;
-
-    public ReviewRequest() {
-
-    }
-
-    enum Status {
-        Opened, Resolved, Rejected;
-    }
-
     private String requester;
     private String resolver;
     private String conceptLink;
+    private String status;
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public ReviewRequest() {
+    }
 
     public String getComment() {
         return comment;

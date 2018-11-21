@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.conceptpower.app.core.impl.CommentsManager;
+
 @Controller
 public class ReviewRequestController {
  
@@ -16,6 +18,13 @@ public class ReviewRequestController {
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
     public ResponseEntity<String> addNewComment(@RequestParam("comment") String comment, @RequestParam("conceptId") String conceptId, Principal principal) {
         // store new comment here
+        
+        CommentsManager commentsObj=new  CommentsManager();
+        String requester="";
+        String resolver="";
+        String status="";
+        commentsObj.addComment(comment, conceptId, requester, resolver, status);
+        
        return new ResponseEntity<String>(HttpStatus.OK);
     }
   

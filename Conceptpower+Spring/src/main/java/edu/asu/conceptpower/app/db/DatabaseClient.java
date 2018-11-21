@@ -419,6 +419,9 @@ public class DatabaseClient implements IConceptDBManager {
     
     
     
+    /* (non-Javadoc)
+     * @see edu.asu.conceptpower.app.db4o.IConceptDBManager#deleteComment(java.lang.String)
+     */
     public void deleteComment(String conceptId) {
         ReviewRequest newRequest = new ReviewRequest();
         newRequest.setConceptLink(conceptId);
