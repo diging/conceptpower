@@ -7,5 +7,5 @@ public interface DBNames {
 	public final String DICTIONARY_DB = "dictionary";
 	public final String TYPES_DB = "types";
 	public final String LUCENE_DETAIL = "lucene";
-	public final String COMMENTS_DB = "comment";
+	public final String COMMENTS_DB = "conceptReview";
 }

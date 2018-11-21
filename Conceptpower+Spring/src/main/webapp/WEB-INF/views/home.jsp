@@ -211,13 +211,23 @@ function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
 
-function showForm(){
-    document.getElementById('loginForm').style.display = "block";
+var formDisplayed=false;
+var concept_id="asd";
+function showForm(conceptId){
+	
+	if (!formDisplayed){
+    	document.getElementById('loginForm').style.display = "none";
+    	formDisplayed=true;
+	}else{
+		document.getElementById('loginForm').style.display = "block";
+		formDisplayed=false;
+	}
+    console.log("##"+conceptId);
+  //  var x = document.getElementById("conceptSearchResult").rows[conceptId.rowIndex].cells[4].innerHTML;
+  //  console.log("##@@"+x);
 }
 
-function hideForm(){
-    document.getElementById('loginForm').style.display = "none";
-}
+
 
 </script>
 
@@ -368,7 +378,7 @@ function hideForm(){
               data-target="#detailsModal"
               data-conceptid="${concept.entry.id}"><c:out
                   value="${concept.entry.word}"></c:out></a></font></td>
-          <td align="justify"><font size="2"><c:out
+          <td align="justify" id="entryId" ><font size="2"><c:out
                 value="${concept.entry.id}"></c:out></font></td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.entry.wordnetId}"></c:out></font></td>
@@ -381,9 +391,9 @@ function hideForm(){
                     <c:out value="${concept.description}" escapeXml="false"></c:out>
                 </div>
           </td>
-          <td align="justify"><font size="2"><c:out
+          <td   align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
-         <td onclick="hideForm();"><div class="fa fa-filter" onmouseover="showForm();" ></div></td> 
+          <td onclick="showForm('${concept.entry.id}')" ><div class="fa fa-filter"></div></td> 
         </tr>
       </c:forEach>
     </tbody>
@@ -409,12 +419,12 @@ height: auto;
 <form action="${pageContext.servletContext.contextPath}/addComment" method="POST">
 
 <div class="floatingform">
-  <div id="loginForm" >
+  <div id="loginForm" style="display: none;" >
     <div class="form-label"><b>Comments</b></div>
     <div class="form-field">
         <!--    <input type="text" id="comment" path="comment"/>-->
       <textarea name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
-      <input type="hidden" name="conceptId" value="xx">
+      <input type="hidden" name="conceptId" value="${concept_id}">
     </div>
     <div class="form-elements">
     	<div class="submit-btn"><input type="submit" value="Submit" /></div>     

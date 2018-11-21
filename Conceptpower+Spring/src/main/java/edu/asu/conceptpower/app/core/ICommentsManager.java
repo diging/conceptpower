@@ -18,22 +18,5 @@ public interface ICommentsManager {
     /**
      * @param conceptLink
      */
-    public abstract void deleteComment(String conceptLink);
-    
-    /**
-     * @return
-     */
-    public abstract List<ReviewRequest> getAllComments();
-    
-    /**
-     * @param conceptId
-     * @return
-     */
-    public abstract ReviewRequest getCommentDetails(String conceptId);
-    
-    /**
-     * @param requestInfo
-     * @param conceptId
-     */
-    public abstract void storeModifiedComments(ReviewRequest requestInfo, String conceptId);
+   
 }

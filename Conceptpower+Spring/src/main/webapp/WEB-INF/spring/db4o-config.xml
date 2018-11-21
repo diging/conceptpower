@@ -21,7 +21,7 @@
 		<property name="databasePath" value="${db.path}/lucene.db" />
 	</bean>
 	
-  <bean id="conceptReviewDatabaseManager" class="edu.asu.conceptpower.app.db.DatabaseManager" init-method="init" destroy-method="close">
+  	<bean id="conceptReviewDatabaseManager" class="edu.asu.conceptpower.app.db.DatabaseManager" init-method="init" destroy-method="close">
 		<property name="databasePath" value="${db.path}/conceptReview.db" />
 	</bean> 
 		
