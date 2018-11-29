@@ -51,6 +51,4 @@ public interface IConceptDBManager {
 
     public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId);
 
-    public abstract void deleteComment(String conceptLink);
-
 }

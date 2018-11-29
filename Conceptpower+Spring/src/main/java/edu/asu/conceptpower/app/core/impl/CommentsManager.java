@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.app.core.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +18,8 @@ import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.app.db4o.DBNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.servlet.core.ChangeEvent;
+import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 
 @Service
 public class CommentsManager implements ICommentsManager{
@@ -26,6 +29,8 @@ public class CommentsManager implements ICommentsManager{
     private DatabaseManager dbManager;
     
     private ObjectContainer client;
+    
+    
 
     @PostConstruct
     public void init() {
@@ -52,8 +57,21 @@ public class CommentsManager implements ICommentsManager{
     /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.ICommentsManager#deleteComment(java.lang.String)
      */
-    public void deleteComment(String conceptLink) {
+    public void deleteComment(ReviewRequest comment, String userName) {
   //      client.deleteComment(conceptLink);
+        
+        if (comment != null) {
+            comment.setDeleted(true);
+            ChangeEvent changeEvent = new ChangeEvent();
+            changeEvent.setType(ChangeEventTypes.DELETION);
+            changeEvent.setDate(new Date());
+            changeEvent.setUserName(userName);
+            comment.addNewChangeEvent(changeEvent);
+       //     client.update(comment, DBNames.DICTIONARY_DB);
+       //     indexService.deleteById(comment.get, userName);
+        }
+        
+       
     }
     
     
@@ -63,17 +81,11 @@ public class CommentsManager implements ICommentsManager{
     /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.ICommentsManager#getCommentDetails(java.lang.String)
      */
-    public ReviewRequest getCommentDetails(String conceptId) {
-        return new ReviewRequest();
+    public void getCommentDetails(String conceptId) {
+      //  client.
     }
     
    
     
-    /* (non-Javadoc)
-     * @see edu.asu.conceptpower.app.core.ICommentsManager#storeModifiedComments(edu.asu.conceptpower.core.ReviewRequest, java.lang.String)
-     */
-    public void storeModifiedComments(ReviewRequest requestInfo, String conceptId) {
-      //  client.update(list, listname, DBNames.DICTIONARY_DB);
-    }
-    
+   
 }

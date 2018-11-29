@@ -2,6 +2,8 @@ package edu.asu.conceptpower.web;
 
 import java.security.Principal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,34 +30,30 @@ public class ReviewRequestController {
     @Autowired
     private ConceptManager conceptMgr;
     
+    private static final Logger logger = LoggerFactory.getLogger(ReviewRequestController.class);
+
+    
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
     public ResponseEntity<String> addNewComment(@RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal) {
-        // store new comment here
         
-      //  String requester="";
         String resolver="";
         String status="Open";
         String conceptId="";
-        System.out.println("###wordNetId--"+wordNetId);
-
-      //  wordNetId="WID-05744010-N-02-rabbit_test";
-        
+     
+       //wordNetId has value stored in <font>wordNetId_Value<font> format.So,extracting the values between font tags.
         wordNetId = wordNetId.substring(wordNetId.indexOf(">") + 1);
         wordNetId = wordNetId.substring(0, wordNetId.indexOf("<"));
         
-        System.out.println("$$$wordNetId--"+wordNetId);
-        
         String requester = usrManager.findUser("admin").getUsername();
-        System.out.println("###requester"+requester);
+       
 
         try {
             conceptId = conceptMgr.getWordnetConceptEntry(wordNetId).getId();
         } catch (LuceneException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Lucene exception", e);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-        System.out.println("###conceptId"+conceptId);
+       
         commentsObj.addComment(comment, conceptId, requester, resolver, status);
         
         
