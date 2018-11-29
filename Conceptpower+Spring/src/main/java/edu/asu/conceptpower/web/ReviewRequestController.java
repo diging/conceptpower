@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.conceptpower.app.core.impl.CommentsManager;
 import edu.asu.conceptpower.app.core.impl.ConceptManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
-import edu.asu.conceptpower.app.users.UsersManager;
 
 @Controller
 public class ReviewRequestController {
@@ -23,9 +22,6 @@ public class ReviewRequestController {
  
     @Autowired
     private CommentsManager commentsObj;
-    
-    @Autowired
-    private UsersManager usrManager;
     
     @Autowired
     private ConceptManager conceptMgr;

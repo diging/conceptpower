@@ -1,25 +1,16 @@
 package edu.asu.conceptpower.app.core.impl;
 
-import java.util.Date;
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import com.db4o.ObjectContainer;
 
 import edu.asu.conceptpower.app.core.ICommentsManager;
-import edu.asu.conceptpower.app.db.DatabaseClient;
 import edu.asu.conceptpower.app.db.DatabaseManager;
-import edu.asu.conceptpower.app.db4o.DBNames;
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.core.ReviewRequest;
-import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 
 @Service
 public class CommentsManager implements ICommentsManager{
@@ -53,39 +44,6 @@ public class CommentsManager implements ICommentsManager{
         client.commit();
        
     }
-    
-    /* (non-Javadoc)
-     * @see edu.asu.conceptpower.app.core.ICommentsManager#deleteComment(java.lang.String)
-     */
-    public void deleteComment(ReviewRequest comment, String userName) {
-  //      client.deleteComment(conceptLink);
-        
-        if (comment != null) {
-            comment.setDeleted(true);
-            ChangeEvent changeEvent = new ChangeEvent();
-            changeEvent.setType(ChangeEventTypes.DELETION);
-            changeEvent.setDate(new Date());
-            changeEvent.setUserName(userName);
-            comment.addNewChangeEvent(changeEvent);
-       //     client.update(comment, DBNames.DICTIONARY_DB);
-       //     indexService.deleteById(comment.get, userName);
-        }
-        
-       
-    }
-    
-    
-
-    
-    
-    /* (non-Javadoc)
-     * @see edu.asu.conceptpower.app.core.ICommentsManager#getCommentDetails(java.lang.String)
-     */
-    public void getCommentDetails(String conceptId) {
-      //  client.
-    }
-    
-   
-    
+     
    
 }
