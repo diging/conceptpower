@@ -420,7 +420,6 @@ margin:0 auto;
 height: auto;
 } </style>
 <form action="${pageContext.servletContext.contextPath}/addComment" method="POST">
-
 <div class="floatingform">
   <div id="loginForm" >
     <div class="form-label"><b>Comments</b></div>
