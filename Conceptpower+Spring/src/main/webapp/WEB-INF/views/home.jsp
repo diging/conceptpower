@@ -212,10 +212,8 @@ function createWrapper(wrapperId) {
 }
 
 var formDisplayed=true;
-var concept_id="asd";
 function showForm(){
 	
-	// console.log('rowNum @@- '+ rowNum);
 	if (!formDisplayed){
     	document.getElementById('loginForm').style.display = "none";
     	formDisplayed=true;
@@ -223,9 +221,7 @@ function showForm(){
 		document.getElementById('loginForm').style.display = "block";
 		formDisplayed=false;
 	}
-  //  console.log("##"+conceptId);
-   //var x = document.getElementById("conceptSearchResult").rows[rowNum].cells[4].innerHTML;
-   //console.log("##@@"+x);
+
 }
 $(document).ready(function() {
 	   $('#loginForm').hide();
@@ -236,14 +232,13 @@ function  getId(element) {
 	rowNum =  element.rowIndex;
     console.log('rowNum - '+ rowNum);
 }
+
 var wordNetId;
 function getWordNetId() {
 	wordNetId = document.getElementById("conceptSearchResult").rows[rowNum].cells[5].innerHTML;
-	console.log("##@@ wordNetId"+ wordNetId);
-	
-	document.getElementById('wordNetId').value = wordNetId;
-	
+	document.getElementById('wordNetId').value = wordNetId;	
 }
+
 </script>
 
 <header class="page-header">
@@ -415,13 +410,7 @@ function getWordNetId() {
   </table>
   <style>
 
-/* div.floatingform {
-    position: relative;
-    left: 1725px;
-     top:178px;
-       resize: both;
-    overflow: auto;
-} */
+
 div.floatingform {
  position: absolute;
 right: 220px;
@@ -429,8 +418,7 @@ top:190px;
 width:5%;
 margin:0 auto;
 height: auto;
-}
-</style>
+} </style>
 <form action="${pageContext.servletContext.contextPath}/addComment" method="POST">
 
 <div class="floatingform">
@@ -442,7 +430,7 @@ height: auto;
       <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
     </div>
     <div class="form-elements">
-    	<div class="submit-btn"><input type="submit" value="Submit"/></div>     
+    	<div class="submit-btn"><input type="submit" value="Submit" /></div>     
 	 </div>
    </div>
   </div>
