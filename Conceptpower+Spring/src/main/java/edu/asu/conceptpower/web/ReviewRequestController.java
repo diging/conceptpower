@@ -39,12 +39,12 @@ public class ReviewRequestController {
         String resolver="";
         String status="Open";
         String conceptId="";
-     
+        
        //wordNetId has value stored in <font>wordNetId_Value<font> format.So,extracting the values between font tags.
         wordNetId = wordNetId.substring(wordNetId.indexOf(">") + 1);
         wordNetId = wordNetId.substring(0, wordNetId.indexOf("<"));
         
-        String requester = usrManager.findUser("admin").getUsername();
+        String requester = principal.getName();
        
 
         try {
@@ -59,6 +59,5 @@ public class ReviewRequestController {
         
        return new ResponseEntity<String>(HttpStatus.OK);
     }
-  
   
 }
