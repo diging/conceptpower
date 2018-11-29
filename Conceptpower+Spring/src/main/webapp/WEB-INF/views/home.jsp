@@ -430,7 +430,7 @@ height: auto;
       <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
     </div>
     <div class="form-elements">
-    	<div class="submit-btn"><input type="submit" value="Submit" /></div>     
+    	<div class="submit-btn"><input type="submit" value="Submit"/></div>     
 	 </div>
    </div>
   </div>
