@@ -211,10 +211,11 @@ function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
 
-var formDisplayed=false;
+var formDisplayed=true;
 var concept_id="asd";
-function showForm(conceptId){
+function showForm(){
 	
+	// console.log('rowNum @@- '+ rowNum);
 	if (!formDisplayed){
     	document.getElementById('loginForm').style.display = "none";
     	formDisplayed=true;
@@ -222,13 +223,27 @@ function showForm(conceptId){
 		document.getElementById('loginForm').style.display = "block";
 		formDisplayed=false;
 	}
-    console.log("##"+conceptId);
-  //  var x = document.getElementById("conceptSearchResult").rows[conceptId.rowIndex].cells[4].innerHTML;
-  //  console.log("##@@"+x);
+  //  console.log("##"+conceptId);
+   //var x = document.getElementById("conceptSearchResult").rows[rowNum].cells[4].innerHTML;
+   //console.log("##@@"+x);
 }
+$(document).ready(function() {
+	   $('#loginForm').hide();
+	});
 
-
-
+var rowNum;
+function  getId(element) {
+	rowNum =  element.rowIndex;
+    console.log('rowNum - '+ rowNum);
+}
+var wordNetId;
+function getWordNetId() {
+	wordNetId = document.getElementById("conceptSearchResult").rows[rowNum].cells[5].innerHTML;
+	console.log("##@@ wordNetId"+ wordNetId);
+	
+	document.getElementById('wordNetId').value = wordNetId;
+	
+}
 </script>
 
 <header class="page-header">
@@ -333,7 +348,7 @@ function showForm(conceptId){
     <tbody>
       <c:forEach var="concept"
         items="${conceptSearchBean.foundConcepts}">
-        <tr class="gradeX" title="${concept.uri}">
+        <tr class="gradeX" title="${concept.uri}" onclick="getId(this);">
           <sec:authorize access="isAuthenticated()">
             <td><c:choose>
                 <c:when
@@ -393,7 +408,7 @@ function showForm(conceptId){
           </td>
           <td   align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
-          <td onclick="showForm('${concept.entry.id}')" ><div class="fa fa-filter"></div></td> 
+          <td onclick="showForm()" ><div class="fa fa-filter"></div></td> 
         </tr>
       </c:forEach>
     </tbody>
@@ -423,11 +438,11 @@ height: auto;
     <div class="form-label"><b>Comments</b></div>
     <div class="form-field">
         <!--    <input type="text" id="comment" path="comment"/>-->
-      <textarea name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
-      <input type="hidden" name="conceptId" value="${concept_id}">
+      <textarea onclick="getWordNetId();" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
+      <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
     </div>
     <div class="form-elements">
-    	<div class="submit-btn"><input type="submit" value="Submit" /></div>     
+    	<div class="submit-btn"><input type="submit" value="Submit"/></div>     
 	 </div>
    </div>
   </div>
