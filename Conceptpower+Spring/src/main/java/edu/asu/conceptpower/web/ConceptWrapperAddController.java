@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.core.impl.ConceptManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -82,10 +83,23 @@ public class ConceptWrapperAddController {
      *         page
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
-    public String prepareConceptWrapperAdd(@ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean,
-            HttpServletRequest req, ModelMap model) {
+    public String prepareConceptWrapperAdd(@RequestParam(value = "wrapperId", required = false) String wrapperId,
+            HttpServletRequest req, ModelMap model){
         model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
         model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
+        ConceptEntry entry = null;
+        try {
+            entry = conceptManager.getWordnetConceptEntry(wrapperId);
+        } catch (LuceneException ex) {
+            logger.error("Error while fetching concepts based on concept id", ex);
+            return "/auth/conceptlist/addconceptwrapper";
+        }
+        ConceptWrapperAddBean conceptWrapperAddBean = new ConceptWrapperAddBean();
+        conceptWrapperAddBean.setDescription(entry.getDescription());
+        conceptWrapperAddBean.setWord(entry.getWord());
+        conceptWrapperAddBean.setSelectedConceptList(entry.getConceptList());
+        conceptWrapperAddBean.setPos(entry.getPos());
+        conceptWrapperAddBean.setWrapperids(wrapperId);
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
         return "/auth/conceptlist/addconceptwrapper";
     }
