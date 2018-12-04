@@ -584,7 +584,6 @@ public class LuceneUtility implements ILuceneUtility {
         catch (IOException ex) {
             throw new LuceneException("Issues in querying lucene index. Please retry", ex);
         }
-        logger.debug("Number of concepts retrieved from lucene = " + concepts.size());
         return concepts.toArray(new ConceptEntry[concepts.size()]);
 
     }
