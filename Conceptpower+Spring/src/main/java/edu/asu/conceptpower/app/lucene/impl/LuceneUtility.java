@@ -2,6 +2,7 @@ package edu.asu.conceptpower.app.lucene.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystems;
@@ -22,10 +23,19 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.custom.CustomAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.standard.StandardFilter;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.SortedDocValuesField;
@@ -36,6 +46,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
@@ -53,7 +64,9 @@ import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.PagedBytes.Reader;
 import org.apache.lucene.util.QueryBuilder;
+import org.apache.lucene.util.Version;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +75,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
 import edu.asu.conceptpower.app.constants.SearchFieldNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
@@ -124,6 +136,7 @@ public class LuceneUtility implements ILuceneUtility {
 
     private String lucenePath;
 
+
     private int numberOfResults;
 
     private IndexWriter writer = null;
@@ -132,19 +145,23 @@ public class LuceneUtility implements ILuceneUtility {
     private Directory index;
     private Path relativePath = null;
     private IndexSearcher searcher = null;
-
+    private Analyzer customAnalyzer = null;
+            
     /**
      * 
      * @throws LuceneException
      */
     @PostConstruct
-    public void init() throws LuceneException {
+    public void init() throws LuceneException, IOException {
+        customAnalyzer = CustomAnalyzer.builder().withTokenizer("keyword").addTokenFilter("asciifolding").addTokenFilter("worddelimiter").
+                addTokenFilter("lowercase").build();
         lucenePath = env.getProperty("lucenePath");
         numberOfResults = Integer.parseInt(env.getProperty("numberOfLuceneResults"));
         try {
             relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
+             
             index = FSDirectory.open(relativePath);
-            configWhiteSpace = new IndexWriterConfig(standardAnalyzer);
+            configWhiteSpace = new IndexWriterConfig(customAnalyzer);
             writer = new IndexWriter(index, configWhiteSpace);
             reader = DirectoryReader.open(writer, true);
             searcher = new IndexSearcher(reader);
@@ -256,7 +273,7 @@ public class LuceneUtility implements ILuceneUtility {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             field.setAccessible(true);
             if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
-                if (!luceneFieldAnnotation.isMultiple()) {
+                if (luceneFieldAnnotation.isMultiple()) {
                     IndexableField[] indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED);
                     if (indexableFields == null || indexableFields.length == 0) {
                         indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName());
@@ -497,7 +514,7 @@ public class LuceneUtility implements ILuceneUtility {
         if (operator == null || operator.equalsIgnoreCase(SearchParamters.OP_AND)) {
             occur = BooleanClause.Occur.MUST;
         }
-
+        
         java.lang.reflect.Field[] fields = ConceptEntry.class.getDeclaredFields();
 
         for (java.lang.reflect.Field field : fields) {
@@ -517,9 +534,8 @@ public class LuceneUtility implements ILuceneUtility {
 
         }
 
-        PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(standardAnalyzer,
-                analyzerPerField);
-
+        
+        PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(customAnalyzer, analyzerPerField);
         QueryBuilder qBuild = new QueryBuilder(perFieldAnalyzerWrapper);
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
 
@@ -579,32 +595,25 @@ public class LuceneUtility implements ILuceneUtility {
                 ConceptEntry entry = getConceptFromDocument(d);
                 concepts.add(entry);
             }
+            return concepts.toArray(new ConceptEntry[concepts.size()]);
         }
 
         catch (IOException ex) {
             throw new LuceneException("Issues in querying lucene index. Please retry", ex);
         }
-        logger.debug("Number of concepts retrieved from lucene = " + concepts.size());
-        return concepts.toArray(new ConceptEntry[concepts.size()]);
-
     }
 
-    private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,
-            QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, String searchString) {
+    private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, String searchString) {
         if (luceneFieldAnnotation.isTokenized()) {
             BooleanQuery.Builder tokenizedQueryBuilder = new BooleanQuery.Builder();
-            buildTokenizedOrWildCardQuery(luceneFieldAnnotation, searchString, tokenizedQueryBuilder);
+            buildTokenizedOrWildCardQuery(luceneFieldAnnotation, searchString, qBuild, tokenizedQueryBuilder);
 
             if (luceneFieldAnnotation.isShortPhraseSearchable()) {
                 BooleanQuery.Builder rootQueryBuilder = new BooleanQuery.Builder();
                 rootQueryBuilder.add(tokenizedQueryBuilder.build(), Occur.SHOULD);
                 // Short word searching
                 BooleanQuery.Builder shortWordSearchQueryBuilder = new BooleanQuery.Builder();
-                shortWordSearchQueryBuilder.add(
-                        new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
-                                searchString),
-                        Occur.SHOULD);
-
+                shortWordSearchQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX, searchString), Occur.SHOULD);
                 rootQueryBuilder.add(shortWordSearchQueryBuilder.build(), Occur.SHOULD);
                 tokenizedQueryBuilder = rootQueryBuilder;
             }
@@ -613,24 +622,25 @@ public class LuceneUtility implements ILuceneUtility {
         } else {
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder, occur);
-            } else {
-                builder.add(new BooleanClause(
-                        new TermQuery(new Term(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
             }
-        }
+            builder.add(new BooleanClause((qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
+        }        
     }
 
-    private void buildTokenizedOrWildCardQuery(LuceneField luceneFieldAnnotation, String searchString,
-            BooleanQuery.Builder tokenizedQueryBuilder) {
-        for (String searchValue : searchString.split(" ")) {
+    private void buildTokenizedOrWildCardQuery(LuceneField luceneFieldAnnotation, String searchString, QueryBuilder qBuild,
+            BooleanQuery.Builder tokenizedQueryBuilder) {       
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
-                createWildCardSearchQuery(luceneFieldAnnotation, searchValue, tokenizedQueryBuilder, Occur.MUST);
+                BooleanQuery.Builder analyzedBuilder = new BooleanQuery.Builder();             
+                createWildCardSearchQuery(luceneFieldAnnotation, searchString, analyzedBuilder, Occur.SHOULD);
+                analyzedBuilder.add(new BooleanClause(
+                        (qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), Occur.SHOULD));
+                tokenizedQueryBuilder.add(analyzedBuilder.build(), Occur.MUST);
             } else {
-                tokenizedQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchValue),
+                tokenizedQueryBuilder.add(qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString),
                         Occur.MUST);
             }
         }
-    }
+
 
     /**
      * This method adds the wild card query to the query builder when the

@@ -9,7 +9,7 @@
 	<version>2.0-BUILD-SNAPSHOT</version>
 	<properties>
 		<java-version>1.8</java-version>
-		<org.springframework-version>4.3.7.RELEASE</org.springframework-version>
+		<org.springframework-version>4.3.18.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.7.3</org.aspectj-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
 		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
@@ -19,21 +19,21 @@
 		<db.files.path>/Users/jdamerow/Software/Conceptpower/db_files</db.files.path>
 		<email.username></email.username>
 		<email.password></email.password>
-		<email.server.port></email.server.port>
+		<email.server.port>8081</email.server.port>
 		<email.server.host></email.server.host>
 		<email.from></email.from>
 		<admin.username>admin</admin.username>
 		<admin.password>admin</admin.password>
 		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
 		<spring-security-version>3.2.8.RELEASE</spring-security-version>
-		<lucene.index>/Users/karthikeyanmohan/Software/Conceptpower/indexFiles</lucene.index>
+		<lucene.index></lucene.index>
 		<pullrequest></pullrequest>
 		<debug_level>debug</debug_level>
 		<skip.integration.tests>false</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
-		<concept.list.url>https://www.dropbox.com/s/48gftjus29qyp2q/conceptLists.db?raw=1</concept.list.url>
-		<concept.types.url>https://www.dropbox.com/s/mla61f63fgfil3y/conceptTypes.db?raw=1</concept.types.url>
-		<users.url>https://www.dropbox.com/s/n0vgpc5ow1xko4v/users.db?raw=1</users.url>
+		<concept.list.url>https://www.dropbox.com/s/r82nymnt2247zz4/conceptLists.db?raw=1</concept.list.url>
+		<concept.types.url>https://www.dropbox.com/s/nwn15s84fzz37s5/conceptTypes.db?raw=1</concept.types.url>
+		<users.url>https://www.dropbox.com/s/p6h3974hmlouq0i/users.db?raw=1</users.url>
 	</properties>
 
 	<repositories>

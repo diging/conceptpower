@@ -10,6 +10,7 @@ public class ConceptWrapperAddBean {
     private String equals;
     private String similar;
     private String wrapperids;
+    private String pos;
 
     public String getWord() {
         return word;
@@ -73,6 +74,14 @@ public class ConceptWrapperAddBean {
 
     public void setSynonymids(String synonymids) {
         this.synonymids = synonymids;
+    }
+
+    public String getPos() {
+        return pos;
+    }
+
+    public void setPos(String pos) {
+        this.pos = pos;
     }
 
 }
