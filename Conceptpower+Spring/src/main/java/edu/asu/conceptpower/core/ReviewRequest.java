@@ -12,9 +12,6 @@ public class ReviewRequest {
     private String status;
     private boolean isDeleted;
     
-    public ReviewRequest() {
-        
-    }
     
     public String getId() {
         return id;
