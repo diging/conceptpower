@@ -1,26 +1,20 @@
 package edu.asu.conceptpower.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Entity;
-
-import edu.asu.conceptpower.servlet.core.ChangeEvent;
-
 
 public class ReviewRequest {
 
-   
-    private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
 
-    
+    private String id;
     private String comment;
     private String requester;
     private String resolver;
     private String conceptLink;
     private String status;
     private boolean isDeleted;
-    private String id;
+    
+    public ReviewRequest() {
+        
+    }
     
     public String getId() {
         return id;
@@ -36,9 +30,6 @@ public class ReviewRequest {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public ReviewRequest() {
     }
 
     public String getComment() {
@@ -81,19 +72,6 @@ public class ReviewRequest {
         this.isDeleted = isDeleted;
     }
     
-    /**
-     * This method add the changeevent to the end of the list. The first element
-     * will always be a creator
-     * 
-     * @param event
-     */
-    public void addNewChangeEvent(ChangeEvent event) {
-
-        if (changeEvents == null) {
-            this.changeEvents = new ArrayList<ChangeEvent>();
-        }
-        // Appends to the end of the list
-        this.changeEvents.add(event);
-    }
+   
 
 }

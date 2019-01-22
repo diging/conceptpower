@@ -344,10 +344,6 @@ public class DatabaseClient implements IConceptDBManager {
             dictionaryClient.store(element);
             dictionaryClient.commit();
         }
-        if (databasename.equals(DBNames.COMMENTS_DB)) {
-            dictionaryClient.store(element);
-            dictionaryClient.commit();
-        }
     }
 
     /*

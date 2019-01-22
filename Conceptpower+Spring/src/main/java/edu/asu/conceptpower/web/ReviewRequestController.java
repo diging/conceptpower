@@ -19,16 +19,15 @@ import edu.asu.conceptpower.app.exceptions.LuceneException;
 @Controller
 public class ReviewRequestController {
  
- 
+    private static final Logger logger = LoggerFactory.getLogger(ReviewRequestController.class);
+
     @Autowired
     private CommentsManager commentsObj;
     
     @Autowired
     private ConceptManager conceptMgr;
     
-    private static final Logger logger = LoggerFactory.getLogger(ReviewRequestController.class);
-
-    
+       
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
     public ResponseEntity<String> addNewComment(@RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal) {
         
