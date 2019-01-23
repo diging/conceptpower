@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.conceptpower.app.core.impl.CommentsManager;
 import edu.asu.conceptpower.app.core.impl.ConceptManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.core.ReviewRequest.Status;
 
 @Controller
 public class ReviewRequestController {
@@ -32,7 +33,6 @@ public class ReviewRequestController {
     public ResponseEntity<String> addNewComment(@RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal) {
         
         String resolver="";
-        String status="Open";
         String conceptId="";
         
        //wordNetId has value stored in <font>wordNetId_Value<font> format.So,extracting the values between font tags.
@@ -43,13 +43,15 @@ public class ReviewRequestController {
        
 
         try {
-            conceptId = conceptMgr.getWordnetConceptEntry(wordNetId).getId();
+            if(wordNetId != null) {
+                conceptId = conceptMgr.getWordnetConceptEntry(wordNetId).getId();
+            }
         } catch (LuceneException e) {
             logger.error("Lucene exception", e);
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
        
-        commentsObj.addComment(comment, conceptId, requester, resolver, status);
+        commentsObj.addComment(comment, conceptId, requester, resolver, Status.OPENED);
         
         
        return new ResponseEntity<String>(HttpStatus.OK);
