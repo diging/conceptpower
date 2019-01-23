@@ -230,7 +230,6 @@ $(document).ready(function() {
 var rowNum;
 function  getId(element) {
 	rowNum =  element.rowIndex;
-    console.log('rowNum - '+ rowNum);
 }
 
 var wordNetId;
