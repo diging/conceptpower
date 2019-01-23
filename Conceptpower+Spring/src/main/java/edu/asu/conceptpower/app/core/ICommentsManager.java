@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.app.core;
 
+import edu.asu.conceptpower.core.ReviewRequest.Status;
+
 public interface ICommentsManager {
 
     /** Used to add comments for each concept entry
@@ -9,7 +11,7 @@ public interface ICommentsManager {
      * @param resolver - the user who will resolve the request
      * @param status - the status of the comment -open,resolved,etc.
      */
-    public abstract  void addComment(String comment, String conceptLink , String requester, String resolver,String status);
+    public abstract  void addComment(String comment, String conceptLink , String requester, String resolver,Status status);
     
    
 }

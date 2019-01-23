@@ -11,6 +11,7 @@ import com.db4o.ObjectContainer;
 import edu.asu.conceptpower.app.core.ICommentsManager;
 import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.core.ReviewRequest.Status;
 
 @Service
 public class CommentsManager implements ICommentsManager{
@@ -31,7 +32,7 @@ public class CommentsManager implements ICommentsManager{
     /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.ICommentsManager#addComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public void addComment(String comment, String conceptLink , String requester, String resolver,String status) {
+    public void addComment(String comment, String conceptLink , String requester, String resolver,Status status) {
 
         ReviewRequest newRequest = new ReviewRequest();
         newRequest.setComment(comment);
