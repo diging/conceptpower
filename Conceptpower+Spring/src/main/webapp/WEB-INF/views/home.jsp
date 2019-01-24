@@ -369,7 +369,7 @@ function getWordNetId() {
           </td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
-          <td><button type="button" style="height:35px; width:50px" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Comment</button></td>
+          <td><button type="button"  style="height:35px; width:50px" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Comment</button></td>
         </tr>
       </c:forEach>
     </tbody>
@@ -469,12 +469,10 @@ function getWordNetId() {
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Details</h4>
         </div>
         <div class="modal-body">
          <div class="form-label"><b>Comments</b></div>
     <div class="form-field">
-        <!--    <input type="text" id="comment" path="comment"/>-->
       <textarea onclick="getWordNetId();" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
       <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
     </div>
