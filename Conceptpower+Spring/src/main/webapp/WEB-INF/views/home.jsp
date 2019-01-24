@@ -5,24 +5,26 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page session="false"%>
-
-
+<!--  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head> -->
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
-
   function removeColumnFromTable(str) {
     var target = $('table').find('th[data-name="' + str +'"]');
     var index = (target).index();
      $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).hide();
   }
-
   function showColumnFromTable(str) {
     var target = $('table').find('th[data-name="' + str +'"]');
     var index = (target).index();
      $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).show();
   }
-
   function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
     var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
     if(conceptsToBeMerged) {
@@ -31,12 +33,10 @@ $(document).ready(function() {
       $("#mergeConcept").show();
       $("#prepareMergeConcept").hide();
       // Check the checkboxes
-
       var conceptIds = conceptsToBeMerged.split(',');
       for(var i = 0; i<conceptIds.length; i++){
         $("input[value='" + conceptIds[i] + "']").prop('checked', true);
       }
-
       $('#conceptIdsToMerge').val(conceptsToBeMerged);
     } else {
       removeColumnFromTable('merge');    
@@ -44,9 +44,7 @@ $(document).ready(function() {
       $("#prepareMergeConcept").show();
     }
   }
-
   checkCheckBoxAndRemoveColumnsForMergeConcepts();
-
 	$('#viafSearchResult').dataTable({
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
@@ -86,8 +84,6 @@ $(document).ready(function() {
 						$("#detailssimilarto").text(details.similarto);
 						$("#detailscreator").text(details.creator);
 						$("#detailsdescription").html(details.description);
-
-
             if(details.mergedIds) {
               $.ajax({
                 url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
@@ -108,7 +104,6 @@ $(document).ready(function() {
                     mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
                     mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
                     mergedIdsHtml += "</span>";
-
                 });
                 $("#detailsmergedIds").html(mergedIdsHtml);  
               });              
@@ -116,7 +111,6 @@ $(document).ready(function() {
 					}
 				});
 		});
-
     $('#prepareMergeConcept').on('click', function (e) {
         e.preventDefault();
         // Get the column API object
@@ -126,7 +120,6 @@ $(document).ready(function() {
         $("#mergeConcept").show();
         $("#prepareMergeConcept").hide();
     });
-
     $(':checkbox').change(function(e) {
         if(this.checked) {
           mergeConcepts($(this).val())
@@ -145,7 +138,6 @@ $(document).ready(function() {
       }
       $('#conceptIdsToMerge').val(conceptsToMerge);  
     }    
-
     function removeMergedConcepts(conceptId) {
         var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
         var conceptIds = conceptsToMerge.split(',');
@@ -161,7 +153,6 @@ $(document).ready(function() {
           $('#conceptIdsToMerge').val(updatedConceptIds);      
         }
     }
-
     $('#mergeError').hide();
 });
                     
@@ -172,8 +163,6 @@ function hideFormProcessing() {
 function showFormProcessing() {
     $('#floatingCirclesG').show();
 }
-
-
 function finalizeMerge() {
   var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
   var conceptIdsToBeMerged = conceptIdsToMerge.split(',');
@@ -183,7 +172,6 @@ function finalizeMerge() {
         window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;      
     }
 }
-
 function paginate(page, sortDir, sortColumn, word, pos) {
       var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
       if(conceptIdsToMerge) {
@@ -193,10 +181,7 @@ function paginate(page, sortDir, sortColumn, word, pos) {
       }
       
     }
-
-
 var conceptsToMerge = "";
-
 function prepareMergeConcept(conceptId) {
     var tis = $(this);
     var conceptsToMerge = $(this).attr("value");
@@ -206,27 +191,9 @@ function prepareMergeConcept(conceptId) {
         conceptsToMerge = conceptsToMerge + "," + conceptId;    
     }
 }
-
 function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
-
-var formDisplayed=true;
-function showForm(){
-	
-	if (!formDisplayed){
-    	document.getElementById('loginForm').style.display = "none";
-    	formDisplayed=true;
-	}else{
-		document.getElementById('loginForm').style.display = "block";
-		formDisplayed=false;
-	}
-
-}
-$(document).ready(function() {
-	   $('#loginForm').hide();
-	});
-
 var rowNum;
 function  getId(element) {
 	rowNum =  element.rowIndex;
@@ -400,39 +367,13 @@ function getWordNetId() {
                     <c:out value="${concept.description}" escapeXml="false"></c:out>
                 </div>
           </td>
-          <td   align="justify"><font size="2"><c:out
+          <td align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
-          <td onclick="showForm()" ><div class="fa fa-filter"></div></td> 
+          <td><button type="button" style="height:35px; width:50px" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Comment</button></td>
         </tr>
       </c:forEach>
     </tbody>
   </table>
-  <style>
-
-
-div.floatingform {
- position: absolute;
-right: 220px;
-top:190px;
-width:5%;
-margin:0 auto;
-height: auto;
-} </style>
-<form action="${pageContext.servletContext.contextPath}/addComment" method="POST">
-<div class="floatingform">
-  <div id="loginForm" >
-    <div class="form-label"><b>Comments</b></div>
-    <div class="form-field">
-        <!--    <input type="text" id="comment" path="comment"/>-->
-      <textarea onclick="getWordNetId();" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
-      <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
-    </div>
-    <div class="form-elements">
-    	<div class="submit-btn"><input type="submit" value="Submit"/></div>     
-	 </div>
-   </div>
-  </div>
-</form>
 
   <nav aria-label="Page navigation">
       <ul class="pagination">
@@ -519,5 +460,33 @@ height: auto;
   </div>
   </div>
   
-
+  <div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+ <form action="${pageContext.servletContext.contextPath}/addComment" method="POST">   
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Details</h4>
+        </div>
+        <div class="modal-body">
+         <div class="form-label"><b>Comments</b></div>
+    <div class="form-field">
+        <!--    <input type="text" id="comment" path="comment"/>-->
+      <textarea onclick="getWordNetId();" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
+      <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
+    </div>
+    <div class="form-elements">
+    	<div class="submit-btn"><input type="submit" value="Submit"/></div>     
+	 </div>
+	
+        </div>
+       
+      </div>
+   </form>   
+    </div>
+  </div>
   
+</div>
