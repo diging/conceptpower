@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +33,7 @@ public class ReviewRequestController {
     
     @PreAuthorize("isAuthenticated()")   
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
-    public ResponseEntity<String> addNewComment(@RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal) {
+    public String addNewComment(@Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean,@RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal) {
         
         StringBuffer resolver = new StringBuffer();
         StringBuffer conceptId = new StringBuffer();
@@ -56,13 +58,13 @@ public class ReviewRequestController {
             }
         } catch (LuceneException e) {
             logger.error("Lucene exception", e);
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+           // return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
        
         commentsObj.addComment(comment, conceptId.toString(), requester, resolver.toString(), Status.OPENED);
         
         
-       return new ResponseEntity<String>(HttpStatus.OK);
+        return "conceptsearch";
     }
   
 }
