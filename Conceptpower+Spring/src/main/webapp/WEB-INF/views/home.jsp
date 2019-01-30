@@ -201,8 +201,17 @@ function  getId(element) {
 
 var wordNetId;
 function getWordNetId() {
+	console.log("inside getWordNetId ");
 	wordNetId = document.getElementById("conceptSearchResult").rows[rowNum].cells[5].innerHTML;
+	console.log(" getWordNetId "+wordNetId);
 	document.getElementById('wordNetId').value = wordNetId;	
+}
+var wordId;
+function getwordId() {
+	console.log("inside getWord ");
+	wordId = document.getElementById("conceptSearchResult").rows[rowNum].cells[4].innerHTML;
+	console.log(" wordId "+wordId);
+	document.getElementById('wordId').value = wordId;	
 }
 
 </script>
@@ -475,6 +484,7 @@ function getWordNetId() {
     <div class="form-field">
       <textarea onclick="getWordNetId();" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
       <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
+       <input type="hidden" name="wordId" id="wordId" value=""/>
     </div>
     <div class="form-elements">
     	<div class="submit-btn"><input type="submit" value="Submit"/></div>     

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.db4o.ObjectContainer;
+
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
@@ -37,6 +41,12 @@ import edu.asu.conceptpower.core.ConceptEntry;
 @Controller
 public class ConceptSearchController {
 
+    @Autowired
+    @Qualifier("conceptReviewDatabaseManager")
+    private DatabaseManager dbManager;
+    
+    private ObjectContainer client;
+    
     @Autowired
     private IConceptManager conceptManager;
 
@@ -96,6 +106,8 @@ public class ConceptSearchController {
         List<ConceptEntryWrapper> foundConcepts = null;
         ConceptEntry[] found = null;
         
+        String[] reviewEnabled = null;
+        
         if (indexService.isIndexerRunning()) {
             model.addAttribute("show_error_alert", true);
             model.addAttribute("error_alert_msg", indexerRunning);
@@ -114,6 +126,20 @@ public class ConceptSearchController {
             model.addAttribute(indexerStatus, e.getMessage());
             return "conceptsearch";
         }
+        
+        //searching for the entries,in found[], in conceptReview.db
+        if(found!= null) {
+        reviewEnabled= new String[found.length];
+        Boolean reviewFlag = null;
+        for(int i=0;i<found.length;i++) {
+            if(dbManager.getEntry(found[i].getId()) != null) {
+            reviewFlag = dbManager.getEntry(found[i].getId()).isReviewFlag();}
+            
+            if(reviewFlag!=null && reviewFlag)
+            reviewEnabled[i]=found[i].getId();
+        }
+        System.out.println("reviewEnabled"+reviewEnabled.length);
+        }//--
         foundConcepts = wrapperCreator.createWrappers(found);
         conceptSearchBean.setFoundConcepts(foundConcepts);
         if (pageInt < 1) {

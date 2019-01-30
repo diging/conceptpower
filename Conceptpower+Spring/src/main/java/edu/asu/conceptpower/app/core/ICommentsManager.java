@@ -11,7 +11,7 @@ public interface ICommentsManager {
      * @param resolver - the user who will resolve the request
      * @param status - the status of the comment -open,resolved,etc.
      */
-    public abstract  void addComment(String comment, String conceptLink , String requester, String resolver,Status status);
+    public abstract  void addComment(String word,String comment, String conceptLink , String requester, String resolver,Status status,Boolean reviewFlag);
     
    
 }

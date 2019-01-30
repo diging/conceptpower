@@ -5,8 +5,7 @@ import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -33,12 +32,13 @@ public class ReviewRequestController {
     
     @PreAuthorize("isAuthenticated()")   
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
-    public String addNewComment(@Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean,@RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal) {
+    public String addNewComment(@Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean,@RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal , @RequestParam("wordId") String word) {
         
         StringBuffer resolver = new StringBuffer();
-        StringBuffer conceptId = new StringBuffer();
+        StringBuffer conceptId = new StringBuffer("");
         StringBuffer wordNet_Id = new StringBuffer(wordNetId);
         String substring;
+        Boolean review_flag = true;
 
         //wordNetId has value stored in <font>wordNetId_Value<font> format.So,extracting the values between font tags.
         if((wordNet_Id.indexOf(">")!=-1) && (wordNet_Id.indexOf("<")!= -1)) {
@@ -52,16 +52,16 @@ public class ReviewRequestController {
         }
         String requester = principal.getName();
        
-        try {
-            if(wordNetId != null) {
-                conceptId.append(conceptMgr.getWordnetConceptEntry(wordNet_Id.toString()).getId());
+            if(wordNet_Id != null && wordNet_Id.length() != 0) {
+                try {
+                    conceptId.append(conceptMgr.getWordnetConceptEntry(wordNet_Id.toString()).getId());
+                } catch (LuceneException e) {
+                    logger.warn(e.getMessage());
+                }
             }
-        } catch (LuceneException e) {
-            logger.error("Lucene exception", e);
-           // return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
        
-        commentsObj.addComment(comment, conceptId.toString(), requester, resolver.toString(), Status.OPENED);
+       System.out.println("word"+ word);
+        commentsObj.addComment(word,comment, conceptId.toString(), requester, resolver.toString(), Status.OPENED , review_flag);
         
         
         return "conceptsearch";

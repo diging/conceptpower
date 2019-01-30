@@ -5,13 +5,14 @@ public class ReviewRequest {
 
 
     private String id;
+    private String word;
     private String comment;
     private String requester;
     private String resolver;
     private String conceptLink;
     public enum Status {OPENED,RESOLVED,CLOSED};
     private Status status;
-   
+    private Boolean reviewFlag = new Boolean(false);
     private boolean isDeleted;
     
     
@@ -21,6 +22,14 @@ public class ReviewRequest {
 
     public void setId(String id) {
         this.id = id;
+    }
+    
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
     }
     
     public Status getStatus() {
@@ -61,6 +70,14 @@ public class ReviewRequest {
 
     public void setConceptLink(String conceptLink) {
         this.conceptLink = conceptLink;
+    }
+    
+    public Boolean isReviewFlag() {
+        return reviewFlag;
+    }
+
+    public void setReviewFlag(Boolean reviewFlag) {
+        this.reviewFlag = reviewFlag;
     }
 
     public boolean getDeleted() {

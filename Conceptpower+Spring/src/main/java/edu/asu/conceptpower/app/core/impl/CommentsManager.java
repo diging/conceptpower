@@ -32,19 +32,24 @@ public class CommentsManager implements ICommentsManager{
     /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.ICommentsManager#addComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public void addComment(String comment, String conceptLink , String requester, String resolver,Status status) {
+    public void addComment(String word, String comment, String conceptLink , String requester, String resolver,Status status, Boolean review_flag) {
 
         ReviewRequest newRequest = new ReviewRequest();
+        newRequest.setWord(word);
         newRequest.setComment(comment);
         newRequest.setConceptLink(conceptLink);
         newRequest.setRequester(requester);
         newRequest.setResolver(resolver);
         newRequest.setStatus(status);
+        newRequest.setReviewFlag(review_flag);
         
         client.store(newRequest);
         client.commit();
-       
+        
+       System.out.println("getEntry"+dbManager.getEntry(conceptLink).getComment());
+       System.out.println(conceptLink);
     }
      
-   
+  
+  
 }
