@@ -194,18 +194,23 @@ function prepareMergeConcept(conceptId) {
 function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
+var wordNetId;
+
+$(document).ready(function(){
+	$('#commentTextarea').click(function() { 
+		console.log("inside getWordNetId ");
+		wordNetId = document.getElementById("conceptSearchResult").rows[rowNum].cells[5].innerHTML;
+		console.log(" getWordNetId "+wordNetId);
+		document.getElementById('wordNetId').value = wordNetId;	}); 
+	});
+	
 var rowNum;
 function  getId(element) {
 	rowNum =  element.rowIndex;
+	console.log ('rowNum' + rowNum);
 }
 
-var wordNetId;
-function getWordNetId() {
-	console.log("inside getWordNetId ");
-	wordNetId = document.getElementById("conceptSearchResult").rows[rowNum].cells[5].innerHTML;
-	console.log(" getWordNetId "+wordNetId);
-	document.getElementById('wordNetId').value = wordNetId;	
-}
+
 var wordId;
 function getwordId() {
 	console.log("inside getWord ");
@@ -378,7 +383,7 @@ function getwordId() {
           </td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
-          <td><button type="button"  style="height:35px; width:50px" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Comment</button></td>
+          <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
         </tr>
       </c:forEach>
     </tbody>
@@ -482,12 +487,12 @@ function getwordId() {
         <div class="modal-body">
          <div class="form-label"><b>Comments</b></div>
     <div class="form-field">
-      <textarea onclick="getWordNetId();" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
+      <textarea id="commentTextarea" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
       <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
        <input type="hidden" name="wordId" id="wordId" value=""/>
     </div>
     <div class="form-elements">
-    	<div class="submit-btn"><input type="submit" value="Submit"/></div>     
+    	<div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     
 	 </div>
 	
         </div>

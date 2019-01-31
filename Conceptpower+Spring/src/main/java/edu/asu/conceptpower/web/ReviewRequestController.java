@@ -60,7 +60,7 @@ public class ReviewRequestController {
                 }
             }
        
-       System.out.println("word"+ word);
+       System.out.println("wordNetId"+ wordNetId);
         commentsObj.addComment(word,comment, conceptId.toString(), requester, resolver.toString(), Status.OPENED , review_flag);
         
         

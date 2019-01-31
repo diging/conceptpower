@@ -137,8 +137,9 @@ public class ConceptSearchController {
             
             if(reviewFlag!=null && reviewFlag)
             reviewEnabled[i]=found[i].getId();
+            System.out.println("found[i]"+ found[i]);
         }
-        System.out.println("reviewEnabled"+reviewEnabled.length);
+        
         }//--
         foundConcepts = wrapperCreator.createWrappers(found);
         conceptSearchBean.setFoundConcepts(foundConcepts);

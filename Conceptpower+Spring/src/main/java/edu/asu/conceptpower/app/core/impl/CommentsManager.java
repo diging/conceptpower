@@ -45,9 +45,7 @@ public class CommentsManager implements ICommentsManager{
         
         client.store(newRequest);
         client.commit();
-        
-       System.out.println("getEntry"+dbManager.getEntry(conceptLink).getComment());
-       System.out.println(conceptLink);
+       
     }
      
   
