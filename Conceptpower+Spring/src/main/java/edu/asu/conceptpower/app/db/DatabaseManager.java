@@ -57,9 +57,10 @@ public class DatabaseManager implements Serializable {
         close();
     }
     
-    public ReviewRequest getEntry(String id) {
+    public ReviewRequest getEntry(String id,Boolean reviewFlag) {
         ReviewRequest exampleEntry = new ReviewRequest();
         exampleEntry.setConceptLink(id);
+        exampleEntry.setReviewFlag(reviewFlag);
         ObjectSet<ReviewRequest> results = getClient().queryByExample(exampleEntry);
 
         if (results.size()>0)

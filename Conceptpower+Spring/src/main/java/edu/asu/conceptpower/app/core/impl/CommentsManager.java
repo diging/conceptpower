@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.app.core.ICommentsManager;
 import edu.asu.conceptpower.app.db.DatabaseManager;
@@ -46,8 +47,25 @@ public class CommentsManager implements ICommentsManager{
         client.store(newRequest);
         client.commit();
        
+        System.out.println("Checking#" +getEntry(newRequest).getComment());
+        
     }
      
-  
+    public ReviewRequest getEntry(ReviewRequest newRequest) {
+       ReviewRequest exampleEntry = new ReviewRequest();
+       System.out.println("now"+ newRequest.getConceptLink());
+        exampleEntry.setConceptLink(newRequest.getConceptLink());
+       // exampleEntry.setWord(newRequest.getWord());
+        //exampleEntry.setRequester(newRequest.getRequester());
+        //exampleEntry.setStatus(newRequest.getStatus());
+        exampleEntry.setReviewFlag(newRequest.isReviewFlag());
+        ObjectSet<ReviewRequest> results = client.queryByExample(exampleEntry);
+
+        System.out.println(results.size());
+        if (results.size()>0)
+            return results.get(results.size()-1);
+
+        return null;
+    }
   
 }

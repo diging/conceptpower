@@ -1,6 +1,8 @@
 package edu.asu.conceptpower.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -105,8 +107,8 @@ public class ConceptSearchController {
 
         List<ConceptEntryWrapper> foundConcepts = null;
         ConceptEntry[] found = null;
-        
-        String[] reviewEnabled = null;
+       
+        Map<String, String> reviewEnabled = new HashMap<String, String>();
         
         if (indexService.isIndexerRunning()) {
             model.addAttribute("show_error_alert", true);
@@ -126,23 +128,20 @@ public class ConceptSearchController {
             model.addAttribute(indexerStatus, e.getMessage());
             return "conceptsearch";
         }
-        
+       
         //searching for the entries,in found[], in conceptReview.db
         if(found!= null) {
-        reviewEnabled= new String[found.length];
-        Boolean reviewFlag = null;
-        for(int i=0;i<found.length;i++) {
-            if(dbManager.getEntry(found[i].getId()) != null) {
-            reviewFlag = dbManager.getEntry(found[i].getId()).isReviewFlag();}
-            
-            if(reviewFlag!=null && reviewFlag)
-            reviewEnabled[i]=found[i].getId();
-            System.out.println("found[i]"+ found[i]);
-        }
         
+        for(int i=0;i<found.length;i++) {
+            if(dbManager.getEntry(found[i].getWordnetId(),true) != null) {
+                reviewEnabled.put(found[i].getWordnetId(),"true");
+            }
+        }
         }//--
         foundConcepts = wrapperCreator.createWrappers(found);
         conceptSearchBean.setFoundConcepts(foundConcepts);
+        conceptSearchBean.setReviewEnabledWord(reviewEnabled); // added for passing the array of reviewEnabled wordNet Ids
+        
         if (pageInt < 1) {
             pageInt = 1;
         }
@@ -158,7 +157,7 @@ public class ConceptSearchController {
         model.addAttribute("count", pageCount);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("sortColumn", sortColumn);
-
+        
         return "conceptsearch";
     }
 
