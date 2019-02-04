@@ -383,7 +383,20 @@ function getwordId() {
           </td>
           <td align="justify"><font size="2"><c:out
                 value="${concept.type.typeName}"></c:out></font></td>
+                
+        <!-- Enabling Disabling the Review button for reviewflag==true -->  
           <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
+          
+  			<c:forEach var="word" items="${conceptSearchBean.reviewEnabled}">
+  			console.log('key'+${word.key} );
+  			  			console.log('concept'+${concept.entry.wordnetId} );
+  			
+            <c:choose>
+ 			 <c:when test="${word.key} == ${concept.entry.wordnetId}">
+ 			 <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Reviewed</button></td>
+   			 </c:when>
+   			</c:choose>
+          </c:forEach>
         </tr>
       </c:forEach>
     </tbody>
