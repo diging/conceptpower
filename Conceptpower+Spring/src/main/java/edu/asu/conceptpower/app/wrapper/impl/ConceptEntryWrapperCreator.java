@@ -5,11 +5,15 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import com.db4o.ObjectContainer;
 
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.util.IURIHelper;
@@ -36,8 +40,12 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
     private IUserManager usersManager;
 
     @Autowired
-    private IURIHelper helper;
-
+    private IURIHelper helper; 
+    
+    @Autowired
+    @Qualifier("conceptReviewDatabaseManager")
+    private DatabaseManager dbManager;
+    
     /**
      * This method creates wrappers for the concept entries passed as parameter
      * 
@@ -53,6 +61,8 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             return foundConcepts;
 
         for (ConceptEntry entry : entries) {
+            
+            
 
             ConceptEntryWrapper wrapper = new ConceptEntryWrapper(entry);
             wrapper.setUri(helper.getURI(entry));
@@ -79,6 +89,10 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
 
                 }
             }
+            
+            //adding reviewflag in wrapper
+            if(dbManager.getEntry(entry.getWordnetId(),true)!=null)
+                wrapper.setReviewFlag(dbManager.getEntry(entry.getWordnetId(),true).isReviewFlag());
 
             // build description considering all the wordnet entries wrappe
             StringBuffer sb = new StringBuffer();

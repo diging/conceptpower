@@ -33,6 +33,8 @@ public class ConceptEntryWrapper implements Serializable {
     private String creatorId;
     private String lastModifiedEvent;
 
+    private Boolean reviewFlag;
+
     public ConceptEntryWrapper(ConceptEntry entry) {
         this.entry = entry;
     }
@@ -123,5 +125,13 @@ public class ConceptEntryWrapper implements Serializable {
 
     public void setLastModifiedEvent(String lastModifiedEvent) {
         this.lastModifiedEvent = lastModifiedEvent;
+    }
+
+    public Boolean getReviewFlag() {
+        return reviewFlag;
+    }
+
+    public void setReviewFlag(Boolean reviewFlag) {
+        this.reviewFlag = reviewFlag;
     }
 }

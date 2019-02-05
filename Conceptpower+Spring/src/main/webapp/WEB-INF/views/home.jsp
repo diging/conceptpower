@@ -219,6 +219,25 @@ function getwordId() {
 	document.getElementById('wordId').value = wordId;	
 }
 
+$(document).ready(function() {
+    $('#submitInComment').click(function(){
+        $.ajax({
+        type:"GET",
+        url : "${pageContext.servletContext.contextPath}/addComment",
+        data:{ } , // do I need to pass data if im GET ting?
+        dataType: 'json',
+        success : function(data){
+           //doing stuff
+           //end success
+        },
+        always: function() {
+           //submit form !!!
+           $("#reviewForm").submit();
+        }
+    });//end ajax   
+  });//end click
+});//end rdy
+
 </script>
 
 <header class="page-header">
@@ -385,18 +404,18 @@ function getwordId() {
                 value="${concept.type.typeName}"></c:out></font></td>
                 
         <!-- Enabling Disabling the Review button for reviewflag==true -->  
-          <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
+          <c:choose>
+ 		 	<c:when test="${concept.reviewFlag}">
+   			  <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Reviewed</button></td>
+  			</c:when>
+  			<c:otherwise>
+   			     <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
+
+ 			 </c:otherwise>
+		</c:choose>
+                   
           
-  			<c:forEach var="word" items="${conceptSearchBean.reviewEnabled}">
-  			console.log('key'+${word.key} );
-  			  			console.log('concept'+${concept.entry.wordnetId} );
   			
-            <c:choose>
- 			 <c:when test="${word.key} == ${concept.entry.wordnetId}">
- 			 <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Reviewed</button></td>
-   			 </c:when>
-   			</c:choose>
-          </c:forEach>
         </tr>
       </c:forEach>
     </tbody>
@@ -491,7 +510,7 @@ function getwordId() {
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
- <form action="${pageContext.servletContext.contextPath}/addComment" method="POST">   
+ <form id="reviewForm" action="${pageContext.servletContext.contextPath}/addComment" method="POST">   <!--  -->
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -505,7 +524,7 @@ function getwordId() {
        <input type="hidden" name="wordId" id="wordId" value=""/>
     </div>
     <div class="form-elements">
-    	<div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     
+    	<div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     <!-- Ajax call -->
 	 </div>
 	
         </div>
