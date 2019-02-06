@@ -198,34 +198,26 @@ var wordNetId;
 
 $(document).ready(function(){
 	$('#commentTextarea').click(function() { 
-		console.log("inside getWordNetId ");
 		wordNetId = document.getElementById("conceptSearchResult").rows[rowNum].cells[5].innerHTML;
-		console.log(" getWordNetId "+wordNetId);
 		document.getElementById('wordNetId').value = wordNetId;	}); 
 	});
 	
 var rowNum;
 function  getId(element) {
 	rowNum =  element.rowIndex;
-	console.log ('rowNum' + rowNum);
 }
 
 
 var wordId;
 function getwordId() {
-	console.log("inside getWord ");
 	wordId = document.getElementById("conceptSearchResult").rows[rowNum].cells[4].innerHTML;
-	console.log(" wordId "+wordId);
 	document.getElementById('wordId').value = wordId;	
 }
 
 var formDisplayed=true;
-var commentPosted;
-function showForm(comments){
-	commentPosted=comments;
-	console.log("comments"+comments);
-	console.log("commentPosted"+commentPosted);
 
+function showForm(comments){
+	
 	if (!formDisplayed){
     	document.getElementById('commentedBox').style.display = "none";
         document.getElementById("fetchComments").value = comments;
@@ -240,6 +232,8 @@ function showForm(comments){
 $(document).ready(function() {
 	   $('#commentedBox').hide();
 	});
+    
+
 
 </script>
 
@@ -410,16 +404,12 @@ $(document).ready(function() {
         <!-- Enabling Disabling the Review button for reviewflag==true -->  
           <c:choose>
  		 	<c:when test="${concept.reviewFlag}">
-			<td onclick="showForm('${concept.comment}');"><div class="fa fa-filter" ></div></td>
+			<td onclick="showForm('${concept.comment}');" align="center"><div class="fa fa-envelope"></div></td>
   			</c:when>
   			<c:otherwise>
-   			     <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
-
+   			     <td align="center"><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
  			 </c:otherwise>
-		</c:choose>
-                   
-          
-  			
+		</c:choose>	
         </tr>
       </c:forEach>
     </tbody>
@@ -429,7 +419,7 @@ $(document).ready(function() {
 div.floatingform {
  position: absolute;
 right: 220px;
-top:210px;
+top:220px;
 width:5%;
 margin:0 auto;
 height: auto;
