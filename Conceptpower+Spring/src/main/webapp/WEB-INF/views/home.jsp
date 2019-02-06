@@ -219,10 +219,9 @@ function getwordId() {
 	document.getElementById('wordId').value = wordId;	
 }
 
-$(document).ready(function() {
+<!-- $(document).ready(function() {
     $('#submitInComment').click(function(){
         $.ajax({
-        type:"GET",
         url : "${pageContext.servletContext.contextPath}/addComment",
         data:{ } , // do I need to pass data if im GET ting?
         dataType: 'json',
@@ -237,8 +236,9 @@ $(document).ready(function() {
     });//end ajax   
   });//end click
 });//end rdy
-
+-->
 </script>
+
 
 <header class="page-header">
   <h1 class="page-title">Welcome to Conceptpower</h1>
@@ -409,7 +409,7 @@ $(document).ready(function() {
    			  <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Reviewed</button></td>
   			</c:when>
   			<c:otherwise>
-   			     <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
+   			     <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">ReviewNow</button></td>
 
  			 </c:otherwise>
 		</c:choose>
@@ -522,6 +522,8 @@ $(document).ready(function() {
       <textarea id="commentTextarea" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
       <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
        <input type="hidden" name="wordId" id="wordId" value=""/>
+       <input type="hidden" name="wordValue" id="wordValue" value="<%= request.getParameter("word") %>"/>
+       <input type="hidden" name="posValue" id="posValue" value="<%= request.getParameter("pos") %>"/>       
     </div>
     <div class="form-elements">
     	<div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     <!-- Ajax call -->

@@ -5,7 +5,6 @@ import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -14,12 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.db4o.ObjectSet;
-
 import edu.asu.conceptpower.app.core.impl.CommentsManager;
 import edu.asu.conceptpower.app.core.impl.ConceptManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
-import edu.asu.conceptpower.core.ReviewRequest;
 import edu.asu.conceptpower.core.ReviewRequest.Status;
 
 @Controller
@@ -35,7 +31,9 @@ public class ReviewRequestController {
     
     @PreAuthorize("isAuthenticated()")   
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
-    public String addNewComment(@Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean,@RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal , @RequestParam("wordId") String word) {
+    public String addNewComment(@Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean,
+            @RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal , 
+            @RequestParam("wordId") String word, @RequestParam("wordValue") String wordValue, @RequestParam("posValue") String posValue) {
         
         StringBuffer resolver = new StringBuffer();
         StringBuffer conceptId = new StringBuffer("");
@@ -66,8 +64,7 @@ public class ReviewRequestController {
        System.out.println("wordNetId"+ wordNetId);
         commentsObj.addComment(word,comment, conceptId.toString(), requester, resolver.toString(), Status.OPENED , review_flag);
         
-        
-        return "conceptsearch";
+      return "redirect:/home/conceptsearch?word="+wordValue+"&pos="+posValue;
     }
     
   
