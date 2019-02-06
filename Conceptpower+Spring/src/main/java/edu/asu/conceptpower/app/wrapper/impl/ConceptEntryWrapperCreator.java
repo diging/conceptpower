@@ -91,8 +91,10 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             }
             
             //adding reviewflag in wrapper
-            if(dbManager.getEntry(entry.getWordnetId(),true)!=null)
+            if(dbManager.getEntry(entry.getWordnetId(),true)!=null) {
                 wrapper.setReviewFlag(dbManager.getEntry(entry.getWordnetId(),true).isReviewFlag());
+                wrapper.setComment(dbManager.getEntry(entry.getWordnetId(),true).getComment());
+            }
 
             // build description considering all the wordnet entries wrappe
             StringBuffer sb = new StringBuffer();

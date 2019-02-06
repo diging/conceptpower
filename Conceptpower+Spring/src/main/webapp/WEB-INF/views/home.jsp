@@ -219,24 +219,28 @@ function getwordId() {
 	document.getElementById('wordId').value = wordId;	
 }
 
-<!-- $(document).ready(function() {
-    $('#submitInComment').click(function(){
-        $.ajax({
-        url : "${pageContext.servletContext.contextPath}/addComment",
-        data:{ } , // do I need to pass data if im GET ting?
-        dataType: 'json',
-        success : function(data){
-           //doing stuff
-           //end success
-        },
-        always: function() {
-           //submit form !!!
-           $("#reviewForm").submit();
-        }
-    });//end ajax   
-  });//end click
-});//end rdy
--->
+var formDisplayed=true;
+var commentPosted;
+function showForm(comments){
+	commentPosted=comments;
+	console.log("comments"+comments);
+	console.log("commentPosted"+commentPosted);
+
+	if (!formDisplayed){
+    	document.getElementById('commentedBox').style.display = "none";
+        document.getElementById("fetchComments").value = comments;
+
+    	formDisplayed=true;
+	}else{
+		document.getElementById('commentedBox').style.display = "block";
+        document.getElementById("fetchComments").value = comments;
+		formDisplayed=false;
+	}
+}
+$(document).ready(function() {
+	   $('#commentedBox').hide();
+	});
+
 </script>
 
 
@@ -406,10 +410,10 @@ function getwordId() {
         <!-- Enabling Disabling the Review button for reviewflag==true -->  
           <c:choose>
  		 	<c:when test="${concept.reviewFlag}">
-   			  <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Reviewed</button></td>
+			<td onclick="showForm('${concept.comment}');"><div class="fa fa-filter" ></div></td>
   			</c:when>
   			<c:otherwise>
-   			     <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">ReviewNow</button></td>
+   			     <td><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
 
  			 </c:otherwise>
 		</c:choose>
@@ -420,6 +424,27 @@ function getwordId() {
       </c:forEach>
     </tbody>
   </table>
+  
+  <style>
+div.floatingform {
+ position: absolute;
+right: 220px;
+top:210px;
+width:5%;
+margin:0 auto;
+height: auto;
+} </style>
+<form >
+<div class="floatingform">
+  <div id="commentedBox" >
+    <div class="form-label"><b>Comments</b></div>
+    <div class="form-field">
+      <textarea id="fetchComments" name="fetchComments" rows="4" cols="30" ></textarea>
+    </div>
+   
+   </div>
+  </div>
+</form>
 
   <nav aria-label="Page navigation">
       <ul class="pagination">
