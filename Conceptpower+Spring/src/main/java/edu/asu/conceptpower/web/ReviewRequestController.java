@@ -60,8 +60,7 @@ public class ReviewRequestController {
                     logger.warn(e.getMessage());
                 }
             }
-       
-       System.out.println("wordNetId"+ wordNetId);
+       System.out.println("word"+word);
         commentsObj.addComment(word,comment, conceptId.toString(), requester, resolver.toString(), Status.OPENED , review_flag);
         
       return "redirect:/home/conceptsearch?word="+wordValue+"&pos="+posValue;
