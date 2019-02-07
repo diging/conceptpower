@@ -20,6 +20,7 @@ import edu.asu.conceptpower.app.util.IURIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
 import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ReviewRequest;
 
 /**
  * This class provides methods required for creation concept wrappers
@@ -60,6 +61,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
         if (entries == null)
             return foundConcepts;
 
+        ReviewRequest revReq;
         for (ConceptEntry entry : entries) {
             
             
@@ -91,9 +93,10 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             }
             
             //adding reviewflag in wrapper
-            if(dbManager.getEntry(entry.getWordnetId(),true)!=null) {
-                wrapper.setReviewFlag(dbManager.getEntry(entry.getWordnetId(),true).isReviewFlag());
-                wrapper.setComment(dbManager.getEntry(entry.getWordnetId(),true).getComment());
+            revReq = dbManager.getEntry(entry.getId(),entry.getWordnetId(),true);
+            if(revReq!=null) {
+                wrapper.setReviewFlag(revReq.isReviewFlag());
+                wrapper.setComment(revReq.getComment());
             }
 
             // build description considering all the wordnet entries wrappe

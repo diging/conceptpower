@@ -5,11 +5,11 @@ public class ReviewRequest {
 
 
     private String id;
-    private String word;
+    private String wordId;
     private String comment;
     private String requester;
     private String resolver;
-    private String conceptLink;
+    private String wordNetId;
     public enum Status {OPENED,RESOLVED,CLOSED};
     private Status status;
     private Boolean reviewFlag = new Boolean(false);
@@ -24,12 +24,12 @@ public class ReviewRequest {
         this.id = id;
     }
     
-    public String getWord() {
-        return word;
+    public String getWordId() {
+        return wordId;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public void setWordId(String word) {
+        this.wordId = word;
     }
     
     public Status getStatus() {
@@ -64,12 +64,12 @@ public class ReviewRequest {
         this.resolver = resolver;
     }
 
-    public String getConceptLink() {
-        return conceptLink;
+    public String getWordNetId() {
+        return wordNetId;
     }
 
-    public void setConceptLink(String conceptLink) {
-        this.conceptLink = conceptLink;
+    public void setWordNetId(String wordNetID) {
+        this.wordNetId = wordNetID;
     }
     
     public Boolean isReviewFlag() {

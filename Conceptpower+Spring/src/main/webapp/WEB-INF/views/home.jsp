@@ -195,11 +195,16 @@ function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
 var wordNetId;
-
+var wordId;
 $(document).ready(function(){
 	$('#commentTextarea').click(function() { 
 		wordNetId = document.getElementById("conceptSearchResult").rows[rowNum].cells[5].innerHTML;
-		document.getElementById('wordNetId').value = wordNetId;	}); 
+		document.getElementById('wordNetId').value = wordNetId;	
+		wordId = document.getElementById("conceptSearchResult").rows[rowNum].cells[4].innerHTML;
+		document.getElementById('wordId').value = wordId;	
+		console.log('wordId' + wordId);
+		console.log('wordNetId' + wordNetId);
+	}); 
 	});
 	
 var rowNum;
@@ -208,11 +213,6 @@ function  getId(element) {
 }
 
 
-var wordId;
-function getwordId() {
-	wordId = document.getElementById("conceptSearchResult").rows[rowNum].cells[4].innerHTML;
-	document.getElementById('wordId').value = wordId;	
-}
 
 var formDisplayed=true;
 
@@ -541,7 +541,7 @@ height: auto;
        <input type="hidden" name="posValue" id="posValue" value="<%= request.getParameter("pos") %>"/>       
     </div>
     <div class="form-elements">
-    	<div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     <!-- Ajax call -->
+    	<div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     
 	 </div>
 	
         </div>

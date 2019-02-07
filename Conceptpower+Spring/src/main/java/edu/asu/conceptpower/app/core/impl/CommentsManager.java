@@ -33,12 +33,12 @@ public class CommentsManager implements ICommentsManager{
     /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.ICommentsManager#addComment(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public void addComment(String word, String comment, String conceptLink , String requester, String resolver,Status status, Boolean review_flag) {
+    public void addComment(String wordId, String comment, String wordNetId , String requester, String resolver,Status status, Boolean review_flag) {
 
         ReviewRequest newRequest = new ReviewRequest();
-        newRequest.setWord(word);
+        newRequest.setWordId(wordId);
         newRequest.setComment(comment);
-        newRequest.setConceptLink(conceptLink);
+        newRequest.setWordNetId(wordNetId);
         newRequest.setRequester(requester);
         newRequest.setResolver(resolver);
         newRequest.setStatus(status);
@@ -46,7 +46,7 @@ public class CommentsManager implements ICommentsManager{
         
         client.store(newRequest);
         client.commit();
-       
         
     }
+    
 }

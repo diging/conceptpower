@@ -57,9 +57,9 @@ public class DatabaseManager implements Serializable {
         close();
     }
     
-    public ReviewRequest getEntry(String id,Boolean reviewFlag) {
+  /*  public ReviewRequest getEntry(String id,Boolean reviewFlag) {
         ReviewRequest exampleEntry = new ReviewRequest();
-        exampleEntry.setConceptLink(id);
+        exampleEntry.setWordNetId(id);
         exampleEntry.setReviewFlag(reviewFlag);
         ObjectSet<ReviewRequest> results = getClient().queryByExample(exampleEntry);
 
@@ -67,5 +67,25 @@ public class DatabaseManager implements Serializable {
             return results.get(results.size()-1);
 
         return null;
+    }*/
+    
+public ReviewRequest getEntry(String wordId,String wordNetId,Boolean reviewFlag) {
+        
+        ReviewRequest exampleEntry = new ReviewRequest();
+        if(wordNetId!= null && wordNetId.length()!=0) {
+            exampleEntry.setWordNetId(wordNetId);
+        }
+        else {
+            exampleEntry.setWordId(wordId);
+        }
+        exampleEntry.setReviewFlag(reviewFlag);
+        
+        ObjectSet<ReviewRequest> results = getClient().queryByExample(exampleEntry);
+
+        if (results.size()>0)
+            return results.get(results.size()-1);
+
+        return null;
     }
+    
 }

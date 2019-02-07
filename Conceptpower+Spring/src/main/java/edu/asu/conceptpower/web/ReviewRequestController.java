@@ -33,39 +33,62 @@ public class ReviewRequestController {
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
     public String addNewComment(@Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean,
             @RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal , 
-            @RequestParam("wordId") String word, @RequestParam("wordValue") String wordValue, @RequestParam("posValue") String posValue) {
+            @RequestParam("wordId") String wordId, @RequestParam("wordValue") String wordValue, @RequestParam("posValue") String posValue) {
         
         StringBuffer resolver = new StringBuffer();
         StringBuffer conceptId = new StringBuffer("");
-        StringBuffer wordNet_Id = new StringBuffer(wordNetId);
+        StringBuffer sb = new StringBuffer();
         String substring;
         Boolean review_flag = true;
+        boolean wordNetId_Present =true;
 
-        //wordNetId has value stored in <font>wordNetId_Value<font> format.So,extracting the values between font tags.
-        if((wordNet_Id.indexOf(">")!=-1) && (wordNet_Id.indexOf("<")!= -1)) {
-            substring = wordNet_Id.substring(wordNet_Id.indexOf(">") + 1);
-            wordNet_Id.setLength(0);
-            wordNet_Id.append(substring);
-
-            substring = wordNet_Id.substring(0, wordNet_Id.indexOf("<"));
-            wordNet_Id.setLength(0);
-            wordNet_Id.append(substring);            
-        }
         String requester = principal.getName();
-       
-            if(wordNet_Id != null && wordNet_Id.length() != 0) {
+
+        if(wordNetId != null && wordNetId.length()>0)
+        {
+            sb = new StringBuffer(wordNetId);
+            
+            if(wordNetId.equalsIgnoreCase("<font size=\"2\"></font>")) // wordNetId always come in this format even when no value is present.
+            {
+                sb = new StringBuffer(wordId);  //since wordNetId is blank,will use wordId instead.
+                wordNetId_Present = false;
+            }
+        }
+        
+        //wordNetId and wordId has value stored in <font>wordNetId_Value<font> / <font>wordId_Value<font>  format.So,extracting the values between font tags.
+        if((sb.indexOf(">")!=-1) && (sb.indexOf("<")!= -1)) {
+            substring = sb.substring(sb.indexOf(">") + 1);
+            sb.setLength(0);
+            sb.append(substring);
+
+            substring = sb.substring(0, sb.indexOf("<"));
+            sb.setLength(0);
+            sb.append(substring);            
+        }
+
+       //storing the extracted wordNetId in conceptId
+        if(wordNetId_Present && wordNetId != null && wordNetId.length()>0 && sb != null && sb.length() != 0) {
                 try {
-                    conceptId.append(conceptMgr.getWordnetConceptEntry(wordNet_Id.toString()).getId());
+                    conceptId.append(conceptMgr.getWordnetConceptEntry(sb.toString()).getId());
                 } catch (LuceneException e) {
                     logger.warn(e.getMessage());
                 }
-            }
-       System.out.println("word"+word);
-        commentsObj.addComment(word,comment, conceptId.toString(), requester, resolver.toString(), Status.OPENED , review_flag);
+             wordNetId = conceptId.toString();
+
+        }else
+        {
+            wordNetId=null; //otherwise wordNetId will be having value as "<font size="2"></font>". It is therefore made null to get rid of this value.
+            wordNetId_Present = false;
+        }
+        
+        //Will only enter this if loop if wordNetId is missing.
+        if(!wordNetId_Present && wordId != null && wordId.length()>0 && sb != null && sb.length() != 0)
+        {
+            wordId = sb.toString();
+        }
+        
+        commentsObj.addComment(wordId,comment,wordNetId , requester, resolver.toString(), Status.OPENED , review_flag);
         
       return "redirect:/home/conceptsearch?word="+wordValue+"&pos="+posValue;
     }
-    
-  
-  
 }
