@@ -202,9 +202,7 @@ $(document).ready(function(){
 		document.getElementById('wordNetId').value = wordNetId;	
 		wordId = document.getElementById("conceptSearchResult").rows[rowNum].cells[4].innerHTML;
 		document.getElementById('wordId').value = wordId;	
-		console.log('wordId' + wordId);
-		console.log('wordNetId' + wordNetId);
-	}); 
+			}); 
 	});
 	
 var rowNum;
@@ -212,10 +210,7 @@ function  getId(element) {
 	rowNum =  element.rowIndex;
 }
 
-
-
 var formDisplayed=true;
-
 function showForm(comments){
 	
 	if (!formDisplayed){
@@ -403,7 +398,7 @@ $(document).ready(function() {
                 
         <!-- Enabling Disabling the Review button for reviewflag==true -->  
           <c:choose>
- 		 	<c:when test="${concept.reviewFlag}">
+ 		 	<c:when test="${concept.reviewFlag}"> <!-- Testing if the flag is set true for Review-comments already provided for the concept. -->
 			<td onclick="showForm('${concept.comment}');" align="center"><div class="fa fa-envelope"></div></td>
   			</c:when>
   			<c:otherwise>
@@ -415,15 +410,8 @@ $(document).ready(function() {
     </tbody>
   </table>
   
-  <style>
-div.floatingform {
- position: absolute;
-right: 220px;
-top:220px;
-width:5%;
-margin:0 auto;
-height: auto;
-} </style>
+  
+<style> div.floatingform { position: absolute; right: 220px; top:220px; width:5%; margin:0 auto; height: auto;} </style>
 <form >
 <div class="floatingform">
   <div id="commentedBox" >
@@ -431,7 +419,6 @@ height: auto;
     <div class="form-field">
       <textarea id="fetchComments" name="fetchComments" rows="4" cols="30" ></textarea>
     </div>
-   
    </div>
   </div>
 </form>
