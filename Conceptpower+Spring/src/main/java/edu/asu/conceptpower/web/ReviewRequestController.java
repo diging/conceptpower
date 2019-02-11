@@ -30,7 +30,7 @@ public class ReviewRequestController {
     private ConceptManager conceptMgr;
     
     @PreAuthorize("isAuthenticated()")   
-    @RequestMapping(value = "/addComment", method = RequestMethod.POST)
+    @RequestMapping(value = "/auth/addComment", method = RequestMethod.POST)
     public String addNewComment(@Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean,
             @RequestParam("comment") String comment, @RequestParam("wordNetId") String wordNetId, Principal principal , 
             @RequestParam("wordId") String wordId, @RequestParam("wordValue") String wordValue, @RequestParam("posValue") String posValue) {

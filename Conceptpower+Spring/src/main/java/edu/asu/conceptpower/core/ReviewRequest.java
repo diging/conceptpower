@@ -12,7 +12,7 @@ public class ReviewRequest {
     private String wordNetId;
     public enum Status {OPENED,RESOLVED,CLOSED};
     private Status status;
-    private Boolean reviewFlag = new Boolean(false);
+    private Boolean reviewFlag = new Boolean(false); // Flag is set to true if any comment has been posted on the concept.
     private boolean isDeleted;
     
     

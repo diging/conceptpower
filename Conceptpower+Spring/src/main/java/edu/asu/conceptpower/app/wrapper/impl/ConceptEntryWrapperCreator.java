@@ -61,7 +61,6 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
         if (entries == null)
             return foundConcepts;
 
-        ReviewRequest revReq;
         for (ConceptEntry entry : entries) {
             
             
@@ -93,6 +92,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             }
             
             //adding reviewflag in wrapper
+            ReviewRequest revReq;
             revReq = dbManager.getEntry(entry.getId(),entry.getWordnetId(),true);
             if(revReq!=null) {
                 wrapper.setReviewFlag(revReq.isReviewFlag());

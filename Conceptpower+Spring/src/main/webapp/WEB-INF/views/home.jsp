@@ -5,6 +5,9 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page session="false"%>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
 <!--  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -236,11 +239,11 @@ $(document).ready(function() {
 <header class="page-header">
   <h1 class="page-title">Welcome to Conceptpower</h1>
 </header>
-
 <p>Search for a concept:</p>
 <center>
   <font color="red">${IndexerStatus}</font>
 </center>
+<body style="font-family:Calibri">
 
 <form:form
   action="${pageContext.servletContext.contextPath}/home/conceptsearch"
@@ -411,7 +414,11 @@ $(document).ready(function() {
   </table>
   
   
-<style> div.floatingform { position: absolute; right: 220px; top:220px; width:5%; margin:0 auto; height: auto;} </style>
+<style> div.floatingform { position: absolute; right: 220px; top:220px; width:5%; margin:0 auto; height: auto;} 
+div.row
+{
+    font-family: "Times New Roman", Times, serif;
+}</style>
 <form >
 <div class="floatingform">
   <div id="commentedBox" >
@@ -512,7 +519,7 @@ $(document).ready(function() {
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
- <form id="reviewForm" action="${pageContext.servletContext.contextPath}/addComment" method="POST">   <!--  -->
+ <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addComment" method="POST">   <!--  -->
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -537,5 +544,4 @@ $(document).ready(function() {
    </form>   
     </div>
   </div>
-  
-</div>
+  </div></body>
