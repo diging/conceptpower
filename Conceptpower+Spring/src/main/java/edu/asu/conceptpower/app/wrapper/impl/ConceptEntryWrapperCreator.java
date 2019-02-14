@@ -8,11 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.db4o.ObjectContainer;
-
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.impl.CommentsDAO;
 import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.users.IUserManager;
@@ -91,12 +90,14 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
                 }
             }
             
-            //adding reviewflag in wrapper
+          //  CommentsDAO comments_db = new CommentsDAO();
             ReviewRequest revReq;
-            revReq = dbManager.getEntry(entry.getId(),entry.getWordnetId(),true);
-            if(revReq!=null) {
-                wrapper.setReviewFlag(revReq.isReviewFlag());
+            revReq = dbManager.getEntry(entry.getId(),entry.getWordnetId());
+            if(revReq!=null && revReq.getComment()!=null) {
                 wrapper.setComment(revReq.getComment());
+            }else
+            {
+                wrapper.setComment(null);
             }
 
             // build description considering all the wordnet entries wrappe

@@ -56,9 +56,9 @@ public class DatabaseManager implements Serializable {
     public void shutdown() {
         close();
     }
-  
     
-public ReviewRequest getEntry(String wordId,String wordNetId,Boolean reviewFlag) {
+    
+public ReviewRequest getEntry(String wordId,String wordNetId) {
         
         ReviewRequest exampleEntry = new ReviewRequest();
         if(wordNetId!= null && wordNetId.length()!=0) {
@@ -67,7 +67,6 @@ public ReviewRequest getEntry(String wordId,String wordNetId,Boolean reviewFlag)
         else {
             exampleEntry.setWordId(wordId);
         }
-        exampleEntry.setReviewFlag(reviewFlag);
         
         ObjectSet<ReviewRequest> results = getClient().queryByExample(exampleEntry);
 
@@ -76,5 +75,4 @@ public ReviewRequest getEntry(String wordId,String wordNetId,Boolean reviewFlag)
 
         return null;
     }
-    
 }

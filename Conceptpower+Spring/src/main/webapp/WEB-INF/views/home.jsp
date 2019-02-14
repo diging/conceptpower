@@ -212,14 +212,12 @@ var rowNum;
 function  getId(element) {
 	rowNum =  element.rowIndex;
 }
-
 var formDisplayed=true;
 function showForm(comments){
 	
 	if (!formDisplayed){
     	document.getElementById('commentedBox').style.display = "none";
         document.getElementById("fetchComments").value = comments;
-
     	formDisplayed=true;
 	}else{
 		document.getElementById('commentedBox').style.display = "block";
@@ -231,8 +229,6 @@ $(document).ready(function() {
 	   $('#commentedBox').hide();
 	});
     
-
-
 </script>
 
 
@@ -243,7 +239,6 @@ $(document).ready(function() {
 <center>
   <font color="red">${IndexerStatus}</font>
 </center>
-<body style="font-family:Calibri">
 
 <form:form
   action="${pageContext.servletContext.contextPath}/home/conceptsearch"
@@ -313,8 +308,9 @@ $(document).ready(function() {
       <c:set var="sortDirection" value="${-1}"/>
     </c:otherwise>
   </c:choose>
+  
 
-  <table cellpadding="0" cellspacing="0"
+  <table style="font-size:2"
     class="table table-striped table-bordered" id="conceptSearchResult">
     <thead>
       <tr>
@@ -324,15 +320,15 @@ $(document).ready(function() {
           <th data-name='merge'></th>
         </sec:authorize>
         <th>
-          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
+          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
           </a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-      	<th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'reviewStatus', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Review Status  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+      	<th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'reviewStatus', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Review Status   <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
       </tr>
     </thead>
     <tbody>
@@ -363,7 +359,6 @@ $(document).ready(function() {
                     href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcept/${concept.entry.id}?fromHomeScreenDelete=true"
                     id="${concept.entry.id}"><i
                     title="Delete Concept" class="fa fa-trash"></i></a>
-                  </font>
 
                 </c:when>
                 <c:otherwise>
@@ -378,47 +373,44 @@ $(document).ready(function() {
             </td>
 
           </sec:authorize>
-          <td align="justify"><font size="2"> <a
+          <td align="justify"> <a
               id="${concept.entry.id}" data-toggle="modal"
               data-target="#detailsModal"
               data-conceptid="${concept.entry.id}"><c:out
-                  value="${concept.entry.word}"></c:out></a></font></td>
-          <td align="justify" id="entryId" ><font size="2"><c:out
-                value="${concept.entry.id}"></c:out></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.wordnetId}"></c:out></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.pos}"></c:out></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.conceptList}"></c:out></font></td>
+                  value="${concept.entry.word}"></c:out></a></td>
+          <td align="justify" id="entryId" ><c:out
+                value="${concept.entry.id}"></c:out></td>
+          <td align="justify"><c:out
+                value="${concept.entry.wordnetId}"></c:out></td>
+          <td align="justify"><c:out
+                value="${concept.entry.pos}"></c:out></td>
+          <td align="justify"><c:out
+                value="${concept.entry.conceptList}"></c:out></td>
           <td align="justify">
                 <div class="scrollable" style="max-height: 100px; max-width: 400px;">
                     <c:out value="${concept.description}" escapeXml="false"></c:out>
                 </div>
           </td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.type.typeName}"></c:out></font></td>
+          <td align="justify"><c:out
+                value="${concept.type.typeName}"></c:out></td>
                 
-        <!-- Enabling Disabling the Review button for reviewflag==true -->  
+         <!-- Enabling Disabling the Review button for reviewflag==true -->  
           <c:choose>
- 		 	<c:when test="${concept.reviewFlag}"> <!-- Testing if the flag is set true for Review-comments already provided for the concept. -->
-			<td onclick="showForm('${concept.comment}');" align="center"><div class="fa fa-envelope"></div></td>
+ 		 	<c:when test="${concept.comment == null}"> <!-- Testing if the flag is set true for Review-comments already provided for the concept. -->
+ 		 	   			     <td align="center"><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
   			</c:when>
   			<c:otherwise>
-   			     <td align="center"><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
+   			     			<td onclick="showForm('${concept.comment}');" align="center"><div class="fa fa-envelope"></div></td>
  			 </c:otherwise>
 		</c:choose>	
+      
         </tr>
       </c:forEach>
     </tbody>
   </table>
+
   
-  
-<style> div.floatingform { position: absolute; right: 220px; top:220px; width:5%; margin:0 auto; height: auto;} 
-div.row
-{
-    font-family: "Times New Roman", Times, serif;
-}</style>
+<style> div.floatingform { position: absolute; right: 220px; top:220px; width:5%; margin:0 auto; height: auto;} </style>
 <form >
 <div class="floatingform">
   <div id="commentedBox" >
@@ -467,7 +459,7 @@ div.row
         <div class="row row-odd">
           <div class="col-sm-3">Id:</div>
           <div id="detailsid" class="col-sm-9"></div>
-          </tr>
+          
         </div>
         <div class="row row-even">
           <div class="col-sm-3">URI:</div>
@@ -543,5 +535,4 @@ div.row
       </div>
    </form>   
     </div>
-  </div>
-  </div></body>
+  </div>  </div>

@@ -2,6 +2,7 @@ package edu.asu.conceptpower.web;
 
 import java.util.List;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,11 +83,14 @@ public class ConceptSearchController {
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(required = false) String sortColumn,
             @RequestParam(required = false) String conceptIdsToMerge,
-            @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results)
+            @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results, ServletRequest request)
                     throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
             return "conceptsearch";
-        }
+        }   
+        
+        String charc = request.getCharacterEncoding();
+        String att = request.getParameter("word");
         conceptSearchBean.setWord(conceptSearchBean.getWord().trim());
         
         if (conceptIdsToMerge != null) {
