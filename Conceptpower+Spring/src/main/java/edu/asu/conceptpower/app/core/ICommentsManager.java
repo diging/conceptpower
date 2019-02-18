@@ -8,10 +8,9 @@ public interface ICommentsManager {
     /** Used to add comments for each concept entry
      * @param conceptId - the conceptId of the concept word.
      * @param comment - Comments provided by the user
-     * @param wordNetID - the concept Link for which the comments were provided
      * @param status - the status of the comment -open,resolved,etc.
      */
-    public abstract  void addComment(String conceptId,String comment , CommentStatus status);
+    public abstract void addComment(String conceptId,String comment ,CommentStatus status);
     
     
     
@@ -19,7 +18,7 @@ public interface ICommentsManager {
      * @param conceptId - the conceptId of the concept word
      * @return ReviewRequest - the ReviewRequest ,stored row in db, corresponding to the conceptId.
      */
-    public ReviewRequest getEntry(String conceptId);
+    public abstract ReviewRequest getEntry(String conceptId);
 
     
 }

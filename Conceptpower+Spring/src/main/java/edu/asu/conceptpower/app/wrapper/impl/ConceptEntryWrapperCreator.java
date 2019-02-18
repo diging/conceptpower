@@ -87,8 +87,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
                 }
             }
             
-          //  CommentsDAO comments_db = new CommentsDAO();
-            
+          //For getting the Review Request of the entry
             ReviewRequest revReq = commentsManager.getEntry(entry.getId());
             if(revReq!=null && revReq.getComment()!=null) {
                 wrapper.setComment(revReq.getComment());
