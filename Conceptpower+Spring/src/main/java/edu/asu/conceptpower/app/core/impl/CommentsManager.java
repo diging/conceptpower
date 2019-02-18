@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.app.core.ICommentsManager;
 import edu.asu.conceptpower.app.db.DatabaseManager;
+import edu.asu.conceptpower.core.CommentStatus;
 import edu.asu.conceptpower.core.ReviewRequest;
-import edu.asu.conceptpower.core.ReviewRequest.Status;
 
 @Service
 public class CommentsManager implements ICommentsManager{
@@ -21,20 +22,20 @@ public class CommentsManager implements ICommentsManager{
     private DatabaseManager dbManager;
     
     private ObjectContainer client;
-    
-    
 
     @PostConstruct
     public void init() {
         this.client = dbManager.getClient();
     }
    
-    public void addComment(String wordId, String comment, String wordNetId ,Status status) {
+    /* (non-Javadoc)
+     * @see edu.asu.conceptpower.app.core.ICommentsManager#addComment(java.lang.String, java.lang.String, edu.asu.conceptpower.core.CommentStatus)
+     */
+    public void addComment(String conceptId, String comment,CommentStatus status) {
 
         ReviewRequest newRequest = new ReviewRequest();
-        newRequest.setWordId(wordId);
+        newRequest.setConceptId(conceptId);
         newRequest.setComment(comment);
-        newRequest.setWordNetId(wordNetId);
         newRequest.setStatus(status);
         
         client.store(newRequest);
@@ -42,4 +43,20 @@ public class CommentsManager implements ICommentsManager{
         
     }
     
+    /* (non-Javadoc)
+     * @see edu.asu.conceptpower.app.core.ICommentsManager#getEntry(java.lang.String)
+     */
+    public ReviewRequest getEntry(String conceptId) {
+        
+        ReviewRequest exampleEntry = new ReviewRequest();
+        exampleEntry.setConceptId(conceptId);
+        
+        this.client = dbManager.getClient();
+        ObjectSet<ReviewRequest> results = client.queryByExample(exampleEntry);
+
+        if (results.size()>0)
+            return results.get(results.size()-1);
+
+        return null;
+    }
 }

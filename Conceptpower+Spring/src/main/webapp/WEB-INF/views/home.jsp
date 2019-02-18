@@ -5,9 +5,7 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page session="false"%>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-</head>
+
 <!--  <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -197,31 +195,31 @@ function prepareMergeConcept(conceptId) {
 function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
-var wordNetId;
-var wordId;
-$(document).ready(function(){
-	$('#commentTextarea').click(function() { 
-		wordNetId = document.getElementById("conceptSearchResult").rows[rowNum].cells[5].innerHTML;
-		document.getElementById('wordNetId').value = wordNetId;	
-		wordId = document.getElementById("conceptSearchResult").rows[rowNum].cells[4].innerHTML;
-		document.getElementById('wordId').value = wordId;	
-			}); 
+var conceptId;
+ 
+	$(document).ready(function(){
+	$(".btnReview").click(function() {
+		conceptId= $(this).closest("tr")   // Finds the closest row <tr> 
+	                       .find(".entryID")     // Gets a descendent with class="entryID"
+	                       .text();         // Retrieves the text within <td>
+
+   $("#conceptId").val(conceptId);	      // Outputs the answer
+		});
 	});
-	
-var rowNum;
+var rowNum;  
 function  getId(element) {
 	rowNum =  element.rowIndex;
 }
 var formDisplayed=true;
 function showForm(comments){
-	
 	if (!formDisplayed){
-    	document.getElementById('commentedBox').style.display = "none";
-        document.getElementById("fetchComments").value = comments;
+        $("#commentedBox").css("display","none");
+        $("#fetchComments").val(comments);
+
     	formDisplayed=true;
 	}else{
-		document.getElementById('commentedBox').style.display = "block";
-        document.getElementById("fetchComments").value = comments;
+	     $("#commentedBox").css("display","block");
+         $("#fetchComments").val(comments);
 		formDisplayed=false;
 	}
 }
@@ -378,7 +376,7 @@ $(document).ready(function() {
               data-target="#detailsModal"
               data-conceptid="${concept.entry.id}"><c:out
                   value="${concept.entry.word}"></c:out></a></td>
-          <td align="justify" id="entryId" ><c:out
+          <td class="entryID" align="justify" id="entryId" ><c:out
                 value="${concept.entry.id}"></c:out></td>
           <td align="justify"><c:out
                 value="${concept.entry.wordnetId}"></c:out></td>
@@ -397,7 +395,7 @@ $(document).ready(function() {
          <!-- Enabling Disabling the Review button for reviewflag==true -->  
           <c:choose>
  		 	<c:when test="${concept.comment == null}"> <!-- Testing if the flag is set true for Review-comments already provided for the concept. -->
- 		 	   			     <td align="center"><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btn-sm btn-action" data-toggle="modal" data-target="#myModal">Review</button></td>
+ 		 	   			     <td align="center"><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
   			</c:when>
   			<c:otherwise>
    			     			<td onclick="showForm('${concept.comment}');" align="center"><div class="fa fa-envelope"></div></td>
@@ -511,20 +509,23 @@ $(document).ready(function() {
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
- <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addComment" method="POST">   <!--  -->
+ <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addComment" method="POST">  
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
-         <div class="form-label"><b>Comments</b></div>
+         <div class="form-label"><b>Provide Comments</b></div>
     <div class="form-field">
       <textarea id="commentTextarea" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
       <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
-       <input type="hidden" name="wordId" id="wordId" value=""/>
+       <input type="hidden" name="conceptId" id="conceptId" value=""/>
        <input type="hidden" name="wordValue" id="wordValue" value="<%= request.getParameter("word") %>"/>
-       <input type="hidden" name="posValue" id="posValue" value="<%= request.getParameter("pos") %>"/>       
+       <input type="hidden" name="posValue" id="posValue" value="<%= request.getParameter("pos") %>"/> 
+       <input type="hidden" name="url" id="url" value=" ${requestScope['javax.servlet.forward.query_string']}"/> 
+       
+            
     </div>
     <div class="form-elements">
     	<div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     
@@ -535,4 +536,5 @@ $(document).ready(function() {
       </div>
    </form>   
     </div>
-  </div>  </div>
+  </div> 
+   </div>

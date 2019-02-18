@@ -5,14 +5,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.core.Constants;
+import edu.asu.conceptpower.app.core.ICommentsManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
-import edu.asu.conceptpower.app.core.impl.CommentsDAO;
-import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.util.IURIHelper;
@@ -43,8 +41,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
     private IURIHelper helper; 
     
     @Autowired
-    @Qualifier("conceptReviewDatabaseManager")
-    private DatabaseManager dbManager;
+    private ICommentsManager commentsManager; 
     
     /**
      * This method creates wrappers for the concept entries passed as parameter
@@ -91,8 +88,8 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             }
             
           //  CommentsDAO comments_db = new CommentsDAO();
-            ReviewRequest revReq;
-            revReq = dbManager.getEntry(entry.getId(),entry.getWordnetId());
+            
+            ReviewRequest revReq = commentsManager.getEntry(entry.getId());
             if(revReq!=null && revReq.getComment()!=null) {
                 wrapper.setComment(revReq.getComment());
             }else

@@ -4,12 +4,10 @@ import java.io.Serializable;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
-import com.db4o.ObjectSet;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ServerConfiguration;
 
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ReviewRequest;
 
 public class DatabaseManager implements Serializable {
 
@@ -57,22 +55,4 @@ public class DatabaseManager implements Serializable {
         close();
     }
     
-    
-public ReviewRequest getEntry(String wordId,String wordNetId) {
-        
-        ReviewRequest exampleEntry = new ReviewRequest();
-        if(wordNetId!= null && wordNetId.length()!=0) {
-            exampleEntry.setWordNetId(wordNetId);
-        }
-        else {
-            exampleEntry.setWordId(wordId);
-        }
-        
-        ObjectSet<ReviewRequest> results = getClient().queryByExample(exampleEntry);
-
-        if (results.size()>0)
-            return results.get(results.size()-1);
-
-        return null;
-    }
 }
