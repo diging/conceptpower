@@ -512,10 +512,7 @@ $(document).ready(function() {
          <div class="form-label"><b>Provide Comments</b></div>
     <div class="form-field">
       <textarea id="commentTextarea" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
-      <input type="hidden" name="wordNetId" id="wordNetId" value=""/>
        <input type="hidden" name="conceptId" id="conceptId" value=""/>
-       <input type="hidden" name="wordValue" id="wordValue" value="<%= request.getParameter("word") %>"/>
-       <input type="hidden" name="posValue" id="posValue" value="<%= request.getParameter("pos") %>"/> 
        <input type="hidden" name="url" id="url" value=" ${requestScope['javax.servlet.forward.query_string']}"/> 
        
             

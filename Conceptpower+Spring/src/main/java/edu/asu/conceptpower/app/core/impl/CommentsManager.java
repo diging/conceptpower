@@ -31,13 +31,14 @@ public class CommentsManager implements ICommentsManager{
     /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.ICommentsManager#addComment(java.lang.String, java.lang.String, edu.asu.conceptpower.core.CommentStatus)
      */
-    public void addComment(String conceptId, String comment,CommentStatus status) {
+    public void addComment(String conceptId, String comment,CommentStatus status,String requestor) {
 
         ReviewRequest newRequest = new ReviewRequest();
         newRequest.setConceptId(conceptId);
         newRequest.setComment(comment);
         newRequest.setStatus(status);
-        
+        newRequest.setRequestor(requestor);
+                
         client.store(newRequest);
         client.commit();
         

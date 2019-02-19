@@ -89,8 +89,6 @@ public class ConceptSearchController {
             return "conceptsearch";
         }   
         
-        String charc = request.getCharacterEncoding();
-        String att = request.getParameter("word");
         conceptSearchBean.setWord(conceptSearchBean.getWord().trim());
         
         if (conceptIdsToMerge != null) {

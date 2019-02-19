@@ -88,12 +88,9 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             }
             
           //For getting the Review Request of the entry
-            ReviewRequest revReq = commentsManager.getEntry(entry.getId());
-            if(revReq!=null && revReq.getComment()!=null) {
-                wrapper.setComment(revReq.getComment());
-            }else
-            {
-                wrapper.setComment(null);
+            ReviewRequest reviewRequest = commentsManager.getEntry(entry.getId());
+            if(reviewRequest!=null && reviewRequest.getComment()!=null) {
+                wrapper.setComment(reviewRequest.getComment());
             }
 
             // build description considering all the wordnet entries wrappe

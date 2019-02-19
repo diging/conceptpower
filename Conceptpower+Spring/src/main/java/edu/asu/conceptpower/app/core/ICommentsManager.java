@@ -5,12 +5,13 @@ import edu.asu.conceptpower.core.ReviewRequest;
 
 public interface ICommentsManager {
 
-    /** Used to add comments for each concept entry
+    /**
      * @param conceptId - the conceptId of the concept word.
      * @param comment - Comments provided by the user
      * @param status - the status of the comment -open,resolved,etc.
+     * @param requestor - the user who provided the comments.
      */
-    public abstract void addComment(String conceptId,String comment ,CommentStatus status);
+    public abstract void addComment(String conceptId, String comment,CommentStatus status,String requestor);
     
     
     
