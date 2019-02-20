@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.core.ReviewRequest;
 import edu.asu.conceptpower.users.User;
 
 /**
@@ -33,7 +34,7 @@ public class ConceptEntryWrapper implements Serializable {
     private String creatorId;
     private String lastModifiedEvent;
 
-    private String comment;
+    private ReviewRequest reviewRequest;
 
     public ConceptEntryWrapper(ConceptEntry entry) {
         this.entry = entry;
@@ -127,11 +128,13 @@ public class ConceptEntryWrapper implements Serializable {
         this.lastModifiedEvent = lastModifiedEvent;
     }
 
-    public String getComment() {
-        return comment;
+    public ReviewRequest getReviewRequest() {
+        return reviewRequest;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setReviewRequest(ReviewRequest reviewRequest) {
+        this.reviewRequest = reviewRequest;
     }
+
+    
 }

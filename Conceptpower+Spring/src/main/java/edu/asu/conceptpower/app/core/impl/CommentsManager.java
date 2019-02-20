@@ -52,11 +52,12 @@ public class CommentsManager implements ICommentsManager{
         ReviewRequest exampleEntry = new ReviewRequest();
         exampleEntry.setConceptId(conceptId);
         
-        this.client = dbManager.getClient();
         ObjectSet<ReviewRequest> results = client.queryByExample(exampleEntry);
 
-        if (results.size()>0)
-            return results.get(results.size()-1);
+       // getting the results to fetch the comments corresponding to the passed conceptId
+        if (results!= null && results.size()>0) {
+            return results.get(0);
+        }
 
         return null;
     }

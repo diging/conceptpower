@@ -188,17 +188,14 @@ function prepareMergeConcept(conceptId) {
 function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
-var conceptId;
- 
-	$(document).ready(function(){
-	$(".btnReview").click(function() {
-		conceptId= $(this).closest("tr")   // Finds the closest row <tr> 
-	                       .find(".entryID")     // Gets a descendent with class="entryID"
-	                       .text();         // Retrieves the text within <td>
 
-   $("#conceptId").val(conceptId);	      // Outputs the answer
-		});
-	});
+$(document).ready(function(){
+	$(".btnReview").click(function() {
+		$("#conceptId").val($(this).closest("tr").find(".entryID").text());	      
+   });
+}); 
+	
+
 var rowNum;  
 function  getId(element) {
 	rowNum =  element.rowIndex;
@@ -206,22 +203,18 @@ function  getId(element) {
 var formDisplayed=true;
 function showForm(comments){
 	if (!formDisplayed){
-        $("#commentedBox").css("display","none");
-        $("#fetchComments").val(comments);
-
+      $("#commentedBox").show();
+      $("#fetchComments").val(comments);
     	formDisplayed=true;
 	}else{
-	     $("#commentedBox").css("display","block");
-         $("#fetchComments").val(comments);
+	   $("#commentedBox").hide();
 		formDisplayed=false;
 	}
 }
 $(document).ready(function() {
 	   $('#commentedBox').hide();
-	});
-    
+});   
 </script>
-
 
 <header class="page-header">
   <h1 class="page-title">Welcome to Conceptpower</h1>
@@ -301,7 +294,7 @@ $(document).ready(function() {
   </c:choose>
   
 
-  <table style="font-size:2"
+  <table
     class="table table-striped table-bordered" id="conceptSearchResult">
     <thead>
       <tr>
@@ -385,16 +378,15 @@ $(document).ready(function() {
           <td align="justify"><c:out
                 value="${concept.type.typeName}"></c:out></td>
                 
-         <!-- Enabling Disabling the Review button for reviewflag==true -->  
+         <!-- Enabling Disabling the Review button -->  
           <c:choose>
- 		 	<c:when test="${concept.comment == null}"> <!-- Testing if the flag is set true for Review-comments already provided for the concept. -->
- 		 	   			     <td align="center"><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
+ 		 	<c:when test="${concept.reviewRequest.comment == null}"> <!-- Testing if the comment has already been provided. -->
+ 		 	   	<td align="center"><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
   			</c:when>
   			<c:otherwise>
-   			     			<td onclick="showForm('${concept.comment}');" align="center"><div class="fa fa-envelope"></div></td>
- 			 </c:otherwise>
-		</c:choose>	
-      
+   			    <td onclick="showForm('${concept.reviewRequest.comment}');" align="center"><div class="fa fa-envelope"></div></td>
+ 			</c:otherwise>
+		  </c:choose>
         </tr>
       </c:forEach>
     </tbody>
