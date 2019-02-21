@@ -213,7 +213,42 @@ function showForm(comments){
 }
 $(document).ready(function() {
 	   $('#commentedBox').hide();
-});   
+});
+
+/* $("#reviewForm").submit(function(e){
+    $.ajax({
+         url: '${pageContext.servletContext.contextPath}/auth/addComment',
+         type: 'post',
+         data:$(this).serialize(),
+         success: function() {
+             alert('success');
+         }
+     })        
+}); */
+
+
+$(function() {
+	   /*  Submit form using Ajax */
+	   $('button[type=submit]').click(function(e) {
+	   
+	      //Prevent default submission of form
+	      e.preventDefault();
+	     
+	      $.post({
+	         url : '${pageContext.servletContext.contextPath}/auth/addComment',
+	         data : $('form[name=reviewForm]').serialize(),
+	         success : function(res) {
+	         
+	  
+	               //Set response
+	               $('#resultContainer pre code').text(JSON.stringify(res.employee));
+	               $('#resultContainer').show();
+	            
+	           
+	         }
+	      })
+	   });
+	});
 </script>
 
 <header class="page-header">
@@ -494,7 +529,7 @@ $(document).ready(function() {
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
- <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addComment" method="POST">  
+ <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addComment" method="post">  
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -505,19 +540,17 @@ $(document).ready(function() {
     <div class="form-field">
       <textarea id="commentTextarea" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
        <input type="hidden" name="conceptId" id="conceptId" value=""/>
-       <input type="hidden" name="url" id="url" value=" ${requestScope['javax.servlet.forward.query_string']}"/> 
-       
-            
     </div>
     <div class="form-elements">
-    	<div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     
+    	<!-- <div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     -->
+    	 <button type="submit">Submit</button>
 	 </div>
-	
-        </div>
-       
-      </div>
-   </form>   
     </div>
-  </div> 
+   </div>
+</form>   
  </div>
+  </div> 
+</div>
+
+
    
