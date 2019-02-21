@@ -1,32 +1,23 @@
 package edu.asu.conceptpower.app.core.impl;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.app.core.ICommentsManager;
-import edu.asu.conceptpower.app.db.DatabaseManager;
+import edu.asu.conceptpower.app.db4o.ICommentsDBManager;
 import edu.asu.conceptpower.core.CommentStatus;
 import edu.asu.conceptpower.core.ReviewRequest;
 
 @Service
+@PropertySource("classpath:config.properties")
 public class CommentsManager implements ICommentsManager{
 
+  
     @Autowired
-    @Qualifier("conceptReviewDatabaseManager")
-    private DatabaseManager dbManager;
-    
-    private ObjectContainer client;
-
-    @PostConstruct
-    public void init() {
-        this.client = dbManager.getClient();
-    }
+    private ICommentsDBManager dbClient;
    
     /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.ICommentsManager#addComment(java.lang.String, java.lang.String, edu.asu.conceptpower.core.CommentStatus)
@@ -39,9 +30,7 @@ public class CommentsManager implements ICommentsManager{
         newRequest.setStatus(status);
         newRequest.setRequestor(requestor);
                 
-        client.store(newRequest);
-        client.commit();
-        
+        dbClient.store(newRequest);
     }
     
     /* (non-Javadoc)
@@ -52,13 +41,12 @@ public class CommentsManager implements ICommentsManager{
         ReviewRequest exampleEntry = new ReviewRequest();
         exampleEntry.setConceptId(conceptId);
         
-        ObjectSet<ReviewRequest> results = client.queryByExample(exampleEntry);
+        ObjectSet<ReviewRequest> results = dbClient.queryByExample(exampleEntry);
 
        // getting the results to fetch the comments corresponding to the passed conceptId
         if (results!= null && results.size()>0) {
             return results.get(0);
         }
-
         return null;
     }
 }

@@ -191,7 +191,7 @@ function createWrapper(wrapperId) {
 
 $(document).ready(function(){
 	$(".btnReview").click(function() {
-		$("#conceptId").val($(this).closest("tr").find(".entryID").text());	      
+		$("#conceptId").val($(this).data("concept-id"));	      
    });
 }); 
 	
@@ -381,7 +381,7 @@ $(document).ready(function() {
          <!-- Enabling Disabling the Review button -->  
           <c:choose>
  		 	<c:when test="${concept.reviewRequest.comment == null}"> <!-- Testing if the comment has already been provided. -->
- 		 	   	<td align="center"><button type="button" id="reviewButton" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
+ 		 	   	<td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
   			</c:when>
   			<c:otherwise>
    			    <td onclick="showForm('${concept.reviewRequest.comment}');" align="center"><div class="fa fa-envelope"></div></td>
