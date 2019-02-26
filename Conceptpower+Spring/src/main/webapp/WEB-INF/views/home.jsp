@@ -215,55 +215,40 @@ $(document).ready(function() {
 	   $('#commentedBox').hide();
 });
 
-/* $("#reviewForm").submit(function(e){
-    $.ajax({
-         url: '${pageContext.servletContext.contextPath}/auth/addComment',
-         type: 'post',
-         data:$(this).serialize(),
-         success: function() {
-             alert('success');
-         }
-     })        
-}); */
 
-$('#reviewForm').submit(function(e) {
-	
-	console.log("inside Ajax");
-    // reference to form object
-var form = this;
-    // for stopping the default action of element
-    e.preventDefault();
-    // mapthat will hold form data
-    var formData = {}
-//iterate over form elements   
-    $.each(this, function(i, v){
-    var input = $(v);
-    // populate form data as key-value pairs
-        // with the name of input as key and its value as value
-    formData[input.attr("name")] = input.val();
-    });
+
+function doAjaxPost() {
+    // get the form values now
+    var comment = $('#comment').val();
+    var conceptId = $('#conceptId').val();
+ 
     $.ajax({
-        type: form.attr('method'), // method attribute of form
-        url: form.attr('action'),  // action attribute of form
-        dataType : 'json',
-    // convert form data to json format
-        data : JSON.stringify(formData),
-        success : function(res) {
+        type: "POST",
+        url: "${pageContext.servletContext.contextPath}/auth/addComment",
+        data: "comment=" + comment + "&conceptId=" + conceptId,
+        success: function(response){
+            // we have the response now here
+            console.log("response"+response);
+                displayInfo = "<ol>";
+               
+                	displayInfo += "<br><li><b>comment</b> : " + comment +
+                    ";<b> conceptId</b> : " + conceptId;
+                 
+                displayInfo += "</ol>";
+                 $('#info').html("Comment has been added successfully. " + displayInfo);
+                 $('#conceptId').val('');
+                 $('#comment').val('');
+                 $('#error').hide('slow');
+                 $('#info').show('slow');
+                 $('#submitForm').hide();
             
-            if(res.validated){
-               //Set response
-               $('#resultContainer pre code').text(JSON.stringify(res.employee));
-               $('#resultContainer').show();
-            
-            }else{
-              //Set error messages
-              $.each(res.errorMessages,function(key,value){
-  	            $('input[name='+key+']').after('<span class="error">'+value+'</span>');
-              });
-            }
-        }
+         },
+         error: function(e){
+             alert('Error: ' + e);
+         }
     });
-});
+}
+
 
 	
 
@@ -556,12 +541,14 @@ var form = this;
         <div class="modal-body">
          <div class="form-label"><b>Provide Comments</b></div>
     <div class="form-field">
-      <textarea id="commentTextarea" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
+      <textarea id="comment" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
        <input type="hidden" name="conceptId" id="conceptId" value=""/>
+       <div id="error" class="error"></div>
+       <div id="info" class="success"></div>
     </div>
     <div class="form-elements">
     	<!-- <div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     -->
-    	 <input value="Submit Form" type="submit">
+    	 <input value="Submit Form" type="button" id="submitForm" onclick="doAjaxPost()">
 	 </div>
     </div>
    </div>
@@ -570,14 +557,6 @@ var form = this;
   </div> 
 </div>
 
-<!-- Result Container  -->
-<div id="resultContainer" style="display: none;">
- <hr/>
- <h4 style="color: green;">JSON Response From Server</h4>
-  <pre style="color: green;">
-    <code></code>
-   </pre>
-</div>
 
 
    
