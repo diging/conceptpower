@@ -1,10 +1,12 @@
 package edu.asu.conceptpower.core;
 
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class ReviewRequest {
 
 
     private String conceptId;
+    @NotEmpty(message="Enter Comments.")
     private String comment;
     private CommentStatus status;
     private String requestor;

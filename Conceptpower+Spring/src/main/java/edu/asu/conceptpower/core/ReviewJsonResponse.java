@@ -1,25 +1,16 @@
 package edu.asu.conceptpower.core;
 
+import java.util.Map;
+
 public class ReviewJsonResponse {
     
     private String conceptId;
     private String comment;
     private String requestor;
     //--
-    private String status = null;
-    private Object result = null;
-    public String getStatus() {
-            return status;
-    }
-    public void setStatus(String status) {
-            this.status = status;
-    }
-    public Object getResult() {
-            return result;
-    }
-    public void setResult(Object result) {
-            this.result = result;
-    }
+    private boolean validated;
+    private Map<String, String> errorMessages;
+   
     //--
     public String getConceptId() {
         return conceptId;
@@ -38,6 +29,18 @@ public class ReviewJsonResponse {
     }
     public void setRequestor(String requestor) {
         this.requestor = requestor;
+    }
+    public boolean isValidated() {
+        return validated;
+    }
+    public void setValidated(boolean validated) {
+        this.validated = validated;
+    }
+    public Map<String, String> getErrorMessages() {
+        return errorMessages;
+    }
+    public void setErrorMessages(Map<String, String> errorMessages) {
+        this.errorMessages = errorMessages;
     }
 
 }
