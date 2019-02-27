@@ -18,22 +18,19 @@ import edu.asu.conceptpower.core.ReviewRequest;
 @Controller
 public class ReviewRequestController {
  
-    
     @Autowired
-    private CommentsManager commentsObj;
-        
-    
+    private CommentsManager commentsMgr;
+           
     @RequestMapping(value = "/auth/addComment", method = RequestMethod.POST )
     public @ResponseBody ReviewJsonResponse addNewComment( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest, BindingResult result,Principal principal) {
   
+        reviewRequest.setStatus(CommentStatus.OPENED);
+        reviewRequest.setRequester(principal.getName());
+        
         ReviewJsonResponse res = new ReviewJsonResponse();
         res.setResult(reviewRequest);
-        commentsObj.addComment(reviewRequest.getConceptId(),reviewRequest.getComment(),CommentStatus.OPENED,principal.getName());
-
-     
-     return res;
-
+        commentsMgr.addReviewRequest(reviewRequest);
+        
+        return res;
     }
-    
-    
 }

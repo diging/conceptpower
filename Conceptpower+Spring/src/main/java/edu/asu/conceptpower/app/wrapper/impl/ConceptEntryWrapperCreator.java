@@ -87,8 +87,8 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
                 }
             }
             
-          //For getting the Review Request of the entry
-            ReviewRequest reviewRequest = commentsManager.getEntry(entry.getId());
+          //Fetching Review, for the concept, to display when the user searches the concept
+            ReviewRequest reviewRequest = commentsManager.getReview(entry.getId());
             if(reviewRequest!=null) {
                 wrapper.setReviewRequest(reviewRequest);
             }

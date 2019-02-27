@@ -1,15 +1,13 @@
 package edu.asu.conceptpower.core;
 
-import org.hibernate.validator.constraints.NotEmpty;
 
 public class ReviewRequest {
 
 
     private String conceptId;
-    @NotEmpty(message="Enter Comments.")
     private String comment;
     private CommentStatus status;
-    private String requestor;
+    private String requester;
     private String resolver;
     
     public String getConceptId() {
@@ -36,12 +34,12 @@ public class ReviewRequest {
         this.comment = comment;
     }
 
-    public String getRequestor() {
-        return requestor;
+    public String getRequester() {
+        return requester;
     }
 
-    public void setRequestor(String requestor) {
-        this.requestor = requestor;
+    public void setRequester(String requester) {
+        this.requester = requester;
     }
 
     public String getResolver() {

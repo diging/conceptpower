@@ -194,64 +194,36 @@ $(document).ready(function(){
 		$("#conceptId").val($(this).data("concept-id"));	      
    });
 }); 
-	
-
-var rowNum;  
-function  getId(element) {
-	rowNum =  element.rowIndex;
-}
-var formDisplayed=true;
 function showForm(comments){
-	if (!formDisplayed){
       $("#commentedBox").show();
       $("#fetchComments").val(comments);
-    	formDisplayed=true;
-	}else{
-	   $("#commentedBox").hide();
-		formDisplayed=false;
-	}
 }
 $(document).ready(function() {
 	   $('#commentedBox').hide();
+       $('#alertMsg').hide();
 });
-
-
-
 function doAjaxPost() {
-    // get the form values now
     var comment = $('#comment').val();
     var conceptId = $('#conceptId').val();
- 
     $.ajax({
         type: "POST",
         url: "${pageContext.servletContext.contextPath}/auth/addComment",
         data: "comment=" + comment + "&conceptId=" + conceptId,
         success: function(response){
-            // we have the response now here
-            console.log("response"+response);
-                displayInfo = "<ol>";
-               
-                	displayInfo += "<br><li><b>comment</b> : " + comment +
-                    ";<b> conceptId</b> : " + conceptId;
-                 
-                displayInfo += "</ol>";
+                displayInfo = "<ol><br><li><b>comment</b> : "+ comment +";<b> conceptId</b> : " + conceptId+"</ol>";
                  $('#info').html("Comment has been added successfully. " + displayInfo);
                  $('#conceptId').val('');
                  $('#comment').val('');
                  $('#error').hide('slow');
                  $('#info').show('slow');
-                 $('#submitForm').hide();
-            
+                 $('#submitForm').hide(); 
          },
          error: function(e){
-             alert('Error: ' + e);
+        	 $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the comment :'+e);
+             $('#alertMsg').show();
          }
     });
 }
-
-
-	
-
 </script>
 
 <header class="page-header">
@@ -356,7 +328,7 @@ function doAjaxPost() {
     <tbody>
       <c:forEach var="concept"
         items="${conceptSearchBean.foundConcepts}">
-        <tr class="gradeX" title="${concept.uri}" onclick="getId(this);">
+        <tr class="gradeX" title="${concept.uri}">
           <sec:authorize access="isAuthenticated()">
             <td><c:choose>
                 <c:when
@@ -422,27 +394,14 @@ function doAjaxPost() {
  		 	   	<td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
   			</c:when>
   			<c:otherwise>
-   			    <td onclick="showForm('${concept.reviewRequest.comment}');" align="center"><div class="fa fa-envelope"></div></td>
+   			    <td onclick="showForm('${concept.reviewRequest.comment}');" align="center"><div class="fa fa-envelope" data-toggle="modal" data-target="#commentModal"></div></td>
  			</c:otherwise>
 		  </c:choose>
         </tr>
       </c:forEach>
     </tbody>
   </table>
-
   
-<style> div.floatingform { position: absolute; right: 220px; top:220px; width:5%; margin:0 auto; height: auto;} </style>
-<form >
-<div class="floatingform">
-  <div id="commentedBox" >
-    <div class="form-label"><b>Comments</b></div>
-    <div class="form-field">
-      <textarea id="fetchComments" name="fetchComments" rows="4" cols="30" ></textarea>
-    </div>
-   </div>
-  </div>
-</form>
-
   <nav aria-label="Page navigation">
       <ul class="pagination">
         <li <c:if test="${page == 1}">class="disabled"</c:if>>
@@ -528,35 +487,57 @@ function doAjaxPost() {
   </div>
   </div>
   
-  <div class="container">
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
- <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addComment" method="post">  
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-         <div class="form-label"><b>Provide Comments</b></div>
+  <div class="modal-dialog">
+    <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addComment" method="post">  
+    <!-- Modal content-->
+    <div class="modal-content">
+    <div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+    <div class="modal-body">
+    <div class="form-label"><b>Provide Comments</b></div>
     <div class="form-field">
-      <textarea id="comment" name="comment" rows="4" cols="30" placeholder="Enter Comments" ></textarea>
-       <input type="hidden" name="conceptId" id="conceptId" value=""/>
-       <div id="error" class="error"></div>
-       <div id="info" class="success"></div>
+   	    <textarea id="comment" name="comment" rows="4" cols="30" placeholder="Please enter a comment." ></textarea>
+    	<input type="hidden" name="conceptId" id="conceptId" value=""/>
+        <div id="error" class="error"></div>
+        <div id="info" class="success"></div>
     </div>
     <div class="form-elements">
-    	<!-- <div class="submit-btn"><input type="submit" id="submitInComment" value="Submit"/></div>     -->
     	 <input value="Submit Form" type="button" id="submitForm" onclick="doAjaxPost()">
 	 </div>
     </div>
    </div>
 </form>   
- </div>
-  </div> 
+</div>
 </div>
 
+  <!-- Modal -->
+  <div class="modal fade" id="commentModal" role="dialog">
+  <div class="modal-dialog" id="commentedBox">
+    <form>  
+    <!-- Modal content-->
+    <div class="modal-content">
+    <div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+    <div class="modal-body">
+    <div class="form-field">
+   <div class="floatingform" >
+  <div  >
+    <div class="form-label"><b>Comments</b></div>
+    <div class="form-field">
+      <textarea id="fetchComments" name="fetchComments" rows="4" cols="30" ></textarea>
+    </div>
+   </div>
+  </div>
+    </div>
+        </div>
+   </div>
+</form>   
+</div>
+</div>
 
-
-   
+<div class="alert alert-danger alert-dismissible" id="alertMsg">
+</div>
