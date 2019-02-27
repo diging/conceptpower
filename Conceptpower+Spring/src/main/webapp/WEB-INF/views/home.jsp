@@ -202,7 +202,8 @@ $(document).ready(function() {
 	   $('#commentedBox').hide();
        $('#alertMsg').hide();
 });
-function doAjaxPost() {
+$(document).ready(function(){
+$('#submitForm').click(function(e) {
     var comment = $('#comment').val();
     var conceptId = $('#conceptId').val();
     $.ajax({
@@ -223,7 +224,8 @@ function doAjaxPost() {
              $('#alertMsg').show();
          }
     });
-}
+});
+});
 </script>
 
 <header class="page-header">
