@@ -10,7 +10,6 @@ public interface ICommentsDBManager {
     
     public abstract void store(ReviewRequest reviewRequest);
 
-    ObjectSet<ReviewRequest> queryByExample(Object example);
-
+    public ObjectSet<ReviewRequest> getReviewRequestForConcept(Object example);
     
 }

@@ -35,7 +35,8 @@ public class DBCommentsClient implements ICommentsDBManager{
     }
 
     @Override
-    public ObjectSet<ReviewRequest> queryByExample(Object example) {
-        return client.queryByExample(example);
+    public ObjectSet<ReviewRequest> getReviewRequestForConcept(Object example){
+       return client.queryByExample(example);
     }
+   
 }
