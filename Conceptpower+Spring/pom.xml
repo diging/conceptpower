@@ -9,14 +9,14 @@
 	<version>2.0-BUILD-SNAPSHOT</version>
 	<properties>
 		<java-version>1.8</java-version>
-		<org.springframework-version>4.3.7.RELEASE</org.springframework-version>
-		<org.aspectj-version>1.7.3</org.aspectj-version>
-		<org.slf4j-version>1.7.5</org.slf4j-version>
+		<org.springframework-version>5.1.5.RELEASE</org.springframework-version>
+		<org.aspectj-version>1.9.2</org.aspectj-version>
+		<org.slf4j-version>1.7.26</org.slf4j-version>
 		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
 		<deploy.path.dev>conceptpower</deploy.path.dev>
 		<deploy.path.test>conceptpower-test</deploy.path.test>
 		<deploy.path.prod>conceptpower</deploy.path.prod>
-		<db.files.path>/Users/jdamerow/Software/Conceptpower/db_files</db.files.path>
+		<db.files.path>/Users/abhishekkumar/Documents/dbFiles</db.files.path>
 		<email.username></email.username>
 		<email.password></email.password>
 		<email.server.port>8081</email.server.port>
@@ -25,8 +25,8 @@
 		<admin.username>admin</admin.username>
 		<admin.password>admin</admin.password>
 		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
-		<spring-security-version>3.2.8.RELEASE</spring-security-version>
-		<lucene.index>/Users/karthikeyanmohan/Software/Conceptpower/indexFiles</lucene.index>
+		<spring-security-version>5.1.4.RELEASE</spring-security-version>
+		<lucene.index>/Users/abhishekkumar/Documents/conceptpower/indexFiles</lucene.index>
 		<pullrequest></pullrequest>
 		<debug_level>debug</debug_level>
 		<skip.integration.tests>false</skip.integration.tests>
@@ -141,12 +141,12 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-oxm</artifactId>
-			<version>3.0.0.RELEASE</version>
+			<version>5.1.5.RELEASE</version>
 		</dependency>
 
 
-		<!-- LDAP connection -->
-		<dependency>
+	 	<!-- LDAP connection -->
+	<!--  	<dependency>
 			<groupId>org.springframework.ldap</groupId>
 			<artifactId>spring-ldap-core</artifactId>
 			<version>1.3.1.RELEASE</version>
@@ -170,7 +170,7 @@
 			<groupId>org.springframework.ldap</groupId>
 			<artifactId>spring-ldap-ldif-batch</artifactId>
 			<version>1.3.1.RELEASE</version>
-		</dependency>
+		</dependency> -->
 
 		<!-- AspectJ -->
 		<dependency>
@@ -200,7 +200,7 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.15</version>
+			<version>1.2.17</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.mail</groupId>
@@ -233,13 +233,13 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<version>4.0.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
-			<version>2.1</version>
+			<version>2.2.1-b03</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -259,7 +259,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.25</version>
+			<version>8.0.15</version>
 		</dependency>
 
 		<!-- Spring Security -->
@@ -291,27 +291,27 @@
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-template</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-core</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-api</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-servlet</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-jsp</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.8</version>
 		</dependency>
 
 
@@ -355,12 +355,12 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>20030203.000550</version>
+			<version>2.6</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
-			<version>3.0</version>
+			<version>3.2.10</version>
 		</dependency>
 
 
@@ -372,20 +372,20 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.4</version>
+			<version>3.8.1</version>
 		</dependency>
 
 		<!-- Jackson JSON Mapper -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.10</version>
+			<version>1.9.13</version>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-			<version>2.0</version>
+			<version>2.4.0-b180830.0359</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -407,20 +407,20 @@
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>2.7</version>
+			<version>2.10.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>4.2.0.Final</version>
+			<version>6.0.15.Final</version>
 		</dependency>
 
 		<!-- DB4O -->
 		<dependency>
 			<groupId>com.db4o</groupId>
 			<artifactId>db4o-full-java5</artifactId>
-			<version>8.0</version>
+			<version>8.0.276.16149</version>
 		</dependency>
 
 		<!-- Object DB -->
@@ -432,7 +432,7 @@
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>javax.persistence</artifactId>
-			<version>2.1.0</version>
+			<version>2.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.transaction</groupId>
@@ -454,12 +454,12 @@
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
-			<version>2.2</version>
+			<version>3.2.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
-			<version>1.6.10</version>
+			<version>1.9.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -477,14 +477,14 @@
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
-			<version>1.1</version>
+			<version>1.1.1</version>
 		</dependency>
 
 		<!-- Mockito -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>1.9.5</version>
+			<version>2.24.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -495,28 +495,28 @@
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
-			<version>2.1.0</version>
+			<version>2.4.0</version>
 		</dependency>
 
 		<!-- Apache Lucene -->
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
-			<version>5.4.0</version>
+			<version>7.7.1</version>
 		</dependency>
 
 
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-queryparser</artifactId>
-			<version>5.4.0</version>
+			<version>7.7.1</version>
 		</dependency>
 
 
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-common</artifactId>
-			<version>5.4.0</version>
+			<version>7.7.1</version>
 		</dependency>
 
 
@@ -530,12 +530,12 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.7.9</version>
+			<version>2.9.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.7.9</version>
+			<version>2.9.8</version>
 		</dependency>
 
 		<!-- Apache Jena for RDF -->
@@ -543,14 +543,14 @@
 			<groupId>org.apache.jena</groupId>
 			<artifactId>apache-jena-libs</artifactId>
 			<type>pom</type>
-			<version>3.0.1</version>
+			<version>3.10.0</version>
 		</dependency>
         
         <!-- https://mvnrepository.com/artifact/org.skyscreamer/jsonassert -->
         <dependency>
             <groupId>org.skyscreamer</groupId>
             <artifactId>jsonassert</artifactId>
-            <version>0.9.0</version>
+            <version>1.5.0</version>
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/xmlunit/xmlunit -->
@@ -564,7 +564,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.10.2</version>
+            <version>1.11.3</version>
         </dependency>
 	</dependencies>
 
@@ -587,7 +587,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.9</version>
+				<version>2.10</version>
 				<configuration>
 					<additionalProjectnatures>
 						<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
@@ -602,7 +602,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
+				<version>3.8.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -614,7 +614,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
+				<version>3.2.2</version>
 				<configuration>
 					<webResources>
 						<resource>
@@ -631,7 +631,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
+				<version>1.6.0</version>
 				<configuration>
 					<mainClass>org.test.int1.Main</mainClass>
 				</configuration>
@@ -713,7 +713,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.18</version>
+				<version>3.0.0-M3</version>
 				<configuration>
 					<!-- Skips unit tests if the value of skip.unit.tests property is true -->
 					<skipTests>${skip.unit.tests}</skipTests>
@@ -727,7 +727,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.18</version>
+				<version>3.0.0-M3</version>
 				<executions>
 					<!-- Invokes both the integration-test and the verify goals of the Failsafe 
 						Maven plugin -->
