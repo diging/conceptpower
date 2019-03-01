@@ -5,20 +5,21 @@ import org.springframework.stereotype.Service;
 
 import com.db4o.ObjectSet;
 
-import edu.asu.conceptpower.app.core.ICommentsManager;
-import edu.asu.conceptpower.app.db4o.ICommentsDBManager;
+import edu.asu.conceptpower.app.core.IRequestsManager;
+import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.core.ReviewRequest;
 
 @Service
-public  class CommentsManager implements ICommentsManager{
+public  class RequestsManager implements IRequestsManager{
 
   
     @Autowired
-    private ICommentsDBManager dbClient;
+    private IRequestsDBManager dbClient;
    
     
+    
     /* (non-Javadoc)
-     * @see edu.asu.conceptpower.app.core.ICommentsManager#addReviewRequest(edu.asu.conceptpower.core.ReviewRequest)
+     * @see edu.asu.conceptpower.app.core.IRequestsManager#addReviewRequest(edu.asu.conceptpower.core.ReviewRequest)
      */
     public void addReviewRequest(ReviewRequest newReviewRequest) {
         
@@ -26,7 +27,7 @@ public  class CommentsManager implements ICommentsManager{
     }
     
     /* (non-Javadoc)
-     * @see edu.asu.conceptpower.app.core.ICommentsManager#getEntry(java.lang.String)
+     * @see edu.asu.conceptpower.app.core.IRequestsManager#getReview(java.lang.String)
      */
     public ReviewRequest getReview(String conceptId) {
         
@@ -35,9 +36,13 @@ public  class CommentsManager implements ICommentsManager{
         
         ObjectSet<ReviewRequest> results = dbClient.getReviewRequestForConcept(exampleEntry);
 
-       // getting the results to fetch the comments corresponding to the passed conceptId
+       // getting the results to fetch the request corresponding to the given conceptId
         if (results!= null && results.size()>0) {
-            return results.get(0);
+            for (int i=0;i<results.size();i++) {
+                if(results.get(i).getRequest()!=null) { //getting the only entry of conceptId that has the request
+                    return results.get(i);
+                }
+            } 
         }
         return null;
     }

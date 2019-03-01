@@ -5,7 +5,7 @@ import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.core.ReviewRequest;
 
-public interface ICommentsDBManager {
+public interface IRequestsDBManager {
 
     
     public abstract void store(ReviewRequest reviewRequest);

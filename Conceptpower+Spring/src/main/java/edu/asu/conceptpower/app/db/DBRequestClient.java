@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 
-import edu.asu.conceptpower.app.db4o.ICommentsDBManager;
+import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.core.ReviewRequest;
 
 @Component
-public class DBCommentsClient implements ICommentsDBManager{
+public class DBRequestClient implements IRequestsDBManager{
 
     @Autowired
     @Qualifier("conceptReviewDatabaseManager")
@@ -35,8 +35,8 @@ public class DBCommentsClient implements ICommentsDBManager{
     }
 
     @Override
-    public ObjectSet<ReviewRequest> getReviewRequestForConcept(Object example){
-       return client.queryByExample(example);
+    public ObjectSet<ReviewRequest> getReviewRequestForConcept(Object reviewRequest){
+       return client.queryByExample(reviewRequest);
     }
    
 }

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.asu.conceptpower.app.core.impl.CommentsManager;
-import edu.asu.conceptpower.core.CommentStatus;
+import edu.asu.conceptpower.app.core.impl.RequestsManager;
+import edu.asu.conceptpower.core.ReviewStatus;
 import edu.asu.conceptpower.core.ReviewJsonResponse;
 import edu.asu.conceptpower.core.ReviewRequest;
 
@@ -19,17 +19,17 @@ import edu.asu.conceptpower.core.ReviewRequest;
 public class ReviewRequestController {
  
     @Autowired
-    private CommentsManager commentsMgr;
+    private RequestsManager requestsMgr;
            
-    @RequestMapping(value = "/auth/addComment", method = RequestMethod.POST )
-    public @ResponseBody ReviewJsonResponse addNewComment( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest, BindingResult result,Principal principal) {
+    @RequestMapping(value = "/auth/addRequest", method = RequestMethod.POST )
+    public @ResponseBody ReviewJsonResponse addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest, BindingResult result,Principal principal) {
   
-        reviewRequest.setStatus(CommentStatus.OPENED);
+        reviewRequest.setStatus(ReviewStatus.OPENED);
         reviewRequest.setRequester(principal.getName());
         
         ReviewJsonResponse res = new ReviewJsonResponse();
         res.setResult(reviewRequest);
-        commentsMgr.addReviewRequest(reviewRequest);
+        requestsMgr.addReviewRequest(reviewRequest);
         
         return res;
     }

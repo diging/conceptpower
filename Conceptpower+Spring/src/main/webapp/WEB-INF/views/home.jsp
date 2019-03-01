@@ -189,38 +189,35 @@ function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
 
+function showForm(requests){
+      $("#requestBox").show();
+      $("#fetchRequests").val(requests);
+}
+
 $(document).ready(function(){
 	$(".btnReview").click(function() {
-		$("#conceptId").val($(this).data("concept-id"));	      
-   });
-}); 
-function showForm(comments){
-      $("#commentedBox").show();
-      $("#fetchComments").val(comments);
-}
-$(document).ready(function() {
-	   $('#commentedBox').hide();
-       $('#alertMsg').hide();
+	$("#conceptId").val($(this).data("concept-id"));	      
 });
-$(document).ready(function(){
-$('#submitForm').click(function(e) {
-    var comment = $('#comment').val();
+	$('#requestBox').hide();
+    $('#alertMsg').hide();
+	$('#submitForm').click(function(e) {
+    var request = $('#request').val();
     var conceptId = $('#conceptId').val();
     $.ajax({
         type: "POST",
-        url: "${pageContext.servletContext.contextPath}/auth/addComment",
-        data: "comment=" + comment + "&conceptId=" + conceptId,
+        url: "${pageContext.servletContext.contextPath}/auth/addRequest",
+        data: "request=" + request + "&conceptId=" + conceptId,
         success: function(response){
-                displayInfo = "<ol><br><li><b>comment</b> : "+ comment +";<b> conceptId</b> : " + conceptId+"</ol>";
-                 $('#info').html("Comment has been added successfully. " + displayInfo);
+                displayInfo = "<ol><br><li><b>request</b> : "+ request +";<b> conceptId</b> : " + conceptId+"</ol>";
+                 $('#info').html("Request has been added successfully. " + displayInfo);
                  $('#conceptId').val('');
-                 $('#comment').val('');
+                 $('#request').val('');
                  $('#error').hide('slow');
                  $('#info').show('slow');
                  $('#submitForm').hide(); 
          },
          error: function(e){
-        	 $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the comment :'+e);
+        	 $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
              $('#alertMsg').show();
          }
     });
@@ -392,11 +389,11 @@ $('#submitForm').click(function(e) {
                 
          <!-- Enabling Disabling the Review button -->  
           <c:choose>
- 		 	<c:when test="${concept.reviewRequest.comment == null}"> <!-- Testing if the comment has already been provided. -->
+ 		 	<c:when test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
  		 	   	<td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
   			</c:when>
   			<c:otherwise>
-   			    <td onclick="showForm('${concept.reviewRequest.comment}');" align="center"><div class="fa fa-envelope" data-toggle="modal" data-target="#commentModal"></div></td>
+   			    <td onclick="showForm('${concept.reviewRequest.request}');" align="center"><div class="fa fa-envelope" data-toggle="modal" data-target="#requestModal"></div></td>
  			</c:otherwise>
 		  </c:choose>
         </tr>
@@ -492,22 +489,22 @@ $('#submitForm').click(function(e) {
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
   <div class="modal-dialog">
-    <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addComment" method="post">  
+    <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addRequest" method="post">  
     <!-- Modal content-->
     <div class="modal-content">
     <div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal">&times;</button>
     </div>
     <div class="modal-body">
-    <div class="form-label"><b>Provide Comments</b></div>
+    <div class="form-label"><b>Provide Requests</b></div>
     <div class="form-field">
-   	    <textarea id="comment" name="comment" rows="4" cols="30" placeholder="Please enter a comment." ></textarea>
+   	    <textarea id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
     	<input type="hidden" name="conceptId" id="conceptId" value=""/>
         <div id="error" class="error"></div>
         <div id="info" class="success"></div>
     </div>
     <div class="form-elements">
-    	 <input value="Submit Form" type="button" id="submitForm" onclick="doAjaxPost()">
+    	 <input value="Submit Form" type="button" id="submitForm" >
 	 </div>
     </div>
    </div>
@@ -516,8 +513,8 @@ $('#submitForm').click(function(e) {
 </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="commentModal" role="dialog">
-  <div class="modal-dialog" id="commentedBox">
+  <div class="modal fade" id="requestModal" role="dialog">
+  <div class="modal-dialog" id="requestBox">
     <form>  
     <!-- Modal content-->
     <div class="modal-content">
@@ -528,9 +525,9 @@ $('#submitForm').click(function(e) {
     <div class="form-field">
    <div class="floatingform" >
   <div  >
-    <div class="form-label"><b>Comments</b></div>
+    <div class="form-label"><b>Requests</b></div>
     <div class="form-field">
-      <textarea id="fetchComments" name="fetchComments" rows="4" cols="30" ></textarea>
+      <textarea id="fetchRequests" name="fetchRequests" rows="4" cols="30" ></textarea>
     </div>
    </div>
   </div>

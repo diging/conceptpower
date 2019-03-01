@@ -2,7 +2,7 @@ package edu.asu.conceptpower.app.core;
 
 import edu.asu.conceptpower.core.ReviewRequest;
 
-public interface ICommentsManager {
+public interface IRequestsManager {
 
     /**
      * @param newReviewRequest - New Review Request for a concept.

@@ -1,6 +1,6 @@
 package edu.asu.conceptpower.core;
 
-public enum CommentStatus {
+public enum ReviewStatus {
 
     OPENED,RESOLVED,CLOSED;
 }
