@@ -3,7 +3,7 @@ package edu.asu.conceptpower.rest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
@@ -18,7 +18,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
 
     @Test
     public void test_getConceptById_successForWordNetIdInJson() throws Exception {
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetConcept.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "WID-02380464-N-01-polo_pony")
@@ -29,7 +29,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
 
     @Test
     public void test_getConceptById_successForGenericWordNetIdInJson() throws Exception {
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForGenericWordnet.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "WID-02380464-N-??-polo_pony")
@@ -48,7 +48,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
 
     @Test
     public void test_getConceptById_successForLocalConceptIdInJson() throws Exception {
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForLocalId.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a")
@@ -58,7 +58,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
 
     @Test
     public void test_getConceptById_successForConceptWrapperInJson() throws Exception {
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWrapper.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONe7fbf694-5609-4691-bca8-916526c2ba6a")
@@ -67,7 +67,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     }
 
     public void test_getConceptById_successForWordNetIdInXml() throws Exception {
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetConcept.xml"));
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/Concept")
                 .param("id", "WID-02380464-N-01-polo_pony").accept(MediaType.APPLICATION_XML_VALUE))
@@ -89,7 +89,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
 
     @Test
     public void test_getConceptById_successForLocalConceptIdInXml() throws Exception {
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForLocalId.xml"));
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/Concept")
                 .param("id", "CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a").accept(MediaType.APPLICATION_XML_VALUE))
@@ -103,7 +103,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
 
     @Test
     public void test_getConceptById_successForConceptWrapperInXml() throws Exception {
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWrapper.xml"));
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/Concept")
                 .param("id", "CONe7fbf694-5609-4691-bca8-916526c2ba6a").accept(MediaType.APPLICATION_XML_VALUE))

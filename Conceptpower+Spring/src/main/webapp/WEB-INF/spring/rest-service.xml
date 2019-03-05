@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans.xsd 
 	http://www.springframework.org/schema/aop
-    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<!-- This file contains the spring RestTemplate configuration details. To 
 		implement marshalling for any class simply add the class name under the value 

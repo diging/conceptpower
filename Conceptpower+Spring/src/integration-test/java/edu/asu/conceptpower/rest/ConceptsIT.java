@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -18,7 +18,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_success() throws Exception {
-        final String input = IOUtil
+        final String input = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcept.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -28,7 +28,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_successForConceptWrapper() throws Exception {
-        final String input = IOUtil
+        final String input = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWrapper.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -38,7 +38,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcepts_success() throws Exception {
-        final String input = IOUtil
+        final String input = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcepts.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -49,7 +49,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcepts_invalidConceptList() throws Exception {
-        final String input = IOUtil.toString(
+        final String input = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("input/addConceptsWithInvalidConceptList.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -62,7 +62,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_invalidConceptList() throws Exception {
-        final String input = IOUtil.toString(
+        final String input = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidConceptList.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +73,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_invalidPos() throws Exception {
-        final String input = IOUtil
+        final String input = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidPos.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +85,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_nullWord() throws Exception {
-        final String input = IOUtil
+        final String input = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithNullWord.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -98,7 +98,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_emptyConceptList() throws Exception {
-        final String input = IOUtil
+        final String input = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithEmptyList.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -111,7 +111,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_emptyType() throws Exception {
-        final String input = IOUtil
+        final String input = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithEmptyType.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -125,7 +125,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcept_invalidWordnetIds() throws Exception {
         String wordnetId = "WORDNET-123";
-        final String input = IOUtil.toString(
+        final String input = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidWordNetIds.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -139,7 +139,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_existingwrappedWordnetIds() throws Exception {
-        final String input = IOUtil
+        final String input = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWrapper.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -152,7 +152,7 @@ public class ConceptsIT extends IntegrationTest {
 
     @Test
     public void test_addConcept_posMismatch() throws Exception {
-        final String input = IOUtil
+        final String input = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithPosMisMatch.json"));
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)

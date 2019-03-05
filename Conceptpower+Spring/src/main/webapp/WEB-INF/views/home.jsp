@@ -238,7 +238,7 @@ $('#submitForm').click(function(e) {
 
 <form:form
   action="${pageContext.servletContext.contextPath}/home/conceptsearch"
-  method='get' commandName='conceptSearchBean'>
+  method='get' modelAttribute='conceptSearchBean'>
   <form:errors path="luceneError"></form:errors>
   <input type='hidden' id='conceptIdsToMerge' value='${conceptIdsToMerge}' />
     <div id="mergeError" class="alert alert-danger">

@@ -3,7 +3,7 @@ package edu.asu.conceptpower.rest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -16,7 +16,7 @@ public class SynonymSearchIT extends IntegrationTest {
 
     @Test
     public void test_getSynonymsForId_successInJson() throws Exception {
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/synonym.json"));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/SynonymSearch").accept(MediaType.APPLICATION_JSON_VALUE)
                 .with(new RequestPostProcessor() {
@@ -50,7 +50,7 @@ public class SynonymSearchIT extends IntegrationTest {
 
     @Test
     public void test_getSynonymsForId_successInXml() throws Exception {
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/synonym.xml"));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/SynonymSearch").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.asu</groupId>
@@ -12,6 +13,7 @@
 		<org.springframework-version>5.1.5.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.9.2</org.aspectj-version>
 		<org.slf4j-version>1.7.26</org.slf4j-version>
+		<spring-security-version>5.1.4.RELEASE</spring-security-version>
 		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
 		<deploy.path.dev>conceptpower</deploy.path.dev>
 		<deploy.path.test>conceptpower-test</deploy.path.test>
@@ -25,7 +27,6 @@
 		<admin.username>admin</admin.username>
 		<admin.password>admin</admin.password>
 		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
-		<spring-security-version>5.1.4.RELEASE</spring-security-version>
 		<lucene.index>/Users/abhishekkumar/Documents/conceptpower/indexFiles</lucene.index>
 		<pullrequest></pullrequest>
 		<debug_level>debug</debug_level>
@@ -141,42 +142,94 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-oxm</artifactId>
-			<version>5.1.5.RELEASE</version>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
+		<!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring-security-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring-security-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${spring-security-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring-security-version}</version>
 		</dependency>
 
 
-	 	<!-- LDAP connection -->
-	<!--  	<dependency>
-			<groupId>org.springframework.ldap</groupId>
-			<artifactId>spring-ldap-core</artifactId>
-			<version>1.3.1.RELEASE</version>
+		<dependency>
+			<groupId>aopalliance</groupId>
+			<artifactId>aopalliance</artifactId>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.ldap</groupId>
-			<artifactId>spring-ldap-core-tiger</artifactId>
-			<version>1.3.1.RELEASE</version>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>3.2.10</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.ldap</groupId>
-			<artifactId>spring-ldap-odm</artifactId>
-			<version>1.3.1.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.ldap</groupId>
-			<artifactId>spring-ldap-ldif-core</artifactId>
-			<version>1.3.1.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.ldap</groupId>
-			<artifactId>spring-ldap-ldif-batch</artifactId>
-			<version>1.3.1.RELEASE</version>
-		</dependency> -->
 
 		<!-- AspectJ -->
+
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>${org.aspectj-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.9.2</version>
 		</dependency>
 
 		<!-- Logging -->
@@ -262,27 +315,7 @@
 			<version>8.0.15</version>
 		</dependency>
 
-		<!-- Spring Security -->
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-			<version>${spring-security-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>${spring-security-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-taglibs</artifactId>
-			<version>${spring-security-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-ldap</artifactId>
-			<version>${spring-security-version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
@@ -316,53 +349,6 @@
 
 
 		<!-- Added to test rest service - by ram -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-oxm</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>1.5.4</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.6</version>
-		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>3.2.10</version>
-		</dependency>
-
 
 		<dependency>
 			<groupId>edu.mit</groupId>
@@ -374,6 +360,20 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.8.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.6</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+
 
 		<!-- Jackson JSON Mapper -->
 		<dependency>
@@ -381,6 +381,13 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.codehaus.jettison/jettison -->
+		<dependency>
+			<groupId>org.codehaus.jettison</groupId>
+			<artifactId>jettison</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -392,16 +399,7 @@
 			<artifactId>mail</artifactId>
 			<version>1.5.0-b01</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
+
 
 		<!-- Joda Time -->
 		<dependency>
@@ -440,32 +438,8 @@
 			<version>1.1</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
 
-		<dependency>
-			<groupId>aopalliance</groupId>
-			<artifactId>aopalliance</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>3.2.10</version>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>1.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
+
 
 		<dependency>
 			<groupId>ant</groupId>
@@ -486,11 +460,7 @@
 			<artifactId>mockito-core</artifactId>
 			<version>2.24.5</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>${spring-security-version}</version>
-		</dependency>
+
 
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
@@ -502,21 +472,21 @@
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
-			<version>7.7.1</version>
+			<version>5.4.0</version>
 		</dependency>
 
 
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-queryparser</artifactId>
-			<version>7.7.1</version>
+			<version>5.4.0</version>
 		</dependency>
 
 
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-common</artifactId>
-			<version>7.7.1</version>
+			<version>5.4.0</version>
 		</dependency>
 
 
@@ -545,27 +515,27 @@
 			<type>pom</type>
 			<version>3.10.0</version>
 		</dependency>
-        
-        <!-- https://mvnrepository.com/artifact/org.skyscreamer/jsonassert -->
-        <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-        
-        <!-- https://mvnrepository.com/artifact/xmlunit/xmlunit -->
-        <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
-            <version>1.6</version>
-        </dependency>
-        
-        <!-- jsoup HTML parser library @ http://jsoup.org/ -->        
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.11.3</version>
-        </dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.skyscreamer/jsonassert -->
+		<dependency>
+			<groupId>org.skyscreamer</groupId>
+			<artifactId>jsonassert</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/xmlunit/xmlunit -->
+		<dependency>
+			<groupId>xmlunit</groupId>
+			<artifactId>xmlunit</artifactId>
+			<version>1.6</version>
+		</dependency>
+
+		<!-- jsoup HTML parser library @ http://jsoup.org/ -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.11.3</version>
+		</dependency>
 	</dependencies>
 
 	<scm>

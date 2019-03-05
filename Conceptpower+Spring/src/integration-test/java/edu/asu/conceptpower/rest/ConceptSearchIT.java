@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
@@ -21,7 +21,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordAndPosInJson() throws Exception {
 
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.json"));
 
         this.mockMvc
@@ -34,7 +34,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_successWithDefaultOperator() throws Exception {
 
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.json"));
 
         this.mockMvc
@@ -58,7 +58,7 @@ public class ConceptSearchIT extends IntegrationTest {
 
     @Test
     public void test_searchConcept_searchWithWordAndPosAndEqualToInJson() throws Exception {
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndEqualTo.json"));
 
         this.mockMvc
@@ -72,7 +72,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordAndPosAndSimilarToInJson() throws Exception {
 
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndSimilarTo.json"));
 
         this.mockMvc
@@ -84,7 +84,7 @@ public class ConceptSearchIT extends IntegrationTest {
 
     @Test
     public void test_searchConcept_searchWithWordPosAndPaginationInJson() throws Exception {
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination1.json"));
 
         this.mockMvc
@@ -93,7 +93,7 @@ public class ConceptSearchIT extends IntegrationTest {
                         .param("operator", SearchParamters.OP_AND).accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json(output, false)).andExpect(status().isOk());
 
-        final String output2 = IOUtil.toString(
+        final String output2 = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination2.json"));
 
         this.mockMvc
@@ -107,7 +107,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordPosAndTypeIdInJson() throws Exception {
 
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeId.json"));
 
         this.mockMvc
@@ -121,7 +121,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordPosAndTypeUriInJson() throws Exception {
 
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeUri.json"));
 
         this.mockMvc
@@ -136,7 +136,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordPosAndDescriptionInJson() throws Exception {
 
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndDescription.json"));
 
         this.mockMvc
@@ -150,7 +150,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordAndPosInXml() throws Exception {
 
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.xml"));
 
         MvcResult mvcResult = this.mockMvc
@@ -167,7 +167,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_noResultsInXml() throws Exception {
 
-        final String output = IOUtil
+        final String output = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("output/noResults.xml"));
 
         MvcResult mvcResult = this.mockMvc
@@ -183,7 +183,7 @@ public class ConceptSearchIT extends IntegrationTest {
 
     @Test
     public void test_searchConcept_searchWithWordAndPosAndEqualToInXml() throws Exception {
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndEqualTo.xml"));
 
         MvcResult mvcResult = this.mockMvc
@@ -202,7 +202,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordAndPosAndSimilarToInXml() throws Exception {
 
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndSimilarTo.xml"));
 
         MvcResult mvcResult = this.mockMvc
@@ -219,7 +219,7 @@ public class ConceptSearchIT extends IntegrationTest {
 
     @Test
     public void test_searchConcept_searchWithWordPosAndPaginationInXml() throws Exception {
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination1.xml"));
 
         MvcResult mvcResult = this.mockMvc
@@ -233,7 +233,7 @@ public class ConceptSearchIT extends IntegrationTest {
         XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordPosAndPaginationInXml",
                 xmlDifference, true);
 
-        final String output2 = IOUtil.toString(
+        final String output2 = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination2.xml"));
 
         mvcResult = this.mockMvc
@@ -252,7 +252,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordPosAndTypeIdInXml() throws Exception {
 
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeId.xml"));
 
         MvcResult mvcResult = this.mockMvc
@@ -271,7 +271,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordPosAndTypeUriInXml() throws Exception {
 
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeUri.xml"));
 
         MvcResult mvcResult = this.mockMvc
@@ -291,7 +291,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordPosAndDescriptionInXml() throws Exception {
 
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndDescription.xml"));
 
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch")
@@ -308,7 +308,7 @@ public class ConceptSearchIT extends IntegrationTest {
 
     @Test
     public void test_searchConcept_failureNoValidSearchParametersInXml() throws Exception {
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.xml"));
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_XML_VALUE))
@@ -318,7 +318,7 @@ public class ConceptSearchIT extends IntegrationTest {
 
     @Test
     public void test_searchConcept_failureNoValidSearchParametersInJson() throws Exception {
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.json"));
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_JSON_VALUE))
