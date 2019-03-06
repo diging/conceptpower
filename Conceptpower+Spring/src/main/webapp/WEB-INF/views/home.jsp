@@ -189,12 +189,11 @@ function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
 
-function showForm(requests){
-      $("#requestBox").show();
-      $("#fetchRequests").val(requests);
-}
-
 $(document).ready(function(){
+	$(".fa-envelope").click(function() {
+		 $("#requestBox").show();
+	     $("#fetchRequests").val($(this).data("request"));      
+	});
 	$(".btnReview").click(function() {
 	$("#conceptId").val($(this).data("concept-id"));	      
 });
@@ -369,7 +368,7 @@ $(document).ready(function(){
           <td align="justify"> <a
               id="${concept.entry.id}" data-toggle="modal"
               data-target="#detailsModal"
-              data-conceptid="${concept.entry.id}"><c:out
+              data-conceptid="${concept.entry.id}" ><c:out
                   value="${concept.entry.word}"></c:out></a></td>
           <td class="entryID" align="justify" id="entryId" ><c:out
                 value="${concept.entry.id}"></c:out></td>
@@ -389,12 +388,13 @@ $(document).ready(function(){
                 
          <!-- Enabling Disabling the Review button -->  
           <c:choose>
- 		 	<c:when test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
- 		 	   	<td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
-  			</c:when>
-  			<c:otherwise>
-   			    <td onclick="showForm('${concept.reviewRequest.request}');" align="center"><div class="fa fa-envelope" data-toggle="modal" data-target="#requestModal"></div></td>
- 			</c:otherwise>
+ 		  <c:when 
+ 		    test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
+ 		    <td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
+  		  </c:when>
+  		  <c:otherwise>
+   		    <td align="center" ><button  data-request="${concept.reviewRequest.request}" type="button" class="fa fa-envelope" data-toggle="modal" data-target="#requestModal"></button></td>
+ 		  </c:otherwise>
 		  </c:choose>
         </tr>
       </c:forEach>

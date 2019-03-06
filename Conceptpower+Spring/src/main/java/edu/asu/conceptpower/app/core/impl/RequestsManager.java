@@ -1,9 +1,9 @@
 package edu.asu.conceptpower.app.core.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.app.core.IRequestsManager;
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
@@ -31,18 +31,10 @@ public  class RequestsManager implements IRequestsManager{
      */
     public ReviewRequest getReview(String conceptId) {
         
-        ReviewRequest exampleEntry = new ReviewRequest();
-        exampleEntry.setConceptId(conceptId);
-        
-        ObjectSet<ReviewRequest> results = dbClient.getReviewRequestForConcept(exampleEntry);
+       List<ReviewRequest> results = dbClient.getReviewRequestForConcept(conceptId);
 
-       // getting the results to fetch the request corresponding to the given conceptId
-        if (results!= null && results.size()>0) {
-            for (int i=0;i<results.size();i++) {
-                if(results.get(i).getRequest()!=null) { //getting the only entry of conceptId that has the request
-                    return results.get(i);
-                }
-            } 
+       if (results!= null && results.size()>0) {
+            return results.get(0);
         }
         return null;
     }

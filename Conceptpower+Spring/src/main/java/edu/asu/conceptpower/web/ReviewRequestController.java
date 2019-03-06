@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.core.impl.RequestsManager;
 import edu.asu.conceptpower.core.ReviewStatus;
-import edu.asu.conceptpower.core.ReviewJsonResponse;
+import edu.asu.conceptpower.core.RequestJsonResponse;
 import edu.asu.conceptpower.core.ReviewRequest;
 
 @Controller
@@ -22,12 +22,12 @@ public class ReviewRequestController {
     private RequestsManager requestsMgr;
            
     @RequestMapping(value = "/auth/addRequest", method = RequestMethod.POST )
-    public @ResponseBody ReviewJsonResponse addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest, BindingResult result,Principal principal) {
+    public @ResponseBody RequestJsonResponse addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest, BindingResult result,Principal principal) {
   
         reviewRequest.setStatus(ReviewStatus.OPENED);
         reviewRequest.setRequester(principal.getName());
         
-        ReviewJsonResponse res = new ReviewJsonResponse();
+        RequestJsonResponse res = new RequestJsonResponse();
         res.setResult(reviewRequest);
         requestsMgr.addReviewRequest(reviewRequest);
         
