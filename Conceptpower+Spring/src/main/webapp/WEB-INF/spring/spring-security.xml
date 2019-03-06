@@ -10,11 +10,9 @@
 	<http auto-config="true" use-expressions="true">
 		<access-denied-handler error-page="/forbidden" />
 
-		<form-login login-page="/login" default-target-url="/login"
+		<form-login login-page="/" 
 			authentication-failure-url="/loginfailed" />
-		<form-login login-page="/welcome" default-target-url="/login"
-			authentication-failure-url="/loginfailed" />
-
+		
 		<intercept-url pattern="/welcome*" access="permitAll" />
 		<intercept-url pattern="/login*" access="permitAll" />
 		<intercept-url pattern="/logout*" access="permitAll" />

@@ -19,10 +19,10 @@ public class LoginController {
      * This method redirects user to home page for use login
      * 
      */
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(@ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean) {
-        return "welcome";
-    }
+//    @RequestMapping(value = "/login", method = RequestMethod.GET)
+//    public String login(@ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean) {
+//        return "welcome";
+//    }
 
     /**
      * This method sets error message in home page when there are any errros

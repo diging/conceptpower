@@ -91,15 +91,15 @@
 		<div class="dropdown-menu"
 			style="padding: 15px; width: 220px; margin-left: -120px">
 			<h4 style="margin-top: 0px">Login</h4>
-			<form name='f' action="<c:url value='/j_spring_security_check' />"
-				method='post'>
+			<form action="<c:url value='/login' />"
+				method='POST'>
 				<div style="margin: 10px;">
-					<input placeholder="Username" type='text' name='j_username'
+					<input placeholder="Username" type='text' name='username'
 						class="form-control" value=''>
 				</div>
 				<div style="margin: 10px;">
 					<input placeholder="Password" type='password' class="form-control"
-						name='j_password' />
+						name='password' />
 				</div>
 				<div style="margin: 10px;">
 					<input name="submit" type="submit" value="Login"
