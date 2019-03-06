@@ -47,7 +47,7 @@ public abstract class IntegrationTest {
             this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/indexConcepts").principal(principal));
             MvcResult mr = null;
             do {
-                mr = this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/getIndexerStatus")).andReturn();
+                mr = this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/index/status")).andReturn();
             } while (mr.getResponse().getStatus() != HttpStatus.OK.value());
             isSetupDone = true;
         }

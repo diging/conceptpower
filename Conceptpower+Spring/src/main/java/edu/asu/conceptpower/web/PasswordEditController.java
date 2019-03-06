@@ -32,7 +32,7 @@ public class PasswordEditController {
      *            Represents user id
      * @return Returns a string value to redirect user to edit password page
      */
-    @RequestMapping(value = "auth/user/editpassword/{id:.+}")
+    @RequestMapping(value = "/auth/user/editpassword/{id:.+}")
     public String prepareEditPassword(ModelMap model, @PathVariable String id) {
         User user = userManager.findUser(id);
 
@@ -61,7 +61,7 @@ public class PasswordEditController {
      * 
      * @return Returns a string value to redirect user to user list page
      */
-    @RequestMapping(value = "auth/user/editpassword/store", method = RequestMethod.POST)
+    @RequestMapping(value = "/auth/user/editpassword/store", method = RequestMethod.POST)
     public String storePasswordChanges(ModelMap model, HttpServletRequest req, Principal principal,
             @Valid UserBacking user, BindingResult result) {
 

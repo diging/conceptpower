@@ -10,25 +10,23 @@
 	<http auto-config="true" use-expressions="true">
 		<access-denied-handler error-page="/forbidden" />
 
-		<form-login login-page="/" 
-			authentication-failure-url="/loginfailed" />
+		<form-login login-page="/" />
+		<logout
+		  logout-success-url="/"
+		  logout-url="/signout" delete-cookies="JSESSIONID" />
 		
 		<intercept-url pattern="/welcome*" access="permitAll" />
-		<intercept-url pattern="/login*" access="permitAll" />
-		<intercept-url pattern="/logout*" access="permitAll" />
 
 		<intercept-url pattern="/resources/**" access="permitAll" />
 
 		<!-- here go admin pages -->
 		<intercept-url pattern="/auth/user/**" access="hasRole('ROLE_CP_ADMIN')" />
+		<intercept-url pattern="/auth/index/**" access="hasRole('ROLE_CP_ADMIN')" />
 		<!-- <intercept-url pattern="/rest/concept/add" access="isAuthenticated()" 
 			/> -->
 
 		<intercept-url pattern="/auth/**" access="isAuthenticated()" />
 
-
-
-		<logout logout-success-url="/logout" invalidate-session="true" />
 	</http>
 
 
@@ -41,11 +39,14 @@
 		<beans:property name="userDetailsService" ref="userService" />
 		<beans:property name="passwordEncoder" ref="encoder" />
 	</beans:bean>
+	
+	<beans:bean id="noopPasswordEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder" />
 
 	<authentication-manager alias="authenticationManager"
 		erase-credentials="false">
 		<authentication-provider>
 			<user-service id="userDetailsService" properties="classpath:/user.properties" />
+			<password-encoder ref="noopPasswordEncoder"></password-encoder>
 		</authentication-provider>
 		<authentication-provider ref="authProvider"></authentication-provider>
 	</authentication-manager>

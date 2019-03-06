@@ -1,4 +1,4 @@
-activeProfiles=dev, integration-test, dev, integration-test
+activeProfiles=dev, integration-test, conceptpower
 eclipse.preferences.version=1
 resolveWorkspaceProjects=true
 version=1

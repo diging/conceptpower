@@ -1,14 +1,26 @@
 package edu.asu.conceptpower.app.profile.impl;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import edu.asu.conceptpower.app.jaxb.viaf.Item;
@@ -25,6 +37,8 @@ import edu.asu.conceptpower.app.profile.IService;
 
 @Service
 public class ViafService implements IService {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private ISearchResult searchResult;
@@ -100,15 +114,25 @@ public class ViafService implements IService {
 		List<Item> items = null;
 		String fullUrl;
 
-		fullUrl = viafURL.trim() + searchViafURLPath.trim() + " " + word.trim()
+		fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + word.trim()
 				+ searchViafURLPath1.trim() + startIndex.trim()
 				+ searchViafURLPath2.trim();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_RSS_XML));
 
-		ViafReply rep = (ViafReply) restTemplate.getForObject(fullUrl,
-				ViafReply.class);
+		HttpEntity<ViafReply> entity = new HttpEntity<ViafReply>(headers);
+		ResponseEntity<ViafReply> reply;
+		List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
+        try {
+            reply = restTemplate.exchange(new URI(fullUrl),HttpMethod.GET, entity, ViafReply.class);
+        } catch (RestClientException | URISyntaxException e) {
+            logger.error("Error during contacting VIAF.", e);
+            return searchResults;
+        }
+		
+		ViafReply rep = reply.getBody();
 		items = rep.getChannel().getItems();
 
-		List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
 		if (items != null) {
 			for (Item i : items) {
 				ISearchResult searchResult = searchResultFactory
