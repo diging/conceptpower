@@ -1,6 +1,8 @@
 package edu.asu.conceptpower.app.db;
 
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +10,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
 
-import edu.asu.conceptpower.app.db4o.ICommentsDBManager;
+import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.core.ReviewRequest;
 
 @Component
-public class DBCommentsClient implements ICommentsDBManager{
+public class DBRequestClient implements IRequestsDBManager{
 
     @Autowired
     @Qualifier("conceptReviewDatabaseManager")
@@ -35,8 +36,12 @@ public class DBCommentsClient implements ICommentsDBManager{
     }
 
     @Override
-    public ObjectSet<ReviewRequest> getReviewRequestForConcept(Object example){
-       return client.queryByExample(example);
+    public List<ReviewRequest> getReviewRequestForConcept(String conceptId){
+        
+        ReviewRequest request = new ReviewRequest();
+        request.setConceptId(conceptId);
+        
+        return client.queryByExample(request);
     }
    
 }

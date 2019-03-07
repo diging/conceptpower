@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.core.Constants;
-import edu.asu.conceptpower.app.core.ICommentsManager;
+import edu.asu.conceptpower.app.core.IRequestsManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
@@ -41,7 +41,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
     private IURIHelper helper; 
     
     @Autowired
-    private ICommentsManager commentsManager; 
+    private IRequestsManager requestsManager; 
     
     /**
      * This method creates wrappers for the concept entries passed as parameter
@@ -88,7 +88,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             }
             
           //Fetching Review, for the concept, to display when the user searches the concept
-            ReviewRequest reviewRequest = commentsManager.getReview(entry.getId());
+            ReviewRequest reviewRequest = requestsManager.getReview(entry.getId());
             if(reviewRequest!=null) {
                 wrapper.setReviewRequest(reviewRequest);
             }
