@@ -5,7 +5,9 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page session="false"%>
-
+<meta name="_csrf" content="${_csrf.token}"/>
+	<!-- default header name is X-CSRF-TOKEN -->
+	<meta name="_csrf_header" content="${_csrf.headerName}"/>
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
@@ -201,10 +203,15 @@ $(document).ready(function(){
 	$('#submitForm').click(function(e) {
     var request = $('#request').val();
     var conceptId = $('#conceptId').val();
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
     $.ajax({
         type: "POST",
         url: "${pageContext.servletContext.contextPath}/auth/addRequest",
         data: "request=" + request + "&conceptId=" + conceptId,
+        beforeSend: function(xhr) {
+        	xhr.setRequestHeader(header, token);
+        },
         success: function(response){
                 displayInfo = "<ol><br><li><b>request</b> : "+ request +";<b> conceptId</b> : " + conceptId+"</ol>";
                  $('#info').html("Request has been added successfully. " + displayInfo);
