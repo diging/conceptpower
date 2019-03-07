@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.app.profile.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -48,10 +49,6 @@ public class ViafService implements IService {
 
 	private String serviceid;
 	private String name;
-
-	@Inject
-	@Named("restTemplateViaf")
-	RestTemplate restTemplate;
 
 	@Autowired
 	@Qualifier("viafURL")
@@ -112,18 +109,24 @@ public class ViafService implements IService {
 		String startIndex = "1";
 
 		List<Item> items = null;
-		String fullUrl;
+		String fullUrl="";
+        List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
 
-		fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + word.trim()
-				+ searchViafURLPath1.trim() + startIndex.trim()
-				+ searchViafURLPath2.trim();
+		try {
+            fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + URLEncoder.encode(word.trim(), "UTF-8")
+            		+ searchViafURLPath1.trim() + startIndex.trim()
+            		+ searchViafURLPath2.trim();
+        } catch (UnsupportedEncodingException e1) {
+            logger.error("Error in URL Encoding.", e1);
+            return searchResults;
+        }
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_RSS_XML));
 
 		HttpEntity<ViafReply> entity = new HttpEntity<ViafReply>(headers);
 		ResponseEntity<ViafReply> reply;
-		List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
         try {
+            RestTemplate restTemplate = new RestTemplate();
             reply = restTemplate.exchange(new URI(fullUrl),HttpMethod.GET, entity, ViafReply.class);
         } catch (RestClientException | URISyntaxException e) {
             logger.error("Error during contacting VIAF.", e);

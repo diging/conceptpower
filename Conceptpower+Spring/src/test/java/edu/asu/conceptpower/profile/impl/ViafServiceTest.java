@@ -29,7 +29,7 @@ public class ViafServiceTest {
 
     @Mock
     private ISearchResultFactory searchResultFactory = Mockito.mock(ISearchResultFactory.class);
-
+    
     @InjectMocks
     private ViafService viafService;
 
@@ -40,7 +40,7 @@ public class ViafServiceTest {
         MockitoAnnotations.initMocks(this);
 
         ReflectionTestUtils.setField(viafService, "viafURL", "http://viaf.org/viaf/search");
-        ReflectionTestUtils.setField(viafService, "searchViafURLPath", "?query=local.names all");
+        ReflectionTestUtils.setField(viafService, "searchViafURLPath", "?query=local.names%20all");
         ReflectionTestUtils.setField(viafService, "searchViafURLPath1", "+&amp;maximumRecords=100&amp;startRecord=");
         ReflectionTestUtils.setField(viafService, "searchViafURLPath2",
                 "&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml");
@@ -80,10 +80,10 @@ public class ViafServiceTest {
 
         List<ISearchResult> searchResults = viafService.search("Pirckheimer");
 
-        assertEquals(1, searchResults.size());
-        assertEquals("Mon, 12 Jul 2015 18:51:56 GMT", searchResults.get(0).getDescription());
-        assertEquals("http://viaf.org/viaf/27173507", searchResults.get(0).getId());
-        assertEquals("Pirckheimer, Willibald, 1470-1530.", searchResults.get(0).getName());
+        assertEquals(10, searchResults.size());
+        assertEquals("Mon, 18 Feb 2018 10:37:15 GMT", searchResults.get(0).getDescription());
+        assertEquals("http://viaf.org/viaf/4671151898623524190004", searchResults.get(0).getId());
+        assertEquals("Bry, Theodor de 1528-1598 | Pirckheimer TIB X Kommentar.1001.106 C14", searchResults.get(0).getName());
     }
 
     @Test
