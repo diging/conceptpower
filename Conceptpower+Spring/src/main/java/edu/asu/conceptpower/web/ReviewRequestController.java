@@ -21,7 +21,7 @@ public class ReviewRequestController {
     @Autowired
     private RequestsManager requestsMgr;
            
-    @RequestMapping(value = "/auth/addRequest", method = RequestMethod.POST )
+    @RequestMapping(value = "/auth/request/add", method = RequestMethod.POST )
     public @ResponseBody RequestJsonResponse addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest, BindingResult result,Principal principal) {
   
         reviewRequest.setStatus(ReviewStatus.OPENED);

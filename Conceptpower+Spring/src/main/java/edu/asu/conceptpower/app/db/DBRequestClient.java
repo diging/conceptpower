@@ -36,12 +36,17 @@ public class DBRequestClient implements IRequestsDBManager{
     }
 
     @Override
-    public List<ReviewRequest> getReviewRequestForConcept(String conceptId){
+    public ReviewRequest getReviewRequestForConcept(String conceptId){
         
         ReviewRequest request = new ReviewRequest();
         request.setConceptId(conceptId);
         
-        return client.queryByExample(request);
+        List<ReviewRequest> reviewRequest = client.queryByExample(request);
+        
+        if(reviewRequest!= null && reviewRequest.size()>0) {
+            return reviewRequest.get(0);
+        }
+        return null;
     }
    
 }

@@ -204,7 +204,7 @@ $(document).ready(function(){
     var conceptId = $('#conceptId').val();
     $.ajax({
         type: "POST",
-        url: "${pageContext.servletContext.contextPath}/auth/addRequest",
+        url: "${pageContext.servletContext.contextPath}/auth/request/add",
         data: "request=" + request + "&conceptId=" + conceptId,
         success: function(response){
                 displayInfo = "<ol><br><li><b>request</b> : "+ request +";<b> conceptId</b> : " + conceptId+"</ol>";
@@ -489,7 +489,7 @@ $(document).ready(function(){
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
   <div class="modal-dialog">
-    <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addRequest" method="post">  
+    <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/request/add" method="post">  
     <!-- Modal content-->
     <div class="modal-content">
     <div class="modal-header">
