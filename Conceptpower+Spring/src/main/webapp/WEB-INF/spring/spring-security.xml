@@ -7,9 +7,10 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security.xsd">
 
-	<http auto-config="true" use-expressions="true">
+	 <http auto-config="true" use-expressions="true">
 		<access-denied-handler error-page="/forbidden" />
-
+		<csrf request-matcher-ref="csrfRequestMatcher" />
+		
 		<form-login login-page="/" />
 		<logout
 		  logout-success-url="/"
@@ -19,16 +20,14 @@
 
 		<intercept-url pattern="/resources/**" access="permitAll" />
 
-		<!-- here go admin pages -->
 		<intercept-url pattern="/auth/user/**" access="hasRole('ROLE_CP_ADMIN')" />
 		<intercept-url pattern="/auth/index/**" access="hasRole('ROLE_CP_ADMIN')" />
-		<!-- <intercept-url pattern="/rest/concept/add" access="isAuthenticated()" 
-			/> -->
-
+		
 		<intercept-url pattern="/auth/**" access="isAuthenticated()" />
 
 	</http>
 
+	<beans:bean id="csrfRequestMatcher" class="edu.asu.conceptpower.app.config.CsrfSecurityRequestMatcher" />
 
 	<beans:bean id="encoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
