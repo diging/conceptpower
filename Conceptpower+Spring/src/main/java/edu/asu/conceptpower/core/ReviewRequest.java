@@ -5,8 +5,8 @@ public class ReviewRequest {
 
 
     private String conceptId;
-    private String comment;
-    private CommentStatus status;
+    private String request;
+    private ReviewStatus status;
     private String requester;
     private String resolver;
     
@@ -18,20 +18,20 @@ public class ReviewRequest {
         this.conceptId = conceptId;
     }  
    
-    public CommentStatus getStatus() {
+    public ReviewStatus getStatus() {
         return status;
     }
 
-    public void setStatus(CommentStatus status) {
+    public void setStatus(ReviewStatus status) {
         this.status = status;
     }
 
-    public String getComment() {
-        return comment;
+    public String getRequest() {
+        return request;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setRequest(String request) {
+        this.request = request;
     }
 
     public String getRequester() {
