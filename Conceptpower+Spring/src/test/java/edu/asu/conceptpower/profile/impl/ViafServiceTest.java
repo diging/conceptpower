@@ -81,9 +81,9 @@ public class ViafServiceTest {
         List<ISearchResult> searchResults = viafService.search("Pirckheimer");
 
         assertEquals(10, searchResults.size());
-        assertEquals("Mon, 18 Feb 2018 10:37:15 GMT", searchResults.get(0).getDescription());
-        assertEquals("http://viaf.org/viaf/4671151898623524190004", searchResults.get(0).getId());
-        assertEquals("Bry, Theodor de 1528-1598 | Pirckheimer TIB X Kommentar.1001.106 C14", searchResults.get(0).getName());
+        assertEquals("Mon, 18 Feb 2018 10:37:06 GMT", searchResults.get(0).getDescription());
+        assertEquals("http://viaf.org/viaf/4473151898622624190001", searchResults.get(0).getId());
+        assertEquals("Pirckheimer TIB X Kommentar.1001.106 C6", searchResults.get(0).getName());
     }
 
     @Test

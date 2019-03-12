@@ -8,7 +8,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -24,7 +23,8 @@ import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
-import junit.framework.Assert;
+import org.junit.Assert;
+
 
 public class ConceptsTest {
 
@@ -55,7 +55,7 @@ public class ConceptsTest {
     public void test_addConcept_invalidType()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/invalidType.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/invalidType.json"),"UTF-8");
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         Assert.assertEquals("The type id you are submitting doesn't match any existing type.", response.getBody());
@@ -65,7 +65,7 @@ public class ConceptsTest {
     public void test_addConcept_invalidPos()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/invalidPOS.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/invalidPOS.json"),"UTF-8");
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         Assert.assertEquals("Error parsing request: please provide a POS ('pos' attribute).", response.getBody());
@@ -75,7 +75,7 @@ public class ConceptsTest {
     public void test_addConcept_emptyWord()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/emptyWord.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/emptyWord.json"),"UTF-8");
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         Assert.assertEquals("Error parsing request: please provide a word for the concept ('word' attribute).",
@@ -86,7 +86,7 @@ public class ConceptsTest {
     public void test_addConcept_invalidListName()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithoutListName.json"));
+                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithoutListName.json"),"UTF-8");
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         Assert.assertEquals("Error parsing request: please provide a list name for the concept ('list' attribute).",
@@ -97,10 +97,10 @@ public class ConceptsTest {
     public void test_addConcept_successInJson() throws IllegalAccessException, LuceneException, IndexerRunningException,
             DictionaryDoesNotExistException, DictionaryModifyException, JSONException, IOException {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/addConcept.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/addConcept.json"),"UTF-8");
 
         final String expectedOutput = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/addConcept.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/addConcept.json"),"UTF-8");
 
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
         ConceptType type = new ConceptType();
@@ -113,7 +113,7 @@ public class ConceptsTest {
 
         Mockito.when(typeManager.getType(typeId)).thenReturn(type);
         Mockito.when(
-                conceptManager.addConceptListEntry(Mockito.isA(ConceptEntry.class), Matchers.eq(principal.getName())))
+                conceptManager.addConceptListEntry(Mockito.isA(ConceptEntry.class),Mockito.eq(principal.getName())))
                 .thenReturn(newConceptEntry);
 
         ResponseEntity<String> response = concepts.addConcept(input, principal);
@@ -127,7 +127,7 @@ public class ConceptsTest {
             throws IllegalAccessException, DictionaryDoesNotExistException, DictionaryModifyException, LuceneException,
             IndexerRunningException, IOException {
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"));
+                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"),"UTF-8");
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
         ConceptType type = new ConceptType();
         type.setTypeId(typeId);
@@ -148,7 +148,7 @@ public class ConceptsTest {
             throws IllegalAccessException, DictionaryDoesNotExistException, DictionaryModifyException, LuceneException,
             IndexerRunningException, IOException {
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"));
+                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"),"UTF-8");
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
         ConceptType type = new ConceptType();
         type.setTypeId(typeId);
@@ -168,7 +168,7 @@ public class ConceptsTest {
     public void test_addConcept_luceneException() throws IllegalAccessException, DictionaryDoesNotExistException,
             DictionaryModifyException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"));
+                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"),"UTF-8");
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
         ConceptType type = new ConceptType();
         type.setTypeId(typeId);
@@ -188,7 +188,7 @@ public class ConceptsTest {
     public void test_addConcept_illegalAccessException() throws IllegalAccessException, DictionaryDoesNotExistException,
             DictionaryModifyException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"));
+                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"),"UTF-8");
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
         ConceptType type = new ConceptType();
         type.setTypeId(typeId);
@@ -208,7 +208,7 @@ public class ConceptsTest {
     public void test_addConcept_emptyPos()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtils.toString(this.getClass().getClassLoader()
-                .getResourceAsStream("unitTestInput/conceptWithWordnetAndInvalidPos.json"));
+                .getResourceAsStream("unitTestInput/conceptWithWordnetAndInvalidPos.json"),"UTF-8");
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         Assert.assertEquals("Error parsing request: please provide a POS ('pos' attribute).", response.getBody());
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -219,7 +219,7 @@ public class ConceptsTest {
     public void test_addConcept_invalidConceptType()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithEmptyTypeId.json"));
+                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithEmptyTypeId.json"),"UTF-8");
         ResponseEntity<String> response = concepts.addConcept(input, principal);
         Assert.assertEquals("Error parsing request: please provide a type for the concept ('type' attribute).",
                 response.getBody());
@@ -235,7 +235,7 @@ public class ConceptsTest {
         final String pos = "noun";
 
         final String input = IOUtils.toString(this.getClass().getClassLoader()
-                .getResourceAsStream("unitTestInput/conceptWithNonExistingTypeId.json"));
+                .getResourceAsStream("unitTestInput/conceptWithNonExistingTypeId.json"),"UTF-8");
 
         ConceptEntry entry = new ConceptEntry();
         entry.setWord(word);
@@ -254,7 +254,7 @@ public class ConceptsTest {
     public void test_addConcept_invalidWordNetIds()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException {
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidWordnetId.json"));
+                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidWordnetId.json"),"UTF-8");
 
         ConceptType type = new ConceptType();
         type.setTypeId("c7d0bec3-ea90-4cde-8698-3bb08c47d4f2");
@@ -278,7 +278,7 @@ public class ConceptsTest {
         final String word = "kitty";
         final String pos = "verb";
         final String input = IOUtils.toString(this.getClass().getClassLoader()
-                .getResourceAsStream("unitTestInput/conceptWrapperWithmismatchPOS.json"));
+                .getResourceAsStream("unitTestInput/conceptWrapperWithmismatchPOS.json"),"UTF-8");
 
         ConceptEntry entry = new ConceptEntry();
         entry.setWord(word);
@@ -302,7 +302,7 @@ public class ConceptsTest {
         final String word = "kitty";
         final String pos = "verb";
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/existingWordnetIdsInput.json"));
+                this.getClass().getClassLoader().getResourceAsStream("unitTestInput/existingWordnetIdsInput.json"),"UTF-8");
 
         ConceptEntry entry = new ConceptEntry();
         entry.setWord(word);
@@ -323,10 +323,10 @@ public class ConceptsTest {
             DictionaryModifyException, JSONException, IOException {
 
         final String input = IOUtils.toString(this.getClass().getClassLoader()
-                .getResourceAsStream("unitTestInput/multipleConceptMultipleTypes.json"));
+                .getResourceAsStream("unitTestInput/multipleConceptMultipleTypes.json"),"UTF-8");
 
         final String expectedOutput = IOUtils.toString(this.getClass().getClassLoader()
-                .getResourceAsStream("unitTestOutput/multipleConceptMultipleTypes.json"));
+                .getResourceAsStream("unitTestOutput/multipleConceptMultipleTypes.json"),"UTF-8");
 
         final String typeId1 = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
         final String typeId2 = "c7d0bec3-ea90-4cde-8698-3bb08c47d4r4";
@@ -348,7 +348,7 @@ public class ConceptsTest {
         newConceptEntry.setId("CCP-1");
 
         Mockito.when(
-                conceptManager.addConceptListEntry(Mockito.isA(ConceptEntry.class), Matchers.eq(principal.getName())))
+                conceptManager.addConceptListEntry(Mockito.isA(ConceptEntry.class), Mockito.eq(principal.getName())))
                 .thenReturn(newConceptEntry);
 
         ResponseEntity<String> output = concepts.addConcepts(input, principal);
