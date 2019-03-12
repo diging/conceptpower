@@ -41,10 +41,10 @@ public class DBRequestClient implements IRequestsDBManager{
         ReviewRequest request = new ReviewRequest();
         request.setConceptId(conceptId);
         
-        List<ReviewRequest> reviewRequest = client.queryByExample(request);
+        List<ReviewRequest> reviewRequests = client.queryByExample(request);
         
-        if(reviewRequest!= null && reviewRequest.size()>0) {
-            return reviewRequest.get(0);
+        if(reviewRequests!= null && reviewRequests.size()>0) {
+            return reviewRequests.get(0);
         }
         return null;
     }

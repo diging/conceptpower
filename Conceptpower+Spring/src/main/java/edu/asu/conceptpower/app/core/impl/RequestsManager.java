@@ -29,7 +29,6 @@ public  class RequestsManager implements IRequestsManager{
      */
     public ReviewRequest getReview(String conceptId) {
         
-       ReviewRequest reviewRequest = dbClient.getReviewRequestForConcept(conceptId);
-       return reviewRequest;
+        return dbClient.getReviewRequestForConcept(conceptId);
     }
 }
