@@ -31,6 +31,7 @@ import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.rest.SearchParamters;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 
@@ -72,7 +73,14 @@ public class ConceptManager implements IConceptManager {
     @Override
     public ConceptEntry getConceptEntry(String id) {
 
-        ConceptEntry[] entries = client.getEntriesByFieldContains(SearchFieldNames.MERGED_IDS, id);
+        Map<String, String> fieldMap = new HashMap<>();
+        fieldMap.put(SearchFieldNames.MERGED_IDS, id);
+        ConceptEntry[] entries;
+        try {
+            entries = indexService.searchForConcepts(fieldMap, SearchParamters.OP_OR);
+        } catch (IllegalAccessException | LuceneException | IndexerRunningException e) {
+            return null;
+        }
         if (entries != null && entries.length > 0) {
             fillConceptEntry(entries[0]);
             alternativeIdService.addAlternativeIds(id, entries[0]);
