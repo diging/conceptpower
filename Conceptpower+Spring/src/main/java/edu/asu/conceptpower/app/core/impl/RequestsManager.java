@@ -22,11 +22,7 @@ public  class RequestsManager implements IRequestsManager{
      * @see edu.asu.conceptpower.app.core.IRequestsManager#addReviewRequest(edu.asu.conceptpower.core.ReviewRequest)
      */
     public void addReviewRequest(ReviewRequest newReviewRequest) {
-        System.out.println("reviewRequest*");
-
         dbClient.store(newReviewRequest);
-        System.out.println("reviewRequest**");
-
     }
     
     /* (non-Javadoc)

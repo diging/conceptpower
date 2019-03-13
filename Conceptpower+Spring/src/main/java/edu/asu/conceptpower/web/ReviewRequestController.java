@@ -23,14 +23,12 @@ public class ReviewRequestController {
            
     @RequestMapping(value = "/auth/addRequest", method = RequestMethod.POST )
     public @ResponseBody RequestJsonResponse addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest, BindingResult result,Principal principal) {
-  System.out.println("reviewRequest");
         reviewRequest.setStatus(ReviewStatus.OPENED);
         reviewRequest.setRequester(principal.getName());
         
         RequestJsonResponse res = new RequestJsonResponse();
         res.setResult(reviewRequest);
         requestsMgr.addReviewRequest(reviewRequest);
-        System.out.println("reviewRequest##");
 
         return res;
     }
