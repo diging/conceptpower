@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.core.Constants;
-import edu.asu.conceptpower.app.core.IRequestsManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
@@ -17,7 +16,6 @@ import edu.asu.conceptpower.app.util.IURIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ReviewRequest;
 
 /**
  * This class provides methods required for creation concept wrappers
@@ -38,11 +36,8 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
     private IUserManager usersManager;
 
     @Autowired
-    private IURIHelper helper; 
-    
-    @Autowired
-    private IRequestsManager requestsManager; 
-    
+    private IURIHelper helper;
+
     /**
      * This method creates wrappers for the concept entries passed as parameter
      * 
@@ -85,12 +80,6 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
                     wrapper.setWrappedWordnetEntries(wordnetEntries);
 
                 }
-            }
-            
-          //Fetching Review, for the concept, to display when the user searches the concept
-            ReviewRequest reviewRequest = requestsManager.getReview(entry.getId());
-            if(reviewRequest!=null) {
-                wrapper.setReviewRequest(reviewRequest);
             }
 
             // build description considering all the wordnet entries wrappe

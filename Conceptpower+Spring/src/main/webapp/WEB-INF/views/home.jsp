@@ -190,44 +190,7 @@ function prepareMergeConcept(conceptId) {
 function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
-$(document).ready(function(){
-	$(".fa-envelope").click(function() {
-		 $("#requestBox").show();
-	     $("#fetchRequests").val($(this).data("request"));      
-	});
-	$(".btnReview").click(function() {
-	$("#conceptId").val($(this).data("concept-id"));	      
-});
-	$('#requestBox').hide();
-    $('#alertMsg').hide();
-	$('#submitForm').click(function(e) {
-    var request = $('#request').val();
-    var conceptId = $('#conceptId').val();
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    $.ajax({
-        type: "POST",
-        url: "${pageContext.servletContext.contextPath}/auth/addRequest",
-        data: "request=" + request + "&conceptId=" + conceptId,
-        beforeSend: function(xhr) {
-        	xhr.setRequestHeader(header, token);
-        },
-        success: function(response){
-                displayInfo = "<ol><br><li><b>request</b> : "+ request +";<b> conceptId</b> : " + conceptId+"</ol>";
-                 $('#info').html("Request has been added successfully. " + displayInfo);
-                 $('#conceptId').val('');
-                 $('#request').val('');
-                 $('#error').hide('slow');
-                 $('#info').show('slow');
-                 $('#submitForm').hide(); 
-         },
-         error: function(e){
-        	 $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
-             $('#alertMsg').show();
-         }
-    });
-});
-});
+
 </script>
 
 <header class="page-header">
@@ -306,9 +269,8 @@ $(document).ready(function(){
       <c:set var="sortDirection" value="${-1}"/>
     </c:otherwise>
   </c:choose>
-  
 
-  <table
+  <table cellpadding="0" cellspacing="0"
     class="table table-striped table-bordered" id="conceptSearchResult">
     <thead>
       <tr>
@@ -318,15 +280,14 @@ $(document).ready(function(){
           <th data-name='merge'></th>
         </sec:authorize>
         <th>
-          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
+          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
           </a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-      	<th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'reviewStatus', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Review Status   <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
       </tr>
     </thead>
     <tbody>
@@ -357,6 +318,7 @@ $(document).ready(function(){
                     href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcept/${concept.entry.id}?fromHomeScreenDelete=true"
                     id="${concept.entry.id}"><i
                     title="Delete Concept" class="fa fa-trash"></i></a>
+                  </font>
 
                 </c:when>
                 <c:otherwise>
@@ -371,37 +333,26 @@ $(document).ready(function(){
             </td>
 
           </sec:authorize>
-          <td align="justify"> <a
+          <td align="justify"><font size="2"> <a
               id="${concept.entry.id}" data-toggle="modal"
               data-target="#detailsModal"
               data-conceptid="${concept.entry.id}"><c:out
-                  value="${concept.entry.word}"></c:out></a></td>
-          <td class="entryID" align="justify" id="entryId" ><c:out
-                value="${concept.entry.id}"></c:out></td>
-          <td align="justify"><c:out
-                value="${concept.entry.wordnetId}"></c:out></td>
-          <td align="justify"><c:out
-                value="${concept.entry.pos}"></c:out></td>
-          <td align="justify"><c:out
-                value="${concept.entry.conceptList}"></c:out></td>
+                  value="${concept.entry.word}"></c:out></a></font></td>
+          <td align="justify"><font size="2"><c:out
+                value="${concept.entry.id}"></c:out></font></td>
+          <td align="justify"><font size="2"><c:out
+                value="${concept.entry.wordnetId}"></c:out></font></td>
+          <td align="justify"><font size="2"><c:out
+                value="${concept.entry.pos}"></c:out></font></td>
+          <td align="justify"><font size="2"><c:out
+                value="${concept.entry.conceptList}"></c:out></font></td>
           <td align="justify">
                 <div class="scrollable" style="max-height: 100px; max-width: 400px;">
                     <c:out value="${concept.description}" escapeXml="false"></c:out>
                 </div>
           </td>
-          <td align="justify"><c:out
-                value="${concept.type.typeName}"></c:out></td>
-                
-         <!-- Enabling Disabling the Review button -->  
-          <c:choose>
- 		  <c:when 
- 		    test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
- 		    <td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
-  		  </c:when>
-  		  <c:otherwise>
-   		    <td align="center" ><button  data-request="${concept.reviewRequest.request}" type="button" class="fa fa-envelope" data-toggle="modal" data-target="#requestModal"></button></td>
- 		  </c:otherwise>
-		  </c:choose>
+          <td align="justify"><font size="2"><c:out
+                value="${concept.type.typeName}"></c:out></font></td>
         </tr>
       </c:forEach>
     </tbody>
@@ -444,7 +395,7 @@ $(document).ready(function(){
         <div class="row row-odd">
           <div class="col-sm-3">Id:</div>
           <div id="detailsid" class="col-sm-9"></div>
-          
+          </tr>
         </div>
         <div class="row row-even">
           <div class="col-sm-3">URI:</div>
@@ -491,58 +442,3 @@ $(document).ready(function(){
     </div>
   </div>
   </div>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-  <div class="modal-dialog">
-    <form:form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/addRequest" modelAttribute="/auth/addRequest">  
-    <!-- Modal content-->
-    <div class="modal-content">
-    <div class="modal-header">
-    	<button type="button" class="close" data-dismiss="modal">&times;</button>
-    </div>
-    <div class="modal-body">
-    <div class="form-label"><b>Provide Requests</b></div>
-    <div class="form-field">
-   	    <textarea id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
-    	<input type="hidden" name="conceptId" id="conceptId" value=""/>
-        <div id="error" class="error"></div>
-        <div id="info" class="success"></div>
-    </div>
-    <div class="form-elements">
-    	 <input value="Submit Form" type="button" id="submitForm" >
-	 </div>
-    </div>
-   </div>
-</form:form>  
-</div>
-</div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="requestModal" role="dialog">
-  <div class="modal-dialog" id="requestBox">
-    <form>  
-    <!-- Modal content-->
-    <div class="modal-content">
-    <div class="modal-header">
-    	<button type="button" class="close" data-dismiss="modal">&times;</button>
-    </div>
-    <div class="modal-body">
-    <div class="form-field">
-   <div class="floatingform" >
-  <div  >
-    <div class="form-label"><b>Requests</b></div>
-    <div class="form-field">
-      <textarea id="fetchRequests" name="fetchRequests" rows="4" cols="30" ></textarea>
-    </div>
-   </div>
-  </div>
-    </div>
-        </div>
-   </div>
-</form>   
-</div>
-</div>
-
-<div class="alert alert-danger alert-dismissible" id="alertMsg">
-</div>
