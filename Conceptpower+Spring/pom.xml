@@ -418,7 +418,7 @@
 		<dependency>
 			<groupId>com.db4o</groupId>
 			<artifactId>db4o-full-java5</artifactId>
-			<version>8.0</version>
+			<version>8.0.276.16149</version>
 		</dependency>
 
 		<!-- Object DB -->
