@@ -129,7 +129,6 @@ public class ViafService implements IService {
             logger.error("Error during contacting VIAF.", e);
             return searchResults;
         }
-		
 		ViafReply rep = reply.getBody();
 		items = rep.getChannel().getItems();
 
