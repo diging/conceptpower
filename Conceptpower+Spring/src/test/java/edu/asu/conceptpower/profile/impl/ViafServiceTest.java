@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -33,6 +35,8 @@ import edu.asu.conceptpower.app.profile.impl.ViafReply;
 import edu.asu.conceptpower.app.profile.impl.ViafService;
 
 public class ViafServiceTest {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Mock
     private RestTemplate template;
@@ -81,7 +85,7 @@ public class ViafServiceTest {
         try {
             Mockito.when(restTemplate.exchange(new URI("http://viaf.org/viaf/search?query=local.names%20all%20Pirckheimer+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml"),HttpMethod.GET, entity, ViafReply.class)).thenReturn(reply);
         } catch (RestClientException | URISyntaxException e) {
-            e.printStackTrace();
+            logger.error("Error during contacting VIAF.", e);
         }
 
         ViafReply emptyViafReply = new ViafReply();
@@ -100,7 +104,7 @@ public class ViafServiceTest {
         try {
             Mockito.when(restTemplate.exchange(new URI("http://viaf.org/viaf/search?query=local.names%20all%20Test+for+Null+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml"),HttpMethod.GET, entity, ViafReply.class)).thenReturn(reply);
         } catch (RestClientException | URISyntaxException e) {
-            e.printStackTrace();
+            logger.error("Error during contacting VIAF.", e);
         }
     }
 
