@@ -1,9 +1,5 @@
 package edu.asu.conceptpower.app.core.impl;
 
-
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +18,6 @@ import edu.asu.conceptpower.core.ReviewStatus;
 @RunWith(MockitoJUnitRunner.class)
 public class RequestsManagerTest {
     
-   
-    
     @InjectMocks
     ReviewRequest reviewRequest;
     
@@ -39,7 +33,6 @@ public class RequestsManagerTest {
     @Mock 
     private ObjectContainer client;
 
- 
     @Test
     public void test_addReviewRequest() {
         
@@ -55,8 +48,6 @@ public class RequestsManagerTest {
         Mockito.verify(requestsManager).getReview("WID-01006675-N-02-mental_test");
         Assert.assertEquals("WID-01006675-N-02-mental_test", fetchedReview.getConceptId());
         Assert.assertEquals("Testing Method", fetchedReview.getRequest());
-
-
     }
     
     @Test

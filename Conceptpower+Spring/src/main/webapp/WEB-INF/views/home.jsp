@@ -219,8 +219,8 @@ $(document).ready(function(){
         	 $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
              $('#alertMsg').show();
          }
-    });
-});
+    	});
+	});
 });
 </script>
 
