@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +19,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import edu.asu.conceptpower.app.jaxb.viaf.Channel;
 import edu.asu.conceptpower.app.jaxb.viaf.Item;
 import edu.asu.conceptpower.app.profile.ISearchResult;
 import edu.asu.conceptpower.app.profile.ISearchResultFactory;
@@ -62,6 +68,10 @@ public class ViafService implements IService {
 	@Autowired
 	@Qualifier("searchViafURLPath2")
 	private String searchViafURLPath2;
+	
+	@Inject
+    @Named("restTemplateViaf")
+    private RestTemplate restTemplate;
 
 	@Override
 	public void setServiceId(String serviceid) {
@@ -121,9 +131,11 @@ public class ViafService implements IService {
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_RSS_XML));
 
 		HttpEntity<ViafReply> entity = new HttpEntity<ViafReply>(headers);
-		ResponseEntity<ViafReply> reply;
+		ResponseEntity<ViafReply> reply ;
+
+	        
+		System.out.println("fullUrl"+fullUrl);
         try {
-            RestTemplate restTemplate = new RestTemplate();
             reply = restTemplate.exchange(new URI(fullUrl),HttpMethod.GET, entity, ViafReply.class);
         } catch (RestClientException | URISyntaxException e) {
             logger.error("Error during contacting VIAF.", e);
