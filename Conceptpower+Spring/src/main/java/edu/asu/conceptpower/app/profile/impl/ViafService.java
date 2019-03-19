@@ -65,6 +65,10 @@ public class ViafService implements IService {
 	@Autowired
 	@Qualifier("searchViafURLPath2")
 	private String searchViafURLPath2;
+	
+	@Inject
+    @Named("restTemplateViaf")
+    private RestTemplate restTemplate;
 
 	@Override
 	public void setServiceId(String serviceid) {
@@ -124,15 +128,16 @@ public class ViafService implements IService {
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_RSS_XML));
 
 		HttpEntity<ViafReply> entity = new HttpEntity<ViafReply>(headers);
-		ResponseEntity<ViafReply> reply;
+		ResponseEntity<ViafReply> reply ;
+
+	        
+		System.out.println("fullUrl"+fullUrl);
         try {
-            RestTemplate restTemplate = new RestTemplate();
             reply = restTemplate.exchange(new URI(fullUrl),HttpMethod.GET, entity, ViafReply.class);
         } catch (RestClientException | URISyntaxException e) {
             logger.error("Error during contacting VIAF.", e);
             return searchResults;
         }
-		
 		ViafReply rep = reply.getBody();
 		items = rep.getChannel().getItems();
 

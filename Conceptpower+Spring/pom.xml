@@ -53,6 +53,7 @@
 				<db.path>${db.files.path}</db.path>
 				<deploy.path>${deploy.path.dev}</deploy.path>
 				<tomcat.path>${tomcat.deploy.path}</tomcat.path>
+				<tomcat.server>localhost</tomcat.server>
 				<email.user>${email.username}</email.user>
 				<email.pw>${email.password}</email.pw>
 				<email.port>${email.server.port}</email.port>
@@ -70,6 +71,7 @@
 				<db.path>${db.files.path}</db.path>
 				<deploy.path>${deploy.path.test}</deploy.path>
 				<tomcat.path>${tomcat.deploy.path}</tomcat.path>
+				<tomcat.server>localhost</tomcat.server>
 				<email.user>${email.username}</email.user>
 				<email.pw>${email.password}</email.pw>
 				<email.port>${email.server.port}</email.port>
@@ -418,7 +420,7 @@
 		<dependency>
 			<groupId>com.db4o</groupId>
 			<artifactId>db4o-full-java5</artifactId>
-			<version>8.0</version>
+			<version>8.0.276.16149</version>
 		</dependency>
 
 		<!-- Object DB -->
@@ -612,7 +614,7 @@
 				<version>2.2</version>
 				<configuration>
 					<url>${tomcat.path}</url>
-					<server>TomcatServer</server>
+					<server>${tomcat.server}</server>
 					<path>/${deploy.path}</path>
 				</configuration>
 			</plugin>
