@@ -195,8 +195,8 @@ $(document).ready(function(){
 	     $("#fetchRequests").val($(this).data("request"));      
 	});
 	$(".btnReview").click(function() {
-	$("#conceptId").val($(this).data("concept-id"));	      
-});
+		 $("#conceptId").val($(this).data("concept-id"));	      
+	});
 	$('#requestBox').hide();
     $('#alertMsg').hide();
 	$('#submitForm').click(function(e) {
