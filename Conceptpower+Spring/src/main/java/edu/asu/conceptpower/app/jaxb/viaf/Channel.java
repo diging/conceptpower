@@ -17,8 +17,8 @@ public class Channel {
     
     @XmlElement(name = "item")
 	private List<Item> items;
-
-	@XmlElement(name = "title")
+    
+    @XmlElement(name = "title")
 	private String title;
 
 	@XmlElement(name = "totalResults", namespace = "http://a9.com/-/spec/opensearch/1.1/")
@@ -69,4 +69,5 @@ public class Channel {
 	public void setItems(List<Item> item) {
 		this.items = item;
 	}
+	
 }
