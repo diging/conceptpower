@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Channel {
+    
     @XmlElement(name = "item")
     private List<Item> items;
     
