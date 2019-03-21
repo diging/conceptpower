@@ -69,5 +69,4 @@ public class Channel {
 	public void setItems(List<Item> item) {
 		this.items = item;
 	}
-
 }
