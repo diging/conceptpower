@@ -114,30 +114,28 @@ public class ViafService implements IService {
 
 		List<Item> items = null;
 		String fullUrl="";
-        List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
+        	List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
 
 		try {
-            fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + URLEncoder.encode(word.trim(), "UTF-8")
-            		+ searchViafURLPath1.trim() + startIndex.trim()
-            		+ searchViafURLPath2.trim();
-        } catch (UnsupportedEncodingException e1) {
-            logger.error("Error in URL Encoding.", e1);
-            return searchResults;
-        }
+            	      fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + URLEncoder.encode(word.trim(), "UTF-8")
+            		      + searchViafURLPath1.trim() + startIndex.trim()
+            		      + searchViafURLPath2.trim();
+       		} catch (UnsupportedEncodingException e1) {
+            	      logger.error("Error in URL Encoding.", e1);
+            	      return searchResults;
+        	}
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_RSS_XML));
 
 		HttpEntity<ViafReply> entity = new HttpEntity<ViafReply>(headers);
 		ResponseEntity<ViafReply> reply ;
 
-	        
-		System.out.println("fullUrl"+fullUrl);
-        try {
-            reply = restTemplate.exchange(new URI(fullUrl),HttpMethod.GET, entity, ViafReply.class);
-        } catch (RestClientException | URISyntaxException e) {
-            logger.error("Error during contacting VIAF.", e);
-            return searchResults;
-        }
+	        try {
+           	      reply = restTemplate.exchange(new URI(fullUrl),HttpMethod.GET, entity, ViafReply.class);
+                } catch (RestClientException | URISyntaxException e) {
+                      logger.error("Error during contacting VIAF.", e);
+                      return searchResults;
+                }
 		ViafReply rep = reply.getBody();
 		items = rep.getChannel().getItems();
 
