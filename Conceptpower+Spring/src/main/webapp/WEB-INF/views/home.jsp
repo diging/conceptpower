@@ -393,7 +393,7 @@ $(document).ready(function(){
  		      <td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
   		  </c:when>
   		  <c:otherwise>
-  		      <td align="center" ><button  data-request="${concept.reviewRequest.request}" type="button" class="fa fa-envelope" data-toggle="modal" data-target="#requestModal"></button></td>
+  		       <td align="center" ><button  data-request="${concept.reviewRequest.request}" type="button" class="fa fa-envelope" data-toggle="modal" data-target="#requestModal"></button></td>
  		  </c:otherwise>
 		  </c:choose>
         </tr>
