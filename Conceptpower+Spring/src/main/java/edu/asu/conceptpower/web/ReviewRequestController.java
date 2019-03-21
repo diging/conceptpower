@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.core.impl.RequestsManager;
-import edu.asu.conceptpower.core.ReviewStatus;
-import edu.asu.conceptpower.core.RequestJsonResponse;
 import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.core.ReviewStatus;
 
 @Controller
 public class ReviewRequestController {
@@ -21,15 +20,13 @@ public class ReviewRequestController {
     private RequestsManager requestsMgr;
            
     @RequestMapping(value = "/auth/request/add", method = RequestMethod.POST )
-    public @ResponseBody RequestJsonResponse addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
+    public @ResponseBody ReviewRequest addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
   
         reviewRequest.setStatus(ReviewStatus.OPENED);
         reviewRequest.setRequester(principal.getName());
         
-        RequestJsonResponse res = new RequestJsonResponse();
-        res.setResult(reviewRequest);
         requestsMgr.addReviewRequest(reviewRequest);
         
-        return res;
+        return reviewRequest;
     }
 }

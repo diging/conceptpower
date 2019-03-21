@@ -200,28 +200,28 @@ $(document).ready(function(){
 	$('#requestBox').hide();
     $('#alertMsg').hide();
 	$('#submitForm').click(function(e) {
-    var request = $('#request').val();
-    var conceptId = $('#conceptId').val();
-    $.ajax({
-        type: "POST",
-        url: "${pageContext.servletContext.contextPath}/auth/request/add",
-        data: "request=" + request + "&conceptId=" + conceptId,
-        success: function(response){
-                displayInfo = "<ol><br><li><b>request</b> : "+ request +";<b> conceptId</b> : " + conceptId+"</ol>";
-                 $('#info').html("Request has been added successfully. " + displayInfo);
-                 $('#conceptId').val('');
-                 $('#request').val('');
-                 $('#error').hide('slow');
-                 $('#info').show('slow');
-                 $('#submitForm').hide(); 
-         },
-         error: function(e){
-        	 $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
-             $('#alertMsg').show();
-         }
-    	});
+		var request = $('#request').val();
+		var conceptId = $('#conceptId').val();
+		$.ajax({
+			type: "POST",
+			url: "${pageContext.servletContext.contextPath}/auth/request/add",
+			data: "request=" + request + "&conceptId=" + conceptId,
+			success: function(response){
+				displayInfo = "<ol><br><li><b>request</b> : "+ request +";<b> conceptId</b> : " + conceptId+"</ol>";
+				$('#info').html("Request has been added successfully. " + displayInfo);
+                $('#conceptId').val('');
+                $('#request').val('');
+                $('#error').hide('slow');
+                $('#info').show('slow');
+                $('#submitForm').hide(); 
+                },
+                error: function(e){
+                	$('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
+                	$('#alertMsg').show();
+                	}
+                });
+		});
 	});
-});
 </script>
 
 <header class="page-header">
@@ -390,10 +390,10 @@ $(document).ready(function(){
           <c:choose>
  		  <c:when 
  		    test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
- 		    <td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
+ 		      <td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
   		  </c:when>
   		  <c:otherwise>
-   		    <td align="center" ><button  data-request="${concept.reviewRequest.request}" type="button" class="fa fa-envelope" data-toggle="modal" data-target="#requestModal"></button></td>
+  		      <td align="center" ><button  data-request="${concept.reviewRequest.request}" type="button" class="fa fa-envelope" data-toggle="modal" data-target="#requestModal"></button></td>
  		  </c:otherwise>
 		  </c:choose>
         </tr>
