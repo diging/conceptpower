@@ -67,8 +67,8 @@ public class ViafService implements IService {
 	private String searchViafURLPath2;
 	
 	@Inject
-    @Named("restTemplateViaf")
-    private RestTemplate restTemplate;
+	@Named("restTemplateViaf")
+	private RestTemplate restTemplate;
 
 	@Override
 	public void setServiceId(String serviceid) {
