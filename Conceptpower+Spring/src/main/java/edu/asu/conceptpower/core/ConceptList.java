@@ -3,6 +3,8 @@ package edu.asu.conceptpower.core;
 import java.io.Serializable;
 
 /**
+ * @deprecated
+ *      This class is only kept for migration purposes.
  * This class describes a concept list in Conceptpower. 
  * A concept list groups concept entries for organization
  * purposes.
@@ -10,6 +12,7 @@ import java.io.Serializable;
  * @author Julia Damerow
  *
  */
+@Deprecated
 public class ConceptList implements Serializable {
 
 	/**

@@ -1,7 +1,13 @@
 package edu.asu.conceptpower.users;
 
 import java.io.Serializable;
-
+/** 
+ * @deprecated
+ *      This class is only kept for migration purposes.
+ * @author abhishekkumar
+ *
+ */
+@Deprecated
 public class User implements Serializable {
 
     /**

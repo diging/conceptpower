@@ -2,7 +2,13 @@ package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/** 
+ * @deprecated
+ *      This class is only kept for migration purposes.
+ * @author abhishekkumar
+ *
+ */
+@Deprecated
 public class IndexingEvent implements Serializable {
 
     /**

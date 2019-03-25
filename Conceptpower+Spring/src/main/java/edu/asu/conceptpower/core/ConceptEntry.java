@@ -26,6 +26,7 @@ import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
  * 
  */
 @Entity
+@Deprecated
 public class ConceptEntry implements Serializable {
 
     private static final long serialVersionUID = 4569090620671054560L;

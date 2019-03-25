@@ -1,7 +1,13 @@
 package edu.asu.conceptpower.servlet.core;
 
 import java.util.Date;
-
+/** 
+ * @deprecated
+ *      This class is only kept for migration purposes.
+ * @author abhishekkumar
+ *
+ */
+@Deprecated
 public class ChangeEvent implements Comparable<ChangeEvent> {
 
     public enum ChangeEventTypes {
