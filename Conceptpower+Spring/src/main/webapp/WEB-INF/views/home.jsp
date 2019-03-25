@@ -189,7 +189,6 @@ function prepareMergeConcept(conceptId) {
 function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
-
 </script>
 
 <header class="page-header">
@@ -440,4 +439,4 @@ function createWrapper(wrapperId) {
       </div>
     </div>
   </div>
-  </div>
+</div>
