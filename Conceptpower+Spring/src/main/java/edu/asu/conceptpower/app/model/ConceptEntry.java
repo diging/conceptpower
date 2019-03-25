@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.core;
+package edu.asu.conceptpower.app.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,23 +14,15 @@ import javax.persistence.Id;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
 import edu.asu.conceptpower.app.constants.SearchFieldNames;
+import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.app.reflect.LuceneField;
 import edu.asu.conceptpower.app.reflect.SearchField;
-import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 
-/**
- * @deprecated
- *      This class is only kept for migration purposes.
- * This class represents one entry in the authority file.
- * 
- * @author Julia Damerow
- * 
- */
+
 @Entity
-@Deprecated
 public class ConceptEntry implements Serializable {
 
+    
     private static final long serialVersionUID = 4569090620671054560L;
 
     @Id
@@ -470,4 +462,6 @@ public class ConceptEntry implements Serializable {
         }
         return val.trim();
     }
+
+
 }
