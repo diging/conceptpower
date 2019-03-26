@@ -67,4 +67,15 @@ public class URIHelper implements IURIHelper {
         }
         return uriPrefixes;
     }
+    
+    public String getURI(edu.asu.conceptpower.app.model.ConceptEntry entry) {
+
+        String uriPrefix = xmlConfig.getUriPrefix();
+
+        if (entry.getId() != null && !entry.getId().isEmpty())
+            return uriPrefix + entry.getId();
+
+        else
+            return uriPrefix + entry.getWordnetId();
+    }
 }

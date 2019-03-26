@@ -36,6 +36,7 @@ import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.db.repository.ConceptEntryRepository;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -82,6 +83,9 @@ public class ConceptAddController {
 
     @Autowired
     private ConceptAddValidator validator;
+    
+    @Autowired
+    private ConceptEntryRepository conceptEntryRepository;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
@@ -252,6 +256,53 @@ public class ConceptAddController {
             logger.error("Couldn't parse results.", e);
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    
+    /**
+     * This method prepares a new concept and stores it using concept manager
+     * 
+     * @param req
+     *            Holds http request object information
+     * @param principal
+     *            holds log in information
+     * @return returns string which redirects to concept list page
+     * @throws LuceneException
+     * @throws DictionaryModifyException
+     * @throws DictionaryDoesNotExistException
+     * @throws IllegalAccessException
+     * @throws IndexerRunningException
+     */
+    @RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
+    public String addNewConcept(HttpServletRequest req, Principal principal,
+            @Validated @ModelAttribute("conceptAddBean") ConceptAddBean conceptAddBean, ModelMap model,
+            BindingResult result) throws LuceneException, DictionaryDoesNotExistException, DictionaryModifyException,
+                    IllegalAccessException, IndexerRunningException {
+        if (result.hasErrors()) {
+            return "/auth/conceptlist/addconcept";
+        }
+        edu.asu.conceptpower.app.model.ConceptEntry conceptEntry = new edu.asu.conceptpower.app.model.ConceptEntry();
+        conceptEntry.setSynonymIds(conceptAddBean.getSynonymsids());
+        conceptEntry.setWord(conceptAddBean.getName());
+        conceptEntry.setConceptList(conceptAddBean.getSelectedList());
+        conceptEntry.setPos(conceptAddBean.getPos());
+        conceptEntry.setDescription(conceptAddBean.getDescription());
+        conceptEntry.setEqualTo(conceptAddBean.getEquals());
+        conceptEntry.setSimilarTo(conceptAddBean.getSimilar());
+        conceptEntry.setTypeId(conceptAddBean.getSelectedTypes());
+        conceptEntry.setCreatorId(principal.getName());
+
+        // Checking if indexer is already running.
+        if ((indexService.isIndexerRunning())) {
+            model.addAttribute("show_error_alert", true);
+            model.addAttribute("error_alert_msg", indexerRunning);
+            return "forward:/auth/conceptlist/addconcept";
+        }
+        //  conceptEntry = conceptManager.addConceptListEntry(conceptEntry, principal.getName());
+        conceptEntryRepository.save(conceptEntry);
+         
+        model.addAttribute("entry", conceptEntry);
+        model.addAttribute("uri", uriHelper.getURI(conceptEntry));
+        return "/auth/conceptDetails";
     }
 
 }

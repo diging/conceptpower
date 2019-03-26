@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.asu.conceptpower.app.db.repository.UserRepository;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.validation.UserValidator;
 import edu.asu.conceptpower.users.User;
@@ -30,6 +31,8 @@ public class AddUserController {
     private IUserManager usersManager;
     @Autowired
     private UserValidator uValidator;
+    @Autowired
+    private UserRepository userRepository;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
@@ -81,5 +84,39 @@ public class AddUserController {
         model.addAttribute("user", new UserBacking());
         return "auth/user/add";
     }
+    
+    /**
+     * This method creates a new user in mysql database-table, for given user information
+     * 
+     * @param req
+     *            Holds HTTP request information
+     * @param model
+     *            Holds generic information about the model
+     * @param user
+     *            Holds the User bean values retrieved from the add page
+     * @param result
+     *            Binding Result Object for binding errors if any
+     * @return String to redirect user to user list page
+     * 
+     */
+    @RequestMapping(value = "auth/user/createuser")
+    public String addNewUser(HttpServletRequest req, ModelMap model,
+            @ModelAttribute("user") @Validated UserBacking user, BindingResult result) {
+        if (result.hasErrors()) {
+            return "auth/user/add";
+        }
+
+        edu.asu.conceptpower.app.model.User storeUser = new edu.asu.conceptpower.app.model.User();
+        storeUser.setUsername(user.getUsername());
+        storeUser.setFullname(user.getFullname());
+        storeUser.setIsAdmin(user.getIsAdmin());
+        storeUser.setPw(user.getPassword());
+        storeUser.setEmail(user.getEmail());
+        userRepository.save(storeUser);
+        
+        return "redirect:/auth/user/list";
+    }
+    
+    
 
 }
