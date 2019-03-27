@@ -60,7 +60,7 @@ public class ConceptListAddController {
      *            A generic model holder for Servlet
      * @return String value to redirect user to a concept list page
      */
-    @RequestMapping(value = "auth/concepts/createconceptlist")
+    //@RequestMapping(value = "auth/concepts/createconceptlist")
     public String createConceptList(HttpServletRequest req, ModelMap model,
             @Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
             BindingResult result) {

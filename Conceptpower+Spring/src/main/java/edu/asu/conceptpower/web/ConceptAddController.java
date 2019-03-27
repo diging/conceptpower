@@ -136,7 +136,7 @@ public class ConceptAddController {
      * @throws IllegalAccessException
      * @throws IndexerRunningException
      */
-    @RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
+    //@RequestMapping(value = "auth/conceptlist/addconcept/add", method = RequestMethod.POST)
     public String addConcept(HttpServletRequest req, Principal principal,
             @Validated @ModelAttribute("conceptAddBean") ConceptAddBean conceptAddBean, ModelMap model,
             BindingResult result) throws LuceneException, DictionaryDoesNotExistException, DictionaryModifyException,

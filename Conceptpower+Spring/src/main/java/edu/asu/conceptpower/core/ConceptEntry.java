@@ -27,7 +27,7 @@ import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
  * @author Julia Damerow
  * 
  */
-@Entity
+
 @Deprecated
 public class ConceptEntry implements Serializable {
 

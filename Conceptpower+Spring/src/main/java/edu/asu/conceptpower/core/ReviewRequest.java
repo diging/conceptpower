@@ -1,12 +1,16 @@
 package edu.asu.conceptpower.core;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * @deprecated
+ *            This class has been deprecated.
+ * @author abhishek kumar
+ *
+ */
 @Deprecated
-@Entity
 public class ReviewRequest {
     
     @Id

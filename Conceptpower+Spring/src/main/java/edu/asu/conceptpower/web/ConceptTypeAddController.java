@@ -74,7 +74,7 @@ public class ConceptTypeAddController {
      *            Holds information of a logged in user
      * @return String value to redirect user to concept type list page
      */
-    @RequestMapping(value = "auth/concepts/createconcepttype", method = RequestMethod.POST)
+    //@RequestMapping(value = "auth/concepts/createconcepttype", method = RequestMethod.POST)
     public String createConceptType(HttpServletRequest req, Principal principal,
             @Validated @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm,
             BindingResult results) {

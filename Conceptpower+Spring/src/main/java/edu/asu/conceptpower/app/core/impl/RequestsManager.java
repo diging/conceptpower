@@ -12,8 +12,8 @@ import edu.asu.conceptpower.core.ReviewRequest;
 public  class RequestsManager implements IRequestsManager{
 
   
-    @Autowired
-    private IRequestsDBManager dbClient;
+   // @Autowired
+   // private IRequestsDBManager dbClient;
    
     
     
@@ -22,7 +22,7 @@ public  class RequestsManager implements IRequestsManager{
      */
     public void addReviewRequest(ReviewRequest newReviewRequest) {
         
-        dbClient.store(newReviewRequest);
+      //  dbClient.store(newReviewRequest);
     }
     
     /* (non-Javadoc)
@@ -30,6 +30,7 @@ public  class RequestsManager implements IRequestsManager{
      */
     public ReviewRequest getReview(String conceptId) {
         
-        return dbClient.getReviewRequestForConcept(conceptId);
+        return null;
+      //  return dbClient.getReviewRequestForConcept(conceptId);
     }
 }

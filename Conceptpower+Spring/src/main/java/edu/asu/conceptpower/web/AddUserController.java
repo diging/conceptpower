@@ -53,7 +53,7 @@ public class AddUserController {
      * @return String to redirect user to user list page
      * 
      */
-    @RequestMapping(value = "auth/user/createuser")
+    //@RequestMapping(value = "auth/user/createuser")
     public String createUser(HttpServletRequest req, ModelMap model,
             @ModelAttribute("user") @Validated UserBacking user, BindingResult result) {
         if (result.hasErrors()) {
