@@ -13,15 +13,9 @@ public class ChangeEvent implements Comparable<ChangeEvent> {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+   
 
     public enum ChangeEventTypes {
         MODIFICATION, CREATION, DELETION
@@ -79,6 +73,13 @@ public class ChangeEvent implements Comparable<ChangeEvent> {
     public void setType(ChangeEventTypes type) {
         this.type = type;
     }
+ 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
 }

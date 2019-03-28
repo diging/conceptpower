@@ -35,10 +35,10 @@ public class PersistentContext {
     @Bean(destroyMethod = "close")
     public DataSource dataSource() {
         HikariConfig dataSourceConfig = new HikariConfig();
-        dataSourceConfig.setDriverClassName(env.getRequiredProperty("spring.datasource.driver"));
-        dataSourceConfig.setJdbcUrl(env.getRequiredProperty("spring.datasource.url"));
-        dataSourceConfig.setUsername(env.getRequiredProperty("spring.datasource.username"));
-        dataSourceConfig.setPassword(env.getRequiredProperty("spring.datasource.password"));
+        dataSourceConfig.setDriverClassName(env.getRequiredProperty("db.driver"));
+        dataSourceConfig.setJdbcUrl(env.getRequiredProperty("db.url"));
+        dataSourceConfig.setUsername(env.getRequiredProperty("db.username"));
+        dataSourceConfig.setPassword(env.getRequiredProperty("db.password"));
 
         return new HikariDataSource(dataSourceConfig);
     }
@@ -48,7 +48,7 @@ public class PersistentContext {
        LocalContainerEntityManagerFactoryBean em 
          = new LocalContainerEntityManagerFactoryBean();
        em.setDataSource(dataSource());
-       em.setPackagesToScan(new String[] { "edu.asu.diging.citesphere.core.model" });
+       em.setPackagesToScan(new String[] { "edu.asu.conceptpower.app.model" });
   
        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
        em.setJpaVendorAdapter(vendorAdapter);
@@ -76,9 +76,9 @@ public class PersistentContext {
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty(
           "hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-        properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty("hibernate.show_sql", env.getRequiredProperty("db.log.sql"));
         properties.setProperty("hibernate.id.new_generator_mappings", "true");
-         
+        
         return properties;
     }
 }

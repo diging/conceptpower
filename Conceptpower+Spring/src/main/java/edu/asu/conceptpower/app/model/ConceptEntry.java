@@ -9,8 +9,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
 import edu.asu.conceptpower.app.constants.SearchFieldNames;
@@ -86,9 +90,13 @@ public class ConceptEntry implements Serializable {
     private boolean isDeleted;
     
     private String modifiedUser;
-
+    
+    @OneToMany
+    @JoinColumn(name="ConceptId")
     private List<ChangeEvent> changeEvents = new ArrayList<ChangeEvent>();
 
+    @ElementCollection
+    @CollectionTable(name = "Concept_alternavtiveIds", joinColumns = @JoinColumn(name = "conceptId"))
     private Set<String> alternativeIds = new HashSet<>();
 
     public ConceptEntry() {
