@@ -3,8 +3,8 @@ package edu.asu.conceptpower.app.db.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ChangeEvent;
 @Repository
-public interface ConceptReviewRepository extends CrudRepository<ReviewRequest,Integer>{
+public interface ChangeEventRepository extends CrudRepository<ChangeEvent, Integer> {
 
 }

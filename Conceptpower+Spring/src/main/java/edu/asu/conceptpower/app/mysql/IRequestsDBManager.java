@@ -8,6 +8,11 @@ public interface IRequestsDBManager {
     
     public abstract void store(ReviewRequest reviewRequest);
 
-    public ReviewRequest getReviewRequestForConcept(String conceptId);
+    public String getReviewRequestForConcept(String conceptId);
+    
+    public Iterable<ReviewRequest> getAllReviewRequest();
+    
+    public void deleteRequest(ReviewRequest reviewRequest);
+    
     
 }
