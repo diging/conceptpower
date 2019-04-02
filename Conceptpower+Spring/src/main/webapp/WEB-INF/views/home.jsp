@@ -190,11 +190,11 @@ function createWrapper(wrapperId) {
 }
 
 $(document).ready(function(){
-	$(".fa-envelope").click(function() {
+	$(".fa-exclamation-triangle").click(function() {
 		 $("#requestBox").show();
 	     $("#fetchRequests").val($(this).data("request"));      
 	});
-	$(".btnReview").click(function() {
+	$(".fa-comment").click(function() {
 		 $("#conceptId").val($(this).data("concept-id"));	      
 	});
 	$('#requestBox').hide();
@@ -390,10 +390,10 @@ $(document).ready(function(){
           <c:choose>
  		  <c:when 
  		    test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
- 		      <td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="btnReview" data-toggle="modal" data-target="#myModal">Review</button></td>
+ 		      <td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="fa fa-comment" data-toggle="modal" data-target="#myModal"></button></td>
   		  </c:when>
   		  <c:otherwise>
-  		       <td align="center" ><button  data-request="${concept.reviewRequest.request}" type="button" class="fa fa-envelope" data-toggle="modal" data-target="#requestModal"></button></td>
+  		       <td align="center" ><button  data-request="${concept.reviewRequest.request}" type="button" class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal"></button></td>
  		  </c:otherwise>
 		  </c:choose>
         </tr>
