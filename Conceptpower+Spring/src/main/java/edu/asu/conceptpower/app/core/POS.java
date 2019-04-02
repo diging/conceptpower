@@ -3,7 +3,7 @@ package edu.asu.conceptpower.app.core;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+@Deprecated
 public interface POS {
 
     public final static String NOUN = "noun";

@@ -7,7 +7,7 @@ import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.util.CCPSort;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IndexingEvent;
-
+@Deprecated
 public interface IIndexService {
 
     public ConceptEntry[] searchForConcepts(Map<String, String> fieldMap, String operator)

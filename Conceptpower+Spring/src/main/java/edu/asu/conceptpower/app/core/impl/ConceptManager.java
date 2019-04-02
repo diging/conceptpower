@@ -43,6 +43,7 @@ import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
  * @author Julia Damerow
  * 
  */
+@Deprecated
 @Service
 @PropertySource("classpath:config.properties")
 public class ConceptManager implements IConceptManager {

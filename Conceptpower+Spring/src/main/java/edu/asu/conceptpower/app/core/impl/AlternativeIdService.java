@@ -16,6 +16,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
  * @author karthikeyanmohan
  *
  */
+@Deprecated
 @Service
 public class AlternativeIdService implements IAlternativeIdService {
 

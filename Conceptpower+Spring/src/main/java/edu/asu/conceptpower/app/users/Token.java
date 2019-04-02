@@ -9,6 +9,7 @@ import edu.asu.conceptpower.users.User;
  * @author jdamerow
  *
  */
+@Deprecated
 public class Token {
 
 	private String token;

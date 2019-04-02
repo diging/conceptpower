@@ -1,7 +1,7 @@
 package edu.asu.conceptpower.app.users;
 
 import org.springframework.security.core.GrantedAuthority;
-
+@Deprecated
 public class ConceptpowerGrantedAuthority implements GrantedAuthority {
 	
 	public final static String ROLE_USER = "ROLE_CP_USER";

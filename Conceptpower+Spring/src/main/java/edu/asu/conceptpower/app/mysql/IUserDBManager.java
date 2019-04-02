@@ -20,9 +20,9 @@ public interface IUserDBManager  {
 
     public abstract User getUser(String name, String pw);
 
-    public abstract User[] getAllUsers();
+    public abstract Iterable<User> getAllUsers();
 
-    public abstract User addUser(User user);
+    public abstract void addUser(User user);
 
     public abstract void deleteUser(String username);
 

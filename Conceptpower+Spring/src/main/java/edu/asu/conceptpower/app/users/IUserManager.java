@@ -3,7 +3,7 @@ package edu.asu.conceptpower.app.users;
 import java.util.Map;
 
 import edu.asu.conceptpower.users.User;
-
+@Deprecated
 public interface IUserManager {
 
 	public abstract void setAdmins(Map<String, String> admins);

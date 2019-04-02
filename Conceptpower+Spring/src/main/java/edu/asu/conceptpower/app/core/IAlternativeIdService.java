@@ -3,7 +3,7 @@ package edu.asu.conceptpower.app.core;
 import java.util.Collection;
 
 import edu.asu.conceptpower.core.ConceptEntry;
-
+@Deprecated
 public interface IAlternativeIdService {
 
     /**

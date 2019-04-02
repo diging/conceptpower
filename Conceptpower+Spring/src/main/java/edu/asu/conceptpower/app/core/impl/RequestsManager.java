@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.app.core.IRequestsManager;
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.core.ReviewRequest;
-
+@Deprecated
 @Service
 public  class RequestsManager implements IRequestsManager{
 

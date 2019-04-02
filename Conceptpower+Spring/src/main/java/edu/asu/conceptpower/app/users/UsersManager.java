@@ -27,6 +27,7 @@ import edu.asu.conceptpower.users.User;
  * @author Julia Damerow
  * 
  */
+@Deprecated
 @PropertySource(value = "classpath:/user.properties")
 @Service
 public class UsersManager implements IUserManager {

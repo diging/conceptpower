@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.asu.conceptpower.app.exceptions.DictionaryExistsException;
 import edu.asu.conceptpower.core.ConceptList;
-
+@Deprecated
 public interface IConceptListManager {
 
 	/**

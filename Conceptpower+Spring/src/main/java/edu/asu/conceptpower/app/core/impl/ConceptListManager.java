@@ -20,6 +20,7 @@ import edu.asu.conceptpower.core.ConceptList;
  * @author jdamerow
  *
  */
+@Deprecated
 @Service
 public class ConceptListManager implements IConceptListManager {
 	

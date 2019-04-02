@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author Julia Damerow
  *
  */
+@Deprecated
 class CPUserDetails implements UserDetails {
 	
 	/**

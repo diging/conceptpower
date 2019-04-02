@@ -1,7 +1,7 @@
 package edu.asu.conceptpower.app.core;
 
 import edu.asu.conceptpower.core.ReviewRequest;
-
+@Deprecated
 public interface IRequestsManager {
 
     /**

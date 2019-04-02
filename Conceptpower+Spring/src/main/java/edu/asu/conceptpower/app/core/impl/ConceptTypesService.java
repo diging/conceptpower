@@ -11,6 +11,7 @@ import edu.asu.conceptpower.app.core.IConceptTypesService;
  * @author karthikeyanmohan
  *
  */
+@Deprecated
 @Service
 public class ConceptTypesService implements IConceptTypesService {
     

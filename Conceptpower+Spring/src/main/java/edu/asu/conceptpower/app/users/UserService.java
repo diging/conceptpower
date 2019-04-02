@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.users.User;
-
+@Deprecated
 @Service("userService")
 public class UserService implements UserDetailsService {
 

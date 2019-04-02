@@ -26,6 +26,7 @@ import edu.asu.conceptpower.core.IndexingEvent;
  * @author karthikeyanmohan
  *
  */
+@Deprecated
 @Service
 public class IndexService implements IIndexService {
 

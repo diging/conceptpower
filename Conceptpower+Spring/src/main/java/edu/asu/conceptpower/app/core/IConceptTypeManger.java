@@ -11,6 +11,7 @@ import edu.asu.conceptpower.core.ConceptType;
  * @author jdamerow
  *
  */
+@Deprecated
 public interface IConceptTypeManger {
 
     public void addConceptType(ConceptType type);

@@ -1,5 +1,5 @@
 package edu.asu.conceptpower.app.core;
-
+@Deprecated
 public interface Constants {
 
 	public final static String SYNONYM_SEPARATOR = ",";

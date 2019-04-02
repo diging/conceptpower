@@ -1,6 +1,6 @@
 package edu.asu.conceptpower.app.core;
 
-
+@Deprecated
 public interface IConceptTypesService {
     
     /**

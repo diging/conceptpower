@@ -2,12 +2,18 @@ package edu.asu.conceptpower.app.db;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.asu.conceptpower.app.db.repository.UserRepository;
 import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.mysql.IUserDBManager;
 import edu.asu.conceptpower.app.users.Token;
 
 public class MySqlUSerClient implements IUserDBManager{
 
+    @Autowired
+    UserRepository usrRepository;
+    
     @Override
     public void setAdmins(Map<String, String> admins) {
         
@@ -27,21 +33,22 @@ public class MySqlUSerClient implements IUserDBManager{
     }
 
     @Override
-    public User[] getAllUsers() {
+    public Iterable<User> getAllUsers() {
         
-        return null;
+        return usrRepository.findAll();
+        
     }
 
     @Override
-    public User addUser(User user) {
+    public void addUser(User user) {
         
-        return null;
+        usrRepository.save(user);
     }
 
     @Override
     public void deleteUser(String username) {
         
-        
+        usrRepository.delete(entity);
     }
 
     @Override

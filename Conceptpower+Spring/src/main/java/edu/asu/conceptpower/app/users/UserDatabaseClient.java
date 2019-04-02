@@ -13,7 +13,7 @@ import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.users.User;
-
+@Deprecated
 @Component
 public class UserDatabaseClient {
 
