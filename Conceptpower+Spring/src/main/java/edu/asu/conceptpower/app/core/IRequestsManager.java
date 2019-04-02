@@ -2,6 +2,12 @@ package edu.asu.conceptpower.app.core;
 
 import edu.asu.conceptpower.core.ReviewRequest;
 
+/**This interface provides function declaration for adding new Request for review and 
+ *      fetching an existing Review for the required conceptId.
+ *      
+ * @author abhishekkumar
+ *
+ */
 public interface IRequestsManager {
 
     /**

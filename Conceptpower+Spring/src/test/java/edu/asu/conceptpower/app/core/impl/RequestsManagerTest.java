@@ -58,4 +58,20 @@ public class RequestsManagerTest {
         Assert.assertEquals(ReviewStatus.OPENED, fetchedReview.getStatus());
         Assert.assertEquals("Testing Method2", fetchedReview.getRequest());
     }
+    
+    @Test
+    public void test_getReview_failure() {
+        
+        ReviewRequest reviewRequest = new ReviewRequest();
+        reviewRequest.setStatus(ReviewStatus.OPENED); 
+        reviewRequest.setRequester("admin");
+        reviewRequest.setConceptId("WID-10126926-N-05-Einstein");
+        reviewRequest.setRequest("Testing Method2");
+        
+        Mockito.when(dbClient.getReviewRequestForConcept("WID-10126926-N-05-Einstein")).thenReturn(reviewRequest);
+
+        ReviewRequest fetchedReview = requestManager.getReview("WID-10126926-N-05-Thomas");
+        
+        Assert.assertNull(fetchedReview);
+    }
 }
