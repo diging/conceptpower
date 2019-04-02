@@ -207,13 +207,13 @@ $(document).ready(function(){
 			url: "${pageContext.servletContext.contextPath}/auth/request/add",
 			data: "request=" + request + "&conceptId=" + conceptId,
 			success: function(response){
-				displayInfo = "<ol><br><li><b>request</b> : "+ request +";<b> conceptId</b> : " + conceptId+"</ol>";
-				$('#info').html("Request has been added successfully. " + displayInfo);
-                $('#conceptId').val('');
-                $('#request').val('');
-                $('#error').hide('slow');
-                $('#info').show('slow');
-                $('#submitForm').hide(); 
+				  displayInfo = "<ol><br><li><b>request</b> : "+ request +";<b> conceptId</b> : " + conceptId+"</ol>";
+				  $('#info').html("Request has been added successfully. " + displayInfo);
+                  $('#conceptId').val('');
+                  $('#request').val('');
+                  $('#error').hide('slow');
+                  $('#info').show('slow');
+                  $('#submitForm').hide(); 
                 },
                 error: function(e){
                 	$('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
@@ -221,7 +221,7 @@ $(document).ready(function(){
                 	}
                 });
 		});
-	});
+ });
 </script>
 
 <header class="page-header">
@@ -485,33 +485,34 @@ $(document).ready(function(){
     </div>
   </div>
   </div>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-  <div class="modal-dialog">
-    <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/request/add" method="post">  
+<form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/request/add" method="post">  
+<div class="modal" tabindex="-1" id="myModal" role="dialog">
+  <div class="modal-dialog" role="document">
     <!-- Modal content-->
     <div class="modal-content">
-    <div class="modal-header">
-    	<button type="button" class="close" data-dismiss="modal">&times;</button>
-    </div>
-    <div class="modal-body">
-    <div class="form-label"><b>Provide Requests</b></div>
+      <div class="modal-header">
+      <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title">Request for Review</h5>
+      </div>
+      <div class="modal-body">
+    <div class="form-label"><b>Request</b></div>
     <div class="form-field">
    	    <textarea id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
     	<input type="hidden" name="conceptId" id="conceptId" value=""/>
         <div id="error" class="error"></div>
         <div id="info" class="success"></div>
+      </div>
+      <div class="modal-footer">
+        <input type="button" class="btn btn-primary" style="color:white;background:#FF9B22" value = "Close" data-dismiss="modal">
+    	 <input value="Submit Form" type="button" id="submitForm" class="btn btn-primary" style="color:white;background:#FF9B22" >
+      </div>
     </div>
-    <div class="form-elements">
-    	 <input value="Submit Form" type="button" id="submitForm" >
-	 </div>
-    </div>
-   </div>
-</form>   
+   </div>  
 </div>
 </div>
-
+</form> 
   <!-- Modal -->
   <div class="modal fade" id="requestModal" role="dialog">
   <div class="modal-dialog" id="requestBox">
@@ -519,15 +520,17 @@ $(document).ready(function(){
     <!-- Modal content-->
     <div class="modal-content">
     <div class="modal-header">
-    	<button type="button" class="close" data-dismiss="modal">&times;</button>
-    </div>
+      <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title">Request for Review</h5>
+      </div>
     <div class="modal-body">
     <div class="form-field">
    <div class="floatingform" >
-  <div  >
-    <div class="form-label"><b>Requests</b></div>
+  <div>
     <div class="form-field">
-      <textarea id="fetchRequests" name="fetchRequests" rows="4" cols="30" ></textarea>
+      <textarea disabled style="border: none" id="fetchRequests" name="fetchRequests" rows="4" cols="30" ></textarea>
     </div>
    </div>
   </div>
