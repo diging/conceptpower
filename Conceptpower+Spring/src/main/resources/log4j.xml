@@ -33,7 +33,7 @@
 	</logger>
 	
 	<logger name="org.springframework.security">
-		<level value="debug" />
+		<level value="${debug_level}" />
 	</logger>
 
 	<!-- Root Logger -->

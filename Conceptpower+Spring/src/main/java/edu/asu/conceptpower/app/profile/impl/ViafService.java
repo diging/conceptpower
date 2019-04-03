@@ -107,11 +107,9 @@ public class ViafService implements IService {
 	public List<ISearchResult> search(String word) {
 
 		String startIndex = "1";
-
-		List<Item> items = null;
-		String fullUrl="";
         List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
-
+        String fullUrl;
+        
 		try {
             fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + URLEncoder.encode(word.trim(), "UTF-8")
             		+ searchViafURLPath1.trim() + startIndex.trim()
@@ -134,6 +132,8 @@ public class ViafService implements IService {
         }
 		
 		ViafReply rep = reply.getBody();
+		
+		List<Item> items = null;
 		items = rep.getChannel().getItems();
 
 		if (items != null) {
