@@ -65,6 +65,10 @@ public class ViafService implements IService {
 	@Autowired
 	@Qualifier("searchViafURLPath2")
 	private String searchViafURLPath2;
+	
+	@Inject
+	@Named("restTemplateViaf")
+	private RestTemplate restTemplate;
 
 	@Override
 	public void setServiceId(String serviceid) {
@@ -109,28 +113,27 @@ public class ViafService implements IService {
 		String startIndex = "1";
         List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
         String fullUrl;
-        
+
 		try {
-            fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + URLEncoder.encode(word.trim(), "UTF-8")
-            		+ searchViafURLPath1.trim() + startIndex.trim()
-            		+ searchViafURLPath2.trim();
-        } catch (UnsupportedEncodingException e1) {
-            logger.error("Error in URL Encoding.", e1);
-            return searchResults;
-        }
+            	      fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + URLEncoder.encode(word.trim(), "UTF-8")
+            		      + searchViafURLPath1.trim() + startIndex.trim()
+            		      + searchViafURLPath2.trim();
+       		} catch (UnsupportedEncodingException e1) {
+            	      logger.error("Error in URL Encoding.", e1);
+            	      return searchResults;
+        	}
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_RSS_XML));
 
 		HttpEntity<ViafReply> entity = new HttpEntity<ViafReply>(headers);
-		ResponseEntity<ViafReply> reply;
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            reply = restTemplate.exchange(new URI(fullUrl),HttpMethod.GET, entity, ViafReply.class);
-        } catch (RestClientException | URISyntaxException e) {
-            logger.error("Error during contacting VIAF.", e);
-            return searchResults;
-        }
-		
+		ResponseEntity<ViafReply> reply ;
+
+	        try {
+           	      reply = restTemplate.exchange(new URI(fullUrl),HttpMethod.GET, entity, ViafReply.class);
+                } catch (RestClientException | URISyntaxException e) {
+                      logger.error("Error during contacting VIAF.", e);
+                      return searchResults;
+                }
 		ViafReply rep = reply.getBody();
 		
 		List<Item> items = null;
