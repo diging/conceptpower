@@ -112,7 +112,7 @@ public class ViafService implements IService {
 
 		String startIndex = "1";
         List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
-        String fullUrl;
+		String fullUrl;
 
 		try {
             	      fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + URLEncoder.encode(word.trim(), "UTF-8")
