@@ -54,7 +54,6 @@
 				<db.path>${db.files.path}</db.path>
 				<deploy.path>${deploy.path.dev}</deploy.path>
 				<tomcat.path>${tomcat.deploy.path}</tomcat.path>
-				<tomcat.server>localhost</tomcat.server>
 				<email.user>${email.username}</email.user>
 				<email.pw>${email.password}</email.pw>
 				<email.port>${email.server.port}</email.port>
@@ -72,7 +71,6 @@
 				<db.path>${db.files.path}</db.path>
 				<deploy.path>${deploy.path.test}</deploy.path>
 				<tomcat.path>${tomcat.deploy.path}</tomcat.path>
-				<tomcat.server>localhost</tomcat.server>
 				<email.user>${email.username}</email.user>
 				<email.pw>${email.password}</email.pw>
 				<email.port>${email.server.port}</email.port>
