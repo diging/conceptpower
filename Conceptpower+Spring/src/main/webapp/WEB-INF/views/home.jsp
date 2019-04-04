@@ -220,7 +220,8 @@ $(document).ready(function(){
                 	$('#alertMsg').show();
                 	}
                 });
-		});
+		window.location.reload();
+	});
  });
 </script>
 
@@ -390,10 +391,10 @@ $(document).ready(function(){
           <c:choose>
  		  <c:when 
  		    test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
- 		      <td align="center"><button data-concept-id="${concept.entry.id}" type="button" style="color:white; background:#FF9B22;margin-bottom: 15px;" class="fa fa-comment" data-toggle="modal" data-target="#myModal"></button></td>
+ 		      <td align="center"><div data-concept-id="${concept.entry.id}" title="Add a review request"  class="fa fa-comment" data-toggle="modal" data-target="#myModal"></div></td>  		  
   		  </c:when>
   		  <c:otherwise>
-  		       <td align="center" ><button  data-request="${concept.reviewRequest.request}" type="button" class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal"></button></td>
+  		       <td align="center" ><div data-request="${concept.reviewRequest.request}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal"></div></td>
  		  </c:otherwise>
 		  </c:choose>
         </tr>
@@ -499,7 +500,7 @@ $(document).ready(function(){
       <div class="modal-body">
     <div class="form-label"><b>Request</b></div>
     <div class="form-field">
-   	    <textarea id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
+   	    <textarea class="form-control" id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
     	<input type="hidden" name="conceptId" id="conceptId" value=""/>
         <div id="error" class="error"></div>
         <div id="info" class="success"></div>
@@ -530,7 +531,7 @@ $(document).ready(function(){
    <div class="floatingform" >
   <div>
     <div class="form-field">
-      <textarea disabled style="border: none" id="fetchRequests" name="fetchRequests" rows="4" cols="30" ></textarea>
+      <textarea disabled class="form-control" style="border: none" id="fetchRequests" name="fetchRequests" rows="4" ></textarea>
     </div>
    </div>
   </div>
