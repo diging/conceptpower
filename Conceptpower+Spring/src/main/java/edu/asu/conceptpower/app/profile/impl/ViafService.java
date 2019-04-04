@@ -115,9 +115,8 @@ public class ViafService implements IService {
 		String fullUrl;
 
 		try {
-            	      fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + URLEncoder.encode(word.trim(), "UTF-8")
-            		      + searchViafURLPath1.trim() + startIndex.trim()
-            		      + searchViafURLPath2.trim();
+             fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + URLEncoder.encode(word.trim(), "UTF-8")
+             + searchViafURLPath1.trim() + startIndex.trim()+ searchViafURLPath2.trim();
        		} catch (UnsupportedEncodingException e1) {
             	      logger.error("Error in URL Encoding.", e1);
             	      return searchResults;

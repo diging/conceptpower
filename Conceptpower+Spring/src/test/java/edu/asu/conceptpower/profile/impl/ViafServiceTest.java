@@ -39,9 +39,6 @@ public class ViafServiceTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Mock
-    private RestTemplate template;
-
-    @Mock
     private ISearchResultFactory searchResultFactory;
     
     @InjectMocks
@@ -72,7 +69,7 @@ public class ViafServiceTest {
 
         viafReply.setChannel(channel);
 
-        Mockito.when(template.getForObject(
+        Mockito.when(restTemplate.getForObject(
                 "http://viaf.org/viaf/search?query=local.names all Pirckheimer+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml",
                 ViafReply.class)).thenReturn(viafReply);
         Mockito.when(searchResultFactory.getSearchResultObject()).thenReturn(new SearchResult());
@@ -95,7 +92,7 @@ public class ViafServiceTest {
 
         emptyViafReply.setChannel(emptyChannel);
 
-        Mockito.when(template.getForObject(
+        Mockito.when(restTemplate.getForObject(
                 "http://viaf.org/viaf/search?query=local.names%20all%20Test+for+Null+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml",
                 ViafReply.class)).thenReturn(emptyViafReply);
 

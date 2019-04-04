@@ -15,7 +15,6 @@
 		<org.slf4j-version>1.7.26</org.slf4j-version>
 		<spring-security-version>5.1.4.RELEASE</spring-security-version>
 		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
-		<tomcat.server.id>TomcatServer</tomcat.server.id>
 		<deploy.path.dev>conceptpower</deploy.path.dev>
 		<deploy.path.test>conceptpower-test</deploy.path.test>
 		<deploy.path.prod>conceptpower</deploy.path.prod>
@@ -611,11 +610,6 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
-				<configuration>
-					<url>${tomcat.path}</url>
-					<server>${tomcat.server.id}</server>
-					<path>/${deploy.path}</path>
-				</configuration>
 			</plugin>
 			<!-- Displaying build number -->
 			<plugin>
