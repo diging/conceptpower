@@ -49,7 +49,7 @@ public class ViafServiceTest {
 
     @Before
     public void setUp() {
-          MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
 
         ReflectionTestUtils.setField(viafService, "viafURL", "http://viaf.org/viaf/search");
         ReflectionTestUtils.setField(viafService, "searchViafURLPath", "?query=local.names%20all");
