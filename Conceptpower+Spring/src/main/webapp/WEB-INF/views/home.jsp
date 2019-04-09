@@ -506,7 +506,7 @@ $(document).ready(function(){
         <div id="info" class="success"></div>
       </div>
       <div class="modal-footer">
-        <input type="button" class="btn btn-primary" style="color:white;background:#FF9B22" value = "Close" data-dismiss="modal">
+         <input type="button" class="btn btn-primary" style="color:white;background:#FF9B22" value = "Close" data-dismiss="modal">
     	 <input value="Submit Form" type="button" id="submitForm" class="btn btn-primary" style="color:white;background:#FF9B22" >
       </div>
     </div>
@@ -529,14 +529,17 @@ $(document).ready(function(){
     <div class="modal-body">
     <div class="form-field">
    <div class="floatingform" >
-  <div>
+   <div>
     <div class="form-field">
       <textarea disabled class="form-control" style="border: none" id="fetchRequests" name="fetchRequests" rows="4" ></textarea>
     </div>
    </div>
-  </div>
-    </div>
-        </div>
+   </div>
+   </div>
+   </div>
+   <div class="modal-footer">
+         <input type="button" class="btn btn-primary" style="color:white;background:#FF9B22" value = "Close" data-dismiss="modal">
+   </div>
    </div>
 </form>   
 </div>
