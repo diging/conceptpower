@@ -220,7 +220,6 @@ $(document).ready(function(){
                 	$('#alertMsg').show();
                 	}
                 });
-		window.location.reload();
 	});
  });
 </script>
@@ -302,7 +301,42 @@ $(document).ready(function(){
     </c:otherwise>
   </c:choose>
   
+ <style>
+  .fa-exclamation-triangle {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+  }
 
+  .fa-exclamation-triangle .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    font-size: large;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    right: 120%;
+  }
+
+  .fa-exclamation-triangle .tooltiptext::after {
+   content: "";
+   position: absolute;
+   top: 50%;
+   left: 100%;
+   margin-top: -5px;
+   border-width: 5px;
+   border-style: solid;
+   border-color: transparent transparent transparent black;
+ }
+  .fa-exclamation-triangle:hover .tooltiptext {
+   visibility: visible;
+ }
+</style>
   <table
     class="table table-striped table-bordered" id="conceptSearchResult">
     <thead>
@@ -391,10 +425,11 @@ $(document).ready(function(){
           <c:choose>
  		  <c:when 
  		    test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
- 		      <td align="center"><div data-concept-id="${concept.entry.id}" title="Add a review request"  class="fa fa-comment" data-toggle="modal" data-target="#myModal"></div></td>  		  
+ 		      <td align="center"><div data-concept-id="${concept.entry.id}" title="Add a review request"  class="fa fa-comment" data-toggle="modal" data-target="#myModal" style="color:blue"></div></td>  		  
   		  </c:when>
   		  <c:otherwise>
-  		       <td align="center" ><div data-request="${concept.reviewRequest.request}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal"></div></td>
+  		       <td align="center" ><div data-request="${concept.reviewRequest.request}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:blue">
+  		       <span class="tooltiptext">${fn:substring(concept.reviewRequest.request,0,79)}</span></div></td>
  		  </c:otherwise>
 		  </c:choose>
         </tr>
