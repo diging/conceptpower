@@ -202,26 +202,26 @@ $(document).ready(function(){
 	$('#submitForm').click(function(e) {
 		var request = $('#request').val();
 		var conceptId = $('#conceptId').val();
+		var my_row_value = $(this).attr('data-row-val');
+		console.log(my_row_value)
 		$.ajax({
 			type: "POST",
 			url: "${pageContext.servletContext.contextPath}/auth/request/add",
 			data: "request=" + request + "&conceptId=" + conceptId,
 			success: function(response){
-				  displayInfo = "<ol><br><li><b>request</b> : "+ request +";<b> conceptId</b> : " + conceptId+"</ol>";
-				  $('#info').html("Request has been added successfully. " + displayInfo);
-                  $('#conceptId').val('');
-                  $('#request').val('');
-                  $('#error').hide('slow');
-                  $('#info').show('slow');
-                  $('#submitForm').hide(); 
+                  $('#myModal').modal('hide')
                 },
                 error: function(e){
                 	$('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
                 	$('#alertMsg').show();
                 	}
                 });
+		/* $("#exclamation").removeClass('fa fa-exclamation-triangle').addClass('fa fa-comment');
+		$("#exclamation").removeClass('fa-exclamation-triangle').addClass('fa-comment'); */
+		
 	});
  });
+
 </script>
 
 <header class="page-header">
@@ -428,7 +428,7 @@ $(document).ready(function(){
  		      <td align="center"><div data-concept-id="${concept.entry.id}" title="Add a review request"  class="fa fa-comment" data-toggle="modal" data-target="#myModal" style="color:blue"></div></td>  		  
   		  </c:when>
   		  <c:otherwise>
-  		       <td align="center" ><div data-request="${concept.reviewRequest.request}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:blue">
+  		       <td align="center" ><div data-request="${concept.reviewRequest.request}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:blue" id="exclamation" data-row-val="{{row.name}}">
   		       <span class="tooltiptext">${fn:substring(concept.reviewRequest.request,0,79)}</span></div></td>
  		  </c:otherwise>
 		  </c:choose>
