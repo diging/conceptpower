@@ -188,7 +188,8 @@ function prepareMergeConcept(conceptId) {
 function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
-
+var colIndex;
+var rowIndex;
 $(document).ready(function(){
 	$(".fa-exclamation-triangle").click(function() {
 		 $("#requestBox").show();
@@ -202,9 +203,7 @@ $(document).ready(function(){
 	$('#submitForm').click(function(e) {
 		var request = $('#request').val();
 		var conceptId = $('#conceptId').val();
-		var my_row_value = $(this).attr('data-row-val');
-		console.log(my_row_value)
-		$.ajax({
+	    $.ajax({
 			type: "POST",
 			url: "${pageContext.servletContext.contextPath}/auth/request/add",
 			data: "request=" + request + "&conceptId=" + conceptId,
@@ -216,10 +215,14 @@ $(document).ready(function(){
                 	$('#alertMsg').show();
                 	}
                 });
-		/* $("#exclamation").removeClass('fa fa-exclamation-triangle').addClass('fa fa-comment');
-		$("#exclamation").removeClass('fa-exclamation-triangle').addClass('fa-comment'); */
-		
+		var myTable = document.getElementById('conceptSearchResult');
+		myTable.rows[rowIndex+1].cells[colIndex].innerHTML = '<div class="fa fa-exclamation-triangle" style="color:blue"><span class="tooltiptext">${fn:substring("'+request+'",0,79)}</span></div>';
 	});
+	$('td').click(function(){
+	     colIndex = $(this).parent().children().index($(this));
+	     rowIndex = $(this).parent().parent().children().index($(this).parent());
+	});
+		
  });
 
 </script>
@@ -428,7 +431,7 @@ $(document).ready(function(){
  		      <td align="center"><div data-concept-id="${concept.entry.id}" title="Add a review request"  class="fa fa-comment" data-toggle="modal" data-target="#myModal" style="color:blue"></div></td>  		  
   		  </c:when>
   		  <c:otherwise>
-  		       <td align="center" ><div data-request="${concept.reviewRequest.request}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:blue" id="exclamation" data-row-val="{{row.name}}">
+  		       <td align="center" ><div data-request="${concept.reviewRequest.request}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:blue" id="exclamation" >
   		       <span class="tooltiptext">${fn:substring(concept.reviewRequest.request,0,79)}</span></div></td>
  		  </c:otherwise>
 		  </c:choose>
