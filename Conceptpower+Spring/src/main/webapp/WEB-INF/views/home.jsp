@@ -217,17 +217,23 @@ $(document).ready(function(){
                 	}
                 });
 	    var request_subString = request.substring(0,79);
-	    console.log(request_subString);
 		var myTable = document.getElementById('conceptSearchResult');
-		myTable.rows[rowIndex+1].cells[colIndex].innerHTML = '<div class="fa fa-exclamation-triangle" title="'+request_subString+'" style="color:#19586B"></div>';
+		myTable.rows[rowIndex+1].cells[colIndex].innerHTML='<div  data-request="'+request+'" class="fa fa-exclamation-triangle" title="'+request_subString+'" onclick= "showModal()" data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamationIcon"></div>';
+		
 	});
 	$('td').click(function(){
 	     colIndex = $(this).parent().children().index($(this));
 	     rowIndex = $(this).parent().parent().children().index($(this).parent());
-	});
-		
- });
+	});	
 
+});
+function showmodal()
+{
+	$("#requestModal").modal("show");
+}
+$('#exclamationIcon').click(function(){
+	$("#requestModal").modal("show");
+});	
 </script>
 
 <header class="page-header">
