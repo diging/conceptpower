@@ -208,15 +208,18 @@ $(document).ready(function(){
 			url: "${pageContext.servletContext.contextPath}/auth/request/add",
 			data: "request=" + request + "&conceptId=" + conceptId,
 			success: function(response){
-                  $('#myModal').modal('hide')
+				  $('#request').val('');
+                  $('#myModal').modal('hide');
                 },
                 error: function(e){
                 	$('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
                 	$('#alertMsg').show();
                 	}
                 });
+	    var request_subString = request.substring(0,79);
+	    console.log(request_subString);
 		var myTable = document.getElementById('conceptSearchResult');
-		myTable.rows[rowIndex+1].cells[colIndex].innerHTML = '<div class="fa fa-exclamation-triangle" style="color:blue"><span class="tooltiptext">${fn:substring("'+request+'",0,79)}</span></div>';
+		myTable.rows[rowIndex+1].cells[colIndex].innerHTML = '<div class="fa fa-exclamation-triangle" title="'+request_subString+'" style="color:#19586B"></div>';
 	});
 	$('td').click(function(){
 	     colIndex = $(this).parent().children().index($(this));
@@ -308,37 +311,7 @@ $(document).ready(function(){
   .fa-exclamation-triangle {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted black;
   }
-
-  .fa-exclamation-triangle .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    font-size: large;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    top: -5px;
-    right: 120%;
-  }
-
-  .fa-exclamation-triangle .tooltiptext::after {
-   content: "";
-   position: absolute;
-   top: 50%;
-   left: 100%;
-   margin-top: -5px;
-   border-width: 5px;
-   border-style: solid;
-   border-color: transparent transparent transparent black;
- }
-  .fa-exclamation-triangle:hover .tooltiptext {
-   visibility: visible;
- }
 </style>
   <table
     class="table table-striped table-bordered" id="conceptSearchResult">
@@ -428,11 +401,11 @@ $(document).ready(function(){
           <c:choose>
  		  <c:when 
  		    test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
- 		      <td align="center"><div data-concept-id="${concept.entry.id}" title="Add a review request"  class="fa fa-comment" data-toggle="modal" data-target="#myModal" style="color:blue"></div></td>  		  
+ 		      <td align="center"><div data-concept-id="${concept.entry.id}" title="Add a review request"  class="fa fa-comment" data-toggle="modal" data-target="#myModal" style="color:#19586B"></div></td>  		  
   		  </c:when>
   		  <c:otherwise>
-  		       <td align="center" ><div data-request="${concept.reviewRequest.request}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:blue" id="exclamation" >
-  		       <span class="tooltiptext">${fn:substring(concept.reviewRequest.request,0,79)}</span></div></td>
+  		       <td align="center" ><div data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}" class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamation" >
+  		       </div></td>
  		  </c:otherwise>
 		  </c:choose>
         </tr>
