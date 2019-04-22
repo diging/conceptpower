@@ -218,7 +218,7 @@ $(document).ready(function(){
                 });
 	    var request_subString = request.substring(0,79);
 		var myTable = document.getElementById('conceptSearchResult');
-		myTable.rows[rowIndex+1].cells[colIndex].innerHTML='<div  data-request="'+request+'" class="fa fa-exclamation-triangle" title="'+request_subString+'" onclick= "showModal()" data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamationIcon"></div>';
+		myTable.rows[rowIndex+1].cells[colIndex].innerHTML='<div  data-request="'+request+'" class="fa fa-exclamation-triangle" title="'+request_subString+'" onclick ="showModal(\'' + request + '\');" data-toggle="modal" data-target="#requestModal" style="color:#19586B"></div>';
 		
 	});
 	$('td').click(function(){
@@ -227,13 +227,10 @@ $(document).ready(function(){
 	});	
 
 });
-function showmodal()
-{
-	$("#requestModal").modal("show");
+function showModal(request) {
+	 $("#requestBox").show();
+     $("#fetchRequests").val(request);      
 }
-$('#exclamationIcon').click(function(){
-	$("#requestModal").modal("show");
-});	
 </script>
 
 <header class="page-header">
@@ -532,7 +529,7 @@ $('#exclamationIcon').click(function(){
 </div>
 </form> 
   <!-- Modal -->
-  <div class="modal fade" id="requestModal" role="dialog">
+  <div class="modal fade" id="requestModal" role="dialog" >
   <div class="modal-dialog" id="requestBox">
     <form>  
     <!-- Modal content-->
