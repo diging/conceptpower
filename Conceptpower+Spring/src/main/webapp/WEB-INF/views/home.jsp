@@ -39,45 +39,45 @@ $(document).ready(function() {
     }
   }
   checkCheckBoxAndRemoveColumnsForMergeConcepts();
-	$('#viafSearchResult').dataTable({
-		"bJQueryUI" : true,
-		"sPaginationType" : "full_numbers",
-		"bAutoWidth" : false,
-		"aoColumnDefs" : [ {
-			"aTargets" : [ 2 ],
-			"sType" : "html",
-			"fnRender" : function(o, val) {
-				return $("<div/>").html(o.aData[2]).text();
-			}
-		 } ],
-	});
-	$('#detailsModal')
-		.on(
-			'show.bs.modal',
-			function(event) {
-				var button = $(event.relatedTarget); // ` that triggered the modal
-				var conceptid = button.data('conceptid'); // Extract info from data-* attributes
-				// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-				// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-				$.ajax({
-					type : "GET",
-					url : "${pageContext.servletContext.contextPath}/conceptDetail",
-					data : {
-						conceptid : conceptid
-					},
-					success : function(details) {
-						details = $.parseJSON(details);
-						$("#conceptTerm").text(details.name);
-						$("#detailsid").text(details.id);
-						$("#detailsuri").text(details.uri);
-						$("#detailswordnetid").text(details.wordnetid);
-						$("#detailspos").text(details.pos);
-						$("#detailsconceptlist").text(details.conceptlist);
-						$("#detailstypeid").text(details.type);
-						$("#detailsequalto").text(details.equalto);
-						$("#detailssimilarto").text(details.similarto);
-						$("#detailscreator").text(details.creator);
-						$("#detailsdescription").html(details.description);
+    $('#viafSearchResult').dataTable({
+        "bJQueryUI" : true,
+        "sPaginationType" : "full_numbers",
+        "bAutoWidth" : false,
+        "aoColumnDefs" : [ {
+            "aTargets" : [ 2 ],
+            "sType" : "html",
+            "fnRender" : function(o, val) {
+                return $("<div/>").html(o.aData[2]).text();
+            }
+         } ],
+    });
+    $('#detailsModal')
+        .on(
+            'show.bs.modal',
+            function(event) {
+                var button = $(event.relatedTarget); // ` that triggered the modal
+                var conceptid = button.data('conceptid'); // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                $.ajax({
+                    type : "GET",
+                    url : "${pageContext.servletContext.contextPath}/conceptDetail",
+                    data : {
+                        conceptid : conceptid
+                    },
+                    success : function(details) {
+                        details = $.parseJSON(details);
+                        $("#conceptTerm").text(details.name);
+                        $("#detailsid").text(details.id);
+                        $("#detailsuri").text(details.uri);
+                        $("#detailswordnetid").text(details.wordnetid);
+                        $("#detailspos").text(details.pos);
+                        $("#detailsconceptlist").text(details.conceptlist);
+                        $("#detailstypeid").text(details.type);
+                        $("#detailsequalto").text(details.equalto);
+                        $("#detailssimilarto").text(details.similarto);
+                        $("#detailscreator").text(details.creator);
+                        $("#detailsdescription").html(details.description);
             if(details.mergedIds) {
               $.ajax({
                 url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
@@ -102,9 +102,9 @@ $(document).ready(function() {
                 $("#detailsmergedIds").html(mergedIdsHtml);  
               });              
             }
-					}
-				});
-		});
+                    }
+                });
+        });
     $('#prepareMergeConcept').on('click', function (e) {
         e.preventDefault();
         // Get the column API object
@@ -191,44 +191,43 @@ function createWrapper(wrapperId) {
 var colIndex;
 var rowIndex;
 $(document).ready(function(){
-	$(".fa-exclamation-triangle").click(function() {
-		 $("#requestBox").show();
-	     $("#fetchRequests").val($(this).data("request"));      
-	});
-	$(".fa-comment").click(function() {
-		 $("#conceptId").val($(this).data("concept-id"));	      
-	});
-	$('#requestBox').hide();
+    $(".fa-exclamation-triangle").click(function() {
+         $("#requestBox").show();
+         $("#fetchRequests").val($(this).data("request"));      
+    });
+    $(".fa-comment").click(function() {
+         $("#conceptId").val($(this).data("concept-id"));          
+    });
+    $('#requestBox').hide();
     $('#alertMsg').hide();
-	$('#submitForm').click(function(e) {
-		var request = $('#request').val();
-		var conceptId = $('#conceptId').val();
-	    $.ajax({
-			type: "POST",
-			url: "${pageContext.servletContext.contextPath}/auth/request/add",
-			data: "request=" + request + "&conceptId=" + conceptId,
-			success: function(response){
-				  $('#request').val('');
+    $('#submitForm').click(function(e) {
+        var request = $('#request').val();
+        var conceptId = $('#conceptId').val();
+        $.ajax({
+            type: "POST",
+            url: "${pageContext.servletContext.contextPath}/auth/request/add",
+            data: "request=" + request + "&conceptId=" + conceptId,
+            success: function(response){
+                  $('#request').val('');
                   $('#myModal').modal('hide');
-                },
-                error: function(e){
-                	$('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
-                	$('#alertMsg').show();
-                	}
-                });
-	    var request_subString = request.substring(0,79);
-		var myTable = document.getElementById('conceptSearchResult');
-		myTable.rows[rowIndex+1].cells[colIndex].innerHTML='<div  data-request="'+request+'" class="fa fa-exclamation-triangle" title="'+request_subString+'" onclick ="showModal(\'' + request + '\');" data-toggle="modal" data-target="#requestModal" style="color:#19586B"></div>';
-		
-	});
-	$('td').click(function(){
-	     colIndex = $(this).parent().children().index($(this));
-	     rowIndex = $(this).parent().parent().children().index($(this).parent());
-	});	
-
+            },
+            error: function(e){
+                  $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
+                  $('#alertMsg').show();
+            }
+        });
+        var request_subString = request.substring(0,79);
+        var myTable = document.getElementById('conceptSearchResult');
+        myTable.rows[rowIndex+1].cells[colIndex].innerHTML='<div  data-request="'+request+'" class="fa fa-exclamation-triangle" title="'+request_subString+'" onclick ="showModal(\'' + request + '\');" data-toggle="modal" data-target="#requestModal" style="color:#19586B"></div>';
+        
+    });
+    $('td').click(function(){
+         colIndex = $(this).parent().children().index($(this));
+         rowIndex = $(this).parent().parent().children().index($(this).parent());
+    });    
 });
 function showModal(request) {
-	 $("#requestBox").show();
+     $("#requestBox").show();
      $("#fetchRequests").val(request);      
 }
 </script>
@@ -334,7 +333,7 @@ function showModal(request) {
         <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
         <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
         <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-      	<th><div style="color:#19586B">Review Status</div></th>
+          <th><div style="color:#19586B">Review Status</div></th>
       </tr>
     </thead>
     <tbody>
@@ -402,15 +401,15 @@ function showModal(request) {
                 
          <!-- Enabling Disabling the Review button -->  
           <c:choose>
- 		  <c:when 
- 		    test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
- 		      <td align="center"><div data-concept-id="${concept.entry.id}" title="Add a review request"  class="fa fa-comment" data-toggle="modal" data-target="#myModal" style="color:#19586B"></div></td>  		  
-  		  </c:when>
-  		  <c:otherwise>
-  		       <td align="center" ><div data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}" class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamation" >
-  		       </div></td>
- 		  </c:otherwise>
-		  </c:choose>
+           <c:when 
+             test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
+               <td align="center"><div data-concept-id="${concept.entry.id}" title="Add a review request"  class="fa fa-comment" data-toggle="modal" data-target="#myModal" style="color:#19586B"></div></td>            
+            </c:when>
+            <c:otherwise>
+                 <td align="center" ><div data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}" class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamation" >
+                 </div></td>
+           </c:otherwise>
+          </c:choose>
         </tr>
       </c:forEach>
     </tbody>
@@ -514,14 +513,14 @@ function showModal(request) {
       <div class="modal-body">
     <div class="form-label"><b>Request</b></div>
     <div class="form-field">
-   	    <textarea class="form-control" id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
-    	<input type="hidden" name="conceptId" id="conceptId" value=""/>
+           <textarea class="form-control" id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
+        <input type="hidden" name="conceptId" id="conceptId" value=""/>
         <div id="error" class="error"></div>
         <div id="info" class="success"></div>
       </div>
       <div class="modal-footer">
          <input type="button" class="btn btn-primary" style="color:white;background:#FF9B22" value = "Close" data-dismiss="modal">
-    	 <input value="Submit Form" type="button" id="submitForm" class="btn btn-primary" style="color:white;background:#FF9B22" >
+         <input value="Submit Form" type="button" id="submitForm" class="btn btn-primary" style="color:white;background:#FF9B22" >
       </div>
     </div>
    </div>  
