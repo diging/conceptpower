@@ -190,15 +190,17 @@ function createWrapper(wrapperId) {
 }
 var colIndex;
 var rowIndex;
+var storeRequest;
 $(document).ready(function(){
     $(".fa-exclamation-triangle").click(function() {
+		 console.log("inside class2")
          $("#requestBox").show();
          $("#fetchRequests").val($(this).data("request"));      
     });
     $(".fa-comment").click(function() {
          $("#conceptId").val($(this).data("concept-id"));          
     });
-    $('#requestBox').hide();
+    //$('#requestBox').hide();
     $('#alertMsg').hide();
     $('#submitForm').click(function(e) {
         var request = $('#request').val();
@@ -216,20 +218,40 @@ $(document).ready(function(){
                   $('#alertMsg').show();
             }
         });
+        storeRequest = request;
         var request_subString = request.substring(0,79);
         var myTable = document.getElementById('conceptSearchResult');
-        myTable.rows[rowIndex+1].cells[colIndex].innerHTML='<div  data-request="'+request+'" class="fa fa-exclamation-triangle" title="'+request_subString+'" onclick ="showModal(\'' + request + '\');" data-toggle="modal" data-target="#requestModal" style="color:#19586B"></div>';
-        
+        myTable.rows[rowIndex+1].cells[colIndex].innerHTML='<div  data-request="'+request+'" class="fa fa-exclamation-triangle" title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"></div>';
+		// onclick ="showModal(\'' + request + '\');"
+       
+        console.log(myTable.rows[rowIndex+1].cells[colIndex].innerHTML)
     });
     $('td').click(function(){
          colIndex = $(this).parent().children().index($(this));
          rowIndex = $(this).parent().parent().children().index($(this).parent());
     });    
 });
-function showModal(request) {
+ function showModal(request) {
+	 console.log("inside e ")
+      $("#requestBox").show();
+      $("#fetchRequests").val(request);      
+ }
+ $('.fa-exclamation-triangle').on('click', function (e) {
+	 console.log("inside ef ")
      $("#requestBox").show();
-     $("#fetchRequests").val(request);      
-}
+	 $("#fetchRequests").val(storeRequest);    
+ });
+ 
+/*  $(".fa-envelope").click(function() {
+		 console.log("inside class2")
+         $("#requestBox").show();
+         $("#fetchRequests").val($(this).data("request"));      
+ });
+ $( "#fetchRequests" ).on('shown.bs.modal', function(){
+	 console.log("inside class3")
+     $("#requestBox").show();
+     $("#fetchRequests").val(storeRequest); 
+	}); */
 </script>
 
 <header class="page-header">
@@ -383,7 +405,7 @@ function showModal(request) {
               data-target="#detailsModal"
               data-conceptid="${concept.entry.id}" ><c:out
                   value="${concept.entry.word}"></c:out></a></td>
-          <td class="entryID" align="justify" id="entryId" ><c:out
+          <td class="entryID" align="justify" ><c:out
                 value="${concept.entry.id}"></c:out></td>
           <td align="justify"><c:out
                 value="${concept.entry.wordnetId}"></c:out></td>
@@ -532,7 +554,7 @@ function showModal(request) {
   <div class="modal-dialog" id="requestBox">
     <form>  
     <!-- Modal content-->
-    <div class="modal-content">
+    <div class="modal-content" >
     <div class="modal-header">
       <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
