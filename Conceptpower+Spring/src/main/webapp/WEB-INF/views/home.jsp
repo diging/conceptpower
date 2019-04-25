@@ -205,6 +205,7 @@ $(document).ready(function(){
     $('#submitForm').click(function(e) {
         var request = $('#request').val();
         var conceptId = $('#conceptId').val();
+        console.log("%"+conceptId)
         $.ajax({
             type: "POST",
             url: "${pageContext.servletContext.contextPath}/auth/request/add",
@@ -220,40 +221,38 @@ $(document).ready(function(){
         });
         //storeRequest = request;
         var request_subString = request.substring(0,79);
-        var myTable = $('#conceptSearchResult').prop('outerHTML');
-        console.log(myTable);
-        //var myTable = document.getElementById('conceptSearchResult');
+       // var myTable = $('#conceptSearchResult').prop('outerHTML');
+        //console.log(myTable);
+        var myTable = document.getElementById('conceptSearchResult');
         //console.log(myTable);
         //console.log("exclamationTD"+ document.getElementById('exclamation'))
         //var currentRow=$(this).closest("tr"); 
    		//console.log("currentRow"+currentRow)
         //var col1=currentRow.find("td:eq(0)").html();
    		//console.log("col1"+col1)
-   		$('#conceptSearchResult tr').each(function() {
-   		 	var rowInfo = $(this).find(".CommentIcon").html();    
-   	   		console.log("rowInfo"+rowInfo)
-			console.log($("rowInfo:contains("+conceptId+")"))
- 		});
-        myTable.rows[rowIndex+1].cells[colIndex].innerHTML='<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>';
+   		var commentTd = $("#comment-" + conceptId);
+   		console.log("request"+ request);
+   		console.log("commenTd"+commentTd);
+        //myTable.rows[rowIndex+1].cells[colIndex].innerHTML='<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>';
 		// onclick ="showModal(\'' + request + '\');"
-       
-        console.log(myTable.rows[rowIndex+1].cells[colIndex].innerHTML)
+       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
+       // console.log(myTable.rows[rowIndex+1].cells[colIndex].innerHTML)
     });
-    $('td').click(function(){
+    /* $('td').click(function(){
          colIndex = $(this).parent().children().index($(this));
          rowIndex = $(this).parent().parent().children().index($(this).parent());
-    });    
+    }); */    
 });
- function showModal(request) {
+/*  function showModal(request) {
 	 console.log("inside e ")
       $("#requestBox").show();
       $("#fetchRequests").val(request);      
- }
- $('.fa-exclamation-triangle').on('click', function (e) {
-	 console.log("inside ef ")
-     $("#requestBox").show();
+ } */
+/*  $('.fa-exclamation-triangle').on('click', function (e) {
+	// console.log("inside ef ")
+    //// $("#requestBox").show();
 	 $("#fetchRequests").val(storeRequest);    
- });
+ }); */
  
 /*  $(".fa-envelope").click(function() {
 		 console.log("inside class2")
@@ -438,10 +437,10 @@ $(document).ready(function(){
           <c:choose>
            <c:when 
              test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
-               <td align="center" class="CommentIcon"><div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" style="color:#19586B"><i class="fa fa-comment" ></i></div></td>            
+               <td align="center" id="comment-${concept.entry.id}"  ><div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div></td>            
             </c:when>
             <c:otherwise>
-                 <td align="center" id= "exclamationTD" class="ExclamationIcon"><div data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamation" ><i class="fa fa-exclamation-triangle"></i>
+                 <td align="center" id="comment-${concept.entry.id}" ><div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamation" >
                  </div></td>
            </c:otherwise>
           </c:choose>
