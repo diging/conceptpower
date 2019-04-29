@@ -189,32 +189,19 @@ function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
 $(document).ready(function(){
-	console.log("inside 1:")
-	var conceptRequest = $("#comment-" + $(this).data("concept-id"));
-	console.log("conceptRequest" + conceptRequest)
-
-	var conceptComment = $("#request-"+ $(this).data("concept-id"))
-		console.log("conceptComment" + conceptComment)
-
-	conceptRequest.click(function() {
-		console.log("inside 2:"+$(this).data("request") )
+    $(".fa-exclamation-triangle").click(function() {
+    	 console.log("lol")
 		 $("#fetchRequests").val($(this).data("request"));
          $("#requestBox").show();    
     });
-	conceptComment.click(function() {
-		console.log("inside 3:"+$(this).data("concept-id") )
-
+    $(".fa-comment").click(function() {
          $("#conceptId").val($(this).data("concept-id"));          
     });
     $('#alertMsg').hide();
     $('#submitForm').click(function(e) {
-		console.log("inside 4:")
-
         var request = $('#request').val();
-		console.log("request"+request)
-
         var conceptId = $('#conceptId').val();
-		console.log("conceptId"+conceptId)
+        console.log("%"+conceptId)
         $.ajax({
             type: "POST",
             url: "${pageContext.servletContext.contextPath}/auth/request/add",
@@ -230,19 +217,16 @@ $(document).ready(function(){
         });
         var request_subString = request.substring(0,79);
         var commentTd = $("#comment-" + conceptId);
-       	console.log("commentTd"+commentTd)
-
        	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
        	$("#fetchRequests").val(request); 
-       	console.log("fetchRequests"+request)
     });
-  
+     
 });
-$("#comment-" + $(this).data("concept-id")).click(function() {
-	console.log("insdie 4:"+$(this).data("request"))
-   $("#fetchRequests").val($(this).data("request"));
-   $("#requestBox").show();    
-}); 
+$(".fa-exclamation-triangle").click(function() {
+	console.log("pop");
+	 $("#fetchRequests").val($(this).data("request"));
+     $("#requestBox").show();    
+});
 </script>
 
 <header class="page-header">
@@ -416,11 +400,11 @@ $("#comment-" + $(this).data("concept-id")).click(function() {
           <c:choose>
            <c:when 
              test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
-               <td align="center" id="request-${concept.entry.id}"  ><div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal"  style="color:#19586B"><i class="fa fa-comment" aria-hidden="true"></i></div></td>            
+               <td align="center" id="comment-${concept.entry.id}"  ><div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div></td>            
             </c:when>
             <c:otherwise>
-                 <td align="center" id="comment-${concept.entry.id}" ><div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"   data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamation" >
-                 <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div></td>
+                 <td align="center" id="comment-${concept.entry.id}" ><div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamation" >
+                 </div></td>
            </c:otherwise>
           </c:choose>
         </tr>
