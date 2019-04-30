@@ -190,7 +190,6 @@ function createWrapper(wrapperId) {
 }
 $(document).ready(function(){
     $(".fa-exclamation-triangle").click(function() {
-    	 console.log("lol")
 		 $("#fetchRequests").val($(this).data("request"));
          $("#requestBox").show();    
     });
@@ -221,11 +220,6 @@ $(document).ready(function(){
        	$("#fetchRequests").val(request); 
     });
      
-});
-$(".fa-exclamation-triangle").click(function() {
-	console.log("pop");
-	 $("#fetchRequests").val($(this).data("request"));
-     $("#requestBox").show();    
 });
 </script>
 
