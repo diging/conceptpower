@@ -219,7 +219,32 @@ $(document).ready(function(){
        	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
        	$("#fetchRequests").val(request); 
     });
+    function RefreshTable() {
+    	console.log("inside RefreshTable");
+    	//String uri = request.getRequestURI();
+    	//String pageName = uri.substring(uri.lastIndexOf("/")+1);
+    	
+       
+    }
+
+    $(".fa-exclamation-triangle").on("click", RefreshTable);
      
+});
+
+$(document).on("click", ".fa-exclamation-triangle", function () {
+	
+	console.log("inside modal On");
+	console.log(window.location.href+" #conceptSearchResult");
+ 	$( "#conceptSearchResult" ).load( window.location.href+" #conceptSearchResult" );
+	console.log($(this).data());
+		var request = $(this).data("request");
+	console.log("request"+ request);
+		//console.log($(".modal-body #fetchRequests"));
+		$(".modal-body #fetchRequests").val( request );
+	
+		console.log("over");
+	
+    
 });
 </script>
 
