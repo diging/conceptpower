@@ -85,7 +85,8 @@ $(document).ready(function() {
 						$("#detailssimilarto").text(details.similarto);
 						$("#detailscreator").text(details.creator);
 						$("#detailsdescription").html(details.description);
-
+						$("#detailsmergedIds").html(details.mergedIds);
+						
             if(details.mergedIds) {
               $.ajax({
                 url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
