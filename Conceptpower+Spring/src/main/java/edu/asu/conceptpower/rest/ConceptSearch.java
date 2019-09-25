@@ -133,9 +133,11 @@ public class ConceptSearch {
 
         ConceptEntry[] searchResults = null;
         int totalNumberOfRecords = 0;
+        int numberOfPages = 0;
         try {
             totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields,
                     conceptSearchParameters.getOperator());
+            numberOfPages = (int) Math.ceil(new Double(totalNumberOfRecords) / new Double(numberOfRecordsPerPage));
             CCPSort sort = null;
             if (conceptSearchParameters.getSortField() != null) {
                 Integer sortDirection = Integer.parseInt(conceptSearchParameters.getSortDirection());
@@ -162,7 +164,7 @@ public class ConceptSearch {
         Map<ConceptEntry, ConceptType> entryMap = new LinkedHashMap<ConceptEntry, ConceptType>();
         IConceptMessage msg = messageFactory.getMessageFactory(acceptHeader).createConceptMessage();
         createEntryMap(searchResults, entryMap);
-        Pagination pagination = new Pagination(page, totalNumberOfRecords);
+        Pagination pagination = new Pagination(page, totalNumberOfRecords, numberOfPages);
         return new ResponseEntity<String>(msg.getAllConceptEntriesAndPaginationDetails(entryMap, pagination),
                 HttpStatus.OK);
     }
