@@ -134,13 +134,13 @@ public class ConceptSearch {
         ConceptEntry[] searchResults = null;
         int totalNumberOfRecords = 0;
         int numberOfPages = 0;
-        numberOfRecordsPerPage = (conceptSearchParameters.getNumber_of_records_per_page()!= null 
+        int numberOfRecordsToBeDisplayedPerPage = (conceptSearchParameters.getNumber_of_records_per_page()!= null 
                 && conceptSearchParameters.getNumber_of_records_per_page() > 0) ? 
                 conceptSearchParameters.getNumber_of_records_per_page() : numberOfRecordsPerPage;
         try {
             totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields,
                     conceptSearchParameters.getOperator());
-            numberOfPages = (int) Math.ceil(new Double(totalNumberOfRecords) / new Double(numberOfRecordsPerPage));
+            numberOfPages = (int) Math.ceil(new Double(totalNumberOfRecords) / new Double(numberOfRecordsToBeDisplayedPerPage));
             CCPSort sort = null;
             if (conceptSearchParameters.getSortField() != null) {
                 Integer sortDirection = Integer.parseInt(conceptSearchParameters.getSortDirection());
