@@ -134,6 +134,9 @@ public class ConceptSearch {
         ConceptEntry[] searchResults = null;
         int totalNumberOfRecords = 0;
         int numberOfPages = 0;
+        numberOfRecordsPerPage = (conceptSearchParameters.getNumber_of_records_per_page()!= null 
+                && conceptSearchParameters.getNumber_of_records_per_page() > 0) ? 
+                conceptSearchParameters.getNumber_of_records_per_page() : numberOfRecordsPerPage;
         try {
             totalNumberOfRecords = manager.getTotalNumberOfRecordsForSearch(searchFields,
                     conceptSearchParameters.getOperator());
