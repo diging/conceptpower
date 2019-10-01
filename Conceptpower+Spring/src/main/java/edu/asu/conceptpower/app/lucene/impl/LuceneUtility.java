@@ -601,8 +601,6 @@ public class LuceneUtility implements ILuceneUtility {
         catch (IOException ex) {
             throw new LuceneException("Issues in querying lucene index. Please retry", ex);
         }
-        
-
     }
 
     private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, String searchString) {

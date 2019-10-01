@@ -13,6 +13,7 @@
 		<org.aspectj-version>1.7.3</org.aspectj-version>
 		<org.slf4j-version>1.7.5</org.slf4j-version>
 		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
+		<tomcat.server.id>TomcatServer</tomcat.server.id>
 		<deploy.path.dev>conceptpower</deploy.path.dev>
 		<deploy.path.test>conceptpower-test</deploy.path.test>
 		<deploy.path.prod>conceptpower</deploy.path.prod>
@@ -26,7 +27,7 @@
 		<admin.password>admin</admin.password>
 		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
 		<spring-security-version>3.2.8.RELEASE</spring-security-version>
-		<lucene.index>/Users/karthikeyanmohan/Software/Conceptpower/indexFiles</lucene.index>
+		<lucene.index></lucene.index>
 		<pullrequest></pullrequest>
 		<debug_level>debug</debug_level>
 		<skip.integration.tests>false</skip.integration.tests>
@@ -642,7 +643,7 @@
 				<version>2.2</version>
 				<configuration>
 					<url>${tomcat.path}</url>
-					<server>TomcatServer</server>
+					<server>${tomcat.server.id}</server>
 					<path>/${deploy.path}</path>
 				</configuration>
 			</plugin>

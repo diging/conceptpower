@@ -68,7 +68,7 @@ public class WordNetManager {
         try {
             wordId = WordID.parseWordID(id);
         } catch (IllegalArgumentException e) {
-            logger.error("Could not find id '" + id + "' in WordNet.", e);
+            logger.warn("Could not find id '" + id + "' in WordNet.", e);
             return null;
         }
 

@@ -39,45 +39,48 @@ $(document).ready(function() {
     }
   }
   checkCheckBoxAndRemoveColumnsForMergeConcepts();
-    $('#viafSearchResult').dataTable({
-        "bJQueryUI" : true,
-        "sPaginationType" : "full_numbers",
-        "bAutoWidth" : false,
-        "aoColumnDefs" : [ {
-            "aTargets" : [ 2 ],
-            "sType" : "html",
-            "fnRender" : function(o, val) {
-                return $("<div/>").html(o.aData[2]).text();
-            }
-         } ],
-    });
-    $('#detailsModal')
-        .on(
-            'show.bs.modal',
-            function(event) {
-                var button = $(event.relatedTarget); // ` that triggered the modal
-                var conceptid = button.data('conceptid'); // Extract info from data-* attributes
-                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                $.ajax({
-                    type : "GET",
-                    url : "${pageContext.servletContext.contextPath}/conceptDetail",
-                    data : {
-                        conceptid : conceptid
-                    },
-                    success : function(details) {
-                        details = $.parseJSON(details);
-                        $("#conceptTerm").text(details.name);
-                        $("#detailsid").text(details.id);
-                        $("#detailsuri").text(details.uri);
-                        $("#detailswordnetid").text(details.wordnetid);
-                        $("#detailspos").text(details.pos);
-                        $("#detailsconceptlist").text(details.conceptlist);
-                        $("#detailstypeid").text(details.type);
-                        $("#detailsequalto").text(details.equalto);
-                        $("#detailssimilarto").text(details.similarto);
-                        $("#detailscreator").text(details.creator);
-                        $("#detailsdescription").html(details.description);
+
+	$('#viafSearchResult').dataTable({
+		"bJQueryUI" : true,
+		"sPaginationType" : "full_numbers",
+		"bAutoWidth" : false,
+		"aoColumnDefs" : [ {
+			"aTargets" : [ 2 ],
+			"sType" : "html",
+			"fnRender" : function(o, val) {
+				return $("<div/>").html(o.aData[2]).text();
+			}
+		 } ],
+	});
+	$('#detailsModal')
+		.on(
+			'show.bs.modal',
+			function(event) {
+				var button = $(event.relatedTarget); // ` that triggered the modal
+				var conceptid = button.data('conceptid'); // Extract info from data-* attributes
+				// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+				// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+				$.ajax({
+					type : "GET",
+					url : "${pageContext.servletContext.contextPath}/conceptDetail",
+					data : {
+						conceptid : conceptid
+					},
+					success : function(details) {
+						details = $.parseJSON(details);
+						$("#conceptTerm").text(details.name);
+						$("#detailsid").text(details.id);
+						$("#detailsuri").text(details.uri);
+						$("#detailswordnetid").text(details.wordnetid);
+						$("#detailspos").text(details.pos);
+						$("#detailsconceptlist").text(details.conceptlist);
+						$("#detailstypeid").text(details.type);
+						$("#detailsequalto").text(details.equalto);
+						$("#detailssimilarto").text(details.similarto);
+						$("#detailscreator").text(details.creator);
+						$("#detailsdescription").html(details.description);
+						$("#detailsmergedIds").html(details.mergedIds);
+						
             if(details.mergedIds) {
               $.ajax({
                 url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
@@ -194,13 +197,12 @@ $(document).ready(function(){
          $("#requestBox").show();    
     });
     $(".fa-comment").click(function() {
-         $("#conceptId").val($(this).data("concept-id"));          
+         $("#conceptId").val($(this).data("concept-id"));
     });
     $('#alertMsg').hide();
     $('#submitForm').click(function(e) {
         var request = $('#request').val();
         var conceptId = $('#conceptId').val();
-        console.log("%"+conceptId)
         $.ajax({
             type: "POST",
             url: "${pageContext.servletContext.contextPath}/auth/request/add",
@@ -218,34 +220,9 @@ $(document).ready(function(){
         var commentTd = $("#comment-" + conceptId);
        	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
        	$("#fetchRequests").val(request); 
-    });
-    function RefreshTable() {
-    	console.log("inside RefreshTable");
-    	//String uri = request.getRequestURI();
-    	//String pageName = uri.substring(uri.lastIndexOf("/")+1);
-    	
-       
-    }
-
-    $(".fa-exclamation-triangle").on("click", RefreshTable);
-     
+    });  
 });
 
-$(document).on("click", ".fa-exclamation-triangle", function () {
-	
-	console.log("inside modal On");
-	console.log(window.location.href+" #conceptSearchResult");
- 	$( "#conceptSearchResult" ).load( window.location.href+" #conceptSearchResult" );
-	console.log($(this).data());
-		var request = $(this).data("request");
-	console.log("request"+ request);
-		//console.log($(".modal-body #fetchRequests"));
-		$(".modal-body #fetchRequests").val( request );
-	
-		console.log("over");
-	
-    
-});
 </script>
 
 <header class="page-header">
