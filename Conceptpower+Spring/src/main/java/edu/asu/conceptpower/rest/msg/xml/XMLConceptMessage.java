@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.validation.ObjectError;
 
 import edu.asu.conceptpower.app.util.URIHelper;
@@ -44,7 +44,7 @@ public class XMLConceptMessage implements IConceptMessage {
                 + XMLConstants.NAMESPACE + "\">");
         sb.append(getAllConceptEntries(entries));
         if (pagination != null) {
-            sb.append(appendPaginationDetails(pagination.getTotalNumberOfRecords(), pagination.getPageNumber()));
+            sb.append(appendPaginationDetails(pagination.getTotalNumberOfRecords(), pagination.getPageNumber(), pagination.getTotalNumberofPages()));
         }
         sb.append("</" + XMLConstants.CONCEPTPOWER_ANSWER + ">");
         return sb.toString();
@@ -220,11 +220,12 @@ public class XMLConceptMessage implements IConceptMessage {
         return sb.toString();
     }
 
-    private String appendPaginationDetails(int numberOfRecords, int pageNumber) {
+    private String appendPaginationDetails(int numberOfRecords, int pageNumber, int numberOfPages) {
         StringBuilder sb = new StringBuilder();
         sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + " ");
         sb.append(XMLConstants.NUMBER_OF_RECORDS + "=\"" + numberOfRecords + "\" ");
         sb.append(XMLConstants.PAGE_NUMBER + "=\"" + pageNumber + "\" ");
+        sb.append(XMLConstants.NUMBER_OF_PAGES + "=\"" + numberOfPages + "\" ");
         sb.append(">");
         sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.PAGINATION + ">");
         return sb.toString();

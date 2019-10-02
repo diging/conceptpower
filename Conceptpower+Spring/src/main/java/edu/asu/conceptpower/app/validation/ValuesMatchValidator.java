@@ -51,7 +51,7 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
 
         if (firstObj.equals("") || firstObj == null) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("This field cannot be empty.").addNode(firstFieldName)
+            context.buildConstraintViolationWithTemplate("This field cannot be empty.").addPropertyNode(firstFieldName)
                     .addConstraintViolation();
             return false;
         }
@@ -59,13 +59,13 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
         if (firstObj.toString().length() < 4 && !(firstObj == null)) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Password should be at least 4 characters long.")
-                    .addNode(firstFieldName).addConstraintViolation();
+                    .addPropertyNode(firstFieldName).addConstraintViolation();
             return false;
         }
 
         if (secondObj.equals("") || secondObj == null) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("This field cannot be empty.").addNode(secondFieldName)
+            context.buildConstraintViolationWithTemplate("This field cannot be empty.").addPropertyNode(secondFieldName)
                     .addConstraintViolation();
             return false;
         }
@@ -74,7 +74,7 @@ public class ValuesMatchValidator implements ConstraintValidator<ValuesMatch, Ob
 
         if (!matches) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Passwords do not match.").addNode(secondFieldName)
+            context.buildConstraintViolationWithTemplate("Passwords do not match.").addPropertyNode(secondFieldName)
                     .addConstraintViolation();
         }
 

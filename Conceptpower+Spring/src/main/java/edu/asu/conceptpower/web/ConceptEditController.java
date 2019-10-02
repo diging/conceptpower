@@ -114,7 +114,7 @@ public class ConceptEditController {
         conceptEditBean.setEquals(concept.getEqualTo());
         conceptEditBean.setSimilar(concept.getSimilarTo());
         conceptEditBean.setConceptId(concept.getId());
-        conceptEditBean.setConceptEntryList(new ArrayList());
+        conceptEditBean.setConceptEntryList(new ArrayList<>());
         conceptEditBean.setWordnetIds(concept.getWordnetId());
         conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
