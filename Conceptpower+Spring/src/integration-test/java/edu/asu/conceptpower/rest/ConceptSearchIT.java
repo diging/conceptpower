@@ -22,7 +22,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_searchWithWordAndPosInJson() throws Exception {
 
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.json"), "UTF-8");
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
@@ -35,7 +35,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_successWithDefaultOperator() throws Exception {
 
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.json"), "UTF-8");
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
@@ -59,7 +59,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordAndPosAndEqualToInJson() throws Exception {
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndEqualTo.json"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndEqualTo.json"), "UTF-8");
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Abbott Henderson Thayer")
@@ -73,7 +73,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_searchWithWordAndPosAndSimilarToInJson() throws Exception {
 
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndSimilarTo.json"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndSimilarTo.json"), "UTF-8");
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Douglas Weiner")
@@ -85,7 +85,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordPosAndPaginationInJson() throws Exception {
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination1.json"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination1.json"), "UTF-8");
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
@@ -94,7 +94,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 .andExpect(content().json(output, false)).andExpect(status().isOk());
 
         final String output2 = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination2.json"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination2.json"), "UTF-8");
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
@@ -108,7 +108,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_searchWithWordPosAndTypeIdInJson() throws Exception {
 
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeId.json"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeId.json"), "UTF-8");
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Almira Hart Lincoln Phelps")
@@ -122,7 +122,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_searchWithWordPosAndTypeUriInJson() throws Exception {
 
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeUri.json"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeUri.json"), "UTF-8");
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Almira Hart Lincoln Phelps")
@@ -137,7 +137,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_searchWithWordPosAndDescriptionInJson() throws Exception {
 
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndDescription.json"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndDescription.json"), "UTF-8");
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "indian pony").param("pos", "noun")
@@ -151,7 +151,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_searchWithWordAndPosInXml() throws Exception {
 
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordAndPos.xml"), "UTF-8");
 
         MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
@@ -168,7 +168,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_noResultsInXml() throws Exception {
 
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/noResults.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/noResults.xml"), "UTF-8");
 
         MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Gustav Robert Kirchhoff")
@@ -184,7 +184,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordAndPosAndEqualToInXml() throws Exception {
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndEqualTo.xml"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndEqualTo.xml"), "UTF-8");
 
         MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Abbott Henderson Thayer")
@@ -203,7 +203,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_searchWithWordAndPosAndSimilarToInXml() throws Exception {
 
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndSimilarTo.xml"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndSimilarTo.xml"), "UTF-8");
 
         MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Douglas Weiner")
@@ -220,7 +220,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_searchWithWordPosAndPaginationInXml() throws Exception {
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination1.xml"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination1.xml"), "UTF-8");
 
         MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
@@ -234,7 +234,7 @@ public class ConceptSearchIT extends IntegrationTest {
                 xmlDifference, true);
 
         final String output2 = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination2.xml"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndPagination2.xml"), "UTF-8");
 
         mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "einstein").param("pos", "noun")
@@ -253,7 +253,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_searchWithWordPosAndTypeIdInXml() throws Exception {
 
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeId.xml"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeId.xml"), "UTF-8");
 
         MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Almira Hart Lincoln Phelps")
@@ -272,7 +272,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_searchWithWordPosAndTypeUriInXml() throws Exception {
 
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeUri.xml"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndTypeUri.xml"), "UTF-8");
 
         MvcResult mvcResult = this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptSearch").param("word", "Almira Hart Lincoln Phelps")
@@ -292,7 +292,7 @@ public class ConceptSearchIT extends IntegrationTest {
     public void test_searchConcept_searchWithWordPosAndDescriptionInXml() throws Exception {
 
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndDescription.xml"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptWithWordPosAndDescription.xml"), "UTF-8");
 
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch")
                 .param("word", "indian pony").param("pos", "noun").param("description", "small native range horse")
@@ -309,7 +309,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_failureNoValidSearchParametersInXml() throws Exception {
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.xml"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.xml"), "UTF-8");
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(content().xml(output)).andExpect(status().isBadRequest());
@@ -319,7 +319,7 @@ public class ConceptSearchIT extends IntegrationTest {
     @Test
     public void test_searchConcept_failureNoValidSearchParametersInJson() throws Exception {
         final String output = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.json"));
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.json"), "UTF-8");
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json(output)).andExpect(status().isBadRequest());
