@@ -193,27 +193,27 @@ function createWrapper(wrapperId) {
 }
 $(document).ready(function(){
     $(".fa-exclamation-triangle").click(function() {
-		 $("#fetchRequests").val($(this).data("request"));
-         $("#requestBox").show();    
-    });
+		$("#fetchRequests").val($(this).data("request"));
+		$("#requestBox").show();    
+	});
     $(".fa-comment").click(function() {
-         $("#conceptId").val($(this).data("concept-id"));
+    	$("#conceptId").val($(this).data("concept-id"));
     });
     $('#alertMsg').hide();
     $('#submitForm').click(function(e) {
-        var request = $('#request').val();
-        var conceptId = $('#conceptId').val();
+    	var request = $('#request').val();
+    	var conceptId = $('#conceptId').val();
         $.ajax({
-            type: "POST",
+        	type: "POST",
             url: "${pageContext.servletContext.contextPath}/auth/request/add",
             data: "request=" + request + "&conceptId=" + conceptId,
             success: function(response){
-                  $('#request').val('');
-                  $('#myModal').modal('hide');
+            	$('#request').val('');
+            	$('#myModal').modal('hide');
             },
             error: function(e){
-                  $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
-                  $('#alertMsg').show();
+            	$('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
+            	$('#alertMsg').show();
             }
         });
         var request_subString = request.substring(0,79);
