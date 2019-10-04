@@ -193,9 +193,9 @@ function createWrapper(wrapperId) {
 }
 $(document).ready(function(){
     $(".fa-exclamation-triangle").click(function() {
-		 $("#fetchRequests").val($(this).data("request"));
-         $("#requestBox").show();    
-    });
+		$("#fetchRequests").val($(this).data("request"));
+		$("#requestBox").show();    
+	});
     $(".fa-comment").click(function() {
     	$('#reviewError').hide();
     	$("#conceptId").val($(this).data("concept-id"));
