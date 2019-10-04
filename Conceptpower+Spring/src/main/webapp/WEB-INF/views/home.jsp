@@ -208,7 +208,7 @@ $(document).ready(function(){
         if(!request){
         	$('#reviewError').show();
         }else {
-	        $.ajax({
+	 	  	$.ajax({
 	            type: "POST",
 	            url: "${pageContext.servletContext.contextPath}/auth/request/add",
 	            data: "request=" + request + "&conceptId=" + conceptId,
@@ -222,6 +222,8 @@ $(document).ready(function(){
 	            }
 	        });
 	        var request_subString = request.substring(0,79);
+	        //Escaping Single quotes
+	        conceptId = conceptId.replace(/'/g, "\\'");
 	        var commentTd = $("#comment-" + conceptId);
 	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
 	       	$("#fetchRequests").val(request);
