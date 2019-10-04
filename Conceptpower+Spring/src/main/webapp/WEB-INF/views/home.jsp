@@ -183,7 +183,7 @@ function prepareMergeConcept(conceptId) {
     var tis = $(this);
     var conceptsToMerge = $(this).attr("value");
     if(conceptsToMerge != '') {
-        conceptsToMerge = conceptId;
+    	conceptsToMerge = conceptId;
     } else {
         conceptsToMerge = conceptsToMerge + "," + conceptId;    
     }
@@ -197,29 +197,35 @@ $(document).ready(function(){
          $("#requestBox").show();    
     });
     $(".fa-comment").click(function() {
-         $("#conceptId").val($(this).data("concept-id"));
+    	$('#reviewError').hide();
+    	$("#conceptId").val($(this).data("concept-id"));
     });
     $('#alertMsg').hide();
     $('#submitForm').click(function(e) {
         var request = $('#request').val();
         var conceptId = $('#conceptId').val();
-        $.ajax({
-            type: "POST",
-            url: "${pageContext.servletContext.contextPath}/auth/request/add",
-            data: "request=" + request + "&conceptId=" + conceptId,
-            success: function(response){
-                  $('#request').val('');
-                  $('#myModal').modal('hide');
-            },
-            error: function(e){
-                  $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
-                  $('#alertMsg').show();
-            }
-        });
-        var request_subString = request.substring(0,79);
-        var commentTd = $("#comment-" + conceptId);
-       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
-       	$("#fetchRequests").val(request); 
+        
+        if(!request){
+        	$('#reviewError').show();
+        }else {
+	        $.ajax({
+	            type: "POST",
+	            url: "${pageContext.servletContext.contextPath}/auth/request/add",
+	            data: "request=" + request + "&conceptId=" + conceptId,
+	            success: function(response){
+	                  $('#request').val('');
+	                  $('#myModal').modal('hide');
+	            },
+	            error: function(e){
+	                  $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
+	                  $('#alertMsg').show();
+	            }
+	        });
+	        var request_subString = request.substring(0,79);
+	        var commentTd = $("#comment-" + conceptId);
+	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
+	       	$("#fetchRequests").val(request);
+        }
     });  
 });
 
@@ -506,9 +512,9 @@ $(document).ready(function(){
       <div class="modal-body">
     <div class="form-label"><b>Request</b></div>
     <div class="form-field">
-           <textarea class="form-control" id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
+    	<textarea class="form-control" id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
         <input type="hidden" name="conceptId" id="conceptId" value=""/>
-        <div id="error" class="error"></div>
+        <div id="reviewError" class="error">Request cannot be empty</div>
         <div id="info" class="success"></div>
       </div>
       <div class="modal-footer">
