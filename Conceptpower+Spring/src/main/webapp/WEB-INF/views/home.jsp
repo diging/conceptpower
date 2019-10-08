@@ -105,9 +105,9 @@ $(document).ready(function() {
                 $("#detailsmergedIds").html(mergedIdsHtml);  
               });              
             }
-					}
-				});
-		});
+                    }
+                });
+        });
     $('#prepareMergeConcept').on('click', function (e) {
         e.preventDefault();
         // Get the column API object
@@ -183,7 +183,7 @@ function prepareMergeConcept(conceptId) {
     var tis = $(this);
     var conceptsToMerge = $(this).attr("value");
     if(conceptsToMerge != '') {
-        conceptsToMerge = conceptId;
+    	conceptsToMerge = conceptId;
     } else {
         conceptsToMerge = conceptsToMerge + "," + conceptId;    
     }
@@ -191,6 +191,46 @@ function prepareMergeConcept(conceptId) {
 function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
+$(document).ready(function(){
+    $(".fa-exclamation-triangle").click(function() {
+		$("#fetchRequests").val($(this).data("request"));
+		$("#requestBox").show();    
+	});
+    $(".fa-comment").click(function() {
+    	$('#reviewError').hide();
+    	$("#conceptId").val($(this).data("concept-id"));
+    });
+    $('#alertMsg').hide();
+    $('#submitForm').click(function(e) {
+        var request = $('#request').val();
+        var conceptId = $('#conceptId').val();
+        
+        if(!request){
+        	$('#reviewError').show();
+        }else {
+	 	  	$.ajax({
+	            type: "POST",
+	            url: "${pageContext.servletContext.contextPath}/auth/request/add",
+	            data: "request=" + request + "&conceptId=" + conceptId,
+	            success: function(response){
+	                  $('#request').val('');
+	                  $('#myModal').modal('hide');
+	            },
+	            error: function(e){
+	                  $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
+	                  $('#alertMsg').show();
+	            }
+	        });
+	        var request_subString = request.substring(0,79);
+	        //Escaping Single quotes
+	        conceptId = conceptId.replace(/'/g, "\\'");
+	        var commentTd = $("#comment-" + conceptId);
+	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
+	       	$("#fetchRequests").val(request);
+        }
+    });  
+});
+
 </script>
 
 <header class="page-header">
@@ -269,8 +309,14 @@ function createWrapper(wrapperId) {
       <c:set var="sortDirection" value="${-1}"/>
     </c:otherwise>
   </c:choose>
-
-  <table cellpadding="0" cellspacing="0"
+  
+ <style>
+  .fa-exclamation-triangle {
+    position: relative;
+    display: inline-block;
+  }
+</style>
+  <table
     class="table table-striped table-bordered" id="conceptSearchResult">
     <thead>
       <tr>
@@ -280,14 +326,15 @@ function createWrapper(wrapperId) {
           <th data-name='merge'></th>
         </sec:authorize>
         <th>
-          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
+          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
           </a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+          <th><div style="color:#19586B">Review Status</div></th>
       </tr>
     </thead>
     <tbody>
@@ -318,7 +365,6 @@ function createWrapper(wrapperId) {
                     href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcept/${concept.entry.id}?fromHomeScreenDelete=true"
                     id="${concept.entry.id}"><i
                     title="Delete Concept" class="fa fa-trash"></i></a>
-                  </font>
 
                 </c:when>
                 <c:otherwise>
@@ -333,26 +379,38 @@ function createWrapper(wrapperId) {
             </td>
 
           </sec:authorize>
-          <td align="justify"><font size="2"> <a
+          <td align="justify"> <a
               id="${concept.entry.id}" data-toggle="modal"
               data-target="#detailsModal"
-              data-conceptid="${concept.entry.id}"><c:out
-                  value="${concept.entry.word}"></c:out></a></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.id}"></c:out></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.wordnetId}"></c:out></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.pos}"></c:out></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.conceptList}"></c:out></font></td>
+              data-conceptid="${concept.entry.id}" ><c:out
+                  value="${concept.entry.word}"></c:out></a></td>
+          <td class="entryID" align="justify" ><c:out
+                value="${concept.entry.id}"></c:out></td>
+          <td align="justify"><c:out
+                value="${concept.entry.wordnetId}"></c:out></td>
+          <td align="justify"><c:out
+                value="${concept.entry.pos}"></c:out></td>
+          <td align="justify"><c:out
+                value="${concept.entry.conceptList}"></c:out></td>
           <td align="justify">
                 <div class="scrollable" style="max-height: 100px; max-width: 400px;">
                     <c:out value="${concept.description}" escapeXml="false"></c:out>
                 </div>
           </td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.type.typeName}"></c:out></font></td>
+          <td align="justify"><c:out
+                value="${concept.type.typeName}"></c:out></td>
+                
+         <!-- Enabling Disabling the Review button -->  
+          <c:choose>
+           <c:when 
+             test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
+               <td align="center" id="comment-${concept.entry.id}"  ><div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div></td>            
+            </c:when>
+            <c:otherwise>
+                 <td align="center" id="comment-${concept.entry.id}" ><div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamation" >
+                 </div></td>
+           </c:otherwise>
+          </c:choose>
         </tr>
       </c:forEach>
     </tbody>
@@ -395,7 +453,7 @@ function createWrapper(wrapperId) {
         <div class="row row-odd">
           <div class="col-sm-3">Id:</div>
           <div id="detailsid" class="col-sm-9"></div>
-          </tr>
+          
         </div>
         <div class="row row-even">
           <div class="col-sm-3">URI:</div>
@@ -441,4 +499,65 @@ function createWrapper(wrapperId) {
       </div>
     </div>
   </div>
+  </div>
+<form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/request/add" method="post">  
+<div class="modal" tabindex="-1" id="myModal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title">Request for Review</h5>
+      </div>
+      <div class="modal-body">
+    <div class="form-label"><b>Request</b></div>
+    <div class="form-field">
+    	<textarea class="form-control" id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
+        <input type="hidden" name="conceptId" id="conceptId" value=""/>
+        <div id="reviewError" class="error">Request cannot be empty</div>
+        <div id="info" class="success"></div>
+      </div>
+      <div class="modal-footer">
+         <input type="button" class="btn btn-primary" style="color:white;background:#FF9B22" value = "Close" data-dismiss="modal">
+         <input value="Submit Form" type="button" id="submitForm" class="btn btn-primary" style="color:white;background:#FF9B22" >
+      </div>
+    </div>
+   </div>  
+</div>
+</div>
+</form> 
+  <!-- Modal -->
+  <div class="modal fade" id="requestModal" role="dialog" >
+  <div class="modal-dialog" id="requestBox">
+    <form>  
+    <!-- Modal content-->
+    <div class="modal-content" >
+    <div class="modal-header">
+      <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title">Request for Review</h5>
+      </div>
+    <div class="modal-body">
+    <div class="form-field">
+   <div class="floatingform" >
+   <div>
+    <div class="form-field">
+      <textarea disabled class="form-control" style="border: none" id="fetchRequests" name="fetchRequests" rows="4" ></textarea>
+    </div>
+   </div>
+   </div>
+   </div>
+   </div>
+   <div class="modal-footer">
+         <input type="button" class="btn btn-primary" style="color:white;background:#FF9B22" value = "Close" data-dismiss="modal">
+   </div>
+   </div>
+</form>   
+</div>
+</div>
+
+<div class="alert alert-danger alert-dismissible" id="alertMsg">
 </div>
