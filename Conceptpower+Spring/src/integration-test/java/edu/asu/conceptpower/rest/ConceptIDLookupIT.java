@@ -19,7 +19,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     @Test
     public void test_getConceptById_successForWordNetIdInJson() throws Exception {
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetConcept.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetConcept.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "WID-02380464-N-01-polo_pony")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -30,7 +30,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     @Test
     public void test_getConceptById_successForGenericWordNetIdInJson() throws Exception {
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForGenericWordnet.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForGenericWordnet.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "WID-02380464-N-??-polo_pony")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -41,7 +41,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     @Test(expected = IllegalArgumentException.class)
     public void test_getConceptById_invalidWordNetIdInJson() throws Exception {
         this.mockMvc.perform(
-                MockMvcRequestBuilders.get("/Concept").param("id", null).accept(MediaType.APPLICATION_JSON_VALUE))
+                MockMvcRequestBuilders.get("/Concept").param("id").accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isBadRequest());
 
     }
@@ -49,7 +49,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     @Test
     public void test_getConceptById_successForLocalConceptIdInJson() throws Exception {
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForLocalId.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForLocalId.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -59,7 +59,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     @Test
     public void test_getConceptById_successForConceptWrapperInJson() throws Exception {
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWrapper.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWrapper.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/Concept").param("id", "CONe7fbf694-5609-4691-bca8-916526c2ba6a")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -68,7 +68,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
 
     public void test_getConceptById_successForWordNetIdInXml() throws Exception {
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetConcept.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/wordNetConcept.xml"), "UTF-8");
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/Concept")
                 .param("id", "WID-02380464-N-01-polo_pony").accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(status().isOk()).andReturn();
@@ -82,7 +82,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     @Test(expected = IllegalArgumentException.class)
     public void test_getConceptById_invalidWordNetIdInXml() throws Exception {
         this.mockMvc.perform(
-                MockMvcRequestBuilders.get("/Concept").param("id", null).accept(MediaType.APPLICATION_XML_VALUE))
+                MockMvcRequestBuilders.get("/Concept").param("id").accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(status().isBadRequest());
 
     }
@@ -90,7 +90,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     @Test
     public void test_getConceptById_successForLocalConceptIdInXml() throws Exception {
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForLocalId.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptForLocalId.xml"), "UTF-8");
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/Concept")
                 .param("id", "CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a").accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(status().isOk()).andReturn();
@@ -104,7 +104,7 @@ public class ConceptIDLookupIT extends IntegrationTest {
     @Test
     public void test_getConceptById_successForConceptWrapperInXml() throws Exception {
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWrapper.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptWrapper.xml"), "UTF-8");
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/Concept")
                 .param("id", "CONe7fbf694-5609-4691-bca8-916526c2ba6a").accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(status().isOk()).andReturn();

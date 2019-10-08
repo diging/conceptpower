@@ -2,6 +2,7 @@ package edu.asu.conceptpower.validation;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -14,7 +15,6 @@ import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.validation.ConceptListAddValidator;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.web.ConceptListAddForm;
-import junit.framework.Assert;
 
 public class ConceptListAddValidatorTest {
 

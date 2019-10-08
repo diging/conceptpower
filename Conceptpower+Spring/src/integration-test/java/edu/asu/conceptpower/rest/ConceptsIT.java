@@ -19,7 +19,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcept_success() throws Exception {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcept.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcept.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -29,7 +29,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcept_successForConceptWrapper() throws Exception {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWrapper.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWrapper.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -39,7 +39,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcepts_success() throws Exception {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcepts.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConcepts.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -50,7 +50,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcepts_invalidConceptList() throws Exception {
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("input/addConceptsWithInvalidConceptList.json"));
+                this.getClass().getClassLoader().getResourceAsStream("input/addConceptsWithInvalidConceptList.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -63,7 +63,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcept_invalidConceptList() throws Exception {
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidConceptList.json"));
+                this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidConceptList.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -74,7 +74,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcept_invalidPos() throws Exception {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidPos.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidPos.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -86,7 +86,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcept_nullWord() throws Exception {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithNullWord.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithNullWord.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -99,7 +99,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcept_emptyConceptList() throws Exception {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithEmptyList.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithEmptyList.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -112,7 +112,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcept_emptyType() throws Exception {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithEmptyType.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithEmptyType.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -126,7 +126,7 @@ public class ConceptsIT extends IntegrationTest {
     public void test_addConcept_invalidWordnetIds() throws Exception {
         String wordnetId = "WORDNET-123";
         final String input = IOUtils.toString(
-                this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidWordNetIds.json"));
+                this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithInvalidWordNetIds.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -140,7 +140,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcept_existingwrappedWordnetIds() throws Exception {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWrapper.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWrapper.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
@@ -153,7 +153,7 @@ public class ConceptsIT extends IntegrationTest {
     @Test
     public void test_addConcept_posMismatch() throws Exception {
         final String input = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithPosMisMatch.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("input/addConceptWithPosMisMatch.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))

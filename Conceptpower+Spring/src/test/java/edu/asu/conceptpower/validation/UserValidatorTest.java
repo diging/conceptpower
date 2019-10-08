@@ -2,6 +2,7 @@ package edu.asu.conceptpower.validation;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -14,7 +15,6 @@ import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.validation.UserValidator;
 import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.web.backing.UserBacking;
-import junit.framework.Assert;
 
 public class UserValidatorTest {
     @Mock

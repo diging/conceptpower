@@ -210,7 +210,7 @@ $(document).ready(function(){
         }else {
 	 	  	$.ajax({
 	            type: "POST",
-	            url: "${pageContext.servletContext.contextPath}/auth/request/add",
+	            url: "${pageContext.servletContext.contextPath}/auth/request/add?${_csrf.parameterName}=${_csrf.token}",
 	            data: "request=" + request + "&conceptId=" + conceptId,
 	            success: function(response){
 	                  $('#request').val('');
@@ -500,7 +500,7 @@ $(document).ready(function(){
     </div>
   </div>
   </div>
-<form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/request/add" method="post">  
+<form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/request/add" method="post" modelAttribute="reviewRequest">  
 <div class="modal" tabindex="-1" id="myModal" role="dialog">
   <div class="modal-dialog" role="document">
     <!-- Modal content-->

@@ -17,7 +17,7 @@ public class SynonymSearchIT extends IntegrationTest {
     @Test
     public void test_getSynonymsForId_successInJson() throws Exception {
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/synonym.json"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/synonym.json"), "UTF-8");
         this.mockMvc.perform(MockMvcRequestBuilders.get("/SynonymSearch").accept(MediaType.APPLICATION_JSON_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
@@ -51,7 +51,7 @@ public class SynonymSearchIT extends IntegrationTest {
     @Test
     public void test_getSynonymsForId_successInXml() throws Exception {
         final String output = IOUtils
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/synonym.xml"));
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/synonym.xml"), "UTF-8");
         this.mockMvc.perform(MockMvcRequestBuilders.get("/SynonymSearch").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {

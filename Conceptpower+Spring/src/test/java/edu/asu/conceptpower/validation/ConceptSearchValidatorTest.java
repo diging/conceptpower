@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.validation;
 
 import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.validation.BindException;
@@ -10,7 +11,6 @@ import org.springframework.validation.ValidationUtils;
 import edu.asu.conceptpower.app.core.POS;
 import edu.asu.conceptpower.app.validation.ConceptSearchValidator;
 import edu.asu.conceptpower.web.ConceptSearchBean;
-import junit.framework.Assert;
 
 public class ConceptSearchValidatorTest {
 
