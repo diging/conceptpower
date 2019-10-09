@@ -311,9 +311,13 @@ public class ConceptSearchIT extends IntegrationTest {
         final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("output/conceptSearchNoSearchParameters.xml"), "UTF-8");
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_XML_VALUE))
-                .andExpect(content().xml(output)).andExpect(status().isBadRequest());
+        MvcResult mvcResult =  this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptSearch").accept(MediaType.APPLICATION_XML_VALUE))
+                .andExpect(status().isBadRequest()).andReturn();
 
+        Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
+        xmlDifference.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+        XMLAssert.assertXMLEqual("Similarlity failed in test_searchConcept_searchWithWordPosAndDescriptionInXml",
+                xmlDifference, true);
     }
 
     @Test
