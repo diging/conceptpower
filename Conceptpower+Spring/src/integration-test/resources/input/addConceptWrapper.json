@@ -1,1 +1,1 @@
-{ "word": "pony", "pos": "noun", "conceptlist": "VogonWeb Concepts", "description": "Wrapped concept of pony.", "type": "986a7cc9-c0c1-4720-b344-853f08c136ab","wordnetIds":"WID-02380335-N-01-pony"}
+{ "lemma": "pony", "pos": "noun", "conceptList": "test", "description": "Wrapped concept of pony.", "type": {"type_id":"986a7cc9-c0c1-4720-b344-853f08c136b","wordnetIds":"WID-02380335-N-01-pony"}}

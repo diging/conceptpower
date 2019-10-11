@@ -12,10 +12,13 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.asu.conceptpower.IntegrationTest;
 
 public class ConceptsIT extends IntegrationTest {
 
+    public ObjectMapper objectMapper = new ObjectMapper();
     @Test
     public void test_addConcept_success() throws Exception {
         final String input = IOUtil
@@ -67,7 +70,7 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andExpect(content().string("Specified concept list does not exist in Conceptpower."))
+                .andExpect(content().string(objectMapper.writeValueAsString("Specified concept list does not exist in Conceptpower.")))
                 .andExpect(status().isBadRequest());
     }
 
@@ -78,7 +81,7 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andExpect(content().string("Error parsing request: please provide a valid POS ('pos' attribute)."))
+                .andExpect(content().string(objectMapper.writeValueAsString("Error parsing request: please provide a valid POS ('pos' attribute).")))
                 .andExpect(status().isBadRequest());
 
     }
@@ -91,7 +94,7 @@ public class ConceptsIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
                 .andExpect(content()
-                        .string("Error parsing request: please provide a word for the concept ('word' attribute)."))
+                        .string(objectMapper.writeValueAsString("Error parsing request: please provide a word for the concept ('word' attribute).")))
                 .andExpect(status().isBadRequest());
 
     }
@@ -104,7 +107,7 @@ public class ConceptsIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
                 .andExpect(content()
-                        .string("Error parsing request: please provide a list name for the concept ('list' attribute)."))
+                        .string(objectMapper.writeValueAsString("Error parsing request: please provide a list name for the concept ('list' attribute).")))
                 .andExpect(status().isBadRequest());
 
     }
@@ -117,7 +120,7 @@ public class ConceptsIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
                 .andExpect(content()
-                        .string("Error parsing request: please provide a type for the concept ('type' attribute)."))
+                        .string(new ObjectMapper().writeValueAsString("Error parsing request: please provide a type for the concept ('type' attribute).")))
                 .andExpect(status().isBadRequest());
 
     }
@@ -131,8 +134,8 @@ public class ConceptsIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
                 .andExpect(content()
-                        .string("Error parsing request: please provide a valid list of wordnet ids seperated by commas. Wordnet id "
-                                + wordnetId + " doesn't exist."))
+                        .string(new ObjectMapper().writeValueAsString("Error parsing request: please provide a valid list of wordnet ids seperated by commas. Wordnet id "
+                                + wordnetId + " doesn't exist.")))
                 .andExpect(status().isBadRequest());
 
     }
@@ -158,7 +161,7 @@ public class ConceptsIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
                 .andExpect(content()
-                        .string("Error parsing request: please enter POS that matches with the wordnet POS NOUN"))
+                        .string(objectMapper.writeValueAsString("Error parsing request: please enter POS that matches with the wordnet POS NOUN")))
                 .andExpect(status().isBadRequest());
 
     }

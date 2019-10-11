@@ -9,19 +9,16 @@
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
-
   function removeColumnFromTable(str) {
     var target = $('table').find('th[data-name="' + str +'"]');
     var index = (target).index();
      $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).hide();
   }
-
   function showColumnFromTable(str) {
     var target = $('table').find('th[data-name="' + str +'"]');
     var index = (target).index();
      $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).show();
   }
-
   function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
     var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
     if(conceptsToBeMerged) {
@@ -30,12 +27,10 @@ $(document).ready(function() {
       $("#mergeConcept").show();
       $("#prepareMergeConcept").hide();
       // Check the checkboxes
-
       var conceptIds = conceptsToBeMerged.split(',');
       for(var i = 0; i<conceptIds.length; i++){
         $("input[value='" + conceptIds[i] + "']").prop('checked', true);
       }
-
       $('#conceptIdsToMerge').val(conceptsToBeMerged);
     } else {
       removeColumnFromTable('merge');    
@@ -43,7 +38,6 @@ $(document).ready(function() {
       $("#prepareMergeConcept").show();
     }
   }
-
   checkCheckBoxAndRemoveColumnsForMergeConcepts();
 
 	$('#viafSearchResult').dataTable({
@@ -85,7 +79,8 @@ $(document).ready(function() {
 						$("#detailssimilarto").text(details.similarto);
 						$("#detailscreator").text(details.creator);
 						$("#detailsdescription").html(details.description);
-
+						$("#detailsmergedIds").html(details.mergedIds);
+						
             if(details.mergedIds) {
               $.ajax({
                 url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
@@ -106,15 +101,13 @@ $(document).ready(function() {
                     mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
                     mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
                     mergedIdsHtml += "</span>";
-
                 });
                 $("#detailsmergedIds").html(mergedIdsHtml);  
               });              
             }
-					}
-				});
-		});
-
+                    }
+                });
+        });
     $('#prepareMergeConcept').on('click', function (e) {
         e.preventDefault();
         // Get the column API object
@@ -124,7 +117,6 @@ $(document).ready(function() {
         $("#mergeConcept").show();
         $("#prepareMergeConcept").hide();
     });
-
     $(':checkbox').change(function(e) {
         if(this.checked) {
           mergeConcepts($(this).val())
@@ -143,7 +135,6 @@ $(document).ready(function() {
       }
       $('#conceptIdsToMerge').val(conceptsToMerge);  
     }    
-
     function removeMergedConcepts(conceptId) {
         var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
         var conceptIds = conceptsToMerge.split(',');
@@ -159,7 +150,6 @@ $(document).ready(function() {
           $('#conceptIdsToMerge').val(updatedConceptIds);      
         }
     }
-
     $('#mergeError').hide();
 });
                     
@@ -170,8 +160,6 @@ function hideFormProcessing() {
 function showFormProcessing() {
     $('#floatingCirclesG').show();
 }
-
-
 function finalizeMerge() {
   var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
   var conceptIdsToBeMerged = conceptIdsToMerge.split(',');
@@ -181,7 +169,6 @@ function finalizeMerge() {
         window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;      
     }
 }
-
 function paginate(page, sortDir, sortColumn, word, pos) {
       var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
       if(conceptIdsToMerge) {
@@ -191,30 +178,64 @@ function paginate(page, sortDir, sortColumn, word, pos) {
       }
       
     }
-
-
 var conceptsToMerge = "";
-
 function prepareMergeConcept(conceptId) {
     var tis = $(this);
     var conceptsToMerge = $(this).attr("value");
     if(conceptsToMerge != '') {
-        conceptsToMerge = conceptId;
+    	conceptsToMerge = conceptId;
     } else {
         conceptsToMerge = conceptsToMerge + "," + conceptId;    
     }
 }
-
-var createWrapper = function(word, pos, conceptList, description, conceptType, wrapperId) {
-  window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?word=' + word + '&selectedConceptList=' + conceptList + '&description=' + description + '&selectedType=' + conceptType + '&wrapperids=' + wrapperId;
+function createWrapper(wrapperId) {
+  window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
+$(document).ready(function(){
+    $(".fa-exclamation-triangle").click(function() {
+		$("#fetchRequests").val($(this).data("request"));
+		$("#requestBox").show();    
+	});
+    $(".fa-comment").click(function() {
+    	$('#reviewError').hide();
+    	$("#conceptId").val($(this).data("concept-id"));
+    });
+    $('#alertMsg').hide();
+    $('#submitForm').click(function(e) {
+        var request = $('#request').val();
+        var conceptId = $('#conceptId').val();
+        
+        if(!request){
+        	$('#reviewError').show();
+        }else {
+	 	  	$.ajax({
+	            type: "POST",
+	            url: "${pageContext.servletContext.contextPath}/auth/request/add",
+	            data: "request=" + request + "&conceptId=" + conceptId,
+	            success: function(response){
+	                  $('#request').val('');
+	                  $('#myModal').modal('hide');
+	            },
+	            error: function(e){
+	                  $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
+	                  $('#alertMsg').show();
+	            }
+	        });
+	        var request_subString = request.substring(0,79);
+	        //Escaping Single quotes
+	        conceptId = conceptId.replace(/'/g, "\\'");
+	        var commentTd = $("#comment-" + conceptId);
+	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
+	       	$("#fetchRequests").val(request);
+        }
+    });  
+});
 
 </script>
 
 <header class="page-header">
   <h1 class="page-title">Welcome to Conceptpower</h1>
 </header>
-
 <p>Search for a concept:</p>
 <center>
   <font color="red">${IndexerStatus}</font>
@@ -288,8 +309,14 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
       <c:set var="sortDirection" value="${-1}"/>
     </c:otherwise>
   </c:choose>
-
-  <table cellpadding="0" cellspacing="0"
+  
+ <style>
+  .fa-exclamation-triangle {
+    position: relative;
+    display: inline-block;
+  }
+</style>
+  <table
     class="table table-striped table-bordered" id="conceptSearchResult">
     <thead>
       <tr>
@@ -299,14 +326,15 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
           <th data-name='merge'></th>
         </sec:authorize>
         <th>
-          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
+          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
           </a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" />Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+          <th><div style="color:#19586B">Review Status</div></th>
       </tr>
     </thead>
     <tbody>
@@ -324,7 +352,7 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
                   </a>
                 </c:when>
                 <c:otherwise>
-                  <a href="#" onclick="createWrapper('${concept.entry.word}', '${concept.entry.pos}', '${concept.entry.conceptList}', '${concept.entry.description}', '${concept.entry.typeId}', '${concept.entry.id}');">
+                  <a href="#" onclick="createWrapper('${concept.entry.id}');">
                     <i title='Create wrapper' class="fa fa-pencil-square-o"></i>
                   </a>
                 </c:otherwise>
@@ -337,7 +365,6 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
                     href="${pageContext.servletContext.contextPath}/auth/conceptlist/deleteconcept/${concept.entry.id}?fromHomeScreenDelete=true"
                     id="${concept.entry.id}"><i
                     title="Delete Concept" class="fa fa-trash"></i></a>
-                  </font>
 
                 </c:when>
                 <c:otherwise>
@@ -352,31 +379,43 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
             </td>
 
           </sec:authorize>
-          <td align="justify"><font size="2"> <a
+          <td align="justify"> <a
               id="${concept.entry.id}" data-toggle="modal"
               data-target="#detailsModal"
-              data-conceptid="${concept.entry.id}"><c:out
-                  value="${concept.entry.word}"></c:out></a></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.id}"></c:out></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.wordnetId}"></c:out></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.pos}"></c:out></font></td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.entry.conceptList}"></c:out></font></td>
+              data-conceptid="${concept.entry.id}" ><c:out
+                  value="${concept.entry.word}"></c:out></a></td>
+          <td class="entryID" align="justify" ><c:out
+                value="${concept.entry.id}"></c:out></td>
+          <td align="justify"><c:out
+                value="${concept.entry.wordnetId}"></c:out></td>
+          <td align="justify"><c:out
+                value="${concept.entry.pos}"></c:out></td>
+          <td align="justify"><c:out
+                value="${concept.entry.conceptList}"></c:out></td>
           <td align="justify">
                 <div class="scrollable" style="max-height: 100px; max-width: 400px;">
                     <c:out value="${concept.description}" escapeXml="false"></c:out>
                 </div>
           </td>
-          <td align="justify"><font size="2"><c:out
-                value="${concept.type.typeName}"></c:out></font></td>
+          <td align="justify"><c:out
+                value="${concept.type.typeName}"></c:out></td>
+                
+         <!-- Enabling Disabling the Review button -->  
+          <c:choose>
+           <c:when 
+             test="${concept.reviewRequest.request == null}"> <!-- Testing if the request has already been provided. -->
+               <td align="center" id="comment-${concept.entry.id}"  ><div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div></td>            
+            </c:when>
+            <c:otherwise>
+                 <td align="center" id="comment-${concept.entry.id}" ><div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamation" >
+                 </div></td>
+           </c:otherwise>
+          </c:choose>
         </tr>
       </c:forEach>
     </tbody>
   </table>
-
+  
   <nav aria-label="Page navigation">
       <ul class="pagination">
         <li <c:if test="${page == 1}">class="disabled"</c:if>>
@@ -414,7 +453,7 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
         <div class="row row-odd">
           <div class="col-sm-3">Id:</div>
           <div id="detailsid" class="col-sm-9"></div>
-          </tr>
+          
         </div>
         <div class="row row-even">
           <div class="col-sm-3">URI:</div>
@@ -461,3 +500,64 @@ var createWrapper = function(word, pos, conceptList, description, conceptType, w
     </div>
   </div>
   </div>
+<form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/request/add" method="post">  
+<div class="modal" tabindex="-1" id="myModal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title">Request for Review</h5>
+      </div>
+      <div class="modal-body">
+    <div class="form-label"><b>Request</b></div>
+    <div class="form-field">
+    	<textarea class="form-control" id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
+        <input type="hidden" name="conceptId" id="conceptId" value=""/>
+        <div id="reviewError" class="error">Request cannot be empty</div>
+        <div id="info" class="success"></div>
+      </div>
+      <div class="modal-footer">
+         <input type="button" class="btn btn-primary" style="color:white;background:#FF9B22" value = "Close" data-dismiss="modal">
+         <input value="Submit Form" type="button" id="submitForm" class="btn btn-primary" style="color:white;background:#FF9B22" >
+      </div>
+    </div>
+   </div>  
+</div>
+</div>
+</form> 
+  <!-- Modal -->
+  <div class="modal fade" id="requestModal" role="dialog" >
+  <div class="modal-dialog" id="requestBox">
+    <form>  
+    <!-- Modal content-->
+    <div class="modal-content" >
+    <div class="modal-header">
+      <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title">Request for Review</h5>
+      </div>
+    <div class="modal-body">
+    <div class="form-field">
+   <div class="floatingform" >
+   <div>
+    <div class="form-field">
+      <textarea disabled class="form-control" style="border: none" id="fetchRequests" name="fetchRequests" rows="4" ></textarea>
+    </div>
+   </div>
+   </div>
+   </div>
+   </div>
+   <div class="modal-footer">
+         <input type="button" class="btn btn-primary" style="color:white;background:#FF9B22" value = "Close" data-dismiss="modal">
+   </div>
+   </div>
+</form>   
+</div>
+</div>
+
+<div class="alert alert-danger alert-dismissible" id="alertMsg">
+</div>

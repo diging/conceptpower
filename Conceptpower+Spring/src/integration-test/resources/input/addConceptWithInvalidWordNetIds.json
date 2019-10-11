@@ -1,1 +1,1 @@
-{ "word": "kitty", "pos": "noun", "conceptlist": "TestList", "description": "Soft kitty, sleepy kitty, little ball of fur.", "type": "7c8745be-d06f-4feb-b749-910efa1b986d","wordnetIds":"WORDNET-123,WORDNET-456"}
+{ "lemma": "kitty", "pos": "noun", "conceptList": "test", "description": "Soft kitty, sleepy kitty, little ball of fur.", "type": {"type_id": "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2"},"wordnetIds":"WORDNET-123,WORDNET-456"}

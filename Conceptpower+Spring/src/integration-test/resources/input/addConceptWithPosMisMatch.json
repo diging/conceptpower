@@ -1,1 +1,1 @@
-{ "word": "pony", "pos": "verb", "conceptlist": "TestList", "description": "Soft kitty, sleepy kitty, little ball of fur.", "type": "7c8745be-d06f-4feb-b749-910efa1b986d","wordnetIds": "WID-02380335-N-01-pony"}
+{ "lemma": "pony", "pos": "verb", "conceptList": "TestList", "description": "Soft kitty, sleepy kitty, little ball of fur.", "type":{ "type_id": "7c8745be-d06f-4feb-b749-910efa1b986d" },"wordnetIds": "WID-02380335-N-01-pony"}

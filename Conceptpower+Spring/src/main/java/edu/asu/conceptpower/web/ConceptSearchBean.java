@@ -17,7 +17,7 @@ public class ConceptSearchBean {
     private Map<String, String> posMap;
     private List<ConceptEntryWrapper> foundConcepts;
     private String luceneError;
-
+ 
     public String getWord() {
         return word;
     }
