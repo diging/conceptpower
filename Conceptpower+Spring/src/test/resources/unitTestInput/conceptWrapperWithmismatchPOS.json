@@ -1,1 +1,1 @@
-{ "word": "kitty","wordnetIds" : "WID-02382750-N-01-Welsh_pony",  "pos": "noun", "conceptlist": "mylist", "description": "Soft kitty, sleepy kitty, little ball of fur.", "type": "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2"}
+{ "lemma": "kitty","wordnet_id" : "WID-02382750-N-01-Welsh_pony",  "pos": "noun", "conceptList": "mylist", "description": "Soft kitty, sleepy kitty, little ball of fur.", "type":{"type_id": "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2"}}
