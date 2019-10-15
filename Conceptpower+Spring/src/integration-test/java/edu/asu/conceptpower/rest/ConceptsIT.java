@@ -26,7 +26,7 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andExpect(jsonPath("$.id", isA(String.class))).andExpect(status().isOk());
+                .andExpect(jsonPath("$.conceptEntries[0].id", isA(String.class))).andExpect(status().isOk());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andExpect(jsonPath("$.id", isA(String.class))).andExpect(status().isOk());
+                .andExpect(jsonPath("$.conceptEntries[0].id", isA(String.class))).andExpect(status().isOk());
     }
 
     @Test
@@ -46,8 +46,8 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andExpect(jsonPath("$[0].id", is(instanceOf(String.class))))
-                .andExpect(jsonPath("$[1].id", is(instanceOf(String.class)))).andExpect(status().isOk());
+                .andExpect(jsonPath("$.conceptEntries[0].id", is(instanceOf(String.class))))
+                .andExpect(jsonPath("$.conceptEntries[1].id", is(instanceOf(String.class)))).andExpect(status().isOk());
     }
 
     @Test
@@ -57,10 +57,7 @@ public class ConceptsIT extends IntegrationTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders.post("/concepts/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
-                .andExpect(jsonPath("$.[0].error_message", is("Specified dictionary does not exist in Conceptpower.")))
-                .andExpect(jsonPath("$.[0].success", is(false))).andExpect(jsonPath("$.[0].word", is("kitty")))
-                .andExpect(jsonPath("$.[1].error_message", is("Specified dictionary does not exist in Conceptpower.")))
-                .andExpect(jsonPath("$.[1].success", is(false))).andExpect(jsonPath("$.[1].word", is("kitty-2")));
+                .andExpect(jsonPath("$.message", is("No concept entry found.")));
     }
 
     @Test
@@ -148,7 +145,7 @@ public class ConceptsIT extends IntegrationTest {
                 .perform(MockMvcRequestBuilders.post("/concept/add").contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(input).principal(principal))
                 .andExpect(content()
-                        .string("Error parsing request: the WordNet concept you are trying to wrap is already wrapped."))
+                        .string(objectMapper.writeValueAsString("Error parsing request: the WordNet concept you are trying to wrap is already wrapped.")))
                 .andExpect(status().isBadRequest());
 
     }
