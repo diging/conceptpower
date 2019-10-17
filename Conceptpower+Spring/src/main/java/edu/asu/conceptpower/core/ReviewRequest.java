@@ -9,6 +9,7 @@ public class ReviewRequest {
     private ReviewStatus status;
     private String requester;
     private String resolver;
+    private String resolvingComment;
     
     public String getConceptId() {
         return conceptId;
@@ -49,5 +50,13 @@ public class ReviewRequest {
     public void setResolver(String resolver) {
         this.resolver = resolver;
     }  
+    
+    public String getResolvingComment() {
+        return resolvingComment;
+    }
+    
+    public void setResolvingComment(String resolvingComment) {
+        this.resolvingComment = resolvingComment;
+    }
 
 }

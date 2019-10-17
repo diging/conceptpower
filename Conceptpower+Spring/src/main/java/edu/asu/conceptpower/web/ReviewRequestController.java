@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,12 +22,23 @@ public class ReviewRequestController {
            
     @RequestMapping(value = "/auth/request/add", method = RequestMethod.POST )
     public @ResponseBody ReviewRequest addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
-  
-        reviewRequest.setStatus(ReviewStatus.OPENED);
+        
+    	reviewRequest.setStatus(ReviewStatus.OPENED);
         reviewRequest.setRequester(principal.getName());
         
         requestsMgr.addReviewRequest(reviewRequest);
         
         return reviewRequest;
+    }
+    
+    @RequestMapping(value = "/auth/request/all", method = RequestMethod.GET )
+    public @ResponseBody List<ReviewRequest> getAllReviewRequests(){
+        return  requestsMgr.getAllReviews();
+    }
+    
+    @RequestMapping(value = "/auth/request/resolve", method = RequestMethod.POST )
+    public @ResponseBody String resolveRequest(@ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
+        reviewRequest.setResolver(principal.getName());
+        return "Success";
     }
 }

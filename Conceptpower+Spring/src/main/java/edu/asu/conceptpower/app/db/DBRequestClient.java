@@ -55,5 +55,4 @@ public class DBRequestClient implements IRequestsDBManager{
         
         return reviewRequests;
     }
-   s
 }

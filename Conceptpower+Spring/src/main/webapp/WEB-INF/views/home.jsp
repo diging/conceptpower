@@ -228,9 +228,26 @@ $(document).ready(function(){
 	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
 	       	$("#fetchRequests").val(request);
         }
-    });  
+    });
 });
 
+$(document).ready(function(){
+
+	$('#resolveButton').click(function(){
+		var resolveComment = $('#resolveComment').val();
+		// In case we need a master view of all open requests
+		$.ajax({
+			type:"GET",
+			url:"${pageContext.servletContext.contextPath}/auth/request/all",
+			success: function(response){
+				console.log(response);
+			},
+			error: function(e){
+				console.log("Error Block");
+			}
+		});
+	});
+});
 </script>
 
 <header class="page-header">
@@ -300,7 +317,7 @@ $(document).ready(function(){
          </div>
       </div>
    </sec:authorize>
-
+   
    <c:choose>
       <c:when test="${sortDir == -1}">
          <c:set var="sortDirection" value="${1}"/>
@@ -639,6 +656,10 @@ $(document).ready(function(){
                         </div>
                      </div>
                   </div>
+               </div>
+               <div id = "resolveArea" style="padding-top: 25px; display: inline-flex;">
+               	<textarea class="form-control" id="resolveComment" name="resolveComment" rows="1" cols="40" placeholder="Please enter some resolve Comment"></textarea>
+               	<input type="button" id="resolveButton" class="btn btn-primary" style="color:white;background:#FF9B22;margin-left:20px" value = "Resolve">
                </div>
             </div>
             <div class="modal-footer">
