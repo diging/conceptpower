@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.db4o.ObjectContainer;
+import com.db4o.query.Predicate;
 
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.core.ReviewRequest;
@@ -30,7 +31,20 @@ public class DBRequestClient implements IRequestsDBManager{
     
     @Override
     public void store(ReviewRequest reviewRequest) {
-       
+        List<ReviewRequest> isReviewRequestPresent = client.query(new Predicate<ReviewRequest>() {
+            private static final long serialVersionUID = 6495914730735826451L;
+
+            @Override
+            public boolean match(ReviewRequest review) {
+                return review.getConceptId().equals(reviewRequest.getConceptId());
+            }
+            
+        });
+        //Deleting the reviewRequest if already present and Adding it back with updated Request data
+        if(isReviewRequestPresent.size() !=0) {
+            client.delete(isReviewRequestPresent.get(0));
+        }
+        
         client.store(reviewRequest);
         client.commit();
     }
@@ -54,5 +68,28 @@ public class DBRequestClient implements IRequestsDBManager{
         List<ReviewRequest> reviewRequests = client.queryByExample(new ReviewRequest());
         
         return reviewRequests;
+    }
+    
+    @Override
+    public ReviewRequest updateReviewRequest(ReviewRequest reviewRequest) {
+        
+        ReviewRequest requestToBeUpdated = client.query(new Predicate<ReviewRequest>() {
+            private static final long serialVersionUID = 6495914730735826451L;
+
+            @Override
+            public boolean match(ReviewRequest review) {
+                return review.getConceptId().equals(reviewRequest.getConceptId());
+            }
+            
+        }).get(0);
+        
+        requestToBeUpdated.setResolvingComment(reviewRequest.getResolvingComment());
+        requestToBeUpdated.setStatus(reviewRequest.getStatus());
+        requestToBeUpdated.setResolver(reviewRequest.getResolver());
+        
+        client.store(requestToBeUpdated);
+        client.commit();
+        
+        return requestToBeUpdated;
     }
 }

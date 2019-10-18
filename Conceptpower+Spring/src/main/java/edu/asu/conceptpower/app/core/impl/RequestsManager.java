@@ -37,4 +37,8 @@ public  class RequestsManager implements IRequestsManager{
     public List<ReviewRequest> getAllReviews(){
         return dbClient.getAllReviewRequests();
     }
+    
+    public ReviewRequest updateReview(ReviewRequest reviewRequest) {
+        return dbClient.updateReviewRequest(reviewRequest);
+    }
 }

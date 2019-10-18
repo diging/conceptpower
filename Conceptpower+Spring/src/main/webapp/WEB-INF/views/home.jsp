@@ -194,6 +194,8 @@ function createWrapper(wrapperId) {
 $(document).ready(function(){
     $(".fa-exclamation-triangle").click(function() {
 		$("#fetchRequests").val($(this).data("request"));
+    	$("#conceptId").val($(this).data("concept-id"));
+    	$('#resolveCommentError').hide();
 		$("#requestBox").show();    
 	});
     $(".fa-comment").click(function() {
@@ -225,27 +227,36 @@ $(document).ready(function(){
 	        //Escaping Single quotes
 	        conceptId = conceptId.replace(/'/g, "\\'");
 	        var commentTd = $("#comment-" + conceptId);
-	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
+	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" data-conceptid="#conceptId" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
 	       	$("#fetchRequests").val(request);
         }
     });
 });
 
 $(document).ready(function(){
-
 	$('#resolveButton').click(function(){
 		var resolveComment = $('#resolveComment').val();
-		// In case we need a master view of all open requests
-		$.ajax({
-			type:"GET",
-			url:"${pageContext.servletContext.contextPath}/auth/request/all",
-			success: function(response){
-				console.log(response);
-			},
-			error: function(e){
-				console.log("Error Block");
-			}
-		});
+		var conceptId = $("#conceptId").val();
+		
+		if(!resolveComment){
+			$('#resolveCommentError').text('Comment cannot be empty');
+			$('#resolveCommentError').show();
+		}else{
+			$.ajax({
+				type:"POST",
+				url:"${pageContext.servletContext.contextPath}/auth/request/resolve",
+				data: "resolvingComment=" + resolveComment + "&conceptId="+conceptId,
+				success: function(response){
+					$('#requestModal').modal('hide');
+					conceptId = conceptId.replace(/'/g, "\\'");
+			        var commentTd = $("#comment-" + conceptId);
+					commentTd.html('<div data-concept-id="'+conceptId+'" title="Add a review request" data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>');
+				},
+				error: function(e){
+					$('#resolveCommentError').text("Something went wrong. Unable to resolve the request");
+				}
+			});
+		}
 	});
 });
 </script>
@@ -495,7 +506,7 @@ $(document).ready(function(){
                <!-- Enabling Disabling the Review button -->  
                <c:choose>
                   <c:when 
-                     test="${concept.reviewRequest.request == null}">
+                     test="${concept.reviewRequest.request == null || concept.reviewRequest.resolvingComment != null }">
                      <!-- Testing if the request has already been provided. -->
                      <td align="center" id="comment-${concept.entry.id}"  >
                         <div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>
@@ -503,7 +514,7 @@ $(document).ready(function(){
                   </c:when>
                   <c:otherwise>
                      <td align="center" id="comment-${concept.entry.id}" >
-                        <div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" style="color:#19586B" id="exclamation" >
+                        <div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" data-concept-id="${concept.entry.id}" style="color:#19586B" id="exclamation" >
                         </div>
                      </td>
                   </c:otherwise>
@@ -645,7 +656,7 @@ $(document).ready(function(){
                <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
                <span aria-hidden="true">&times;</span>
                </button>
-               <h5 class="modal-title">Request for Review</h5>
+               <h5 class="modal-title">Resolve Request</h5>
             </div>
             <div class="modal-body">
                <div class="form-field">
@@ -658,12 +669,10 @@ $(document).ready(function(){
                   </div>
                </div>
                <div id = "resolveArea" style="padding-top: 25px; display: inline-flex;">
-               	<textarea class="form-control" id="resolveComment" name="resolveComment" rows="1" cols="40" placeholder="Please enter some resolve Comment"></textarea>
-               	<input type="button" id="resolveButton" class="btn btn-primary" style="color:white;background:#FF9B22;margin-left:20px" value = "Resolve">
+	               	<textarea class="form-control" id="resolveComment" name="resolveComment" rows="1" cols="60" placeholder="Please enter a closing Comment"></textarea>
+	               	<input type="button" id="resolveButton" class="btn btn-primary" style="color:white;background:#FF9B22;margin-left:20px" value = "Resolve">
                </div>
-            </div>
-            <div class="modal-footer">
-               <input type="button" class="btn btn-primary" style="color:white;background:#FF9B22" value = "Close" data-dismiss="modal">
+               <div id="resolveCommentError" class="error"></div>
             </div>
          </div>
       </form>

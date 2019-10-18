@@ -22,8 +22,7 @@ public class ReviewRequestController {
            
     @RequestMapping(value = "/auth/request/add", method = RequestMethod.POST )
     public @ResponseBody ReviewRequest addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
-        
-    	reviewRequest.setStatus(ReviewStatus.OPENED);
+        reviewRequest.setStatus(ReviewStatus.OPENED);
         reviewRequest.setRequester(principal.getName());
         
         requestsMgr.addReviewRequest(reviewRequest);
@@ -37,8 +36,12 @@ public class ReviewRequestController {
     }
     
     @RequestMapping(value = "/auth/request/resolve", method = RequestMethod.POST )
-    public @ResponseBody String resolveRequest(@ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
+    public @ResponseBody ReviewRequest resolveRequest(@ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
+        reviewRequest.setStatus(ReviewStatus.RESOLVED);
         reviewRequest.setResolver(principal.getName());
-        return "Success";
+        
+        ReviewRequest updatedRequest = requestsMgr.updateReview(reviewRequest);
+        
+        return updatedRequest;
     }
 }

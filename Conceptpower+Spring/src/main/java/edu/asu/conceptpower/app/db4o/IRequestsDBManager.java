@@ -13,4 +13,6 @@ public interface IRequestsDBManager {
     public ReviewRequest getReviewRequestForConcept(String conceptId);
     
     public List<ReviewRequest> getAllReviewRequests();
+    
+    public ReviewRequest updateReviewRequest(ReviewRequest reviewRequest);
 }
