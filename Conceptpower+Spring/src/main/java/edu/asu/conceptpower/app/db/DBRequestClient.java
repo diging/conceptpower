@@ -92,4 +92,24 @@ public class DBRequestClient implements IRequestsDBManager{
         
         return requestToBeUpdated;
     }
+    
+    @Override
+    public ReviewRequest reopenReviewRequest(ReviewRequest reviewRequest) {
+        ReviewRequest requestToBeUpdated = client.query(new Predicate<ReviewRequest>() {
+            private static final long serialVersionUID = 6495914730735826451L;
+
+            @Override
+            public boolean match(ReviewRequest review) {
+                return review.getConceptId().equals(reviewRequest.getConceptId());
+            }
+            
+        }).get(0);
+        
+        requestToBeUpdated.setStatus(reviewRequest.getStatus());
+        
+        client.store(requestToBeUpdated);
+        client.commit();
+        
+        return requestToBeUpdated;
+    }
 }

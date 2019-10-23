@@ -15,4 +15,6 @@ public interface IRequestsDBManager {
     public List<ReviewRequest> getAllReviewRequests();
     
     public ReviewRequest updateReviewRequest(ReviewRequest reviewRequest);
+    
+    public ReviewRequest reopenReviewRequest(ReviewRequest reviewRequest);
 }

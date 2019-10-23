@@ -41,4 +41,8 @@ public  class RequestsManager implements IRequestsManager{
     public ReviewRequest updateReview(ReviewRequest reviewRequest) {
         return dbClient.updateReviewRequest(reviewRequest);
     }
+    
+    public ReviewRequest reopenReview(ReviewRequest reviewRequest) {
+        return dbClient.reopenReviewRequest(reviewRequest);
+    }
 }

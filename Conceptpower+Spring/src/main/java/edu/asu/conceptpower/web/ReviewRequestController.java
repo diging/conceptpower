@@ -44,4 +44,13 @@ public class ReviewRequestController {
         
         return updatedRequest;
     }
+    
+    @RequestMapping(value = "/auth/request/reopen", method = RequestMethod.POST )
+    public @ResponseBody ReviewRequest reopenRequest(@ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
+        reviewRequest.setStatus(ReviewStatus.OPENED);
+        
+        ReviewRequest updatedRequest = requestsMgr.reopenReview(reviewRequest);
+        
+        return updatedRequest;
+    }
 }

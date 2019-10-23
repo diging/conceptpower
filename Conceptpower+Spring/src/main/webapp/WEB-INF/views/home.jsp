@@ -191,23 +191,26 @@ function prepareMergeConcept(conceptId) {
 function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
+
 $(document).ready(function(){
-    $(".fa-exclamation-triangle").click(function() {
+    $(document).on("click", ".fa-exclamation-triangle", function() {
 		$("#fetchRequests").val($(this).data("request"));
     	$("#conceptId").val($(this).data("concept-id"));
     	$('#resolveCommentError').hide();
 		$("#requestBox").show();    
 	});
+    
     $(".fa-comment").click(function() {
     	$('#reviewError').hide();
     	$("#conceptId").val($(this).data("concept-id"));
     });
+    
     $('#alertMsg').hide();
     $('#submitForm').click(function(e) {
         var request = $('#request').val();
         var conceptId = $('#conceptId').val();
         
-        if(!request){
+        if(request.length == 0){
         	$('#reviewError').show();
         }else {
 	 	  	$.ajax({
@@ -227,18 +230,17 @@ $(document).ready(function(){
 	        //Escaping Single quotes
 	        conceptId = conceptId.replace(/'/g, "\\'");
 	        var commentTd = $("#comment-" + conceptId);
-	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" data-conceptid="#conceptId" style="color:#19586B"><i class="fa fa-exclamation-triangle"></i></div>');
+	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" data-concept-id="'+conceptId+'" style="color:#19586B" class="fa fa-exclamation-triangle"></div>');
 	       	$("#fetchRequests").val(request);
         }
     });
-});
-
-$(document).ready(function(){
-	$('#resolveButton').click(function(){
+    
+    $('#resolveButton').click(function(){	
 		var resolveComment = $('#resolveComment').val();
 		var conceptId = $("#conceptId").val();
-		
-		if(!resolveComment){
+		var request = $("#fetchRequests").val();
+	
+		if(resolveComment.length == 0){
 			$('#resolveCommentError').text('Comment cannot be empty');
 			$('#resolveCommentError').show();
 		}else{
@@ -248,9 +250,12 @@ $(document).ready(function(){
 				data: "resolvingComment=" + resolveComment + "&conceptId="+conceptId,
 				success: function(response){
 					$('#requestModal').modal('hide');
+			    	$('#resolveComment').val('');
 					conceptId = conceptId.replace(/'/g, "\\'");
 			        var commentTd = $("#comment-" + conceptId);
-					commentTd.html('<div data-concept-id="'+conceptId+'" title="Add a review request" data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>');
+			        
+					commentTd.html('<div data-concept-id="'+conceptId+'" title="Add a review request" data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>'
+								  +'<div data-concept-id="'+conceptId+'" data-request="'+request+'" data-resolve-comment="'+resolveComment+'" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>');
 				},
 				error: function(e){
 					$('#resolveCommentError').text("Something went wrong. Unable to resolve the request");
@@ -258,7 +263,40 @@ $(document).ready(function(){
 			});
 		}
 	});
+	
+	$(document).on("click",".fa-refresh", function(){
+		$("#conceptId").val($(this).data("concept-id"));
+		$("#fetchReopenRequests").val($(this).data('request'));
+		$("#reopenComment").val($(this).data('resolveComment')); 
+	});
+	
+	$("#reopenButton").click(function(){
+		var operationToPerform = $("#reopenButton").val();
+		var conceptId = $("#conceptId").val();
+		var request = $("#fetchReopenRequests").val();
+		
+		$.ajax({
+			type:"POST",
+			url:"${pageContext.servletContext.contextPath}/auth/request/reopen",
+			data: "&conceptId="+conceptId,
+			success: function(response){
+				$('#reopenModal').modal('hide');
+				var request_subString = request.substring(0,79);
+				
+				conceptId = conceptId.replace(/'/g, "\\'");
+				var commentTd = $("#comment-" + conceptId);
+				commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" data-concept-id="'+conceptId+'" style="color:#19586B" class="fa fa-exclamation-triangle"></div>');
+			},
+			error: function(e){
+				$('#reopenError').text("Something went wrong. Unable to reopen the request");
+			}
+		});
+	});
+
 });
+
+
+
 </script>
 
 <header class="page-header">
@@ -503,15 +541,21 @@ $(document).ready(function(){
                   <c:out
                      value="${concept.type.typeName}"></c:out>
                </td>
+
                <!-- Enabling Disabling the Review button -->  
                <c:choose>
                   <c:when 
-                     test="${concept.reviewRequest.request == null || concept.reviewRequest.resolvingComment != null }">
+                     test="${concept.reviewRequest.request == null || concept.reviewRequest.status == 'RESOLVED'}">
                      <!-- Testing if the request has already been provided. -->
                      <td align="center" id="comment-${concept.entry.id}"  >
                         <div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>
+                        <c:if
+                        test="${concept.reviewRequest.request != null && concept.reviewRequest.status == 'RESOLVED'}">
+                        <div data-concept-id="${concept.entry.id}"  data-request="${concept.reviewRequest.request}" data-resolve-comment="${concept.reviewRequest.resolvingComment}" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>
+                        </c:if>
                      </td>
                   </c:when>
+                 
                   <c:otherwise>
                      <td align="center" id="comment-${concept.entry.id}" >
                         <div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" data-concept-id="${concept.entry.id}" style="color:#19586B" id="exclamation" >
@@ -670,7 +714,7 @@ $(document).ready(function(){
                </div>
                <div id = "resolveArea" style="padding-top: 25px; display: inline-flex;">
 	               	<textarea class="form-control" id="resolveComment" name="resolveComment" rows="1" cols="60" placeholder="Please enter a closing Comment"></textarea>
-	               	<input type="button" id="resolveButton" class="btn btn-primary" style="color:white;background:#FF9B22;margin-left:20px" value = "Resolve">
+	               	<input type="button" id="resolveButton" class="btn btn-primary" style="color:white;background:#FF9B22;margin-left:20px" value = "RESOLVE">
                </div>
                <div id="resolveCommentError" class="error"></div>
             </div>
@@ -679,3 +723,36 @@ $(document).ready(function(){
    </div>
 </div>
 <div class="alert alert-danger alert-dismissible" id="alertMsg"></div>
+
+<!--Reopen Modal-->
+<div class="modal fade" id="reopenModal" role="dialog" >
+   <div class="modal-dialog" id="requestBox">
+      <form>
+         <!-- Modal content-->
+         <div class="modal-content" >
+            <div class="modal-header">
+               <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+               <h5 class="modal-title">Reopen Request</h5>
+            </div>
+            <div class="modal-body">
+               <div class="form-field">
+                  <div class="floatingform" >
+                     <div>
+                        <div class="form-field">
+                           <textarea disabled class="form-control" style="border: none" id="fetchReopenRequests" name="fetchRequests" rows="4" ></textarea>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div id = "resolveArea" style="padding-top: 25px; display: inline-flex;">
+	               	<textarea disabled class="form-control" id="reopenComment" name="reopenComment" rows="1" cols="60" placeholder="Please enter a closing Comment"></textarea>
+	               	<input type="button" id="reopenButton" class="btn btn-primary" style="color:white;background:#FF9B22;margin-left:20px" value = "REOPEN">
+               </div>
+               <div id="reopenError" class="error"></div>
+            </div>
+         </div>
+      </form>
+   </div>
+</div>
