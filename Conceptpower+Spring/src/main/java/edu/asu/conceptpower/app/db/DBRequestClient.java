@@ -14,6 +14,7 @@ import com.db4o.query.Predicate;
 
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.core.ReviewStatus;
 
 @Component
 public class DBRequestClient implements IRequestsDBManager{
@@ -64,13 +65,6 @@ public class DBRequestClient implements IRequestsDBManager{
     }
     
     @Override
-    public List<ReviewRequest> getAllReviewRequests(){
-        List<ReviewRequest> reviewRequests = client.queryByExample(new ReviewRequest());
-        
-        return reviewRequests;
-    }
-    
-    @Override
     public ReviewRequest updateReviewRequest(ReviewRequest reviewRequest) {
         
         ReviewRequest requestToBeUpdated = client.query(new Predicate<ReviewRequest>() {
@@ -94,18 +88,20 @@ public class DBRequestClient implements IRequestsDBManager{
     }
     
     @Override
-    public ReviewRequest reopenReviewRequest(ReviewRequest reviewRequest) {
+    public ReviewRequest reopenReviewRequest(String conceptId) {
         ReviewRequest requestToBeUpdated = client.query(new Predicate<ReviewRequest>() {
             private static final long serialVersionUID = 6495914730735826451L;
 
             @Override
             public boolean match(ReviewRequest review) {
-                return review.getConceptId().equals(reviewRequest.getConceptId());
+                return review.getConceptId().equals(conceptId);
             }
             
         }).get(0);
         
-        requestToBeUpdated.setStatus(reviewRequest.getStatus());
+        requestToBeUpdated.setStatus(ReviewStatus.OPENED);
+        requestToBeUpdated.setResolver(null);
+        requestToBeUpdated.setResolvingComment(null);
         
         client.store(requestToBeUpdated);
         client.commit();
