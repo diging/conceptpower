@@ -1,18 +1,13 @@
 package edu.asu.conceptpower.core.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -48,7 +43,7 @@ public class ConceptListManagerTest {
 	@Test
 	public void addConceptListTest() {
 		conceptListManager.addConceptList("List Name", "List Description");
-		Mockito.verify(client).store(Matchers.any(ConceptList.class), Mockito.eq(DBNames.DICTIONARY_DB));
+		Mockito.verify(client).store(ArgumentMatchers.any(ConceptList.class), Mockito.eq(DBNames.DICTIONARY_DB));
 
 	}
 
@@ -61,37 +56,37 @@ public class ConceptListManagerTest {
 	@Test
 	public void getAllConceptListsTest() {
 		List list = conceptListManager.getAllConceptLists();
-		assertNotNull(list);
-		assertEquals(1, list.size());
+		Assert.assertNotNull(list);
+		Assert.assertEquals(1, list.size());
 	}
 	
 	@Test
 	public void getConceptListTest() {
 		String listName = "First List";
 		ConceptList conceptList = conceptListManager.getConceptList(listName);
-		assertNotNull(conceptList);
-		assertEquals(conceptList, conceptList);
+		Assert.assertNotNull(conceptList);
+		Assert.assertEquals(conceptList, conceptList);
 	}
 
 	@Test
 	public void getConceptListNullTest() {
 		String listName = "Second List";
 		ConceptList conceptList = conceptListManager.getConceptList(listName);
-		assertNull(conceptList);
+		Assert.assertNull(conceptList);
 	}
 
 	@Test
 	public void checkExistingListForTrue() {
 		String listName = "First List";
 		boolean isExists = conceptListManager.checkExistingConceptList(listName);
-		assertTrue(isExists);
+		Assert.assertTrue(isExists);
 	}
 
 	@Test
 	public void checkExistingListForFalse() {
 		String listName = "Second List";
 		boolean isExists = conceptListManager.checkExistingConceptList(listName);
-		assertFalse(isExists);
+		Assert.assertFalse(isExists);
 	}
 
 	@Test

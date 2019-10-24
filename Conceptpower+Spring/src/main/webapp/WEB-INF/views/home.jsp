@@ -5,7 +5,8 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page session="false"%>
-
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
@@ -39,7 +40,6 @@ $(document).ready(function() {
     }
   }
   checkCheckBoxAndRemoveColumnsForMergeConcepts();
-
 	$('#viafSearchResult').dataTable({
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
@@ -210,7 +210,7 @@ $(document).ready(function(){
         }else {
 	 	  	$.ajax({
 	            type: "POST",
-	            url: "${pageContext.servletContext.contextPath}/auth/request/add",
+	            url: "${pageContext.servletContext.contextPath}/auth/request/add?${_csrf.parameterName}=${_csrf.token}",
 	            data: "request=" + request + "&conceptId=" + conceptId,
 	            success: function(response){
 	                  $('#request').val('');
@@ -243,7 +243,7 @@ $(document).ready(function(){
 
 <form:form
   action="${pageContext.servletContext.contextPath}/home/conceptsearch"
-  method='get' commandName='conceptSearchBean'>
+  method='get' modelAttribute='conceptSearchBean'>
   <form:errors path="luceneError"></form:errors>
   <input type='hidden' id='conceptIdsToMerge' value='${conceptIdsToMerge}' />
     <div id="mergeError" class="alert alert-danger">
@@ -500,7 +500,7 @@ $(document).ready(function(){
     </div>
   </div>
   </div>
-<form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/request/add" method="post">  
+<form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/request/add" method="post" modelAttribute="reviewRequest">  
 <div class="modal" tabindex="-1" id="myModal" role="dialog">
   <div class="modal-dialog" role="document">
     <!-- Modal content-->

@@ -11,7 +11,7 @@
 <p>Please enter your email address below. If you have an account you will receive an email with instructions how to login to Conceptpower.</p>
 
 <form:form
-	commandName="emailBackBean"
+	modelAttribute="emailBackBean"
 	action="${pageContext.servletContext.contextPath}/emailSent"
 	method='post'>
     <p>

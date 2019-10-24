@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -15,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
 import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.core.ConceptEntry;
-import junit.framework.Assert;
 
 public class AlternativeIdServiceTest {
 

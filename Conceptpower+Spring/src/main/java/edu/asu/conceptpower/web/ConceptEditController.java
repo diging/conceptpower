@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.jettison.json.JSONException;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.app.bean.ConceptEditBean;
 import edu.asu.conceptpower.app.core.Constants;
@@ -115,7 +114,7 @@ public class ConceptEditController {
         conceptEditBean.setEquals(concept.getEqualTo());
         conceptEditBean.setSimilar(concept.getSimilarTo());
         conceptEditBean.setConceptId(concept.getId());
-        conceptEditBean.setConceptEntryList(new ArrayList());
+        conceptEditBean.setConceptEntryList(new ArrayList<>());
         conceptEditBean.setWordnetIds(concept.getWordnetId());
         conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());

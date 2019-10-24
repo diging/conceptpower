@@ -2,6 +2,7 @@ package edu.asu.conceptpower.validation;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -14,7 +15,6 @@ import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.validation.ConceptTypeAddValidator;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.web.ConceptTypeAddForm;
-import junit.framework.Assert;
 
 public class ConceptTypeAddValidatorTest {
 

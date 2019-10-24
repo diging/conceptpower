@@ -7,7 +7,7 @@
 
 <h2>Delete user:</h2>
 
-<form:form commandName="user"
+<form:form modelAttribute="user"
 	action="${pageContext.servletContext.contextPath}/auth/user/confirmdeleteuser/"
 	method='post' id="edituserform">
 

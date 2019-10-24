@@ -13,7 +13,7 @@
 
 <form:form
 	action="${pageContext.servletContext.contextPath}/auth/conceptlist/storeeditlist"
-	method='post' commandName="conceptListAddForm">
+	method='post' modelAttribute="conceptListAddForm">
 	<table>
 		<tr>
 			<td>List Name</td>

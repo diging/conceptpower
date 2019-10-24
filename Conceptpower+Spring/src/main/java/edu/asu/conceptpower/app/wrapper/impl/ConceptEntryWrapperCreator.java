@@ -3,7 +3,7 @@ package edu.asu.conceptpower.app.wrapper.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,7 +58,6 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             return foundConcepts;
 
         for (ConceptEntry entry : entries) {
-            
             ConceptEntryWrapper wrapper = new ConceptEntryWrapper(entry);
             wrapper.setUri(helper.getURI(entry));
             if (entry.getTypeId() != null && !entry.getTypeId().isEmpty())

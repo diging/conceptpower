@@ -10,7 +10,7 @@
 
 <p>Please enter a new password below.</p>
 
-<form:form commandName="userBacking"
+<form:form modelAttribute="userBacking"
 	action="${pageContext.servletContext.contextPath}/resetComplete"
 	method='post' id="editpasswordform">
 

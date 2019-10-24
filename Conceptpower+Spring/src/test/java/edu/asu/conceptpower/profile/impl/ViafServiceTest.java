@@ -2,7 +2,10 @@ package edu.asu.conceptpower.profile.impl;
 
 import static org.junit.Assert.assertEquals;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -11,7 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import edu.asu.conceptpower.app.jaxb.viaf.Channel;
@@ -24,23 +36,23 @@ import edu.asu.conceptpower.app.profile.impl.ViafService;
 
 public class ViafServiceTest {
 
-    @Mock
-    private RestTemplate template = Mockito.mock(RestTemplate.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Mock
-    private ISearchResultFactory searchResultFactory = Mockito.mock(ISearchResultFactory.class);
-
+    private ISearchResultFactory searchResultFactory;
+    
     @InjectMocks
     private ViafService viafService;
+    
+    @Mock
+    private RestTemplate restTemplate;
 
     @Before
     public void setUp() {
-        template = Mockito.mock(RestTemplate.class);
-
         MockitoAnnotations.initMocks(this);
 
         ReflectionTestUtils.setField(viafService, "viafURL", "http://viaf.org/viaf/search");
-        ReflectionTestUtils.setField(viafService, "searchViafURLPath", "?query=local.names all");
+        ReflectionTestUtils.setField(viafService, "searchViafURLPath", "?query=local.names%20all");
         ReflectionTestUtils.setField(viafService, "searchViafURLPath1", "+&amp;maximumRecords=100&amp;startRecord=");
         ReflectionTestUtils.setField(viafService, "searchViafURLPath2",
                 "&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml");
@@ -57,10 +69,21 @@ public class ViafServiceTest {
 
         viafReply.setChannel(channel);
 
-        Mockito.when(template.getForObject(
+        Mockito.when(restTemplate.getForObject(
                 "http://viaf.org/viaf/search?query=local.names all Pirckheimer+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml",
                 ViafReply.class)).thenReturn(viafReply);
         Mockito.when(searchResultFactory.getSearchResultObject()).thenReturn(new SearchResult());
+       
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_RSS_XML));
+        HttpEntity<ViafReply> entity = new HttpEntity<ViafReply>(headers);
+        
+        ResponseEntity<ViafReply> reply = new ResponseEntity<ViafReply>(viafReply, HttpStatus.OK);
+        try {
+            Mockito.when(restTemplate.exchange(new URI("http://viaf.org/viaf/search?query=local.names%20all%20Pirckheimer+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml"),HttpMethod.GET, entity, ViafReply.class)).thenReturn(reply);
+        } catch (RestClientException | URISyntaxException e) {
+            logger.error("Error during contacting VIAF.", e);
+        }
 
         ViafReply emptyViafReply = new ViafReply();
         Channel emptyChannel = new Channel();
@@ -69,10 +92,17 @@ public class ViafServiceTest {
 
         emptyViafReply.setChannel(emptyChannel);
 
-        Mockito.when(template.getForObject(
-                "http://viaf.org/viaf/search?query=local.names all Test for Null+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml",
+        Mockito.when(restTemplate.getForObject(
+                "http://viaf.org/viaf/search?query=local.names%20all%20Test+for+Null+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml",
                 ViafReply.class)).thenReturn(emptyViafReply);
 
+        
+        reply = new ResponseEntity<ViafReply>(emptyViafReply, HttpStatus.OK);
+        try {
+            Mockito.when(restTemplate.exchange(new URI("http://viaf.org/viaf/search?query=local.names%20all%20Test+for+Null+&amp;maximumRecords=100&amp;startRecord=1&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml"),HttpMethod.GET, entity, ViafReply.class)).thenReturn(reply);
+        } catch (RestClientException | URISyntaxException e) {
+            logger.error("Error during contacting VIAF.", e);
+        }
     }
 
     @Test

@@ -10,7 +10,7 @@
 
 <form:form
 	action="${pageContext.servletContext.contextPath}/auth/concepts/createconceptlist"
-	commandName="conceptListAddForm" method='post'>
+	modelAttribute="conceptListAddForm" method='post'>
 	<table>
 		<tr>
 			<td>List Name</td>

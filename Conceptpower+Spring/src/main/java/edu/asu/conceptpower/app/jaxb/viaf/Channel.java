@@ -14,60 +14,60 @@ import javax.xml.bind.annotation.XmlElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Channel {
-
-	@XmlElement(name = "item")
-	private List<Item> items;
-
-	@XmlElement(name = "title")
-	private String title;
-
-	@XmlElement(name = "totalResults", namespace = "http://a9.com/-/spec/opensearch/1.1/")
-	private Integer totalResults;
-
-	@XmlElement(name = "link")
-	private String link;
-
-	@XmlElement(name = "description")
-	private String description;
-
-	public Integer getTotalResults() {
-		return totalResults;
-	}
-
-	public void setTotalResults(Integer totalResults) {
+    
+    @XmlElement(name = "item")
+    private List<Item> items;
+    
+    @XmlElement(name = "title")
+    private String title;
+    
+    @XmlElement(name = "totalResults", namespace = "http://a9.com/-/spec/opensearch/1.1/")
+    private Integer totalResults;
+    
+    @XmlElement(name = "link")
+    private String link;
+    
+    @XmlElement(name = "description")
+    private String description;
+    
+    public Integer getTotalResults() {
+        return totalResults;
+    }
+    
+    public void setTotalResults(Integer totalResults) {
 		this.totalResults = totalResults;
 	}
-
-	public String getTitle() {
+    
+    public String getTitle() {
 		return title;
 	}
-
-	public void setTitle(String title) {
+    
+    public void setTitle(String title) {
 		this.title = title;
 	}
-
-	public String getLink() {
+    
+    public String getLink() {
 		return link;
 	}
-
-	public void setLink(String link) {
+    
+    public void setLink(String link) {
 		this.link = link;
 	}
-
-	public String getDescription() {
+    
+    public String getDescription() {
 		return description;
 	}
-
-	public void setDescription(String description) {
+    
+    public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public List<Item> getItems() {
+    
+    public List<Item> getItems() {
 		return items;
 	}
-
-	public void setItems(List<Item> item) {
+    
+    public void setItems(List<Item> item) {
 		this.items = item;
 	}
-
+	
 }

@@ -1,6 +1,6 @@
 package edu.asu.conceptpower.web.profile.backing;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 
 import edu.asu.conceptpower.app.validation.ValuesMatch;
 
