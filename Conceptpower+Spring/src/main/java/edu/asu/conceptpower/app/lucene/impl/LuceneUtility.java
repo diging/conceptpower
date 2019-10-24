@@ -62,6 +62,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
@@ -609,7 +610,7 @@ public class LuceneUtility implements ILuceneUtility {
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder, occur);
             }
-            builder.add(new BooleanClause((qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
+            builder.add(new BooleanClause((qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
         }        
     }
 
