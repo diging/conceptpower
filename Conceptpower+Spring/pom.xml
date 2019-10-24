@@ -15,6 +15,7 @@
 		<org.slf4j-version>1.7.26</org.slf4j-version>
 		<spring-security-version>5.2.0.RELEASE</spring-security-version>
 		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
+		<tomcat.server.id>TomcatServer</tomcat.server.id>
 		<deploy.path.dev>conceptpower</deploy.path.dev>
 		<deploy.path.test>conceptpower-test</deploy.path.test>
 		<deploy.path.prod>conceptpower</deploy.path.prod>
