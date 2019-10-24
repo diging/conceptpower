@@ -611,6 +611,11 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
+				<configuration>
+ 					<url>${tomcat.path}</url>
+ 					<server>${tomcat.server.id}</server>
+ 					<path>/${deploy.path}</path>
+ 				</configuration>
 			</plugin>
 			<!-- Displaying build number -->
 			<plugin>
