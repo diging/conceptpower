@@ -200,14 +200,14 @@ $(document).ready(function(){
 		$("#requestBox").show();    
 	});
     
-    $(".fa-comment").click(function() {
+    $(document).on("click", ".fa-comment", function() {
     	$('#reviewError').hide();
     	$("#conceptId").val($(this).data("concept-id"));
     });
     
     $('#alertMsg').hide();
     $('#submitForm').click(function(e) {
-        var request = $('#request').val();
+        var request = $('#request').val().trim();
         var conceptId = $('#conceptId').val();
         
         if(request.length == 0){
@@ -236,7 +236,7 @@ $(document).ready(function(){
     });
     
     $('#resolveButton').click(function(){	
-		var resolveComment = $('#resolveComment').val();
+		var resolveComment = $('#resolveComment').val().trim();
 		var conceptId = $("#conceptId").val();
 		var request = $("#fetchRequests").val();
 	
