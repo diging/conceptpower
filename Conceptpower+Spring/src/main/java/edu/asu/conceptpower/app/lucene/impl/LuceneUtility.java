@@ -2,7 +2,6 @@ package edu.asu.conceptpower.app.lucene.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystems;
@@ -23,19 +22,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
-import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
-import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.analysis.standard.StandardFilter;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
-import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.SortedDocValuesField;
@@ -46,7 +37,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
@@ -56,7 +46,6 @@ import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopDocsCollector;
 import org.apache.lucene.search.TopFieldCollector;
@@ -64,9 +53,7 @@ import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.BytesRef;
-import org.apache.lucene.util.PagedBytes.Reader;
 import org.apache.lucene.util.QueryBuilder;
-import org.apache.lucene.util.Version;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,8 +62,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
-import edu.asu.conceptpower.app.constants.SearchFieldNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
@@ -623,7 +610,7 @@ public class LuceneUtility implements ILuceneUtility {
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder, occur);
             }
-            builder.add(new BooleanClause((qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
+            builder.add(new BooleanClause((qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
         }        
     }
 

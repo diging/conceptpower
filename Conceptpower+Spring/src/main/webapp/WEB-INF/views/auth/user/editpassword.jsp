@@ -2,7 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <h2>Edit user: ${fullname}</h2>
 
-<form:form commandName="user"
+<form:form modelAttribute="user"
 	action="${pageContext.servletContext.contextPath}/auth/user/editpassword/store"
 	method='post' id="editpasswordform">
 

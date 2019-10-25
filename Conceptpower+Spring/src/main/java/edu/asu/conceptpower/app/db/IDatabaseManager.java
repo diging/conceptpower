@@ -2,8 +2,6 @@ package edu.asu.conceptpower.app.db;
 
 import javax.persistence.EntityManager;
 
-import org.springframework.transaction.annotation.Transactional;
-
 public interface IDatabaseManager {
 
 	public abstract void update(Object object);

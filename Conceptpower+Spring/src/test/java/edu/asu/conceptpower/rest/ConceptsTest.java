@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -29,9 +28,10 @@ import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.json.ConceptEntryMessage;
-import junit.framework.Assert;
 
-@SuppressWarnings("deprecation")
+import org.junit.Assert;
+
+
 public class ConceptsTest {
 
     @Mock
@@ -63,8 +63,8 @@ public class ConceptsTest {
     @Test
     public void test_addConcept_invalidType()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/invalidType.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/invalidType.json"), "UTF-8");
         
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
         
@@ -76,8 +76,8 @@ public class ConceptsTest {
     @Test
     public void test_addConcept_invalidPos()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/invalidPOS.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/invalidPOS.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
      
         ResponseEntity<String> response = concepts.addConcept(input, principal);
@@ -88,8 +88,8 @@ public class ConceptsTest {
     @Test
     public void test_addConcept_emptyWord()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/emptyWord.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/emptyWord.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
         
         ResponseEntity<String> response = concepts.addConcept(input, principal);
@@ -101,8 +101,8 @@ public class ConceptsTest {
     @Test
     public void test_addConcept_invalidListName()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithoutListName.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithoutListName.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
        
         ResponseEntity<String> response = concepts.addConcept(input, principal);
@@ -114,11 +114,11 @@ public class ConceptsTest {
     @Test
     public void test_addConcept_successInJson() throws IllegalAccessException, LuceneException, IndexerRunningException,
             DictionaryDoesNotExistException, DictionaryModifyException, JSONException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/addConcept.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/addConcept.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
-        final String expectedOutput = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/addConcept.json"));
+        final String expectedOutput = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/addConcept.json"), "UTF-8");
 
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
         ConceptType type = new ConceptType();
@@ -131,7 +131,7 @@ public class ConceptsTest {
 
         Mockito.when(typeManager.getType(typeId)).thenReturn(type);
         Mockito.when(
-                conceptManager.addConceptListEntry(Mockito.isA(ConceptEntry.class), Matchers.eq(principal.getName())))
+                conceptManager.addConceptListEntry(Mockito.isA(ConceptEntry.class),Mockito.eq(principal.getName())))
                 .thenReturn(newConceptEntry);
 
         ResponseEntity<String> response = concepts.addConcept(input, principal);
@@ -145,8 +145,8 @@ public class ConceptsTest {
     public void test_addConcept_invalidListWithDictionaryException()
             throws IllegalAccessException, DictionaryDoesNotExistException, DictionaryModifyException, LuceneException,
             IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
      
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
@@ -168,8 +168,8 @@ public class ConceptsTest {
     public void test_addConcept_dictionaryModifiedException()
             throws IllegalAccessException, DictionaryDoesNotExistException, DictionaryModifyException, LuceneException,
             IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
 
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
@@ -190,8 +190,8 @@ public class ConceptsTest {
     @Test
     public void test_addConcept_luceneException() throws IllegalAccessException, DictionaryDoesNotExistException,
             DictionaryModifyException, LuceneException, IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
 
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
@@ -212,8 +212,8 @@ public class ConceptsTest {
     @Test
     public void test_addConcept_illegalAccessException() throws IllegalAccessException, DictionaryDoesNotExistException,
             DictionaryModifyException, LuceneException, IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidListName.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
   
         final String typeId = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
@@ -234,8 +234,8 @@ public class ConceptsTest {
     @Test
     public void test_addConcept_emptyPos()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithWordnetAndInvalidPos.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithWordnetAndInvalidPos.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
  
         ResponseEntity<String> response = concepts.addConcept(input, principal);
@@ -247,8 +247,8 @@ public class ConceptsTest {
     @Test
     public void test_addConcept_invalidConceptType()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithEmptyTypeId.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithEmptyTypeId.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
 
         ResponseEntity<String> response = concepts.addConcept(input, principal);
@@ -264,8 +264,8 @@ public class ConceptsTest {
         final String wordnetId = "WID-02382750-N-01-Welsh_pony";
         final String word = "kitty";
         final String pos = "noun";
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithNonExistingTypeId.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithNonExistingTypeId.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
         
         ConceptEntry entry = new ConceptEntry();
@@ -284,8 +284,8 @@ public class ConceptsTest {
     @Test
     public void test_addConcept_invalidWordNetIds()
             throws IllegalAccessException, LuceneException, IndexerRunningException, IOException, ClassNotFoundException {
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidWordnetId.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWithInvalidWordnetId.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
         
         ConceptType type = new ConceptType();
@@ -309,8 +309,8 @@ public class ConceptsTest {
         final String wordnetId = "WID-02382750-N-01-Welsh_pony";
         final String word = "kitty";
         final String pos = "verb";
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWrapperWithmismatchPOS.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/conceptWrapperWithmismatchPOS.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
  
         ConceptEntry entry = new ConceptEntry();
@@ -334,8 +334,8 @@ public class ConceptsTest {
         final String wordnetId = "WID-02382750-N-01-Welsh_pony";
         final String word = "kitty";
         final String pos = "verb";
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/existingWordnetIdsInput.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/existingWordnetIdsInput.json"), "UTF-8");
         final ConceptEntryMessage input = new ObjectMapper().readValue(inputFile, ConceptEntryMessage.class);
         
         ConceptEntry entry = new ConceptEntry();
@@ -351,18 +351,17 @@ public class ConceptsTest {
         Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void test_addConcepts_successInJsonWithMultipleTypes()
             throws IllegalAccessException, LuceneException, IndexerRunningException, DictionaryDoesNotExistException,
             DictionaryModifyException, JSONException, IOException, ClassNotFoundException {
 
-        final String inputFile = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/multipleConceptMultipleTypes.json"));
+        final String inputFile = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestInput/multipleConceptMultipleTypes.json"), "UTF-8");
         final List<ConceptEntryMessage> input = new ObjectMapper().readValue(inputFile, new TypeReference<List<ConceptEntryMessage>>(){});
 
-        final String expectedOutput = IOUtil.toString(this.getClass().getClassLoader()
-                .getResourceAsStream("unitTestOutput/multipleConceptMultipleTypes.json"));
+        final String expectedOutput = IOUtils.toString(this.getClass().getClassLoader()
+                .getResourceAsStream("unitTestOutput/multipleConceptMultipleTypes.json"),"UTF-8");
 
         final String typeId1 = "c7d0bec3-ea90-4cde-8698-3bb08c47d4f2";
         final String typeId2 = "c7d0bec3-ea90-4cde-8698-3bb08c47d4r4";
@@ -384,7 +383,7 @@ public class ConceptsTest {
         newConceptEntry.setId("CCP-1");
 
         Mockito.when(
-                conceptManager.addConceptListEntry(Mockito.isA(ConceptEntry.class), Matchers.eq(principal.getName())))
+                conceptManager.addConceptListEntry(Mockito.isA(ConceptEntry.class), Mockito.eq(principal.getName())))
                 .thenReturn(newConceptEntry);
 
         ResponseEntity<String> output = concepts.addConcepts(input, principal);

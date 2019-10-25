@@ -377,7 +377,7 @@
     <input type="submit" value="Search" class="btn btn-primary">
 </form>
 
-<form:form action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper/add" method='post' commandName='conceptWrapperAddBean'>
+<form:form action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper/add" method='post' modelAttribute='conceptWrapperAddBean'>
     <h2>2. Select Wordnet concept from search results</h2>
 
     <h4>The following concepts were found:</h4>

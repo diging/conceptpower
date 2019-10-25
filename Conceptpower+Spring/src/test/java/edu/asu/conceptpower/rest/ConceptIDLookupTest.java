@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -62,7 +62,7 @@ public class ConceptIDLookupTest {
     @Test
     public void test_getConceptEntry_successForWordNetIds()
             throws IOException, SAXException, ParserConfigurationException {
-        final String output = IOUtil.toString(
+        final String output = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptEntryWithWordnet.xml"));
         final String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";
         final String wordNetIds = "W-ID1, W-ID2";
@@ -79,7 +79,7 @@ public class ConceptIDLookupTest {
 
     @Test
     public void test_getConceptEntry_sucessWithConceptTypes() throws Exception {
-        final String expectedResponse = IOUtil.toString(
+        final String expectedResponse = IOUtils.toString(
                 this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/alternativeGenericIds.xml"));
         final String wordNetIds = "W-ID01, W-ID02";
         final String conceptId = "CONf375adff-dde7-4536-9e62-f80328f800d0";

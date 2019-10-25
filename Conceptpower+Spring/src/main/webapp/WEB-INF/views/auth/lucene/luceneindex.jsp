@@ -30,7 +30,7 @@
     <div id="page">
         <div id="page_content">
             <div class="containerBlock">
-                <form:form action="${pageContext.servletContext.contextPath}/auth/indexConcepts" method='post' id="indexLucene">
+                <form:form action="${pageContext.servletContext.contextPath}/auth/index/start" method='post' id="indexLucene">
                     <div id="div1"></div>
                     <table style="vertical-align: top">
                         <tr>
@@ -78,7 +78,7 @@
                         run_waitMe(current_effect);
                         return $
                             .ajax({
-                                url: "${pageContext.servletContext.contextPath}/auth/deleteIndex",
+                                url: "${pageContext.servletContext.contextPath}/auth/index/delete?${_csrf.parameterName}=${_csrf.token}",
                                 type: "POST",
                                 timeout: 3600000,
                                 success: function(
@@ -101,7 +101,7 @@
                         run_waitMe(current_effect);
                         $
                             .ajax({
-                                url: "${pageContext.servletContext.contextPath}/auth/indexConcepts",
+                                url: "${pageContext.servletContext.contextPath}/auth/index/start?${_csrf.parameterName}=${_csrf.token}",
                                 type: "POST",
                                 success: function(
                                     result) {
@@ -123,7 +123,7 @@
             function checkIndexerStatus() {
                 $
                     .ajax({
-                        url: "${pageContext.servletContext.contextPath}/auth/getIndexerStatus",
+                        url: "${pageContext.servletContext.contextPath}/auth/index/status?${_csrf.parameterName}=${_csrf.token}",
                         type: "POST",
                         success: function(result, status,
                             jqXHR) {

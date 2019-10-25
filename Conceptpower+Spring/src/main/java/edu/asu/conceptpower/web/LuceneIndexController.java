@@ -40,7 +40,7 @@ public class LuceneIndexController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "auth/index", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/index", method = RequestMethod.GET)
     public String onLoadLucene(ModelMap model) {
         IndexingEvent bean = manager.getTotalNumberOfWordsIndexed();
         model.addAttribute("bean", bean);
@@ -57,7 +57,7 @@ public class LuceneIndexController {
      * @return
      * @throws IndexerRunningException
      */
-    @RequestMapping(value = "auth/indexConcepts", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/auth/index/start", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody ResponseEntity<IndexingEvent> indexConcepts(HttpServletRequest req, Principal principal,
             ModelMap model)
             throws IndexerRunningException {
@@ -78,7 +78,7 @@ public class LuceneIndexController {
         }
     }
 
-    @RequestMapping(value = "auth/getIndexerStatus", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/auth/index/status", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody ResponseEntity<IndexingEvent> getIndexerStatus() throws IndexerRunningException {
 
         IndexingEvent bean = new IndexingEvent();
@@ -100,7 +100,7 @@ public class LuceneIndexController {
      * @return
      * @throws IndexerRunningException
      */
-    @RequestMapping(value = "auth/deleteIndex", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/auth/index/delete", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody IndexingEvent deleteConcepts(HttpServletRequest req, Principal principal, ModelMap model)
             throws IndexerRunningException {
         IndexingEvent bean = new IndexingEvent();

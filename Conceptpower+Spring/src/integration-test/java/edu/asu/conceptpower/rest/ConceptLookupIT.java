@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
@@ -21,8 +21,8 @@ public class ConceptLookupIT extends IntegrationTest {
 
     @Test
     public void test_getWordNetEntry_successForSingleEntryInJson() throws Exception {
-        final String output = IOUtil.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpWordNetEntry.json"));
+        final String output = IOUtils.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpWordNetEntry.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas Weiner/noun")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -40,8 +40,8 @@ public class ConceptLookupIT extends IntegrationTest {
 
     @Test
     public void test_getWordNetEntry_successForMultipleEntryInJson() throws Exception {
-        final String output = IOUtil.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpForMultipletEntry.json"));
+        final String output = IOUtils.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpForMultipletEntry.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas/noun")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -50,8 +50,8 @@ public class ConceptLookupIT extends IntegrationTest {
 
     @Test
     public void test_getWordNetEntry_successForSingleEntryInXml() throws Exception {
-        final String output = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpWordNetEntry.xml"));
+        final String output = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpWordNetEntry.xml"), "UTF-8");
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/ConceptLookup/Douglas Weiner/noun")
                 .accept(MediaType.APPLICATION_XML_VALUE)).andExpect(status().isOk()).andReturn();
         Diff xmlDifference = new Diff(output, mvcResult.getResponse().getContentAsString());
@@ -63,8 +63,8 @@ public class ConceptLookupIT extends IntegrationTest {
 
     @Test
     public void test_getWordNetEntry_noResultsInXml() throws Exception {
-        final String output = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptEntryNotFound.xml"));
+        final String output = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/conceptEntryNotFound.xml"), "UTF-8");
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders
                 .get("/ConceptLookup/Gustav Robert Kirchhoff/verb").accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(status().isOk()).andReturn();
@@ -76,8 +76,8 @@ public class ConceptLookupIT extends IntegrationTest {
 
     @Test
     public void test_getWordNetEntry_successForMultipleEntryInXml() throws Exception {
-        final String output = IOUtil.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpForMultipletEntry.xml"));
+        final String output = IOUtils.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/conceptLookUpForMultipletEntry.xml"), "UTF-8");
 
         MvcResult mvcResult = this.mockMvc.perform(
                 MockMvcRequestBuilders.get("/ConceptLookup/Douglas/noun").accept(MediaType.APPLICATION_XML_VALUE))
@@ -90,8 +90,8 @@ public class ConceptLookupIT extends IntegrationTest {
 
     @Test
     public void test_getWordNetEntry_searchWithWildCardOneOrMoreCharactersInXml() throws Exception {
-        final String output = IOUtil.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/wildCardSearchConceptLookUp1.xml"));
+        final String output = IOUtils.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/wildCardSearchConceptLookUp1.xml"), "UTF-8");
         MvcResult mvcResult = this.mockMvc.perform(
                 MockMvcRequestBuilders.get("/ConceptLookup/Dougl*/noun").accept(MediaType.APPLICATION_XML_VALUE))
                 .andExpect(status().isOk()).andReturn();
@@ -104,8 +104,8 @@ public class ConceptLookupIT extends IntegrationTest {
 
     @Test
     public void test_getWordNetEntry_searchWithWildCardOneOrMoreCharactersInJson() throws Exception {
-        final String output = IOUtil.toString(
-                this.getClass().getClassLoader().getResourceAsStream("output/wildCardSearchConceptLookUp1.json"));
+        final String output = IOUtils.toString(
+                this.getClass().getClassLoader().getResourceAsStream("output/wildCardSearchConceptLookUp1.json"), "UTF-8");
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/ConceptLookup/Dougl*/noun")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
