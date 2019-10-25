@@ -2,7 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <h1>Add new user</h1>
 <p>Add a new user here.</p>
-<form:form commandName="user"
+<form:form modelAttribute="user"
 	action="${pageContext.servletContext.contextPath}/auth/user/createuser"
 	method='post'>
 	<table>

@@ -3,7 +3,7 @@
 
 <h2>Edit user:</h2>
 
-<form:form commandName="user"
+<form:form modelAttribute="user"
 	action="${pageContext.servletContext.contextPath}/auth/user/edituser/store"
 	method='post' id="edituserform">
 

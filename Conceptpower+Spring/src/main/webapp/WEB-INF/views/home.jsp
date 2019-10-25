@@ -5,7 +5,8 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page session="false"%>
-
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
@@ -39,7 +40,6 @@ $(document).ready(function() {
     }
   }
   checkCheckBoxAndRemoveColumnsForMergeConcepts();
-
 	$('#viafSearchResult').dataTable({
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
@@ -215,7 +215,7 @@ $(document).ready(function(){
         }else {
 	 	  	$.ajax({
 	            type: "POST",
-	            url: "${pageContext.servletContext.contextPath}/auth/request/add",
+	            url: "${pageContext.servletContext.contextPath}/auth/request/add?${_csrf.parameterName}=${_csrf.token}",
 	            data: "request=" + request + "&conceptId=" + conceptId,
 	            success: function(response){
 	                  $('#request').val('');
@@ -246,7 +246,7 @@ $(document).ready(function(){
 		}else{
 			$.ajax({
 				type:"POST",
-				url:"${pageContext.servletContext.contextPath}/auth/request/resolve",
+				url:"${pageContext.servletContext.contextPath}/auth/request/resolve?${_csrf.parameterName}=${_csrf.token}",
 				data: "resolvingComment=" + resolveComment + "&conceptId="+conceptId,
 				success: function(response){
 					$('#requestModal').modal('hide');
@@ -277,7 +277,7 @@ $(document).ready(function(){
 		
 		$.ajax({
 			type:"POST",
-			url:"${pageContext.servletContext.contextPath}/auth/request/reopen",
+			url:"${pageContext.servletContext.contextPath}/auth/request/reopen?${_csrf.parameterName}=${_csrf.token}",
 			data: "&conceptId="+conceptId,
 			success: function(response){
 				$('#reopenModal').modal('hide');
@@ -308,11 +308,11 @@ $(document).ready(function(){
 </center>
 
 <form:form
-   action="${pageContext.servletContext.contextPath}/home/conceptsearch"
-   method='get' commandName='conceptSearchBean'>
-   <form:errors path="luceneError"></form:errors>
-   <input type='hidden' id='conceptIdsToMerge' value='${conceptIdsToMerge}' />
-   <div id="mergeError" class="alert alert-danger">
+  action="${pageContext.servletContext.contextPath}/home/conceptsearch"
+  method='get' modelAttribute='conceptSearchBean'>
+  <form:errors path="luceneError"></form:errors>
+  <input type='hidden' id='conceptIdsToMerge' value='${conceptIdsToMerge}' />
+    <div id="mergeError" class="alert alert-danger">
       Please select at least two concepts to merge.
    </div>
    

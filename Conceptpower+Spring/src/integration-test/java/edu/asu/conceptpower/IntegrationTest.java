@@ -44,10 +44,10 @@ public abstract class IntegrationTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         XMLUnit.setIgnoreAttributeOrder(true);
         if (!isSetupDone) {
-            this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/indexConcepts").principal(principal));
+            this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/index/start").principal(principal));
             MvcResult mr = null;
             do {
-                mr = this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/getIndexerStatus")).andReturn();
+                mr = this.mockMvc.perform(MockMvcRequestBuilders.post("/auth/index/status")).andReturn();
             } while (mr.getResponse().getStatus() != HttpStatus.OK.value());
             isSetupDone = true;
         }

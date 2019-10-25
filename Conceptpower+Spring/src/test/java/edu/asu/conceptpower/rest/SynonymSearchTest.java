@@ -6,7 +6,7 @@ import java.util.Collections;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -109,7 +109,7 @@ public class SynonymSearchTest {
 
     @Test
     public void test_getSynonymsForId_successInXml() throws ParserConfigurationException, SAXException, IOException {
-        final String expectedOutput = IOUtil
+        final String expectedOutput = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/synonym.xml"));
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn("http://www.digitalhps.org/concepts/" + synonymId);
@@ -121,7 +121,7 @@ public class SynonymSearchTest {
 
     @Test
     public void test_getSynonymsForId_successInJson() throws JSONException, IOException {
-        final String expectedOutput = IOUtil
+        final String expectedOutput = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/synonym.json"));
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         Mockito.when(req.getParameter("id")).thenReturn("http://www.digitalhps.org/concepts/" + synonymId);

@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
-import edu.asu.conceptpower.app.core.impl.ConceptManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -243,7 +242,7 @@ public class ConceptWrapperAddController {
             jsonStringBuilder.append(",");
             jsonStringBuilder.append("\"word\":\"" + syn.getWord() + "\"");
             jsonStringBuilder.append(",");
-            jsonStringBuilder.append("\"description\":\"" + StringEscapeUtils.escapeHtml(syn.getDescription()) + "\"");
+            jsonStringBuilder.append("\"description\":\"" + StringEscapeUtils.escapeHtml4(syn.getDescription()) + "\"");
             jsonStringBuilder.append(",");
             String pos = syn.getPos().replaceAll("\"", "'");
             jsonStringBuilder.append("\"pos\":\"" + pos + "\"");

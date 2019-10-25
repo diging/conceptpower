@@ -11,7 +11,7 @@
 <p>Please enter the email address to which the recovery email was sent:</p>
 
 <form:form
-	commandName="emailBackBean"
+	modelAttribute="emailBackBean"
 	action="${pageContext.servletContext.contextPath}/reset"
 	method='post'>
     <p>

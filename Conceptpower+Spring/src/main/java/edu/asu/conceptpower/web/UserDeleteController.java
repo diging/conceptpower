@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,7 +26,7 @@ public class UserDeleteController {
      *            Request Parameter to get user details based on Username.
      * @return Returns a string value to redirect user to delete user page.
      */
-    @RequestMapping(value = "auth/user/deleteuser/{id:.+}")
+    @RequestMapping(value = "/auth/user/deleteuser/{id:.+}")
     public String prepareDeleteUser(ModelMap model, @PathVariable String id) {
         User user = userManager.findUser(id);
 
@@ -46,7 +47,7 @@ public class UserDeleteController {
      *            Security Principal Object
      * @return Returns a string value to redirect user to user list page
      */
-    @RequestMapping(value = "auth/user/confirmdeleteuser/", method = RequestMethod.POST)
+    @RequestMapping(value = "/auth/user/confirmdeleteuser/", method = RequestMethod.POST)
     public String confirmDeleteUser(UserBacking user, Principal principal) {
 
         User uUser = userManager.findUser(user.getUsername());
@@ -61,7 +62,7 @@ public class UserDeleteController {
     /**
      * @return Returns a string value to redirect user to user list page
      */
-    @RequestMapping(value = "auth/user/canceldelete", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/user/canceldelete", method = RequestMethod.GET)
     public String cancelDelete() {
         return "redirect:/auth/user/list";
     }

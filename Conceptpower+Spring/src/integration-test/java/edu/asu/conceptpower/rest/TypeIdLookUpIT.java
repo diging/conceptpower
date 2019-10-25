@@ -3,7 +3,7 @@ package edu.asu.conceptpower.rest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -17,8 +17,8 @@ public class TypeIdLookUpIT extends IntegrationTest {
 
     @Test
     public void test_getTypeById_successWithIdInJson() throws Exception {
-        final String output = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/types.json"));
+        final String output = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/types.json"), "UTF-8");
         this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_JSON_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
@@ -30,8 +30,8 @@ public class TypeIdLookUpIT extends IntegrationTest {
 
     @Test
     public void test_getTypeById_successWithTypeIdInJson() throws Exception {
-        final String output = IOUtil
-                .toString(this.getClass().getClassLoader().getResourceAsStream("output/types.json"));
+        final String output = IOUtils
+                .toString(this.getClass().getClassLoader().getResourceAsStream("output/types.json"), "UTF-8");
         this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_JSON_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
@@ -76,7 +76,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
 
     @Test
     public void test_getTypeById_successWithIdInXml() throws Exception {
-        final String output = IOUtil.toString(this.getClass().getClassLoader().getResourceAsStream("output/types.xml"));
+        final String output = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("output/types.xml"), "UTF-8");
         this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
@@ -88,7 +88,7 @@ public class TypeIdLookUpIT extends IntegrationTest {
 
     @Test
     public void test_getTypeById_successWithTypeIdInXml() throws Exception {
-        final String output = IOUtil.toString(this.getClass().getClassLoader().getResourceAsStream("output/types.xml"));
+        final String output = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("output/types.xml"), "UTF-8");
         this.mockMvc.perform(MockMvcRequestBuilders.get("/Type").accept(MediaType.APPLICATION_XML_VALUE)
                 .with(new RequestPostProcessor() {
                     public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
