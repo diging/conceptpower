@@ -30,8 +30,8 @@ public interface IRequestsManager {
     
     /**
      * Method to reopen the reviewRequest
-     * @param conceptId - String holding the conceptId for which the reviewRequest needs to be reopened. 
+     * @param reviewRequest - the review corresponding to a conceptID needs to be reopened. 
      * @Return ReviewRequest - Returns back the updated reviewRequest
      */
-    public ReviewRequest reopenReview(String conceptId);
+    public ReviewRequest reopenReview(ReviewRequest reviewRequest);
 }

@@ -1,8 +1,6 @@
 package edu.asu.conceptpower.app.db;
 
-
 import java.util.List;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import com.db4o.query.Predicate;
 
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.core.ReviewRequest;
-import edu.asu.conceptpower.core.ReviewStatus;
 
 @Component
 public class DBRequestClient implements IRequestsDBManager{
@@ -32,21 +29,14 @@ public class DBRequestClient implements IRequestsDBManager{
     
     @Override
     public void store(ReviewRequest reviewRequest) {
-        List<ReviewRequest> isReviewRequestPresent = client.query(new Predicate<ReviewRequest>() {
-            private static final long serialVersionUID = 6495914730735826451L;
-
-            @Override
-            public boolean match(ReviewRequest review) {
-                return review.getConceptId().equals(reviewRequest.getConceptId());
-            }
-            
-        });
-        //Deleting the reviewRequest if already present and Adding it back with updated Request data
-        if(isReviewRequestPresent.size() !=0) {
-            client.delete(isReviewRequestPresent.get(0));
-        }
+        ReviewRequest storeRequest= new ReviewRequest();
         
-        client.store(reviewRequest);
+        storeRequest.setConceptId(reviewRequest.getConceptId());
+        storeRequest.setStatus(reviewRequest.getStatus());
+        storeRequest.setRequest(reviewRequest.getRequest());
+        storeRequest.setRequester(reviewRequest.getRequester());
+        
+        client.store(storeRequest);
         client.commit();
     }
 
@@ -57,17 +47,17 @@ public class DBRequestClient implements IRequestsDBManager{
         request.setConceptId(conceptId);
         
         List<ReviewRequest> reviewRequests = client.queryByExample(request);
-        
         if(reviewRequests!= null && reviewRequests.size()>0) {
-            return reviewRequests.get(0);
+            return reviewRequests.get(reviewRequests.size() - 1);
         }
+        
         return null;
     }
     
     @Override
     public ReviewRequest updateReviewRequest(ReviewRequest reviewRequest) {
         
-        ReviewRequest requestToBeUpdated = client.query(new Predicate<ReviewRequest>() {
+        List<ReviewRequest> requests = client.query(new Predicate<ReviewRequest>() {
             private static final long serialVersionUID = 6495914730735826451L;
 
             @Override
@@ -75,9 +65,10 @@ public class DBRequestClient implements IRequestsDBManager{
                 return review.getConceptId().equals(reviewRequest.getConceptId());
             }
             
-        }).get(0);
+        });
+        ReviewRequest requestToBeUpdated = requests.get(requests.size() - 1);
         
-        requestToBeUpdated.setResolvingComment(reviewRequest.getResolvingComment());
+        requestToBeUpdated.getResolvingComment().addAll(reviewRequest.getResolvingComment());
         requestToBeUpdated.setStatus(reviewRequest.getStatus());
         requestToBeUpdated.setResolver(reviewRequest.getResolver());
         
@@ -88,20 +79,20 @@ public class DBRequestClient implements IRequestsDBManager{
     }
     
     @Override
-    public ReviewRequest reopenReviewRequest(String conceptId) {
-        ReviewRequest requestToBeUpdated = client.query(new Predicate<ReviewRequest>() {
+    public ReviewRequest reopenReviewRequest(ReviewRequest reviewRequest) {
+        List<ReviewRequest> requests = client.query(new Predicate<ReviewRequest>() {
             private static final long serialVersionUID = 6495914730735826451L;
 
             @Override
             public boolean match(ReviewRequest review) {
-                return review.getConceptId().equals(conceptId);
+                return review.getConceptId().equals(reviewRequest.getConceptId());
             }
             
-        }).get(0);
+        });
+        ReviewRequest requestToBeUpdated = requests.get(requests.size() - 1);
         
-        requestToBeUpdated.setStatus(ReviewStatus.OPENED);
-        requestToBeUpdated.setResolver(null);
-        requestToBeUpdated.setResolvingComment(null);
+        requestToBeUpdated.setStatus(reviewRequest.getStatus());
+        requestToBeUpdated.setResolver(reviewRequest.getResolver());
         
         client.store(requestToBeUpdated);
         client.commit();

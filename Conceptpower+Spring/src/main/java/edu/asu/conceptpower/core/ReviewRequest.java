@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.core;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReviewRequest {
 
@@ -9,7 +11,11 @@ public class ReviewRequest {
     private ReviewStatus status;
     private String requester;
     private String resolver;
-    private String resolvingComment;
+    private List<String> resolvingComment;
+    
+    public ReviewRequest() {
+        resolvingComment = new ArrayList<>();
+    }
     
     public String getConceptId() {
         return conceptId;
@@ -51,11 +57,11 @@ public class ReviewRequest {
         this.resolver = resolver;
     }  
     
-    public String getResolvingComment() {
+    public List<String> getResolvingComment() {
         return resolvingComment;
     }
     
-    public void setResolvingComment(String resolvingComment) {
+    public void setResolvingComment(List<String> resolvingComment) {
         this.resolvingComment = resolvingComment;
     }
 

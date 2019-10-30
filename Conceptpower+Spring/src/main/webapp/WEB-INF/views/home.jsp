@@ -216,7 +216,7 @@ $(document).ready(function(){
 	 	  	$.ajax({
 	            type: "POST",
 	            url: "${pageContext.servletContext.contextPath}/auth/request/add?${_csrf.parameterName}=${_csrf.token}",
-	            data: "request=" + request + "&conceptId=" + conceptId,
+	            data: "request=" + request + "&conceptId=" + conceptId + "&status=OPENED",
 	            success: function(response){
 	                  $('#request').val('');
 	                  $('#myModal').modal('hide');
@@ -247,7 +247,7 @@ $(document).ready(function(){
 			$.ajax({
 				type:"POST",
 				url:"${pageContext.servletContext.contextPath}/auth/request/resolve?${_csrf.parameterName}=${_csrf.token}",
-				data: "resolvingComment=" + resolveComment + "&conceptId="+conceptId,
+				data: "resolvingComment=" + resolveComment + "&conceptId="+conceptId + "&status=RESOLVED",
 				success: function(response){
 					$('#requestModal').modal('hide');
 			    	$('#resolveComment').val('');
@@ -278,7 +278,7 @@ $(document).ready(function(){
 		$.ajax({
 			type:"POST",
 			url:"${pageContext.servletContext.contextPath}/auth/request/reopen?${_csrf.parameterName}=${_csrf.token}",
-			data: "&conceptId="+conceptId,
+			data: "&conceptId="+conceptId + "&status=OPENED",
 			success: function(response){
 				$('#reopenModal').modal('hide');
 				var request_subString = request.substring(0,79);
@@ -551,7 +551,7 @@ $(document).ready(function(){
                         <div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>
                         <c:if
                         test="${concept.reviewRequest.request != null && concept.reviewRequest.status == 'RESOLVED'}">
-                        <div data-concept-id="${concept.entry.id}"  data-request="${concept.reviewRequest.request}" data-resolve-comment="${concept.reviewRequest.resolvingComment}" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>
+                        <div data-concept-id="${concept.entry.id}"  data-request="${concept.reviewRequest.request}" data-resolve-comment="${concept.reviewRequest.resolvingComment.get(concept.reviewRequest.resolvingComment.size()-1)}" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>
                         </c:if>
                      </td>
                   </c:when>

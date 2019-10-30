@@ -11,5 +11,5 @@ public interface IRequestsDBManager {
     
     public ReviewRequest updateReviewRequest(ReviewRequest reviewRequest);
     
-    public ReviewRequest reopenReviewRequest(String conceptId);
+    public ReviewRequest reopenReviewRequest(ReviewRequest conceptId);
 }

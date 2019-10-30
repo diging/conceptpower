@@ -42,7 +42,7 @@ public  class RequestsManager implements IRequestsManager{
     /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.IRequestsManager#reopenReview(edu.asu.conceptpower.core.ReviewRequest)
      */
-    public ReviewRequest reopenReview(String conceptId) {
-        return dbClient.reopenReviewRequest(conceptId);
+    public ReviewRequest reopenReview(ReviewRequest reviewRequest) {
+        return dbClient.reopenReviewRequest(reviewRequest);
     }
 }
