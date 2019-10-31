@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.app.core;
 
+import java.util.List;
+
 import edu.asu.conceptpower.core.ReviewRequest;
 
 /**This interface provides function declaration for adding new Request for review and 
@@ -21,6 +23,11 @@ public interface IRequestsManager {
      */
     public abstract ReviewRequest getReview(String conceptId);
     
+    /**
+     * @param conceptId - the conceptId of the concept word
+     * @return List<ReviewRequest> - list of reviewRequests corresponding to a conceptId.
+     */
+    public List<ReviewRequest> getAllReviews(String conceptId);
     /**
      * Method to Resolve the reviewRequest
      * @param reviewRequest - ReviewRequest holds the resolvingComment, ConceptId and the Resolver.

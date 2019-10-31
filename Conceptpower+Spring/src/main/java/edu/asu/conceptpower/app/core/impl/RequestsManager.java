@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.app.core.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +35,16 @@ public  class RequestsManager implements IRequestsManager{
     }
     
     /* (non-Javadoc)
+     * @see edu.asu.conceptpower.app.core.IRequestsManager#getAllReviews(java.lang.String)
+     */
+    public List<ReviewRequest> getAllReviews(String conceptId){
+        return dbClient.getAllReviewsForaConcept(conceptId);
+    }
+    
+    /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.IRequestsManager#updateReview(edu.asu.conceptpower.core.ReviewRequest)
      */
+    
     public ReviewRequest updateReview(ReviewRequest reviewRequest) {
         return dbClient.updateReviewRequest(reviewRequest);
     }

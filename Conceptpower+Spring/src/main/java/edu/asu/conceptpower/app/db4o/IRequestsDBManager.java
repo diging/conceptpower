@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.app.db4o;
 
+import java.util.List;
+
 import edu.asu.conceptpower.core.ReviewRequest;
 
 public interface IRequestsDBManager {
@@ -12,4 +14,6 @@ public interface IRequestsDBManager {
     public ReviewRequest updateReviewRequest(ReviewRequest reviewRequest);
     
     public ReviewRequest reopenReviewRequest(ReviewRequest conceptId);
+    
+    public List<ReviewRequest> getAllReviewsForaConcept(String conceptId);
 }

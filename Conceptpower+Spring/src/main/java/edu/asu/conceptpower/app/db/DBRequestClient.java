@@ -55,6 +55,16 @@ public class DBRequestClient implements IRequestsDBManager{
     }
     
     @Override
+    public List<ReviewRequest> getAllReviewsForaConcept(String conceptId){
+        ReviewRequest request = new ReviewRequest();
+        request.setConceptId(conceptId);
+        
+        List<ReviewRequest> reviewRequests = client.queryByExample(request);
+        
+        return reviewRequests;
+    }
+    
+    @Override
     public ReviewRequest updateReviewRequest(ReviewRequest reviewRequest) {
         
         List<ReviewRequest> requests = client.query(new Predicate<ReviewRequest>() {
@@ -66,16 +76,20 @@ public class DBRequestClient implements IRequestsDBManager{
             }
             
         });
-        ReviewRequest requestToBeUpdated = requests.get(requests.size() - 1);
+       
+        List<String> comments  = requests.get(requests.size() - 1).getResolvingComment();
+        comments.addAll(reviewRequest.getResolvingComment());
         
-        requestToBeUpdated.getResolvingComment().addAll(reviewRequest.getResolvingComment());
-        requestToBeUpdated.setStatus(reviewRequest.getStatus());
-        requestToBeUpdated.setResolver(reviewRequest.getResolver());
+        requests.get(requests.size() - 1).setResolvingComment(comments);
+        requests.get(requests.size() - 1).setStatus(reviewRequest.getStatus());
+        requests.get(requests.size() - 1).setResolver(reviewRequest.getResolver());
         
-        client.store(requestToBeUpdated);
+        ReviewRequest updatedRequest = requests.get(requests.size() - 1);
+        
+        client.store(requests.toArray());
         client.commit();
         
-        return requestToBeUpdated;
+        return updatedRequest;
     }
     
     @Override

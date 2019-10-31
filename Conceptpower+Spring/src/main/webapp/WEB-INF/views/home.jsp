@@ -268,6 +268,16 @@ $(document).ready(function(){
 		$("#conceptId").val($(this).data("concept-id"));
 		$("#fetchReopenRequests").val($(this).data('request'));
 		$("#reopenComment").val($(this).data('resolveComment')); 
+		
+		var conceptId = $("#conceptId").val().replace(/'/g, "\\'");
+        var reviewHistoryId = $("#review-history-" + conceptId);
+        $(reviewHistoryId).show();
+	});
+	
+	$("#reopenModal").on("hide.bs.modal", function(e){
+		var conceptId = $("#conceptId").val().replace(/'/g, "\\'");
+        var reviewHistoryId = $("#review-history-" + conceptId);
+        $(reviewHistoryId).hide();
 	});
 	
 	$("#reopenButton").click(function(){
@@ -294,9 +304,6 @@ $(document).ready(function(){
 	});
 
 });
-
-
-
 </script>
 
 <header class="page-header">
@@ -545,20 +552,20 @@ $(document).ready(function(){
                <!-- Enabling Disabling the Review button -->  
                <c:choose>
                   <c:when 
-                     test="${concept.reviewRequest.request == null || concept.reviewRequest.status == 'RESOLVED'}">
+                     test="${concept.reviewRequest.size() <= 0 || concept.reviewRequest.get(concept.reviewRequest.size()-1).status == 'RESOLVED'}">
                      <!-- Testing if the request has already been provided. -->
                      <td align="center" id="comment-${concept.entry.id}"  >
                         <div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>
                         <c:if
-                        test="${concept.reviewRequest.request != null && concept.reviewRequest.status == 'RESOLVED'}">
-                        <div data-concept-id="${concept.entry.id}"  data-request="${concept.reviewRequest.request}" data-resolve-comment="${concept.reviewRequest.resolvingComment.get(concept.reviewRequest.resolvingComment.size()-1)}" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>
+                        test="${concept.reviewRequest.size() > 0  && concept.reviewRequest.get(concept.reviewRequest.size()-1).status == 'RESOLVED'}">
+                        <div data-concept-id="${concept.entry.id}" data-request="${concept.reviewRequest.get(concept.reviewRequest.size()-1).request}" data-resolve-comment="${concept.reviewRequest.get(concept.reviewRequest.size()-1).resolvingComment.get(concept.reviewRequest.get(concept.reviewRequest.size()-1).resolvingComment.size()-1)}" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>
                         </c:if>
                      </td>
                   </c:when>
                  
                   <c:otherwise>
                      <td align="center" id="comment-${concept.entry.id}" >
-                        <div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" data-concept-id="${concept.entry.id}" style="color:#19586B" id="exclamation" >
+                        <div  data-request="${concept.reviewRequest.get(concept.reviewRequest.size()-1).request}" title="${fn:substring(concept.reviewRequest.get(concept.reviewRequest.size()-1).request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" data-concept-id="${concept.entry.id}" style="color:#19586B" id="exclamation" >
                         </div>
                      </td>
                   </c:otherwise>
@@ -746,6 +753,22 @@ $(document).ready(function(){
                      </div>
                   </div>
                </div>
+               
+               <c:forEach var="concept"
+            	items="${conceptSearchBean.foundConcepts}">
+            	<ul id="review-history-${concept.entry.id}" hidden=true>
+            		
+            		<c:forEach var="review" items="${concept.reviewRequest}" >
+            		<li class="list-group-item">${review.request}</li>
+            			<ul>
+            				<c:forEach var="comment" items="${review.resolvingComment}">
+            				<li class="list-group-item">${comment}</li>
+            				</c:forEach>
+            			</ul>
+            		</c:forEach>
+            		
+            	 </ul>
+               </c:forEach>
                <div id = "resolveArea" style="padding-top: 25px; display: inline-flex;">
 	               	<textarea disabled class="form-control" id="reopenComment" name="reopenComment" rows="1" cols="60" placeholder="Please enter a closing Comment"></textarea>
 	               	<input type="button" id="reopenButton" class="btn btn-primary" style="color:white;background:#FF9B22;margin-left:20px" value = "REOPEN">
