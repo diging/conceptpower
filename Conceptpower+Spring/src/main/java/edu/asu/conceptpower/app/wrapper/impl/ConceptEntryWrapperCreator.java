@@ -86,7 +86,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
             
           //Fetching Review, for the concept, to display when the user searches the concept
             
-            List<ReviewRequest> reviewRequest = requestsManager.getAllReviews(entry.getId());
+            ReviewRequest reviewRequest = requestsManager.getReview(entry.getId());
             wrapper.setReviewRequest(reviewRequest);
 
             // build description considering all the wordnet entries wrappe

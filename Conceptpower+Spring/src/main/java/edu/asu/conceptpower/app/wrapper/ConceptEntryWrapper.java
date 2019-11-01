@@ -34,7 +34,7 @@ public class ConceptEntryWrapper implements Serializable {
     private String creatorId;
     private String lastModifiedEvent;
 
-    private List<ReviewRequest> reviewRequest;
+    private ReviewRequest reviewRequest;
 
     public ConceptEntryWrapper(ConceptEntry entry) {
         this.entry = entry;
@@ -128,11 +128,11 @@ public class ConceptEntryWrapper implements Serializable {
         this.lastModifiedEvent = lastModifiedEvent;
     }
 
-    public List<ReviewRequest> getReviewRequest() {
+    public ReviewRequest getReviewRequest() {
         return reviewRequest;
     }
 
-    public void setReviewRequest(List<ReviewRequest> reviewRequest) {
+    public void setReviewRequest(ReviewRequest reviewRequest) {
         this.reviewRequest = reviewRequest;
     }
 

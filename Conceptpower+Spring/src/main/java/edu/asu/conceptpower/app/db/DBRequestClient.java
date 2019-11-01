@@ -103,14 +103,18 @@ public class DBRequestClient implements IRequestsDBManager{
             }
             
         });
-        ReviewRequest requestToBeUpdated = requests.get(requests.size() - 1);
+        List<String> comments  = requests.get(requests.size() - 1).getResolvingComment();
+        comments.addAll(reviewRequest.getResolvingComment());
         
-        requestToBeUpdated.setStatus(reviewRequest.getStatus());
-        requestToBeUpdated.setResolver(reviewRequest.getResolver());
+        requests.get(requests.size() - 1).setResolvingComment(comments);
+        requests.get(requests.size() - 1).setStatus(reviewRequest.getStatus());
+        requests.get(requests.size() - 1).setResolver(reviewRequest.getResolver());
         
-        client.store(requestToBeUpdated);
+        ReviewRequest updatedRequest = requests.get(requests.size() - 1);
+        
+        client.store(requests.toArray());
         client.commit();
         
-        return requestToBeUpdated;
+        return updatedRequest;
     }
 }

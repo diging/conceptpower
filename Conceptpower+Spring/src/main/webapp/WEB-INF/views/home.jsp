@@ -192,16 +192,59 @@ function createWrapper(wrapperId) {
   window.location = '${pageContext.servletContext.contextPath}/auth/conceptlist/addconceptwrapper?wrapperId=' + wrapperId;
 }
 
+function getListOfReviewRequests(conceptId, operation){
+	$.ajax({
+        type: "GET",
+        url: "${pageContext.servletContext.contextPath}/auth/request/getallreviews/"+conceptId,
+        success: function(response){
+        	var reviewHistory='';
+        	popUpData = popUpData + '<div id="review-history-'+conceptId+'">';
+        	
+        	$.each(response, function(index, element){
+        		var reviewNumber = index + 1;
+        		popUpData = popUpData + '<div>';
+        		popUpData = popUpData + '<div data-toggle="collapse" class="reviewhistory" href="#review-'+index+conceptId+'" aria-expanded="false" aria-controls="review-'+index+conceptId+'"><h4>'+reviewNumber+'. '+element.request+'</h4></div>'
+        		popUpData = popUpData + '<div class="collapse" id="review-'+index+conceptId+'">'
+        		
+        		$.each(element.resolvingComment, function(iterator, commentElement){
+        			if(iterator%2 === 0){
+        				popUpData= popUpData+ '<div><h6 style="color:#19586B; display:inline-block;">Resolved:</h6><span>'+'  '+commentElement+'</span></div>';
+        			}else{
+        				popUpData= popUpData+ '<div><h6 style="color:#19586B; display:inline-block;">Reopened:</h6><span>'+'  '+commentElement+'</span></div>';
+        			}
+        		});
+        		
+        		popUpData = popUpData + '</div></div>';
+        	});
+        	
+        	popUpData = popUpData + '</div>';
+        	if(operation === 'resolve'){
+        		$('#reviewHistoryForResolve').html(popUpData);
+        	}else{
+        		$('#reviewHistoryForReopen').html(popUpData);
+        	}
+        },
+        error: function(e){
+              console.log("Fetching Review History Failed");
+        }
+    });
+	
+	
+}
+
 $(document).ready(function(){
     $(document).on("click", ".fa-exclamation-triangle", function() {
 		$("#fetchRequests").val($(this).data("request"));
     	$("#conceptId").val($(this).data("concept-id"));
     	$('#resolveCommentError').hide();
 		$("#requestBox").show();    
+		
+		getListOfReviewRequests($("#conceptId").val(), 'resolve');
 	});
     
     $(document).on("click", ".fa-comment", function() {
     	$('#reviewError').hide();
+    	$('#request').val('');
     	$("#conceptId").val($(this).data("concept-id"));
     });
     
@@ -241,7 +284,7 @@ $(document).ready(function(){
 		var request = $("#fetchRequests").val();
 	
 		if(resolveComment.length == 0){
-			$('#resolveCommentError').text('Comment cannot be empty');
+			$('#resolveCommentError').text('Closing comment cannot be empty');
 			$('#resolveCommentError').show();
 		}else{
 			$.ajax({
@@ -266,41 +309,39 @@ $(document).ready(function(){
 	
 	$(document).on("click",".fa-refresh", function(){
 		$("#conceptId").val($(this).data("concept-id"));
-		$("#fetchReopenRequests").val($(this).data('request'));
-		$("#reopenComment").val($(this).data('resolveComment')); 
+		$("#request").val($(this).data('request'));
+		$('#reopenError').hide();
 		
-		var conceptId = $("#conceptId").val().replace(/'/g, "\\'");
-        var reviewHistoryId = $("#review-history-" + conceptId);
-        $(reviewHistoryId).show();
-	});
-	
-	$("#reopenModal").on("hide.bs.modal", function(e){
-		var conceptId = $("#conceptId").val().replace(/'/g, "\\'");
-        var reviewHistoryId = $("#review-history-" + conceptId);
-        $(reviewHistoryId).hide();
+		getListOfReviewRequests($("#conceptId").val(), 'reopen');
 	});
 	
 	$("#reopenButton").click(function(){
-		var operationToPerform = $("#reopenButton").val();
 		var conceptId = $("#conceptId").val();
-		var request = $("#fetchReopenRequests").val();
+		var request = $("#request").val();
+		var resolveComment = $('#reopenComment').val().trim();
 		
-		$.ajax({
-			type:"POST",
-			url:"${pageContext.servletContext.contextPath}/auth/request/reopen?${_csrf.parameterName}=${_csrf.token}",
-			data: "&conceptId="+conceptId + "&status=OPENED",
-			success: function(response){
-				$('#reopenModal').modal('hide');
-				var request_subString = request.substring(0,79);
-				
-				conceptId = conceptId.replace(/'/g, "\\'");
-				var commentTd = $("#comment-" + conceptId);
-				commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" data-concept-id="'+conceptId+'" style="color:#19586B" class="fa fa-exclamation-triangle"></div>');
-			},
-			error: function(e){
-				$('#reopenError').text("Something went wrong. Unable to reopen the request");
-			}
-		});
+		if(resolveComment.length == 0){
+			$('#reopenError').text('Reopen comment cannot be empty');
+			$('#reopenError').show();
+		}else{
+			$.ajax({
+				type:"POST",
+				url:"${pageContext.servletContext.contextPath}/auth/request/reopen?${_csrf.parameterName}=${_csrf.token}",
+				data: "&conceptId="+conceptId + "&status=OPENED" + "&resolvingComment="+resolveComment,
+				success: function(response){
+					$('#reopenModal').modal('hide');
+					$('#reopenComment').val('');
+					var request_subString = request.substring(0,79);
+					
+					conceptId = conceptId.replace(/'/g, "\\'");
+					var commentTd = $("#comment-" + conceptId);
+					commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" data-concept-id="'+conceptId+'" style="color:#19586B" class="fa fa-exclamation-triangle"></div>');
+				},
+				error: function(e){
+					$('#reopenError').text("Something went wrong. Unable to reopen the request");
+				}
+			});
+		}
 	});
 
 });
@@ -552,20 +593,20 @@ $(document).ready(function(){
                <!-- Enabling Disabling the Review button -->  
                <c:choose>
                   <c:when 
-                     test="${concept.reviewRequest.size() <= 0 || concept.reviewRequest.get(concept.reviewRequest.size()-1).status == 'RESOLVED'}">
+                     test="${concept.reviewRequest == null || concept.reviewRequest.status == 'RESOLVED'}">
                      <!-- Testing if the request has already been provided. -->
                      <td align="center" id="comment-${concept.entry.id}"  >
                         <div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>
                         <c:if
-                        test="${concept.reviewRequest.size() > 0  && concept.reviewRequest.get(concept.reviewRequest.size()-1).status == 'RESOLVED'}">
-                        <div data-concept-id="${concept.entry.id}" data-request="${concept.reviewRequest.get(concept.reviewRequest.size()-1).request}" data-resolve-comment="${concept.reviewRequest.get(concept.reviewRequest.size()-1).resolvingComment.get(concept.reviewRequest.get(concept.reviewRequest.size()-1).resolvingComment.size()-1)}" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>
+                        test="${concept.reviewRequest != null && concept.reviewRequest.status == 'RESOLVED'}">
+                        <div data-concept-id="${concept.entry.id}" data-request="${concept.reviewRequest.request}" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>
                         </c:if>
                      </td>
                   </c:when>
                  
                   <c:otherwise>
                      <td align="center" id="comment-${concept.entry.id}" >
-                        <div  data-request="${concept.reviewRequest.get(concept.reviewRequest.size()-1).request}" title="${fn:substring(concept.reviewRequest.get(concept.reviewRequest.size()-1).request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" data-concept-id="${concept.entry.id}" style="color:#19586B" id="exclamation" >
+                        <div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" data-concept-id="${concept.entry.id}" style="color:#19586B" id="exclamation" >
                         </div>
                      </td>
                   </c:otherwise>
@@ -719,6 +760,8 @@ $(document).ready(function(){
                      </div>
                   </div>
                </div>
+               <h2 style="color:#19586B;"> History of Requests</h2>
+               <div id="reviewHistoryForResolve"></div>
                <div id = "resolveArea" style="padding-top: 25px; display: inline-flex;">
 	               	<textarea class="form-control" id="resolveComment" name="resolveComment" rows="1" cols="60" placeholder="Please enter a closing Comment"></textarea>
 	               	<input type="button" id="resolveButton" class="btn btn-primary" style="color:white;background:#FF9B22;margin-left:20px" value = "RESOLVE">
@@ -743,34 +786,11 @@ $(document).ready(function(){
                </button>
                <h5 class="modal-title">Reopen Request</h5>
             </div>
-            <div class="modal-body">
-               <div class="form-field">
-                  <div class="floatingform" >
-                     <div>
-                        <div class="form-field">
-                           <textarea disabled class="form-control" style="border: none" id="fetchReopenRequests" name="fetchRequests" rows="4" ></textarea>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               
-               <c:forEach var="concept"
-            	items="${conceptSearchBean.foundConcepts}">
-            	<ul id="review-history-${concept.entry.id}" hidden=true>
-            		
-            		<c:forEach var="review" items="${concept.reviewRequest}" >
-            		<li class="list-group-item">${review.request}</li>
-            			<ul>
-            				<c:forEach var="comment" items="${review.resolvingComment}">
-            				<li class="list-group-item">${comment}</li>
-            				</c:forEach>
-            			</ul>
-            		</c:forEach>
-            		
-            	 </ul>
-               </c:forEach>
+            <div class="modal-body" style="padding-top:0px;">
+               <h2 style="color:#19586B;"> History of Requests</h2>
+               <div id="reviewHistoryForReopen"></div>
                <div id = "resolveArea" style="padding-top: 25px; display: inline-flex;">
-	               	<textarea disabled class="form-control" id="reopenComment" name="reopenComment" rows="1" cols="60" placeholder="Please enter a closing Comment"></textarea>
+	               	<textarea class="form-control" id="reopenComment" name="reopenComment" rows="1" cols="60" placeholder="Please enter a opening Comment"></textarea>
 	               	<input type="button" id="reopenButton" class="btn btn-primary" style="color:white;background:#FF9B22;margin-left:20px" value = "REOPEN">
                </div>
                <div id="reopenError" class="error"></div>

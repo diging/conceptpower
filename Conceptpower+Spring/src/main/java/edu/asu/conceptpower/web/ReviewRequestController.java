@@ -1,10 +1,12 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,5 +43,12 @@ public class ReviewRequestController {
         ReviewRequest updatedRequest = requestsMgr.reopenReview(reviewRequest);
         
         return updatedRequest;
+    }
+    
+    @RequestMapping(value = "/auth/request/getallreviews/{id}", method = RequestMethod.GET)
+    public @ResponseBody List<ReviewRequest> getAllReviews(@PathVariable String id, Principal principal){
+        List<ReviewRequest> listOfReviews = requestsMgr.getAllReviews(id);
+        
+        return listOfReviews;
     }
 }
