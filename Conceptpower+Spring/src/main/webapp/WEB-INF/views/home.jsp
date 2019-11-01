@@ -198,41 +198,45 @@ function getListOfReviewRequests(conceptId, operation){
         url: "${pageContext.servletContext.contextPath}/auth/request/getallreviews/"+conceptId,
         success: function(response){
         	var reviewHistory='';
-        	popUpData = popUpData + '<div id="review-history-'+conceptId+'">';
+        	reviewHistory += '<div id="review-history-'+conceptId+'">';
         	
         	$.each(response, function(index, element){
         		var reviewNumber = index + 1;
-        		popUpData = popUpData + '<div>';
-        		popUpData = popUpData + '<div data-toggle="collapse" class="reviewhistory" href="#review-'+index+conceptId+'" aria-expanded="false" aria-controls="review-'+index+conceptId+'"><h4>'+reviewNumber+'. '+element.request+'</h4></div>'
-        		popUpData = popUpData + '<div class="collapse" id="review-'+index+conceptId+'">'
+        		reviewHistory += '<div>';
+        		reviewHistory += '<div data-toggle="collapse" class="reviewhistory" href="#review-'+index+conceptId+'" aria-expanded="false" aria-controls="review-'+index+conceptId+'">'
+        		+'<h4 data-toggle="tooltip" data-placement="right" title="Click to view the comments" style="cursor:pointer;"><b>'+reviewNumber+'. '+element.request+'</b></h4></div>'
+        		reviewHistory += '<div class="collapse" id="review-'+index+conceptId+'">'
         		
         		$.each(element.resolvingComment, function(iterator, commentElement){
         			if(iterator%2 === 0){
-        				popUpData= popUpData+ '<div><h6 style="color:#19586B; display:inline-block;">Resolved:</h6><span>'+'  '+commentElement+'</span></div>';
+        				reviewHistory += '<div><h6 style="color:#19586B; display:inline-block;">Resolved:</h6><span>'+'  '+commentElement+'</span></div>';
         			}else{
-        				popUpData= popUpData+ '<div><h6 style="color:#19586B; display:inline-block;">Reopened:</h6><span>'+'  '+commentElement+'</span></div>';
+        				reviewHistory += '<div><h6 style="color:#19586B; display:inline-block;">Reopened:</h6><span>'+'  '+commentElement+'</span></div>';
         			}
         		});
         		
-        		popUpData = popUpData + '</div></div>';
+        		reviewHistory += '</div></div>';
         	});
         	
-        	popUpData = popUpData + '</div>';
+        	reviewHistory += '</div>';
         	if(operation === 'resolve'){
-        		$('#reviewHistoryForResolve').html(popUpData);
+        		$('#reviewHistoryForResolve').html(reviewHistory);
         	}else{
-        		$('#reviewHistoryForReopen').html(popUpData);
+        		$('#reviewHistoryForReopen').html(reviewHistory);
         	}
         },
         error: function(e){
-              console.log("Fetching Review History Failed");
+        	if(operation === 'resolve'){
+        		$('reopenError').text('Fetching Review History Failed')
+        	}else{
+        		$('resolveCommentError').text('Fetching Review History Failed')
+        	}
         }
     });
-	
-	
 }
 
 $(document).ready(function(){
+  
     $(document).on("click", ".fa-exclamation-triangle", function() {
 		$("#fetchRequests").val($(this).data("request"));
     	$("#conceptId").val($(this).data("concept-id"));
@@ -343,7 +347,6 @@ $(document).ready(function(){
 			});
 		}
 	});
-
 });
 </script>
 
@@ -751,15 +754,6 @@ $(document).ready(function(){
                <h5 class="modal-title">Resolve Request</h5>
             </div>
             <div class="modal-body">
-               <div class="form-field">
-                  <div class="floatingform" >
-                     <div>
-                        <div class="form-field">
-                           <textarea disabled class="form-control" style="border: none" id="fetchRequests" name="fetchRequests" rows="4" ></textarea>
-                        </div>
-                     </div>
-                  </div>
-               </div>
                <h2 style="color:#19586B;"> History of Requests</h2>
                <div id="reviewHistoryForResolve"></div>
                <div id = "resolveArea" style="padding-top: 25px; display: inline-flex;">

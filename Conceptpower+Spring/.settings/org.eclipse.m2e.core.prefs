@@ -1,4 +1,4 @@
-activeProfiles=dev, integration-test, dev, integration-test
+activeProfiles=dev, keerthivasan
 eclipse.preferences.version=1
 resolveWorkspaceProjects=true
 version=1
