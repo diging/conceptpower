@@ -3,6 +3,10 @@ package edu.asu.conceptpower.app.db;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,12 +29,14 @@ public class DBRequestClientTest {
     private ReviewRequest reviewRequest = new ReviewRequest();
     
     private ReviewRequest updateRequest = new ReviewRequest();
+
+    private ReviewRequest reopenRequest  = new ReviewRequest();
     
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
         
-        objectContainerClient = Mockito.mock(ObjectContainer.class);
+        client = Mockito.mock(DBRequestClient.class);
         
         reviewRequest.setConceptId("WID-10126926-N-05-Einstein");
         reviewRequest.setRequest("Review the Spelling");
@@ -39,7 +45,7 @@ public class DBRequestClientTest {
         reviewRequest.setStatus(ReviewStatus.OPENED);
         
         updateRequest.setConceptId("WID-10126926-N-05-Einstein");
-        updateRequest.setResolvingComment("Resolving Comment");
+        updateRequest.setResolvingComment(new ArrayList<>(Arrays.asList("Resolving Comment")));
         updateRequest.setStatus(ReviewStatus.RESOLVED);
         updateRequest.setResolver("User3");
 
@@ -52,9 +58,13 @@ public class DBRequestClientTest {
         updatedRequest.setRequester("user2");
         updatedRequest.setStatus(ReviewStatus.RESOLVED);
         updatedRequest.setResolver("User3");
-        updatedRequest.setResolvingComment("Resolving Comment");
+        updatedRequest.setResolvingComment(new ArrayList<>(Arrays.asList("Resolving Comment")));
         
         Mockito.when(client.updateReviewRequest(updateRequest)).thenReturn(updatedRequest);
+        
+        reopenRequest.setConceptId("WID-10126926-N-05-Einstein");
+        reopenRequest.setStatus(ReviewStatus.OPENED);
+        reopenRequest.setResolvingComment(new ArrayList<>(Arrays.asList("Reopening Comment")));
         
         ReviewRequest reopenedRequest = new ReviewRequest();
         
@@ -62,8 +72,22 @@ public class DBRequestClientTest {
         reopenedRequest.setRequest("Review the Spelling");
         reopenedRequest.setRequester("user2");
         reopenedRequest.setStatus(ReviewStatus.OPENED);
+        reopenedRequest.setResolvingComment(new ArrayList<>(Arrays.asList("Reopening Comment")));
         
-        Mockito.when(client.reopenReviewRequest("WID-10126926-N-05-Einstein")).thenReturn(reopenedRequest);
+        Mockito.when(client.reopenReviewRequest(reopenRequest)).thenReturn(reopenedRequest);
+        
+        List<ReviewRequest> responseList = new ArrayList<>();
+        ReviewRequest newReview = new ReviewRequest();
+        
+        newReview.setConceptId("WID-10126926-N-05-Einstein");
+        newReview.setRequest("Review the Spelling again");
+        newReview.setRequester("user2");
+        newReview.setResolver("admin");
+        newReview.setStatus(ReviewStatus.OPENED);
+        
+        responseList.add(newReview);
+        responseList.add(reopenedRequest);
+        Mockito.when(client.getAllReviewsForaConcept(reviewRequest.getConceptId())).thenReturn(responseList);
     }
     @Test
     public void getReviewRequestTest() {
@@ -89,12 +113,12 @@ public class DBRequestClientTest {
         assertEquals("user2", response.getRequester());
         assertEquals("User3", response.getResolver());
         assertEquals(ReviewStatus.RESOLVED, response.getStatus());
-        assertEquals("Resolving Comment", response.getResolvingComment());
+        assertEquals(new ArrayList<>(Arrays.asList("Resolving Comment")), response.getResolvingComment());
     }
     
     @Test
     public void reopenReviewRequestTest() {
-        ReviewRequest response = client.reopenReviewRequest("WID-10126926-N-05-Einstein");
+        ReviewRequest response = client.reopenReviewRequest(reopenRequest);
         
         assertNotNull(response);
         
@@ -103,6 +127,17 @@ public class DBRequestClientTest {
         assertEquals("user2", response.getRequester());
         assertEquals(null, response.getResolver());
         assertEquals(ReviewStatus.OPENED, response.getStatus());
-        assertEquals(null, response.getResolvingComment());
+        assertEquals(new ArrayList<>(Arrays.asList("Reopening Comment")), response.getResolvingComment());
+    }
+    
+    @Test
+    public void getAllReviewsForaConceptTest() {
+        List<ReviewRequest> response = client.getAllReviewsForaConcept("WID-10126926-N-05-Einstein");
+        
+        assertNotNull(response);
+        
+        assertEquals(2, response.size());
+        assertEquals("Review the Spelling again", response.get(0).getRequest());
+        assertEquals("Review the Spelling", response.get(1).getRequest());
     }
 }

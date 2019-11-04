@@ -203,11 +203,12 @@ function getListOfReviewRequests(conceptId, operation){
         	$.each(response, function(index, element){
         		var reviewNumber = index + 1;
         		reviewHistory += '<div>';
-        		reviewHistory += '<div data-toggle="collapse" class="reviewhistory" href="#review-'+index+conceptId+'" aria-expanded="false" aria-controls="review-'+index+conceptId+'">'
-        		+'<h4 data-toggle="tooltip" data-placement="right" title="Click to view the comments" style="cursor:pointer;"><b>'+reviewNumber+'. '+element.request+'</b></h4></div>'
-        		reviewHistory += '<div class="collapse" id="review-'+index+conceptId+'">'
+        		reviewHistory += '<div  class="reviewhistory">'
+        		+'<h4 data-toggle="tooltip" data-placement="right"><b>'+reviewNumber+'. '+element.request+'</b></h4></div>'
+        		reviewHistory += '<div  id="review-'+index+conceptId+'">'
         		
         		$.each(element.resolvingComment, function(iterator, commentElement){
+        			//small timely hack to differentiate between resolve and reopen comment. Needs to be changed when we bring in discussion feature.
         			if(iterator%2 === 0){
         				reviewHistory += '<div><h6 style="color:#19586B; display:inline-block;">Resolved:</h6><span>'+'  '+commentElement+'</span></div>';
         			}else{
