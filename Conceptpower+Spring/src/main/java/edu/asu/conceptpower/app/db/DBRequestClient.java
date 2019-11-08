@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.app.db;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
@@ -28,15 +30,8 @@ public class DBRequestClient implements IRequestsDBManager{
     }
     
     @Override
-    public void store(ReviewRequest reviewRequest) {
-        ReviewRequest storeRequest= new ReviewRequest();
-        
-        storeRequest.setConceptId(reviewRequest.getConceptId());
-        storeRequest.setStatus(reviewRequest.getStatus());
-        storeRequest.setRequest(reviewRequest.getRequest());
-        storeRequest.setRequester(reviewRequest.getRequester());
-        
-        client.store(storeRequest);
+    public void store(ReviewRequest reviewRequest) {  
+        client.store(reviewRequest);
         client.commit();
     }
 
@@ -46,75 +41,37 @@ public class DBRequestClient implements IRequestsDBManager{
         ReviewRequest request = new ReviewRequest();
         request.setConceptId(conceptId);
         
-        List<ReviewRequest> reviewRequests = client.queryByExample(request);
+        //ArrayList is initialized to make the instance mutable for sorting
+        List<ReviewRequest> reviewRequests = new ArrayList<>(client.queryByExample(request));
+       
         if(reviewRequests!= null && reviewRequests.size()>0) {
+            Collections.sort(reviewRequests, (x, y) -> x.getCreatedAt().compareTo(y.getCreatedAt()));
             return reviewRequests.get(reviewRequests.size() - 1);
         }
         
         return null;
     }
     
-    @Override
-    public List<ReviewRequest> getAllReviewsForaConcept(String conceptId){
-        ReviewRequest request = new ReviewRequest();
-        request.setConceptId(conceptId);
-        
-        List<ReviewRequest> reviewRequests = client.queryByExample(request);
-        
-        return reviewRequests;
-    }
-    
-    @Override
-    public ReviewRequest updateReviewRequest(ReviewRequest reviewRequest) {
-        
-        List<ReviewRequest> requests = client.query(new Predicate<ReviewRequest>() {
+    public List<ReviewRequest> getReview(ReviewRequest request) {
+        return client.query(new Predicate<ReviewRequest>() {
             private static final long serialVersionUID = 6495914730735826451L;
 
             @Override
             public boolean match(ReviewRequest review) {
-                return review.getConceptId().equals(reviewRequest.getConceptId());
+                return review.getId().equals(request.getId());
             }
             
         });
-       
-        List<String> comments  = requests.get(requests.size() - 1).getResolvingComment();
-        comments.addAll(reviewRequest.getResolvingComment());
-        
-        requests.get(requests.size() - 1).setResolvingComment(comments);
-        requests.get(requests.size() - 1).setStatus(reviewRequest.getStatus());
-        requests.get(requests.size() - 1).setResolver(reviewRequest.getResolver());
-        
-        ReviewRequest updatedRequest = requests.get(requests.size() - 1);
-        
-        client.store(requests.toArray());
-        client.commit();
-        
-        return updatedRequest;
     }
     
     @Override
-    public ReviewRequest reopenReviewRequest(ReviewRequest reviewRequest) {
-        List<ReviewRequest> requests = client.query(new Predicate<ReviewRequest>() {
-            private static final long serialVersionUID = 6495914730735826451L;
-
-            @Override
-            public boolean match(ReviewRequest review) {
-                return review.getConceptId().equals(reviewRequest.getConceptId());
-            }
-            
-        });
-        List<String> comments  = requests.get(requests.size() - 1).getResolvingComment();
-        comments.addAll(reviewRequest.getResolvingComment());
-        
-        requests.get(requests.size() - 1).setResolvingComment(comments);
-        requests.get(requests.size() - 1).setStatus(reviewRequest.getStatus());
-        requests.get(requests.size() - 1).setResolver(reviewRequest.getResolver());
-        
-        ReviewRequest updatedRequest = requests.get(requests.size() - 1);
-        
-        client.store(requests.toArray());
+    public List<ReviewRequest> getAllReviews(ReviewRequest reviewRequest){
+        return client.queryByExample(reviewRequest);
+    }
+    
+    @Override
+    public void updateReviewRequest(Object reviewRequest) {
+        client.store(reviewRequest);
         client.commit();
-        
-        return updatedRequest;
     }
 }

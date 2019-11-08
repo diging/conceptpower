@@ -1,20 +1,31 @@
 package edu.asu.conceptpower.core;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewRequest {
 
-
+    private String id;
     private String conceptId;
     private String request;
     private ReviewStatus status;
     private String requester;
     private String resolver;
-    private List<String> resolvingComment;
+    private List<Comment> comments;
+    private LocalDateTime createdTime;
+    
     
     public ReviewRequest() {
-        resolvingComment = new ArrayList<>();
+        comments = new ArrayList<>();
+    }
+    
+    public String getId() {
+        return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
     }
     
     public String getConceptId() {
@@ -57,12 +68,19 @@ public class ReviewRequest {
         this.resolver = resolver;
     }  
     
-    public List<String> getResolvingComment() {
-        return resolvingComment;
+    public List<Comment> getComments() {
+        return comments;
     }
     
-    public void setResolvingComment(List<String> resolvingComment) {
-        this.resolvingComment = resolvingComment;
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
-
+    
+    public LocalDateTime getCreatedAt() {
+        return createdTime;
+    }
+    
+    public void setCreatedAt(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
 }

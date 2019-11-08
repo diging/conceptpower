@@ -195,11 +195,10 @@ function createWrapper(wrapperId) {
 function getListOfReviewRequests(conceptId, operation){
 	$.ajax({
         type: "GET",
-        url: "${pageContext.servletContext.contextPath}/auth/request/getallreviews/"+conceptId,
+        url: "${pageContext.servletContext.contextPath}/auth/request/"+conceptId+"/all",
         success: function(response){
         	var reviewHistory='';
         	reviewHistory += '<div id="review-history-'+conceptId+'">';
-        	
         	$.each(response, function(index, element){
         		var reviewNumber = index + 1;
         		reviewHistory += '<div>';
@@ -207,13 +206,8 @@ function getListOfReviewRequests(conceptId, operation){
         		+'<h4 data-toggle="tooltip" data-placement="right"><b>'+reviewNumber+'. '+element.request+'</b></h4></div>'
         		reviewHistory += '<div  id="review-'+index+conceptId+'">'
         		
-        		$.each(element.resolvingComment, function(iterator, commentElement){
-        			//small timely hack to differentiate between resolve and reopen comment. Needs to be changed when we bring in discussion feature.
-        			if(iterator%2 === 0){
-        				reviewHistory += '<div><h6 style="color:#19586B; display:inline-block;">Resolved:</h6><span>'+'  '+commentElement+'</span></div>';
-        			}else{
-        				reviewHistory += '<div><h6 style="color:#19586B; display:inline-block;">Reopened:</h6><span>'+'  '+commentElement+'</span></div>';
-        			}
+        		$.each(element.comments, function(iterator, commentElement){
+        			reviewHistory += '<div><h6 style="color:#19586B; display:inline-block;">'+commentElement.createdBy.toUpperCase()+': </h6><span>'+'  '+commentElement.comment+'</span></div>';
         		});
         		
         		reviewHistory += '</div></div>';
@@ -237,9 +231,11 @@ function getListOfReviewRequests(conceptId, operation){
 }
 
 $(document).ready(function(){
-  
+	
+    var reviewId;
     $(document).on("click", ".fa-exclamation-triangle", function() {
-		$("#fetchRequests").val($(this).data("request"));
+    	reviewId = $(this).data("review-id");
+		$("#request").val($(this).data("request"));
     	$("#conceptId").val($(this).data("concept-id"));
     	$('#resolveCommentError').hide();
 		$("#requestBox").show();    
@@ -266,44 +262,55 @@ $(document).ready(function(){
 	            url: "${pageContext.servletContext.contextPath}/auth/request/add?${_csrf.parameterName}=${_csrf.token}",
 	            data: "request=" + request + "&conceptId=" + conceptId + "&status=OPENED",
 	            success: function(response){
-	                  $('#request').val('');
-	                  $('#myModal').modal('hide');
+	            	$('#request').val('');
+	            	$('#myModal').modal('hide');
+	                  
+	                var request_subString = request.substring(0,79);
+	      	        //Escaping Single quotes
+	      	        conceptId = conceptId.replace(/'/g, "\\'");
+	      	        var commentTd = $("#comment-" + conceptId);
+	      	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString + '" data-review-id="' +response.id +'"  data-toggle="modal" data-target="#requestModal" data-concept-id="'+conceptId+'" style="color:#19586B" class="fa fa-exclamation-triangle"></div>');
+	      	       	$("#fetchRequests").val(request);
 	            },
 	            error: function(e){
 	                  $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :'+e);
 	                  $('#alertMsg').show();
 	            }
 	        });
-	        var request_subString = request.substring(0,79);
-	        //Escaping Single quotes
-	        conceptId = conceptId.replace(/'/g, "\\'");
-	        var commentTd = $("#comment-" + conceptId);
-	       	commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" data-concept-id="'+conceptId+'" style="color:#19586B" class="fa fa-exclamation-triangle"></div>');
-	       	$("#fetchRequests").val(request);
+	        
         }
     });
-    
+
     $('#resolveButton').click(function(){	
-		var resolveComment = $('#resolveComment').val().trim();
+		var comment = $('#resolveComment').val().trim();
 		var conceptId = $("#conceptId").val();
-		var request = $("#fetchRequests").val();
+		var request = $("#request").val();
 	
 		if(resolveComment.length == 0){
 			$('#resolveCommentError').text('Closing comment cannot be empty');
 			$('#resolveCommentError').show();
 		}else{
+			var resolveBody = {
+					conceptId:conceptId,
+					status:"RESOLVED",
+					comments: [{
+						comment:comment,
+					}],
+					id:reviewId
+			};
+			
 			$.ajax({
 				type:"POST",
 				url:"${pageContext.servletContext.contextPath}/auth/request/resolve?${_csrf.parameterName}=${_csrf.token}",
-				data: "resolvingComment=" + resolveComment + "&conceptId="+conceptId + "&status=RESOLVED",
+				data: JSON.stringify(resolveBody),
+				contentType:"application/json",
 				success: function(response){
 					$('#requestModal').modal('hide');
-			    	$('#resolveComment').val('');
+					$('#resolveComment').val('');
 					conceptId = conceptId.replace(/'/g, "\\'");
-			        var commentTd = $("#comment-" + conceptId);
-			        
+					var commentTd = $("#comment-" + conceptId);
 					commentTd.html('<div data-concept-id="'+conceptId+'" title="Add a review request" data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>'
-								  +'<div data-concept-id="'+conceptId+'" data-request="'+request+'" data-resolve-comment="'+resolveComment+'" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>');
+								  +'<div data-concept-id="'+conceptId+'" data-request="'+request+'" data-review-id="'+response.id+'" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>');
 				},
 				error: function(e){
 					$('#resolveCommentError').text("Something went wrong. Unable to resolve the request");
@@ -313,6 +320,7 @@ $(document).ready(function(){
 	});
 	
 	$(document).on("click",".fa-refresh", function(){
+		reviewId = $(this).data("review-id");
 		$("#conceptId").val($(this).data("concept-id"));
 		$("#request").val($(this).data('request'));
 		$('#reopenError').hide();
@@ -323,16 +331,26 @@ $(document).ready(function(){
 	$("#reopenButton").click(function(){
 		var conceptId = $("#conceptId").val();
 		var request = $("#request").val();
-		var resolveComment = $('#reopenComment').val().trim();
-		
+		var comment = $('#reopenComment').val().trim();
+
 		if(resolveComment.length == 0){
 			$('#reopenError').text('Reopen comment cannot be empty');
 			$('#reopenError').show();
 		}else{
+			var reopenBody = {
+					conceptId:conceptId,
+					status:"OPENED",
+					comments: [{
+						comment:comment,
+					}],
+					id:reviewId
+			};
+			
 			$.ajax({
 				type:"POST",
 				url:"${pageContext.servletContext.contextPath}/auth/request/reopen?${_csrf.parameterName}=${_csrf.token}",
-				data: "&conceptId="+conceptId + "&status=OPENED" + "&resolvingComment="+resolveComment,
+				data: JSON.stringify(reopenBody),
+				contentType:"application/json",
 				success: function(response){
 					$('#reopenModal').modal('hide');
 					$('#reopenComment').val('');
@@ -340,7 +358,7 @@ $(document).ready(function(){
 					
 					conceptId = conceptId.replace(/'/g, "\\'");
 					var commentTd = $("#comment-" + conceptId);
-					commentTd.html('<div  data-request="'+request+'"  title="'+request_subString+'"  data-toggle="modal" data-target="#requestModal" data-concept-id="'+conceptId+'" style="color:#19586B" class="fa fa-exclamation-triangle"></div>');
+					commentTd.html('<div  data-request="'+request+'" title="'+request_subString+'" data-review-id="'+response.id+'" data-toggle="modal" data-target="#requestModal" data-concept-id="'+conceptId+'" style="color:#19586B" class="fa fa-exclamation-triangle"></div>');
 				},
 				error: function(e){
 					$('#reopenError').text("Something went wrong. Unable to reopen the request");
@@ -603,14 +621,14 @@ $(document).ready(function(){
                         <div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>
                         <c:if
                         test="${concept.reviewRequest != null && concept.reviewRequest.status == 'RESOLVED'}">
-                        <div data-concept-id="${concept.entry.id}" data-request="${concept.reviewRequest.request}" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" style="color:#19586B"></div>
+                        <div  title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" data-concept-id="${concept.entry.id}" data-request="${concept.reviewRequest.request}" data-review-id="${concept.reviewRequest.id}" style="color:#19586B"></div>
                         </c:if>
                      </td>
                   </c:when>
                  
                   <c:otherwise>
                      <td align="center" id="comment-${concept.entry.id}" >
-                        <div  data-request="${concept.reviewRequest.request}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" data-concept-id="${concept.entry.id}" style="color:#19586B" id="exclamation" >
+                        <div  data-request="${concept.reviewRequest.request}" data-review-id="${concept.reviewRequest.id}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" data-concept-id="${concept.entry.id}" style="color:#19586B" id="exclamation" >
                         </div>
                      </td>
                   </c:otherwise>
