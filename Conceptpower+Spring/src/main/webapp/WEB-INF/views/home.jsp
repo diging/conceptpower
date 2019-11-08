@@ -247,7 +247,7 @@ $(document).ready(function(){
   <form:errors path="luceneError"></form:errors>
   <input type='hidden' id='conceptIdsToMerge' value='${conceptIdsToMerge}' />
     <div id="mergeError" class="alert alert-danger">
-      Please select at least two concepts to merge.
+      Please select at least three concepts to merge.
     </div>
   
   <div class="row">
