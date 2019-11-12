@@ -48,7 +48,7 @@ public class ReviewRequestController {
         reviewRequest.getComments().get(0).setCreatedAt(LocalDateTime.now());
         reviewRequest.setRequester(principal.getName());
         
-        ReviewRequest updatedRequest = requestsMgr.reopenReview(reviewRequest);
+        ReviewRequest updatedRequest = requestsMgr.updateReview(reviewRequest);
         
         return updatedRequest;
     }

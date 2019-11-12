@@ -34,11 +34,4 @@ public interface IRequestsManager {
      * @Return ReviewRequest - Returns back the updated reviewRequest
      */
     public ReviewRequest updateReview(ReviewRequest reviewRequest);
-    
-    /**
-     * Method to reopen the reviewRequest
-     * @param reviewRequest - the review corresponding to a conceptID needs to be reopened. 
-     * @Return ReviewRequest - Returns back the updated reviewRequest
-     */
-    public ReviewRequest reopenReview(ReviewRequest reviewRequest);
 }

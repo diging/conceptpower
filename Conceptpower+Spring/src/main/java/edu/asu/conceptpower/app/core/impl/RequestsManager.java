@@ -48,7 +48,9 @@ public  class RequestsManager implements IRequestsManager{
         
         List<ReviewRequest> reviewRequests = new ArrayList<>(dbClient.getAllReviews(request));
         
-        Collections.sort(reviewRequests, (x, y) -> x.getCreatedAt().compareTo(y.getCreatedAt()));
+        if(reviewRequests.size() > 0) {
+            Collections.sort(reviewRequests, (x, y) -> x.getCreatedAt().compareTo(y.getCreatedAt()));
+        }
         
         return reviewRequests;
     }
@@ -58,48 +60,24 @@ public  class RequestsManager implements IRequestsManager{
      */
     
     public ReviewRequest updateReview(ReviewRequest reviewRequest) {
-        ReviewRequest rev = new ReviewRequest();
+        ReviewRequest request = new ReviewRequest();
         
-        rev.setId(reviewRequest.getId());
+        request.setId(reviewRequest.getId());
         
-        List<ReviewRequest> requests = dbClient.getReview(rev);
+        List<ReviewRequest> responses = dbClient.getReview(request);
         
-        if(requests == null || requests.size() == 0) {
+        if(responses == null || responses.size() == 0) {
             return null;
         }
 
-        List<Comment> comments  = requests.get(0).getComments();
+        List<Comment> comments  = responses.get(0).getComments();
         comments.addAll(reviewRequest.getComments());
-        requests.get(0).setResolver(reviewRequest.getResolver());
-        requests.get(0).setComments(comments);
-        requests.get(0).setStatus(reviewRequest.getStatus());
+        responses.get(0).setResolver(reviewRequest.getResolver());
+        responses.get(0).setComments(comments);
+        responses.get(0).setStatus(reviewRequest.getStatus());
         
-        dbClient.updateReviewRequest(requests.toArray());
-        return requests.get(0);
-    }
-    
-    /* (non-Javadoc)
-     * @see edu.asu.conceptpower.app.core.IRequestsManager#reopenReview(edu.asu.conceptpower.core.ReviewRequest)
-     */
-    public ReviewRequest reopenReview(ReviewRequest reviewRequest) {
-        ReviewRequest rev = new ReviewRequest();
-        
-        rev.setId(reviewRequest.getId());
-        List<ReviewRequest> requests = dbClient.getReview(rev);
-        
-        if(requests == null || requests.size() == 0) {
-            return null;
-        }
-        
-        List<Comment> comments  = requests.get(0).getComments();
-        comments.addAll(reviewRequest.getComments());
-        
-        requests.get(0).setResolver(reviewRequest.getResolver());
-        requests.get(0).setComments(comments);
-        requests.get(0).setStatus(reviewRequest.getStatus());
-        
-        dbClient.updateReviewRequest(requests.toArray()); 
-        return requests.get(0);
+        dbClient.updateReviewRequest(responses.toArray());
+        return responses.get(0);
     }
     
     /*
