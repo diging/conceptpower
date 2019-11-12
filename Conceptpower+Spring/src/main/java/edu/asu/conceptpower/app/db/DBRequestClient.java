@@ -1,7 +1,5 @@
 package edu.asu.conceptpower.app.db;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
@@ -35,22 +33,6 @@ public class DBRequestClient implements IRequestsDBManager{
         client.commit();
     }
 
-    @Override
-    public ReviewRequest getReviewRequestForConcept(String conceptId){
-        
-        ReviewRequest request = new ReviewRequest();
-        request.setConceptId(conceptId);
-        
-        //ArrayList is initialized to make the instance mutable for sorting
-        List<ReviewRequest> reviewRequests = new ArrayList<>(client.queryByExample(request));
-       
-        if(reviewRequests!= null && reviewRequests.size()>0) {
-            Collections.sort(reviewRequests, (x, y) -> x.getCreatedAt().compareTo(y.getCreatedAt()));
-            return reviewRequests.get(reviewRequests.size() - 1);
-        }
-        
-        return null;
-    }
     
     public List<ReviewRequest> getReview(ReviewRequest request) {
         return client.query(new Predicate<ReviewRequest>() {

@@ -36,7 +36,19 @@ public  class RequestsManager implements IRequestsManager{
      */
     public ReviewRequest getReview(String conceptId) {
         
-        return dbClient.getReviewRequestForConcept(conceptId);
+        ReviewRequest request = new ReviewRequest();
+        request.setConceptId(conceptId);
+        
+        //ArrayList is initialized to make the instance mutable for sorting
+        List<ReviewRequest> reviewRequests = dbClient.getAllReviews(request);
+       
+        if(reviewRequests!= null && reviewRequests.size()>0) {
+            reviewRequests = new ArrayList<>(reviewRequests);
+            Collections.sort(reviewRequests, (x, y) -> x.getCreatedAt().compareTo(y.getCreatedAt()));
+            return reviewRequests.get(reviewRequests.size() - 1);
+        }
+        
+        return null;
     }
     
     /* (non-Javadoc)
