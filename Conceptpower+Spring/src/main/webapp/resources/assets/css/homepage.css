@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
+
+.navbar {
+    padding: 15px 0px 15px 0px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 40px 0px 40px;
+    margin: 15px 0px 15px 0px;
+}
+
+.navbar-brand{
+	padding: 0px !important;
+}
+
+.btn#signInBtn{
+	border-radius: 30px;
+	width: 115px;
+	height: 44px;
+	background-color: #4f3acc;
+	color: white;
+	padding: 0px 20px 0px 20px;
+}
+
+body{
+	font-family:
+}
+
+.modal-content{
+	width: 300px;
+	border-radius:30px;
+	height: auto;
+	font-weight: 400;
+	font-size: 16px;
+}
+
+.form-control{
+	border-radius: 30px;
+}
+
+h3{
+	margin-top:10px;
+	margin-botton:5px;
+	font-size:16px;
+}
