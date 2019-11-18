@@ -41,11 +41,11 @@
 				<input type="text" class="form-control" id="searchInput" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
 				
 				<div class="input-group-append">
-			    	<button class="btn btn-outline-secondary dropdown-toggle" type="button" id="searchDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown
+			    	<button class="btn btn-outline-secondary dropdown-toggle" type="button" id="searchDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Noun
 			    	<i class="fa fa-caret-down" aria-hidden="true"></i>
 			    	</button>
 				    <div class="dropdown-menu">
-				      <div class="dropdown-item" href="#">Noun</div>
+				      <div class="dropdown-item" href="#">Adverb</div>
 				      <div class="dropdown-item" href="#">Verb</div>
 				      <div class="dropdown-item" href="#">Adjective</div>
 				    </div>
@@ -60,6 +60,7 @@
 		
 	 	<div class="resultsSection">
 	 		<h4>Results</h4>
+	 		<div class="tableStyles">
 	 		<table class="table table-striped">
 			  <thead>
 			    <tr>
@@ -102,6 +103,26 @@
 			    </tr>
 			  </tbody>
 			</table>
+			</div>
+		</div>
+		
+		<div class="pagination">
+			  <ul class="pagination">
+			    <li class="page-item disabled">
+			      <span class="page-link">Previous</span>
+			    </li>
+			    <li class="page-item"><a class="page-link" href="#">1</a></li>
+			    <li class="page-item active" aria-current="page">
+			      <span class="page-link">
+			        2
+			        <span class="sr-only">(current)</span>
+			      </span>
+			    </li>
+			    <li class="page-item"><a class="page-link" href="#">3</a></li>
+			    <li class="page-item">
+			      <a class="page-link" href="#">Next</a>
+			    </li>
+			  </ul>
 		</div>
 		
 		<div class="footerBox">

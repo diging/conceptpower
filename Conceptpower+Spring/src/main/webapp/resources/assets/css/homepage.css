@@ -35,6 +35,9 @@ body{
 	font-weight: 400;
 	font-size: 16px;
 	padding: 15px;
+	position: absolute;
+   	top: 10px;
+   	right: 100px;
 }
 
 .form-control{
@@ -54,12 +57,19 @@ h3{
 
 }
 
+.modal-dialog {
+
+    width: 300px;
+    margin: 90px 40px auto auto;
+
+}
+
 #forgotPwd {
     font-size: 14px;
 }
 
 .searchSection {
-    padding: 15px 40px 50px 40px;
+    padding: 15px 40px 20px 40px;
     align-content: stretch;
     justify-content: space-between;
 }
@@ -113,11 +123,40 @@ h3{
 	justify-content: space-between;
 }	
 
-.resultsSection{
-    padding: 15px 40px 50px 40px;
+.resultsSection {
+    padding: 15px 40px 20px 40px;
 }
 
 thead{
 	background-color:#4f3acc;
 	color:white;
+}
+
+.tableStyles {
+    margin-top: 30px;
+    -webkit-box-shadow: 4px 4px 15px #dbdbdb;
+    -webkit-border-radius: 30px;
+}
+
+.pagination {
+	margin: 0px 20px 0px 20px;
+	font-family: Nunito Sans;
+}
+
+.pagination>li>a {
+	color: #4f3acc;
+}
+
+.pagination>li>a:hover {
+	color: #4f3acc;
+}
+
+.pagination>.active>span {
+	background-color: #4f3acc;
+	border-color: transparent;
+}
+
+.pagination>.active>span:hover {
+	background-color: #4f3acc;
+	cursor: pointer;
 }
