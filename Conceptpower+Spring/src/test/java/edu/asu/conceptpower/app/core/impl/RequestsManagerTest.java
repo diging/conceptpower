@@ -47,7 +47,7 @@ public class RequestsManagerTest {
         updatedRequest.setStatus(ReviewStatus.OPENED);
         
         responseList.add(updatedRequest);
-        Mockito.when(dbClient.getReview(ArgumentMatchers.any(ReviewRequest.class))).thenReturn(responseList);
+        Mockito.when(dbClient.getReview(ArgumentMatchers.any(ReviewRequest.class))).thenReturn(updatedRequest);
         
         Mockito.when(dbClient.getAllReviews(ArgumentMatchers.any(ReviewRequest.class))).thenReturn(responseList);
     }

@@ -16,7 +16,7 @@ import edu.asu.conceptpower.core.ReviewRequest;
 @Service
 public  class RequestsManager implements IRequestsManager{
 
-    protected final String LIST_PREFIX = "REVIEW";
+    protected final String REVIEW_PREFIX = "REVIEW";
     
     @Autowired
     private IRequestsDBManager dbClient;
@@ -27,7 +27,7 @@ public  class RequestsManager implements IRequestsManager{
      * @see edu.asu.conceptpower.app.core.IRequestsManager#addReviewRequest(edu.asu.conceptpower.core.ReviewRequest)
      */
     public void addReviewRequest(ReviewRequest newReviewRequest) {
-        newReviewRequest.setId(generateId(LIST_PREFIX));
+        newReviewRequest.setId(generateId(REVIEW_PREFIX));
         dbClient.store(newReviewRequest);
     }
     
@@ -39,10 +39,10 @@ public  class RequestsManager implements IRequestsManager{
         ReviewRequest request = new ReviewRequest();
         request.setConceptId(conceptId);
         
-        //ArrayList is initialized to make the instance mutable for sorting
         List<ReviewRequest> reviewRequests = dbClient.getAllReviews(request);
        
         if(reviewRequests!= null && reviewRequests.size()>0) {
+            //ArrayList is initialized to make the instance mutable for sorting
             reviewRequests = new ArrayList<>(reviewRequests);
             Collections.sort(reviewRequests, (x, y) -> x.getCreatedAt().compareTo(y.getCreatedAt()));
             return reviewRequests.get(reviewRequests.size() - 1);
@@ -58,9 +58,10 @@ public  class RequestsManager implements IRequestsManager{
         ReviewRequest request = new ReviewRequest();
         request.setConceptId(conceptId);
         
-        List<ReviewRequest> reviewRequests = new ArrayList<>(dbClient.getAllReviews(request));
+        List<ReviewRequest> reviewRequests = dbClient.getAllReviews(request);
         
-        if(reviewRequests.size() > 0) {
+        if(reviewRequests!= null && reviewRequests.size() > 0) {
+            reviewRequests = new ArrayList<>(reviewRequests);
             Collections.sort(reviewRequests, (x, y) -> x.getCreatedAt().compareTo(y.getCreatedAt()));
         }
         
@@ -76,20 +77,20 @@ public  class RequestsManager implements IRequestsManager{
         
         request.setId(reviewRequest.getId());
         
-        List<ReviewRequest> responses = dbClient.getReview(request);
+        ReviewRequest responses = dbClient.getReview(request);
         
-        if(responses == null || responses.size() == 0) {
+        if(responses == null) {
             return null;
         }
 
-        List<Comment> comments  = responses.get(0).getComments();
+        List<Comment> comments  = responses.getComments();
         comments.addAll(reviewRequest.getComments());
-        responses.get(0).setResolver(reviewRequest.getResolver());
-        responses.get(0).setComments(comments);
-        responses.get(0).setStatus(reviewRequest.getStatus());
+        responses.setResolver(reviewRequest.getResolver());
+        responses.setComments(comments);
+        responses.setStatus(reviewRequest.getStatus());
         
-        dbClient.updateReviewRequest(responses.toArray());
-        return responses.get(0);
+        dbClient.updateReviewRequest(responses);
+        return responses;
     }
     
     /*
@@ -107,8 +108,8 @@ public  class RequestsManager implements IRequestsManager{
             example.setId(id);
             
             // if there doesn't exist an object with this id return id
-            List<ReviewRequest> results = dbClient.getReview(example);
-            if (results == null || results.size() == 0)
+            ReviewRequest results = dbClient.getReview(example);
+            if (results == null )
                 return id;
 
             // try other id

@@ -13,5 +13,5 @@ public interface IRequestsDBManager {
     
     public List<ReviewRequest> getAllReviews(ReviewRequest conceptId);
     
-    public List<ReviewRequest> getReview(ReviewRequest request);
+    public ReviewRequest getReview(ReviewRequest request);
 }

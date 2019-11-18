@@ -314,6 +314,7 @@ $(document).ready(function(){
 				},
 				error: function(e){
 					$('#resolveCommentError').text("Something went wrong. Unable to resolve the request");
+					$('#resolveCommentError').show();
 				}
 			});
 		}
@@ -362,6 +363,7 @@ $(document).ready(function(){
 				},
 				error: function(e){
 					$('#reopenError').text("Something went wrong. Unable to reopen the request");
+					$('#reopenError').show();
 				}
 			});
 		}
