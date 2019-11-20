@@ -1,184 +1,195 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="resources/js/bootstrap.min.js" type="text/javascript" ></script>
-		<link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
-		<link th:href="@{/resources/assets/css/bootstrap.css}" rel="stylesheet" />
-		<link th:href="@{/resources/assets/css/font-awesome.min.css}" rel="stylesheet" />
-		<link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<script>	
-	$(document).ready(function(){
-			$('#signInBtn').click(function(){
-				console.log('----');
-				$('#siginModal').modal('show');
-			});
-		});
-	
-	</script>
-	
-	
-	</head>
-	<body class = "body">
-		<nav class="navbar navbar-light bg-light justify-content-between">
-			<div class="header">
-				<a class="navbar-brand" href="#">
-		    		<img th:src="@{/resources/assets/images/cp_logo.png}" width="70" height=auto alt="">
-		  		</a>
-   				<button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="signInBtn" type="submit" data-toggle="modal" data-target="siginModal">
-	  				Sign In
-	  				<i class="fa fa-sign-in"></i>
-	  			</button>
-			</div>  
-		</nav>
-		
-		<div class="searchSection">
-			<h1>Welcome to Conceptpower</h1>
-			
-			<div class="input-group input-group-lg">
-				<input type="text" class="form-control" id="searchInput" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
-				
-				<div class="input-group-append">
-			    	<button class="btn btn-outline-secondary dropdown-toggle" type="button" id="searchDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Noun
-			    	<i class="fa fa-caret-down" aria-hidden="true"></i>
-			    	</button>
-				    <div class="dropdown-menu">
-				      <div class="dropdown-item" href="#">Adverb</div>
-				      <div class="dropdown-item" href="#">Verb</div>
-				      <div class="dropdown-item" href="#">Adjective</div>
-				    </div>
-			    </div>
-			</div>
-			
-			<button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit">
-	  				Search
-	  				<i class="fa fa-search" aria-hidden="true"></i>
-	  		</button>
-		</div>
-		
-	 	<div class="resultsSection">
-	 		<h4>Results</h4>
-	 		<div class="tableStyles">
-	 		<table class="table table-striped">
-			  <thead>
-			    <tr>
-			      <th scope="col">Term</th>
-			      <th scope="col">Id</th>
-			      <th scope="col">WordNet ID</th>
-			      <th scope="col">POS</th>
-			      <th scope="col">Concept List</th>
-			       <th scope="col">Description</th>
-			      <th scope="col">Type</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <th scope="row">1</th>
-			      <td>Mark</td>
-			      <td>Otto</td>
-			      <td>@mdo</td>
-			      <td>Mark</td>
-			      <td>Otto</td>
-			      <td>@mdo</td>
-			    </tr>
-			    <tr>
-			      <th scope="row">2</th>
-			      <td>Jacob</td>
-			      <td>Thornton</td>
-			      <td>@fat</td>
-			      <td>Mark</td>
-			      <td>Otto</td>
-			      <td>@mdo</td>
-			    </tr>
-			    <tr>
-			      <th scope="row">3</th>
-			      <td>Larry</td>
-			      <td>the Bird</td>
-			      <td>@twitter</td>
-			      <td>Mark</td>
-			      <td>Otto</td>
-			      <td>@mdo</td>
-			    </tr>
-			  </tbody>
-			</table>
-			</div>
-		</div>
-		
-		<div class="pagination">
-			  <ul class="pagination">
-			    <li class="page-item disabled">
-			      <span class="page-link">Previous</span>
-			    </li>
-			    <li class="page-item"><a class="page-link" href="#">1</a></li>
-			    <li class="page-item active" aria-current="page">
-			      <span class="page-link">
-			        2
-			        <span class="sr-only">(current)</span>
-			      </span>
-			    </li>
-			    <li class="page-item"><a class="page-link" href="#">3</a></li>
-			    <li class="page-item">
-			      <a class="page-link" href="#">Next</a>
-			    </li>
-			  </ul>
-		</div>
-		
-		<div class="footerBox">
-			<div class="footer">
-				<h5>Version</h5>
-				<h5>© DigInG   2019</h5>
-			</div>
-		</div>
-		
-		  <div class="modal fade" id="siginModal" role="dialog" >
-			  <div class="modal-dialog" id="requestBox">
-				    <div class="modal-content" >
-				    <div class="modal-body">
-				    	<div class="form-field">
-				   			<div class="floatingform" >
-				   				<div>
-				    				<div class="form-field">
-				      					<form name='f' action="<c:url value='/j_spring_security_check' />" method='post'>
-											<table>
-												<tr>
-													<td><h3> Username </h3></td>
-												</tr>
-												<tr>
-												<td>
-													<input type='text' name='j_username' class="form-control" value='' placeholder="Enter username...">
-												</td>
-												
-												</tr>
-												<tr>
-													<td><h3>Password</h3></td>
-													
-												</tr>
-												<tr>
-												<td><input type='password' class="form-control"
-														name='j_password' placeholder="Enter Password..."/> </td></tr>
-											</table>
-											<div id="modalFooter">
-												<div >
-													<button class="btn btn-outline-success my-2 my-sm-0 signInBtn" type="submit" id="modalSignInBtn" data-toggle="modal" data-target="siginModal">
-														Sign In
-		  												<i class="fa fa-sign-in"></i>
-	  												</button>
-												</div>
-												<div id="forgotPwd">
-													<a href="#">Forgot <br/> Password ?</a>
-												</div>
-											</div>
-											</form>
-				    				</div>
-				   				</div>
-				   			</div>
-				   		</div>
-			   		</div>  
-			   		</div>
-			</div>
-		</div>
-		
-	</body>
+   <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="resources/js/bootstrap.min.js" type="text/javascript" ></script>
+      <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
+      <link th:href="@{/resources/assets/css/bootstrap.css}" rel="stylesheet" />
+      <link th:href="@{/resources/assets/css/font-awesome.min.css}" rel="stylesheet" />
+      <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+      <script>	
+         $(document).ready(function(){
+       		$('#signInBtn').click(function(){
+       			$('#siginModal').modal('show');
+       		});
+       		
+       		$('#searchBtn').click(function(){
+       			var pos = $('#posWord').text();
+       			var word = $("#searchInput").val();
+       			$.ajax({
+    	            type: "GET",
+    	            url: "/home/conceptsearch",
+    	            success: function(response){
+    	            	console.log('Success');
+    	            },
+    	            error: function(e){
+    	            	console.log('Failure');
+    	            }
+    	        });
+       			
+         	});
+       		
+       		$('#posList div div').on('click', function(){
+       			$('#posWord').text($(this).text());
+       		});
+         });
+      </script>
+   </head>
+   <body class = "body">	
+      <nav class="navbar navbar-light bg-light justify-content-between">
+         <div class="header">
+            <a class="navbar-brand" href="#">
+            <img th:src="@{/resources/assets/images/cp_logo.png}" width="70" height=auto alt="">
+            </a>
+            <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="signInBtn" type="submit" data-toggle="modal" data-target="siginModal">
+            Sign In
+            <i class="fa fa-sign-in"></i>
+            </button>
+         </div>
+      </nav>
+      <div class="searchSection">
+         <h1>Welcome to Conceptpower</h1>
+         <div class="input-group input-group-lg">
+            <input type="text" class="form-control" id="searchInput" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
+            <div class="input-group-append">
+               <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="searchDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               	<span id="posWord" th:text="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true">
+               </i>
+               </button>
+               <div id="posList" class="dropdown-menu">
+                  <div th:each="entry: ${conceptSearchBean.posMap}">
+                  	<div th:text="${entry.value}" class="dropdown-item"></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit">
+         Search
+         <i class="fa fa-search" aria-hidden="true"></i>
+         </button>
+      </div>
+      <div class="resultsSection">
+         <h4>Results</h4>
+         <div class="tableStyles">
+            <table class="table table-striped">
+               <thead>
+                  <tr>
+                     <th scope="col">Term</th>
+                     <th scope="col">Id</th>
+                     <th scope="col">WordNet ID</th>
+                     <th scope="col">POS</th>
+                     <th scope="col">Concept List</th>
+                     <th scope="col">Description</th>
+                     <th scope="col">Type</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <th scope="row">1</th>
+                     <td>Mark</td>
+                     <td>Otto</td>
+                     <td>@mdo</td>
+                     <td>Mark</td>
+                     <td>Otto</td>
+                     <td>@mdo</td>
+                  </tr>
+                  <tr>
+                     <th scope="row">2</th>
+                     <td>Jacob</td>
+                     <td>Thornton</td>
+                     <td>@fat</td>
+                     <td>Mark</td>
+                     <td>Otto</td>
+                     <td>@mdo</td>
+                  </tr>
+                  <tr>
+                     <th scope="row">3</th>
+                     <td>Larry</td>
+                     <td>the Bird</td>
+                     <td>@twitter</td>
+                     <td>Mark</td>
+                     <td>Otto</td>
+                     <td>@mdo</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <div class="pagination">
+         <ul class="pagination">
+            <li class="page-item disabled">
+               <span class="page-link">Previous</span>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active" aria-current="page">
+               <span class="page-link">
+               2
+               <span class="sr-only">(current)</span>
+               </span>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+               <a class="page-link" href="#">Next</a>
+            </li>
+         </ul>
+      </div>
+      <div class="footerBox">
+         <div class="footer">
+            <h5>Version</h5>
+            <h5>© DigInG   2019</h5>
+         </div>
+      </div>
+      <div class="modal fade" id="siginModal" role="dialog" >
+         <div class="modal-dialog" id="requestBox">
+            <div class="modal-content" >
+               <div class="modal-body">
+                  <div class="form-field">
+                     <div class="floatingform" >
+                        <div>
+                           <div class="form-field">
+                              <form name='f' action="<c:url value='/j_spring_security_check' />" method='post'>
+                                 <table>
+                                    <tr>
+                                       <td>
+                                          <h3> Username </h3>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td>
+                                          <input type='text' name='j_username' class="form-control" value='' placeholder="Enter username...">
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td>
+                                          <h3>Password</h3>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td><input type='password' class="form-control"
+                                          name='j_password' placeholder="Enter Password..."/> </td>
+                                    </tr>
+                                 </table>
+                                 <div id="modalFooter">
+                                    <div >
+                                       <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" type="submit" id="modalSignInBtn" data-toggle="modal" data-target="siginModal">
+                                       Sign In
+                                       <i class="fa fa-sign-in"></i>
+                                       </button>
+                                    </div>
+                                    <div id="forgotPwd">
+                                       <a href="#">Forgot <br/> Password ?</a>
+                                    </div>
+                                 </div>
+                              </form>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
 </html>
