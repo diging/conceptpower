@@ -1,51 +1,46 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-	      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	      <script src="resources/js/bootstrap.min.js" type="text/javascript" ></script>
-	      <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
-	      <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
-	      <link th:href="@{/resources/assets/css/conceptType.css}" rel="stylesheet" />
-	      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	</head>
-	
-	<body class="body">
-       <main class="wrapper">
-	      <div th:insert="layouts/navbar :: navbar('false')"></div>      
-	      
-	      <div class="conceptType">
-	      	<h3 class="title">Add a new Concept List.</h3>
-	      	
-	     	<table class="conceptForm">
-	     		<tbody>
-	     			<tr>
-	     				<td style="width:40px;">
-	     					<label for="exampleFormControlInput1" class="formlabel">List name</label>
-	     				</td>
-	     				<td>
-	     					<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Enter List name....">
-	     				</td>
-	     			</tr>
-	     			<tr>
-	     				<td style="width:172px;">
-	     					<label for="exampleFormControlTextarea1" class="formlabel">List description</label>
-	     				</td>
-	     				<td>
-	     					<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter List description...."></textarea>
-	     				</td>
-	     			</tr>
-	     		</tbody>
-	      	</table>
-	      	
-	      	<div class="btnCenter">
-		      	<button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="addConceptTypeBtn">
-	                Create List
-	            </button>
+   <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="resources/js/bootstrap.min.js" type="text/javascript" ></script>
+      <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
+      <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
+      <link th:href="@{/resources/assets/css/conceptType.css}" rel="stylesheet" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   </head>
+   <body class="body">
+      <main class="wrapper">
+         <div th:insert="layouts/navbar :: navbar('false')"></div>
+         <div class="conceptType">
+            <h3 class="title">Add a new Concept List.</h3>
+            <table class="conceptForm">
+               <tbody>
+                  <tr>
+                     <td style="width:40px;">
+                        <label for="exampleFormControlInput1" class="formlabel">List name</label>
+                     </td>
+                     <td>
+                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Enter List name....">
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width:172px;">
+                        <label for="exampleFormControlTextarea1" class="formlabel">List description</label>
+                     </td>
+                     <td>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter List description...."></textarea>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <div class="btnCenter">
+               <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="addConceptTypeBtn">
+               Create List
+               </button>
             </div>
-	      </div>
-	      <div class='push'></div>
-       </main>
+         </div>
+         <div class='push'></div>
+      </main>
       <div th:insert="~{layouts/footer}"></div>
-	</body>
+   </body>
 </html>
