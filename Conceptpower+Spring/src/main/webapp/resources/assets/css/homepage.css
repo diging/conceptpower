@@ -24,8 +24,9 @@
 	padding: 0px 20px 0px 20px;
 }
 
-body{
-	font-family:
+html,body{
+	height: 100%;
+  	margin: 0;
 }
 
 .modal-content{
@@ -111,8 +112,6 @@ h3{
 
 .footerBox {
 	color: #4f3acc;
-    bottom: 0;
-    position: fixed;
     width: 100%;
 }
 
@@ -133,8 +132,7 @@ thead{
 }
 
 .tableStyles {
-    margin-top: 30px;
-    -webkit-box-shadow: 4px 4px 15px #dbdbdb;
+    -webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
     -webkit-border-radius: 30px;
 }
 
@@ -159,4 +157,116 @@ thead{
 .pagination>.active>span:hover {
 	background-color: #4f3acc;
 	cursor: pointer;
+}
+
+table{
+	width: 100%;
+}
+
+.btn:active, .btn.active {
+    box-shadow: unset;
+}
+
+.wrapper {
+	
+  min-height: 100%;
+  
+  /* This is the same as the height of the footer */
+  margin-bottom: -75px; 
+}
+
+.footerBox,.push {
+  height: 50px;
+}
+
+.navbar-default {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.rightNavSection{
+	display:inline-flex;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #333;
+}
+
+
+.fa-user-circle-o {
+    font-size: 48px !important;
+    color: #4f3acc;
+}
+
+.mergeConceptBtn {
+    margin: 15px 0px 15px 0px;
+    background-color: #4f3acc;
+    color: white;
+    border-radius: 30px;
+    height: 36px;
+}
+
+.cardLayout {
+    -webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+    text-align: center;
+    border-radius: 30px;
+    width: 200px;
+    padding: 15px;
+}
+
+.btn-primary {
+	width: 80%;
+	border-radius: 20px;
+	margin: 5px 0px 5px 0px;
+}
+
+#editBtn {
+	background-color: #4f3acc;
+	border-color: transparent;
+	color: white;
+}
+
+#editBtn:hover {
+	background-color: #8079dd;
+	border-color: transparent;
+	color: white;
+	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+}
+
+#deleteBtn {
+	background-color: transparent;
+	border: 2px solid #d54854;
+	color: #d54854;
+}
+
+#deleteBtn:hover {
+	background-color: #d54854;
+	border: 2px solid #d54854;
+	color: white;
+	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+}
+
+.btn:hover {
+    color: white;
+    text-decoration: none;
+    background-color: #8079dd;
+    -webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+}
+
+.signInBtn:hover {
+	background-color: #8079dd;
+	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+	
+}
+
+.dropdown-menu {
+	border: transparent;
+	border-radius: 20px;
+	overflow: auto;
+}
+
+.cardLayout.dropdown-menu {
+	margin-left: 25px;
+    right: unset;
+
 }

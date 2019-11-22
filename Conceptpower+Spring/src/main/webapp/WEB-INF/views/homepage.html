@@ -1,14 +1,13 @@
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
    <head>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <script src="resources/js/bootstrap.min.js" type="text/javascript" ></script>
       <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
-      <link th:href="@{/resources/assets/css/bootstrap.css}" rel="stylesheet" />
-      <link th:href="@{/resources/assets/css/font-awesome.min.css}" rel="stylesheet" />
       <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-      
       <script>	
          $(document).ready(function(){
          $('#signInBtn').click(function(){
@@ -36,36 +35,46 @@
          });
          });
       </script>
+      <script>
+		$.get("navigation.html", function(data){
+		    $("#nav-placeholder").replaceWith(data);
+		});
+	  </script>
    </head>
    <body class = "body">
-      <div th:insert="layouts/navbar"></div>
-      <div class="searchSection">
-         <h1>Welcome to Conceptpower</h1>
-         <div class="input-group input-group-lg">
-            <input type="text" class="form-control" id="searchInput" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
-            <div class="input-group-append">
-               <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="searchDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               <span id="posWord" th:text="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true">
-               </i>
-               </button>
-               <div id="posList" class="dropdown-menu">
-                  <div th:each="entry: ${conceptSearchBean.posMap}">
-                     <div th:text="${entry.value}" class="dropdown-item"></div>
+      <main class="wrapper">
+      <div th:insert="layouts/navbar :: navbar('false')"></div>
+         <div class="searchSection">
+            <h1>Welcome to Conceptpower</h1>
+            <div class="input-group input-group-lg">
+               <input type="text" class="form-control" id="searchInput" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
+               <div class="input-group-append">
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="searchDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span id="posWord" th:text="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true">
+                  </i>
+                  </button>
+                  <div id="posList" class="dropdown-menu">
+                     <div th:each="entry: ${conceptSearchBean.posMap}">
+                        <div th:text="${entry.value}" class="dropdown-item"></div>
+                     </div>
                   </div>
                </div>
             </div>
+            <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit">
+            Search
+            <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
          </div>
-         <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit">
-         Search
-         <i class="fa fa-search" aria-hidden="true"></i>
-         </button>
-      </div>
-      <div class="resultsSection">
-         <h4>Results</h4>
-         <div class="tableStyles">
-            <table class="table table-striped">
+         <div class="resultsSection">
+            <h4>Results</h4>
+            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
+	            Select Concepts To merge
+            </button>
+            
+            <table class="table table-striped resultTable tableStyles" >
                <thead>
                   <tr>
+                  	<th scope="col"></th>
                      <th scope="col">Term</th>
                      <th scope="col">Id</th>
                      <th scope="col">WordNet ID</th>
@@ -73,59 +82,129 @@
                      <th scope="col">Concept List</th>
                      <th scope="col">Description</th>
                      <th scope="col">Type</th>
+                     <th style="width:120px;" scope="col">Review Status</th>
                   </tr>
                </thead>
                <tbody>
                   <tr>
-                     <th scope="row">1</th>
+                  	 <td>
+                  	 <div class="dropdown">
+                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                           <div class="cardLayout dropdown-menu" role="menu">
+							  <div class="card-body">
+							    <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
+							    <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+							  </div>
+                           </div>
+                        </div>
+                        </td>
+                     <td>1</td>
                      <td>Mark</td>
                      <td>Otto</td>
                      <td>@mdo</td>
                      <td>Mark</td>
                      <td>Otto</td>
                      <td>@mdo</td>
+                     <td><i class="fa fa-comment" aria-hidden="true"></i></td>
                   </tr>
                   <tr>
-                     <th scope="row">2</th>
+                  	 <td>
+                  	 <div class="dropdown">
+                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                           <div class="cardLayout dropdown-menu" role="menu">
+							  <div class="card-body">
+							    <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
+							    <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+							  </div>
+                           </div>
+                        </div>
+                        </td>
+                     <td>2</td>
                      <td>Jacob</td>
                      <td>Thornton</td>
                      <td>@fat</td>
                      <td>Mark</td>
                      <td>Otto</td>
                      <td>@mdo</td>
+                     <td><i class="fa fa-comment" aria-hidden="true"></i></td>
                   </tr>
                   <tr>
-                     <th scope="row">3</th>
+                  	 <td>
+                  	 <div class="dropdown">
+                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                           <div class="cardLayout dropdown-menu" role="menu">
+							  <div class="card-body">
+							    <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
+							    <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+							  </div>
+                           </div>
+                        </div>
+                        </td>
+                     <td>3</td>
                      <td>Larry</td>
                      <td>the Bird</td>
                      <td>@twitter</td>
                      <td>Mark</td>
                      <td>Otto</td>
                      <td>@mdo</td>
+                     <td><i class="fa fa-comment" aria-hidden="true"></i></td>
                   </tr>
                </tbody>
             </table>
          </div>
-      </div>
-      <div class="pagination">
-         <ul class="pagination">
-            <li class="page-item disabled">
-               <span class="page-link">Previous</span>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active" aria-current="page">
-               <span class="page-link">
-               2
-               <span class="sr-only">(current)</span>
-               </span>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-               <a class="page-link" href="#">Next</a>
-            </li>
-         </ul>
-      </div>
+         <div class="pagination">
+            <ul class="pagination">
+               <li class="page-item disabled">
+                  <span class="page-link">Previous</span>
+               </li>
+               <li class="page-item"><a class="page-link" href="#">1</a></li>
+               <li class="page-item active" aria-current="page">
+                  <span class="page-link">
+                  2
+                  <span class="sr-only">(current)</span>
+                  </span>
+               </li>
+               <li class="page-item"><a class="page-link" href="#">3</a></li>
+               <li class="page-item">
+                  <a class="page-link" href="#">Next</a>
+               </li>
+            </ul>
+         </div>
+         <div class='push'></div>
+      </main>
       <div th:insert="~{layouts/footer}"></div>
+      
+      
+      <div class="modal fade" id="conceptModal" role="dialog" >
+         <div class="modal-dialog" id="requestBox">
+            <div class="modal-content" >
+               <div class="modal-body">
+                  <div class="form-field">
+                     <div class="floatingform" >
+                     <ul class="list-group">
+						  <li class="list-group-item list-group-item-success">Id:</li>
+						  <li class="list-group-item list-group-item-info">URI:</li>
+						  <li class="list-group-item list-group-item-warning">WordNet Id:</li>
+						  <li class="list-group-item list-group-item-danger">Description</li>
+						   <li class="list-group-item list-group-item-success">Pos:</li>
+						  <li class="list-group-item list-group-item-info">Concept List:</li>
+						  <li class="list-group-item list-group-item-warning">Type:</li>
+						  <li class="list-group-item list-group-item-danger">Equal To:</li>
+						   <li class="list-group-item list-group-item-success">Similar To:</li>
+						  <li class="list-group-item list-group-item-info">Creator:</li>
+						  <li class="list-group-item list-group-item-danger">Merged Ids:</li>
+					</ul>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      
+      
       <div class="modal fade" id="siginModal" role="dialog" >
          <div class="modal-dialog" id="requestBox">
             <div class="modal-content" >
@@ -138,7 +217,7 @@
                                  <table>
                                     <tr>
                                        <td>
-                                          <h3> User name </h3>
+                                          <h3> Username </h3>
                                        </td>
                                     </tr>
                                     <tr>
@@ -178,3 +257,4 @@
       </div>
    </body>
 </html>
+
