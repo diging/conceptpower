@@ -8,59 +8,49 @@
       <link th:href="@{/resources/assets/css/font-awesome.min.css}" rel="stylesheet" />
       <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+      
       <script>	
          $(document).ready(function(){
-       		$('#signInBtn').click(function(){
-       			$('#siginModal').modal('show');
-       		});
-       		
-       		$('#searchBtn').click(function(){
-       			var pos = $('#posWord').text();
-       			var word = $("#searchInput").val();
-       			$.ajax({
-    	            type: "GET",
-    	            url: "/home/conceptsearch",
-    	            success: function(response){
-    	            	console.log('Success');
-    	            },
-    	            error: function(e){
-    	            	console.log('Failure');
-    	            }
-    	        });
-       			
+         $('#signInBtn').click(function(){
+         	$('#siginModal').modal('show');
+         });
+         
+         $('#searchBtn').click(function(){
+         	var pos = $('#posWord').text();
+         	var word = $("#searchInput").val();
+         	$.ajax({
+                 type: "GET",
+                 url: "/home/conceptsearch",
+                 success: function(response){
+                 	console.log('Success');
+                 },
+                 error: function(e){
+                 	console.log('Failure');
+                 }
+             });
+         	
          	});
-       		
-       		$('#posList div div').on('click', function(){
-       			$('#posWord').text($(this).text());
-       		});
+         
+         $('#posList div div').on('click', function(){
+         	$('#posWord').text($(this).text());
+         });
          });
       </script>
    </head>
-   <body class = "body">	
-      <nav class="navbar navbar-light bg-light justify-content-between">
-         <div class="header">
-            <a class="navbar-brand" href="#">
-            <img th:src="@{/resources/assets/images/cp_logo.png}" width="70" height=auto alt="">
-            </a>
-            <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="signInBtn" type="submit" data-toggle="modal" data-target="siginModal">
-            Sign In
-            <i class="fa fa-sign-in"></i>
-            </button>
-         </div>
-      </nav>
+   <body class = "body">
+      <div th:insert="layouts/navbar"></div>
       <div class="searchSection">
          <h1>Welcome to Conceptpower</h1>
          <div class="input-group input-group-lg">
             <input type="text" class="form-control" id="searchInput" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
             <div class="input-group-append">
                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="searchDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               	<span id="posWord" th:text="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true">
+               <span id="posWord" th:text="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true">
                </i>
                </button>
                <div id="posList" class="dropdown-menu">
                   <div th:each="entry: ${conceptSearchBean.posMap}">
-                  	<div th:text="${entry.value}" class="dropdown-item"></div>
+                     <div th:text="${entry.value}" class="dropdown-item"></div>
                   </div>
                </div>
             </div>
@@ -135,12 +125,7 @@
             </li>
          </ul>
       </div>
-      <div class="footerBox">
-         <div class="footer">
-            <h5>Version</h5>
-            <h5>© DigInG   2019</h5>
-         </div>
-      </div>
+      <div th:insert="~{layouts/footer}"></div>
       <div class="modal fade" id="siginModal" role="dialog" >
          <div class="modal-dialog" id="requestBox">
             <div class="modal-content" >
@@ -153,7 +138,7 @@
                                  <table>
                                     <tr>
                                        <td>
-                                          <h3> Username </h3>
+                                          <h3> User name </h3>
                                        </td>
                                     </tr>
                                     <tr>
