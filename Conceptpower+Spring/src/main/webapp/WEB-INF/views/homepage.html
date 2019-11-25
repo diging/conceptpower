@@ -12,10 +12,14 @@
          	$('#siginModal').modal('show');
          });
          
+         $('#conceptDetails').click(function(){
+          	$('#conceptDetailsModal').modal('show');
+          });
+         
          $('#searchBtn').click(function(){
          	var pos = $('#posWord').text();
          	var word = $("#searchInput").val();
-         /*  	$.ajax({
+          	$.ajax({
                  type: "GET",
                  url: "/conceptpower/home/conceptsearch?word="+word+"&pos="+pos,
                  success: function(response){
@@ -24,7 +28,7 @@
                  error: function(e){
                  	console.log('Failure');
                  }
-             }); */
+             }); 
          	
          	}); 
          
@@ -53,7 +57,9 @@
                   </div>
                </div>
             </div>
-            <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit">
+            
+            
+            <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" th:href="@{/home/conceptsearch?word=cat&pos=verb}" id="searchBtn" type="submit">
             Search
             <i class="fa fa-search" aria-hidden="true"></i>
             </button>
@@ -91,7 +97,7 @@
                            </div>
                         </div>
                      </td>
-                     <td>1</td>
+                     <td data-toggle="modal" role="button" data-target="siginModal" id="conceptDetails">1</td>
                      <td>Mark</td>
                      <td>Otto</td>
                      <td>@mdo</td>
@@ -168,27 +174,27 @@
          <div class='push'></div>
       </main>
       <div th:insert="~{layouts/footer}"></div>
-      <div class="modal fade" id="conceptModal" role="dialog" >
-         <div class="modal-dialog" id="requestBox">
+      
+      <div class="modal fade" id="conceptDetailsModal" role="dialog" >
             <div class="modal-content" >
                <div class="modal-body">
-                  <ul class="list-group">
-                     <li class="list-group-item list-group-item-success">Id:</li>
+                   <ul class="list-group" style="margin-bottom: 0px;">
+                     <li class="list-group-item">Id:</li>
                      <li class="list-group-item list-group-item-info">URI:</li>
-                     <li class="list-group-item list-group-item-warning">WordNet Id:</li>
-                     <li class="list-group-item list-group-item-danger">Description</li>
-                     <li class="list-group-item list-group-item-success">Pos:</li>
+                     <li class="list-group-item">WordNet Id:</li>
+                     <li class="list-group-item list-group-item-info">Description</li>
+                     <li class="list-group-item">Pos:</li>
                      <li class="list-group-item list-group-item-info">Concept List:</li>
-                     <li class="list-group-item list-group-item-warning">Type:</li>
-                     <li class="list-group-item list-group-item-danger">Equal To:</li>
-                     <li class="list-group-item list-group-item-success">Similar To:</li>
+                     <li class="list-group-item">Type:</li>
+                     <li class="list-group-item list-group-item-info">Equal To:</li>
+                     <li class="list-group-item">Similar To:</li>
                      <li class="list-group-item list-group-item-info">Creator:</li>
-                     <li class="list-group-item list-group-item-danger">Merged Ids:</li>
+                     <li class="list-group-item">Merged Ids:</li>
                   </ul>
                </div>
             </div>
-         </div>
       </div>
+      
       <div class="modal fade" id="siginModal" role="dialog" >
          <div class="modal-dialog" id="requestBox">
             <div class="modal-content" >

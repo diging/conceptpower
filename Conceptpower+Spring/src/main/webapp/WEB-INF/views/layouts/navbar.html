@@ -1,74 +1,73 @@
-
 <nav class="navbar navbar-default" th:fragment ="navbar(isSignedIn)">
-            <div class="header">
-               <a class="navbar-brand" href="#">
-               <img th:src="@{/resources/assets/images/cp_logo.png}" width="70" height=auto alt="">
-               </a>
-               <div class="rightNavSection">
-                  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                     <ul class="nav navbar-nav">
-                        <li><a href="#">Home</a></li>
-                        <li class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Concept Type <span class="caret"></span></a>
-                           <ul class="dropdown-menu" role="menu">
-                              <li><a
-                                 href="${pageContext.servletContext.contextPath}/auth/concepttype"><i
-                                 class="fa fa-list"></i> Concept Types</a></li>
-                              <li><a
-                                 href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype"><i
-                                 class="fa fa-plus-circle"></i> Add New Type</a></li>
-                           </ul>
-                        </li>
-                        <li class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Concept Lists <span class="caret"></span></a>
-                           <ul class="dropdown-menu" role="menu">
-                              <li><a
-                                 href="/auth/conceptlist"><i
-                                 class="fa fa-list"></i> Show Concept Lists</a></li>
-                              <li><a
-                                 href="/auth/conceptlist/addconceptlist"><i
-                                 class="fa fa-plus-circle"></i> Add New Concept List</a></li>
-                              <li><a
-                                 href="/auth/conceptlist/addconcept">
-                                 <i class="fa fa-plus-circle"></i> Add New Concept
-                                 </a>
-                              </li>
-                              <li><a
-                                 href="/auth/conceptlist/addconceptwrapper"><i
-                                 class="fa fa-plus-circle"></i> Add New Wordnet Concept Wrapper</a></li>
-                           </ul>
-                        </li>
-                        <li class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Users<span class="caret"></span></a>
-                           <ul class="dropdown-menu" role="menu">
-                              <li><a
-                                 href="${pageContext.servletContext.contextPath}/auth/user/list"><i
-                                 class="fa fa-users"></i> Manage Users</a></li>
-                              <li><a
-                                 href="${pageContext.servletContext.contextPath}/auth/user/add"><i
-                                 class="fa fa-plus-circle"></i> Add New User</a></li>
-                           </ul>
-                        </li>
-                     </ul>
-                  </div>
-                  <button th:if="${isSignedIn == 'true'}" class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="signInBtn" type="submit" data-toggle="modal" data-target="siginModal">
-                  Sign In
-                  <i class="fa fa-sign-in"></i>
-                  </button>
-                  <div class="dropdown">
-                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">   
-                     <i class="fa fa-user-circle-o fa-10x" aria-hidden="true"></i>
-                     </a>
-                     <ul class="dropdown-menu" role="menu">
-                        <li><a
-                           href=""><i
-                           class="fa fa-list"></i> Index</a></li>
-                        <li><a
-                           href=""> <i class="fa fa-sign-out" aria-hidden="true"></i>
-                           Logout</a>
-                        </li>
-                     </ul>
-                  </div>
-               </div>
-            </div>
-         </nav>
+   <div class="header">
+      <a class="navbar-brand" href="#">
+      <img th:src="@{/resources/assets/images/cp_logo.png}" width="70" height=auto alt="">
+      </a>
+      <div class="rightNavSection">
+         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+               <li><a href="#">Home</a></li>
+               <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Concept Type <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                     <li><a
+                        href="${pageContext.servletContext.contextPath}/auth/concepttype"><i
+                        class="fa fa-list"></i> Concept Types</a></li>
+                     <li><a
+                        href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype"><i
+                        class="fa fa-plus-circle"></i> Add New Type</a></li>
+                  </ul>
+               </li>
+               <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Concept Lists <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                     <li><a
+                        href="/auth/conceptlist"><i
+                        class="fa fa-list"></i> Show Concept Lists</a></li>
+                     <li><a
+                        href="/auth/conceptlist/addconceptlist"><i
+                        class="fa fa-plus-circle"></i> Add New Concept List</a></li>
+                     <li><a
+                        href="/auth/conceptlist/addconcept">
+                        <i class="fa fa-plus-circle"></i> Add New Concept
+                        </a>
+                     </li>
+                     <li><a
+                        href="/auth/conceptlist/addconceptwrapper"><i
+                        class="fa fa-plus-circle"></i> Add New Wordnet Concept Wrapper</a></li>
+                  </ul>
+               </li>
+               <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Users<span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                     <li><a
+                        href="${pageContext.servletContext.contextPath}/auth/user/list"><i
+                        class="fa fa-users"></i> Manage Users</a></li>
+                     <li><a
+                        href="${pageContext.servletContext.contextPath}/auth/user/add"><i
+                        class="fa fa-plus-circle"></i> Add New User</a></li>
+                  </ul>
+               </li>
+            </ul>
+         </div>
+         <button th:if="${isSignedIn == 'false'}" class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="signInBtn" type="submit" data-toggle="modal" data-target="siginModal">
+         Sign In
+         <i class="fa fa-sign-in"></i>
+         </button>
+         <div class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">   
+            <i class="fa fa-user-circle-o fa-10x" aria-hidden="true"></i>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+               <li><a
+                  href=""><i
+                  class="fa fa-list"></i> Index</a></li>
+               <li><a
+                  href=""> <i class="fa fa-sign-out" aria-hidden="true"></i>
+                  Logout</a>
+               </li>
+            </ul>
+         </div>
+      </div>
+   </div>
+</nav>

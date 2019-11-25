@@ -268,5 +268,13 @@ table{
 .cardLayout.dropdown-menu {
 	margin-left: 25px;
     right: unset;
+}
 
+#conceptDetailsModal .modal-content, #conceptDetailsModal .modal-body{
+	padding: unset;	
+}
+
+#conceptDetailsModal .modal-content{
+	width:40%;
+	overflow:auto;
 }
