@@ -71,3 +71,35 @@
     align-items: baseline;
 
 }
+
+.newConcept {
+	width: 60%;
+	margin: auto;
+	display: block;
+	
+}
+
+.btn-group.dropdown {
+    margin-left: 30px;
+}
+
+.drpSpacing {
+width:250px;
+display: flex;
+justify-content: space-between;
+}
+
+.termSpacing {
+	display: flex;
+	width: 400px;
+	justify-content: space-between;
+	
+}
+
+a {
+	color: #4f3acc;
+}
+
+a:hover {
+	color: #333;
+}

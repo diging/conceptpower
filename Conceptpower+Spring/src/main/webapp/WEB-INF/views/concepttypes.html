@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="resources/js/bootstrap.min.js" type="text/javascript" ></script>
+      <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
+      <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
+      <link th:href="@{/resources/assets/css/conceptType.css}" rel="stylesheet" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   </head>
+   
+   
+   <body class="body">
+      <main class="wrapper">
+         <div th:insert="layouts/navbar :: navbar('false')"></div>
+         <div class="resultsSection">
+            <div class="headerSection">
+               <div style="display: block;">
+                  <h3 class="titleHeader">Concept types</h3>
+                  <h4 class="subHeader">See existing types below.</h4>
+               </div>
+               <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
+               <i class="fa fa-plus" aria-hidden="true"></i> Add new type
+               </button>
+            </div>
+            <div class="headerSection">
+               <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search....." style="width: 200px;">
+               <div class="btn-group showDrp">
+                  <label for="dropdown">Show </label>
+                  <div class="dropdown">
+                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                     1
+                     <span class="caret"></span>
+                     </button>
+                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">1</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">2</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">3</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">4</a></li>
+                     </ul>
+                  </div>
+                  <label for="dropdown">entries </label>
+               </div>
+            </div>
+            <table class="table table-striped resultTable tableStyles" >
+               <thead>
+                  <tr>
+                     <th scope="col"></th>
+                     <th scope="col">Name</th>
+                     <th scope="col">Type URI</th>
+                     <th scope="col">Description</th>
+                     <th scope="col">Super type</th>
+                     <th scope="col">Matches</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>
+                        <div class="dropdown">
+                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                           <div class="cardLayout dropdown-menu" role="menu">
+                              <div class="card-body">
+                                 <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
+                                 <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+                              </div>
+                           </div>
+                        </div>
+                     </td>
+                     <td>Mark</td>
+                     <td>asdf fagaag</td>
+                     <td>adfgaggabayrnyrnabrgnjeymio,uutjkenrtaberen6jyimet</td>
+                     <td>word</td>
+                     <td>yes</td>
+                  </tr>
+                  <tr>
+                     <td>
+                        <div class="dropdown">
+                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                           <div class="cardLayout dropdown-menu" role="menu">
+                              <div class="card-body">
+                                 <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
+                                 <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+                              </div>
+                           </div>
+                        </div>
+                     </td>
+                     <td>Jacob</td>
+                     <td>asdf fagaag</td>
+                     <td>adfgaggabayrnyrnabrgnjeymio,uutjkenrtaberen6jyimet</td>
+                     <td>word</td>
+                     <td>yes</td>
+                  </tr>
+                  <tr>
+                     <td>
+                        <div class="dropdown">
+                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                           <div class="cardLayout dropdown-menu" role="menu">
+                              <div class="card-body">
+                                 <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
+                                 <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+                              </div>
+                           </div>
+                        </div>
+                     </td>
+                     <td>Larry</td>
+                     <td>asdf fagaag</td>
+                     <td>adfgaggabayrnyrnabrgnjeymio,uutjkenrtaberen6jyimet</td>
+                     <td>word</td>
+                     <td>yes</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div class="pagination">
+            <ul class="pagination">
+               <li class="page-item disabled">
+                  <span class="page-link">Previous</span>
+               </li>
+               <li class="page-item"><a class="page-link" href="#">1</a></li>
+               <li class="page-item active" aria-current="page">
+                  <span class="page-link">
+                  2
+                  <span class="sr-only">(current)</span>
+                  </span>
+               </li>
+               <li class="page-item"><a class="page-link" href="#">3</a></li>
+               <li class="page-item">
+                  <a class="page-link" href="#">Next</a>
+               </li>
+            </ul>
+         </div>
+         <div class='push'></div>
+      </main>
+      <div th:replace="~{layouts/footer}"></div>
+   </body>
+</html>

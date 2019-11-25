@@ -36,9 +36,6 @@ html,body{
 	font-weight: 400;
 	font-size: 16px;
 	padding: 15px;
-	position: absolute;
-   	top: 10px;
-   	right: 100px;
 }
 
 .form-control{
@@ -204,6 +201,7 @@ table{
     color: white;
     border-radius: 30px;
     height: 36px;
+    padding: 0px 15px 0px 15px;
 }
 
 .cardLayout {
@@ -227,7 +225,7 @@ table{
 }
 
 #editBtn:hover {
-	background-color: #8079dd;
+	background-color: #4f3acc;
 	border-color: transparent;
 	color: white;
 	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
@@ -249,12 +247,12 @@ table{
 .btn:hover {
     color: white;
     text-decoration: none;
-    background-color: #8079dd;
+    background-color: #4f3acc;
     -webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
 }
 
 .signInBtn:hover {
-	background-color: #8079dd;
+	background-color: #4f3acc;
 	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
 	
 }
@@ -277,4 +275,25 @@ table{
 #conceptDetailsModal .modal-content{
 	width:40%;
 	overflow:auto;
+	margin: auto;
+	margin-top: 200px;
+}
+
+.list-group-item-info {  
+    color: #333 !important;
+	background-color: #eee !important;
+}
+
+.list-group-item {
+    margin-bottom: unset;
+    border: unset;
+    padding: 10px 25px 10px 25px;
+    display:flex;
+}
+
+.conceptDetailsKey {
+	width: 100px;
+    margin-right: 50px;
+    display: inline-table;
+    text-align: right;
 }
