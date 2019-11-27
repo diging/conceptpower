@@ -1,7 +1,7 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,34 +28,20 @@ public class ReviewRequestController {
     @RequestMapping(value = "/auth/request/add", method = RequestMethod.POST )
     public @ResponseBody ReviewRequest addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
         reviewRequest.setRequester(principal.getName());
-        reviewRequest.setCreatedAt(LocalDateTime.now());
+        reviewRequest.setCreatedAt(OffsetDateTime.now());
         requestsMgr.addReviewRequest(reviewRequest);
         
         return reviewRequest;
     }
     
     @RequestMapping(value = "/auth/request/resolve", method = RequestMethod.POST )
-    public @ResponseBody ResponseEntity<ReviewRequest> resolveRequest(@RequestBody ReviewRequest reviewRequest,Principal principal) {
-        if(reviewRequest.getStatus() != ReviewStatus.RESOLVED || reviewRequest.getComments().size() != 1) {
-            return new ResponseEntity<ReviewRequest>(HttpStatus.BAD_REQUEST);
-        }
-        reviewRequest.setResolver(principal.getName());
-        reviewRequest.getComments().get(0).setCreatedBy(principal.getName());
-        reviewRequest.getComments().get(0).setCreatedAt(LocalDateTime.now());
-        
-        return new ResponseEntity<ReviewRequest>(requestsMgr.updateReview(reviewRequest), HttpStatus.OK);
+    public @ResponseBody ReviewRequest resolveRequest(@RequestBody ReviewRequest reviewRequest,Principal principal) {
+        return requestsMgr.updateReview(reviewRequest.getId(), ReviewStatus.RESOLVED, reviewRequest.getComments(), principal.getName());
     }
     
     @RequestMapping(value = "/auth/request/reopen", method = RequestMethod.POST )
-    public @ResponseBody ResponseEntity<ReviewRequest> reopenRequest(@RequestBody ReviewRequest reviewRequest,Principal principal) {
-        if(reviewRequest.getStatus() != ReviewStatus.OPENED || reviewRequest.getComments().size() != 1) {
-            return new ResponseEntity<ReviewRequest>(HttpStatus.BAD_REQUEST);
-        }
-        reviewRequest.setRequester(principal.getName());
-        reviewRequest.getComments().get(0).setCreatedBy(principal.getName());
-        reviewRequest.getComments().get(0).setCreatedAt(LocalDateTime.now());
-        
-        return new ResponseEntity<ReviewRequest>(requestsMgr.updateReview(reviewRequest), HttpStatus.OK);
+    public @ResponseBody ReviewRequest reopenRequest(@RequestBody ReviewRequest reviewRequest,Principal principal) {
+        return requestsMgr.updateReview(reviewRequest.getId(), ReviewStatus.OPENED, reviewRequest.getComments(), principal.getName());
     }
     
     @RequestMapping(value = "/auth/request/{conceptId}/all", method = RequestMethod.GET)

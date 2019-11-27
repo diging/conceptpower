@@ -231,10 +231,8 @@ function getListOfReviewRequests(conceptId, operation){
 }
 
 $(document).ready(function(){
-	
-    var reviewId;
     $(document).on("click", ".fa-exclamation-triangle", function() {
-    	reviewId = $(this).data("review-id");
+    	$('#reviewId').val($(this).data("review-id"));
 		$("#request").val($(this).data("request"));
     	$("#conceptId").val($(this).data("concept-id"));
     	$('#resolveCommentError').hide();
@@ -285,7 +283,8 @@ $(document).ready(function(){
 		var comment = $('#resolveComment').val().trim();
 		var conceptId = $("#conceptId").val();
 		var request = $("#request").val();
-	
+		var reviewId = $('#reviewId').val();
+		
 		if(resolveComment.length == 0){
 			$('#resolveCommentError').text('Closing comment cannot be empty');
 			$('#resolveCommentError').show();
@@ -321,7 +320,7 @@ $(document).ready(function(){
 	});
 	
 	$(document).on("click",".fa-refresh", function(){
-		reviewId = $(this).data("review-id");
+		$('#reviewId').val($(this).data("review-id"));
 		$("#conceptId").val($(this).data("concept-id"));
 		$("#request").val($(this).data('request'));
 		$('#reopenError').hide();
@@ -333,7 +332,8 @@ $(document).ready(function(){
 		var conceptId = $("#conceptId").val();
 		var request = $("#request").val();
 		var comment = $('#reopenComment').val().trim();
-
+		var reviewId = $('#reviewId').val();
+		
 		if(resolveComment.length == 0){
 			$('#reopenError').text('Reopen comment cannot be empty');
 			$('#reopenError').show();
@@ -803,6 +803,7 @@ $(document).ready(function(){
             </div>
             <div class="modal-body" style="padding-top:0px;">
                <h2 style="color:#19586B;"> History of Requests</h2>
+               <input type="hidden" name="reviewId" id="reviewId" value=""/>
                <div id="reviewHistoryForReopen"></div>
                <div id = "resolveArea" style="padding-top: 25px; display: inline-flex;">
 	               	<textarea class="form-control" id="reopenComment" name="reopenComment" rows="1" cols="60" placeholder="Please enter a opening Comment"></textarea>

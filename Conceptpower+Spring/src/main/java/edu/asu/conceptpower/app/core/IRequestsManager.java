@@ -2,7 +2,9 @@ package edu.asu.conceptpower.app.core;
 
 import java.util.List;
 
+import edu.asu.conceptpower.core.Comment;
 import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.core.ReviewStatus;
 
 /**This interface provides function declaration for adding new Request for review and 
  *      fetching an existing Review for the required conceptId.
@@ -18,10 +20,10 @@ public interface IRequestsManager {
     public void addReviewRequest(ReviewRequest newReviewRequest);
     
     /**
-     * @param conceptId - the conceptId of the concept word
+     * @param conceptId - The id of the concept for which review requests are being retrieved.
      * @return ReviewRequest - the ReviewRequest created for the concept with the provided conceptId.
      */
-    public abstract ReviewRequest getReview(String conceptId);
+    public abstract ReviewRequest getLatestReview(String conceptId);
     
     /**
      * @param conceptId - the conceptId of the concept word
@@ -29,9 +31,12 @@ public interface IRequestsManager {
      */
     public List<ReviewRequest> getAllReviews(String conceptId);
     /**
-     * Method to Resolve the reviewRequest
-     * @param reviewRequest - ReviewRequest holds the resolvingComment, ConceptId and the Resolver.
+     * Method to Update(reopen/resolve) the reviewRequest
+     * @param reviewId - The id of the ReviewRequest to be updated.
+     * @param reviewStatus - status to which it needs to be updated(RESOLVED/CLOSED/OPENED).
+     * @param comments - corresponding comment if any, along with this update.
+     * @param updatedBy - The user performing this update.
      * @Return ReviewRequest - Returns back the updated reviewRequest
      */
-    public ReviewRequest updateReview(ReviewRequest reviewRequest);
+    public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, List<Comment> comments, String updatedBy);
 }

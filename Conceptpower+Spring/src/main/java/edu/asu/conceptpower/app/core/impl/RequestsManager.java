@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.app.core.impl;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +13,7 @@ import edu.asu.conceptpower.app.core.IRequestsManager;
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.core.Comment;
 import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.core.ReviewStatus;
 
 @Service
 public  class RequestsManager implements IRequestsManager{
@@ -34,7 +36,7 @@ public  class RequestsManager implements IRequestsManager{
     /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.IRequestsManager#getReview(java.lang.String)
      */
-    public ReviewRequest getReview(String conceptId) {
+    public ReviewRequest getLatestReview(String conceptId) {
         
         ReviewRequest request = new ReviewRequest();
         request.setConceptId(conceptId);
@@ -72,25 +74,28 @@ public  class RequestsManager implements IRequestsManager{
      * @see edu.asu.conceptpower.app.core.IRequestsManager#updateReview(edu.asu.conceptpower.core.ReviewRequest)
      */
     
-    public ReviewRequest updateReview(ReviewRequest reviewRequest) {
+    public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, List<Comment> comments, String updatedBy) {
         ReviewRequest request = new ReviewRequest();
         
-        request.setId(reviewRequest.getId());
+        request.setId(reviewId);
         
-        ReviewRequest responses = dbClient.getReview(request);
+        ReviewRequest storedRequest = dbClient.getReview(request);
         
-        if(responses == null) {
+        if(storedRequest == null) {
             return null;
         }
-
-        List<Comment> comments  = responses.getComments();
-        comments.addAll(reviewRequest.getComments());
-        responses.setResolver(reviewRequest.getResolver());
-        responses.setComments(comments);
-        responses.setStatus(reviewRequest.getStatus());
         
-        dbClient.updateReviewRequest(responses);
-        return responses;
+        if(comments.size() > 0) {
+            //There is only a possibility of single comment at a time
+            comments.get(0).setCreatedAt(OffsetDateTime.now());
+            comments.get(0).setCreatedBy(updatedBy);
+            storedRequest.getComments().addAll(comments);
+        }
+        storedRequest.setResolver(updatedBy);
+        storedRequest.setStatus(reviewStatus);
+        
+        dbClient.updateReviewRequest(storedRequest);
+        return storedRequest;
     }
     
     /*

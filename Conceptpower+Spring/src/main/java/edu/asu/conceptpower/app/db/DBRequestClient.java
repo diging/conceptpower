@@ -58,7 +58,7 @@ public class DBRequestClient implements IRequestsDBManager{
     }
     
     @Override
-    public void updateReviewRequest(Object reviewRequest) {
+    public void updateReviewRequest(ReviewRequest reviewRequest) {
         client.store(reviewRequest);
         client.commit();
     }

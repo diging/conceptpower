@@ -1,11 +1,11 @@
 package edu.asu.conceptpower.core;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class Comment{
 	private String comment;
 	private String createdBy;
-	private LocalDateTime createdAt;
+	private OffsetDateTime createdAt;
 	
 	public String getComment() {
 	    return comment;
@@ -15,7 +15,7 @@ public class Comment{
 	    return createdBy;
 	}
 	
-	public LocalDateTime getCreatedAt() {
+	public OffsetDateTime getCreatedAt() {
 	    return createdAt;
 	}
 	
@@ -27,7 +27,7 @@ public class Comment{
 	    this.createdBy = createdBy;
 	}
 	
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(OffsetDateTime createdAt) {
 	    this.createdAt = createdAt;
 	}
 }

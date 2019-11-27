@@ -1,6 +1,6 @@
 package edu.asu.conceptpower.core;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class ReviewRequest {
     private String requester;
     private String resolver;
     private List<Comment> comments;
-    private LocalDateTime createdTime;
+    private OffsetDateTime createdTime;
     
     
     public ReviewRequest() {
@@ -76,11 +76,11 @@ public class ReviewRequest {
         this.comments = comments;
     }
     
-    public LocalDateTime getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
         return createdTime;
     }
     
-    public void setCreatedAt(LocalDateTime createdTime) {
+    public void setCreatedAt(OffsetDateTime createdTime) {
         this.createdTime = createdTime;
     }
 }

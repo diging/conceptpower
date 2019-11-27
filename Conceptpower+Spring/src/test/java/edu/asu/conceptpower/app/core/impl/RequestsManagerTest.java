@@ -3,7 +3,7 @@ package edu.asu.conceptpower.app.core.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class RequestsManagerTest {
         updatedRequest.setRequest("Review the Spelling again");
         updatedRequest.setRequester("admin");
         updatedRequest.setResolver("admin");
-        updatedRequest.setCreatedAt(LocalDateTime.now());
+        updatedRequest.setCreatedAt(OffsetDateTime.now());
         updatedRequest.setStatus(ReviewStatus.OPENED);
         
         responseList.add(updatedRequest);
@@ -81,7 +81,7 @@ public class RequestsManagerTest {
         response.add(reviewRequest);
         Mockito.when(dbClient.getAllReviews(ArgumentMatchers.any(ReviewRequest.class))).thenReturn(response);
 
-        ReviewRequest fetchedReview = requestManager.getReview("WID-10126926-N-05-Einstein");
+        ReviewRequest fetchedReview = requestManager.getLatestReview("WID-10126926-N-05-Einstein");
      
         Assert.assertEquals("WID-10126926-N-05-Einstein", fetchedReview.getConceptId());
         Assert.assertEquals("admin", fetchedReview.getRequester());
@@ -93,7 +93,7 @@ public class RequestsManagerTest {
     public void test_getReview_failure() {
         Mockito.when(dbClient.getAllReviews(ArgumentMatchers.any(ReviewRequest.class))).thenReturn(null);
 
-        ReviewRequest fetchedReview = requestManager.getReview("WID-10126926-N-05-Thomas");
+        ReviewRequest fetchedReview = requestManager.getLatestReview("WID-10126926-N-05-Thomas");
         
         Assert.assertNull(fetchedReview);
     }
@@ -123,7 +123,7 @@ public class RequestsManagerTest {
     
     @Test
     public void getReviewTest() {
-        ReviewRequest response = requestManager.getReview("WID-10126926-N-05-Einstein");
+        ReviewRequest response = requestManager.getLatestReview("WID-10126926-N-05-Einstein");
         
         assertNotNull(response);
         
