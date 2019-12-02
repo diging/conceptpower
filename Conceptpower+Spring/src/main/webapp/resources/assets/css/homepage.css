@@ -130,7 +130,6 @@ thead{
 
 .tableStyles {
     -webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
-    -webkit-border-radius: 30px;
 }
 
 .pagination {
@@ -173,7 +172,7 @@ table{
 }
 
 .footerBox,.push {
-  height: 50px;
+  height: 75px;
 }
 
 .navbar-default {
@@ -296,4 +295,12 @@ table{
     margin-right: 50px;
     display: inline-table;
     text-align: right;
+}
+
+a {
+	color: #4f3acc;
+}
+
+a:hover {
+	color: #333;
 }

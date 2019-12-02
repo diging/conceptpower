@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	      <script src="resources/js/bootstrap.min.js" type="text/javascript" ></script>
+	      <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
+	      <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
+	      <link th:href="@{/resources/assets/css/conceptType.css}" rel="stylesheet" />
+	      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	</head>
+	
+	<body class="body">
+       <main class="wrapper">
+	      <div th:insert="layouts/navbar :: navbar('false')"></div>
+	      
+	      <div class="newConcept">
+	      	<h3 class="title">Add a new WordNet concept wrapper</h3>
+	      	<h4 style="text-align: center; margin-top: 35px;">Add a wrapper for concept in WordNet. Do that if you, for example, want to attach an<br/>"equals to" URI to a concept that already exists in WordNet.</h4>
+	      	<div class="wordnet1">
+	      		<div class="sectionHeading">
+		      		<h4 class="numeration">1</h4>
+		      		<label class="formlabel">Search for WordNet concept</label>
+	      		</div>
+	      		<div>
+	      			<div class="formlabel row">
+	      				<label>Create wrapper for concept</label>
+	      				<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter wrapper....">
+	      			</div>
+	      			<div class="row1-2">
+                  
+	                        <label for="exampleFormControlInput1" class="formlabel">POS</label>
+	                        <div class="btn-group">
+	                        <div class="dropdown">
+	                           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="margin-right: 35px;">
+	                           Action
+	                           <span class="caret"></span>
+	                           </button>
+	                           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+	                           </ul>
+	                        </div>
+	                       </div>
+                       		<button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" style="margin: 0;" type="submit">
+               					Search
+               				</button>
+                    
+	      			</div>
+	      		</div>
+	      	</div>
+	      	<div class="wordnet1">
+	      		<div class="sectionHeading">
+		      		<h4 class="numeration">2</h4>
+		      		<label class="formlabel" style="width: 500px;">Select WordNet concept from search results</label>
+	      		</div>
+	      		<h4 style="text-align: center; margin-top: 35px;">The following concepts were found.<br/>Remember! You can only create wrapper for concepts in WordNet.</h4>
+	      		<table class="table table-striped resultTable tableStyles" >
+               <thead>
+                  <tr>
+                  	 <th></th>
+                     <th scope="col">Concept</th>
+                     <th scope="col">WordNet ID</th>
+                     <th scope="col">Description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                  	 <td></td>
+                     <td>word</td>
+                     <td>fihwdncsdknlc</td>
+                     <td>jkasdbv;kcjbv zcn;osdvhi;osdvb</td>
+                  </tr>
+                  <tr>
+                  	 <td></td>
+                     <td>word</td>
+                     <td>fihwdncsdknlc</td>
+                     <td>jkasdbv;kcjbv zcn;osdvhi;osdvb</td>
+                  </tr>
+                  <tr>
+                   	 <td></td>
+                     <td>word</td>
+                     <td>fihwdncsdknlc</td>
+                     <td>jkasdbv;kcjbv zcn;osdvhi;osdvb</td>
+                  </tr>
+               </tbody>
+            </table>
+	      	</div>
+	      	<div class="wordnet1">
+	      		<div class="sectionHeading">
+		      		<h4 class="numeration">3</h4>
+		      		<label class="formlabel">Enter additional information</label>
+	      		</div>
+	      		<div class="formlabel row">
+	      				<label>Word</label>
+	      				<input type="text" class="form-control" id="exampleFormControlInput1">
+	      		</div>
+	      			<div class="row1-2">
+                  
+	                        <label for="exampleFormControlInput1" class="formlabel">Concept list</label>
+	                        <div class="btn-group">
+	                        <div class="dropdown">
+	                           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+	                           Action
+	                           <span class="caret"></span>
+	                           </button>
+	                           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+	                           </ul>
+	                        </div>
+	                       </div>
+	               </div>
+	               <div class="formlabel row">
+		               <label class="formlabel">Description</label>
+		               <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter description...."></textarea>
+	               </div>
+	               <div class="formlabel row1-2">
+	               		<label>Synonyms</label>
+	               		<button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" style="margin:0;" type="submit">
+         					<i class="fa fa-plus" aria-hidden="true"></i> Synonyms	
+         				</button>
+	               </div>
+	               <div class="row1-2">
+                  
+	                        <label for="exampleFormControlInput1" class="formlabel">Concept type</label>
+	                        <div class="btn-group">
+	                        <div class="dropdown">
+	                           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+	                           Action
+	                           <span class="caret"></span>
+	                           </button>
+	                           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+	                           </ul>
+	                        </div>
+	                       </div>
+	               </div>
+	               <div class="formlabel row">
+	      				<label>Equals</label>
+	      				<input type="text" class="form-control" id="exampleFormControlInput1">
+	      		</div>
+	      		<div class="formlabel row">
+	      				<label>Similar to</label>
+	      				<input type="text" class="form-control" id="exampleFormControlInput1">
+	      		</div>
+	      	</div>
+	      	<div class="btnCenter">
+               <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="addConceptTypeBtn">
+               Create WordNet concept wrapper
+               </button>
+            </div>
+	      	
+	      </div>
+	      
+	      
+	      <div class='push'></div>
+       </main>
+      <div th:insert="~{layouts/footer}"></div>
+	</body>
+</html>
