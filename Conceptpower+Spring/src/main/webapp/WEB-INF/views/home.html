@@ -8,6 +8,7 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
       <script>	
          $(document).ready(function(){
+        //$('#navLinks').hide();
          $('#signInBtn').click(function(){
          	$('#siginModal').modal('show');
          });
@@ -35,7 +36,32 @@
          $('#posList div div').on('click', function(){
          	$('#posWord').text($(this).text());
          });
+         function validate(){
+        	 var username = document.getElementById("username").value;
+        	 var password = document.getElementById("password").value;
+        	 var navbar = document.getElementById("rightNavSection");
+        	 var btn = document.getElementById("signInBtn");
+        	 navbar.style.display=none;
+        	 if ( username == "admin" && password == "admin"){
+        	 alert ("Login successfully");
+        	 btn.style.display=none;
+        	 navbar.style.display=contents;
+        	 return false;
+        	 }
+        	 else{
+        	 attempt --;// Decrementing by one.
+        	 alert("You have left "+attempt+" attempt;");
+        	 // Disabling fields after 3 attempts.
+        	 if( attempt == 0){
+        	 document.getElementById("username").disabled = true;
+        	 document.getElementById("password").disabled = true;
+        	 document.getElementById("submit").disabled = true;
+        	 return false;
+        	 }
+        	 }
+        	 }
          });
+         
       </script>
    </head>
    <body class = "body">
@@ -229,7 +255,7 @@
                      <div class="floatingform" >
                         <div>
                            <div class="form-field">
-                              <form name='f' action="<c:url value='/j_spring_security_check' />" method='post'>
+                              <form name='f' action="" method='post'>
                                  <table>
                                     <tr>
                                        <td>
@@ -238,7 +264,7 @@
                                     </tr>
                                     <tr>
                                        <td>
-                                          <input type='text' name='j_username' class="form-control" value='' placeholder="Enter username...">
+                                          <input type='text' id="username" class="form-control" value='' placeholder="Enter username...">
                                        </td>
                                     </tr>
                                     <tr>
@@ -248,12 +274,12 @@
                                     </tr>
                                     <tr>
                                        <td><input type='password' class="form-control"
-                                          name='j_password' placeholder="Enter Password..."/> </td>
+                                          id="password" placeholder="Enter Password..."/> </td>
                                     </tr>
                                  </table>
                                  <div id="modalFooter">
                                     <div >
-                                       <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" th:href="@{/conceptsearch}" type="submit" id="modalSignInBtn" data-toggle="modal" data-target="siginModal">
+                                       <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" type="submit" id="modalSignInBtn" data-toggle="modal" data-target="siginModal" onclick="validate()">
                                        Sign In
                                        <i class="fa fa-sign-in"></i>
                                        </button>

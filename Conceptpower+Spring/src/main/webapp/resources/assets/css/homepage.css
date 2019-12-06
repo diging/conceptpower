@@ -180,10 +180,6 @@ table{
     border-color: transparent;
 }
 
-.rightNavSection{
-	display:inline-flex;
-}
-
 .navbar-default .navbar-nav > li > a {
     color: #333;
 }
