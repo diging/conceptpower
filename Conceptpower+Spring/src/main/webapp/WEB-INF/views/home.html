@@ -8,7 +8,7 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
       <script>	
          $(document).ready(function(){
-        //$('#navLinks').hide();
+         //$('#navLinks').hide();
          $('#signInBtn').click(function(){
          	$('#siginModal').modal('show');
          });
@@ -22,44 +22,46 @@
          	var word = $("#searchInput").val();
           	$.ajax({
                  type: "GET",
-                 url: "/conceptpower/home/conceptsearch?word="+word+"&pos="+pos,
+                 url: "rest/ConceptSearch?word="+word+"&pos="+pos,
+                 headers:{'Accept': 'application/json'},
                  success: function(response){
                  	console.log('Success');
+                 	console.log(response);
                  },
                  error: function(e){
                  	console.log('Failure');
                  }
              }); 
-         	
          	}); 
          
          $('#posList div div').on('click', function(){
          	$('#posWord').text($(this).text());
          });
+         
          function validate(){
-        	 var username = document.getElementById("username").value;
-        	 var password = document.getElementById("password").value;
-        	 var navbar = document.getElementById("rightNavSection");
-        	 var btn = document.getElementById("signInBtn");
-        	 navbar.style.display=none;
-        	 if ( username == "admin" && password == "admin"){
-        	 alert ("Login successfully");
-        	 btn.style.display=none;
-        	 navbar.style.display=contents;
-        	 return false;
-        	 }
-        	 else{
-        	 attempt --;// Decrementing by one.
-        	 alert("You have left "+attempt+" attempt;");
-        	 // Disabling fields after 3 attempts.
-        	 if( attempt == 0){
-        	 document.getElementById("username").disabled = true;
-        	 document.getElementById("password").disabled = true;
-        	 document.getElementById("submit").disabled = true;
-        	 return false;
-        	 }
-        	 }
-        	 }
+	          var username = document.getElementById("username").value;
+	          var password = document.getElementById("password").value;
+	          var navbar = document.getElementById("rightNavSection");
+	          var btn = document.getElementById("signInBtn");
+	          navbar.style.display=none;
+	          if ( username == "admin" && password == "admin"){
+		          alert ("Login successfully");
+		          btn.style.display=none;
+		          navbar.style.display=contents;
+		          return false;
+	          }
+	          else{
+		          attempt --;// Decrementing by one.
+		          alert("You have left "+attempt+" attempt;");
+		          // Disabling fields after 3 attempts.
+		          if( attempt == 0){
+			          document.getElementById("username").disabled = true;
+			          document.getElementById("password").disabled = true;
+			          document.getElementById("submit").disabled = true;
+			          return false;
+		          }
+	          }
+          }
          });
          
       </script>
@@ -83,8 +85,6 @@
                   </div>
                </div>
             </div>
-            
-            
             <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" th:href="@{/home/conceptsearch?word=cat&pos=verb}" id="searchBtn" type="submit">
             Search
             <i class="fa fa-search" aria-hidden="true"></i>
@@ -200,53 +200,51 @@
          <div class='push'></div>
       </main>
       <div th:insert="~{layouts/footer}"></div>
-      
       <div class="modal fade" id="conceptDetailsModal" role="dialog" >
-            <div class="modal-content" >
-               <div class="modal-body">
-                   <ul class="list-group" style="margin-bottom: 0px;">
-                     <li class="list-group-item">
+         <div class="modal-content" >
+            <div class="modal-body">
+               <ul class="list-group" style="margin-bottom: 0px;">
+                  <li class="list-group-item">
                      <span class="conceptDetailsKey">Id:</span>
                      <p class="conceptDetailsValue">djf duhpDFPUDBGFD JBVAYOEHRJndf jhdouyvfadouyD BVBDVOADVOA</p>
-                     </li>
-                     <li class="list-group-item list-group-item-info">
+                  </li>
+                  <li class="list-group-item list-group-item-info">
                      <span class="conceptDetailsKey">URI:</span>
                      <p class="conceptDetailsValue">uhpDFPUDB GFDJBVA YOEHRJndf jhdouyvfadou  yDBVBDVOADVOA</p>
-                     </li>                     
-                     <li class="list-group-item">
+                  </li>
+                  <li class="list-group-item">
                      <span class="conceptDetailsKey">WordNet Id:</span>
                      <p class="conceptDetailsValue">duhpDFPUDBGF DJBVAYOE HRJndfjhd ouyvfadouyD BVBDVOADVOA</p>
-                     </li>
-                     <li class="list-group-item list-group-item-info">
+                  </li>
+                  <li class="list-group-item list-group-item-info">
                      <span class="conceptDetailsKey">Description</span>
                      <p class="conceptDetailsValue">djfgadyf baduhpDFPUDB GFDJBVAYOEHRJnd fjhdouyvfadouy DBVBDVOADVO Ajfgadyfba duhpDFPUDBGFDJBVA YOEHRJndfjh douyvf adouyDBVBD VOADV OAjfgadyfba duhpDFPUD BGFDJBVAYOEH RJndfjhdouy  vfadouyDBV BDVOADVOA</p>
-                     </li>
-                     <li class="list-group-item">
-                     <span class="conceptDetailsKey">POS:</span></li>
-                     
-                     <li class="list-group-item list-group-item-info">
+                  </li>
+                  <li class="list-group-item">
+                     <span class="conceptDetailsKey">POS:</span>
+                  </li>
+                  <li class="list-group-item list-group-item-info">
                      <span class="conceptDetailsKey">Concept List:</span>
-                     </li>
-                     <li class="list-group-item">
+                  </li>
+                  <li class="list-group-item">
                      <span class="conceptDetailsKey">Type:</span>
-                     </li>
-                     <li class="list-group-item list-group-item-info">
+                  </li>
+                  <li class="list-group-item list-group-item-info">
                      <span class="conceptDetailsKey">Equal To:</span>
-                     </li>
-                     <li class="list-group-item">
+                  </li>
+                  <li class="list-group-item">
                      <span class="conceptDetailsKey">Similar To:</span>
-                     </li>
-                     <li class="list-group-item list-group-item-info">
+                  </li>
+                  <li class="list-group-item list-group-item-info">
                      <span class="conceptDetailsKey">Creator:</span>
-                     </li>
-                     <li class="list-group-item">
+                  </li>
+                  <li class="list-group-item">
                      <span class="conceptDetailsKey">Merged Ids:</span>
-                     </li>
-                  </ul>
-               </div>
+                  </li>
+               </ul>
             </div>
+         </div>
       </div>
-      
       <div class="modal fade" id="siginModal" role="dialog" >
          <div class="modal-dialog" id="requestBox">
             <div class="modal-content" >
