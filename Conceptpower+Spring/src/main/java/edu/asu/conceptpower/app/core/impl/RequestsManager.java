@@ -38,15 +38,9 @@ public  class RequestsManager implements IRequestsManager{
      */
     public ReviewRequest getLatestReview(String conceptId) {
         
-        ReviewRequest request = new ReviewRequest();
-        request.setConceptId(conceptId);
-        
-        List<ReviewRequest> reviewRequests = dbClient.getAllReviews(request);
+        List<ReviewRequest> reviewRequests = getAllReviews(conceptId);
        
-        if(reviewRequests!= null && reviewRequests.size()>0) {
-            //ArrayList is initialized to make the instance mutable for sorting
-            reviewRequests = new ArrayList<>(reviewRequests);
-            Collections.sort(reviewRequests, (x, y) -> x.getCreatedAt().compareTo(y.getCreatedAt()));
+        if(reviewRequests!= null && reviewRequests.size() > 0) {
             return reviewRequests.get(reviewRequests.size() - 1);
         }
         
@@ -74,7 +68,7 @@ public  class RequestsManager implements IRequestsManager{
      * @see edu.asu.conceptpower.app.core.IRequestsManager#updateReview(edu.asu.conceptpower.core.ReviewRequest)
      */
     
-    public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, List<Comment> comments, OffsetDateTime createdAt,String updatedBy) {
+    public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, Comment comment, OffsetDateTime createdAt,String updatedBy) {
         ReviewRequest request = new ReviewRequest();
         request.setId(reviewId);
         
@@ -84,15 +78,15 @@ public  class RequestsManager implements IRequestsManager{
             return null;
         }
         
-        if(comments != null && comments.size() > 0) {
+        if(comment != null) {
             //There is only a possibility of single comment at a time
-            comments.get(0).setCreatedAt(createdAt);
-            comments.get(0).setCreatedBy(updatedBy);
+            comment.setCreatedAt(createdAt);
+            comment.setCreatedBy(updatedBy);
             
             //Used setComments instead of addAll to comments parameter because db4o is not properly getting indexed to the old object. SetComments solves this issue.
             List<Comment> commentList = new ArrayList<>();
             commentList.addAll(storedRequest.getComments());
-            commentList.add(comments.get(0));
+            commentList.add(comment);
             storedRequest.setComments(commentList);
 
             storedRequest.setResolver(updatedBy);

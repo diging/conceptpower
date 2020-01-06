@@ -32,8 +32,8 @@ public class DBRequestClient implements IRequestsDBManager{
         client.store(reviewRequest);
         client.commit();
     }
-
     
+    @Override
     public ReviewRequest getReview(ReviewRequest request) {
         List<ReviewRequest> responses =  client.query(new Predicate<ReviewRequest>() {
             private static final long serialVersionUID = 6495914730735826451L;

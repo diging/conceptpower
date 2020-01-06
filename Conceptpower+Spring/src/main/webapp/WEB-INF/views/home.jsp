@@ -289,7 +289,7 @@ $(document).ready(function(){
 			$('#resolveCommentError').text('Closing comment cannot be empty');
 			$('#resolveCommentError').show();
 		}else{
-			var comments = [{comment:comment}];
+			var comments = {comment:comment};
 			
 			$.ajax({
 				type:"POST",
@@ -331,7 +331,7 @@ $(document).ready(function(){
 			$('#reopenError').text('Comment cannot be empty');
 			$('#reopenError').show();
 		}else{
-			var comments = [{comment:comment}];
+			var comments = {comment:comment};
 			
 			$.ajax({
 				type:"POST",

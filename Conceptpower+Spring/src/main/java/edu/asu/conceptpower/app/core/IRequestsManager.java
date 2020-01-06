@@ -40,5 +40,5 @@ public interface IRequestsManager {
      * @param updatedBy - The user performing this update.
      * @Return ReviewRequest - Returns back the updated reviewRequest
      */
-    public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, List<Comment> comments, OffsetDateTime createdAt, String updatedBy);
+    public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, Comment comment, OffsetDateTime createdAt, String updatedBy);
 }

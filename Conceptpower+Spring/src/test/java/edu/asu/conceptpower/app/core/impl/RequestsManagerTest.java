@@ -101,12 +101,10 @@ public class RequestsManagerTest {
     
     @Test
     public void updateReviewTest() {
-        List<Comment> comments = new ArrayList<>();
         Comment comment = new Comment();     
         comment.setComment("Sample Comment");
-        comments.add(comment);
         
-        ReviewRequest response  = requestManager.updateReview("REVIEW1234-thisissupposedtobesecret2", ReviewStatus.OPENED, comments, OffsetDateTime.now(), "admin");
+        ReviewRequest response  = requestManager.updateReview("REVIEW1234-thisissupposedtobesecret2", ReviewStatus.OPENED, comment, OffsetDateTime.now(), "admin");
         
         assertNotNull(response);
         

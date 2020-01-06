@@ -34,13 +34,13 @@ public class ReviewRequestController {
     }
     
     @RequestMapping(value = "/auth/request/resolve/{reviewId}", method = RequestMethod.POST )
-    public @ResponseBody ReviewRequest resolveRequest(@PathVariable String reviewId,@RequestBody List<Comment> comments,Principal principal) {
-        return requestsMgr.updateReview(reviewId, ReviewStatus.RESOLVED, comments, OffsetDateTime.now(), principal.getName());
+    public @ResponseBody ReviewRequest resolveRequest(@PathVariable String reviewId,@RequestBody Comment comment,Principal principal) {
+        return requestsMgr.updateReview(reviewId, ReviewStatus.RESOLVED, comment, OffsetDateTime.now(), principal.getName());
     }
     
     @RequestMapping(value = "/auth/request/reopen/{reviewId}", method = RequestMethod.POST )
-    public @ResponseBody ReviewRequest reopenRequest(@PathVariable String reviewId,@RequestBody List<Comment> comments,Principal principal) {
-        return requestsMgr.updateReview(reviewId, ReviewStatus.OPENED, comments, OffsetDateTime.now(), principal.getName());
+    public @ResponseBody ReviewRequest reopenRequest(@PathVariable String reviewId,@RequestBody Comment comment,Principal principal) {
+        return requestsMgr.updateReview(reviewId, ReviewStatus.OPENED, comment, OffsetDateTime.now(), principal.getName());
     }
     
     @RequestMapping(value = "/auth/request/{conceptId}/all", method = RequestMethod.GET)
