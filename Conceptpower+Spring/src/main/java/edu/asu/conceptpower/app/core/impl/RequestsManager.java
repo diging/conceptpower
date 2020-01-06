@@ -74,9 +74,8 @@ public  class RequestsManager implements IRequestsManager{
      * @see edu.asu.conceptpower.app.core.IRequestsManager#updateReview(edu.asu.conceptpower.core.ReviewRequest)
      */
     
-    public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, List<Comment> comments, String updatedBy) {
+    public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, List<Comment> comments, OffsetDateTime createdAt,String updatedBy) {
         ReviewRequest request = new ReviewRequest();
-        
         request.setId(reviewId);
         
         ReviewRequest storedRequest = dbClient.getReview(request);
@@ -85,17 +84,24 @@ public  class RequestsManager implements IRequestsManager{
             return null;
         }
         
-        if(comments.size() > 0) {
+        if(comments != null && comments.size() > 0) {
             //There is only a possibility of single comment at a time
-            comments.get(0).setCreatedAt(OffsetDateTime.now());
+            comments.get(0).setCreatedAt(createdAt);
             comments.get(0).setCreatedBy(updatedBy);
-            storedRequest.getComments().addAll(comments);
+            
+            //Used setComments instead of addAll to comments parameter because db4o is not properly getting indexed to the old object. SetComments solves this issue.
+            List<Comment> commentList = new ArrayList<>();
+            commentList.addAll(storedRequest.getComments());
+            commentList.add(comments.get(0));
+            storedRequest.setComments(commentList);
+
+            storedRequest.setResolver(updatedBy);
+            storedRequest.setStatus(reviewStatus);
+            
+            dbClient.store(storedRequest);
+            return storedRequest;
         }
-        storedRequest.setResolver(updatedBy);
-        storedRequest.setStatus(reviewStatus);
-        
-        dbClient.updateReviewRequest(storedRequest);
-        return storedRequest;
+        return null;
     }
     
     /*

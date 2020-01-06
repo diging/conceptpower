@@ -285,23 +285,16 @@ $(document).ready(function(){
 		var request = $("#request").val();
 		var reviewId = $('#reviewId').val();
 		
-		if(resolveComment.length == 0){
+		if(comment.length == 0){
 			$('#resolveCommentError').text('Closing comment cannot be empty');
 			$('#resolveCommentError').show();
 		}else{
-			var resolveBody = {
-					conceptId:conceptId,
-					status:"RESOLVED",
-					comments: [{
-						comment:comment,
-					}],
-					id:reviewId
-			};
+			var comments = [{comment:comment}];
 			
 			$.ajax({
 				type:"POST",
-				url:"${pageContext.servletContext.contextPath}/auth/request/resolve?${_csrf.parameterName}=${_csrf.token}",
-				data: JSON.stringify(resolveBody),
+				url:"${pageContext.servletContext.contextPath}/auth/request/resolve/"+reviewId+"?${_csrf.parameterName}=${_csrf.token}",
+				data: JSON.stringify(comments),
 				contentType:"application/json",
 				success: function(response){
 					$('#requestModal').modal('hide');
@@ -334,23 +327,16 @@ $(document).ready(function(){
 		var comment = $('#reopenComment').val().trim();
 		var reviewId = $('#reviewId').val();
 		
-		if(resolveComment.length == 0){
-			$('#reopenError').text('Reopen comment cannot be empty');
+		if(comment.length == 0){
+			$('#reopenError').text('Comment cannot be empty');
 			$('#reopenError').show();
 		}else{
-			var reopenBody = {
-					conceptId:conceptId,
-					status:"OPENED",
-					comments: [{
-						comment:comment,
-					}],
-					id:reviewId
-			};
+			var comments = [{comment:comment}];
 			
 			$.ajax({
 				type:"POST",
-				url:"${pageContext.servletContext.contextPath}/auth/request/reopen?${_csrf.parameterName}=${_csrf.token}",
-				data: JSON.stringify(reopenBody),
+				url:"${pageContext.servletContext.contextPath}/auth/request/reopen/"+reviewId+"?${_csrf.parameterName}=${_csrf.token}",
+				data: JSON.stringify(comments),
 				contentType:"application/json",
 				success: function(response){
 					$('#reopenModal').modal('hide');

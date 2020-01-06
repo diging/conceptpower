@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
+import edu.asu.conceptpower.core.Comment;
 import edu.asu.conceptpower.core.ReviewRequest;
 import edu.asu.conceptpower.core.ReviewStatus;
 
@@ -100,7 +101,12 @@ public class RequestsManagerTest {
     
     @Test
     public void updateReviewTest() {
-        ReviewRequest response  = requestManager.updateReview(request);
+        List<Comment> comments = new ArrayList<>();
+        Comment comment = new Comment();     
+        comment.setComment("Sample Comment");
+        comments.add(comment);
+        
+        ReviewRequest response  = requestManager.updateReview("REVIEW1234-thisissupposedtobesecret2", ReviewStatus.OPENED, comments, OffsetDateTime.now(), "admin");
         
         assertNotNull(response);
         

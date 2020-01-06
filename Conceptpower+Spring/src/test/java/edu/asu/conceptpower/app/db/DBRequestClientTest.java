@@ -35,16 +35,6 @@ public class DBRequestClientTest {
         Mockito.verify(objectContainerClient).queryByExample(reviewRequest);
     }
     
-    @Test
-    public void updateReviewRequestTest() {
-        ReviewRequest reviewRequest = new ReviewRequest();
-        reviewRequest.setConceptId("WID-10126926-N-05-Einstein");
-        
-        client.updateReviewRequest(reviewRequest);
-        Mockito.verify(objectContainerClient).store(reviewRequest);
-        Mockito.verify(objectContainerClient).commit();
-    }
-    
     @SuppressWarnings("deprecation")
     @Test
     public void getReviewTest() {

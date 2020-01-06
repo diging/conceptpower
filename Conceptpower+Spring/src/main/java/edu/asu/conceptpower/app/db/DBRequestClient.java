@@ -28,7 +28,7 @@ public class DBRequestClient implements IRequestsDBManager{
     }
     
     @Override
-    public void store(ReviewRequest reviewRequest) {  
+    public void store(ReviewRequest reviewRequest) { 
         client.store(reviewRequest);
         client.commit();
     }
@@ -48,7 +48,6 @@ public class DBRequestClient implements IRequestsDBManager{
         if(responses == null || responses.size() == 0) {
             return null;
         }
-        
         return responses.get(0);
     }
     
@@ -57,9 +56,4 @@ public class DBRequestClient implements IRequestsDBManager{
         return client.queryByExample(reviewRequest);
     }
     
-    @Override
-    public void updateReviewRequest(ReviewRequest reviewRequest) {
-        client.store(reviewRequest);
-        client.commit();
-    }
 }

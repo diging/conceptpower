@@ -5,8 +5,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.core.impl.RequestsManager;
+import edu.asu.conceptpower.core.Comment;
 import edu.asu.conceptpower.core.ReviewRequest;
 import edu.asu.conceptpower.core.ReviewStatus;
 
@@ -34,14 +33,14 @@ public class ReviewRequestController {
         return reviewRequest;
     }
     
-    @RequestMapping(value = "/auth/request/resolve", method = RequestMethod.POST )
-    public @ResponseBody ReviewRequest resolveRequest(@RequestBody ReviewRequest reviewRequest,Principal principal) {
-        return requestsMgr.updateReview(reviewRequest.getId(), ReviewStatus.RESOLVED, reviewRequest.getComments(), principal.getName());
+    @RequestMapping(value = "/auth/request/resolve/{reviewId}", method = RequestMethod.POST )
+    public @ResponseBody ReviewRequest resolveRequest(@PathVariable String reviewId,@RequestBody List<Comment> comments,Principal principal) {
+        return requestsMgr.updateReview(reviewId, ReviewStatus.RESOLVED, comments, OffsetDateTime.now(), principal.getName());
     }
     
-    @RequestMapping(value = "/auth/request/reopen", method = RequestMethod.POST )
-    public @ResponseBody ReviewRequest reopenRequest(@RequestBody ReviewRequest reviewRequest,Principal principal) {
-        return requestsMgr.updateReview(reviewRequest.getId(), ReviewStatus.OPENED, reviewRequest.getComments(), principal.getName());
+    @RequestMapping(value = "/auth/request/reopen/{reviewId}", method = RequestMethod.POST )
+    public @ResponseBody ReviewRequest reopenRequest(@PathVariable String reviewId,@RequestBody List<Comment> comments,Principal principal) {
+        return requestsMgr.updateReview(reviewId, ReviewStatus.OPENED, comments, OffsetDateTime.now(), principal.getName());
     }
     
     @RequestMapping(value = "/auth/request/{conceptId}/all", method = RequestMethod.GET)
