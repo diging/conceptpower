@@ -37,7 +37,6 @@ public  class RequestsManager implements IRequestsManager{
      * @see edu.asu.conceptpower.app.core.IRequestsManager#getReview(java.lang.String)
      */
     public ReviewRequest getLatestReview(String conceptId) {
-        
         List<ReviewRequest> reviewRequests = getAllReviews(conceptId);
        
         if(reviewRequests!= null && reviewRequests.size() > 0) {
@@ -51,10 +50,7 @@ public  class RequestsManager implements IRequestsManager{
      * @see edu.asu.conceptpower.app.core.IRequestsManager#getAllReviews(java.lang.String)
      */
     public List<ReviewRequest> getAllReviews(String conceptId){
-        ReviewRequest request = new ReviewRequest();
-        request.setConceptId(conceptId);
-        
-        List<ReviewRequest> reviewRequests = dbClient.getAllReviews(request);
+        List<ReviewRequest> reviewRequests = dbClient.getAllReviews(conceptId);
         
         if(reviewRequests!= null && reviewRequests.size() > 0) {
             reviewRequests = new ArrayList<>(reviewRequests);
@@ -68,11 +64,8 @@ public  class RequestsManager implements IRequestsManager{
      * @see edu.asu.conceptpower.app.core.IRequestsManager#updateReview(edu.asu.conceptpower.core.ReviewRequest)
      */
     
-    public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, Comment comment, OffsetDateTime createdAt,String updatedBy) {
-        ReviewRequest request = new ReviewRequest();
-        request.setId(reviewId);
-        
-        ReviewRequest storedRequest = dbClient.getReview(request);
+    public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, Comment comment, OffsetDateTime createdAt,String updatedBy) {  
+        ReviewRequest storedRequest = dbClient.getReview(reviewId);
         
         if(storedRequest == null) {
             return null;
@@ -107,13 +100,8 @@ public  class RequestsManager implements IRequestsManager{
         String id = prefix + UUID.randomUUID().toString();
 
         while (true) {
-            ReviewRequest example = null;
-            
-            example = new ReviewRequest();
-            example.setId(id);
-            
             // if there doesn't exist an object with this id return id
-            ReviewRequest results = dbClient.getReview(example);
+            ReviewRequest results = dbClient.getReview(id);
             if (results == null )
                 return id;
 

@@ -34,13 +34,13 @@ public class DBRequestClient implements IRequestsDBManager{
     }
     
     @Override
-    public ReviewRequest getReview(ReviewRequest request) {
+    public ReviewRequest getReview(String reviewId) {
         List<ReviewRequest> responses =  client.query(new Predicate<ReviewRequest>() {
             private static final long serialVersionUID = 6495914730735826451L;
 
             @Override
             public boolean match(ReviewRequest review) {
-                return review.getId().equals(request.getId());
+                return review.getId().equals(reviewId);
             }
             
         });
@@ -52,8 +52,11 @@ public class DBRequestClient implements IRequestsDBManager{
     }
     
     @Override
-    public List<ReviewRequest> getAllReviews(ReviewRequest reviewRequest){
-        return client.queryByExample(reviewRequest);
+    public List<ReviewRequest> getAllReviews(String  conceptId){
+        ReviewRequest request = new ReviewRequest();
+        request.setConceptId(conceptId);
+        
+        return client.queryByExample(request);
     }
     
 }

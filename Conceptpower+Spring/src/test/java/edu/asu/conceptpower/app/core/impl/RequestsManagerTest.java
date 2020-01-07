@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -48,9 +47,9 @@ public class RequestsManagerTest {
         updatedRequest.setStatus(ReviewStatus.OPENED);
         
         responseList.add(updatedRequest);
-        Mockito.when(dbClient.getReview(ArgumentMatchers.any(ReviewRequest.class))).thenReturn(updatedRequest);
+        Mockito.when(dbClient.getReview("REVIEW1234-thisissupposedtobesecret2")).thenReturn(updatedRequest);
         
-        Mockito.when(dbClient.getAllReviews(ArgumentMatchers.any(ReviewRequest.class))).thenReturn(responseList);
+        Mockito.when(dbClient.getAllReviews("WID-10126926-N-05-Einstein")).thenReturn(responseList);
     }
     
     @Test
@@ -58,11 +57,12 @@ public class RequestsManagerTest {
         
         ReviewRequest reviewRequest = new ReviewRequest();
         reviewRequest.setStatus(ReviewStatus.OPENED);
+        reviewRequest.setId("REVIEW1234-thisissupposedtobesecret");
         reviewRequest.setRequester("admin");
         reviewRequest.setConceptId("WID-01006675-N-02-mental_test");
         reviewRequest.setRequest("Testing Method");
            
-        Mockito.when(dbClient.getReview(ArgumentMatchers.any(ReviewRequest.class))).thenReturn(null);
+        Mockito.when(dbClient.getReview("REVIEW1234-thisissupposedtobesecret")).thenReturn(null);
         
         requestManager.addReviewRequest(reviewRequest);
         Mockito.verify(dbClient).store(reviewRequest);
@@ -80,7 +80,7 @@ public class RequestsManagerTest {
         
         List<ReviewRequest> response = new ArrayList<>();
         response.add(reviewRequest);
-        Mockito.when(dbClient.getAllReviews(ArgumentMatchers.any(ReviewRequest.class))).thenReturn(response);
+        Mockito.when(dbClient.getAllReviews("WID-10126926-N-05-Einstein")).thenReturn(response);
 
         ReviewRequest fetchedReview = requestManager.getLatestReview("WID-10126926-N-05-Einstein");
      
@@ -92,7 +92,7 @@ public class RequestsManagerTest {
     
     @Test
     public void test_getReview_failure() {
-        Mockito.when(dbClient.getAllReviews(ArgumentMatchers.any(ReviewRequest.class))).thenReturn(null);
+        Mockito.when(dbClient.getAllReviews("WID-10126926-N-05-Thomas")).thenReturn(null);
 
         ReviewRequest fetchedReview = requestManager.getLatestReview("WID-10126926-N-05-Thomas");
         

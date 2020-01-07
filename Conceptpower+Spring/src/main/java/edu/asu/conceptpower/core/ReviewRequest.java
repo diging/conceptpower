@@ -13,7 +13,7 @@ public class ReviewRequest {
     private String requester;
     private String resolver;
     private List<Comment> comments;
-    private OffsetDateTime createdTime;
+    private OffsetDateTime createdAt;
     
     
     public ReviewRequest() {
@@ -77,10 +77,10 @@ public class ReviewRequest {
     }
     
     public OffsetDateTime getCreatedAt() {
-        return createdTime;
+        return createdAt;
     }
     
-    public void setCreatedAt(OffsetDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

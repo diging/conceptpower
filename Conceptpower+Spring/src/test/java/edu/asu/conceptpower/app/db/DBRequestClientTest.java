@@ -2,6 +2,7 @@ package edu.asu.conceptpower.app.db;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -28,20 +29,14 @@ public class DBRequestClientTest {
     
     @Test
     public void getAllReviewsTest() {
-        ReviewRequest reviewRequest = new ReviewRequest();
-        reviewRequest.setConceptId("WID-10126926-N-05-Einstein");
-        
-        client.getAllReviews(reviewRequest);
-        Mockito.verify(objectContainerClient).queryByExample(reviewRequest);
+        client.getAllReviews("WID-10126926-N-05-Einstein");
+        Mockito.verify(objectContainerClient).queryByExample(ArgumentMatchers.any(ReviewRequest.class));
     }
     
     @SuppressWarnings("deprecation")
     @Test
     public void getReviewTest() {
-        ReviewRequest reviewRequest = new ReviewRequest();
-        reviewRequest.setConceptId("WID-10126926-N-05-Einstein");
-        
-        client.getReview(reviewRequest);
+        client.getReview("REVIEW1234-thisissupposedtobesecret2");
         Mockito.verify(objectContainerClient).query(Mockito.<Predicate<ReviewRequest>>anyObject());
     }
 }

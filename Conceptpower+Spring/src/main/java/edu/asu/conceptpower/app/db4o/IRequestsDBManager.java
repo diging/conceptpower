@@ -9,7 +9,7 @@ public interface IRequestsDBManager {
     
     public abstract void store(ReviewRequest reviewRequest);
     
-    public List<ReviewRequest> getAllReviews(ReviewRequest conceptId);
+    public List<ReviewRequest> getAllReviews(String conceptId);
     
-    public ReviewRequest getReview(ReviewRequest request);
+    public ReviewRequest getReview(String reviewId);
 }
