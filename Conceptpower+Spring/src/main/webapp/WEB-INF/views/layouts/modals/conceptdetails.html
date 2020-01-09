@@ -1,0 +1,58 @@
+ <!DOCTYPE html>
+ <html
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      
+ <div class="modal fade" id="conceptDetailsModal" role="dialog" th:fragment="conceptdetails">
+         <div class="modal-content" >
+            <div class="modal-body">
+               <ul class="list-group" style="margin-bottom: 0px;">
+                  <li class="list-group-item">
+                     <span class="conceptDetailsKey">Id:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsId" th:text="${details}" ></p>
+                  </li>
+                  <li class="list-group-item list-group-item-info">
+                     <span class="conceptDetailsKey">URI:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsUri"></p>
+                  </li>
+                  <li class="list-group-item">
+                     <span class="conceptDetailsKey">WordNet Id:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsWordnetId"></p>
+                  </li>
+                  <li class="list-group-item list-group-item-info">
+                     <span class="conceptDetailsKey">Description:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsDesc"></p>
+                  </li>
+                  <li class="list-group-item">
+                     <span class="conceptDetailsKey">POS:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsPos"></p>
+                  </li>
+                  <li class="list-group-item list-group-item-info">
+                     <span class="conceptDetailsKey">Concept List:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsList"></p>
+                  </li>
+                  <li class="list-group-item">
+                     <span class="conceptDetailsKey">Type:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsType"></p>
+                  </li>
+                  <li class="list-group-item list-group-item-info">
+                     <span class="conceptDetailsKey">Equal To:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsEqualTo"></p>
+                  </li>
+                  <li class="list-group-item">
+                     <span class="conceptDetailsKey">Similar To:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsSimilarTo"></p>
+                  </li>
+                  <li class="list-group-item list-group-item-info">
+                     <span class="conceptDetailsKey">Creator:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsCreator"></p>
+                  </li>
+                  <li class="list-group-item">
+                     <span class="conceptDetailsKey">Merged Ids:</span>
+                     <p class="conceptDetailsValue" id="conceptDetailsMergedIds"></p>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      </html>

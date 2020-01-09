@@ -1,7 +1,6 @@
 <html
 	  xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
 		<nav class="navbar navbar-default" th:fragment ="navbar(isSignedIn)">
 		   <div class="header">
 		      <a class="navbar-brand" href="#">
@@ -70,10 +69,8 @@
 		         </li>
 		            </ul>
 		         </div>
-		         
-		         
 		      </div>
-		      <button th:if="${isSignedIn == 'false'}" class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="signInBtn" type="submit" data-toggle="modal" data-target="siginModal">
+		      <button th:if="${isSignedIn == 'false'}" class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="signInBtn" type="submit" data-toggle="modal" data-target="#siginModal">
 		         Sign In
 		         <i class="fa fa-sign-in"></i>
 		         </button>

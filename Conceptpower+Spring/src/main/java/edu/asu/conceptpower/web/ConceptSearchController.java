@@ -86,7 +86,7 @@ public class ConceptSearchController {
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results, ServletRequest request)
                     throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
-            return "conceptsearch";
+            return "home";
         }   
         
         conceptSearchBean.setWord(conceptSearchBean.getWord().trim());
@@ -102,7 +102,7 @@ public class ConceptSearchController {
             model.addAttribute("show_error_alert", true);
             model.addAttribute("error_alert_msg", indexerRunning);
             // Need to include command Object
-            return "conceptsearch";
+            return "home";
         }
         int pageInt = new Integer(page);
         int sortDirInt = new Integer(sortDir);
@@ -114,7 +114,7 @@ public class ConceptSearchController {
                     conceptSearchBean.getPos(), null);
         } catch (IndexerRunningException e) {
             model.addAttribute(indexerStatus, e.getMessage());
-            return "conceptsearch";
+            return "home";
         }
        
        
@@ -137,7 +137,7 @@ public class ConceptSearchController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("sortColumn", sortColumn);
         
-        return "conceptsearch";
+        return "home";
     }
 
 }

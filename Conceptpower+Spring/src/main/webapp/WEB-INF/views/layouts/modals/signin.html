@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   <div class="modal fade" id="siginModal" role="dialog" th:fragment="signin">
+      <div class="modal-dialog" id="requestBox">
+         <div class="modal-content" >
+            <div class="modal-body">
+               <div class="form-field">
+                  <div class="floatingform" >
+                     <div>
+                        <div class="form-field">
+                           <form name='f' action="" method='post'>
+                              <table>
+                                 <tr>
+                                    <td>
+                                       <h3>Username</h3>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td>
+                                       <input type='text' id="username" class="form-control" value='' placeholder="Enter username...">
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td>
+                                       <h3>Password</h3>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td><input type='password' class="form-control"
+                                       id="password" placeholder="Enter Password..."/> </td>
+                                 </tr>
+                              </table>
+                              <div id="modalFooter">
+                                 <div >
+                                    <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" type="submit" id="modalSignInBtn" data-toggle="modal" data-target="siginModal" onclick="validate()">
+                                    Sign In
+                                    <i class="fa fa-sign-in"></i>
+                                    </button>
+                                 </div>
+                                 <div id="forgotPwd">
+                                    <a href="#">Forgot <br/> Password ?</a>
+                                 </div>
+                              </div>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</html>

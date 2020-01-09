@@ -1,96 +1,172 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    <head>
+   	<meta name="_csrf_token" th:content="${_csrf.token}"/>
+	<meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script src="resources/js/bootstrap.min.js" type="text/javascript" ></script>
+      <script th:src="@{/resources/js/bootstrap.min.js}" type="text/javascript" ></script>
       <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
       <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-      <script>	
-         $(document).ready(function(){
-         //$('#navLinks').hide();
-         $('#signInBtn').click(function(){
-         	$('#siginModal').modal('show');
-         });
-         
-         $('#conceptDetails').click(function(){
-          	$('#conceptDetailsModal').modal('show');
-          });
-         
-         $('#searchBtn').click(function(){
-         	var pos = $('#posWord').text();
-         	var word = $("#searchInput").val();
-          	$.ajax({
-                 type: "GET",
-                 url: "rest/ConceptSearch?word="+word+"&pos="+pos,
-                 headers:{'Accept': 'application/json'},
-                 success: function(response){
-                 	console.log('Success');
-                 	console.log(response);
-                 },
-                 error: function(e){
-                 	console.log('Failure');
-                 }
-             }); 
-         	}); 
-         
-         $('#posList div div').on('click', function(){
-         	$('#posWord').text($(this).text());
-         });
-         
-         function validate(){
-	          var username = document.getElementById("username").value;
-	          var password = document.getElementById("password").value;
-	          var navbar = document.getElementById("rightNavSection");
-	          var btn = document.getElementById("signInBtn");
-	          navbar.style.display=none;
-	          if ( username == "admin" && password == "admin"){
-		          alert ("Login successfully");
-		          btn.style.display=none;
-		          navbar.style.display=contents;
-		          return false;
-	          }
-	          else{
-		          attempt --;// Decrementing by one.
-		          alert("You have left "+attempt+" attempt;");
-		          // Disabling fields after 3 attempts.
-		          if( attempt == 0){
-			          document.getElementById("username").disabled = true;
-			          document.getElementById("password").disabled = true;
-			          document.getElementById("submit").disabled = true;
-			          return false;
-		          }
-	          }
-          }
-         });
-         
+      <script>
+      		$(document).ready(hideFormProcessing);
+	        function hideFormProcessing() {
+	          $('#floatingCirclesG').hide();
+	        }
+	        function showFormProcessing() {
+	          $('#floatingCirclesG').show();
+	        }
+	
+	        //Function to handle pagination
+	    	function paginate(page, sortDir, sortColumn, word, pos) {
+	    	    var conceptIdsToMerge = null; //$('#conceptIdsToMerge').val().replace("\"", "");
+	    	    var paginationElement = document.getElementById("paginationSection")
+	    	    if (conceptIdsToMerge) {
+	    	        window.location = 'conceptsearch?page=' + page + '&sortDir=' + paginationElement.getAttribute('data-sortdir') + '&sortColumn=' + paginationElement.getAttribute('data-searchcolumn') +
+	    	            '&word=' + paginationElement.getAttribute('data-searchword') + '&pos=' + paginationElement.getAttribute('data-searchpos') + '&conceptIdsToMerge=' + conceptIdsToMerge;
+	    	    } else {
+	    	        window.location = 'conceptsearch?page=' + page + '&sortDir=' + paginationElement.getAttribute('data-sortdir') + '&sortColumn=' + paginationElement.getAttribute('data-searchcolumn') +
+	    	            '&word=' + paginationElement.getAttribute('data-searchword') + '&pos=' + paginationElement.getAttribute('data-searchpos');
+	    	    }
+	
+	    	}
+			
+	        //Function to populate concept details Modal
+	    	$(document).ready(function() {
+	    	    $('#conceptDetailsModal')
+	    		.on(
+	    			'show.bs.modal',
+	    			function(event) {
+	    				var viewConceptDetailsEvent = $(event.relatedTarget);
+	    				var conceptid = viewConceptDetailsEvent.data('conceptid');
+	    				
+	    				$.ajax({
+	    					type : "GET",
+	    					url : "/conceptpower/conceptDetail",
+	    					data : {
+	    						conceptid : conceptid
+	    					},
+	    					success : function(details) {
+	    						details = $.parseJSON(details);	    						
+	    						var token = $("meta[name='_csrf_token']").attr("content");
+	
+	    						$.ajax({
+	    	    					type : "POST",
+	    	    					url : "/conceptpower/getconceptdetails?_csrf="+token.trim(),
+	    	    					data : JSON.stringify(details),
+	    	    					contentType:"application/json",
+	    	    					success : function(data) {
+	    	    						console.log(data);
+	    	    					
+	    	    					}
+	    						});
+	    				/* 		
+	    						$("#conceptTerm").text(details.name);
+	    						$("#conceptDetailsId").text(details.id);
+	    						$("#conceptDetailsUri").text(details.uri);
+	    						$("#conceptDetailsWordnetId").text(details.wordnetid);
+	    						$("#conceptDetailsPos").text(details.pos);
+	    						$("#conceptDetailsList").text(details.conceptlist);
+	    						$("#conceptDetailsType").text(details.type);
+	    						$("#conceptDetailsEqualTo").text(details.equalto);
+	    						$("#conceptDetailsSimilarTo").text(details.similarto);
+	    						$("#conceptDetailsCreator").text(details.creator);
+	    						$("#conceptDetailsDesc").html(details.description);
+	    						$("#conceptDetailsMergedIds").html(details.mergedIds);
+	    			 */			
+	    						if(details.mergedIds) {
+	    							$.ajax({
+	    								url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
+	    				                type: 'GET',
+	    				                headers: {          
+	    				                    Accept: "application/json",         
+	    				                },
+	    				                data: {
+	    				                  ids: details.mergedIds
+	    				                },
+	    				              })
+	    				              .msuccess(function(originalConcepts) {
+	    				                var mergedIdsHtml = '';
+	    				                $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
+	    				                    if(mergedIdsHtml) {
+	    				                      mergedIdsHtml += ", ";
+	    				                    }
+	    				                    mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
+	    				                    mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
+	    				                    mergedIdsHtml += "</span>";
+	    				                });
+	    				                $("#detailsmergedIds").html(mergedIdsHtml);  
+	    				              });              
+	    				        }
+	    					}
+	    				});
+	            });
+	
+	    	    $('#posList div div').on('click', function() {
+	    	        $('#posWord').text($(this).text());
+	    	    });
+	
+	    	    function validate() {
+	    	        var username = document.getElementById("username").value;
+	    	        var password = document.getElementById("password").value;
+	    	        var navbar = document.getElementById("rightNavSection");
+	    	        var btn = document.getElementById("signInBtn");
+	    	        navbar.style.display = none;
+	    	        if (username == "admin" && password == "admin") {
+	    	            alert("Login successfully");
+	    	            btn.style.display = none;
+	    	            navbar.style.display = contents;
+	    	            return false;
+	    	        } else {
+	    	            attempt--; // Decrementing by one.
+	    	            alert("You have left " + attempt + " attempt;");
+	    	            // Disabling fields after 3 attempts.
+	    	            if (attempt == 0) {
+	    	                document.getElementById("username").disabled = true;
+	    	                document.getElementById("password").disabled = true;
+	    	                document.getElementById("submit").disabled = true;
+	    	                return false;
+	    	            }
+	    	        }
+	    	    }
+	    	});
       </script>
    </head>
    <body class = "body">
       <main class="wrapper">
          <div th:insert="layouts/navbar :: navbar('false')"></div>
-         <div class="searchSection">
+         <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection">
             <h1>Welcome to Conceptpower</h1>
             <div class="input-group input-group-lg">
-               <input type="text" class="form-control" id="searchInput" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
+               <input type="text" class="form-control" id="searchInput" name="word" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
+ 
                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="searchDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span id="posWord" th:text="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true">
+                  <button class="btn btn-outline-secondary dropdown-toggle" id="searchDropDown" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+                  <span id="posWord"  th:text="Noun" th:value="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true">
                   </i>
                   </button>
                   <div id="posList" class="dropdown-menu">
                      <div th:each="entry: ${conceptSearchBean.posMap}">
-                        <div th:text="${entry.value}" class="dropdown-item"></div>
+                        <div th:text="${entry.value}" th:value="${entry.value}" class="dropdown-item"></div>
                      </div>
                   </div>
                </div>
+               
+                <select th:name="pos">
+				    <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
+				    </option>
+				 </select>
             </div>
-            <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" th:href="@{/home/conceptsearch?word=cat&pos=verb}" id="searchBtn" type="submit">
-            Search
-            <i class="fa fa-search" aria-hidden="true"></i>
+            <div class="error" id="searchAlert"></div>
+            
+            <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit">
+            	Search
+            	<i class="fa fa-search" aria-hidden="true"></i>
             </button>
-         </div>
-         <div class="resultsSection">
+         </form>
+      
+         <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection">
             <h4>Results</h4>
             <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
             Select Concepts To merge
@@ -109,191 +185,62 @@
                      <th style="width:120px;" scope="col">Review Status</th>
                   </tr>
                </thead>
-               <tbody>
-                  <tr>
-                     <td>
-                        <div class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                           <div class="cardLayout dropdown-menu" role="menu">
-                              <div class="card-body">
-                                 <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
-                                 <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
-                              </div>
-                           </div>
-                        </div>
-                     </td>
-                     <td data-toggle="modal" role="button" data-target="siginModal" id="conceptDetails">1</td>
-                     <td>Mark</td>
-                     <td>Otto</td>
-                     <td>@mdo</td>
-                     <td>Mark</td>
-                     <td>Otto</td>
-                     <td>@mdo</td>
-                     <td><i class="fa fa-comment" aria-hidden="true"></i></td>
-                  </tr>
-                  <tr>
-                     <td>
-                        <div class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                           <div class="cardLayout dropdown-menu" role="menu">
-                              <div class="card-body">
-                                 <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
-                                 <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
-                              </div>
-                           </div>
-                        </div>
-                     </td>
-                     <td>2</td>
-                     <td>Jacob</td>
-                     <td>Thornton</td>
-                     <td>@fat</td>
-                     <td>Mark</td>
-                     <td>Otto</td>
-                     <td>@mdo</td>
-                     <td><i class="fa fa-comment" aria-hidden="true"></i></td>
-                  </tr>
-                  <tr>
-                     <td>
-                        <div class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                           <div class="cardLayout dropdown-menu" role="menu">
-                              <div class="card-body">
-                                 <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
-                                 <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
-                              </div>
-                           </div>
-                        </div>
-                     </td>
-                     <td>3</td>
-                     <td>Larry</td>
-                     <td>the Bird</td>
-                     <td>@twitter</td>
-                     <td>Mark</td>
-                     <td>Otto</td>
-                     <td>@mdo</td>
-                     <td><i class="fa fa-comment" aria-hidden="true"></i></td>
-                  </tr>
+               <tbody id="tableData">
+				<tr th:each="concept: ${conceptSearchBean.foundConcepts}">
+				   <td>
+				      <div class="dropdown">
+				         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+				         <div class="cardLayout dropdown-menu" role="menu">
+				            <div class="card-body">
+				               <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" class="btn btn-primary" id="editBtn">Edit Item</a>
+				               
+				               <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+				            </div>
+				         </div>
+				      </div>
+				   </td>
+				   <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}"></td>
+				   <td th:text="${concept.entry.id}"></td>
+				   <td th:text="${concept.entry.wordnetId}"> </td>
+				   <td th:text="${concept.entry.pos}"></td>
+				   <td th:text="${concept.entry.conceptList}"></td>
+				   <td th:text="${concept.description}"></td>
+				   <td th:text="${concept.type}"></td>
+				   <td><i class="fa fa-comment" aria-hidden="true"></i></td>
+				</tr>
                </tbody>
             </table>
          </div>
-         <div class="pagination">
+         <div class="pagination" id="paginationSection" th:if="${conceptSearchBean.foundConcepts != null}" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
+         th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}">
             <ul class="pagination">
-               <li class="page-item disabled">
-                  <span class="page-link">Previous</span>
+               <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+                  <span class="page-link" th:onclick="'paginate(' + ${page - 1} + ','+ ${page - 1} + ','+${page - 1} + ','	+${page - 1}+ ','+${page - 1}+');'" >Previous</span>
                </li>
-               <li class="page-item"><a class="page-link" href="#">1</a></li>
-               <li class="page-item active" aria-current="page">
-                  <span class="page-link">
-                  2
-                  <span class="sr-only">(current)</span>
-                  </span>
+               <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
+               		<span class="page-link" th:onclick="'paginate('+${i}+');'" th:text="${i}">
+               		 <span class="sr-only">(current)</span></span>
+               		
                </li>
-               <li class="page-item"><a class="page-link" href="#">3</a></li>
-               <li class="page-item">
-                  <a class="page-link" href="#">Next</a>
+              
+               <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+                  <a class="page-link" th:onclick="'paginate(' + ${page + 1} + ','+ ${page - 1} + ','+${page - 1} + ','	+${page - 1}+ ','+${page - 1}+');'">Next</a>
                </li>
             </ul>
          </div>
          <div class='push'></div>
       </main>
       <div th:insert="~{layouts/footer}"></div>
-      <div class="modal fade" id="conceptDetailsModal" role="dialog" >
-         <div class="modal-content" >
-            <div class="modal-body">
-               <ul class="list-group" style="margin-bottom: 0px;">
-                  <li class="list-group-item">
-                     <span class="conceptDetailsKey">Id:</span>
-                     <p class="conceptDetailsValue">djf duhpDFPUDBGFD JBVAYOEHRJndf jhdouyvfadouyD BVBDVOADVOA</p>
-                  </li>
-                  <li class="list-group-item list-group-item-info">
-                     <span class="conceptDetailsKey">URI:</span>
-                     <p class="conceptDetailsValue">uhpDFPUDB GFDJBVA YOEHRJndf jhdouyvfadou  yDBVBDVOADVOA</p>
-                  </li>
-                  <li class="list-group-item">
-                     <span class="conceptDetailsKey">WordNet Id:</span>
-                     <p class="conceptDetailsValue">duhpDFPUDBGF DJBVAYOE HRJndfjhd ouyvfadouyD BVBDVOADVOA</p>
-                  </li>
-                  <li class="list-group-item list-group-item-info">
-                     <span class="conceptDetailsKey">Description</span>
-                     <p class="conceptDetailsValue">djfgadyf baduhpDFPUDB GFDJBVAYOEHRJnd fjhdouyvfadouy DBVBDVOADVO Ajfgadyfba duhpDFPUDBGFDJBVA YOEHRJndfjh douyvf adouyDBVBD VOADV OAjfgadyfba duhpDFPUD BGFDJBVAYOEH RJndfjhdouy  vfadouyDBV BDVOADVOA</p>
-                  </li>
-                  <li class="list-group-item">
-                     <span class="conceptDetailsKey">POS:</span>
-                  </li>
-                  <li class="list-group-item list-group-item-info">
-                     <span class="conceptDetailsKey">Concept List:</span>
-                  </li>
-                  <li class="list-group-item">
-                     <span class="conceptDetailsKey">Type:</span>
-                  </li>
-                  <li class="list-group-item list-group-item-info">
-                     <span class="conceptDetailsKey">Equal To:</span>
-                  </li>
-                  <li class="list-group-item">
-                     <span class="conceptDetailsKey">Similar To:</span>
-                  </li>
-                  <li class="list-group-item list-group-item-info">
-                     <span class="conceptDetailsKey">Creator:</span>
-                  </li>
-                  <li class="list-group-item">
-                     <span class="conceptDetailsKey">Merged Ids:</span>
-                  </li>
-               </ul>
-            </div>
-         </div>
-      </div>
-      <div class="modal fade" id="siginModal" role="dialog" >
-         <div class="modal-dialog" id="requestBox">
-            <div class="modal-content" >
-               <div class="modal-body">
-                  <div class="form-field">
-                     <div class="floatingform" >
-                        <div>
-                           <div class="form-field">
-                              <form name='f' action="" method='post'>
-                                 <table>
-                                    <tr>
-                                       <td>
-                                          <h3> Username </h3>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <input type='text' id="username" class="form-control" value='' placeholder="Enter username...">
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>
-                                          <h3>Password</h3>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td><input type='password' class="form-control"
-                                          id="password" placeholder="Enter Password..."/> </td>
-                                    </tr>
-                                 </table>
-                                 <div id="modalFooter">
-                                    <div >
-                                       <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" type="submit" id="modalSignInBtn" data-toggle="modal" data-target="siginModal" onclick="validate()">
-                                       Sign In
-                                       <i class="fa fa-sign-in"></i>
-                                       </button>
-                                    </div>
-                                    <div id="forgotPwd">
-                                       <a href="#">Forgot <br/> Password ?</a>
-                                    </div>
-                                 </div>
-                              </form>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
+      <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
+      <div id="sampleClass"></div>
+      <div th:insert="layouts/modals/signin :: signin"></div>
+      
+      <div sec:authentication="name">
+  		The value of the "name" property of the authentication object should appear here.
+	</div>
+
+<div sec:authorize="isAuthenticated()">
+	Display here
+</div>
    </body>
 </html>
