@@ -95,7 +95,7 @@ public class ConceptAddController {
      *            A generic model holder for Servlet
      * @return returns string which redirects to concept creation page
      */
-    @RequestMapping(value = "auth/conceptlist/addconcept")
+    @RequestMapping(value = "conceptlist/addconcept")
     public String prepareConceptAdd(ModelMap model, @ModelAttribute("conceptAddBean") ConceptAddBean conceptAddBean) {
 
         Map<String, String> serviceNameIdMap = serviceRegistry.getServiceNameIdMap();
@@ -115,7 +115,7 @@ public class ConceptAddController {
         }
         conceptAddBean.setLists(lists);
 
-        return "/auth/conceptlist/addconcept";
+        return "/layouts/concepts/AddConcept";
     }
 
     /**

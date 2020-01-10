@@ -48,7 +48,7 @@ public class ConceptTypeAddController {
      *            A generic model holder for Servlet
      * @return String value to redirect use to concept type add page
      */
-    @RequestMapping(value = "auth/concepttype/addtype")
+    @RequestMapping(value = "concepttype/addtype")
     public String prepareTypeAddView(ModelMap model,
             @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm) {
         ConceptType[] allTypes = conceptTypesManager.getAllTypes();
@@ -58,7 +58,7 @@ public class ConceptTypeAddController {
             types.put(conceptType.getTypeId(), conceptType.getTypeName());
         }
         conceptTypeAddForm.setTypes(types);
-        return "/auth/concepttype/addtype";
+        return "layouts/concepts/AddConceptType";
     }
 
     /**

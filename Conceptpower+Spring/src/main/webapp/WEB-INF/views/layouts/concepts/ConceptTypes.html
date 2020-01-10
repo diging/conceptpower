@@ -2,11 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
    <head>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script src="resources/js/bootstrap.min.js" type="text/javascript" ></script>
+      <script th:src="@{/resources/js/bootstrap.min.js}" type="text/javascript" ></script>
       <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
       <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
       <link th:href="@{/resources/assets/css/conceptType.css}" rel="stylesheet" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      
+      <script>
+     /*  	function paginate(page, sortDir, sortColumn, word, pos) {
+    	    var paginationElement = document.getElementById("paginationSection");
+    	    window.location = 'concepttype?page=' + page + '&sortDir=' + paginationElement.getAttribute('data-sortdir') + '&sortColumn=' + paginationElement.getAttribute('data-searchcolumn');
+	    } */
+      	
+      	$(document).on('click','#paginate', function(e){
+      		console.log($(this).data());
+      		window.location = 'concepttype?page=' + $(this).data().page + '&sortDir=' + $(this).data().sortdir + '&sortColumn=' + $(this).data().sortcolumn;
+      	})
+      </script>
    </head>
    <body class="body">
       <main class="wrapper">
@@ -14,11 +26,11 @@
          <div class="resultsSection">
             <div class="headerSection">
                <div style="display: block;">
-                  <h3 class="titleHeader">Concept List</h3>
-                  <h4 class="subHeader">Here you will find all stored concept lists</h4>
+                  <h3 class="titleHeader">Concept types</h3>
+                  <h4 class="subHeader">See existing types below.</h4>
                </div>
                <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
-               <i class="fa fa-plus" aria-hidden="true"></i> Add New Concept List
+               <i class="fa fa-plus" aria-hidden="true"></i> Add new type
                </button>
             </div>
             <div class="headerSection">
@@ -45,11 +57,16 @@
                   <tr>
                      <th scope="col"></th>
                      <th scope="col">Name</th>
+                     <th scope="col">Type URI</th>
                      <th scope="col">Description</th>
+                     <th scope="col">Super type</th>
+                     <th scope="col">Matches</th>
+                     <th scope="col">Created by</th>
+                     <th scope="col">Modified</th>
                   </tr>
                </thead>
                <tbody>
-                  <tr>
+                  <tr th:each="types : ${result}">
                      <td>
                         <div class="dropdown">
                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -62,59 +79,30 @@
                            </div>
                         </div>
                      </td>
-                     <td>Mark</td>
-                     <td>Otto</td>
-                  </tr>
-                  <tr>
-                     <td>
-                        <div class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                           <div class="cardLayout dropdown-menu" role="menu">
-                              <div class="card-body">
-                                 <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
-                                 <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
-                              </div>
-                           </div>
-                        </div>
-                     </td>
-                     <td>Jacob</td>
-                     <td>Thornton</td>
-                  </tr>
-                  <tr>
-                     <td>
-                        <div class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                           <div class="cardLayout dropdown-menu" role="menu">
-                              <div class="card-body">
-                                 <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
-                                 <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
-                              </div>
-                           </div>
-                        </div>
-                     </td>
-                     <td>Larry</td>
-                     <td>the Bird</td>
+                     <td th:text="${types.typeName}"></td>
+                     <td th:text="${types.typeId}"></td>
+                     <td th:text="${types.description}"></td>
+                     <td th:text="${types.supertypeId}"></td>
+                     <td th:text="${types.matches}"></td>
+                     <td th:text="${types.creatorId}"></td>
+                     <td th:text="${types.modified}"></td>
                   </tr>
                </tbody>
             </table>
          </div>
-         <div class="pagination">
+          <div class="pagination">
             <ul class="pagination">
-               <li class="page-item disabled">
-                  <span class="page-link">Previous</span>
+               <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+                  <span class="page-link" th:data-sortDir="${sortDir}" th:data-sortColumn="${sortColumn}" th:data-page="${page - 1}" id="paginate" >Previous</span>
                </li>
-               <li class="page-item"><a class="page-link" href="#">1</a></li>
-               <li class="page-item active" aria-current="page">
-                  <span class="page-link">
-                  2
-                  <span class="sr-only">(current)</span>
-                  </span>
+               <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
+               		<span class="page-link" th:data-sortDir="${sortDir}" th:data-sortColumn="${sortColumn}" th:data-page="${i}" id="paginate" th:text="${i}">
+               		 <span class="sr-only">(current)</span></span>
+               		
                </li>
-               <li class="page-item"><a class="page-link" href="#">3</a></li>
-               <li class="page-item">
-                  <a class="page-link" href="#">Next</a>
+              
+               <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+                  <a class="page-link" th:data-sortDir="${sortDir}" th:data-sortColumn="${sortColumn}" th:data-page="${page + 1}" id="paginate">Next</a>
                </li>
             </ul>
          </div>

@@ -81,7 +81,7 @@ public class ConceptWrapperAddController {
      * @return String value which redirects user to creating concept wrappers
      *         page
      */
-    @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
+    @RequestMapping(value = "conceptlist/addconceptwrapper")
     public String prepareConceptWrapperAdd(@RequestParam(value = "wrapperId", required = false) String wrapperId,
             HttpServletRequest req, ModelMap model){
         model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
@@ -125,7 +125,7 @@ public class ConceptWrapperAddController {
         if (result.hasErrors()) {
             model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
             model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
-            return "/auth/conceptlist/addconceptwrapper";
+            return "/layouts/concepts/AddConceptWrapper";
         }
         
         String[] wrappers = conceptWrapperAddBean.getWrapperids().split(Constants.CONCEPT_SEPARATOR);
@@ -145,7 +145,7 @@ public class ConceptWrapperAddController {
             if (indexService.isIndexerRunning()) {
                 model.addAttribute("show_error_alert", true);
                 model.addAttribute("error_alert_msg", indexerRunning);
-                return "forward:/auth/conceptlist/addconceptwrapper";
+                return "forward:/layouts/concepts/AddConceptWrapper";
             }
             conceptManager.addConceptListEntry(conceptEntry, principal.getName());
         }

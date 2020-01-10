@@ -34,7 +34,7 @@ public class ConceptTypesController {
      * @throws SecurityException
      * @throws NoSuchFieldException
      */
-    @RequestMapping(value = "auth/concepttype")
+    @RequestMapping(value = "/concepttype")
     public String prepareShowConceptTypes(ModelMap model, @RequestParam(defaultValue = "1") String page,
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(defaultValue = "typeName") String sortColumn) throws NoSuchFieldException, SecurityException {
@@ -69,6 +69,6 @@ public class ConceptTypesController {
         model.addAttribute("count", pageCount);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("sortColumn", sortColumn);
-        return "/auth/concepttype";
+        return "layouts/concepts/ConceptTypes";
     }
 }

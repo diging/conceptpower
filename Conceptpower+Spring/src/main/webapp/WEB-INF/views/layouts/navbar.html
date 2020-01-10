@@ -14,10 +14,10 @@
 		                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Concept Type <span class="caret"></span></a>
 		                  <ul class="dropdown-menu" role="menu">
 		                     <li><a
-		                        href="${/resources/newuipages/concepttypes.html}"><i
+		                        th:href="@{/concepttype}"><i
 		                        class="fa fa-list"></i> Concept Types</a></li>
 		                     <li><a
-		                        href="${pageContext.servletContext.contextPath}/auth/concepttype/addtype"><i
+		                        th:href="@{/concepttype/addtype}"><i
 		                        class="fa fa-plus-circle"></i> Add New Type</a></li>
 		                  </ul>
 		               </li>
@@ -25,18 +25,18 @@
 		                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Concept Lists <span class="caret"></span></a>
 		                  <ul class="dropdown-menu" role="menu">
 		                     <li><a
-		                        href="/auth/conceptlist"><i
+		                        th:href="@{/conceptlist}"><i
 		                        class="fa fa-list"></i> Show Concept Lists</a></li>
 		                     <li><a
-		                        href="/auth/conceptlist/addconceptlist"><i
+		                       th:href="@{/conceptlist/addconceptlist}"><i
 		                        class="fa fa-plus-circle"></i> Add New Concept List</a></li>
 		                     <li><a
-		                        href="/auth/conceptlist/addconcept">
+		                        th:href="@{/conceptlist/addconcept}">
 		                        <i class="fa fa-plus-circle"></i> Add New Concept
 		                        </a>
 		                     </li>
 		                     <li><a
-		                        href="/auth/conceptlist/addconceptwrapper"><i
+		                        th:href="@{/conceptlist/addconceptwrapper}"><i
 		                        class="fa fa-plus-circle"></i> Add New WordNet Concept Wrapper</a></li>
 		                  </ul>
 		               </li>
