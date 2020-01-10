@@ -9,47 +9,47 @@
                <ul class="list-group" style="margin-bottom: 0px;">
                   <li class="list-group-item">
                      <span class="conceptDetailsKey">Id:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsId" th:text="${details}" ></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsId" th:text="${details.id}" ></p>
                   </li>
                   <li class="list-group-item list-group-item-info">
                      <span class="conceptDetailsKey">URI:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsUri"></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsUri" th:text="${details.uri}"></p>
                   </li>
                   <li class="list-group-item">
                      <span class="conceptDetailsKey">WordNet Id:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsWordnetId"></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsWordnetId" th:text="${details.wordnetid}"></p>
                   </li>
                   <li class="list-group-item list-group-item-info">
                      <span class="conceptDetailsKey">Description:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsDesc"></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsDesc" th:text="${details.description}"></p>
                   </li>
                   <li class="list-group-item">
                      <span class="conceptDetailsKey">POS:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsPos"></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsPos" th:text="${details.pos}"></p>
                   </li>
                   <li class="list-group-item list-group-item-info">
                      <span class="conceptDetailsKey">Concept List:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsList"></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsList" th:text="${details.conceptlist}"></p>
                   </li>
                   <li class="list-group-item">
                      <span class="conceptDetailsKey">Type:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsType"></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsType" th:text="${details.type}"></p>
                   </li>
                   <li class="list-group-item list-group-item-info">
                      <span class="conceptDetailsKey">Equal To:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsEqualTo"></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsEqualTo" th:text="${details.equalto}"></p>
                   </li>
                   <li class="list-group-item">
                      <span class="conceptDetailsKey">Similar To:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsSimilarTo"></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsSimilarTo" th:text="${details.similarto}"></p>
                   </li>
                   <li class="list-group-item list-group-item-info">
                      <span class="conceptDetailsKey">Creator:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsCreator"></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsCreator" th:text="${details.creator}"></p>
                   </li>
                   <li class="list-group-item">
                      <span class="conceptDetailsKey">Merged Ids:</span>
-                     <p class="conceptDetailsValue" id="conceptDetailsMergedIds"></p>
+                     <p class="conceptDetailsValue" id="conceptDetailsMergedIds" th:text="${details.mergedIds}"></p>
                   </li>
                </ul>
             </div>

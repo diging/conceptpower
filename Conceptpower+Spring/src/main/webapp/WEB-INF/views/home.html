@@ -34,75 +34,63 @@
 			
 	        //Function to populate concept details Modal
 	    	$(document).ready(function() {
-	    	    $('#conceptDetailsModal')
-	    		.on(
-	    			'show.bs.modal',
-	    			function(event) {
-	    				var viewConceptDetailsEvent = $(event.relatedTarget);
-	    				var conceptid = viewConceptDetailsEvent.data('conceptid');
-	    				
-	    				$.ajax({
-	    					type : "GET",
-	    					url : "/conceptpower/conceptDetail",
-	    					data : {
-	    						conceptid : conceptid
-	    					},
-	    					success : function(details) {
-	    						details = $.parseJSON(details);	    						
-	    						var token = $("meta[name='_csrf_token']").attr("content");
-	
-	    						$.ajax({
-	    	    					type : "POST",
-	    	    					url : "/conceptpower/getconceptdetails?_csrf="+token.trim(),
-	    	    					data : JSON.stringify(details),
-	    	    					contentType:"application/json",
-	    	    					success : function(data) {
-	    	    						console.log(data);
-	    	    					
-	    	    					}
-	    						});
-	    				/* 		
-	    						$("#conceptTerm").text(details.name);
-	    						$("#conceptDetailsId").text(details.id);
-	    						$("#conceptDetailsUri").text(details.uri);
-	    						$("#conceptDetailsWordnetId").text(details.wordnetid);
-	    						$("#conceptDetailsPos").text(details.pos);
-	    						$("#conceptDetailsList").text(details.conceptlist);
-	    						$("#conceptDetailsType").text(details.type);
-	    						$("#conceptDetailsEqualTo").text(details.equalto);
-	    						$("#conceptDetailsSimilarTo").text(details.similarto);
-	    						$("#conceptDetailsCreator").text(details.creator);
-	    						$("#conceptDetailsDesc").html(details.description);
-	    						$("#conceptDetailsMergedIds").html(details.mergedIds);
-	    			 */			
-	    						if(details.mergedIds) {
-	    							$.ajax({
-	    								url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
-	    				                type: 'GET',
-	    				                headers: {          
-	    				                    Accept: "application/json",         
-	    				                },
-	    				                data: {
-	    				                  ids: details.mergedIds
-	    				                },
-	    				              })
-	    				              .msuccess(function(originalConcepts) {
-	    				                var mergedIdsHtml = '';
-	    				                $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
-	    				                    if(mergedIdsHtml) {
-	    				                      mergedIdsHtml += ", ";
-	    				                    }
-	    				                    mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
-	    				                    mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
-	    				                    mergedIdsHtml += "</span>";
-	    				                });
-	    				                $("#detailsmergedIds").html(mergedIdsHtml);  
-	    				              });              
-	    				        }
-	    					}
-	    				});
-	            });
-	
+	    		$(document).on('click','#conceptDetails', function(e){
+	    			var conceptid = $(this).data('conceptid');
+	    			
+	    			$.ajax({
+    					type : "GET",
+    					url : "/conceptpower/conceptDetail",
+    					data : {
+    						conceptid : conceptid
+    					},
+    					success : function(details) {
+    						details = $.parseJSON(details);	    						
+    						var token = $("meta[name='_csrf_token']").attr("content");
+    						
+    						//Ajax Call to plugin a pre populated Concepet Details Modal
+    						$.ajax({
+    	    					type : "POST",
+    	    					url : "/conceptpower/conceptdetails?_csrf="+token.trim(),
+    	    					data : JSON.stringify(details),
+    	    					contentType:"application/json",
+    	    					success : function(data) {
+    	    						$('#conceptDetailsPlugin').html(data);
+    	    						$('#conceptDetailsModal').modal('show');
+    	    					}
+    						});
+    						
+    						if(details.mergedIds) {
+    							$.ajax({
+    								url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
+    				                type: 'GET',
+    				                headers: {          
+    				                    Accept: "application/json",         
+    				                },
+    				                data: {
+    				                  ids: details.mergedIds
+    				                },
+    				              })
+    				              .msuccess(function(originalConcepts) {
+    				                var mergedIdsHtml = '';
+    				                $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
+    				                    if(mergedIdsHtml) {
+    				                      mergedIdsHtml += ", ";
+    				                    }
+    				                    mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
+    				                    mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
+    				                    mergedIdsHtml += "</span>";
+    				                });
+    				                $("#detailsmergedIds").html(mergedIdsHtml);  
+    				              });              
+    				        }
+    					}
+	    			});
+	    		});
+	    		
+	    		$(document).on('hidden.bs.modal', '#conceptDetailsModal',function(event) {
+	    			$('#conceptDetailsPlugin').empty();
+	    		});
+	    	    
 	    	    $('#posList div div').on('click', function() {
 	    	        $('#posWord').text($(this).text());
 	    	    });
@@ -231,8 +219,8 @@
          <div class='push'></div>
       </main>
       <div th:insert="~{layouts/footer}"></div>
-      <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
-      <div id="sampleClass"></div>
+ 
+      <div id="conceptDetailsPlugin"></div>
       <div th:insert="layouts/modals/signin :: signin"></div>
       
       <div sec:authentication="name">

@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class ConceptDetailsController {
 
-    @RequestMapping(value="/getconceptdetails", method=RequestMethod.POST)
+    @RequestMapping(value="/conceptdetails", method=RequestMethod.POST)
     public String getConceptDetails(@RequestBody Map<String, String> details, Model model) {
-        System.out.println("Enteirng"+details);
         model.addAttribute("details", details);
         return "layouts/modals/conceptdetails";
     }
