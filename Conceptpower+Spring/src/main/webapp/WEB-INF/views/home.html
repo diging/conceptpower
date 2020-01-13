@@ -282,16 +282,15 @@
          </div>
          <div class='push'></div>
       </main>
+      
       <div th:insert="~{layouts/footer}"></div>
       <div id="conceptDetailsPlugin"></div>
       <div th:insert="layouts/modals/signin :: signin"></div>
       
       <div sec:authentication="name">
-  		The value of the "name" property of the authentication object should appear here.
-	</div>
-
-<div sec:authorize="isAuthenticated()">
-	Display here
-</div>
+      	The value of the "name" property of the authentication object should appear here.
+      </div>
+      
+      <div sec:authorize="isAuthenticated()">Display here</div>
    </body>
 </html>

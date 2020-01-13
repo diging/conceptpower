@@ -353,3 +353,11 @@ a:hover {
 .select-items div:hover, .same-as-selected {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+.pagination>li>a, .pagination>li>span, .pagination>li>span:hover{
+	color: #4f39cc;
+}
+
+#sortTag, #paginationTag{
+	cursor: pointer;
+}
