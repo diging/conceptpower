@@ -40,7 +40,7 @@
 	      //Function to get required data for sorting
 	        $(document).on('click', '#sortTag', function(e){
 				var sortData = $(this).data();
-	        	paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos)	
+	        	paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos)	
 	        });
 	        
 	        //Function to populate concept details Modal
