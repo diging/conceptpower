@@ -34,10 +34,10 @@ public class ConceptListAddController {
      * 
      * @return string value to redirect user to add concept list paage
      */
-    @RequestMapping(value = "conceptlist/addconceptlist")
+    @RequestMapping(value = "auth/conceptlist/addconceptlist")
     public String listAddView(@ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm)
             throws Exception {
-        return "/layouts/concepts/AddConceptList";
+        return "layouts/concepts/AddConceptList";
     }
 
     /**
@@ -49,7 +49,7 @@ public class ConceptListAddController {
      *            A generic model holder for Servlet
      * @return String value to redirect user to a concept list page
      */
-    @RequestMapping(value = "concepts/createconceptlist")
+    @RequestMapping(value = "auth/concepts/createconceptlist")
     public String createConceptList(HttpServletRequest req, ModelMap model,
             @Validated @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm,
             BindingResult result) {

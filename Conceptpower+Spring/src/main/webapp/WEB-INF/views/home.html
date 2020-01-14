@@ -134,7 +134,7 @@
    </head>
    <body class = "body">
       <main class="wrapper">
-         <div th:insert="layouts/navbar :: navbar('false')"></div>
+         <div th:insert="layouts/navbar :: navbar"></div>
          <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection">
             <h1>Welcome to Conceptpower</h1>
             <div class="input-group input-group-lg">
@@ -179,7 +179,6 @@
 		        </div>
 	        </div>
          </form>
-      
          <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection"  th:with="sortDirection = ${sortDir == '1' ? '-1' : '1'}">
             <h4>Results</h4>
             <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
@@ -281,16 +280,9 @@
             </ul>
          </div>
          <div class='push'></div>
-      </main>
-      
+      </main>  
       <div th:insert="~{layouts/footer}"></div>
       <div id="conceptDetailsPlugin"></div>
       <div th:insert="layouts/modals/signin :: signin"></div>
-      
-      <div sec:authentication="name">
-      	The value of the "name" property of the authentication object should appear here.
-      </div>
-      
-      <div sec:authorize="isAuthenticated()">Display here</div>
    </body>
 </html>

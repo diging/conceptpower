@@ -11,7 +11,7 @@
                   <div class="floatingform" >
                      <div>
                         <div class="form-field">
-                           <form name='f' action="" method='post'>
+                           <form th:action="@{/login}" method="post">
                               <table>
                                  <tr>
                                     <td>
@@ -20,7 +20,7 @@
                                  </tr>
                                  <tr>
                                     <td>
-                                       <input type='text' id="username" class="form-control" value='' placeholder="Enter username...">
+                                       <input type='text' id="username" name='username' class="form-control" value='' placeholder="Enter username...">
                                     </td>
                                  </tr>
                                  <tr>
@@ -29,13 +29,13 @@
                                     </td>
                                  </tr>
                                  <tr>
-                                    <td><input type='password' class="form-control"
+                                    <td><input type='password' name='password' class="form-control"
                                        id="password" placeholder="Enter Password..."/> </td>
                                  </tr>
                               </table>
                               <div id="modalFooter">
                                  <div >
-                                    <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" type="submit" id="modalSignInBtn" data-toggle="modal" data-target="siginModal" onclick="validate()">
+                                    <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" name="submit" value="Login" type="submit" id="modalSignInBtn" >
                                     Sign In
                                     <i class="fa fa-sign-in"></i>
                                     </button>

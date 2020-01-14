@@ -34,7 +34,7 @@ public class ConceptTypesController {
      * @throws SecurityException
      * @throws NoSuchFieldException
      */
-    @RequestMapping(value = "/concepttype")
+    @RequestMapping(value = "auth/concepttype")
     public String prepareShowConceptTypes(ModelMap model, @RequestParam(defaultValue = "1") String page,
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(defaultValue = "typeName") String sortColumn) throws NoSuchFieldException, SecurityException {

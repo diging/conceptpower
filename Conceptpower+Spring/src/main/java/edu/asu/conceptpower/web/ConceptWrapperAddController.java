@@ -81,7 +81,7 @@ public class ConceptWrapperAddController {
      * @return String value which redirects user to creating concept wrappers
      *         page
      */
-    @RequestMapping(value = "conceptlist/addconceptwrapper")
+    @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
     public String prepareConceptWrapperAdd(@RequestParam(value = "wrapperId", required = false) String wrapperId,
             HttpServletRequest req, ModelMap model){
         model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());

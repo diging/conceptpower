@@ -55,7 +55,7 @@ public class ConceptListController {
      *            A generic model holder for Servlet
      * @return String value to redirect user to all concpet list page
      */
-    @RequestMapping(value = "conceptlist")
+    @RequestMapping(value = "auth/conceptlist")
     public String prepareShowConceptList(ModelMap model) {
 
         List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
