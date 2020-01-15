@@ -140,20 +140,19 @@
             <div class="input-group input-group-lg">
                <input type="text" class="form-control" id="searchInput" name="word" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
  
-               <div class="input-group-append">
+               <!--  <div class="input-group-append">
                   <button class="btn btn-outline-secondary dropdown-toggle" id="searchDropDown" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
-                  <span id="posWord"  th:text="Noun" th:value="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true">
-                  </i>
+                  <span id="posWord"  th:text="Noun" th:value="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
                   </button>
                   <div id="posList" class="dropdown-menu">
                      <div th:each="entry: ${conceptSearchBean.posMap}">
                         <div th:text="${entry.value}" th:value="${entry.value}" class="dropdown-item"></div>
                      </div>
                   </div>
-               </div>
+               </div>-->
                
-                <select th:name="pos">
-				    <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
+                <select th:name="pos" style="-moz-appearance: none; border: none;">
+				    <option data-content="<i class= 'fa fa-caret-down' aria-hidden='true'></i>" th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
 				    </option>
 				 </select>
             </div>

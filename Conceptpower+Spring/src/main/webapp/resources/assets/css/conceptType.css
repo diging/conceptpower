@@ -5,6 +5,11 @@
 	margin: 0px auto 100px auto;
 }
 
+.btn:hover {
+	color: white;
+	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+}
+
 .title {
 	font-family: Nunito Sans;
 	font-size: 44px;
@@ -35,6 +40,27 @@
 	background-color: #4f3acc;
 	color: white;
 	border-radius: 30px;
+}
+
+#addConceptTypeBtn:hover {
+	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+}
+
+#cancelTypeBtn {
+	height: 44px;
+	width: 300px;
+	background-color: transparent;
+	border: 2px solid #4f3acc;
+	color: #4f3acc;
+	border-radius: 30px;
+	margin-right: 30px;
+}
+
+#cancelTypeBtn:hover {
+	background-color: #4f3acc;
+	border: 2px solid #4f3acc;
+	color: white;
+	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
 }
 
 .btnCenter {

@@ -63,7 +63,7 @@ public class UserEditController {
         if (!model.containsAttribute("user")) {
             model.addAttribute("user", userBacking);
         }
-        return "auth/user/edituser";
+        return "layouts/user/edituser";
     }
 
     /**
@@ -87,7 +87,7 @@ public class UserEditController {
         if (result.hasErrors()) {
             model.addAttribute("org.springframework.validation.BindingResult.user", result);
             model.addAttribute("user", user);
-            return "auth/user/edituser";
+            return "layouts/user/edituser";
         }
 
         User uUser = userManager.findUser(user.getUsername());

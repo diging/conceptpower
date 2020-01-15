@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
    <head>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script src="resources/js/bootstrap.min.js" type="text/javascript" ></script>
+      <script th:src="@{/resources/js/bootstrap.min.js}" type="text/javascript" ></script>
       <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
       <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
       <link th:href="@{/resources/assets/css/conceptType.css}" rel="stylesheet" />
@@ -13,65 +13,58 @@
          <div th:insert="layouts/navbar :: navbar"></div>
          <div class="conceptType">
             <h3 class="title">Add a new User.</h3>
-            <table class="conceptForm">
+            <form  th:object="${user}" th:action="@{/auth/user/createuser}" method='post'>
+        <table class="conceptForm">
                <tbody>
                   <tr>
                      <td style="width:40px;">
-                        <label for="exampleFormControlInput1" class="formlabel">User name</label>
+                        <label for="username" class="formlabel">User name</label>
                      </td>
                      <td>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter your user name....">
+                        <input type="text" class="form-control" name="username" placeholder="Enter your user name....">
                      </td>
                   </tr>
                   <tr>
                      <td style="width:172px;">
-                        <label for="exampleFormControlTextarea1" class="formlabel">Full Name</label>
+                        <label for="fullname" class="formlabel">Full Name</label>
                      </td>
                      <td>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter your full name....">
+                        <input type="text" class="form-control" name="fullname"  placeholder="Enter your full name....">
                      </td>
                   </tr>
                   <tr>
                      <td style="width:40px;">
-                        <label for="exampleFormControlTextarea2" class="formlabel">Email Id</label>
+                        <label for="email" class="formlabel">Email Id</label>
                      </td>
                      <td>
-                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Enter your email id....">
+                        <input type="email" class="form-control" name="email" placeholder="Enter your email id....">
                      </td>
                   </tr>
                   <tr>
                      <td style="width:40px;">
-                        <label for="exampleFormControlSelect1" class="formlabel">Admin</label>
+                        <label for="isAdmin" class="formlabel">Admin</label>
                      </td>
                      <td>
-                        <div class="btn-group">
-                           <div class="dropdown">
-                              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                              Yes
-                              <span class="caret"></span>
-                              </button>
-                              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Yes</a></li>
-                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No</a></li>
-                              </ul>
-                           </div>
-                        </div>
+                      <select th:name="isAdmin">
+					    <option th:value="yes" th:text="Yes"></option>
+					    <option th:value="no" th:text="No"></option>
+				    </select>
                      </td>
                   </tr>
                   <tr>
                      <td style="width:172px;">
-                        <label for="exampleFormControlTextarea1" class="formlabel">Password</label>
+                        <label for="password" class="formlabel">Password</label>
                      </td>
                      <td>
-                        <input type="password" class="form-control" id="exampleFormControlInput1" placeholder="Atleast 8 characters long....">
+                        <input type="password" class="form-control" name="password" placeholder="Atleast 8 characters long....">
                      </td>
                   </tr>
                   <tr>
                      <td style="width:40px;">
-                        <label for="exampleFormControlTextarea2" class="formlabel">Retype Password</label>
+                        <label for="retypedPassword" class="formlabel">Retype Password</label>
                      </td>
                      <td>
-                        <input type="password" class="form-control" id="exampleFormControlInput1">
+                        <input type="password" class="form-control" name="retypedPassword" placeholder="Retype Password....">
                      </td>
                   </tr>
                </tbody>
@@ -81,6 +74,8 @@
                Create User
                </button>
             </div>
+            
+            </form>
          </div>
          <div class='push'></div>
       </main>
