@@ -181,13 +181,13 @@
          </form>
          <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection"  th:with="sortDirection = ${sortDir == '1' ? '-1' : '1'}">
             <h4>Results</h4>
-            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
+            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" sec:authorize="isAuthenticated()">
             Select Concepts To merge
             </button>
             <table class="table table-striped resultTable tableStyles" >
                <thead>
                   <tr>
-                     <th scope="col"></th>
+                     <th scope="col" sec:authorize="isAuthenticated()"></th>
                      <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="word" 
                      	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" id="sortTag">Term
 	                     <i th:if="${sortColumn == 'word' && sortDir == '1'}" class="fa fa-sort-desc"></i>
@@ -235,18 +235,19 @@
                </thead>
                <tbody id="tableData">
 				<tr th:each="concept: ${conceptSearchBean.foundConcepts}">
-				   <td>
+				   <td sec:authorize="isAuthenticated()">
 				      <div class="dropdown">
 				         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
 				         <div class="cardLayout dropdown-menu" role="menu">
 				            <div class="card-body">
-				               <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" class="btn btn-primary" id="editBtn">Edit Item</a>
+				               <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" class="btn btn-primary" id="editBtn">Edit Concept</a>
 				               
-				               <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+				               <a th:href="@{'/auth/conceptlist/deleteconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
 				            </div>
 				         </div>
 				      </div>
-				   </td>
+				      <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id }" />
+				   	</td>
 				   <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}"></td>
 				   <td th:text="${concept.entry.id}"></td>
 				   <td th:text="${concept.entry.wordnetId}"> </td>

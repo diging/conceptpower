@@ -76,7 +76,7 @@ public class ConceptTypeAddController {
             BindingResult results) {
 
         if (results.hasErrors()) {
-            return "/auth/concepttype/addtype";
+            return "layouts/concepts/AddConceptType";
         }
         ConceptType type = new ConceptType();
         type.setTypeName(conceptTypeAddForm.getTypeName());
