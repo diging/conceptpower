@@ -34,7 +34,7 @@ public  class RequestsManager implements IRequestsManager{
     }
     
     /* (non-Javadoc)
-     * @see edu.asu.conceptpower.app.core.IRequestsManager#getReview(java.lang.String)
+     * @see edu.asu.conceptpower.app.core.IRequestsManager#getLatestReview(java.lang.String)
      */
     public ReviewRequest getLatestReview(String conceptId) {
         List<ReviewRequest> reviewRequests = getAllReviews(conceptId);
@@ -72,16 +72,10 @@ public  class RequestsManager implements IRequestsManager{
         }
         
         if(comment != null) {
-            //There is only a possibility of single comment at a time
             comment.setCreatedAt(createdAt);
             comment.setCreatedBy(updatedBy);
             
-            //Used setComments instead of addAll to comments parameter because db4o is not properly getting indexed to the old object. SetComments solves this issue.
-            List<Comment> commentList = new ArrayList<>();
-            commentList.addAll(storedRequest.getComments());
-            commentList.add(comment);
-            storedRequest.setComments(commentList);
-
+            storedRequest.getComments().add(comment);
             storedRequest.setResolver(updatedBy);
             storedRequest.setStatus(reviewStatus);
             
