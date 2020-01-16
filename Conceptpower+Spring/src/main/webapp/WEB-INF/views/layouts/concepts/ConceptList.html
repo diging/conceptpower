@@ -1,59 +1,49 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-   <head>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script th:src="@{/resources/js/bootstrap.min.js}" type="text/javascript" ></script>
-      <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
-      <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
-      <link th:href="@{/resources/assets/css/conceptType.css}" rel="stylesheet" />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-   </head>
-   <body class="body">
-      <main class="wrapper">
-         <div th:insert="layouts/navbar :: navbar"></div>
-         <div class="resultsSection">
-            <div class="headerSection">
-               <div style="display: block;">
-                  <h3 class="titleHeader">Concept List</h3>
-                  <h4 class="subHeader">Here you will find all stored concept lists</h4>
-               </div>
-               <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
-               <i class="fa fa-plus" aria-hidden="true"></i> Add New Concept List
-               </button>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <body class="body" layout:fragment="content">
+      <div class="resultsSection">
+         <div class="headerSection">
+            <div style="display: block;">
+               <h3 class="titleHeader">Concept List</h3>
+               <h4 class="subHeader">Here you will find all stored concept lists</h4>
             </div>
-            <div class="headerSection">
-               <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search....." style="width: 200px;">
-            </div>
-            <table class="table table-striped resultTable tableStyles" >
-               <thead>
-                  <tr>
-                     <th scope="col"></th>
-                     <th scope="col">Name</th>
-                     <th scope="col">Description</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <tr th:each="list : ${result}">
-                     <td>
-                        <div class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                           <div class="cardLayout dropdown-menu" role="menu">
-                              <div class="card-body">
-                                 <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
-                                 <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
-                              </div>
+            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
+            <i class="fa fa-plus" aria-hidden="true"></i> Add New Concept List
+            </button>
+         </div>
+         <div class="headerSection">
+            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search....." style="width: 200px;">
+         </div>
+         <table class="table table-striped resultTable tableStyles" >
+            <thead>
+               <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr th:each="list : ${result}">
+                  <td>
+                     <div class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                        <div class="cardLayout dropdown-menu" role="menu">
+                           <div class="card-body">
+                              <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
+                              <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
                            </div>
                         </div>
-                     </td>
-                     <td th:text="${list.conceptListName}"></td>
-                     <td th:text="${list.description}"></td>
-                  </tr>
-               </tbody>
-            </table>
-         </div>
-         <div class='push'></div>
-      </main>
-      <div th:replace="~{layouts/footer}"></div>
+                     </div>
+                  </td>
+                  <td th:text="${list.conceptListName}"></td>
+                  <td th:text="${list.description}"></td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
    </body>
 </html>

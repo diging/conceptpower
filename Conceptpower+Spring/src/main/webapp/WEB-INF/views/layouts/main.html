@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+   <head>
+   	<meta name="_csrf_token" th:content="${_csrf.token}"/>
+	<meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script th:src="@{/resources/js/bootstrap.min.js}" type="text/javascript" ></script>
+      <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
+      <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
+      <link th:href="@{/resources/assets/css/conceptType.css}" rel="stylesheet" />
+      <link th:href="@{/resources/assets/css/spinner.css}" rel="stylesheet" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   </head>
+   <body class = "body">
+      <main class="wrapper">
+         <div th:insert="layouts/navbar :: navbar"></div>
+         <div layout:fragment="content"></div>
+         <div class='push'></div>
+      </main>  
+      <div th:insert="~{layouts/footer}"></div>
+   </body>
+</html>
