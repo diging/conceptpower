@@ -4,13 +4,12 @@
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
    <div class="modal fade" id="deleteButton" role="dialog" th:fragment="deleteButton">
-      <div class="modal-dialog" id="requestBox">
+      <div class="modal-dialog" id="requestBox" style="margin-right: auto;margin-top: 300px;">
          <div class="modal-content" >
             <div class="modal-body">
             	<div>
-                   <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" name="submit" value="Login" type="submit" id="modalSignInBtn" >
-                       Delete
-                   </button>
+            	   <h4>Are you sure you want to delete?</h4>
+                   <button class="btn btn-primary deleteBtn" id="deleteBtn" data-toggle="modal" data-target="#deleteButton">Delete</button>
                 </div>
             </div>   
          </div>

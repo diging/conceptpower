@@ -7,6 +7,7 @@
 <%@ page session="false"%>
 <meta name="_csrf" content="${_csrf.token}"/>
 <meta name="_csrf_header" content="${_csrf.headerName}"/>
+
 <script type="text/javascript">
 //# sourceURL=details.js
 $(document).ready(function() {
@@ -233,8 +234,10 @@ $(document).ready(function(){
 
 </script>
 
+
 <header class="page-header">
-  <h1 class="page-title">Welcome to Conceptpower</h1>
+<div class="w3-container">
+  <h1 class="page-title">Welcome to ConceptPower</h1></div>
 </header>
 <p>Search for a concept:</p>
 <center>
@@ -500,6 +503,7 @@ $(document).ready(function(){
     </div>
   </div>
   </div>
+  
 <form id="reviewForm" action="${pageContext.servletContext.contextPath}/auth/request/add" method="post" modelAttribute="reviewRequest">  
 <div class="modal" tabindex="-1" id="myModal" role="dialog">
   <div class="modal-dialog" role="document">

@@ -6,6 +6,7 @@
          <a class="navbar-brand" href="#">
          <img th:src="@{/resources/assets/images/cp_logo.png}" width="70" height=auto alt="">
          </a>
+         <div style="display:flex;">
          <div id="navLinks" class="rightNavSection">
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                <ul class="nav navbar-nav">
@@ -70,6 +71,7 @@
                   </form>
                </li>
             </ul>
+         </div>
          </div>
          <button sec:authorize="!isAuthenticated()" class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="signInBtn" type="submit" data-toggle="modal" data-target="#siginModal">
          Sign In

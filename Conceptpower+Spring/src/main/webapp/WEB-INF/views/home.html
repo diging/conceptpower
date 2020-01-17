@@ -144,11 +144,13 @@
                      </div>
                   </div>
                </div>-->
-               
+               <div style="display: flex; margin-left: 40px; align-items: center;">
                 <select th:name="pos" style="-moz-appearance: none; border: none;">
-				    <option data-content="<i class= 'fa fa-caret-down' aria-hidden='true'></i>" th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
+				    <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
 				    </option>
 				 </select>
+				 <i class="fa fa-caret-down" aria-hidden="true"></i>
+				</div>
             </div>
             <div class="error" id="searchAlert"></div>
             
@@ -174,9 +176,27 @@
          </form>
          <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection"  th:with="sortDirection = ${sortDir == '1' ? '-1' : '1'}">
             <h4>Results</h4>
-            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" sec:authorize="isAuthenticated()">
-            Select Concepts To merge
-            </button>
+            <div style="display:flex; justify-content: space-between; align-items: center;">
+	            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" sec:authorize="isAuthenticated()">
+	            Select Concepts To merge
+	            </button>
+	            <div class="btn-group showDrp">
+               <label for="dropdown">Show </label>
+               <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                  1
+                  <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">1</a></li>
+                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">2</a></li>
+                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">3</a></li>
+                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">4</a></li>
+                  </ul>
+               </div>
+               <label for="dropdown">entries </label>
+            </div>
+	        </div>
             <table class="table table-striped resultTable tableStyles" >
                <thead>
                   <tr>
@@ -200,13 +220,13 @@
 	                    <i th:unless="${sortColumn == 'wordnetid'}" class="fa fa-sort"></i>
                      </th>
                      <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="pos" 
-                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">POS
+                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 100px;">POS
                      	<i th:if="${sortColumn == 'pos' && sortDir == '1'}" class="fa fa-sort-desc"></i>
 	                    <i th:if="${sortColumn == 'pos' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
 	                    <i th:unless="${sortColumn == 'pos'}" class="fa fa-sort"></i>
                      </th>
                      <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="listname" 
-                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">Concept List
+                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 200px;">Concept List
                      	<i th:if="${sortColumn == 'listName' && sortDir == '1'}" class="fa fa-sort-desc"></i>
 	                    <i th:if="${sortColumn == 'liestName' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
 	                    <i th:unless="${sortColumn == 'listName'}" class="fa fa-sort"></i>
@@ -218,7 +238,7 @@
 	                    <i th:unless="${sortColumn == 'description' }" class="fa fa-sort"></i>
                      </th>
                      <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="types" 
-                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">Type
+                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 100px;">Type
                      	<i th:if="${sortColumn == 'types' && sortDir == '1'}" class="fa fa-sort-desc"></i>
 	                    <i th:if="${sortColumn == 'types' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
 	                    <i th:unless="${sortColumn == 'types'}" class="fa fa-sort"></i>

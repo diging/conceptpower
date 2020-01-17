@@ -100,7 +100,7 @@ public class ConceptWrapperAddController {
         conceptWrapperAddBean.setPos(entry.getPos());
         conceptWrapperAddBean.setWrapperids(wrapperId);
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
-        return "/auth/conceptlist/addconceptwrapper";
+        return "layouts/concepts/AddConceptWrapper";
     }
 
     /**
@@ -195,7 +195,7 @@ public class ConceptWrapperAddController {
         model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
 
-        return "/auth/conceptlist/addconceptwrapper";
+        return "layouts/concepts/AddConceptWrapper";
     }
 
     /**
