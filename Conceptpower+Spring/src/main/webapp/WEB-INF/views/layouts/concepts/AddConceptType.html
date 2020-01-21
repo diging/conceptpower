@@ -6,36 +6,34 @@
    <body class="body" layout:fragment="content">
          <div class="conceptType">
          <h3 class="title">Add a new concept type</h3>
-         <form th:action="@{/auth/concepts/createconcepttype}" method="post" th:object="${userForm}">
+         <form th:action="@{/auth/concepts/createconcepttype}" method="post" th:object="${conceptTypeAddForm}">
 	         <table class="conceptForm">
 	            <tbody>
 	               <tr>
 	                  <td style="width:40px;">
-	                     <label for="TypeName"  class="formlabel">Type name</label>
+	                     <label for="typeName"  class="formlabel">Type name</label>
 	                  </td>
 	                  <td>
 	                     <input type="text" th:name="typeName" class="form-control" placeholder="Enter type name....">
-	                     <div th:if="${userForm}">error</div>
-	                     <div th:text="${#fields.hasErrors('typeName')}"></div>
+	                     <div th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}"></div>
 	                  </td>
 	               </tr>
 	               <tr>
 	                  <td style="width:172px;">
-	                     <label for="TypeDescription"  class="formlabel">Type description</label>
-	                     <div th:if="${#fields.hasErrors('typeDescription')}">error</div>
+	                     <label for="typeDescription"  class="formlabel">Type description</label>
 	                  </td>
 	                  <td>
 	                     <textarea class="form-control" th:name="typeDescription" rows="3" placeholder="Enter type description...."></textarea>
+	                     <div th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeName}"></div>
 	                  </td>
-	                  <td>
-					
 	               </tr>
 	               <tr>
 	                  <td style="width:40px;">
-	                     <label for="Matches"  class="formlabel">Matches</label>
+	                     <label for="matches"  class="formlabel">Matches</label>
 	                  </td>
 	                  <td>
 	                     <textarea class="form-control" th:name="matches" rows="3"></textarea>
+	                     <div th:if="${#fields.hasErrors('matches')}" th:errors="*{matches}"></div>
 	                  </td>
 	               </tr>
 	               <tr>
@@ -43,7 +41,7 @@
 	                     <label for="SuperType" class="formlabel">Super Type</label>
 	                  </td>
 	                  <td>
-	                     <select th:name="pos" path="superType">
+	                     <select th:name="superType">
 						    <option th:each="types: ${conceptTypeAddForm.types}" th:value="${types.value}" th:text="${types.value}">
 						    </option>
 				 		</select>

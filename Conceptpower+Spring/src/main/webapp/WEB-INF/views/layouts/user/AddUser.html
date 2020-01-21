@@ -4,10 +4,10 @@
    layout:decorate="~{layouts/main}"
    >
    <body class="body" layout:fragment="content">
-         <div class="conceptType">
-            <h3 class="title">Add a new User.</h3>
-            <form  th:object="${user}" th:action="@{/auth/user/createuser}" method='post'>
-        <table class="conceptForm">
+      <div class="addUser conceptType">
+         <h3 class="title">Add a new User</h3>
+         <form  th:object="${user}" th:action="@{/auth/user/createuser}" method='post'>
+            <table class="userAddForm conceptForm">
                <tbody>
                   <tr>
                      <td style="width:40px;">
@@ -15,6 +15,7 @@
                      </td>
                      <td>
                         <input type="text" class="form-control" name="username" placeholder="Enter your user name....">
+                        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -23,6 +24,7 @@
                      </td>
                      <td>
                         <input type="text" class="form-control" name="fullname"  placeholder="Enter your full name....">
+                        <div th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -31,6 +33,7 @@
                      </td>
                      <td>
                         <input type="email" class="form-control" name="email" placeholder="Enter your email id....">
+                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -38,10 +41,10 @@
                         <label for="isAdmin" class="formlabel">Admin</label>
                      </td>
                      <td>
-                      <select th:name="isAdmin">
-					    <option th:value="yes" th:text="Yes"></option>
-					    <option th:value="no" th:text="No"></option>
-				    </select>
+                        <select th:name="isAdmin">
+                           <option th:value="yes" th:text="Yes"></option>
+                           <option th:value="no" th:text="No"></option>
+                        </select>
                      </td>
                   </tr>
                   <tr>
@@ -49,7 +52,8 @@
                         <label for="password" class="formlabel">Password</label>
                      </td>
                      <td>
-                        <input type="password" class="form-control" name="password" placeholder="Atleast 8 characters long....">
+                        <input type="password" class="form-control" name="password" placeholder="Atleast 4 characters long....">
+                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -58,6 +62,7 @@
                      </td>
                      <td>
                         <input type="password" class="form-control" name="retypedPassword" placeholder="Retype Password....">
+                        <div th:if="${#fields.hasErrors('retypedPassword')}" th:errors="*{retypedPassword}"></div>
                      </td>
                   </tr>
                </tbody>
@@ -67,8 +72,7 @@
                Create User
                </button>
             </div>
-            
-            </form>
-         </div>
+         </form>
+      </div>
    </body>
 </html>

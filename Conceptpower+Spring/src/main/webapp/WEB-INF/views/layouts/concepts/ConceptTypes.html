@@ -28,26 +28,7 @@
             <i class="fa fa-plus" aria-hidden="true"></i> Add new type
             </button>
          </div>
-         <div class="headerSection">
-            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search....." style="width: 200px;">
-            <div class="btn-group showDrp">
-               <label for="dropdown">Show </label>
-               <div class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                  1
-                  <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">1</a></li>
-                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">2</a></li>
-                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">3</a></li>
-                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">4</a></li>
-                  </ul>
-               </div>
-               <label for="dropdown">entries </label>
-            </div>
-         </div>
-         <table class="table table-striped resultTable tableStyles" >
+         <table class="table table-striped resultTable tableStyles" th:if="${result.size() > 0}">
             <thead>
                <tr>
                   <th scope="col"></th>
@@ -84,13 +65,15 @@
                </tr>
             </tbody>
          </table>
+         
+      	<div th:if="${result.size()<=0}"> No Concept Types to display</div>
       </div>
-      <div class="pagination">
+      <div class="pagination" th:if="${result.size() > 0}">
          <ul class="pagination">
-            <li class="page-item" th:classappend="${page == 0} ? disabled : '' ">
+            <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
                <span class="page-link" th:data-sortDir="${sortDir}" th:data-sortColumn="${sortColumn}" th:data-page="${page - 1}" id="paginate" >Previous</span>
             </li>
-            <li th:each="i: ${#numbers.sequence(0, count)}" th:class="page-item" th:classappend="${page == i+1} ? active: '' ">
+            <li th:each="i: ${#numbers.sequence(0, count-1)}" th:class="page-item" th:classappend="${page == i+1} ? active: '' ">
                <span class="page-link" th:data-sortDir="${sortDir}" th:data-sortColumn="${sortColumn}" th:data-page="${i+1}" id="paginate" th:text="${i+1}">
                <span class="sr-only">(current)</span></span>
             </li>

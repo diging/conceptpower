@@ -5,7 +5,7 @@
    >
    <body class="body" layout:fragment="content">
          <div class="conceptType">
-            <h3 class="title">Edit User.</h3>
+            <h3 class="title">Edit User</h3>
             <form  th:object="${user}" th:action="@{/auth/user/createuser}" method='post'>
         <table class="conceptForm">
                <tbody>
@@ -14,7 +14,7 @@
                         <label for="username" class="formlabel">User name</label>
                      </td>
                      <td>
-                        <input type="text" class="form-control" name="username" value="th:text='${user.username}'">
+                        <input type="text" class="form-control" name="username" th:value="${user.username}" >
                      </td>
                   </tr>
                   <tr>
@@ -22,7 +22,7 @@
                         <label for="fullname" class="formlabel">Full Name</label>
                      </td>
                      <td>
-                        <input type="text" class="form-control" name="fullname"  placeholder="Enter your full name....">
+                        <input type="text" class="form-control" name="fullname"  th:value="${user.fullname}" placeholder="Enter your full name....">
                      </td>
                   </tr>
                   <tr>
@@ -30,7 +30,7 @@
                         <label for="email" class="formlabel">Email Id</label>
                      </td>
                      <td>
-                        <input type="email" class="form-control" name="email" placeholder="Enter your email id....">
+                        <input type="email" class="form-control" name="email" th:value="${user.email}" placeholder="Enter your email id....">
                      </td>
                   </tr>
                   <tr>

@@ -14,26 +14,7 @@
                <i class="fa fa-plus" aria-hidden="true"></i> Add new user
                </button></a>
             </div>
-            <div class="headerSection">
-               <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search....." style="width: 200px;">
-               <div class="btn-group showDrp">
-                  <label for="dropdown">Show </label>
-                  <div class="dropdown">
-                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-	                     1
-	                     <span class="caret"></span>
-                     </button>
-                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">1</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">2</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">3</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">4</a></li>
-                     </ul>
-                  </div>
-                  <label for="dropdown">entries </label>
-               </div>
-            </div>
-            <table class="table table-striped resultTable tableStyles" >
+            <table class="table table-striped resultTable tableStyles" th:if="${users.length > 0}">
                <thead>
                   <tr>
                      <th scope="col"></th>
@@ -44,7 +25,6 @@
                   </tr>
                </thead>
                <tbody>
-               
                   <tr th:each="user : ${users}">
                      <td>
                         <div class="dropdown">
@@ -62,29 +42,11 @@
                      <td th:text="${user.fullname}"></td>
                      <td th:text="${user.email}"></td>
                      <td th:text="${user.isAdmin}"></td>
-                     
                   </tr>
                   
                </tbody>
             </table>
-         </div>
-         <div class="pagination">
-            <ul class="pagination">
-               <li class="page-item disabled">
-                  <span class="page-link">Previous</span>
-               </li>
-               <li class="page-item"><a class="page-link" href="#">1</a></li>
-               <li class="page-item active" aria-current="page">
-                  <span class="page-link">
-                  2
-                  <span class="sr-only">(current)</span>
-                  </span>
-               </li>
-               <li class="page-item"><a class="page-link" href="#">3</a></li>
-               <li class="page-item">
-                  <a class="page-link" href="#">Next</a>
-               </li>
-            </ul>
+            <div th:if="${users.length <= 0}">No Users exist</div>
          </div>
          <div th:insert="layouts/modals/deleterow :: deleteButton"></div>
    </body>

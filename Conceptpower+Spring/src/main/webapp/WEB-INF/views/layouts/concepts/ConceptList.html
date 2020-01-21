@@ -15,9 +15,9 @@
             </button>
          </div>
          <div class="headerSection">
-            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search....." style="width: 200px;">
+            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search....." th:disabled="${result.size() <= 0}" style="width: 200px;">
          </div>
-         <table class="table table-striped resultTable tableStyles" >
+         <table class="table table-striped resultTable tableStyles" th:if="${result.size() > 0}" >
             <thead>
                <tr>
                   <th scope="col"></th>
@@ -44,6 +44,7 @@
                </tr>
             </tbody>
          </table>
+         <div th:if="${result.size() <= 0}">No Concept Lists to display</div>
       </div>
    </body>
 </html>
