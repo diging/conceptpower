@@ -46,7 +46,7 @@ public class ForgottenPasswordController {
     @RequestMapping(value = "/forgot", method = RequestMethod.GET)
     public String preparePage(Model model) {
         model.addAttribute("emailBackBean", new EmailBackBean());
-        return "forgot";
+        return "/layouts/user/forgotpassword";
     }
 
     @RequestMapping(value = "/emailSent", method = RequestMethod.POST)
@@ -70,7 +70,7 @@ public class ForgottenPasswordController {
         }
 
         model.addAttribute("email", email);
-        return "emailSent";
+        return "/layouts/user/PassEmailClick";
     }
 
     @RequestMapping(value = "/beginReset/{token}")

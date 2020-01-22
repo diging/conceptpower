@@ -91,7 +91,7 @@ public class ConceptWrapperAddController {
             entry = conceptManager.getWordnetConceptEntry(wrapperId);
         } catch (LuceneException ex) {
             logger.error("Error while fetching concepts based on concept id", ex);
-            return "/auth/conceptlist/addconceptwrapper";
+            return "/layouts/concepts/AddConceptWrapper";
         }
         ConceptWrapperAddBean conceptWrapperAddBean = new ConceptWrapperAddBean();
         conceptWrapperAddBean.setDescription(entry.getDescription());
@@ -100,7 +100,7 @@ public class ConceptWrapperAddController {
         conceptWrapperAddBean.setPos(entry.getPos());
         conceptWrapperAddBean.setWrapperids(wrapperId);
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
-        return "layouts/concepts/AddConceptWrapper";
+        return "/layouts/concepts/AddConceptWrapper";
     }
 
     /**

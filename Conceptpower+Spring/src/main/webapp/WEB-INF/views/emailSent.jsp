@@ -8,7 +8,7 @@
 
 <h1>Forgotten Password</h1>
 
-<p>An email with instructions on how to recover your password has been sent to ${email}.</p>
+<p>An email with instructions on how to recover your password has been sent to </p>
 
 
 

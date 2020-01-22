@@ -208,7 +208,7 @@ table{
 }
 
 .btn-primary {
-	width: 80%;
+	width: 100%;
 	border-radius: 20px;
 	margin: 5px 0px 5px 0px;
 }
@@ -250,6 +250,7 @@ table{
 	border: transparent;
 	border-radius: 20px;
 	overflow: auto;
+	min-width: 125px;
 }
 
 .cardLayout.dropdown-menu {
@@ -360,4 +361,8 @@ a:hover {
 
 #sortTag, #paginationTag{
 	cursor: pointer;
+}
+
+.table.indexTable.tableStyles {
+    margin-top: 40px;
 }

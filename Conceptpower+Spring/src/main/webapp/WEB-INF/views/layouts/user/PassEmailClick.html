@@ -1,0 +1,15 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   
+   <body class = "body" layout:fragment="content">
+   <div class="newConcept">
+   	<h1>Reset your Password</h1>
+		<p>An email with instructions on how to recover your password has been sent to </p><div th:text="${email}"></div>
+   	</div>
+   
+   </body>
+   
+</html>

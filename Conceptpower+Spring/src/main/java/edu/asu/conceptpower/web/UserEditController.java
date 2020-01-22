@@ -85,6 +85,7 @@ public class UserEditController {
             BindingResult result, Principal principal) {
 
         if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
             model.addAttribute("org.springframework.validation.BindingResult.user", result);
             model.addAttribute("user", user);
             return "layouts/user/edituser";

@@ -6,15 +6,12 @@
    <body class="body" layout:fragment="content">
          <div class="conceptType">
             <h3 class="title">Edit User</h3>
-            <form  th:object="${user}" th:action="@{/auth/user/createuser}" method='post'>
+            <form  th:object="${user}" th:action="@{/auth/user/edituser/store}" method='post'>
         <table class="conceptForm">
                <tbody>
                   <tr>
-                     <td style="width:40px;">
-                        <label for="username" class="formlabel">User name</label>
-                     </td>
                      <td>
-                        <input type="text" class="form-control" name="username" th:value="${user.username}" >
+                        <input type="hidden" class="form-control" name="username" th:value="${user.username}" >
                      </td>
                   </tr>
                   <tr>
@@ -38,9 +35,9 @@
                         <label for="isAdmin" class="formlabel">Admin</label>
                      </td>
                      <td>
-                      <select th:name="isAdmin">
-					    <option th:value="yes" th:text="Yes"></option>
-					    <option th:value="no" th:text="No"></option>
+                      <select th:name="isAdmin" >
+					    <option th:value="yes" th:selected="${user.isAdmin == true}"  th:text="Yes"></option>
+					    <option th:value="no" th:selected="${user.isAdmin == false}"  th:text="No"></option>
 				    </select>
                      </td>
                   </tr>
@@ -49,21 +46,21 @@
                         <label for="password" class="formlabel">Password</label>
                      </td>
                      <td>
-                        <input type="password" class="form-control" name="password" placeholder="Atleast 8 characters long....">
+                        <input type="password" class="form-control" name="password"  th:value="${user.password}" placeholder="Atleast 8 characters....">
                      </td>
                   </tr>
                   <tr>
-                     <td style="width:40px;">
-                        <label for="retypedPassword" class="formlabel">Retype Password</label>
+                     <td style="width:172px;">
+                        <label for="retype pass" class="formlabel">Retype password</label>
                      </td>
                      <td>
-                        <input type="password" class="form-control" name="retypedPassword" placeholder="Retype Password....">
+                        <input type="password" class="form-control" name="retype pass"  placeholder="Retype your password....">
                      </td>
                   </tr>
                </tbody>
             </table>
             <div class="btnCenter">
-            	<a th:href="@{/auth/user/list}"><button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="cancelTypeBtn">
+            	<a th:href="@{/auth/user/list}"><button class="btn btn-outline-success my-2 my-sm-0 cancelTypeBtn" type="button" >
                		Cancel
                	</button></a>
                	<button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="addConceptTypeBtn">

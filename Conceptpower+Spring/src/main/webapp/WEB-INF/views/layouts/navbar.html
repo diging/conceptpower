@@ -7,7 +7,7 @@
          <img th:src="@{/resources/assets/images/cp_logo.png}" width="70" height=auto alt="">
          </a>
          <div style="display:flex;">
-         <div id="navLinks" class="rightNavSection">
+         <div id="navLinks" class="rightNavSection" sec:authorize="isAuthenticated()">
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                <ul class="nav navbar-nav">
                   <li><a th:href="@{/}">Home</a></li>
@@ -61,12 +61,12 @@
             </a>
             <ul class="dropdown-menu" role="menu">
                <li><a
-                  href=""><i
+                  th:href="@{/auth/index}"><i
                   class="fa fa-list"></i> Index</a></li>
                <li>
-                  <form th:action="@{/signout}" method="post">
+                  <form th:action="@{/signout}" method="post" style="margin-left:18px;">
                      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                     <button style="border-width: 0px; margin-left: 8px;" type="submit" class="btn"><i
+                     <button  type="submit" class="btn mergeConceptBtn"><i
                         class="fa fa-sign-out"></i> Logout</button>
                   </form>
                </li>

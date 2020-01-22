@@ -47,7 +47,7 @@
 	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
 }
 
-#cancelTypeBtn {
+.cancelTypeBtn {
 	height: 44px;
 	width: 300px;
 	background-color: transparent;
@@ -57,7 +57,7 @@
 	margin-right: 30px;
 }
 
-#cancelTypeBtn:hover {
+.cancelTypeBtn:hover {
 	background-color: #4f3acc;
 	border: 2px solid #4f3acc;
 	color: white;

@@ -1,0 +1,39 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <body class = "body" layout:fragment="content"> 
+   	<div class="conceptType">
+            <h3 class="title">Index Management</h3>
+            <table class="table indexTable tableStyles"	>
+             
+               <thead>
+               	<tr>
+               		<th>
+               		Total Indexed Concepts
+               		</th>
+               		<th>
+               		Last Run
+               		</th>
+               	</tr>
+               </thead>
+                 <tbody>
+                  <tr>
+                     <td th:text="${bean.indexedWordsCount}"></td>
+                     <td th:text="${bean.lastRun}"></td>
+                  </tr>
+               </tbody>
+            </table>
+            <div class="btnCenter">
+            <button class="btn btn-outline-success my-2 my-sm-0 cancelTypeBtn" type="submit" >
+               Delete Index
+               </button>
+               <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="addConceptTypeBtn">
+               Index Concepts
+               </button>
+               
+            </div>
+         </div>
+   </body>
+</html>
