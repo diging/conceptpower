@@ -2,12 +2,12 @@ package edu.asu.conceptpower.app.core.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -28,28 +28,38 @@ public class RequestsManagerTest {
     @InjectMocks
     private RequestsManager requestManager;
     
-    private ReviewRequest request = new ReviewRequest();
-    
+    private final String REVIEW_ID1 = "REVIEWf78d0a6e-a187-43df-b3be-3f22c040b5a1";
+    private final String REVIEW_ID2 = "REVIEWf78d0a6e-a187-43df-b3be-3f22c040b5a2";
+    private final String CONCEPT_ID1 = "WID-10126926-N-05-Einstein";
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
+        ReviewRequest req1 = new ReviewRequest();
+        req1.setId(REVIEW_ID1);
+        req1.setConceptId(CONCEPT_ID1);
+        req1.setRequest("Review the Spelling again");
+        req1.setRequester("admin");
+        req1.setResolver("admin");
+        req1.setCreatedAt(OffsetDateTime.parse("2020-01-21T10:47:02.873-07:00"));
+        req1.setStatus(ReviewStatus.CLOSED);
         
-        List<ReviewRequest> responseList = new ArrayList<>();
-        ReviewRequest updatedRequest = new ReviewRequest();
-        request.setId("REVIEW1234-thisissupposedtobesecret");
+
+        ReviewRequest req2 = new ReviewRequest();
+        req2.setId(REVIEW_ID2);
+        req2.setConceptId(CONCEPT_ID1);
+        req2.setRequest("Review one more time");
+        req2.setRequester("admin");
+        req2.setResolver("admin");
+        req2.setCreatedAt(OffsetDateTime.parse("2020-01-23T10:47:02.873-07:00"));
+        req2.setStatus(ReviewStatus.OPENED);
         
-        updatedRequest.setId("REVIEW1234-thisissupposedtobesecret2");
-        updatedRequest.setConceptId("WID-10126926-N-05-Einstein");
-        updatedRequest.setRequest("Review the Spelling again");
-        updatedRequest.setRequester("admin");
-        updatedRequest.setResolver("admin");
-        updatedRequest.setCreatedAt(OffsetDateTime.now());
-        updatedRequest.setStatus(ReviewStatus.OPENED);
+        List<ReviewRequest> responseList = new ArrayList<>();  
+        responseList.add(req1);
+        responseList.add(req2);
         
-        responseList.add(updatedRequest);
-        Mockito.when(dbClient.getReview("REVIEW1234-thisissupposedtobesecret2")).thenReturn(updatedRequest);
-        
-        Mockito.when(dbClient.getAllReviews("WID-10126926-N-05-Einstein")).thenReturn(responseList);
+        Mockito.when(dbClient.getReview(REVIEW_ID1)).thenReturn(req1);
+        Mockito.when(dbClient.getAllReviews(CONCEPT_ID1)).thenReturn(responseList);
     }
     
     @Test
@@ -57,12 +67,10 @@ public class RequestsManagerTest {
         
         ReviewRequest reviewRequest = new ReviewRequest();
         reviewRequest.setStatus(ReviewStatus.OPENED);
-        reviewRequest.setId("REVIEW1234-thisissupposedtobesecret");
+        reviewRequest.setId(REVIEW_ID1);
         reviewRequest.setRequester("admin");
-        reviewRequest.setConceptId("WID-01006675-N-02-mental_test");
+        reviewRequest.setConceptId(CONCEPT_ID1);
         reviewRequest.setRequest("Testing Method");
-           
-        Mockito.when(dbClient.getReview("REVIEW1234-thisissupposedtobesecret")).thenReturn(null);
         
         requestManager.addReviewRequest(reviewRequest);
         Mockito.verify(dbClient).store(reviewRequest);
@@ -70,73 +78,66 @@ public class RequestsManagerTest {
     }
     
     @Test
-    public void test_getReview_success() {
-        
-        ReviewRequest reviewRequest = new ReviewRequest();
-        reviewRequest.setStatus(ReviewStatus.OPENED); 
-        reviewRequest.setRequester("admin");
-        reviewRequest.setConceptId("WID-10126926-N-05-Einstein");
-        reviewRequest.setRequest("Testing Method2");
-        
-        List<ReviewRequest> response = new ArrayList<>();
-        response.add(reviewRequest);
-        Mockito.when(dbClient.getAllReviews("WID-10126926-N-05-Einstein")).thenReturn(response);
-
-        ReviewRequest fetchedReview = requestManager.getLatestReview("WID-10126926-N-05-Einstein");
-     
-        Assert.assertEquals("WID-10126926-N-05-Einstein", fetchedReview.getConceptId());
-        Assert.assertEquals("admin", fetchedReview.getRequester());
-        Assert.assertEquals(ReviewStatus.OPENED, fetchedReview.getStatus());
-        Assert.assertEquals("Testing Method2", fetchedReview.getRequest());
-    }
-    
-    @Test
-    public void test_getReview_failure() {
-        Mockito.when(dbClient.getAllReviews("WID-10126926-N-05-Thomas")).thenReturn(null);
-
-        ReviewRequest fetchedReview = requestManager.getLatestReview("WID-10126926-N-05-Thomas");
-        
-        Assert.assertNull(fetchedReview);
-    }
-    
-    @Test
-    public void updateReviewTest() {
-        Comment comment = new Comment();     
-        comment.setComment("Sample Comment");
-        
-        ReviewRequest response  = requestManager.updateReview("REVIEW1234-thisissupposedtobesecret2", ReviewStatus.OPENED, comment, OffsetDateTime.now(), "admin");
+    public void test_getLatestReview_success() {
+        ReviewRequest response = requestManager.getLatestReview(CONCEPT_ID1);
         
         assertNotNull(response);
-        
-        assertEquals("WID-10126926-N-05-Einstein", response.getConceptId());
-        assertEquals("REVIEW1234-thisissupposedtobesecret2", response.getId());
-        assertEquals("Review the Spelling again", response.getRequest());
-        assertEquals("admin", response.getRequester());
-    }
-    
-    @Test
-    public void getAllReviewsTest() {
-        List<ReviewRequest> response = requestManager.getAllReviews("WID-10126926-N-05-Einstein");
-        
-        assertNotNull(response);
-        
-        assertEquals(1, response.size());
-        assertEquals("Review the Spelling again", response.get(0).getRequest());
-        assertEquals("REVIEW1234-thisissupposedtobesecret2", response.get(0).getId());
-    }
-    
-    @Test
-    public void getReviewTest() {
-        ReviewRequest response = requestManager.getLatestReview("WID-10126926-N-05-Einstein");
-        
-        assertNotNull(response);
-        
-        assertEquals("WID-10126926-N-05-Einstein", response.getConceptId());
-        assertEquals("REVIEW1234-thisissupposedtobesecret2", response.getId());
-        assertEquals("Review the Spelling again", response.getRequest());
+        assertEquals(CONCEPT_ID1, response.getConceptId());
+        assertEquals(REVIEW_ID2, response.getId());
+        assertEquals("Review one more time", response.getRequest());
         assertEquals("admin", response.getRequester());
         assertEquals("admin", response.getResolver());
         assertEquals(ReviewStatus.OPENED, response.getStatus());
         
+    }
+    
+    @Test
+    public void test_getLatestReview_failure() {
+        ReviewRequest fetchedReview = requestManager.getLatestReview("WID-10126926-N-05-Thomas");
+        
+        assertNull(fetchedReview);
+    }
+    
+    @Test
+    public void test_updateReview_success() {
+        Comment comment = new Comment();     
+        comment.setComment("Sample Comment");
+        
+        ReviewRequest response  = requestManager.updateReview(REVIEW_ID1, ReviewStatus.OPENED, comment, OffsetDateTime.now(), "admin");
+        
+        assertNotNull(response);
+        assertEquals(1, response.getComments().size());
+        assertEquals("Sample Comment",response.getComments().get(0).getComment());
+        assertEquals(CONCEPT_ID1, response.getConceptId());
+        assertEquals(REVIEW_ID1, response.getId());
+        assertEquals("Review the Spelling again", response.getRequest());
+        assertEquals("admin", response.getRequester());
+        assertEquals(ReviewStatus.OPENED, response.getStatus());
+    }
+    
+    @Test
+    public void test_updateReview_failure() {
+        ReviewRequest response  = requestManager.updateReview(REVIEW_ID2, ReviewStatus.OPENED, new Comment(), OffsetDateTime.now(), "admin");
+        
+        assertNull(response);
+    }
+    
+    @Test
+    public void test_getAllReviews_success() {
+        List<ReviewRequest> response = requestManager.getAllReviews(CONCEPT_ID1);
+        
+        assertNotNull(response);
+        assertEquals(2, response.size());
+        assertEquals("Review the Spelling again", response.get(0).getRequest());
+        assertEquals("Review one more time", response.get(1).getRequest());
+        assertEquals(REVIEW_ID1, response.get(0).getId());
+        assertEquals(REVIEW_ID2, response.get(1).getId());
+    }
+    
+    @Test
+    public void test_getAllReviews_failure() {
+        List<ReviewRequest> response = requestManager.getAllReviews("WID-10126926-N-05-Albert");
+        
+        assertNull(response);
     }
 }

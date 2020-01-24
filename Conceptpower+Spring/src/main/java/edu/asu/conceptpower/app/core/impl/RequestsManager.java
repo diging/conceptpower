@@ -28,9 +28,9 @@ public  class RequestsManager implements IRequestsManager{
     /* (non-Javadoc)
      * @see edu.asu.conceptpower.app.core.IRequestsManager#addReviewRequest(edu.asu.conceptpower.core.ReviewRequest)
      */
-    public void addReviewRequest(ReviewRequest newReviewRequest) {
-        newReviewRequest.setId(generateId(REVIEW_PREFIX));
-        dbClient.store(newReviewRequest);
+    public void addReviewRequest(ReviewRequest reviewRequest) {
+        reviewRequest.setId(generateId(REVIEW_PREFIX));
+        dbClient.store(reviewRequest);
     }
     
     /* (non-Javadoc)
@@ -55,9 +55,10 @@ public  class RequestsManager implements IRequestsManager{
         if(reviewRequests!= null && reviewRequests.size() > 0) {
             reviewRequests = new ArrayList<>(reviewRequests);
             Collections.sort(reviewRequests, (x, y) -> x.getCreatedAt().compareTo(y.getCreatedAt()));
+            return reviewRequests;
         }
         
-        return reviewRequests;
+        return null;
     }
     
     /* (non-Javadoc)
