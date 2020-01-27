@@ -172,3 +172,9 @@ label {
 	line-height: 45px;
 	font-weight: 700;
 }
+
+.resetPassForm {
+	width: 70%;
+	border-collapse: separate;
+	border-spacing: 0 15px;
+}

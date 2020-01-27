@@ -24,9 +24,9 @@
                <h3 class="titleHeader">Concept types</h3>
                <h4 class="subHeader">See existing types below.</h4>
             </div>
-            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
+            <a th:href="@{/auth/concepttype/addtype}"><button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
             <i class="fa fa-plus" aria-hidden="true"></i> Add new type
-            </button>
+            </button></a>
          </div>
          <table class="table table-striped resultTable tableStyles" th:if="${result.size() > 0}">
             <thead>
@@ -49,8 +49,8 @@
                         <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
                         <div class="cardLayout dropdown-menu" role="menu">
                            <div class="card-body">
-                              <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
-                              <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+                              <a th:href="@{'/auth/concepttype/edittype/'+${types.typeId}}" class="btn btn-primary" id="editBtn">Edit Item</a>
+                              <button class="btn btn-primary deleteBtn" id="deleteBtn" data-toggle="modal" data-target="#deleteButton">Delete</button>
                            </div>
                         </div>
                      </div>
@@ -82,5 +82,6 @@
             </li>
          </ul>
       </div>
+      <div th:insert="layouts/modals/deleterow :: deleteTypeBtn"></div>
    </body>
 </html>

@@ -352,8 +352,8 @@
 				      </div>
 				      <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" value="${concept.entry.id }" />
 				   	</td>
-				   <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}"></td>
-				   <td th:text="${concept.entry.id}"></td>
+				   <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
+				   <td th:text="${concept.entry.id}"> </td>
 				   <td th:text="${concept.entry.wordnetId}"> </td>
 				   <td th:text="${concept.entry.pos}"></td>
 				   <td th:text="${concept.entry.conceptList}"></td>

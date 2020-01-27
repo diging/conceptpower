@@ -79,7 +79,7 @@ public class ConceptTypeEditController {
         types.remove(typeid);
         conceptTypeAddForm.setTypes(types);
         conceptTypeAddForm.setTypeid(typeid);
-        return "/auth/concepttype/edittype";
+        return "/layouts/concepts/ConceptTypes";
     }
 
     /**

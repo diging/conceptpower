@@ -52,6 +52,8 @@
                            class="fa fa-plus-circle"></i> Add New User</a></li>
                      </ul>
                   </li>
+                  <li><a th:href="@{/auth/index}"><i
+                  	class="fa fa-list"></i> Index</a></li>
                </ul>
             </div>
          </div>
@@ -60,9 +62,6 @@
             <i class="fa fa-user-circle-o fa-10x" aria-hidden="true"></i>
             </a>
             <ul class="dropdown-menu" role="menu">
-               <li><a
-                  th:href="@{/auth/index}"><i
-                  class="fa fa-list"></i> Index</a></li>
                <li>
                   <form th:action="@{/signout}" method="post" style="margin-left:18px;">
                      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
