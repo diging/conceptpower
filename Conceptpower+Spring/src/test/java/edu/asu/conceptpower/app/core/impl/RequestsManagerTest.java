@@ -116,8 +116,15 @@ public class RequestsManagerTest {
     }
     
     @Test
-    public void test_updateReview_failure() {
+    public void test_updateReview_invalidReviewId_failure() {
         ReviewRequest response  = requestManager.updateReview(REVIEW_ID2, ReviewStatus.OPENED, new Comment(), OffsetDateTime.now(), "admin");
+        
+        assertNull(response);
+    }
+    
+    @Test
+    public void test_updateReview_nullComment_failure() {
+        ReviewRequest response  = requestManager.updateReview(REVIEW_ID1, ReviewStatus.OPENED, null, OffsetDateTime.now(), "admin");
         
         assertNull(response);
     }

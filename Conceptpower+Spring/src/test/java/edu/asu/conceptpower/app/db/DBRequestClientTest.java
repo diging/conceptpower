@@ -10,8 +10,8 @@ import org.mockito.MockitoAnnotations;
 import com.db4o.ObjectContainer;
 import com.db4o.query.Predicate;
 
-import edu.asu.conceptpower.app.db.CustomMatchers.PredicateReviewRequestMatcher;
-import edu.asu.conceptpower.app.db.CustomMatchers.ReviewRequestMatcher;
+import edu.asu.conceptpower.app.db.custommatchers.PredicateReviewRequestMatcher;
+import edu.asu.conceptpower.app.db.custommatchers.ReviewRequestMatcher;
 import edu.asu.conceptpower.core.ReviewRequest;
 
 public class DBRequestClientTest {
