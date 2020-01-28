@@ -13,14 +13,14 @@ import edu.asu.conceptpower.core.ReviewRequest;
 
 public class ReviewRequestMatcher implements ArgumentMatcher<ReviewRequest> {
  
-    private ReviewRequest left;
+    private ReviewRequest validRequest;
  
     public ReviewRequestMatcher(ReviewRequest request) {
-        this.left = request;
+        this.validRequest = request;
     }
  
     @Override
-    public boolean matches(ReviewRequest right) {
-        return left.getConceptId().equals(right.getConceptId());
+    public boolean matches(ReviewRequest toBeValidatedRequest) {
+        return validRequest.getConceptId().equals(toBeValidatedRequest.getConceptId());
     }
 }
