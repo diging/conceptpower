@@ -46,7 +46,7 @@
     	   	  if(conceptIdsToBeMerged.length < 2) {
     	   	      $('#mergeError').show();
     	   	    } else {
-    	   	        window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;      
+    	   	        window.location = '/conceptpower/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;      
     	   	    }
     	   	}
        
@@ -63,7 +63,16 @@
    	    var index = (target).index();
    	     $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).show();
    	  }
-   	
+   	var conceptsToMerge = "";
+   	function prepareMergeConcept(conceptId) {
+   	    var tis = $(this);
+   	    var conceptsToMerge = $(this).attr("value");
+   	    if(conceptsToMerge != '') {
+   	    	conceptsToMerge = conceptId;
+   	    } else {
+   	        conceptsToMerge = conceptsToMerge + "," + conceptId;    
+   	    }
+   	}
    	  function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
    	    var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
    	    if(conceptsToBeMerged) {
@@ -350,7 +359,7 @@
 				            </div>
 				         </div>
 				      </div>
-				      <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" value="${concept.entry.id }" />
+				      <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
 				   	</td>
 				   <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
 				   <td th:text="${concept.entry.id}"> </td>
