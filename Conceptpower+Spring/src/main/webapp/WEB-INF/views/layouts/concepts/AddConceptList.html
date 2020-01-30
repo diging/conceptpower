@@ -6,31 +6,37 @@
    <body class="body" layout:fragment="content">
          <div class="conceptType">
             <h3 class="title">Add a new Concept List.</h3>
-            <table class="conceptForm">
-               <tbody>
-                  <tr>
-                     <td style="width:40px;">
-                        <label for="exampleFormControlInput1" class="formlabel">List name</label>
-                     </td>
-                     <td>
-                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Enter List name....">
-                     </td>
-                  </tr>
-                  <tr>
-                     <td style="width:172px;">
-                        <label for="exampleFormControlTextarea1" class="formlabel">List description</label>
-                     </td>
-                     <td>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter List description...."></textarea>
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
-            <div class="btnCenter">
-               <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="addConceptTypeBtn">
-               Create List
-               </button>
-            </div>
+            <form
+				th:action="@{/auth/concepts/createconceptlist}"
+				th:object="${conceptListAddForm}" method='post'>
+	            <table class="conceptForm">
+	               <tbody>
+	                  <tr>
+	                     <td style="width:40px;">
+	                        <label for="listName" class="formlabel">List name</label>
+	                     </td>
+	                     <td>
+	                        <input type="text" class="form-control" name="listName" placeholder="Enter List name....">
+	                        <div th:if="${#fields.hasErrors('listName')}" th:errors="*{listName}"></div>
+	                     </td>
+	                  </tr>
+	                  <tr>
+	                     <td style="width:172px;">
+	                        <label for="description" class="formlabel">List description</label>
+	                     </td>
+	                     <td>
+	                        <textarea class="form-control" name="description" placeholder="Enter List description...."></textarea>
+	                        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+	                     </td>
+	                  </tr>
+	               </tbody>
+	            </table>
+	            <div class="btnCenter">
+	               <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="addConceptTypeBtn">
+	               		Create List
+	               </button>
+	            </div>
+            </form>
          </div>
    </body>
 </html>

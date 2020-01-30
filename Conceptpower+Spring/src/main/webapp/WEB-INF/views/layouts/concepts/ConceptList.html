@@ -10,13 +10,11 @@
                <h3 class="titleHeader">Concept List</h3>
                <h4 class="subHeader">Here you will find all stored concept lists</h4>
             </div>
-            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
+            <a th:href="@{/auth/conceptlist/addconceptlist}"><button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" >
             <i class="fa fa-plus" aria-hidden="true"></i> Add New Concept List
-            </button>
+            </button></a>
          </div>
-         <div class="headerSection">
-            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Search....." th:disabled="${result.size() <= 0}" style="width: 200px;">
-         </div>
+         
          <table class="table table-striped resultTable tableStyles" th:if="${result.size() > 0}" >
             <thead>
                <tr>
@@ -33,13 +31,16 @@
                         <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
                         <div class="cardLayout dropdown-menu" role="menu">
                            <div class="card-body">
-                              <a href="#" class="btn btn-primary" id="editBtn">Edit Item</a>
-                              <a href="#" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+                              <a th:href="@{'/auth/conceptlist/editlist/'+${list.conceptListName}}" class="btn btn-primary" id="editBtn">Edit Item</a>
+                              <a th:href="@{'/auth/conceptlist/deletelist/'+${list.conceptListName}}"class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
                            </div>
                         </div>
                      </div>
                   </td>
-                  <td th:text="${list.conceptListName}"></td>
+                  <td >
+                  <font size="2"><a
+                  			style="text-decoration:none;"
+							th:href="@{'/auth/'+${list.conceptListName}+'/concepts'}" th:text="${list.conceptListName}"></a></font></td>
                   <td th:text="${list.description}"></td>
                </tr>
             </tbody>

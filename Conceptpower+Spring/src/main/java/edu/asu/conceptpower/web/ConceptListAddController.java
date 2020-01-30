@@ -58,7 +58,7 @@ public class ConceptListAddController {
             return "/layouts/concepts/AddConceptList";
         }
         conceptListManager.addConceptList(conceptListAddForm.getListName(), conceptListAddForm.getDescription());
-        return "redirect:/layouts/concepts/ConceptList";
+        return "redirect:/auth/conceptlist";
     }
 
 }

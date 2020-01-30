@@ -9,7 +9,7 @@
          <div class="modal-content" >
             <div class="modal-body">
             	<form
-            		th:object="${'user'}"
+            		th:object="${user}"
             		th:action="@{/auth/user/confirmdeleteuser/}"
 					method='post' id="edituserform">
 					<div>
