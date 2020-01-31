@@ -7,24 +7,6 @@
    	<meta name="_csrf_token" th:content="${_csrf.token}"/>
 	<meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
     <script>
-    	$(document).ready(hideFormProcessing);
-    	function hideFormProcessing() {
-    		$('#floatingCirclesG').hide();
-    	}
-       function showFormProcessing() {
-	         $('#floatingCirclesG').show();
-	       }
-
-       //Function to handle pagination and sort
-	   	function paginate(page, sortDir, sortColumn, word, pos) {
-	   	    var conceptIdsToMerge = null; //$('#conceptIdsToMerge').val().replace("\"", "");
-	   	    
-	   	    if (conceptIdsToMerge) {
-	   	        window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;
-	   	    } else {
-	   	        window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos;
-	   	    }
-	   	}
        
        //Function to get required data for pagination
        $(document).on('click', '#paginationTag', function(e){
@@ -165,7 +147,7 @@
   						
   						if(details.mergedIds) {
   							$.ajax({
-  								url: '${pageContext.servletContext.contextPath}/rest/OriginalConcepts',
+  								url: '/conceptpower/rest/OriginalConcepts',
   				                type: 'GET',
   				                headers: {          
   				                    Accept: "application/json",         
@@ -173,8 +155,7 @@
   				                data: {
   				                  ids: details.mergedIds
   				                },
-  				              })
-  				              .msuccess(function(originalConcepts) {
+  				              success : function(originalConcepts) {
   				                var mergedIdsHtml = '';
   				                $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
   				                    if(mergedIdsHtml) {
@@ -185,8 +166,9 @@
   				                    mergedIdsHtml += "</span>";
   				                });
   				                $("#detailsmergedIds").html(mergedIdsHtml);  
-  				              });              
-  				        }
+  				              }
+  							});              
+  					}
   					}
    			});
    		});
@@ -223,6 +205,25 @@
    	        }
    	    }
    	});
+   	
+   	$(document).ready(hideFormProcessing);
+	function hideFormProcessing() {
+		$('#floatingCirclesG').hide();
+	}
+   function showFormProcessing() {
+         $('#floatingCirclesG').show();
+       }
+
+   //Function to handle pagination and sort
+   	function paginate(page, sortDir, sortColumn, word, pos) {
+   	    var conceptIdsToMerge = null; //$('#conceptIdsToMerge').val().replace("\"", "");
+   	    
+   	    if (conceptIdsToMerge) {
+   	        window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;
+   	    } else {
+   	        window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos;
+   	    }
+   	}
     </script>
    </head>
    <body class = "body" layout:fragment="content">
@@ -278,6 +279,7 @@
 	            	Select Concepts To merge
 	            </button>
 	            <input type='hidden' id='conceptIdsToMerge' th:value='${conceptIdsToMerge}' />
+	            <div th:text="${conceptIdsToMerge}">hello</div>
 	            <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" th:onclick="'finalizeMerge();'">Merge selected concepts</button>
 	            <div id="mergeError" class="alert alert-danger"> Please select at least two concepts to merge.</div>
 	            <div class="btn-group showDrp">
@@ -361,13 +363,13 @@
 				      </div>
 				      <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
 				   	</td>
-				   <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
-				   <td th:text="${concept.entry.id}"> </td>
+				   <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}"></td>
+				   <td th:text="${concept.entry.id}"></td>
 				   <td th:text="${concept.entry.wordnetId}"> </td>
 				   <td th:text="${concept.entry.pos}"></td>
 				   <td th:text="${concept.entry.conceptList}"></td>
 				   <td th:text="${concept.description}"></td>
-				   <td th:text="${concept.type}"></td>
+				   <td th:text="${concept.type != null ? concept.type.typeName : ''}"></td>
 				   <td><i class="fa fa-comment" aria-hidden="true"></i></td>
 				</tr>
                </tbody>

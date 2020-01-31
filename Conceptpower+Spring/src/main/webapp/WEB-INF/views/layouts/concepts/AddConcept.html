@@ -3,163 +3,527 @@
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
    layout:decorate="~{layouts/main}"
    >
-	<body class="body" layout:fragment="content">
-	      <div class="newConcept">
-	      	<h3 class="title">Add a new Concept</h3>
-	      	
-	      	<table class="conceptForm">
-               <tbody>
-                  <tr>
-                     <td>
-                     	<div class="drpSpacing">
-                        	<label for="exampleFormControlInput1" class="formlabel">Service</label>
-                        	<div class="btn-group dropdown">
-	                        	<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-	                           		Action
-	                           		<span class="caret"></span>
+   <script>
+	   $(function() {
+		    $(document).ready(function() {
+		        var term = $('#term').val();
+		        if (term != '') {
+		            var synonymDescription = $('#synonymDescription').val();
+		            var id = $('#synonymId').val();
+		            var termArray = term.split(',,');
+		            var synonymDescriptionArray = synonymDescription.split(',,');
+		            var idArray = id.split(',,');
+		            for (var i = 0; i < termArray.length; i++) {
+		                if (idArray[i] != '') {
+		                    synonymAdd(idArray[i], termArray[i], synonymDescriptionArray[i], 'true');
+		                }
+		            }
+		        }
+		    });
+		    $("#synonymModal").dialog({
+		        autoOpen: false
+		    });
+		});
+		$(function() {
+		    $("#addsynonym").click(function() {
+		        var addedSynonymsTable = $('#addedSynonyms');
+		        $('#synonymstable').dataTable().fnClearTable();
+		        $("#synonymModal").dialog('open');
+		        $("#synonymsDialogTable").show();
+		    });
+		    $("#name").on("change paste", function() {
+		        $.ajax({
+		            type: "GET",
+		            url: "${pageContext.servletContext.contextPath}/getExistingConcepts",
+		            data: {
+		                conceptname: $(this).val()
+		            },
+		            success: function(response) {
+		                var data = jQuery.parseJSON(response);
+		                if (data.length > 0) {
+		                    var text = "Following concepts have the same name : \n";
+		                    var len = data.length;
+		                    for (var i = 0; i < len; i++) {
+		                        text += (data[i].word + " - " + data[i].description + "\n");
+		                    }
+		                    $("#warning").show();
+		                    $('#warning').prop('title', text);
+		                } else {
+		                    $("#warning").hide();
+		                    $('#warning').prop('title', '');
+		                }
+		            },
+		            error: function(httpStatus, response) {
+		                if (httpStatus.status == 409) {
+		                    var errorMessage = "<i class=\" fa fa-exclamation-triangle\">" +
+		                        httpStatus.responseText + "</i>";
+		                    $("#synonymModal").dialog("close");
+		                    $('#synonymModal').modal('toggle');
+		                    $('#errorMessage').show();
+		                    $('#error_alert_msg').html(errorMessage);
+		                }
+		            }
+		        });
+		    });
+		});
+		$(document).ready(definedatatable);
+	
+		function definedatatable() {
+		    $('#synonymstable').dataTable({
+		        "bJQueryUI": true,
+		        "sPaginationType": "full_numbers",
+		        "bAutoWidth": false,
+		        "bStateSave": true,
+		        "aoColumns": [{
+		            "sTitle": "Term",
+		            "mDataProp": "word",
+		        }, {
+		            "sTitle": "POS",
+		            "mDataProp": "pos",
+		        }, {
+		            "sTitle": "Description",
+		            "mDataProp": "description",
+		        }, {
+		            "sTitle": "Add",
+		            "mDataProp": "id"
+		        }],
+		        "fnRowCallback": function(nRow, aData, iDisplayIndex) {
+		            var description = aData.description;
+		            description = description != null ? description.replace(/"/g, '&quot;') :
+		                "";
+		            $('td:eq(3)', nRow).html(
+		                '<a onclick="synonymAdd(\'' + aData.id + '\',\'' + aData.word +
+		                '\',\'' + description + '\')">Add</a>');
+		            return nRow;
+		        }
+		    });
+		};
+		$(function() {
+		    $("#synonymsearch").click(
+		        function() {
+		            $("#synonymViewDiv").show();
+		            $("#synonymstable").show();
+		            var addedsynonym = $('#addedSynonnym').val();
+		            var synonymname = $("#synonymname").val();
+		            $.ajax({
+		                type: "GET",
+		                url: "${pageContext.servletContext.contextPath}/conceptAddSynonymView",
+		                data: {
+		                    synonymname: synonymname,
+		                    addedsynonym: addedsynonym
+		                },
+		                success: function(response) {
+		                    var data = jQuery.parseJSON(response);
+		                    $('#synonymstable').dataTable().fnClearTable();
+		                    $('#synonymstable').dataTable().fnAddData(data);
+		                },
+		                error: function(httpStatus, response) {
+		                    if (httpStatus.status == 409) {
+		                        var errorMessage = "<i class=\"fa fa-exclamation-triangle\">" +
+		                            httpStatus.responseText + "</i>";
+		                        $("#synonymModal").dialog("close");
+		                        $('#synonymModal').modal('toggle');
+		                        $('#errorMessage').show();
+		                        $('#error_alert_msg').html(errorMessage);
+		                    }
+		                }
+		            });
+		        });
+		});
+		var synonymAdd = function(id, term, description, onLoad) {
+		    if (typeof onLoad === "undefined") {
+		        onLoad = false;
+		    }
+		    if (onLoad == false) {
+		        $("#dialog").dialog("close");
+		        $("#synonymModal").dialog("close");
+		        $('#synonymModal').modal('toggle');
+		        $("#synonymsDialogTable").hide();
+		    }
+		    var x = document.getElementById('addedSynonymsTable');
+		    var addedsynonym = $('#addedSynonnym').val();
+		    if (x != null) {
+		        var new_row = x.rows[0].cloneNode(true);
+		        new_row.cells[0].innerHTML = '<a onclick="synonymRemove(\'' + x.rows.length +
+		            '\')">Remove</a>' + '</font> < /
+		            td > '
+		        new_row.cells[1].innerHTML = term;
+		        new_row.cells[2].innerHTML = description;
+		        new_row.cells[3].innerHTML = id;
+		        new_row.cells[3].hidden = true;
+		        if (onLoad == false) {
+		            var t = $('#term').val();
+		            t = t + ",," + term;
+		            $('#term').val(t);
+		            var d = $('#synonymDescription').val();
+		            d = d + ",," + description;
+		            $('#synonymDescription').val(d);
+		            var i = $('#synonymId').val();
+		            i = i + ",," + id;
+		            $('#synonymId').val(i);
+		        }
+		        x.appendChild(new_row);
+		        addedsynonym += ','
+		        addedsynonym += id;
+		        $('#addedSynonnym').val(addedsynonym);
+		    } else {
+		        var html = '<table border="1" width="400" id="addedSynonymsTable"> <
+		        thead > < /thead>';
+		        html += '<tr> <
+		        td align = "justify" >
+		            <
+		            font size = "2" > ' +
+		        '<a onclick="synonymRemove(\'0\')">Remove</a>' + '</font> < /
+		        td > ';
+		        html += '<td align="justify"> <
+		        font size = "2" > ' + term + ' < /font> < /
+		            td > ';
+		        html += '<td align="justify"> <
+		        font size = "2" > ' + description + ' < /font> < /
+		            td > ';
+		        html += '<td align="justify" hidden="true">' + id + '</td> < /
+		            tr > ';
+		        html += ' < /
+		            table > ';
+		        html += '<input type="hidden" name="syns" />';
+		        addedsynonym += id;
+		        if (onLoad == false) {
+		            $('#term').val(term);
+		            $('#synonymDescription').val(description);
+		            $('#synonymId').val(id);
+		        }
+		        $('#addedSynonnym').val(addedsynonym);
+		        $("#addedSynonyms").html(html);
+		    }
+		    var synonyms = " ";
+		    var table = document.getElementById('addedSynonymsTable');
+		    for (var r = 0, n = table.rows.length; r < n; r++) {
+		        synonyms += table.rows[r].cells[3].innerHTML + ',';
+		    }
+		    $("#synonymsids").val(synonyms);
+		};
+		var synonymRemove = function(row) {
+		    bindingRemoval(row);
+		    $('#addedSynonnym').val('');
+		    var x = document.getElementById('addedSynonymsTable');
+		    x.deleteRow(row);
+		    if (!(x.rows.length > 0))
+		        x.parentNode.removeChild(x);
+		    var synonyms = " ";
+		    var table = document.getElementById('addedSynonymsTable');
+		    for (var r = 0, n = table.rows.length; r < n; r++) {
+		        synonyms += table.rows[r].cells[3].innerHTML + ',';
+		    }
+		    $("#synonymsids").val(synonyms);
+		    $('#addedSynonnym').val(synonyms);
+		};
+		var bindingRemoval = function(row) {
+		    var ids = $('#synonymId').val();
+		    var idArray = ids.split(',,');
+		    var newIdArray = '';
+		    for (var i = 0; i < idArray.length; i++) {
+		        if (i != row) {
+		            newIdArray = newIdArray + idArray[i];
+		            newIdArray = newIdArray + ',,';
+		        }
+		    }
+		    $('#synonymId').val(newIdArray);
+		    var synonymDescriptions = $('#synonymDescription').val();
+		    var synonymDescriptionArray = synonymDescriptions.split(',,');
+		    var newSynonymArray = '';
+		    for (var i = 0; i < synonymDescriptionArray.length; i++) {
+		        if (i != row) {
+		            newSynonymArray = newSynonymArray + synonymDescriptionArray[i];
+		            newSynonymArray = newSynonymArray + ',,';
+		        }
+		    }
+		    $('#synonymDescription').val(newSynonymArray);
+		    var terms = $('#term').val();
+		    var termArray = terms.split(',,');
+		    var newTermArray = '';
+		    for (var i = 0; i < termArray.length; i++) {
+		        if (i != row) {
+		            newTermArray = newTermArray + termArray[i];
+		            newTermArray = newTermArray + ',,';
+		        }
+		    }
+		    $('#term').val(newTermArray);
+		} //service $(function() { $("#serviceSearch").click(function() { getTermDetails(); }); }); function getTermDetails() { var serviceterm=$("#serviceterm").val(); // Added validation for search term if(!serviceterm.trim()) { $("#serviceTermError").html('Term cannot be empty.'); return false; } else { $("#serviceTermError").html(''); } var serviceid=$("#selectedServiceNameIdMap").val(); $.ajax({ type : "GET" , url : "${pageContext.servletContext.contextPath}/serviceSearch" , data : { serviceterm : serviceterm, serviceid : serviceid }, success : function(response) { if (response.length> 0 && response != "[]") {
+		var data = jQuery.parseJSON(response);
+		$('#serviceResultTable').dataTable().fnClearTable();
+		$('#serviceResultTable').dataTable().fnAddData(data);
+		$('#showServiceResult').show();
+		}
+		else {
+		    $('#serviceResultTable').dataTable().fnClearTable();
+		    $('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
+		    $('#showServiceResult').hide();
+		    $("#serviceTermError").html('No results found.');
+		}
+		},
+		error: function(response) {
+		$('#serviceResultTable').dataTable().fnClearTable();
+		$('#serviceResultTable').parents('div.dataTables_wrapper').first().hide();
+		$('#showServiceResult').hide();
+		$("#serviceTermError").html('An error occurred. Please try again later.');
+		}
+		});
+		}
+	
+		$(function() {
+		    $("#showServiceResult").click(function() {
+		        $('#serviceResult').toggle();
+		        $('#serviceResultTable').toggle();
+		    });
+		});
+		$(document).ready(defineServicedatatable);
+	
+		function defineServicedatatable() {
+		    $('#serviceResultTable').dataTable({
+		        "bJQueryUI": true,
+		        "sPaginationType": "full_numbers",
+		        "bAutoWidth": false,
+		        "aoColumns": [{
+		            "sTitle": "Select",
+		            "mData": "isChecked",
+		        }, {
+		            "sTitle": "Word",
+		            "mDataProp": "word",
+		        }, {
+		            "sTitle": "ID",
+		            "mDataProp": "id",
+		        }, {
+		            "sTitle": "Description",
+		            "mDataProp": "description",
+		        }],
+		        aoColumnDefs: [{
+		                "targets": [0, 1],
+		                'bSortable': false
+		            },
+		            {
+		                aTargets: [0],
+		                mRender: function(sourceData, dataType, fullData) {
+		                    var check = '';
+		                    if ($('#equals').val().indexOf(fullData.id) != -1) {
+		                        check = 'checked=\'checked\'';
+		                    }
+		                    var word = encodeURI(fullData.word);
+		                    return '<input type="checkbox" id="' + fullData.id + '" ' +
+		                        check +
+		                        ' name="isChecked" onclick="serviceConceptAdd(\'' +
+		                        fullData.id + '\',\'' + word.replace(/'/g, '%39') +
+		                        '\')"></input>';
+		                },
+		            }
+		        ],
+		        "order": [
+		            [1, "desc"]
+		        ]
+		    });
+		};
+		var serviceConceptAdd = function(serviceConceptID, name) {
+		    var check = false;
+		    if (document.getElementById(serviceConceptID).checked) {
+		        $('#equals').val(serviceConceptID);
+		        document.getElementById("name").value = decodeURI(name);
+		        check = true;
+		    } else if (!(document.getElementById(serviceConceptID).checked)) {
+		        $('#equals').val('');
+		        document.getElementById("name").value = '';
+		        check = false;
+		    }
+		    var checkboxes = new Array();
+		    checkboxes = document.getElementsByTagName('input');
+		    for (var i = 0; i < checkboxes.length; i++) {
+		        if (checkboxes[i].type == 'checkbox') {
+		            checkboxes[i].checked = false;
+		        }
+		    }
+		    if (check) document.getElementById(serviceConceptID).checked = true;
+		    else document.getElementById(serviceConceptID).checked = false;
+		};
+		$(document).ready(function() {
+		    $('#createconceptform').submit(function(event) {
+		        var ret = true;
+		        if ($("#name").val() === "") {
+		            $("#nameerror").html('Please enter a name for concept.');
+		            hideFormProcessing();
+		            ret = false;
+		        } else {
+		            $("#nameerror").html('');
+		        }
+		        if ($("#pos").val() === "") {
+		            $("#poserror").html('Please select a pos.');
+		            hideFormProcessing();
+		            ret = false;
+		        } else {
+		            $("#poserror").html('');
+		        }
+		        if ($("#selectedList").val() === "") {
+		            $("#listerror").html('Please select a concept list.');
+		            hideFormProcessing();
+		            ret = false;
+		        } else {
+		            $("#listerror").html('');
+		        }
+		        if ($("#selectedTypes").val() === "") {
+		            $("#typeerror").html('Please select a concept type.');
+		            hideFormProcessing();
+		            ret = false;
+		        } else {
+		            $("#typeerror").html('');
+		        }
+		        return ret;
+		    });
+		});
+		$(document).ready(showAjaxProcessing);
+	
+		function showAjaxProcessing() {
+		    var $loading = $('#loadingDiv').hide();
+		    $(document).ajaxStart(function() {
+		        $loading.show();
+		    }).ajaxStop(function() {
+		        $loading.hide();
+		    });
+		}
+		$(document).ready(hideFormProcessing);
+	
+		function hideFormProcessing() {
+		    $('#loadingDiv').hide();
+		}
+	
+		function showFormProcessing() {
+		    $('#loadingDiv').show();
+		}
+		$(document).ready(function() {
+		    $("#serviceterm").keydown(function(event) {
+		        if (event.keyCode == 13) {
+		            event.preventDefault();
+		            return getTermDetails();
+		        }
+		    });
+		});
+   </script>
+   <body class="body" layout:fragment="content">
+	   <div class="newConcept">
+	      <h3 class="title">Add a new Concept</h3>
+	      <form
+	         th:action="@{/auth/conceptlist/addconcept/add}"
+	         th:object="${conceptAddBean}" method='post'
+	         id="createconceptform">
+	         <table class="conceptForm">
+	            <tbody>
+	               <tr>
+	                  <td>
+	                     <div class="drpSpacing">
+	                        <label for="exampleFormControlInput1" class="formlabel">Service</label>
+	                        <select th:name="selectedServiceNameIdMap" style="-moz-appearance: none; border: none;">
+							    <option th:each="serviceName: ${conceptAddBean.serviceNameIdMap}" th:value="${serviceName.key}" th:text="${serviceName.value}">
+							    </option>
+				 			</select>
+	                     </div>
+	                  </td>
+	                  <td>
+	                     <div class="termSpacing">
+	                        <div style="margin: 15px 0px 15px 0px;">
+	                           <label for="serviceterm" class="formlabel">Term</label>
+	                        </div>
+	                        <div style="margin: 15px 0px 15px 0px;">
+	                           <input type="text" class="form-control" name="serviceterm" id="serviceterm" placeholder="Enter term....">
+	                        </div>
+	                        <div>
+	                           <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="serviceSearch" type="submit">
+	                           Search
 	                           </button>
-	                           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-	                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-	                           </ul>
-                           </div>
-                        </div>
-                     </td>
-                     <td>                       
-                       <div class="termSpacing">
-                       	<div style="margin: 15px 0px 15px 0px;">
-                        	<label for="exampleFormControlInput1" class="formlabel">Term</label>
-                     	</div>
-                     	<div style="margin: 15px 0px 15px 0px;">
-                     		<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter term....">
-                     	</div>
-                     	<div>
-                     	 	<button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" type="submit">
-               					Search
-               				</button>
-                     </div>
-                       </div>
-                     </td>
-                  </tr>
-                  <tr>
-                     <td style="width:172px;">
-                        <label for="exampleFormControlTextarea1" class="formlabel">Concept</label>
-                     </td>
-                     <td>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter concept....">
-                     </td>
-                  </tr>
-                  <tr>
-                    <td class="drpSpacing">
-                  
-                        <label for="exampleFormControlInput1" class="formlabel">POS</label>
-                        <div class="btn-group">
-                        <div class="dropdown">
-                           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                           Action
-                           <span class="caret"></span>
-                           </button>
-                           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-                           </ul>
-                        </div>
-                       </div>
-                     </td>
-                     <td>
-                     
-                        
-                       <div class="drpSpacing">
-                        	<label for="exampleFormControlInput1" class="formlabel">Concept List</label>
-                     	 
-                        <div class="btn-group">
-                        <div class="dropdown">
-                           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                           Action
-                           <span class="caret"></span>
-                           </button>
-                           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-                           </ul>
-                        </div>
-                       </div>
-                     </div>
-                     </td>
-                     
-                     
-                    
-                  </tr>
-                  <tr>
-                  	<td style="width:172px;">
-                        <label for="exampleFormControlTextarea1" class="formlabel">Description</label>
-                     </td>
-                     <td>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter description...."></textarea>
-                     </td>
-                  </tr>
-                  <tr>
-                  	<td style="width:172px;">
-                        <label for="exampleFormControlTextarea1" class="formlabel">Synonyms</label>
-                     </td>
-                     <td>
-                     	<button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" type="submit">
-         					<i class="fa fa-plus" aria-hidden="true"></i> Synonyms	
-         				</button>
-                     </td>
-                  </tr>
-                  <tr>
-                  	<td style="width:172px;">
-                        <label for="exampleFormControlTextarea1" class="formlabel">Concept Type</label>
-                    </td>
-                  	
-                  	<td>
-                        <div class="btn-group">
-                        <div class="dropdown">
-                           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                           Action
-                           <span class="caret"></span>
-                           </button>
-                           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-                              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-                           </ul>
-                        </div>
-                       </div>
-                     </td>
-                  </tr>
-                  <tr>
-                  	<td style="width:300px;">
-                        <label for="exampleFormControlTextarea1" class="formlabel">External Authority Service Links</label>
-                     </td>
-                     <td>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter links...."></textarea>
-                     </td>
-                  </tr>
-                  
-                  <tr>
-                  	<td style="width:300px;">
-                        <label for="exampleFormControlTextarea1" class="formlabel">Links to other services</label>
-                     </td>
-                     <td>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter links..."></textarea>
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
-            <div class="btnCenter">
-               <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="addConceptTypeBtn">
-               Add Concept
-               </button>
-            </div>
-	      </div>
+	                        </div>
+	                     </div>
+	                  </td>
+	               </tr>
+	               <tr>
+	                  <td style="width:172px;">
+	                     <label for="exampleFormControlTextarea1" class="formlabel">Concept</label>
+	                  </td>
+	                  <td>
+	                     <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter concept....">
+	                  </td>
+	               </tr>
+	               <tr>
+	                  <td class="drpSpacing">
+	                     <label for="pos" class="formlabel">POS</label>
+	                     <select name="pos"
+                                class="form-control">
+                                <option value="">Please select</option>
+                                <option value="noun">Noun </option>
+                                <option value="verb">Verb</option>
+                                <option value="adverb">Adverb</option>
+                                <option value="adjective">Adjective</option>
+                                <option value="other">Other</option>
+                         </select>
+                      </td>
+	                  <td>
+                        <label for="selectedList" class="formlabel">Concept List</label>
+                      </td>
+                      <td>
+                        <select th:name="selectedList" style="-moz-appearance: none; border: none;">
+						    <option th:each="item: ${conceptAddBean.lists}" th:value="${item.key}" th:text="${item.value}">
+						    </option>
+						 </select>
+	                  </td>
+	               </tr>
+	               <tr>
+	                  <td style="width:172px;">
+	                     <label for="description" class="formlabel">Description</label>
+	                  </td>
+	                  <td>
+	                     <textarea class="form-control" name="description" rows="3" placeholder="Enter description...."></textarea>
+	                  </td>
+	               </tr>
+	               <tr>
+	                  <td style="width:172px;">
+	                     <label for="exampleFormControlTextarea1" class="formlabel">Synonyms</label>
+	                  </td>
+	                  <td>
+	                     <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" type="submit">
+	                     <i class="fa fa-plus" aria-hidden="true"></i> Synonyms	
+	                     </button>
+	                  </td>
+	               </tr>
+	               <tr>
+	                  <td style="width:172px;">
+	                     <label for="selectedTypes" class="formlabel">Concept Type</label>
+	                  </td>
+	                  <td>
+                        <select th:name="selectedTypes" style="-moz-appearance: none; border: none;">
+						    <option th:each="type: ${conceptAddBean.types}" th:value="${type.key}" th:text="${type.value}">
+						    </option>
+						 </select>
+	                  </td>
+	               </tr>
+	               <tr>
+	                  <td style="width:300px;">
+	                     <label for="exampleFormControlTextarea1" class="formlabel">External Authority Service Links</label>
+	                  </td>
+	                  <td>
+	                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter links...."></textarea>
+	                  </td>
+	               </tr>
+	               <tr>
+	                  <td style="width:300px;">
+	                     <label for="exampleFormControlTextarea1" class="formlabel">Links to other services</label>
+	                  </td>
+	                  <td>
+	                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter links..."></textarea>
+	                  </td>
+	               </tr>
+	            </tbody>
+	         </table>
+	         <div class="btnCenter">
+	            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"  th:onclick="'showFormProcessing()'"
+                            th:onsubmit="'hideFormProcessing()'" id="addConceptTypeBtn">
+	            Add Concept
+	            </button>
+	         </div>
+	      </form>
+	   </div>
 	</body>
 </html>
