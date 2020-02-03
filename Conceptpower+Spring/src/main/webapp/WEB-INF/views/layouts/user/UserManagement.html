@@ -3,6 +3,25 @@
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
    layout:decorate="~{layouts/main}"
    >
+   <head>
+   <script>
+   	
+	$(document).ready(function() {
+	   $(document).on('click','.deleteBtn', function(e){
+		   var username = $(this).data().username;
+		    $.ajax({
+				type : "GET",
+				url : '/conceptpower/auth/user/deleteuser/'+username,
+				contentType:"application/json",
+				success : function(data) {
+					$('#deleteModalPlugin').html(data);
+					$('#deleteButton').modal('show');
+				}
+	  		 });
+	   });
+   });
+   </script>
+   </head>
    <body class="body" layout:fragment="content">
          <div class="resultsSection">
             <div class="headerSection">
@@ -33,7 +52,7 @@
                            <div class="cardLayout dropdown-menu" role="menu">
                               <div class="card-body">
                                  <a th:href="@{'/auth/user/edituser/'+${user.username}}" class="btn btn-primary" id="editBtn">Edit User</a>
-                                 <button class="btn btn-primary deleteBtn" id="deleteBtn" data-toggle="modal" data-target="#deleteButton">Delete</button>
+                                 <button class="btn btn-primary deleteBtn" type="button" th:data-username="${user.username}" id="deleteBtn" data-toggle="modal" data-target="#deleteButton">Delete</button>
                                  
                               </div>
                            </div>
@@ -49,6 +68,6 @@
             </table>
             <div th:if="${users.length <= 0}">No Users exist</div>
          </div>
-         <div th:insert="layouts/modals/deleterow :: deleteButton"></div>
+         <div id="deleteModalPlugin"></div>
    </body>
 </html>

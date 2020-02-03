@@ -58,7 +58,7 @@ public class ConcepTypeDeleteController {
         }
         model.addAttribute("enabledelete", enableDelete);
 
-        return "/auth/concepttype/deletetype";
+        return "/layouts/modals/deleteType";
     }
 
     /**

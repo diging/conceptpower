@@ -79,7 +79,7 @@ public class ConceptTypeEditController {
         types.remove(typeid);
         conceptTypeAddForm.setTypes(types);
         conceptTypeAddForm.setTypeid(typeid);
-        return "/layouts/concepts/ConceptTypes";
+        return "/layouts/concepts/ConceptTypeEdit";
     }
 
     /**
@@ -98,7 +98,7 @@ public class ConceptTypeEditController {
             BindingResult results) {
 
         if (results.hasErrors()) {
-            return "/auth/concepttype/edittype";
+            return "/layouts/concepts/ConceptTypeEdit";
         }
         ConceptType type = typeManager.getType(conceptTypeAddForm.getTypeid());
         type.setTypeName(conceptTypeAddForm.getTypeName());

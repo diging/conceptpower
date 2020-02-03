@@ -417,10 +417,13 @@
 	                  <td>
 	                     <div class="drpSpacing">
 	                        <label for="exampleFormControlInput1" class="formlabel">Service</label>
-	                        <select th:name="selectedServiceNameIdMap" style="-moz-appearance: none; border: none;">
+	                        <div class="selectDropdown">
+	                        <select th:name="selectedServiceNameIdMap" class="POS">
 							    <option th:each="serviceName: ${conceptAddBean.serviceNameIdMap}" th:value="${serviceName.key}" th:text="${serviceName.value}">
 							    </option>
 				 			</select>
+				 			<i class="fa fa-caret-down" aria-hidden="true"></i>
+				 			</div>
 	                     </div>
 	                  </td>
 	                  <td>
@@ -450,8 +453,9 @@
 	               <tr>
 	                  <td class="drpSpacing">
 	                     <label for="pos" class="formlabel">POS</label>
+	                     <div class="selectDropdown">
 	                     <select name="pos"
-                                class="form-control">
+                                class="POS">
                                 <option value="">Please select</option>
                                 <option value="noun">Noun </option>
                                 <option value="verb">Verb</option>
@@ -459,16 +463,21 @@
                                 <option value="adjective">Adjective</option>
                                 <option value="other">Other</option>
                          </select>
+                         <i class="fa fa-caret-down" aria-hidden="true"></i>
+                         </div>
                       </td>
 	                  <td>
+	                  <div class="drpSpacing">
                         <label for="selectedList" class="formlabel">Concept List</label>
-                      </td>
-                      <td>
-                        <select th:name="selectedList" style="-moz-appearance: none; border: none;">
+                        <div class="selectDropdown">
+                        <select th:name="selectedList" class="POS">
 						    <option th:each="item: ${conceptAddBean.lists}" th:value="${item.key}" th:text="${item.value}">
 						    </option>
 						 </select>
-	                  </td>
+						 <i class="fa fa-caret-down" aria-hidden="true"></i>
+						 </div>
+						</div>
+                      </td>
 	               </tr>
 	               <tr>
 	                  <td style="width:172px;">
@@ -483,7 +492,7 @@
 	                     <label for="exampleFormControlTextarea1" class="formlabel">Synonyms</label>
 	                  </td>
 	                  <td>
-	                     <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" type="submit">
+	                     <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" type="submit" data-toggle="modal" data-target="synonyms">
 	                     <i class="fa fa-plus" aria-hidden="true"></i> Synonyms	
 	                     </button>
 	                  </td>
@@ -492,27 +501,36 @@
 	                  <td style="width:172px;">
 	                     <label for="selectedTypes" class="formlabel">Concept Type</label>
 	                  </td>
-	                  <td>
-                        <select th:name="selectedTypes" style="-moz-appearance: none; border: none;">
+	                  <td class="drpSpacing">
+	                  <div class="selectDropdown">
+                        <select th:name="selectedTypes" class="POS">
 						    <option th:each="type: ${conceptAddBean.types}" th:value="${type.key}" th:text="${type.value}">
 						    </option>
 						 </select>
+						 <i class="fa fa-caret-down" aria-hidden="true"></i>
+						</div>
 	                  </td>
 	               </tr>
 	               <tr>
 	                  <td style="width:300px;">
-	                     <label for="exampleFormControlTextarea1" class="formlabel">External Authority Service Links</label>
+	                     <label for="equals" class="formlabel">External Authority Service Links</label>
 	                  </td>
 	                  <td>
-	                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter links...."></textarea>
+	                     <textarea class="form-control" name="equals" rows="3" placeholder="Enter links...."></textarea>
 	                  </td>
 	               </tr>
 	               <tr>
 	                  <td style="width:300px;">
-	                     <label for="exampleFormControlTextarea1" class="formlabel">Links to other services</label>
+	                     <label for="similar" class="formlabel">Links to other services</label>
 	                  </td>
 	                  <td>
-	                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter links..."></textarea>
+	                     <textarea class="form-control" name="similar" rows="3" placeholder="Enter links..."></textarea>
+	                  </td>
+	                  <td>
+	                  	<input type="hidden" name="synonymsids"/>
+	                  	<input type="hidden" name="term"/>
+	                  	<input type="hidden" name="synonymDescription"/>
+	                  	<input type="hidden" name="synonymId"/>
 	                  </td>
 	               </tr>
 	            </tbody>
@@ -525,5 +543,6 @@
 	         </div>
 	      </form>
 	   </div>
+	   <div th:insert="layouts/modals/synonyms :: synonyms"></div>
 	</body>
 </html>

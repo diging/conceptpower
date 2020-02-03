@@ -101,6 +101,8 @@ h3{
 
 #searchInput{
 	border-radius: 30px !important;
+	height: 36px;
+	font-size: 16px;
 }
 
 #searchBtn {
@@ -365,4 +367,29 @@ a:hover {
 
 .table.indexTable.tableStyles {
     margin-top: 40px;
+}
+
+.selectDropdown {
+	display: flex; 
+	align-items: center;
+	border: 1px solid rgba(0,0,0,0.21);
+	border-radius: 30px;
+	padding: 0px 15px;
+	cursor: pointer;
+	-moz-appearance: none; 
+	-webkit-appearance: none; 
+	height: 36px;
+}
+
+.selectDropdown:hover {
+	background-color: rgba(0,0,0,0.03);
+}
+
+.POS {
+	-moz-appearance: none; 
+	-webkit-appearance: none; 
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	margin-right: 10px;
 }

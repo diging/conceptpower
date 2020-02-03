@@ -3,6 +3,31 @@
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
    layout:decorate="~{layouts/main}"
    >
+   <head>
+   <script>
+   	
+	$(document).ready(function() {
+	   $(document).on('click','.deleteBtn', function(e){
+		   var listName = $(this).data().listname;
+		   console.log('click' + listName)
+		    $.ajax({
+				type : "GET",
+				url : '/conceptpower/auth/conceptlist/deletelist/'+listName,
+				contentType:"application/json",
+				success : function(data) {
+					console.log(data)
+	 				$('#deleteModalPlugin').html(data);
+					$('#deleteList').modal('show');
+				}
+	  		 });
+	   });
+   });
+	
+	$(document).on('hidden.bs.modal', '#deleteModalPlugin',function(event) {
+		$('#deleteModalPlugin').empty();
+	});
+   </script>
+   </head>
    <body class="body" layout:fragment="content">
       <div class="resultsSection">
          <div class="headerSection">
@@ -32,7 +57,7 @@
                         <div class="cardLayout dropdown-menu" role="menu">
                            <div class="card-body">
                               <a th:href="@{'/auth/conceptlist/editlist/'+${list.conceptListName}}" class="btn btn-primary" id="editBtn">Edit Item</a>
-                              <a th:href="@{'/auth/conceptlist/deletelist/'+${list.conceptListName}}"class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
+                              <button class="btn btn-primary deleteBtn" id="deleteBtn" th:data-listname="${list.conceptListName}" data-toggle="modal" data-target="#deleteList">Delete</button>
                            </div>
                         </div>
                      </div>
@@ -47,5 +72,6 @@
          </table>
          <div th:if="${result.size() <= 0}">No Concept Lists to display</div>
       </div>
+      <div id="deleteModalPlugin"></div>
    </body>
 </html>
