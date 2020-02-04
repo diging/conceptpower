@@ -38,7 +38,7 @@ public class UserDeleteController {
 
         model.addAttribute("user", userBacking);
         
-        return "/layouts/modals/deleterow";
+        return "/layouts/modals/DeleteUser";
     }
 
     /**

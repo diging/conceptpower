@@ -77,7 +77,7 @@ public class ConceptListEditController {
         conceptListAddForm.setListName(list.getConceptListName());
         conceptListAddForm.setDescription(list.getDescription());
         conceptListAddForm.setOldListName(listName);
-        return "/layouts/concepts/ConceptListedit";
+        return "/layouts/concepts/EditConceptList";
     }
 
     /**
@@ -97,7 +97,7 @@ public class ConceptListEditController {
             BindingResult result, ModelMap model, Principal principal)
                     throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (result.hasErrors()) {
-            return "/layouts/concepts/ConceptListedit";
+            return "/layouts/concepts/EditConceptList";
         }
 
         ConceptList list = conceptListManager.getConceptList(conceptListAddForm.getOldListName());
@@ -108,7 +108,7 @@ public class ConceptListEditController {
             model.addAttribute("show_error_alert", true);
             model.addAttribute("error_alert_msg", indexerRunning);
             // Need to include command Object
-            return "/layouts/concepts/ConceptListedit/";
+            return "/layouts/concepts/EditConceptList";
         }
 
         conceptListManager.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
