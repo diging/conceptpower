@@ -17,7 +17,7 @@
 	                     </td>
 	                     <td>
 	                        <input type="text" class="form-control" name="listName" th:value="${conceptListAddForm.listName}">
-	                        <input type="hidden" th:value=${conceptListAddForm.oldListName} name="oldListName" />
+	                        <input type="hidden" th:value="${conceptListAddForm.oldListName}" name="oldListName" />
 	                        <div th:if="${#fields.hasErrors('listName')}" th:errors="*{listName}"></div>
 	                     </td>
 	                  </tr>

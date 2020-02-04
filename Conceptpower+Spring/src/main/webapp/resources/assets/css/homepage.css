@@ -393,3 +393,11 @@ a:hover {
 	cursor: pointer;
 	margin-right: 10px;
 }
+
+.synonymDialog > .modal-content{
+    width: 800px;
+    overflow-y: auto;
+}
+.synonymDialog{
+	margin-top: 100px !important;
+}
