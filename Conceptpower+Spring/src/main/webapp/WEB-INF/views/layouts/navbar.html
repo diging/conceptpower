@@ -63,10 +63,16 @@
             <i class="fa fa-user-circle-o fa-10x" aria-hidden="true"></i>
             </a>
             <ul class="dropdown-menu" role="menu">
+            	<li>
+            		<a th:href="@{/auth/profile/password/change}"><i class="fa fa-unlock-alt" aria-hidden="true"></i>
+            			Change password
+            		</a>
+           		</li>
                <li>
+               <hr style="margin-top: 10px; margin-bottom: 10px;"/>
                   <form th:action="@{/signout}" method="post" style="margin-left:18px;">
                      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                     <button  type="submit" class="btn mergeConceptBtn"><i
+                     <button  type="submit" class="logoutBtn"><i
                         class="fa fa-sign-out"></i> Logout</button>
                   </form>
                </li>

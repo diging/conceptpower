@@ -173,7 +173,7 @@ public class ConceptAddController {
         }
         model.addAttribute("entry", conceptEntry);
         model.addAttribute("uri", uriHelper.getURI(conceptEntry));
-        return "/auth/conceptDetails";
+        return "/layouts/concepts/AddConceptReview";
     }
 
     /**

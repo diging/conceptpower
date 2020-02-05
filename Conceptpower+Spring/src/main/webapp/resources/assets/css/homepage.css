@@ -400,4 +400,15 @@ a:hover {
 }
 .synonymDialog{
 	margin-top: 100px !important;
+	margin-right: auto;
+	margin-top: 300px;
+	width: 800px;
 }
+
+.logoutBtn {
+    border: none;
+    background: 
+    transparent;
+    padding: 0px;
+}
+

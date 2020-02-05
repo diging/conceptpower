@@ -218,8 +218,8 @@
                      </div>
                   </div>
                </div>-->
-               <div class="selectDropdown">
-                <select class="POS" th:name="pos">
+               <div>
+                <select class="selectDropdown" th:name="pos">
 				    <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
 				    </option>
 				 </select>
