@@ -379,6 +379,8 @@ a:hover {
 	-moz-appearance: none; 
 	-webkit-appearance: none; 
 	height: 36px;
+	background-image: url('https://c7.uihere.com/icons/709/957/75/caret-down-bef41e1f804b25ffda0374199b550993.png'),linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
+	
 }
 
 .selectDropdown:hover {
