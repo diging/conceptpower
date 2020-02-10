@@ -3,6 +3,7 @@ package edu.asu.conceptpower.app.core.impl;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +30,7 @@ public  class RequestsManager implements IRequestsManager{
      * @see edu.asu.conceptpower.app.core.IRequestsManager#addReviewRequest(edu.asu.conceptpower.core.ReviewRequest)
      */
     public void addReviewRequest(ReviewRequest reviewRequest) {
+        System.out.println(reviewRequest.getConceptId());
         reviewRequest.setId(generateId(REVIEW_PREFIX));
         dbClient.store(reviewRequest);
     }
@@ -54,7 +56,7 @@ public  class RequestsManager implements IRequestsManager{
         
         if(reviewRequests!= null && reviewRequests.size() > 0) {
             reviewRequests = new ArrayList<>(reviewRequests);
-            Collections.sort(reviewRequests, (x, y) -> x.getCreatedAt().compareTo(y.getCreatedAt()));
+            Collections.sort(reviewRequests, Comparator.comparing(ReviewRequest :: getCreatedAt, Comparator.nullsFirst(Comparator.naturalOrder())));
             return reviewRequests;
         }
         
