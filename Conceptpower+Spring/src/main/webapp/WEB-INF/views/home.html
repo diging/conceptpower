@@ -1,264 +1,280 @@
+
+
 <html
    xmlns:th="http://www.thymeleaf.org"
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
    layout:decorate="~{layouts/main}"
    >
    <head>
-   	<meta name="_csrf_token" th:content="${_csrf.token}"/>
-	<meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
-    <script>
-       
-       //Function to get required data for pagination
-       $(document).on('click', '#paginationTag', function(e){
-       	var paginateData = $(this).data();
-       	paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos)
-       });
-       
-	
-     //Function to get required data for sorting
-       $(document).on('click', '#sortTag', function(e){
-		var sortData = $(this).data();
-       	paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos)	
-       });
-     
-       function finalizeMerge() {
-    	   	  var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-    	   	  var conceptIdsToBeMerged = conceptIdsToMerge.split(',');
-    	   	  console.log(conceptIdsToBeMerged)
-    	   	  if(conceptIdsToBeMerged.length < 2) {
-    	   	      $('#mergeError').show();
-    	   	    } else {
-    	   	        window.location = '/conceptpower/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;      
-    	   	    }
-    	   	}
-       
-       
-   	$(document).ready(function() {
-   	  
-   	function removeColumnFromTable(str) {
-   	    var target = $('table').find('th[data-name="' + str +'"]');
-   	    var index = (target).index();
-   	     $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).hide();
-   	  }
-   	  function showColumnFromTable(str) {
-   	    var target = $('table').find('th[data-name="' + str +'"]');
-   	    var index = (target).index();
-   	     $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).show();
-   	  }
-   	var conceptsToMerge = "";
-   	function prepareMergeConcept(conceptId) {
-   	    var tis = $(this);
-   	    var conceptsToMerge = $(this).attr("value");
-   	    if(conceptsToMerge != '') {
-   	    	conceptsToMerge = conceptId;
-   	    } else {
-   	        conceptsToMerge = conceptsToMerge + "," + conceptId;    
-   	    }
-   	}
-   	  function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
-   	    var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
-   	    if(conceptsToBeMerged) {
-   	      removeColumnFromTable('delete');    
-   	      removeColumnFromTable('edit');    
-   	      $("#mergeConcept").show();
-   	      $("#prepareMergeConcept").hide();
-   	      // Check the checkboxes
-   	      var conceptIds = conceptsToBeMerged.split(',');
-   	      for(var i = 0; i<conceptIds.length; i++){
-   	        $("input[value='" + conceptIds[i] + "']").prop('checked', true);
-   	      }
-   	      $('#conceptIdsToMerge').val(conceptsToBeMerged);
-   	    } else {
-   	      removeColumnFromTable('merge');    
-   	      $("#mergeConcept").hide();
-   	      $("#prepareMergeConcept").show();
-   	    }
-   	  }
-   	  checkCheckBoxAndRemoveColumnsForMergeConcepts();
-
-   		$('#prepareMergeConcept').on('click', function (e) {
-   	        e.preventDefault();
-   	        // Get the column API object
-   	        removeColumnFromTable('edit');
-   	        removeColumnFromTable('delete');
-   	        showColumnFromTable('merge');
-   	        $("#mergeConcept").show();
-   	        $("#prepareMergeConcept").hide();
-   	    });
-   	    $(':checkbox').change(function(e) {
-   	        if(this.checked) {
-   	          mergeConcepts($(this).val())
-   	        } else {
-   	          removeMergedConcepts($(this).val());
-   	        }
-   	    });
-   	    
-   	    function mergeConcepts(conceptId) {
-   	      $('#mergeError').hide();
-   	      var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-   	      if(conceptsToMerge) {
-   	        conceptsToMerge = conceptsToMerge + ',' + conceptId;
-   	      } else {
-   	        conceptsToMerge = conceptId;
-   	      }
-   	      $('#conceptIdsToMerge').val(conceptsToMerge);  
-   	    }    
-   	    function removeMergedConcepts(conceptId) {
-   	        var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-   	        var conceptIds = conceptsToMerge.split(',');
-   	        var updatedConceptIds = '';
-   	        for(var i=0; i<conceptIds.length; i++) {
-   	          if(conceptIds[i] != conceptId) {
-   	            updatedConceptIds = updatedConceptIds + conceptIds[i] + ",";
-   	          }
-   	        }
-   	        if(updatedConceptIds != '') {
-   	          $('#conceptIdsToMerge').val(updatedConceptIds.substring(0, updatedConceptIds.length - 1));      
-   	        } else { 
-   	          $('#conceptIdsToMerge').val(updatedConceptIds);      
-   	        }
-   	    }
-   	    $('#mergeError').hide();
-   	//Function to populate concept details Modal
-   		$(document).on('click','#conceptDetails', function(e){
-   			var conceptid = $(this).data('conceptid');
-   			
-   			$.ajax({
-  					type : "GET",
-  					url : "/conceptpower/conceptDetail",
-  					data : {
-  						conceptid : conceptid
-  					},
-  					success : function(details) {
-  						details = $.parseJSON(details);	    						
-  						var token = $("meta[name='_csrf_token']").attr("content");
-  						
-  						//Ajax Call to plugin a pre populated Concepet Details Modal
-  						$.ajax({
-  	    					type : "POST",
-  	    					url : "/conceptpower/conceptdetails?_csrf="+token.trim(),
-  	    					data : JSON.stringify(details),
-  	    					contentType:"application/json",
-  	    					success : function(data) {
-  	    						$('#conceptDetailsPlugin').html(data);
-  	    						$('#conceptDetailsModal').modal('show');
-  	    					}
-  						});
-  						
-  						if(details.mergedIds) {
-  							$.ajax({
-  								url: '/conceptpower/rest/OriginalConcepts',
-  				                type: 'GET',
-  				                headers: {          
-  				                    Accept: "application/json",         
-  				                },
-  				                data: {
-  				                  ids: details.mergedIds
-  				                },
-  				              success : function(originalConcepts) {
-  				                var mergedIdsHtml = '';
-  				                $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
-  				                    if(mergedIdsHtml) {
-  				                      mergedIdsHtml += ", ";
-  				                    }
-  				                    mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
-  				                    mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
-  				                    mergedIdsHtml += "</span>";
-  				                });
-  				                $("#detailsmergedIds").html(mergedIdsHtml);  
-  				              }
-  							});              
-  					}
-  					}
-   			});
-   		});
-   		
-   		$(document).on('hidden.bs.modal', '#conceptDetailsModal',function(event) {
-   			$('#conceptDetailsPlugin').empty();
-   		});
-   	    
-   	    $('#posList div div').on('click', function() {
-   	        $('#posWord').text($(this).text());
-   	    });
-   	});
-   	
-   	$(document).ready(hideFormProcessing);
-	function hideFormProcessing() {
-		$('#floatingCirclesG').hide();
-	}
-   function showFormProcessing() {
-         $('#floatingCirclesG').show();
-       }
-
-   //Function to handle pagination and sort
-   	function paginate(page, sortDir, sortColumn, word, pos) {
-   	    var conceptIdsToMerge = null; //$('#conceptIdsToMerge').val().replace("\"", "");
-   	    
-   	    if (conceptIdsToMerge) {
-   	        window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;
-   	    } else {
-   	        window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos;
-   	    }
-   	}
-    </script>
+      <meta name="_csrf_token" th:content="${_csrf.token}"/>
+      <meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
+      <script>
+         //Function to get required data for pagination
+         $(document).on('click', '#paginationTag', function(e){
+         	var paginateData = $(this).data();
+         	paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos)
+         });
+         
+         
+         //Function to get required data for sorting
+         $(document).on('click', '#sortTag', function(e){
+         var sortData = $(this).data();
+         	paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos)	
+         });
+         
+         function finalizeMerge() {
+          	  var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+          	  var conceptIdsToBeMerged = conceptIdsToMerge.split(',');
+          	  console.log(conceptIdsToBeMerged)
+          	  if(conceptIdsToBeMerged.length < 2) {
+          	      $('#mergeError').show();
+          	    } else {
+          	        window.location = '/conceptpower/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;      
+          	    }
+          	}
+         
+         
+         $(document).ready(function() {
+         
+         function removeColumnFromTable(str) {
+          var target = $('table').find('th[data-name="' + str +'"]');
+          var index = (target).index();
+           $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).hide();
+         }
+         function showColumnFromTable(str) {
+          var target = $('table').find('th[data-name="' + str +'"]');
+          var index = (target).index();
+           $('table tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).show();
+         }
+         var conceptsToMerge = "";
+         function prepareMergeConcept(conceptId) {
+          var tis = $(this);
+          var conceptsToMerge = $(this).attr("value");
+          if(conceptsToMerge != '') {
+          	conceptsToMerge = conceptId;
+          } else {
+              conceptsToMerge = conceptsToMerge + "," + conceptId;    
+          }
+         }
+         function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
+          var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
+          if(conceptsToBeMerged) {
+            removeColumnFromTable('delete');    
+            removeColumnFromTable('edit');    
+            $("#mergeConcept").show();
+            $("#prepareMergeConcept").hide();
+            // Check the checkboxes
+            var conceptIds = conceptsToBeMerged.split(',');
+            for(var i = 0; i<conceptIds.length; i++){
+              $("input[value='" + conceptIds[i] + "']").prop('checked', true);
+            }
+            $('#conceptIdsToMerge').val(conceptsToBeMerged);
+          } else {
+            removeColumnFromTable('merge');    
+            $("#mergeConcept").hide();
+            $("#prepareMergeConcept").show();
+          }
+         }
+         checkCheckBoxAndRemoveColumnsForMergeConcepts();
+         
+         $('#prepareMergeConcept').on('click', function (e) {
+              e.preventDefault();
+              // Get the column API object
+              removeColumnFromTable('edit');
+              removeColumnFromTable('delete');
+              showColumnFromTable('merge');
+              $("#mergeConcept").show();
+              $("#prepareMergeConcept").hide();
+          });
+          $(':checkbox').change(function(e) {
+              if(this.checked) {
+                mergeConcepts($(this).val())
+              } else {
+                removeMergedConcepts($(this).val());
+              }
+          });
+          
+          function mergeConcepts(conceptId) {
+            $('#mergeError').hide();
+            var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+            if(conceptsToMerge) {
+              conceptsToMerge = conceptsToMerge + ',' + conceptId;
+            } else {
+              conceptsToMerge = conceptId;
+            }
+            $('#conceptIdsToMerge').val(conceptsToMerge);  
+          }    
+          function removeMergedConcepts(conceptId) {
+              var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+              var conceptIds = conceptsToMerge.split(',');
+              var updatedConceptIds = '';
+              for(var i=0; i<conceptIds.length; i++) {
+                if(conceptIds[i] != conceptId) {
+                  updatedConceptIds = updatedConceptIds + conceptIds[i] + ",";
+                }
+              }
+              if(updatedConceptIds != '') {
+                $('#conceptIdsToMerge').val(updatedConceptIds.substring(0, updatedConceptIds.length - 1));      
+              } else { 
+                $('#conceptIdsToMerge').val(updatedConceptIds);      
+              }
+          }
+          $('#mergeError').hide();
+         //Function to populate concept details Modal
+         $(document).on('click','#conceptDetails', function(e){
+         var conceptid = $(this).data('conceptid');
+         
+         $.ajax({
+         type : "GET",
+         url : "/conceptpower/conceptDetail",
+         data : {
+         	conceptid : conceptid
+         },
+         success : function(details) {
+         	details = $.parseJSON(details);	    						
+         	var token = $("meta[name='_csrf_token']").attr("content");
+         	
+         	//Ajax Call to plugin a pre populated Concepet Details Modal
+         	$.ajax({
+         					type : "POST",
+         					url : "/conceptpower/conceptdetails?_csrf="+token.trim(),
+         					data : JSON.stringify(details),
+         					contentType:"application/json",
+         					success : function(data) {
+         						$('#conceptDetailsPlugin').html(data);
+         						$('#conceptDetailsModal').modal('show');
+         					}
+         	});
+         	
+         	if(details.mergedIds) {
+         		$.ajax({
+         			url: '/conceptpower/rest/OriginalConcepts',
+                        type: 'GET',
+                        headers: {          
+                            Accept: "application/json",         
+                        },
+                        data: {
+                          ids: details.mergedIds
+                        },
+                      success : function(originalConcepts) {
+                        var mergedIdsHtml = '';
+                        $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
+                            if(mergedIdsHtml) {
+                              mergedIdsHtml += ", ";
+                            }
+                            mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
+                            mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
+                            mergedIdsHtml += "</span>";
+                        });
+                        $("#detailsmergedIds").html(mergedIdsHtml);  
+                      }
+         		});              
+         }
+         }
+         });
+         });
+         
+         $(document).on('hidden.bs.modal', '#conceptDetailsModal',function(event) {
+         $('#conceptDetailsPlugin').empty();
+         });
+          
+          $('#posList div div').on('click', function() {
+              $('#posWord').text($(this).text());
+          });
+         });
+         
+         $(document).ready(hideFormProcessing);
+         function hideFormProcessing() {
+         $('#floatingCirclesG').hide();
+         }
+         function showFormProcessing() {
+           $('#floatingCirclesG').show();
+         }
+         
+         //Function to handle pagination and sort
+         function paginate(page, sortDir, sortColumn, word, pos) {
+          var conceptIdsToMerge = null; //$('#conceptIdsToMerge').val().replace("\"", "");
+          
+          if (conceptIdsToMerge) {
+              window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;
+          } else {
+              window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos;
+          }
+         }
+         
+         /* $(document).ready(function() {
+        	   $(document).on('click','.deleteBtn', function(e){
+        		   var conceptId = $(this).data().conceptId;
+        		   console.log('click ' + conceptId)
+        		    $.ajax({
+        				type : "GET",
+        				url : '/conceptpower/auth/conceptlist/deleteconcept/'+conceptId,
+        				contentType:"application/json",
+        				success : function(data) {
+        					console.log(data)
+        	 				$('#deleteModalPlugin').html(data);
+        					$('#deleteConcept').modal('show');
+        				}
+        	  		 });
+        	   });
+           }); */
+         
+      </script>
    </head>
    <body class = "body" layout:fragment="content">
-         <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection">
-            <h1>Welcome to Conceptpower</h1>
-            <div class="input-group input-group-lg">
-               <input type="text" class="form-control" id="searchInput" name="word" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
- 
-               <!--  <div class="input-group-append">
-                  <button class="btn btn-outline-secondary dropdown-toggle" id="searchDropDown" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
-                  <span id="posWord"  th:text="Noun" th:value="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
-                  </button>
-                  <div id="posList" class="dropdown-menu">
-                     <div th:each="entry: ${conceptSearchBean.posMap}">
-                        <div th:text="${entry.value}" th:value="${entry.value}" class="dropdown-item"></div>
-                     </div>
+      <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection">
+         <h1>Welcome to Conceptpower</h1>
+         <div class="input-group input-group-lg">
+            <input type="text" class="form-control" id="searchInput" name="word" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
+            <!--  <div class="input-group-append">
+               <button class="btn btn-outline-secondary dropdown-toggle" id="searchDropDown" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+               <span id="posWord"  th:text="Noun" th:value="Noun"></span>&nbsp;<i class="fa fa-caret-down" aria-hidden="true"></i>
+               </button>
+               <div id="posList" class="dropdown-menu">
+                  <div th:each="entry: ${conceptSearchBean.posMap}">
+                     <div th:text="${entry.value}" th:value="${entry.value}" class="dropdown-item"></div>
                   </div>
+               </div>
                </div>-->
-               <div>
-                <select class="selectDropdown" th:name="pos">
-				    <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
-				    </option>
-				 </select>
-				 <i class="fa fa-caret-down" aria-hidden="true"></i>
-				</div>
+            <div>
+               <select class="selectDropdown" th:name="pos">
+                  <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
+                  </option>
+               </select>
+               <i class="fa fa-caret-down" aria-hidden="true"></i>
             </div>
-            <div class="error" id="searchAlert"></div>
-            
-            <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit" th:onclick="'showFormProcessing()'" th:onsubmit="'hideFormProcessing()'">
-            	Search
-            	<i class="fa fa-search" aria-hidden="true"></i>
+         </div>
+         <div class="error" id="searchAlert"></div>
+         <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit" th:onclick="'showFormProcessing()'" th:onsubmit="'hideFormProcessing()'">
+         Search
+         <i class="fa fa-search" aria-hidden="true"></i>
+         </button>
+         <div class="row" style="margin-top: 15px;">
+            <div class="col-sm-12">
+               <div id="floatingCirclesG">
+                  <div class="f_circleG" id="frotateG_01"></div>
+                  <div class="f_circleG" id="frotateG_02"></div>
+                  <div class="f_circleG" id="frotateG_03"></div>
+                  <div class="f_circleG" id="frotateG_04"></div>
+                  <div class="f_circleG" id="frotateG_05"></div>
+                  <div class="f_circleG" id="frotateG_06"></div>
+                  <div class="f_circleG" id="frotateG_07"></div>
+                  <div class="f_circleG" id="frotateG_08"></div>
+               </div>
+            </div>
+         </div>
+      </form>
+      <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection"  th:with="sortDirection = ${sortDir == '1' ? '-1' : '1'}">
+         <h4>Results</h4>
+         <div style="display:flex; justify-content: space-between; align-items: center;">
+            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="prepareMergeConcept" sec:authorize="isAuthenticated()">
+            Select Concepts To merge
             </button>
-            
-            <div class="row" style="margin-top: 15px;">
-            	<div class="col-sm-12">
-            		<div id="floatingCirclesG">
-				        <div class="f_circleG" id="frotateG_01"></div>
-				        <div class="f_circleG" id="frotateG_02"></div>
-				        <div class="f_circleG" id="frotateG_03"></div>
-				        <div class="f_circleG" id="frotateG_04"></div>
-				        <div class="f_circleG" id="frotateG_05"></div>
-				        <div class="f_circleG" id="frotateG_06"></div>
-				        <div class="f_circleG" id="frotateG_07"></div>
-				        <div class="f_circleG" id="frotateG_08"></div>
-			        </div>
-		        </div>
-	        </div>
-         </form>
-         <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection"  th:with="sortDirection = ${sortDir == '1' ? '-1' : '1'}">
-            <h4>Results</h4>
-            <div style="display:flex; justify-content: space-between; align-items: center;">
-	            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="prepareMergeConcept" sec:authorize="isAuthenticated()">
-	            	Select Concepts To merge
-	            </button>
-	            <input type='hidden' id='conceptIdsToMerge' th:value='${conceptIdsToMerge}' />
-	            <div th:text="${conceptIdsToMerge}">hello</div>
-	            <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" th:onclick="'finalizeMerge();'">Merge selected concepts</button>
-	            <div id="mergeError" class="alert alert-danger"> Please select at least two concepts to merge.</div>
-	            <div class="btn-group showDrp">
+            <input type='hidden' id='conceptIdsToMerge' th:value='${conceptIdsToMerge}' />
+            <div th:text="${conceptIdsToMerge}">hello</div>
+            <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" th:onclick="'finalizeMerge();'">Merge selected concepts</button>
+            <div id="mergeError" class="alert alert-danger"> Please select at least two concepts to merge.</div>
+            <div class="btn-group showDrp">
                <label for="dropdown">Show </label>
                <div class="dropdown">
                   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
@@ -274,104 +290,103 @@
                </div>
                <label for="dropdown">entries </label>
             </div>
-	        </div>
-            <table class="table table-striped resultTable tableStyles" >
-               <thead>
-                  <tr>
-                     <th scope="col" sec:authorize="isAuthenticated()"></th>
-                     <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="word" 
-                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" id="sortTag">Term
-	                     <i th:if="${sortColumn == 'word' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-	                     <i th:if="${sortColumn == 'word' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-	                     <i th:unless="${sortColumn == 'word'}" class="fa fa-sort"></i>
-                     </th>
-                     <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="id" 
-                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">Id
-                     	<i th:if="${sortColumn == 'id' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-	                    <i th:if="${sortColumn == 'id' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-	                    <i th:unless="${sortColumn == 'id'}" class="fa fa-sort"></i>
-                     </th>
-                     <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
-                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">WordNet ID
-                     	<i th:if="${sortColumn == 'wordnetid' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-	                    <i th:if="${sortColumn == 'wordnetid' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-	                    <i th:unless="${sortColumn == 'wordnetid'}" class="fa fa-sort"></i>
-                     </th>
-                     <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="pos" 
-                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 100px;">POS
-                     	<i th:if="${sortColumn == 'pos' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-	                    <i th:if="${sortColumn == 'pos' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-	                    <i th:unless="${sortColumn == 'pos'}" class="fa fa-sort"></i>
-                     </th>
-                     <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="listname" 
-                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 200px;">Concept List
-                     	<i th:if="${sortColumn == 'listName' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-	                    <i th:if="${sortColumn == 'liestName' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-	                    <i th:unless="${sortColumn == 'listName'}" class="fa fa-sort"></i>
-                     </th>
-                     <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="description" 
-                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">Description
-                     	<i th:if="${sortColumn == 'description' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-	                    <i th:if="${sortColumn == 'description' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-	                    <i th:unless="${sortColumn == 'description' }" class="fa fa-sort"></i>
-                     </th>
-                     <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="types" 
-                     	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 100px;">Type
-                     	<i th:if="${sortColumn == 'types' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-	                    <i th:if="${sortColumn == 'types' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-	                    <i th:unless="${sortColumn == 'types'}" class="fa fa-sort"></i>
-                     </th>
-                     <th style="width:120px;" scope="col">Review Status</th>
-                  </tr>
-               </thead>
-               <tbody id="tableData">
-				<tr th:each="concept: ${conceptSearchBean.foundConcepts}">
-				   <td sec:authorize="isAuthenticated()">
-				      <div class="dropdown" >
-				         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-				         <div class="cardLayout dropdown-menu" role="menu">
-				            <div class="card-body">
-				               <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" class="btn btn-primary" id="editBtn">Edit Concept</a>
-				               
-				               <a th:href="@{'/auth/conceptlist/deleteconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" class="btn btn-primary deleteBtn" id="deleteBtn">Delete</a>
-				            </div>
-				         </div>
-				      </div>
-				      <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
-				   	</td>
-				   <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
-				   <td th:text="${concept.entry.id}"></td>
-				   <td th:text="${concept.entry.wordnetId}"> </td>
-				   <td th:text="${concept.entry.pos}"></td>
-				   <td th:text="${concept.entry.conceptList}"></td>
-				   <td th:text="${concept.description}"></td>
-				   <td th:text="${concept.type != null ? concept.type.typeName : ''}"></td>
-				   <td><i class="fa fa-comment" aria-hidden="true"></i></td>
-				</tr>
-               </tbody>
-            </table>
          </div>
-         <div class="pagination" id="paginationSection" th:if="${conceptSearchBean.foundConcepts != null}" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
+         <table class="table table-striped resultTable tableStyles" >
+            <thead>
+               <tr>
+                  <th scope="col" sec:authorize="isAuthenticated()"></th>
+                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="word" 
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" id="sortTag">Term
+                     <i th:if="${sortColumn == 'word' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+                     <i th:if="${sortColumn == 'word' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+                     <i th:unless="${sortColumn == 'word'}" class="fa fa-sort"></i>
+                  </th>
+                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="id" 
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">Id
+                     <i th:if="${sortColumn == 'id' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+                     <i th:if="${sortColumn == 'id' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+                     <i th:unless="${sortColumn == 'id'}" class="fa fa-sort"></i>
+                  </th>
+                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">WordNet ID
+                     <i th:if="${sortColumn == 'wordnetid' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+                     <i th:if="${sortColumn == 'wordnetid' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+                     <i th:unless="${sortColumn == 'wordnetid'}" class="fa fa-sort"></i>
+                  </th>
+                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="pos" 
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 100px;">POS
+                     <i th:if="${sortColumn == 'pos' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+                     <i th:if="${sortColumn == 'pos' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+                     <i th:unless="${sortColumn == 'pos'}" class="fa fa-sort"></i>
+                  </th>
+                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="listname" 
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 200px;">Concept List
+                     <i th:if="${sortColumn == 'listName' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+                     <i th:if="${sortColumn == 'liestName' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+                     <i th:unless="${sortColumn == 'listName'}" class="fa fa-sort"></i>
+                  </th>
+                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="description" 
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">Description
+                     <i th:if="${sortColumn == 'description' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+                     <i th:if="${sortColumn == 'description' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+                     <i th:unless="${sortColumn == 'description' }" class="fa fa-sort"></i>
+                  </th>
+                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="types" 
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 100px;">Type
+                     <i th:if="${sortColumn == 'types' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+                     <i th:if="${sortColumn == 'types' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+                     <i th:unless="${sortColumn == 'types'}" class="fa fa-sort"></i>
+                  </th>
+                  <th style="width:120px;" scope="col">Review Status</th>
+               </tr>
+            </thead>
+            <tbody id="tableData">
+               <tr th:each="concept: ${conceptSearchBean.foundConcepts}">
+                  <td sec:authorize="isAuthenticated()">
+                     <div class="dropdown" >
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                        <div class="cardLayout dropdown-menu" role="menu">
+                           <div class="card-body">
+                              <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" class="btn btn-primary" id="editBtn">Edit Concept</a>
+                              <button class="btn btn-primary deleteBtn" id="deleteBtn" th:value="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept">Delete</button>
+                           </div>
+                        </div>
+                     </div>
+                     <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
+                  </td>
+                  <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
+                  <td th:text="${concept.entry.id}"></td>
+                  <td th:text="${concept.entry.wordnetId}"> </td>
+                  <td th:text="${concept.entry.pos}"></td>
+                  <td th:text="${concept.entry.conceptList}"></td>
+                  <td th:text="${concept.description}"></td>
+                  <td th:text="${concept.type != null ? concept.type.typeName : ''}"></td>
+                  <td><i class="fa fa-comment" aria-hidden="true"></i></td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+      <div class="pagination" id="paginationSection" th:if="${conceptSearchBean.foundConcepts != null}" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
          th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}">
-            <ul class="pagination">
-               <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
-                  <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
-         									th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" id="paginationTag">Previous</span>
-               </li>
-               <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
-               		<span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-               									th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${i}" id="paginationTag" th:text="${i}">
-               		 <span class="sr-only">(current)</span></span>
-               		
-               </li>
-              
-               <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
-                  <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  						  	th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" id="paginationTag">Next</span>
-               </li>
-            </ul>
-         </div>
+         <ul class="pagination">
+            <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+               <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" id="paginationTag">Previous</span>
+            </li>
+            <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
+               <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${i}" id="paginationTag" th:text="${i}">
+               <span class="sr-only">(current)</span></span>
+            </li>
+            <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+               <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" id="paginationTag">Next</span>
+            </li>
+         </ul>
+      </div>
       <div id="conceptDetailsPlugin"></div>
       <div th:insert="layouts/modals/SignIn :: signin"></div>
+      <div th:insert="layouts/modals/DeleteConcept :: deleteConcept"></div>
    </body>
 </html>
+

@@ -21,13 +21,7 @@
 		      			<div class="row1-2">
 	                  
 		                        <label for="exampleFormControlInput1" class="formlabel">POS</label>
-		                        <div>
-					                <select class="selectDropdown" th:name="pos">
-									    <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
-									    </option>
-									 </select>
-									 <i class="fa fa-caret-down" aria-hidden="true"></i>
-								</div>
+		                        
 	                       		<button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" style="margin: 0;" type="submit">
 	               					Search
 	               				</button>

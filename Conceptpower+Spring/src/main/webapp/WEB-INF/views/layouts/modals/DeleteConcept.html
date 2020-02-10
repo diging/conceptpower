@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body class="body" layout:fragment="content">
+   <div class="modal fade" id="deleteConcept" role="dialog" th:fragment="deleteConcept">
+      <div class="modal-dialog" id="requestBox" style="margin-right: auto;margin-top: 300px;">
+         <div class="modal-content" >
+            <div class="modal-body">
+            	<form
+            		th:action="@{/auth/conceptlist/deleteconceptconfirm/+${conceptid}}"
+					method='post' id="deleteConfirmForm">
+					<div>
+						<input type="hidden" th:value="${word}" name="word" />
+						<input type="hidden" th:value="${description}" name="description" />
+						<input type="hidden" th:value="${conceptId}" name="conceptId" />
+						<input type="hidden" th:value="${wordnetId}" name="wordnetId" />
+						<input type="hidden" th:value="${pos}" name="pos" />
+						<input type="hidden" th:value="${conceptList}" name="conceptList" />
+						<input type="hidden" th:value="${type}" name="type" />
+						<input type="hidden" th:value="${equal}" name="equal" />
+						<input type="hidden" th:value="${similar}" name="similar" />
+						<input type="hidden" th:value="${user}" name="user" />
+						<input type="hidden" th:value="${modified}" name="modified" />
+						<input type="hidden" th:value="${synonyms}" name="synonyms" />
+	            	   	<h4 style="text-align: center;">Are you sure you want to delete?</h4>
+	            	   	<input type="submit" value="Delete" class="btn btn-primary deleteBtn" id="deleteBtn" />
+	                   	<!--  <button type="submit" class="btn btn-primary deleteBtn" id="deleteBtn" data-toggle="modal" data-target="#deleteButton">Delete
+	                   	</button>-->
+                   	</div>
+                </form>
+            </div>   
+         </div>
+      </div>
+   </div>
+</body>
+</html>

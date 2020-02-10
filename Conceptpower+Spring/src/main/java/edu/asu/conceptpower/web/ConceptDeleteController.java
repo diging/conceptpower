@@ -78,7 +78,7 @@ public class ConceptDeleteController {
         } else {
             model.addAttribute("fromHomeScreenDelete", false);
         }
-        return "/auth/conceptlist/deleteconcept";
+        return "/layouts/modals/DeleteConcept";
     }
 
     /**
