@@ -603,7 +603,7 @@ $(document).ready(function(){
                <!-- Enabling Disabling the Review button -->  
                <c:choose>
                   <c:when 
-                     test="${concept.reviewRequest == null || concept.reviewRequest.status == 'RESOLVED'}">
+                     test="${concept.reviewRequest == null || concept.reviewRequest.id == null ||concept.reviewRequest.status == 'RESOLVED'}">
                      <!-- Testing if the request has already been provided. -->
                      <td align="center" id="comment-${concept.entry.id}"  >
                         <div data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#myModal" class="fa fa-comment" style="color:#19586B"></div>

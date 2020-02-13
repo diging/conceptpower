@@ -30,7 +30,6 @@ public  class RequestsManager implements IRequestsManager{
      * @see edu.asu.conceptpower.app.core.IRequestsManager#addReviewRequest(edu.asu.conceptpower.core.ReviewRequest)
      */
     public void addReviewRequest(ReviewRequest reviewRequest) {
-        System.out.println(reviewRequest.getConceptId());
         reviewRequest.setId(generateId(REVIEW_PREFIX));
         dbClient.store(reviewRequest);
     }
