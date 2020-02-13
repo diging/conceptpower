@@ -206,9 +206,11 @@ function getListOfReviewRequests(conceptId, operation){
         		+'<h4 data-toggle="tooltip" data-placement="right"><b>'+reviewNumber+'. '+element.request+'</b></h4></div>'
         		reviewHistory += '<div  id="review-'+index+conceptId+'">'
         		
-        		$.each(element.comments, function(iterator, commentElement){
-        			reviewHistory += '<div><h6 style="color:#19586B; display:inline-block;">'+commentElement.createdBy.toUpperCase()+': </h6><span>'+'  '+commentElement.comment+'</span></div>';
-        		});
+        		if(element.comments){
+	        		$.each(element.comments, function(iterator, commentElement){
+	        			reviewHistory += '<div><h6 style="color:#19586B; display:inline-block;">'+commentElement.createdBy.toUpperCase()+': </h6><span>'+'  '+commentElement.comment+'</span></div>';
+	        		});
+        		}
         		
         		reviewHistory += '</div></div>';
         	});
