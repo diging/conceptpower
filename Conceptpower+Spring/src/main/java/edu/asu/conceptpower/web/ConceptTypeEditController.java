@@ -61,7 +61,10 @@ public class ConceptTypeEditController {
             @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm) {
 
         ConceptType type = typeManager.getType(typeid);
-
+        
+        if (type.getSupertypeId().trim().isEmpty()) {
+            conceptTypeAddForm.setSuperType("none");
+        }
         conceptTypeAddForm.setTypeName(type.getTypeName());
         conceptTypeAddForm.setOldTypeName(type.getTypeName());
         conceptTypeAddForm.setTypeDescription(type.getDescription());

@@ -120,6 +120,7 @@ public class ConceptDeleteController {
             @RequestParam(value = "listName") String listName, Principal principal,
             RedirectAttributes redirectAttributes) throws LuceneException, IndexerRunningException {
         ModelAndView model = new ModelAndView();
+        ConceptEntry concept = conceptManager.getConceptEntry(id);
         // Check if indexer is running
         if (indexService.isIndexerRunning()) {
             model.addObject("show_error_alert", true);
@@ -131,7 +132,7 @@ public class ConceptDeleteController {
 
         conceptManager.deleteConcept(conceptManager.getConceptEntry(id), principal.getName());
         if (fromHomeScreenDelete.equalsIgnoreCase("true")) {
-            model.setViewName("redirect:/login");
+            model.setViewName("redirect:/home/conceptsearch?word="+concept.getWord()+"&pos="+concept.getPos());
             return model;
         }
         model.setViewName("redirect:/auth/" + listName + "/concepts");

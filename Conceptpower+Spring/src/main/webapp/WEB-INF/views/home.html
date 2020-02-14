@@ -52,14 +52,15 @@
           var conceptsToMerge = $(this).attr("value");
           if(conceptsToMerge != '') {
           	conceptsToMerge = conceptId;
-          } else {
+          } 
+          else {
               conceptsToMerge = conceptsToMerge + "," + conceptId;    
           }
          }
          function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
           var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
           if(conceptsToBeMerged) {
-            removeColumnFromTable('delete');    
+            /* removeColumnFromTable('delete'); */    
             removeColumnFromTable('edit');    
             $("#mergeConcept").show();
             $("#prepareMergeConcept").hide();
@@ -69,7 +70,8 @@
               $("input[value='" + conceptIds[i] + "']").prop('checked', true);
             }
             $('#conceptIdsToMerge').val(conceptsToBeMerged);
-          } else {
+          } 
+          else {
             removeColumnFromTable('merge');    
             $("#mergeConcept").hide();
             $("#prepareMergeConcept").show();
@@ -77,10 +79,10 @@
          }
          checkCheckBoxAndRemoveColumnsForMergeConcepts();
          
-         $('#prepareMergeConcept').on('click', function (e) {
+         $("#prepareMergeConcept").on('click', function (e) {
               e.preventDefault();
               // Get the column API object
-              removeColumnFromTable('edit');
+              removeColumnFromTable('editConceptModal');
               removeColumnFromTable('delete');
               showColumnFromTable('merge');
               $("#mergeConcept").show();
@@ -202,10 +204,10 @@
           }
          }
          
-         /* $(document).ready(function() {
+         $(document).ready(function() {
         	   $(document).on('click','.deleteBtn', function(e){
-        		   var conceptId = $(this).data().conceptId;
-        		   console.log('click ' + conceptId)
+        		   var conceptId = $(this).data().conceptid;
+        		   console.log(conceptId)
         		    $.ajax({
         				type : "GET",
         				url : '/conceptpower/auth/conceptlist/deleteconcept/'+conceptId,
@@ -217,7 +219,7 @@
         				}
         	  		 });
         	   });
-           }); */
+           });
          
       </script>
    </head>
@@ -272,7 +274,7 @@
             </button>
             <input type='hidden' id='conceptIdsToMerge' th:value='${conceptIdsToMerge}' />
             <div th:text="${conceptIdsToMerge}">hello</div>
-            <button id="mergeConcept" class="btn-sm btn-action" style="margin-bottom: 15px;" th:onclick="'finalizeMerge();'">Merge selected concepts</button>
+            <button id="mergeConcept" class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" th:onclick="'finalizeMerge();'">Merge selected concepts</button>
             <div id="mergeError" class="alert alert-danger"> Please select at least two concepts to merge.</div>
             <div class="btn-group showDrp">
                <label for="dropdown">Show </label>
@@ -294,7 +296,7 @@
          <table class="table table-striped resultTable tableStyles" >
             <thead>
                <tr>
-                  <th scope="col" sec:authorize="isAuthenticated()"></th>
+                  <th th:data-name="edit" scope="col" sec:authorize="isAuthenticated()"></th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="word" 
                      th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" id="sortTag">Term
                      <i th:if="${sortColumn == 'word' && sortDir == '1'}" class="fa fa-sort-desc"></i>
@@ -342,13 +344,13 @@
             </thead>
             <tbody id="tableData">
                <tr th:each="concept: ${conceptSearchBean.foundConcepts}">
-                  <td sec:authorize="isAuthenticated()">
+                  <td sec:authorize="isAuthenticated()" id="editConceptModal">
                      <div class="dropdown" >
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
                         <div class="cardLayout dropdown-menu" role="menu">
                            <div class="card-body">
                               <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" class="btn btn-primary" id="editBtn">Edit Concept</a>
-                              <button class="btn btn-primary deleteBtn" id="deleteBtn" th:value="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept">Delete</button>
+                              <button class="btn btn-primary deleteBtn" id="deleteBtn" th:data-conceptId="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept">Delete</button>
                            </div>
                         </div>
                      </div>
@@ -386,7 +388,8 @@
       </div>
       <div id="conceptDetailsPlugin"></div>
       <div th:insert="layouts/modals/SignIn :: signin"></div>
-      <div th:insert="layouts/modals/DeleteConcept :: deleteConcept"></div>
+      <!-- <div th:insert="layouts/modals/DeleteConcept :: deleteConcept"></div> -->
+      <div id="deleteModalPlugin"></div>
    </body>
 </html>
 

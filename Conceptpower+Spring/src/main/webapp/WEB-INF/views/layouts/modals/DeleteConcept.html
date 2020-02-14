@@ -9,7 +9,7 @@
          <div class="modal-content" >
             <div class="modal-body">
             	<form
-            		th:action="@{/auth/conceptlist/deleteconceptconfirm/+${conceptid}}"
+            		th:action="@{'/auth/conceptlist/deleteconceptconfirm/'+${conceptid}+'?fromHomeScreenDelete=true&listName='+${conceptList}}"
 					method='post' id="deleteConfirmForm">
 					<div>
 						<input type="hidden" th:value="${word}" name="word" />

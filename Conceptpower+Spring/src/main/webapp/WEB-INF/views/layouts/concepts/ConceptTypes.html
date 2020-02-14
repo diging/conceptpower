@@ -18,6 +18,7 @@
 		   $(document).on('click','.deleteBtn', function(e){
 			   console.log($(this).data())
 			   var typeId = $(this).data().typeid;
+			   console.log($(this).data())
 			    $.ajax({
 					type : "GET",
 					url : '/conceptpower/auth/concepttype/deletetype/'+typeId,

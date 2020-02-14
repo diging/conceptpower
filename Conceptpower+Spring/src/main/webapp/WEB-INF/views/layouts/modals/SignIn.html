@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html
    xmlns:th="http://www.thymeleaf.org"
@@ -10,41 +12,30 @@
                <div class="form-field">
                   <div class="floatingform" >
                      <div>
-                        <div class="form-field">
-                           <form th:action="@{/login}" method="post">
-                              <table>
-                                 <tr>
-                                    <td>
-                                       <h3>Username</h3>
-                                    </td>
-                                 </tr>
-                                 <tr>
-                                    <td>
-                                       <input type='text' id="username" name='username' class="form-control" value='' placeholder="Enter username...">
-                                    </td>
-                                 </tr>
-                                 <tr>
-                                    <td>
-                                       <h3>Password</h3>
-                                    </td>
-                                 </tr>
-                                 <tr>
-                                    <td><input type='password' name='password' class="form-control" id="password" placeholder="Enter Password..."/> </td>
-                                 </tr>
-                              </table>
-                              <div id="modalFooter">
-                                 <div >
-                                    <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" name="submit" value="Login" type="submit" id="modalSignInBtn" >
-                                    Sign In
-                                    <i class="fa fa-sign-in"></i>
-                                    </button>
-                                 </div>
-                                 <div id="forgotPwd">
-                                    <a th:href="@{/forgot}">Forgot <br/> Password ?</a>
-                                 </div>
+                        <form th:action="@{/login}" method="post">
+                           <div>
+                              <h3>Username</h3>
+                           </div>
+                           <div>
+                              <input type='text' id="username" name='username' class="form-control" value='' placeholder="Enter username...">
+                           </div>
+                           <div>
+                              <h3>Password</h3>
+                           </div>
+                           <div><input type='password' name='password' class="form-control" id="password" placeholder="Enter Password..."/> </td>
+                           </div>
+                           <div id="modalFooter">
+                              <div >
+                                 <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" name="submit" value="Login" type="submit" id="modalSignInBtn" >
+                                 Sign In
+                                 <i class="fa fa-sign-in"></i>
+                                 </button>
                               </div>
-                           </form>
-                        </div>
+                              <div id="forgotPwd">
+                                 <a th:href="@{/forgot}">Forgot <br/> Password ?</a>
+                              </div>
+                           </div>
+                        </form>
                      </div>
                   </div>
                </div>
@@ -53,3 +44,5 @@
       </div>
    </div>
 </html>
+
+© FreeFormatter.com - FREEFORMATTER is a d/b/a of 10174785 Canada Inc. - Copyright Notice - Privacy Statement - Terms of Use
