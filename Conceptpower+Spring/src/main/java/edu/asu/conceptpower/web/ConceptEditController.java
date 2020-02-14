@@ -118,7 +118,13 @@ public class ConceptEditController {
         conceptEditBean.setWordnetIds(concept.getWordnetId());
         conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
-        return "/layouts/concepts/EditConceptdiffId";
+        
+        if(concept.getWordnetId()!=null) {
+            return "/layouts/concepts/EditConcept";
+        }
+        else {
+            return "/layouts/concepts/EditConceptdiffId";
+        }
     }
 
     /**
