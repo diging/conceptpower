@@ -79,7 +79,7 @@ public class ConceptMergeController {
         mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
                 .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
         mav.addObject("posValues", POS.posValues);
-        mav.setViewName("/auth/conceptMerge");
+        mav.setViewName("/layouts/concepts/MergeConcepts");
         return mav;
     }
 
@@ -99,7 +99,7 @@ public class ConceptMergeController {
             mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
                     .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
             mav.addObject("posValues", POS.posValues);
-            mav.setViewName("/auth/conceptMerge");
+            mav.setViewName("/layouts/concepts/MergeConcepts");
             return mav;
         }
         conceptMergeService.mergeConcepts(conceptsMergeBean, principal.getName());

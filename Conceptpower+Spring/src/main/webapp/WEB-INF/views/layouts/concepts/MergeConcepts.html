@@ -1,0 +1,158 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   
+   <head>
+	   <script>
+		$(document).ready(function() { 
+		    $('#conceptMergeForm').submit(function(event) {
+		        var ret = true;
+		        if ($("#words").val() === "") {
+		            $("#wordsError").html('Word cannot be empty');
+		            ret = false;
+		        } else {
+		            $("#wordsError").html('');
+		        }
+		        if ($("#selectedPosValue").val() === "") {
+		            $("#selectedPosError").html('Please select a pos.');
+		            ret = false;
+		        } else {
+		            $("#selectedPosError").html('');
+		        }
+		        if ($("#selectedListName").val() === "") {
+		            $("#selectedListNameError").html('Please select a concept list.');
+		            ret = false;
+		        } else {
+		            $("#selectedListNameError").html('');
+		        }
+		        if ($("#selectedTypeId").val() === "") {
+		            $("#selectedTypeIdError").html('Please select a concept type.');
+		            ret = false;
+		        } else {
+		            $("#selectedTypeIdError").html('');
+		        }
+		        
+		        if(ret == true) {
+					$("#descriptions").val($("#descriptionDiv").text().trim());
+		        }
+		        return ret;
+		    });    
+		});
+	   </script>
+   </head>
+   
+   <body class="body" layout:fragment="content">
+      <div class="conceptType">
+         <h3 class="title">Merge Concepts</h3>
+         <form
+            th:action="@{/auth/concepts/merge}"
+            th:object="${conceptsMergeBean}" method='post'>
+            <table class="conceptForm">
+               <tbody>
+                  <tr>
+                     <td style="width:40px;">
+                        <label for="listName" class="formlabel">Concept</label>
+                     </td>
+                     <td>
+                        <input type="text" class="form-control" name="word" th:value="${conceptsMergeBean.word}">
+                        <div th:if="${#fields.hasErrors('word')}" th:errors="*{word}"></div>
+                     </td>
+                  </tr>
+                  
+                  <tr>
+	                  <td style="width:172px;">
+	                     <label for="selectedTypes" class="formlabel">POS</label>
+	                  </td>
+	                  <td class="drpSpacing">
+	                     <div class="selectDropdown">
+	                        <select name="selectedTypes" class="POS">
+	                           <option th:each="type: ${posValues}" th:value="${type}" th:text="${type}">
+	                           </option>
+	                        </select>
+	                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+	                     </div>
+	                  </td>
+	               </tr>
+	               
+	               <tr>
+	                  <td style="width:172px;">
+	                     <label for="selectedListName" class="formlabel">Concept List</label>
+	                  </td>
+	                  <td class="drpSpacing">
+	                     <div class="selectDropdown">
+	                        <select name="selectedListName" class="POS">
+	                           <option th:each="item: ${conceptListValues}" th:value="${item}" th:text="${item}">
+	                           </option>
+	                        </select>
+	                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+	                     </div>
+	                  </td>
+	               </tr>
+	               
+                  <tr>
+                     <td style="width:172px;">
+                        <label for="description" class="formlabel">Description</label>
+                     </td>
+                     <td>
+                        <textarea class="form-control" name="similarValues" th:text="${conceptsMergeBean.descriptions}"></textarea>
+                        <div th:if="${#fields.hasErrors('similarValues')}" th:errors="*{similarValues"></div>
+                     </td>
+                  </tr>
+                  
+                  <tr>
+	                  <td style="width:172px;">
+	                     <label for="selectedTypeId" class="formlabel">Concept Type</label>
+	                  </td>
+	                  <td class="drpSpacing">
+	                     <div class="selectDropdown">
+	                        <select name="selectedTypeId" class="POS">
+	                           <option th:each="item: ${types}" th:value="${item.typeId}" th:text="${item.typeName}">
+	                           </option>
+	                        </select>
+	                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+	                     </div>
+	                  </td>
+	               </tr>
+	               
+	               <tr>
+                     <td style="width:172px;">
+                        <label for="equalsValues" class="formlabel">Equals</label>
+                     </td>
+                     <td>
+                        <input class="form-control" name="equalsValues" 
+                        placeholder="N/A"
+                        th:value="${conceptsMergeBean.equalsValues.size() > 0 ? conceptsMergeBean.equalsValues : ''}" ></input>
+                     </td>
+                  </tr>
+	               
+                  <tr>
+                     <td style="width:172px;">
+                        <label for="similarValues" class="formlabel">Similar</label>
+                     </td>
+                     <td>
+                        <input class="form-control" name="similarValues" 
+                        placeholder="N/A"
+                        th:value="${conceptsMergeBean.similarValues.size() > 0 ? conceptsMergeBean.similarValues : ''}"></input>
+                     </td>
+                     <td>
+	                     <input type="hidden" th:name ="synonymsids" id="synonymsids"/>
+	                     <input type="hidden" th:name="mergeIds" id="mergeIds"/>
+	                     <input type="hidden" th:name="alternativeIds" id="alternativeIds"/>
+	                  </td>
+                  </tr>
+               </tbody>
+            </table>
+            <div class="btnCenter">
+               <a th:href="@{/}"><button class="btn btn-outline-success my-2 my-sm-0 cancelTypeBtn" type="button" >
+               Cancel
+               </button></a>
+               <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="addConceptTypeBtn">
+               Stored merged concept
+               </button>
+            </div>
+         </form>
+      </div>
+   </body>
+</html>

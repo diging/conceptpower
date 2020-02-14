@@ -97,7 +97,6 @@
 		});
 		    $(function() {
 		        $("#addsynonym").click(function() {
-		            var addedSynonymsTable = $('#addedSynonyms');
 		            $('#synonymstable').dataTable().fnClearTable();
 		            $("#synonymModal").dialog('open');
 		            $("#synonymsDialogTable").show();
@@ -423,22 +422,44 @@
          <div style="margin-bottom: 100px;">
             <div class="formlabel row">
                <label style="width: 300px;">Create wrapper for concept</label>
-               <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter wrapper....">
+               <input type="text" class="form-control" id="name" placeholder="Enter wrapper....">
             </div>
             <div class="row1-2">
                <label for="exampleFormControlInput1" class="formlabel">POS</label>
                <div>
-	               <select class="selectDropdown" th:name="pos">
+	               <select class="selectDropdown" th:name="pos" id="pos">
 	                  <option> Test
 	                  </option>
 	               </select>
 	               <i class="fa fa-caret-down" aria-hidden="true"></i>
                </div>
-               <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" style="margin: 0;" type="submit">
+               <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="searchconcept" name="searchconcept" type="button" style="margin: 0;">
                Search
                </button>
             </div>
          </div>
+         
+         <div id="conceptSearchDiv" style="display:none;">
+	        <h4>The following concepts were found:</h4>
+	        Click on the row to add the wordnet id
+	        <p></p>
+	        <table class="table table-striped table-bordered"
+	            id="conceptSearch">
+	            <thead>
+	                <tr>
+	                    <th></th>
+	                    <th>Term</th>
+	                    <th>ID</th>
+	                    <th>Wordnet ID</th>
+	                    <th>POS</th>
+	                    <th>Description</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	            </tbody>
+	        </table>
+    	</div>
+    	
          <div class="btnCenter">
             <a th:href="@{/auth/conceptlist}"><button class="btn btn-outline-success my-2 my-sm-0 cancelTypeBtn" type="button" >
             Cancel
