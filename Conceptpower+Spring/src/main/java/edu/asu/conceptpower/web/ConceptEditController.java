@@ -119,11 +119,11 @@ public class ConceptEditController {
         conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
         
-        if(concept.getWordnetId()!=null) {
-            return "/layouts/concepts/EditConcept";
+        if(concept.getWordnetId()==null) {
+            return "/layouts/concepts/EditConceptdiffId";
         }
         else {
-            return "/layouts/concepts/EditConceptdiffId";
+            return "/layouts/concepts/EditConcept";
         }
     }
 
