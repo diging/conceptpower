@@ -332,7 +332,7 @@
                   <td class="drpSpacing">
                         <div class="selectDropdown">
                            <select th:name="selectedList" class="POS">
-	                              <option th:each="item: ${conceptEditBean.conceptList}" th:value="${item}" th:text="${item}">
+	                              <option th:each="item: ${conceptEditBean.conceptList}" th:value="${item.id}" th:text="${item.conceptListName}">
 	                              </option>
                            </select>
                            <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -450,7 +450,7 @@
     	</div>
     	
          <div class="btnCenter">
-            <a th:href="@{'/home/conceptsearch/?word='+${conceptEditBean.word}+'&pos='+${conceptEditBean.selectedPosValue}}"><button class="btn btn-outline-success my-2 my-sm-0 cancelTypeBtn" type="button" >
+            <a th:href="@{'/home/conceptsearch/?word='+${searchWord}+'&pos='+${conceptEditBean.selectedPosValue}}"><button class="btn btn-outline-success my-2 my-sm-0 cancelTypeBtn" type="button" >
             Cancel
             </button></a>
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit"  th:onclick="'showFormProcessing()'"

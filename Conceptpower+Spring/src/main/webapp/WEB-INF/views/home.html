@@ -235,12 +235,11 @@
                   </div>
                </div>
                </div>-->
-            <div>
+            <div class='custom-select'>
                <select class="selectDropdown" th:name="pos">
                   <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
                   </option>
                </select>
-               <i class="fa fa-caret-down" aria-hidden="true"></i>
             </div>
          </div>
          <div class="error" id="searchAlert"></div>
@@ -346,7 +345,7 @@
 				         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
 				         <div class="cardLayout dropdown-menu" role="menu">
 				            <div class="card-body">
-				               <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" class="btn btn-primary" id="editBtn">Edit Concept</a>
+				               <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'+'&searchWord='+${conceptSearchBean.word}}" class="btn btn-primary" id="editBtn">Edit Concept</a>
 				               <button class="btn btn-primary deleteBtn" id="deleteBtn" th:data-conceptId="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept">Delete</button>
 				            </div>
 				         </div>

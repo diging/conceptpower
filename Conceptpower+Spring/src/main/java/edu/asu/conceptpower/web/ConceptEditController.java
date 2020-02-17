@@ -91,13 +91,14 @@ public class ConceptEditController {
     @RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
     public String prepareEditConcept(@PathVariable("conceptid") String conceptid,
             @RequestParam(value = "fromHomeScreen", required = false) String fromHomeScreen,
+            @RequestParam(value = "searchWord", required = true) String searchWord,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model, BindingResult results)
             throws LuceneException {
 
         if (fromHomeScreen != null) {
             conceptEditBean.setFromHomeScreen(true);
         }
-
+        
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
         ConceptType[] allTypes = conceptTypesManager.getAllTypes();
         List<ConceptList> allLists = conceptListManager.getAllConceptLists();
@@ -118,7 +119,7 @@ public class ConceptEditController {
         conceptEditBean.setWordnetIds(concept.getWordnetId());
         conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
-        
+        model.addAttribute("searchWord", searchWord);
         if(concept.getWordnetId()==null) {
             return "/layouts/concepts/EditConceptdiffId";
         }

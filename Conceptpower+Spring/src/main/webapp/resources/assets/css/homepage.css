@@ -369,24 +369,6 @@ a:hover {
     margin-top: 40px;
 }
 
-.selectDropdown {
-	display: flex; 
-	align-items: center;
-	border: 1px solid rgba(0,0,0,0.21);
-	border-radius: 30px;
-	padding: 0px 15px;
-	cursor: pointer;
-	-moz-appearance: none; 
-	-webkit-appearance: none; 
-	height: 36px;
-	background-image: url('https://c7.uihere.com/icons/709/957/75/caret-down-bef41e1f804b25ffda0374199b550993.png'),linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
-	
-}
-
-.selectDropdown:hover {
-	background-color: rgba(0,0,0,0.03);
-}
-
 .POS {
 	-moz-appearance: none; 
 	-webkit-appearance: none; 
@@ -412,5 +394,44 @@ a:hover {
     background: 
     transparent;
     padding: 0px;
+}
+
+.custom-select {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    border-radius: 30px;
+    border: 1px solid #4f39cc;
+    background-color: #ffffff;
+    z-index: 10;
+}
+
+.custom-select select {
+    border: none;
+    outline: none;
+    background: transparent;
+    -webkit-appearance: none;
+    cursor: pointer;
+    border-radius: 0;
+    margin: 0;
+    height: 36px;
+    display: block;
+    width: 100%;
+    padding: 0px 48px 0px 15px;
+    font-size: 14px;
+    color: #714BB9;
+}
+.custom-select:after {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50px;
+    height: 100%;
+    line-height: 36px;
+    content: "v";
+    text-align: center;
+    color: #714BB9;
+    font-size: 18px;
+    font-weight: bold;
 }
 

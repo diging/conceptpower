@@ -449,7 +449,7 @@
 	                     <div class="drpSpacing">
 	                        <label for="selectedServiceNameIdMap" class="formlabel">Service</label>
 	                        <div class="selectDropdown">
-	                           <select id="selectedServiceNameIdMap" th:name="selectedServiceNameIdMap" class="POS">
+	                           <select id="selectedServiceNameIdMap custom-select" th:name="selectedServiceNameIdMap" class="POS">
 	                              <option th:each="serviceName: ${conceptAddBean.serviceNameIdMap}" th:value="${serviceName.key}" th:text="${serviceName.value}">
 	                              </option>
 	                           </select>
@@ -499,7 +499,7 @@
 	               <tr>
 	                  <td class="drpSpacing">
 	                     <label for="pos" class="formlabel">POS</label>
-	                     <div class="selectDropdown">
+	                     <div class="selectDropdown custom-select">
 	                        <select name="pos"
 	                           class="POS">
 	                           <option value="">Please select</option>
@@ -509,18 +509,16 @@
 	                           <option value="adjective">Adjective</option>
 	                           <option value="other">Other</option>
 	                        </select>
-	                        <i class="fa fa-caret-down" aria-hidden="true"></i>
 	                     </div>
 	                  </td>
 	                  <td>
 	                     <div class="drpSpacing">
 	                        <label for="selectedList" class="formlabel">Concept List</label>
-	                        <div class="selectDropdown">
+	                        <div class="selectDropdown custom-select" >
 	                           <select th:name="selectedList" class="POS">
 	                              <option th:each="item: ${conceptAddBean.lists}" th:value="${item.key}" th:text="${item.value}">
 	                              </option>
 	                           </select>
-	                           <i class="fa fa-caret-down" aria-hidden="true"></i>
 	                        </div>
 	                     </div>
 	                  </td>
