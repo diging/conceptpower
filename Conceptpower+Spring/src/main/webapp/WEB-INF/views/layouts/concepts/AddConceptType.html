@@ -41,10 +41,12 @@
 	                     <label for="SuperType" class="formlabel">Super Type</label>
 	                  </td>
 	                  <td>
-	                     <select th:name="superType">
-						    <option th:each="types: ${conceptTypeAddForm.types}" th:value="${types.value}" th:text="${types.value}">
-						    </option>
-				 		</select>
+	                  	<div class="custom-dropdown">
+		                     <select th:name="superType">
+							    <option th:each="types: ${conceptTypeAddForm.types}" th:value="${types.value}" th:text="${types.value}">
+							    </option>
+					 		</select>
+				 		</div>
 	                  </td>
 	               </tr>
 	            </tbody>

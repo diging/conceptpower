@@ -396,42 +396,80 @@ a:hover {
     padding: 0px;
 }
 
-.custom-select {
-    position: relative;
-    display: block;
-    margin: 0 auto;
-    border-radius: 30px;
-    border: 1px solid #4f39cc;
-    background-color: #ffffff;
-    z-index: 10;
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1.5px solid #4f3acc;
+  border-radius: 30px;
+  background-color: transparent;
 }
 
-.custom-select select {
-    border: none;
-    outline: none;
-    background: transparent;
-    -webkit-appearance: none;
-    cursor: pointer;
-    border-radius: 0;
-    margin: 0;
-    height: 36px;
-    display: block;
-    width: 100%;
-    padding: 0px 48px 0px 15px;
-    font-size: 14px;
-    color: #714BB9;
+.custom-dropdown:hover {
+	background-color: #eee;
 }
-.custom-select:after {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 50px;
-    height: 100%;
-    line-height: 36px;
-    content: "v";
-    text-align: center;
-    color: #714BB9;
-    font-size: 18px;
-    font-weight: bold;
+
+.custom-dropdown select {
+  background-color: transparent;
+  color: #333;
+  font-size: 14px;
+  padding: .5em;
+  padding-right: 2.5em;	
+  border: 0;
+  margin: 0;
+  border-radius: 3px;
+  text-indent: 0.01px;
+  text-overflow: '';
+  /*Hiding the select arrow for firefox*/
+  -moz-appearance: none;
+  /*Hiding the select arrow for chrome*/
+  -webkit-appearance:none;
+  /*Hiding the select arrow default implementation*/
+  appearance: none;
+  cursor: pointer;
+}
+/*Hiding the select arrow for IE10*/
+.custom-dropdown select::-ms-expand {
+    display: none;
+    cursor: pointer;
+}
+
+.custom-dropdown::before,
+.custom-dropdown::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.custom-dropdown::after { /*  Custom dropdown arrow */
+  content: "\25BC";
+  height: 1em;
+  font-size: .625em;
+  line-height: 1;
+  right: 1.2em;
+  top: 50%;
+  margin-top: -.5em;
+  cursor: pointer;
+}
+
+.custom-dropdown::before { /*  Custom dropdown arrow cover */
+  width: 2em;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 0 3px 3px 0;
+  cursor: pointer;
+}
+
+.custom-dropdown::after {
+  color: #4f3acc;	
+  cursor: pointer;
+}
+
+.custom-dropdown select[disabled] {
+  color: rgba(0,0,0,.25);
+  cursor: pointer;
 }
 

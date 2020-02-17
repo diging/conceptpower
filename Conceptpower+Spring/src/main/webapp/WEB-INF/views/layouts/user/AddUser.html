@@ -41,10 +41,12 @@
                         <label for="isAdmin" class="formlabel">Admin</label>
                      </td>
                      <td>
-                        <select th:name="isAdmin">
-                           <option th:value="yes" th:text="Yes"></option>
-                           <option th:value="no" th:text="No"></option>
-                        </select>
+                        <div class="custom-dropdown">
+                           <select th:name="isAdmin">
+                              <option th:value="yes" th:text="Yes"></option>
+                              <option th:value="no" th:text="No"></option>
+                           </select>
+                        </div>
                      </td>
                   </tr>
                   <tr>
