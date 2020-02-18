@@ -449,7 +449,7 @@
                         <div class="drpSpacing">
                            <label for="selectedServiceNameIdMap" class="formlabel">Service</label>
                            <div class="custom-dropdown">
-                              <select id="selectedServiceNameIdMap custom-select" th:name="selectedServiceNameIdMap" class="POS">
+                              <select th:field="*{selectedServiceNameIdMap}" class="POS">
                                  <option th:each="serviceName: ${conceptAddBean.serviceNameIdMap}" th:value="${serviceName.key}" th:text="${serviceName.value}">
                                  </option>
                               </select>
@@ -492,14 +492,15 @@
                         <label for="name" class="formlabel">Concept</label>
                      </td>
                      <td>
-                        <input type="text" class="form-control" name="name" placeholder="Enter concept....">
+                        <input type="text" class="form-control" th:field="*{name}" placeholder="Enter concept....">
+                        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                      </td>
                   </tr>
                   <tr>
                      <td class="drpSpacing">
                         <label for="pos" class="formlabel">POS</label>
                         <div class="custom-dropdown">
-                           <select name="pos" class="POS">
+                           <select th:field="*{pos}" class="POS">
                               <option value="">Please select</option>
                               <option value="noun">Noun </option>
                               <option value="verb">Verb</option>
@@ -507,16 +508,18 @@
                               <option value="adjective">Adjective</option>
                               <option value="other">Other</option>
                            </select>
+                           <div th:if="${#fields.hasErrors('pos')}" th:errors="*{pos}"></div>
                         </div>
                      </td>
                      <td>
                         <div class="drpSpacing">
                            <label for="selectedList" class="formlabel">Concept List</label>
                            <div class="custom-dropdown" >
-                              <select th:name="selectedList" class="POS">
+                              <select th:field="*{selectedList}" class="POS">
                                  <option th:each="item: ${conceptAddBean.lists}" th:value="${item.key}" th:text="${item.value}">
                                  </option>
                               </select>
+                              <div th:if="${#fields.hasErrors('selectedList')}" th:errors="*{selectedList}"></div>
                            </div>
                         </div>
                      </td>
@@ -526,7 +529,7 @@
                         <label for="description" class="formlabel">Description</label>
                      </td>
                      <td>
-                        <textarea class="form-control" name="description" rows="3" placeholder="Enter description...."></textarea>
+                        <textarea class="form-control" th:field="*{description}" rows="3" placeholder="Enter description...."></textarea>
                      </td>
                   </tr>
                   <tr>
@@ -552,6 +555,7 @@
                               <option th:each="type: ${conceptAddBean.types}" th:value="${type.key}" th:text="${type.value}">
                               </option>
                            </select>
+                           <div th:if="${#fields.hasErrors('selectedTypes')}" th:errors="*{selectedTypes}"></div>
                         </div>
                      </td>
                   </tr>
@@ -560,7 +564,7 @@
                         <label for="equals" class="formlabel">External Authority Service Links</label>
                      </td>
                      <td>
-                        <textarea class="form-control" id="equals" name="equals" rows="3" placeholder="Enter links...."></textarea>
+                        <textarea class="form-control" th:field="*{equals}" rows="3" placeholder="Enter links...."></textarea>
                      </td>
                   </tr>
                   <tr>
@@ -568,13 +572,13 @@
                         <label for="similar" class="formlabel">Links to other services</label>
                      </td>
                      <td>
-                        <textarea class="form-control" name="similar" rows="3" placeholder="Enter links..."></textarea>
+                        <textarea class="form-control" th:field="*{similar}" rows="3" placeholder="Enter links..."></textarea>
                      </td>
                      <td>
-                        <input type="hidden" th:name ="synonymsids" id="synonymsids"/>
-                        <input type="hidden" th:name="term" id="term"/>
-                        <input type="hidden" th:name="synonymDescription" id="synonymDescription"/>
-                        <input type="hidden" th:name="synonymId" id="synonymId"/>
+                        <input type="hidden" th:field="*{synonymsids}"/>
+                        <input type="hidden" th:field="*{term}"/>
+                        <input type="hidden" th:field="*{synonymDescription}"/>
+                        <input type="hidden" th:field="*{synonymId}"/>
                      </td>
                   </tr>
                </tbody>

@@ -79,12 +79,11 @@
                         <label for="selectedTypes" class="formlabel">POS</label>
                      </td>
                      <td class="drpSpacing">
-                        <div class="selectDropdown">
+                        <div class='custom-dropdown'>
                            <select name="selectedPosValue" class="POS">
                               <option th:each="type: ${posValues}" th:value="${type}" th:text="${type}">
                               </option>
                            </select>
-                           <i class="fa fa-caret-down" aria-hidden="true"></i>
                         </div>
                         <div th:if="${#fields.hasErrors('selectedPosValue')}" th:errors="*{selectedPosValue}"></div>
                      </td>
@@ -94,12 +93,11 @@
                         <label for="selectedListName" class="formlabel">Concept List</label>
                      </td>
                      <td class="drpSpacing">
-                        <div class="selectDropdown">
+                        <div class='custom-dropdown'>
                            <select name="selectedListName" class="POS">
                               <option th:each="item: ${conceptListValues}" th:value="${item}" th:text="${item}">
                               </option>
                            </select>
-                           <i class="fa fa-caret-down" aria-hidden="true"></i>
                         </div>
                         <div th:if="${#fields.hasErrors('selectedListName')}" th:errors="*{selectedListName}"></div>
                      </td>
@@ -123,12 +121,11 @@
                         <label for="selectedTypeId" class="formlabel">Concept Type</label>
                      </td>
                      <td class="drpSpacing">
-                        <div class="selectDropdown">
+                        <div class='custom-dropdown'>
                            <select name="selectedTypeId" class="POS">
                               <option th:each="item: ${types}" th:value="${item.typeId}" th:text="${item.typeName}">
                               </option>
                            </select>
-                           <i class="fa fa-caret-down" aria-hidden="true"></i>
                            <div th:if="${#fields.hasErrors('selectedTypeId')}" th:errors="*{selectedTypeId}"></div>
                         </div>
                      </td>
@@ -153,9 +150,9 @@
                            th:value="${conceptsMergeBean.similarValues.size() > 0 ? conceptsMergeBean.similarValues : ''}"></input>
                      </td>
                      <td>
-                        <input type="hidden" th:name ="synonymsids" id="synonymsids" th:value=${conceptsMergeBean.synonymsids}/>
-                        <input type="hidden" th:name="mergeIds" id="mergeIds" th:value=${conceptsMergeBean.mergeIds}/>
-                        <input type="hidden" th:name="alternativeIds" id="alternativeIds" th:value=${conceptsMergeBean.alternativeIds}/>
+                        <input type="hidden" th:field ="*{synonymsids}" />
+                        <input type="hidden" th:field="*{mergeIds}" />
+                        <input type="hidden" th:field="*{alternativeIds}"/>
                      </td>
                   </tr>
                </tbody>

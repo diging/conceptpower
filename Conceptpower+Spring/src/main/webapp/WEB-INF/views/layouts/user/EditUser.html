@@ -35,10 +35,12 @@
                         <label for="isAdmin" class="formlabel">Admin</label>
                      </td>
                      <td>
+                     <div class='custom-dropdown'>
                       <select th:name="isAdmin" >
 					    <option th:value="yes" th:selected="${user.isAdmin == true}"  th:text="Yes"></option>
 					    <option th:value="no" th:selected="${user.isAdmin == false}"  th:text="No"></option>
 				    </select>
+				    </div>
                      </td>
                   </tr>
                   <tr>
