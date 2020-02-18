@@ -145,8 +145,10 @@
                                    $('#synonymstable').dataTable().fnClearTable();
                                    $("#synonymstable").show();
                                    
-           var addedsynonym = $('#synonymsids').val();
+           						  var addedsynonym = $('#synonymsids').val();
                                    var synonymname = $("#synonymname").val();
+                                   
+                                   console.log(addedsynonym)
                                    $
                                            .ajax({
                                                type : "GET",
@@ -228,13 +230,14 @@
            $(document)
                    .ready(
                            function() {
-                               $('#synonyms').dataTable({
+                        	   //There is no synonym table but used. Commented it for now.
+                              /*  $('#synonyms').dataTable({
                                    "bJQueryUI" : true,
                                    "sPaginationType" : "full_numbers",
                                    "bAutoWidth" : false
-                               });
+                               }); */
                                var conceptid = $('#conceptid').val();
-                               console.log(conceptid)
+                               
                                $
                                        .ajax({
                                            type : "GET",
@@ -245,7 +248,6 @@
                                            success : function(response) {
                                                var border = response.length > 0 ? 1
                                                        : 0;
-                                               console.log(response)
                                                var synonym = JSON.parse(response);
                                                var total = synonym.Total;
                                                // var arr = new Array();
@@ -296,26 +298,26 @@
       <div class="newConcept">
          <h3 class="title">Edit concept</h3>
          <form
-            th:action="@{/auth/conceptlist/editconcept/edit/'+${conceptId}}"
+            th:action="@{'/auth/conceptlist/editconcept/edit/'+${conceptId}}"
             th:object="${conceptEditBean}" method='post'
             id="createconceptform">
             <table class="conceptForm">
                <tbody>
                   <tr>
                      <td style="width:172px;">
-                        <label for="name" class="formlabel">Concept</label>
+                        <label for="word" class="formlabel">Concept</label>
                      </td>
                      <td>
-                        <input type="text" class="form-control" name="name" th:value="${conceptEditBean.word}">
+                        <input type="text" class="form-control" th:field="*{word}">
                      </td>
                   </tr>
                   <tr>
                      <td style="width:172px;">
-                        <label for="pos" class="formlabel">POS</label>
+                        <label for="selectedPosValue" class="formlabel">POS</label>
                      </td>
                      <td class="drpSpacing">
                         <div class="custom-dropdown">
-                           <select class="selectDropdown" th:name="pos">
+                           <select class="selectDropdown" th:field="*{selectedPosValue}">
                               <option th:each="entry: ${conceptEditBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
                               </option>
                            </select>
@@ -325,12 +327,12 @@
                   <tr>
                      <td style="width:172px;">
                         <div>
-                           <label for="selectedList" class="formlabel">Concept List</label>
+                           <label for="conceptListValue" class="formlabel">Concept List</label>
                         </div>
                      </td>
                      <td class="drpSpacing">
                         <div class="custom-dropdown">
-                           <select th:name="selectedList" class="POS">
+                           <select th:field="*{conceptListValue}" class="POS">
                               <option th:each="item: ${conceptEditBean.conceptList}" th:value="${item.id}" th:text="${item.conceptListName}">
                               </option>
                            </select>
@@ -342,7 +344,7 @@
                         <label for="description" class="formlabel">Description</label>
                      </td>
                      <td>
-                        <textarea class="form-control" name="description" rows="3" th:text="${conceptEditBean.description}"></textarea>
+                        <textarea class="form-control" th:field="*{description}" rows="3"></textarea>
                      </td>
                   </tr>
                   <tr>
@@ -353,6 +355,7 @@
                         <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="addsynonym" name="synonym" type="button" data-toggle="modal" data-target="#synonyms">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add Synonym	
                         </button>
+                        <input type="hidden" th:field="*{synonymsids}"></input> 
                      </td>
                      <td style="width: 100px;">
                         <div id="addedSynonyms">
@@ -362,7 +365,6 @@
                            </table>
                         </div>
                      </td>
-                     <td><input type="text" name="conceptid" id="conceptid" hidden="true" th:value="${conceptId}"></td>
                   </tr>
                   <tr>
                      <td style="width:172px;">
@@ -370,7 +372,7 @@
                      </td>
                      <td class="drpSpacing">
                         <div class="custom-dropdown">
-                           <select class="POS">
+                           <select th:field="*{selectedTypeId}" class="POS">
                               <option th:each="type: ${conceptEditBean.types}" th:value="${type.typeId}" th:text="${type.typeName}">
                               </option>
                            </select>
@@ -382,7 +384,7 @@
                         <label for="equals" class="formlabel">External Authority Service Links</label>
                      </td>
                      <td>
-                        <textarea class="form-control" id="equals" name="equals" rows="3" th:text="${conceptEditBean.equals}"></textarea>
+                        <textarea class="form-control" th:field="*{equals}" rows="3"></textarea>
                      </td>
                   </tr>
                   <tr>
@@ -390,15 +392,25 @@
                         <label for="similar" class="formlabel">Links to other services</label>
                      </td>
                      <td>
-                        <textarea class="form-control" name="similar" rows="3" th:text="${conceptEditBean.similar}"></textarea>
-                     </td>
-                     <td>
-                        <input type="hidden" id="synonymsids"/>
-                        <input type="hidden" id="term"/>
-                        <input type="hidden" id="synonymDescription"/>
-                        <input type="hidden" id="synonymId"/>
+                        <textarea class="form-control" th:field="*{similar}" rows="3"></textarea>
                      </td>
                   </tr>
+                  <tr>
+                   <td style="width:300px;">
+                      <label for="wordnetIds" class="formlabel">Wordnet</label>
+                   </td>
+                   <td>
+                      <textarea class="form-control" th:field="*{wordnetIds}" id="wordnetIds" rows="3"></textarea>
+                      <input type="hidden" th:field="*{existingWordnetIds}"/>
+                   </td>
+                </tr>
+                <tr>
+                <td><input type="hidden" th:field="*{conceptEntryList}"></td>
+                </tr>
+                <tr>
+            	<td><input type="text" name="conceptid" id="conceptid"
+                hidden="true" th:value="${conceptId}"></td>
+        		</tr>
                </tbody>
             </table>
             <div class="sectionHeading">
@@ -411,15 +423,18 @@
                   <input type="text" class="form-control" id="name" placeholder="Enter wrapper....">
                </div>
                <div class="row1-2">
-                  <label for="exampleFormControlInput1" class="formlabel">POS</label>
+                  <label for="selectDropdown" class="formlabel">POS</label>
                   <div class="custom-dropdown">
-                     <select class="selectDropdown" th:name="pos" id="pos">
-                        <option> Test
-                        </option>
+                     <select class="selectDropdown" id="pos">
+                        <option value="noun">Noun</option>
+	                    <option value="verb">Verb</option>
+	                    <option value="adverb">Adverb</option>
+	                    <option value="adjective">Adjective</option>
+	                    <option value="other">Other</option>
                      </select>
                   </div>
                   <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="searchconcept" name="searchconcept" type="button" style="margin: 0;">
-                  Search
+                  	Search
                   </button>
                </div>
             </div>
@@ -452,6 +467,7 @@
                Save changes
                </button>
             </div>
+            <input type="hidden" th:field="*{fromHomeScreen}" />
          </form>
       </div>
       <div th:insert="layouts/modals/Synonyms :: synonyms"></div>

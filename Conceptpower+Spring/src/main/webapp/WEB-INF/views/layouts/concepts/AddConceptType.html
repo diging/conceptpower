@@ -14,7 +14,7 @@
 	                     <label for="typeName"  class="formlabel">Type name</label>
 	                  </td>
 	                  <td>
-	                     <input type="text" th:name="typeName" class="form-control" placeholder="Enter type name....">
+	                     <input type="text" th:field="*{typeName}" class="form-control" placeholder="Enter type name....">
 	                     <div th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}"></div>
 	                  </td>
 	               </tr>
@@ -23,7 +23,7 @@
 	                     <label for="typeDescription"  class="formlabel">Type description</label>
 	                  </td>
 	                  <td>
-	                     <textarea class="form-control" th:name="typeDescription" rows="3" placeholder="Enter type description...."></textarea>
+	                     <textarea class="form-control" th:field="*{typeDescription}" rows="3" placeholder="Enter type description...."></textarea>
 	                     <div th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeName}"></div>
 	                  </td>
 	               </tr>
@@ -32,7 +32,7 @@
 	                     <label for="matches"  class="formlabel">Matches</label>
 	                  </td>
 	                  <td>
-	                     <textarea class="form-control" th:name="matches" rows="3"></textarea>
+	                     <textarea class="form-control" th:path="*{matches}" rows="3"></textarea>
 	                     <div th:if="${#fields.hasErrors('matches')}" th:errors="*{matches}"></div>
 	                  </td>
 	               </tr>
@@ -42,7 +42,7 @@
 	                  </td>
 	                  <td>
 	                  	<div class="custom-dropdown">
-		                     <select th:name="superType">
+		                     <select th:path="*{superType}">
 							    <option th:each="types: ${conceptTypeAddForm.types}" th:value="${types.value}" th:text="${types.value}">
 							    </option>
 					 		</select>

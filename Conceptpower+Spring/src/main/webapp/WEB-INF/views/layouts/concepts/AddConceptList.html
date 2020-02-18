@@ -5,7 +5,7 @@
    >
    <body class="body" layout:fragment="content">
          <div class="conceptType">
-            <h3 class="title">Add a new Concept List.</h3>
+            <h3 class="title">Add a new Concept List</h3>
             <form
 				th:action="@{/auth/concepts/createconceptlist}"
 				th:object="${conceptListAddForm}" method='post'>
@@ -16,7 +16,7 @@
 	                        <label for="listName" class="formlabel">List name</label>
 	                     </td>
 	                     <td>
-	                        <input type="text" class="form-control" name="listName" placeholder="Enter List name....">
+	                        <input type="text" class="form-control" th:field="*{listName}" placeholder="Enter List name....">
 	                        <div th:if="${#fields.hasErrors('listName')}" th:errors="*{listName}"></div>
 	                     </td>
 	                  </tr>
@@ -25,7 +25,7 @@
 	                        <label for="description" class="formlabel">List description</label>
 	                     </td>
 	                     <td>
-	                        <textarea class="form-control" name="description" placeholder="Enter List description...."></textarea>
+	                        <textarea class="form-control" th:field="*{description}" placeholder="Enter List description...."></textarea>
 	                        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
 	                     </td>
 	                  </tr>
