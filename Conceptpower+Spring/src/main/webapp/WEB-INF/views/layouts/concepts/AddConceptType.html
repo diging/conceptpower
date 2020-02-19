@@ -43,6 +43,7 @@
 	                  <td>
 	                  	<div class="custom-dropdown">
 		                     <select th:path="*{superType}">
+		                     	<option>N/A</option>
 							    <option th:each="types: ${conceptTypeAddForm.types}" th:value="${types.value}" th:text="${types.value}">
 							    </option>
 					 		</select>

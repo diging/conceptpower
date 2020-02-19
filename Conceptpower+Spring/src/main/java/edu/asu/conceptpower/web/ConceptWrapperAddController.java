@@ -89,11 +89,13 @@ public class ConceptWrapperAddController {
         ConceptEntry entry = null;
         try {
             entry = conceptManager.getWordnetConceptEntry(wrapperId);
-        } catch (LuceneException ex) {
+        } 
+        catch (LuceneException ex) {
             logger.error("Error while fetching concepts based on concept id", ex);
             return "/layouts/concepts/AddConceptWrapper";
         }
         ConceptWrapperAddBean conceptWrapperAddBean = new ConceptWrapperAddBean();
+        
         conceptWrapperAddBean.setDescription(entry.getDescription());
         conceptWrapperAddBean.setWord(entry.getWord());
         conceptWrapperAddBean.setSelectedConceptList(entry.getConceptList());

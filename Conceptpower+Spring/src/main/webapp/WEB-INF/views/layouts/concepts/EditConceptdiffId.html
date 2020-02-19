@@ -137,6 +137,8 @@
                            }
                        });
            };
+           
+           
            $(function() {
                $("#synonymsearch")
                        .click(
@@ -291,6 +293,7 @@
            $(document).ready(function() {
            	$("#addedSynonyms").hide();
            	$("addedSynonymsTable").hide();
+           	$("#conceptSearchDiv").hide();
            });
       </script>
    </head>
@@ -397,7 +400,7 @@
                   </tr>
                   <tr>
                    <td style="width:300px;">
-                      <label for="wordnetIds" class="formlabel">Wordnet</label>
+                      <label for="wordnetIds" class="formlabel">WordNet</label>
                    </td>
                    <td>
                       <textarea class="form-control" th:field="*{wordnetIds}" id="wordnetIds" rows="3"></textarea>
@@ -433,14 +436,16 @@
 	                    <option value="other">Other</option>
                      </select>
                   </div>
-                  <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="searchconcept" name="searchconcept" type="button" style="margin: 0;">
-                  	Search
-                  </button>
+                  <div id="clickableIcon">
+	                  <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="searchconcept" name="searchconcept" type="button" style="margin: 0;">
+	                  	Search
+	                  </button>
+                  </div>
                </div>
             </div>
-            <div id="conceptSearchDiv" style="display:none;">
+            <div id="conceptSearchDiv">
                <h4>The following concepts were found:</h4>
-               Click on the row to add the wordnet id
+               Click on the row to add the wordNet id
                <p></p>
                <table class="table table-striped table-bordered"
                   id="conceptSearch">

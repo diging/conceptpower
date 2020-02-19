@@ -6,289 +6,291 @@
    
    <head>
       <script>
-         $(function() {
-           $("#synonymModal").dialog({
-               autoOpen : false
-           });
-         });
-         $(document).ready(function(){
-           oTable = $('#conceptSearch').dataTable({
-               "bJQueryUI" : true,
-               "sPaginationType" : "full_numbers",
-               "bAutoWidth" : false,
-               //set row class to gradeX even if the row is selectable
-               "fnRowCallback" : function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                   if (aData[2] == aData[3]) {
-                       $(nRow).removeClass('odd');
-                       $(nRow).removeClass('even');
-                       $(nRow).addClass('gradeX even');
-                   } else {
-                       $(nRow).removeClass('odd');
-                       $(nRow).removeClass('even');
-                       $(nRow).addClass('gradeX odd');
-                   }
-               }
-           
-           });
-           
-         //		     Used for loading the wordnet ids when clicked on a row
-           $('body').delegate('#conceptSearch tbody tr', "click", "td button", function() {
-               var aData = oTable.fnGetData(this); // get datarow
-               
-               if (null != aData) // null if we clicked on title row
-               {
-                   var wordnetID = aData[2];
-                   var selectedWordNetIds = $("#wordnetIds").val();
-                   if(selectedWordNetIds.length == 0) {
-                       // Then just append
-                       selectedWordNetIds = wordnetID;
-                   } else if(selectedWordNetIds.indexOf(wordnetID) == -1) {
-                       selectedWordNetIds = selectedWordNetIds+','+wordnetID;
-                   }
-                   $("#wordnetIds").val(selectedWordNetIds);
-               }
-           });
-           
-         });
-         
-         
-         $(document).ready(function() {
-           
-           $('#name').keydown(function(event){
-               if(event.keyCode == 13) {
-                 event.preventDefault();
-                 $("#searchconcept").trigger("click");
-               }
-         });
-           
-           $("#searchconcept").click(function() {
-               $.ajax({
-                   type : "GET",
-                   url : "/conceptpower/conceptEdit/search",
-                   data : {
-                       concept : $("#name").val(),
-                       pos : $("#pos").val()
-                   },
-                   success : function(response) {
-                       var t = $('#conceptSearch').dataTable();
-                       t.clear().draw();
-                       for(var i=0; i< response.length; i++) {
-                           var conceptEntry = response[i].entry;
-                           
-                           var t = $('#conceptSearch').dataTable();
-                           t.row.add( [
-         						"<span id=\"clickableIcon\"><i title=\"Click to add wordnet id\" class=\"fa fa-plus\" id=\"addwrapper\" name=\"addwrapper\" aria-hidden=\"true\"></i></span>",
-                                       conceptEntry.word,
-                                       conceptEntry.id,
-                                       conceptEntry.wordnetId,
-                                       conceptEntry.pos,
-                                       conceptEntry.description
-                                   ] ).draw( false );
-                           
-                           // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
-                       }
-                       $('#conceptSearchDiv').show();  
-                   }, error : function(response) {
-                       var t = $('#conceptSearch').dataTable();
-                       t.clear().draw();
-                   }
-               });
-           });
-         });
-           $(function() {
-               $("#addsynonym").click(function() {
-                   $('#synonymstable').dataTable().fnClearTable();
-                   $("#synonymModal").dialog('open');
-                   $("#synonymsDialogTable").show();
-               });
-           });
-           $(document).ready(definedatatable);
-           $(document).ready(definedatatableForSynonymAdd);
-           function definedatatable() {
-               $('#synonymstable').dataTable(
-                       {
-                           "bJQueryUI" : true,
-                           "sPaginationType" : "full_numbers",
-                           "bAutoWidth" : false,
-                           "bStateSave" : true,
-                           "aoColumns" : [ {
-                               "sTitle" : "Term",
-                               "mDataProp" : "word",
-                           }, {
-                               "sTitle" : "POS",
-                               "mDataProp" : "pos",
-                           }, {
-                               "sTitle" : "Description",
-                               "mDataProp" : "description",
-                           }, {
-                               "sTitle" : "Add",
-                               "mDataProp" : "id"
-                           } ],
-                           "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
-                               var description = aData.description;
-                               description = description != null ? description
-                                       .replace(/"/g, '&quot;') : "";
-                               $('td:eq(3)', nRow).html(
-                                       '<a onclick="synonymAdd(\'' + aData.id
-                                               + '\',\'' + aData.word + '\',\''
-                                               + description + '\')">Add</a>');
-                               return nRow;
-                           }
-                       });
-           };
-           $(function() {
-               $("#synonymsearch")
-                       .click(
-                               function() {
-                                   $("#synonymViewDiv").show();
-                                   $('#synonymstable').dataTable().fnClearTable();
-                                   $("#synonymstable").show();
-                                   
-           var addedsynonym = $('#synonymsids').val();
-                                   var synonymname = $("#synonymname").val();
-                                   $
-                                           .ajax({
-                                               type : "GET",
-                                               url : "/conceptpower/conceptAddSynonymView",
-                                               data : {
-                                                   synonymname : synonymname,
-                                                   addedsynonym : addedsynonym
-                                               },
-                                               success : function(response) {
-                                                   var data = jQuery
-                                                           .parseJSON(response);
-                                                   $('#synonymstable').dataTable()
-                                                           .fnClearTable();
-                                                   $('#synonymstable').dataTable()
-                                                           .fnAddData(data);
-                                               },
-                                               error : function(httpStatus, response) {
-                                                   if (httpStatus.status == 409) {
-                                                       var errorMessage = "<i class=\"fa fa-exclamation-triangle\">"
-                                                               + httpStatus.responseText
-                                                               + "</i>";
-                                                       $("#synonymModal").dialog(
-                                                               "close");
-                                                       $('#synonymModal').modal(
-                                                               'toggle');
-                                                       $('#errorMessage').show();
-                                                       $('#error_alert_msg').html(
-                                                               errorMessage);
-                                                   }
-                                               }
-                                           });
-                               });
-           });
-           var synonymAdd = function(idValue, wrd, desc) {
-               $("#synonymModal").dialog("close");
-               $('#synonymModal').modal('toggle');
-               $("#synonymsDialogTable").hide();
-               var eachSynonym = {
-                   Id : idValue,
-                   Description : desc,
-                   Word : wrd
-               };
-               //Adding synonymId to the existing list
-               var list = document.getElementById("synonymsids").value;
-               list += eachSynonym.Id + ',';
-               $("#synonymsids").val(list);
-               $("#addedSynonyms").show();
-               $("#addedSynonymsTable").show();
-               $('#addedSynonymsTable').dataTable().fnAddData(eachSynonym);
-           }
-           function definedatatableForSynonymAdd() {
-               $('#addedSynonymsTable').dataTable(
-                       {
-                           "bJQueryUI" : true,
-                           "bAutoWidth" : false,
-                           "bStateSave" : true,
-                           "aoColumns" : [ {
-                               "sTitle" : "Remove",
-                               "mDataProp" : "Id"
-                           }, {
-                               "sTitle" : "Word",
-                               "mDataProp" : "Word",
-                           }, {
-                               "sTitle" : "Description",
-                               "mDataProp" : "Description",
-                           } ],
-                           "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
-                               $('td:eq(0)', nRow).html(
-                                       '<a onclick="synonymTemporaryRemove(\''
-                                               + aData.Id + '\')">Remove</a>');
-                               return nRow;
-                           },
-                           "fnCreatedRow" : function(nRow, aData, iDataIndex) {
-                               $(nRow).attr('id', aData.Id);
-                               $(nRow).attr('class', '');
-                           }
-                       });
-           };
-           $(document)
-                   .ready(
-                           function() {
-                               $('#synonyms').dataTable({
-                                   "bJQueryUI" : true,
-                                   "sPaginationType" : "full_numbers",
-                                   "bAutoWidth" : false
-                               });
-                               var conceptid = $('#conceptid').val();
-                               console.log(conceptid)
-                               $
-                                       .ajax({
-                                           type : "GET",
-                                           url : "/conceptpower/getConceptEditSynonyms",
-                                           data : {
-                                               conceptid : conceptid
-                                           },
-                                           success : function(response) {
-                                               var border = response.length > 0 ? 1
-                                                       : 0;
-                                               console.log(response)
-                                               var synonym = JSON.parse(response);
-                                               var total = synonym.Total;
-                                               // var arr = new Array();
-                                               for (var i = 0; i < total; i++) {
-                                                   $('#addedSynonymsTable')
-                                                           .dataTable()
-                                                           .fnAddData(
-                                                                   synonym.synonyms[i]);
-                                               }
-                                               if (total > 0) {
-                                                   $("#addedSynonyms").show();
-                                                   $("#addedSynonymsTable").show();
-                                               }
-                                           }
-                                       });
-                           });
-           
-           var synonymTemporaryRemove = function(synonymid) {
-               var count = $('#addedSynonymsTable tr').length;
-               var synonymTable = $("#addedSynonymsTable").dataTable();
-               var tableRow = $('#' + synonymid);
-               synonymTable.fnDeleteRow(synonymTable
-                       .fnGetPosition(tableRow.find('td')[0])[0]);
-               //Removing synonymId from existing list
-               var list = document.getElementById("synonymsids").value;
-               document.getElementById("synonymsids").value = removeList(list,
-                       synonymid, ',');
-           };
-           var removeList = function(list, synonymid, separator) {
-               separator = separator || ",";
-               var values = list.split(separator);
-               for (var i = 0; i < values.length; i++) {
-                   if (values[i] == synonymid) {
-                       values.splice(i, 1);
-                       return values.join(separator);
-                   }
-               }
-               return list;
-           };   
-           
-           $(document).ready(function() {
-           	$("#addedSynonyms").hide();
-           	$("addedSynonymsTable").hide();
-           });
+      $(function() {
+          $("#synonymModal").dialog({
+              autoOpen : false
+          });
+        });
+        $(document).ready(function(){
+          oTable = $('#conceptSearch').dataTable({
+              "bJQueryUI" : true,
+              "sPaginationType" : "full_numbers",
+              "bAutoWidth" : false,
+              //set row class to gradeX even if the row is selectable
+              "fnRowCallback" : function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                  if (aData[2] == aData[3]) {
+                      $(nRow).removeClass('odd');
+                      $(nRow).removeClass('even');
+                      $(nRow).addClass('gradeX even');
+                  } else {
+                      $(nRow).removeClass('odd');
+                      $(nRow).removeClass('even');
+                      $(nRow).addClass('gradeX odd');
+                  }
+              }
+          
+          });
+          
+        //		     Used for loading the wordnet ids when clicked on a row
+          $('body').delegate('#conceptSearch tbody tr', "click", "td button", function() {
+              var aData = oTable.fnGetData(this); // get datarow
+              
+              if (null != aData) // null if we clicked on title row
+              {
+                  var wordnetID = aData[2];
+                  var selectedWordNetIds = $("#wordnetIds").val();
+                  if(selectedWordNetIds.length == 0) {
+                      // Then just append
+                      selectedWordNetIds = wordnetID;
+                  } else if(selectedWordNetIds.indexOf(wordnetID) == -1) {
+                      selectedWordNetIds = selectedWordNetIds+','+wordnetID;
+                  }
+                  $("#wordnetIds").val(selectedWordNetIds);
+              }
+          });
+          
+        });
+        
+        
+        $(document).ready(function() {
+          
+          $('#name').keydown(function(event){
+              if(event.keyCode == 13) {
+                event.preventDefault();
+                $("#searchconcept").trigger("click");
+              }
+        });
+          
+          $("#searchconcept").click(function() {
+              $.ajax({
+                  type : "GET",
+                  url : "/conceptpower/conceptEdit/search",
+                  data : {
+                      concept : $("#name").val(),
+                      pos : $("#pos").val()
+                  },
+                  success : function(response) {
+                      var t = $('#conceptSearch').dataTable();
+                      t.clear().draw();
+                      for(var i=0; i< response.length; i++) {
+                          var conceptEntry = response[i].entry;
+                          
+                          var t = $('#conceptSearch').dataTable();
+                          t.row.add( [
+        						"<span id=\"clickableIcon\"><i title=\"Click to add wordnet id\" class=\"fa fa-plus\" id=\"addwrapper\" name=\"addwrapper\" aria-hidden=\"true\"></i></span>",
+                                      conceptEntry.word,
+                                      conceptEntry.id,
+                                      conceptEntry.wordnetId,
+                                      conceptEntry.pos,
+                                      conceptEntry.description
+                                  ] ).draw( false );
+                          
+                          // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
+                      }
+                      $('#conceptSearchDiv').show();  
+                  }, error : function(response) {
+                      var t = $('#conceptSearch').dataTable();
+                      t.clear().draw();
+                  }
+              });
+          });
+        });
+          $(function() {
+              $("#addsynonym").click(function() {
+                  $('#synonymstable').dataTable().fnClearTable();
+                  $("#synonymModal").dialog('open');
+                  $("#synonymsDialogTable").show();
+              });
+          });
+          $(document).ready(definedatatable);
+          $(document).ready(definedatatableForSynonymAdd);
+          function definedatatable() {
+              $('#synonymstable').dataTable(
+                      {
+                          "bJQueryUI" : true,
+                          "sPaginationType" : "full_numbers",
+                          "bAutoWidth" : false,
+                          "bStateSave" : true,
+                          "aoColumns" : [ {
+                              "sTitle" : "Term",
+                              "mDataProp" : "word",
+                          }, {
+                              "sTitle" : "POS",
+                              "mDataProp" : "pos",
+                          }, {
+                              "sTitle" : "Description",
+                              "mDataProp" : "description",
+                          }, {
+                              "sTitle" : "Add",
+                              "mDataProp" : "id"
+                          } ],
+                          "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
+                              var description = aData.description;
+                              description = description != null ? description
+                                      .replace(/"/g, '&quot;') : "";
+                              $('td:eq(3)', nRow).html(
+                                      '<a onclick="synonymAdd(\'' + aData.id
+                                              + '\',\'' + aData.word + '\',\''
+                                              + description + '\')">Add</a>');
+                              return nRow;
+                          }
+                      });
+          };
+          $(function() {
+              $("#synonymsearch")
+                      .click(
+                              function() {
+                                  $("#synonymViewDiv").show();
+                                  $('#synonymstable').dataTable().fnClearTable();
+                                  $("#synonymstable").show();
+                                  
+          						  var addedsynonym = $('#synonymsids').val();
+                                  var synonymname = $("#synonymname").val();
+                                  
+                                  console.log(addedsynonym)
+                                  $
+                                          .ajax({
+                                              type : "GET",
+                                              url : "/conceptpower/conceptAddSynonymView",
+                                              data : {
+                                                  synonymname : synonymname,
+                                                  addedsynonym : addedsynonym
+                                              },
+                                              success : function(response) {
+                                                  var data = jQuery
+                                                          .parseJSON(response);
+                                                  $('#synonymstable').dataTable()
+                                                          .fnClearTable();
+                                                  $('#synonymstable').dataTable()
+                                                          .fnAddData(data);
+                                              },
+                                              error : function(httpStatus, response) {
+                                                  if (httpStatus.status == 409) {
+                                                      var errorMessage = "<i class=\"fa fa-exclamation-triangle\">"
+                                                              + httpStatus.responseText
+                                                              + "</i>";
+                                                      $("#synonymModal").dialog(
+                                                              "close");
+                                                      $('#synonymModal').modal(
+                                                              'toggle');
+                                                      $('#errorMessage').show();
+                                                      $('#error_alert_msg').html(
+                                                              errorMessage);
+                                                  }
+                                              }
+                                          });
+                              });
+          });
+          var synonymAdd = function(idValue, wrd, desc) {
+              $("#synonymModal").dialog("close");
+              $('#synonymModal').modal('toggle');
+              $("#synonymsDialogTable").hide();
+              var eachSynonym = {
+                  Id : idValue,
+                  Description : desc,
+                  Word : wrd
+              };
+              //Adding synonymId to the existing list
+              var list = document.getElementById("synonymsids").value;
+              list += eachSynonym.Id + ',';
+              $("#synonymsids").val(list);
+              $("#addedSynonyms").show();
+              $("#addedSynonymsTable").show();
+              $('#addedSynonymsTable').dataTable().fnAddData(eachSynonym);
+          }
+          function definedatatableForSynonymAdd() {
+              $('#addedSynonymsTable').dataTable(
+                      {
+                          "bJQueryUI" : true,
+                          "bAutoWidth" : false,
+                          "bStateSave" : true,
+                          "aoColumns" : [ {
+                              "sTitle" : "Remove",
+                              "mDataProp" : "Id"
+                          }, {
+                              "sTitle" : "Word",
+                              "mDataProp" : "Word",
+                          }, {
+                              "sTitle" : "Description",
+                              "mDataProp" : "Description",
+                          } ],
+                          "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
+                              $('td:eq(0)', nRow).html(
+                                      '<a onclick="synonymTemporaryRemove(\''
+                                              + aData.Id + '\')">Remove</a>');
+                              return nRow;
+                          },
+                          "fnCreatedRow" : function(nRow, aData, iDataIndex) {
+                              $(nRow).attr('id', aData.Id);
+                              $(nRow).attr('class', '');
+                          }
+                      });
+          };
+          $(document)
+                  .ready(
+                          function() {
+                       	   //There is no synonym table but used. Commented it for now.
+                             /*  $('#synonyms').dataTable({
+                                  "bJQueryUI" : true,
+                                  "sPaginationType" : "full_numbers",
+                                  "bAutoWidth" : false
+                              }); */
+                              var conceptid = $('#conceptid').val();
+                              
+                              $
+                                      .ajax({
+                                          type : "GET",
+                                          url : "/conceptpower/getConceptEditSynonyms",
+                                          data : {
+                                              conceptid : conceptid
+                                          },
+                                          success : function(response) {
+                                              var border = response.length > 0 ? 1
+                                                      : 0;
+                                              var synonym = JSON.parse(response);
+                                              var total = synonym.Total;
+                                              // var arr = new Array();
+                                              for (var i = 0; i < total; i++) {
+                                                  $('#addedSynonymsTable')
+                                                          .dataTable()
+                                                          .fnAddData(
+                                                                  synonym.synonyms[i]);
+                                              }
+                                              if (total > 0) {
+                                                  $("#addedSynonyms").show();
+                                                  $("#addedSynonymsTable").show();
+                                              }
+                                          }
+                                      });
+                          });
+          
+          var synonymTemporaryRemove = function(synonymid) {
+              var count = $('#addedSynonymsTable tr').length;
+              var synonymTable = $("#addedSynonymsTable").dataTable();
+              var tableRow = $('#' + synonymid);
+              synonymTable.fnDeleteRow(synonymTable
+                      .fnGetPosition(tableRow.find('td')[0])[0]);
+              //Removing synonymId from existing list
+              var list = document.getElementById("synonymsids").value;
+              document.getElementById("synonymsids").value = removeList(list,
+                      synonymid, ',');
+          };
+          var removeList = function(list, synonymid, separator) {
+              separator = separator || ",";
+              var values = list.split(separator);
+              for (var i = 0; i < values.length; i++) {
+                  if (values[i] == synonymid) {
+                      values.splice(i, 1);
+                      return values.join(separator);
+                  }
+              }
+              return list;
+          };   
+          
+          $(document).ready(function() {
+          	$("#addedSynonyms").hide();
+          	$("addedSynonymsTable").hide();
+          });
       </script>
    </head>
    
@@ -296,7 +298,10 @@
       <div class="newConcept">
          <h3 class="title">Add a new WordNet concept wrapper</h3>
          <h4 style="text-align: center; margin-top: 35px;">Add a wrapper for concept in WordNet. Do that if you, for example, want to attach an<br/>"equals to" URI to a concept that already exists in WordNet.</h4>
-         <form th:object="${conceptEditBean}" th:action="@{/auth/conceptlist/editconcept/edit/'+${conceptId}}" method='post'>
+         <form 
+         		th:object="${conceptEditBean}" 
+         		th:action="@{/auth/conceptlist/editconcept/edit/'+${conceptId}}" 
+         		method='post' id="createconceptform">
             <div class="wordnet1">
                <div class="sectionHeading">
                   <h4 class="numeration">1</h4>
@@ -327,36 +332,22 @@
                   <label class="formlabel" style="width: 500px;">Select WordNet concept from search results</label>
                </div>
                <h4 style="text-align: center; margin-top: 35px;">The following concepts were found.<br/>Remember! You can only create wrapper for concepts in WordNet.</h4>
-               <table class="table table-striped resultTable tableStyles" >
-                  <thead>
-                     <tr>
-                        <th></th>
-                        <th scope="col">Concept</th>
-                        <th scope="col">WordNet ID</th>
-                        <th scope="col">Description</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td></td>
-                        <td>word</td>
-                        <td>fihwdncsdknlc</td>
-                        <td>jkasdbv;kcjbv zcn;osdvhi;osdvb</td>
-                     </tr>
-                     <tr>
-                        <td></td>
-                        <td>word</td>
-                        <td>fihwdncsdknlc</td>
-                        <td>jkasdbv;kcjbv zcn;osdvhi;osdvb</td>
-                     </tr>
-                     <tr>
-                        <td></td>
-                        <td>word</td>
-                        <td>fihwdncsdknlc</td>
-                        <td>jkasdbv;kcjbv zcn;osdvhi;osdvb</td>
-                     </tr>
-                  </tbody>
-               </table>
+               <table class="table table-striped resultTable tableStyles">
+		            <thead>
+		               <tr>
+		                  <th th:text="Concept"></th>
+		                  <th th:text="WordnetId"></th>
+		                  <th th:text="description"></th>
+		               </tr>
+		            </thead>
+		            <tbody>
+		               <tr th:each="conceptEntry: ${conceptEditBean}">
+		                  <td th:text="${conceptEntry.word}"></td>
+		                  <td th:text="${conceptEntry.wordnetIds}"></td>
+		                  <td th:text="${conceptEntry.description}"></td>
+		               </tr>
+		            </tbody>
+	         </table>
             </div>
             <div class="wordnet1">
                <div class="sectionHeading">
@@ -380,17 +371,22 @@
                   <label style="width:172px;">Description</label>
                   <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" th:text="${conceptEditBean.description}"></textarea>
                </div>
-               <div class="formlabel row">
+               <div class="formlabel row" style="display: block;">
+               <div style="display: flex; justify-content: space-between;">
+               	<div>
                   <label style="width:172px;">Synonyms</label>
-                  <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" style="margin:0;" type="submit">
-                  <i class="fa fa-plus" aria-hidden="true"></i> Synonyms	
+                  <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="addsynonym" name="synonym" type="button" data-toggle="modal" data-target="#synonyms">
+                  <i class="fa fa-plus" aria-hidden="true"></i>Add Synonym
                   </button>
-                  <div id="addedSynonyms">
+                  <input type="hidden" th:field="*{synonymsids}"></input>
+                </div>
+                  <div id="addedSynonyms" style="font-size: 14px; width: 600px;">
                      <table border="1" style="width: 400px;" id="addedSynonymsTable" hidden="true" class="table table-striped table-bordered">
                         <tbody>
                         </tbody>
                      </table>
                   </div>
+               </div>
                </div>
                <div class="formlabel row">
                   <label for="exampleFormControlInput1" style="width:172px;">Concept type</label>
@@ -402,15 +398,14 @@
                   </div>
                </div>
                <div class="formlabel row">
-                  <label style="width:172px;">External Authority Service Links</label>
+                  <label style="width:300px;">External Authority Service Links</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1" th:text="${conceptEditBean.equals}">
                </div>
                <div class="formlabel row">
-                  <label style="width:172px;">Links to other services</label>
+                  <label style="width:300px;">Links to other services</label>
                   <input type="text" class="form-control" id="exampleFormControlInput1" th:text="${conceptEditBean.similar}">
                </div>
             </div>
-         </form>
          <div class="btnCenter">
             <a th:href="@{'/home/conceptsearch/?word='+${conceptEditBean.word}+'&pos='+${conceptEditBean.selectedPosValue}}"><button class="btn btn-outline-success my-2 my-sm-0 cancelTypeBtn" type="button" >
             Cancel
@@ -419,6 +414,8 @@
             Create WordNet concept wrapper
             </button>
          </div>
+         <input type="hidden" th:field="*{fromHomeScreen}" />
+       </form>
       </div>
       <div th:insert="layouts/modals/Synonyms :: synonyms"></div>
    </body>

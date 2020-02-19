@@ -62,14 +62,14 @@ public class ConceptTypeEditController {
 
         ConceptType type = typeManager.getType(typeid);
         
-        if (type.getSupertypeId().trim().isEmpty()) {
+        if (type.getSupertypeId()==null) {
             conceptTypeAddForm.setSuperType("none");
         }
         conceptTypeAddForm.setTypeName(type.getTypeName());
         conceptTypeAddForm.setOldTypeName(type.getTypeName());
         conceptTypeAddForm.setTypeDescription(type.getDescription());
         conceptTypeAddForm.setMatches(type.getMatches());
-        conceptTypeAddForm.setSuperType(type.getSupertypeId().trim());
+        conceptTypeAddForm.setSuperType(type.getSupertypeId());
         conceptTypeAddForm.setTypeid(type.getTypeId());
 
         ConceptType[] allTypes = typeManager.getAllTypes();
@@ -111,9 +111,11 @@ public class ConceptTypeEditController {
 
         String userId = usersManager.findUser(principal.getName()).getUsername();
         String modified = type.getModified() != null ? type.getModified() : "";
-        if (!modified.trim().isEmpty())
-            modified += ", ";
-        type.setModified(modified + userId + "@" + (new Date()).toString());
+//        if (!modified.trim().isEmpty()) 
+//           modified+=",";
+            
+        type.setModified(userId + "@" + (new Date()).toString());
+        
 
         typeManager.storeModifiedConceptType(type);
         return "redirect:/auth/concepttype";

@@ -485,7 +485,7 @@
                   </tbody>
                </table>
             </div>
-            <table class="conceptForm">
+            <table class="conceptForm" style="margin-top: 0px;">
                <tbody>
                   <tr>
                      <td style="width:172px;">
@@ -497,8 +497,10 @@
                      </td>
                   </tr>
                   <tr>
-                     <td class="drpSpacing">
+                     <td class="drpSpacing" style="width:172px;">
                         <label for="pos" class="formlabel">POS</label>
+                     </td>
+                     <td>
                         <div class="custom-dropdown">
                            <select th:field="*{pos}" class="POS">
                               <option value="">Please select</option>
@@ -511,17 +513,19 @@
                            <div th:if="${#fields.hasErrors('pos')}" th:errors="*{pos}"></div>
                         </div>
                      </td>
+                  </tr>
+                  <tr>
+                     <td style="width:172px;">
+                         <label for="selectedList" class="formlabel">Concept List</label>
+                     </td>
                      <td>
-                        <div class="drpSpacing">
-                           <label for="selectedList" class="formlabel">Concept List</label>
-                           <div class="custom-dropdown" >
-                              <select th:field="*{selectedList}" class="POS">
-                                 <option th:each="item: ${conceptAddBean.lists}" th:value="${item.key}" th:text="${item.value}">
-                                 </option>
-                              </select>
-                              <div th:if="${#fields.hasErrors('selectedList')}" th:errors="*{selectedList}"></div>
-                           </div>
-                        </div>
+                         <div class="custom-dropdown" >
+                            <select th:field="*{selectedList}" class="POS">
+                               <option th:each="item: ${conceptAddBean.lists}" th:value="${item.key}" th:text="${item.value}">
+                               </option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('selectedList')}" th:errors="*{selectedList}"></div>
+                         </div>
                      </td>
                   </tr>
                   <tr>
