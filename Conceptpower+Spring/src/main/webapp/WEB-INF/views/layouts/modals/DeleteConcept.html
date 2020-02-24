@@ -11,6 +11,16 @@
             	<form
             		th:action="@{'/auth/conceptlist/deleteconceptconfirm/'+${conceptid}+'?fromHomeScreenDelete=true&listName='+${conceptList}}"
 					method='post' id="deleteConfirmForm">
+					<ul class="list-group" style="margin-bottom: 0px;">
+	                  <li class="list-group-item">
+	                     <span class="conceptDetailsKey">Concept Id:</span>
+	                     <p class="conceptDetailsValue" id="conceptDetailsId" th:text="${conceptId}" ></p>
+	                  </li>
+	                  <li class="list-group-item list-group-item-info">
+	                     <span class="conceptDetailsKey">Word:</span>
+	                     <p class="conceptDetailsValue" id="conceptDetailsUri" th:text="${word}"></p>
+	                  </li>
+                  </ul>
 					<div>
 						<input type="hidden" th:value="${word}" name="word" />
 						<input type="hidden" th:value="${description}" name="description" />

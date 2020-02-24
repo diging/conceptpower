@@ -240,6 +240,11 @@ table{
 	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
 }
 
+.fa-trash-o{
+	color:	#d54854;
+	cursor: pointer;
+}
+
 
 .signInBtn:hover {
 	background-color: #4f3acc;

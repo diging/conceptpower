@@ -7,6 +7,9 @@
       <div class="newConcept">
          <h3 class="title">Add a new WordNet concept wrapper</h3>
          <h4 style="text-align: center; margin-top: 35px;">Add a wrapper for concept in WordNet. Do that if you, for example, want to attach an<br/>"equals to" URI to a concept that already exists in WordNet.</h4>
+         <form 
+			th:action="@{'/auth/conceptlist/addconceptwrapper/conceptsearch'}" 
+			method='post' id="createconceptform">
          <div class="wordnet1">
             <div class="sectionHeading">
                <h4 class="numeration">1</h4>
@@ -14,67 +17,69 @@
             </div>
             <div>
                <div class="formlabel row">
-                  <label>Create wrapper for concept</label>
-                  <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter wrapper....">
+                  <label for="name" >Create wrapper for concept</label>
+                  <input type="text" class="form-control" name="name" id="name" placeholder="Enter wrapper....">
                </div>
                <div class="row1-2">
-                  <label for="exampleFormControlInput1" class="formlabel">POS</label>
-                  <div class="btn-group">
-                     <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="margin-right: 35px;">
-                        Action
-                        <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                           <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-                           <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-                           <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-                           <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-                        </ul>
-                     </div>
-                  </div>
+                  <label for="pos" class="formlabel">POS</label>
+                   <select name="pos" class="form-control">
+	                    <option value="noun">Nouns</option>
+	                    <option value="verb">Verb</option>
+	                    <option value="adverb">Adverb</option>
+	                    <option value="adjective">Adjective</option>
+	                    <option value="other">Other</option>
+            		</select>
                   <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" style="margin: 0;" type="submit">
                   Search
                   </button>
                </div>
             </div>
          </div>
+         </form>
+         
+		<form th:action="@{/auth/conceptlist/addconceptwrapper/add}" method='post' th:object="${conceptWrapperAddBean}"> 
          <div class="wordnet1">
             <div class="sectionHeading">
                <h4 class="numeration">2</h4>
                <label class="formlabel" style="width: 500px;">Select WordNet concept from search results</label>
             </div>
             <h4 style="text-align: center; margin-top: 35px;">The following concepts were found.<br/>Remember! You can only create wrapper for concepts in WordNet.</h4>
+            
+            <div th:if="${result}">
             <table class="table table-striped resultTable tableStyles" >
                <thead>
                   <tr>
                      <th></th>
-                     <th scope="col">Concept</th>
+                     <th scope="col">Term</th>
+                     <th scope="col">ID</th>
                      <th scope="col">WordNet ID</th>
+                     <th scope="col">POS</th>
+                     <th scope="col">Concept List</th>
                      <th scope="col">Description</th>
+                     <th scope="col">Type</th>
+                     <th scope="col">Synonyms</th>
                   </tr>
                </thead>
                <tbody>
-                  <tr>
+                  <tr th:each="concept : ${result}">
                      <td></td>
-                     <td>word</td>
-                     <td>fihwdncsdknlc</td>
-                     <td>jkasdbv;kcjbv zcn;osdvhi;osdvb</td>
-                  </tr>
-                  <tr>
-                     <td></td>
-                     <td>word</td>
-                     <td>fihwdncsdknlc</td>
-                     <td>jkasdbv;kcjbv zcn;osdvhi;osdvb</td>
-                  </tr>
-                  <tr>
-                     <td></td>
-                     <td>word</td>
-                     <td>fihwdncsdknlc</td>
-                     <td>jkasdbv;kcjbv zcn;osdvhi;osdvb</td>
+                     <td th:text="${concept.entry.word}"></td>
+                     <td th:text="${concept.entry.id}"></td>
+                     <td th:text="${concept.entry.wordnetId}"></td>
+                     <td th:text="${concept.entry.pos}"></td>
+                     <td th:text="${concept.entry.conceptList}"></td>
+                     <td th:text="${concept.description}"></td>
+                     <td th:text="${concept.type != null} ? ${concept.type.typeName} :''"></td>
+                     <td>
+                     	<div th:each="syn : ${concept.synonyms}">
+                     		<div th:text="${syn.word}"></div>
+                     	</div>
+                     </td>
                   </tr>
                </tbody>
             </table>
+                
+            </div>
          </div>
          <div class="wordnet1">
             <div class="sectionHeading">
@@ -143,6 +148,7 @@
             Create WordNet concept wrapper
             </button>
          </div>
+         </form>
       </div>
    </body>
 </html>

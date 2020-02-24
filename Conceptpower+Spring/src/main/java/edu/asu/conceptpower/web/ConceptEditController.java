@@ -124,7 +124,7 @@ public class ConceptEditController {
             return "/layouts/concepts/EditConceptdiffId";
         }
         else {
-            return "/layouts/concepts/EditConcept";
+            return "/layouts/concepts/AddConceptWrapper";
         }
     }
 

@@ -200,21 +200,23 @@
          }
          
          $(document).ready(function() {
-         $(document).on('click','.deleteBtn', function(e){
-         var conceptId = $(this).data().conceptid;
-         console.log(conceptId)
-         $.ajax({
-         type : "GET",
-         url : '/conceptpower/auth/conceptlist/deleteconcept/'+conceptId,
-         contentType:"application/json",
-         success : function(data) {
-         console.log(data)
-         $('#deleteModalPlugin').html(data);
-         $('#deleteConcept').modal('show');
-         }
+	         $(document).on('click','#openDeleteModal', function(e){
+	         var conceptId = $(this).data().conceptid;
+		         $.ajax({
+				         type : "GET",
+				         url : '/conceptpower/auth/conceptlist/deleteconcept/'+conceptId,
+				         contentType:"application/json",
+				         success : function(data) {
+				         $('#deleteModalPlugin').html(data);
+				         $('#deleteConcept').modal('show');
+			         }
+		         });
+	         });
          });
-         });
-         });
+         
+         $(document).on('hidden.bs.modal', '#deleteModalPlugin',function(event) {
+     		$('#deleteModalPlugin').empty();
+     	});
          
          $(function(){
          $(".custom-select").click(function(){
@@ -335,15 +337,14 @@
             <tbody id="tableData">
                <tr th:each="concept: ${conceptSearchBean.foundConcepts}">
                   <td sec:authorize="isAuthenticated()" id="editConceptModal">
-                     <div class="dropdown" >
-                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                        <div class="cardLayout dropdown-menu" role="menu">
-                           <div class="card-body">
-                              <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'+'&searchWord='+${conceptSearchBean.word}}" class="btn btn-primary" id="editBtn">Edit Concept</a>
-                              <button class="btn btn-primary deleteBtn" id="deleteBtn" th:data-conceptId="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept">Delete</button>
-                           </div>
-                        </div>
-                     </div>
+      
+                     <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'+'&searchWord='+${conceptSearchBean.word}}" 
+                        role="button" aria-expanded="false">
+                       	<i class="fa fa-pencil-square-o dropright" aria-hidden="true">
+                       	</i>
+                  	</a>
+                    <i class="fa fa-trash-o" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept"></i>
+                        	
                   </td>
                   <td sec:authorize="isAuthenticated()">
                      <input type="checkbox"  id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
