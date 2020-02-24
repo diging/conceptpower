@@ -73,19 +73,19 @@
                    url : '/conceptpower/conceptEdit/search/',
                    success : function(response) {
                        var t = $('#conceptSearch').dataTable();
-                       //t.clear().draw();
+                       t.fnClearTable();
                        for(var i=0; i< response.length; i++) {
                            var conceptEntry = response[i].entry;
                            
                            var t = $('#conceptSearch').dataTable();
-                           t.row.add( [
+                           t.fnAddData( [
          						"<span id=\"clickableIcon\"><i title=\"Click to add wordnet id\" class=\"fa fa-plus\" id=\"addwrapper\" name=\"addwrapper\" aria-hidden=\"true\"></i></span>",
                                        conceptEntry.word,
                                        conceptEntry.id,
                                        conceptEntry.wordnetId,
                                        conceptEntry.pos,
                                        conceptEntry.description
-                                   ] ).draw( false );
+                                   ] );
                            
                            // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
                        }
