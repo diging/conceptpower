@@ -213,7 +213,7 @@ public class LuceneUtility implements ILuceneUtility {
                             }
                         } else {
                             doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
-                                    contentOfField, Field.Store.YES));
+                                    contentOfField.toLowerCase(), Field.Store.YES));
                         }
 
                     }

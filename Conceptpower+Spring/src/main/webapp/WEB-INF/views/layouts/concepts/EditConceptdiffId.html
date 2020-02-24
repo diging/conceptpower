@@ -7,6 +7,7 @@
    >
    <head>
       <script>
+      //# sourceURL=search.js
          $(function() {
            $("#synonymModal").dialog({
                autoOpen : false
@@ -65,14 +66,14 @@
            $("#searchconcept").click(function() {
                $.ajax({
                    type : "GET",
-                   url : "/conceptpower/conceptEdit/search",
                    data : {
                        concept : $("#name").val(),
                        pos : $("#pos").val()
                    },
+                   url : '/conceptpower/conceptEdit/search/',
                    success : function(response) {
                        var t = $('#conceptSearch').dataTable();
-                       t.clear().draw();
+                       //t.clear().draw();
                        for(var i=0; i< response.length; i++) {
                            var conceptEntry = response[i].entry;
                            
@@ -89,20 +90,23 @@
                            // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
                        }
                        $('#conceptSearchDiv').show();  
-                   }, error : function(response) {
+                   }, 
+                   error : function(response) {
                        var t = $('#conceptSearch').dataTable();
                        t.clear().draw();
                    }
                });
            });
          });
-           $(function() {
+           
+         $(function() {
                $("#addsynonym").click(function() {
                    $('#synonymstable').dataTable().fnClearTable();
                    $("#synonymModal").dialog('open');
                    $("#synonymsDialogTable").show();
                });
            });
+         
            $(document).ready(definedatatable);
            $(document).ready(definedatatableForSynonymAdd);
            function definedatatable() {
@@ -436,11 +440,9 @@
 	                    <option value="other">Other</option>
                      </select>
                   </div>
-                  <div id="clickableIcon">
 	                  <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="searchconcept" name="searchconcept" type="button" style="margin: 0;">
 	                  	Search
 	                  </button>
-                  </div>
                </div>
             </div>
             <div id="conceptSearchDiv">
