@@ -45,7 +45,7 @@
             </div>
             <h4 style="text-align: center; margin-top: 35px;">The following concepts were found.<br/>Remember! You can only create wrapper for concepts in WordNet.</h4>
             
-            <div th:if="${result}">
+            <div th:if="${result!=null && result.size() > 0}">
             <table class="table table-striped resultTable tableStyles" >
                <thead>
                   <tr>
@@ -79,8 +79,24 @@
                </tbody>
             </table>
                 
-            </div>
-         </div>
+            </div >
+                 <table th:if=${conceptEditBean} class="table table-striped resultTable tableStyles">
+		            <thead>
+		               <tr>
+		                  <th th:text="Concept"></th>
+		                  <th th:text="WordnetId"></th>
+		                  <th th:text="description"></th>
+		               </tr>
+		            </thead>
+		            <tbody>
+		               <tr th:each="conceptEntry: ${conceptEditBean}">
+		                  <td th:text="${conceptEntry.word}"></td>
+		                  <td th:text="${conceptEntry.wordnetIds}"></td>
+		                  <td th:text="${conceptEntry.description}"></td>
+		               </tr>
+		            </tbody>
+	         </table>
+         	</div>
          <div class="wordnet1">
             <div class="sectionHeading">
                <h4 class="numeration">3</h4>
