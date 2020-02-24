@@ -22,13 +22,15 @@
                </div>
                <div class="row1-2">
                   <label for="pos" class="formlabel">POS</label>
-                   <select name="pos" class="form-control">
-	                    <option value="noun">Nouns</option>
-	                    <option value="verb">Verb</option>
-	                    <option value="adverb">Adverb</option>
-	                    <option value="adjective">Adjective</option>
-	                    <option value="other">Other</option>
-            		</select>
+                  <div class="custom-dropdown">
+	                   <select name="pos">
+		                    <option value="noun">Nouns</option>
+		                    <option value="verb">Verb</option>
+		                    <option value="adverb">Adverb</option>
+		                    <option value="adjective">Adjective</option>
+		                    <option value="other">Other</option>
+	            		</select>
+            		</div>
                   <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" style="margin: 0;" type="submit">
                   Search
                   </button>
@@ -104,59 +106,43 @@
             </div>
             <div class="formlabel row">
                <label style="width:172px;">Word</label>
-               <input type="text" class="form-control" id="exampleFormControlInput1">
+               <input type="text" class="form-control" id="exampleFormControlInput1" th:value="${conceptEditBean.word}">
             </div>
             <div class="formlabel row">
-               <label for="exampleFormControlInput1" style="width:172px;">Concept list</label>
-               <div class="btn-group">
-                  <div class="dropdown">
-                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                     Action
-                     <span class="caret"></span>
-                     </button>
-                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-                     </ul>
-                  </div>
-               </div>
-            </div>
+             <label for="exampleFormControlInput1" style="width:172px;">Concept list</label>
+             <div class="custom-dropdown">
+                <select th:name="selectedList" class="POS">
+                   <option th:each="item: ${conceptEditBean.conceptList}" th:value="${item.id}" th:text="${item.conceptListName}">
+                   </option>
+                </select>
+             </div>
+          </div>
             <div class="formlabel row">
                <label style="width:172px;">Description</label>
-               <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter description...."></textarea>
+               <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" th:text="${conceptEditBean.description}" placeholder="Enter description...."></textarea>
             </div>
-            <div class="formlabel row">
+            <!-- <div class="formlabel row">
                <label style="width:172px;">Synonyms</label>
                <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" style="margin:0;" type="submit">
                <i class="fa fa-plus" aria-hidden="true"></i> Synonyms	
                </button>
-            </div>
+            </div> -->
             <div class="formlabel row">
                <label for="exampleFormControlInput1" style="width:172px;">Concept type</label>
-               <div class="btn-group">
-                  <div class="dropdown">
-                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                     Action
-                     <span class="caret"></span>
-                     </button>
-                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-                     </ul>
-                  </div>
+               <div class="custom-dropdown">
+                  <select class="POS">
+                     <option th:each="type: ${conceptEditBean.types}" th:value="${type.typeId}" th:text="${type.typeName}">
+                     </option>
+                  </select>
                </div>
             </div>
             <div class="formlabel row">
                <label style="width:172px;">Equals</label>
-               <input type="text" class="form-control" id="exampleFormControlInput1">
+               <input type="text" class="form-control" id="exampleFormControlInput1" th:text="${conceptEditBean.equals}">
             </div>
             <div class="formlabel row">
                <label style="width:172px;">Similar to</label>
-               <input type="text" class="form-control" id="exampleFormControlInput1">
+               <input type="text" class="form-control" id="exampleFormControlInput1" >
             </div>
          </div>
          <div class="btnCenter">
