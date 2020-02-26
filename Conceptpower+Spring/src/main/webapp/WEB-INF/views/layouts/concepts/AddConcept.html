@@ -442,7 +442,7 @@
             th:action="@{/auth/conceptlist/addconcept/add}"
             th:object="${conceptAddBean}" method='post'
             id="createconceptform">
-            <table class="conceptForm">
+            <table class="conceptPowerForm">
                <tbody>
                   <tr>
                      <td>
@@ -465,7 +465,7 @@
                               <input type="text" class="form-control" name="serviceterm" id="serviceterm" placeholder="Enter term....">
                            </div>
                            <div>
-                              <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="serviceSearch" type="button">
+                              <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="serviceSearch" type="button">
                                  <div id="loadingIcon">Search</div>
                               </button>
                            </div>
@@ -485,7 +485,7 @@
                   </tbody>
                </table>
             </div>
-            <table class="conceptForm" style="margin-top: 0px;">
+            <table class="conceptPowerForm" style="margin-top: 0px;">
                <tbody>
                   <tr>
                      <td style="width:172px;">
@@ -541,7 +541,7 @@
                         <label for="synonym" class="formlabel">Synonyms</label>
                      </td>
                      <td>
-                        <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="addsynonym" name="synonym" type="button" data-toggle="modal" data-target="#synonyms">
+                        <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="addsynonym" name="synonym" type="button" data-toggle="modal" data-target="#synonyms">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add Synonym	
                         </button>
                      </td>

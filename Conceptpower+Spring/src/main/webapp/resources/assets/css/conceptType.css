@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
-
 .conceptType {
 	width: 50%;
 	margin: 0px auto 100px auto;
@@ -29,7 +27,7 @@
 	color: #333;
 }
 
-.conceptForm {
+.conceptPowerForm {
 	border-collapse: separate;
 	border-spacing: 0px 25px;
 	margin-top: 60px;

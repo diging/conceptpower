@@ -308,7 +308,7 @@
             th:action="@{'/auth/conceptlist/editconcept/edit/'+${conceptId}}"
             th:object="${conceptEditBean}" method='post'
             id="createconceptform">
-            <table class="conceptForm">
+            <table class="conceptPowerForm">
                <tbody>
                   <tr>
                      <td style="width:172px;">
@@ -359,7 +359,7 @@
                         <label for="synonym" class="formlabel">Synonyms</label>
                      </td>
                      <td>
-                        <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="addsynonym" name="synonym" type="button" data-toggle="modal" data-target="#synonyms">
+                        <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="addsynonym" name="synonym" type="button" data-toggle="modal" data-target="#synonyms">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add Synonym	
                         </button>
                         <input type="hidden" th:field="*{synonymsids}"></input> 
@@ -440,7 +440,7 @@
 	                    <option value="other">Other</option>
                      </select>
                   </div>
-	                  <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="searchconcept" name="searchconcept" type="button" style="margin: 0;">
+	                  <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="searchconcept" name="searchconcept" type="button" style="margin: 0;">
 	                  	Search
 	                  </button>
                </div>

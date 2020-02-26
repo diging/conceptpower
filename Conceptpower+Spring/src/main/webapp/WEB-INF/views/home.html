@@ -3,233 +3,235 @@
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
    layout:decorate="~{layouts/main}"
    >
+   
    <head>
       <meta name="_csrf_token" th:content="${_csrf.token}"/>
       <meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
       <script>
-         //Function to get required data for pagination
-         $(document).on('click', '#paginationTag', function(e){
-         	var paginateData = $(this).data();
-         	paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, paginateData.numrecords)
-         });
-         
-         
-         //Function to get required data for sorting
-         $(document).on('click', '#sortTag', function(e){
-         var sortData = $(this).data();
-         	paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos, sortData.numrecords)	
-         });
-         
-         function finalizeMerge() {
-          	  var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-          	  var conceptIdsToBeMerged = conceptIdsToMerge.split(',');
-          	  if(conceptIdsToBeMerged.length < 2) {
-          	      $('#mergeError').show();
-          	    } else {
-          	        window.location = '/conceptpower/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;      
-          	    }
-          	}
-         
-         
-         $(document).ready(function() {
-         
-         function removeColumnFromTable(str) {
-          var target = $('.resultTable').find('th[data-name="' + str +'"]');
-          var index = (target).index();
-           $('.resultTable tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).hide();
-         }
-         function showColumnFromTable(str) {
-          var target = $('.resultTable').find('th[data-name="' + str +'"]');
-          var index = (target).index();
-           $('.resultTable tr').find('th:eq(' + index + '),td:eq(' + index + ')' ).show();
-         }
-         var conceptsToMerge = "";
-         function prepareMergeConcept(conceptId) {
-          var tis = $(this);
-          var conceptsToMerge = $(this).attr("value");
-          if(conceptsToMerge != '') {
-          	conceptsToMerge = conceptId;
-          } else {
-              conceptsToMerge = conceptsToMerge + "," + conceptId;    
-          }
-         }
-         function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
-          var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
-          if(conceptsToBeMerged) {  
-            removeColumnFromTable('edit');    
-            $("#mergeConcept").show();
-            $("#prepareMergeConcept").hide();
-            // Check the checkboxes
-            var conceptIds = conceptsToBeMerged.split(',');
-            for(var i = 0; i<conceptIds.length; i++){
-              $("input[value='" + conceptIds[i] + "']").prop('checked', true);
-            }
-            $('#conceptIdsToMerge').val(conceptsToBeMerged);
-          } else {
-            removeColumnFromTable('merge');    
-            $("#mergeConcept").hide();
-            $("#prepareMergeConcept").show();
-          }
-         }
-         checkCheckBoxAndRemoveColumnsForMergeConcepts();
-         
-         $('#prepareMergeConcept').on('click', function (e) {
-              e.preventDefault();
-              // Get the column API object
-              removeColumnFromTable('edit');
-              showColumnFromTable('merge');
-              $("#mergeConcept").show();
-              $("#prepareMergeConcept").hide();
-          });
-          $(':checkbox').change(function(e) {
-              if(this.checked) {
-                mergeConcepts($(this).val())
-              } else {
-                removeMergedConcepts($(this).val());
-              }
-          });
-          
-          function mergeConcepts(conceptId) {
-            $('#mergeError').hide();
-            var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-            if(conceptsToMerge) {
-              conceptsToMerge = conceptsToMerge + ',' + conceptId;
-            } else {
-              conceptsToMerge = conceptId;
-            }
-            $('#conceptIdsToMerge').val(conceptsToMerge);  
-          }    
-          function removeMergedConcepts(conceptId) {
-              var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-              var conceptIds = conceptsToMerge.split(',');
-              var updatedConceptIds = '';
-              for(var i=0; i<conceptIds.length; i++) {
-                if(conceptIds[i] != conceptId) {
-                  updatedConceptIds = updatedConceptIds + conceptIds[i] + ",";
-                }
-              }
-              if(updatedConceptIds != '') {
-                $('#conceptIdsToMerge').val(updatedConceptIds.substring(0, updatedConceptIds.length - 1));      
-              } else { 
-                $('#conceptIdsToMerge').val(updatedConceptIds);      
-              }
-          }
-          $('#mergeError').hide();
-          
-         //Function to populate concept details Modal
-         $(document).on('click','#conceptDetails', function(e){
-         var conceptid = $(this).data('conceptid');
-         
-         $.ajax({
-         type : "GET",
-         url : "/conceptpower/conceptDetail",
-         data : {
-         	conceptid : conceptid
-         },
-         success : function(details) {
-         	details = $.parseJSON(details);	    						
-         	var token = $("meta[name='_csrf_token']").attr("content");
-         	
-         	//Ajax Call to plugin a pre populated Concepet Details Modal
-         	$.ajax({
-         					type : "POST",
-         					url : "/conceptpower/conceptdetails?_csrf="+token.trim(),
-         					data : JSON.stringify(details),
-         					contentType:"application/json",
-         					success : function(data) {
-         						$('#conceptDetailsPlugin').html(data);
-         						$('#conceptDetailsModal').modal('show');
-         					}
-         	});
-         	
-         	if(details.mergedIds) {
-         		$.ajax({
-         			url: '/conceptpower/rest/OriginalConcepts',
-                        type: 'GET',
-                        headers: {          
-                            Accept: "application/json",         
-                        },
-                        data: {
-                          ids: details.mergedIds
-                        },
-                      success : function(originalConcepts) {
-                        var mergedIdsHtml = '';
-                        $.each(originalConcepts.conceptEntries, function (index, conceptEntry) {
-                            if(mergedIdsHtml) {
-                              mergedIdsHtml += ", ";
-                            }
-                            mergedIdsHtml += '<span title =  "Id: '+ conceptEntry.id +', Word: '+ conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
-                            mergedIdsHtml += "<i>" + conceptEntry.id  + "</i>";
-                            mergedIdsHtml += "</span>";
-                        });
-                        $("#detailsmergedIds").html(mergedIdsHtml);  
-                      }
-         		});              
-         }
-         }
-         });
-         });
-         
-         $(document).on('hidden.bs.modal', '#conceptDetailsModal',function(event) {
-         $('#conceptDetailsPlugin').empty();
-         });
-          
-          $('#posList div div').on('click', function() {
-              $('#posWord').text($(this).text());
-          });
-         });
-         
-         $(document).ready(hideFormProcessing);
-         function hideFormProcessing() {
-         $('#floatingCirclesG').hide();
-         }
-         function showFormProcessing() {
-           $('#floatingCirclesG').show();
-         }
-         
-         //Function to handle pagination and sort
-         function paginate(page, sortDir, sortColumn, word, pos, numRecords) {
-          var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-          
-          if (conceptIdsToMerge) {
-              window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;
-          } else {
-              window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords;
-          }
-         }
-         
-         $(document).ready(function() {
-	         $(document).on('click','#openDeleteModal', function(e){
-	         var conceptId = $(this).data().conceptid;
-		         $.ajax({
-				         type : "GET",
-				         url : '/conceptpower/auth/conceptlist/deleteconcept/'+conceptId+'?fromHomeScreenDelete=true',
-				         contentType:"application/json",
-				         success : function(data) {
-				         $('#deleteModalPlugin').html(data);
-				         $('#deleteConcept').modal('show');
-			         }
-		         });
-	         });
-         });
-         
-         $(document).on('hidden.bs.modal', '#deleteModalPlugin',function(event) {
-     		$('#deleteModalPlugin').empty();
-     	});
-         
-         $(function(){
-         $(".custom-select").click(function(){
-          $('select').size()=10;
-          });
-         });
-         
-         $(document).on("change", "#numRecordsPerPage", function(e){
-        	var paginateData = $(this).data();
-         	paginate(1, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, e.target.value)
-         });
-         
+    	  //Function to get required data for pagination
+	      $(document).on('click', '#paginationTag', function(e) {
+	          var paginateData = $(this).data();
+	          paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, paginateData.numrecords)
+	      });
+	
+	
+	      //Function to get required data for sorting
+	      $(document).on('click', '#sortTag', function(e) {
+	          var sortData = $(this).data();
+	          paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos, sortData.numrecords)
+	      });
+	
+	      function finalizeMerge() {
+	          var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+	          var conceptIdsToBeMerged = conceptIdsToMerge.split(',');
+	          if (conceptIdsToBeMerged.length < 2) {
+	              $('#mergeError').show();
+	          } else {
+	              window.location = '/conceptpower/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;
+	          }
+	      }
+	
+	
+	      $(document).ready(function() {
+	
+	          function removeColumnFromTable(str) {
+	              var target = $('.resultTable').find('th[data-name="' + str + '"]');
+	              var index = (target).index();
+	              $('.resultTable tr').find('th:eq(' + index + '),td:eq(' + index + ')').hide();
+	          }
+	
+	          function showColumnFromTable(str) {
+	              var target = $('.resultTable').find('th[data-name="' + str + '"]');
+	              var index = (target).index();
+	              $('.resultTable tr').find('th:eq(' + index + '),td:eq(' + index + ')').show();
+	          }
+	          var conceptsToMerge = "";
+	
+	          function prepareMergeConcept(conceptId) {
+	              var tis = $(this);
+	              var conceptsToMerge = $(this).attr("value");
+	              if (conceptsToMerge != '') {
+	                  conceptsToMerge = conceptId;
+	              } else {
+	                  conceptsToMerge = conceptsToMerge + "," + conceptId;
+	              }
+	          }
+	
+	          function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
+	              var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
+	              if (conceptsToBeMerged) {
+	                  removeColumnFromTable('edit');
+	                  $("#mergeConcept").show();
+	                  $("#prepareMergeConcept").hide();
+	                  // Check the checkboxes
+	                  var conceptIds = conceptsToBeMerged.split(',');
+	                  for (var i = 0; i < conceptIds.length; i++) {
+	                      $("input[value='" + conceptIds[i] + "']").prop('checked', true);
+	                  }
+	                  $('#conceptIdsToMerge').val(conceptsToBeMerged);
+	              } else {
+	                  removeColumnFromTable('merge');
+	                  $("#mergeConcept").hide();
+	                  $("#prepareMergeConcept").show();
+	              }
+	          }
+	          checkCheckBoxAndRemoveColumnsForMergeConcepts();
+	
+	          $('#prepareMergeConcept').on('click', function(e) {
+	              e.preventDefault();
+	              // Get the column API object
+	              removeColumnFromTable('edit');
+	              showColumnFromTable('merge');
+	              $("#mergeConcept").show();
+	              $("#prepareMergeConcept").hide();
+	          });
+	          $(':checkbox').change(function(e) {
+	              if (this.checked) {
+	                  mergeConcepts($(this).val())
+	              } else {
+	                  removeMergedConcepts($(this).val());
+	              }
+	          });
+	
+	          function mergeConcepts(conceptId) {
+	              $('#mergeError').hide();
+	              var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+	              if (conceptsToMerge) {
+	                  conceptsToMerge = conceptsToMerge + ',' + conceptId;
+	              } else {
+	                  conceptsToMerge = conceptId;
+	              }
+	              $('#conceptIdsToMerge').val(conceptsToMerge);
+	          }
+	
+	          function removeMergedConcepts(conceptId) {
+	              var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+	              var conceptIds = conceptsToMerge.split(',');
+	              var updatedConceptIds = '';
+	              for (var i = 0; i < conceptIds.length; i++) {
+	                  if (conceptIds[i] != conceptId) {
+	                      updatedConceptIds = updatedConceptIds + conceptIds[i] + ",";
+	                  }
+	              }
+	              if (updatedConceptIds != '') {
+	                  $('#conceptIdsToMerge').val(updatedConceptIds.substring(0, updatedConceptIds.length - 1));
+	              } else {
+	                  $('#conceptIdsToMerge').val(updatedConceptIds);
+	              }
+	          }
+	          $('#mergeError').hide();
+	
+	          //Function to populate concept details Modal
+	          $(document).on('click', '#conceptDetails', function(e) {
+	              var conceptid = $(this).data('conceptid');
+	
+	              $.ajax({
+	                  type: "GET",
+	                  url: "/conceptpower/conceptDetail",
+	                  data: {
+	                      conceptid: conceptid
+	                  },
+	                  success: function(details) {
+	                      details = $.parseJSON(details);
+	                      var token = $("meta[name='_csrf_token']").attr("content");
+	
+	                      //Ajax Call to plugin a pre populated Concepet Details Modal
+	                      $.ajax({
+	                          type: "POST",
+	                          url: "/conceptpower/conceptdetails?_csrf=" + token.trim(),
+	                          data: JSON.stringify(details),
+	                          contentType: "application/json",
+	                          success: function(data) {
+	                              $('#conceptDetailsPlugin').html(data);
+	                              $('#conceptDetailsModal').modal('show');
+	                          }
+	                      });
+	
+	                      if (details.mergedIds) {
+	                          $.ajax({
+	                              url: '/conceptpower/rest/OriginalConcepts',
+	                              type: 'GET',
+	                              headers: {
+	                                  Accept: "application/json",
+	                              },
+	                              data: {
+	                                  ids: details.mergedIds
+	                              },
+	                              success: function(originalConcepts) {
+	                                  var mergedIdsHtml = '';
+	                                  $.each(originalConcepts.conceptEntries, function(index, conceptEntry) {
+	                                      if (mergedIdsHtml) {
+	                                          mergedIdsHtml += ", ";
+	                                      }
+	                                      mergedIdsHtml += '<span title =  "Id: ' + conceptEntry.id + ', Word: ' + conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
+	                                      mergedIdsHtml += "<i>" + conceptEntry.id + "</i>";
+	                                      mergedIdsHtml += "</span>";
+	                                  });
+	                                  $("#detailsmergedIds").html(mergedIdsHtml);
+	                              }
+	                          });
+	                      }
+	                  }
+	              });
+	          });
+	
+	          $(document).on('hidden.bs.modal', '#conceptDetailsModal', function(event) {
+	              $('#conceptDetailsPlugin').empty();
+	          });
+	
+	          $('#posList div div').on('click', function() {
+	              $('#posWord').text($(this).text());
+	          });
+	      });
+	
+	      $(document).ready(hideFormProcessing);
+	
+	      function hideFormProcessing() {
+	          $('#floatingCirclesG').hide();
+	      }
+	
+	      function showFormProcessing() {
+	          $('#floatingCirclesG').show();
+	      }
+	
+	      //Function to handle pagination and sort
+	      function paginate(page, sortDir, sortColumn, word, pos, numRecords) {
+	          var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+	
+	          if (conceptIdsToMerge) {
+	              window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords 
+	            		  +'&conceptIdsToMerge=' + conceptIdsToMerge;
+	          } else {
+	              window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords;
+	          }
+	      }
+	
+	      $(document).ready(function() {
+	          $(document).on('click', '#openDeleteModal', function(e) {
+	              var conceptId = $(this).data().conceptid;
+	              $.ajax({
+	                  type: "GET",
+	                  url: '/conceptpower/auth/conceptlist/deleteconcept/' + conceptId + '?fromHomeScreenDelete=true',
+	                  contentType: "application/json",
+	                  success: function(data) {
+	                      $('#deleteModalPlugin').html(data);
+	                      $('#deleteConcept').modal('show');
+	                  }
+	              });
+	          });
+	      });
+	
+	      $(document).on('hidden.bs.modal', '#deleteModalPlugin', function(event) {
+	          $('#deleteModalPlugin').empty();
+	      });
+	
+	      $(document).on("change", "#numRecordsPerPage", function(e) {
+	          var paginateData = $(this).data();
+	          paginate(1, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, e.target.value)
+	      });
       </script>
    </head>
+   
    <body class = "body" layout:fragment="content">
       <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection">
          <h1>Welcome to Conceptpower</h1>
@@ -266,10 +268,10 @@
       <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection"  th:with="sortDirection = ${sortDir == '1' ? '-1' : '1'}">
          <h4>Results</h4>
          <div style="display:flex; justify-content: space-between; align-items: center;">
-            <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="prepareMergeConcept" sec:authorize="isAuthenticated()">
+            <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="prepareMergeConcept" sec:authorize="isAuthenticated()">
             Select Concepts To merge
             </button>
-            <button id="mergeConcept" class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" style="margin-bottom: 15px;" th:onclick="'finalizeMerge();'">Merge selected concepts</button>
+            <button id="mergeConcept" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-bottom: 15px;" th:onclick="'finalizeMerge();'">Merge selected concepts</button>
             <div id="mergeError" class="alert alert-danger"> Please select at least two concepts to merge.</div>
             <div class="btn-group showDrp">
                <label for="dropdown">Show </label>
@@ -382,7 +384,6 @@
       </div>
       <div id="conceptDetailsPlugin"></div>
       <div th:insert="layouts/modals/SignIn :: signin"></div>
-      <!-- <div th:insert="layouts/modals/DeleteConcept :: deleteConcept"></div> -->
       <div id="deleteModalPlugin"></div>
    </body>
 </html>
