@@ -10,20 +10,19 @@
          //Function to get required data for pagination
          $(document).on('click', '#paginationTag', function(e){
          	var paginateData = $(this).data();
-         	paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos)
+         	paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, paginateData.numrecords)
          });
          
          
          //Function to get required data for sorting
          $(document).on('click', '#sortTag', function(e){
          var sortData = $(this).data();
-         	paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos)	
+         	paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos, sortData.numrecords)	
          });
          
          function finalizeMerge() {
           	  var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
           	  var conceptIdsToBeMerged = conceptIdsToMerge.split(',');
-          	  console.log(conceptIdsToBeMerged)
           	  if(conceptIdsToBeMerged.length < 2) {
           	      $('#mergeError').show();
           	    } else {
@@ -189,13 +188,13 @@
          }
          
          //Function to handle pagination and sort
-         function paginate(page, sortDir, sortColumn, word, pos) {
-          var conceptIdsToMerge = null; //$('#conceptIdsToMerge').val().replace("\"", "");
+         function paginate(page, sortDir, sortColumn, word, pos, numRecords) {
+          var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
           
           if (conceptIdsToMerge) {
               window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;
           } else {
-              window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos;
+              window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords;
           }
          }
          
@@ -204,7 +203,7 @@
 	         var conceptId = $(this).data().conceptid;
 		         $.ajax({
 				         type : "GET",
-				         url : '/conceptpower/auth/conceptlist/deleteconcept/'+conceptId,
+				         url : '/conceptpower/auth/conceptlist/deleteconcept/'+conceptId+'?fromHomeScreenDelete=true',
 				         contentType:"application/json",
 				         success : function(data) {
 				         $('#deleteModalPlugin').html(data);
@@ -222,6 +221,11 @@
          $(".custom-select").click(function(){
           $('select').size()=10;
           });
+         });
+         
+         $(document).on("change", "#numRecordsPerPage", function(e){
+        	var paginateData = $(this).data();
+         	paginate(1, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, e.target.value)
          });
          
       </script>
@@ -258,29 +262,26 @@
             </div>
          </div>
       </form>
+      <input type='hidden' id='conceptIdsToMerge' th:value='${conceptIdsToMerge}' />
       <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection"  th:with="sortDirection = ${sortDir == '1' ? '-1' : '1'}">
          <h4>Results</h4>
          <div style="display:flex; justify-content: space-between; align-items: center;">
             <button class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" id="prepareMergeConcept" sec:authorize="isAuthenticated()">
             Select Concepts To merge
             </button>
-            <input type='hidden' id='conceptIdsToMerge' th:value='${conceptIdsToMerge}' />
             <button id="mergeConcept" class="btn btn-outline-success my-2 my-sm-0 mergeConceptBtn" style="margin-bottom: 15px;" th:onclick="'finalizeMerge();'">Merge selected concepts</button>
             <div id="mergeError" class="alert alert-danger"> Please select at least two concepts to merge.</div>
             <div class="btn-group showDrp">
                <label for="dropdown">Show </label>
-               <div class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                  1
-                  <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">1</a></li>
-                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">2</a></li>
-                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">3</a></li>
-                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#">4</a></li>
-                  </ul>
-               </div>
+                <div class='custom-dropdown'>
+	               <select class="selectDropdown" id="numRecordsPerPage" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}">
+	                  <option th:value="5" th:text="5"   th:selected="${numRecords == 5}"></option>
+	                  <option th:value="10" th:text="10" th:selected="${numRecords == 10}"></option>
+	                  <option th:value="20" th:text="20" th:selected="${numRecords == 20}"></option>
+	                  <option th:value="50" th:text="50" th:selected="${numRecords == 50}"></option>
+	               </select>
+                 </div>
                <label for="dropdown">entries </label>
             </div>
          </div>
@@ -290,43 +291,43 @@
                   <th scope="col" sec:authorize="isAuthenticated()" th:data-name='edit'></th>
                   <th scope="col" sec:authorize="isAuthenticated()" th:data-name='merge'></th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="word" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" id="sortTag">Term
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" th:data-numRecords="${numRecords}" id="sortTag">Term
                      <i th:if="${sortColumn == 'word' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'word' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'word'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="id" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">Id
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag">Id
                      <i th:if="${sortColumn == 'id' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'id' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'id'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">WordNet ID
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag">WordNet ID
                      <i th:if="${sortColumn == 'wordnetid' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'wordnetid' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'wordnetid'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="pos" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 100px;">POS
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag" style="width: 100px;">POS
                      <i th:if="${sortColumn == 'pos' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'pos' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'pos'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="listname" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 200px;">Concept List
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag" style="width: 200px;">Concept List
                      <i th:if="${sortColumn == 'listName' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'liestName' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'listName'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="description" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag">Description
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag">Description
                      <i th:if="${sortColumn == 'description' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'description' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'description' }" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="types" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" id="sortTag" style="width: 100px;">Type
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag" style="width: 100px;">Type
                      <i th:if="${sortColumn == 'types' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'types' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'types'}" class="fa fa-sort"></i>
@@ -366,16 +367,16 @@
          <ul class="pagination">
             <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" id="paginationTag">Previous</span>
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" th:data-numRecords="${numRecords}" id="paginationTag">Previous</span>
             </li>
             <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${i}" id="paginationTag" th:text="${i}">
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${i}" th:data-numRecords="${numRecords}" id="paginationTag" th:text="${i}">
                <span class="sr-only">(current)</span></span>
             </li>
             <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" id="paginationTag">Next</span>
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" th:data-numRecords="${numRecords}" id="paginationTag">Next</span>
             </li>
          </ul>
       </div>
