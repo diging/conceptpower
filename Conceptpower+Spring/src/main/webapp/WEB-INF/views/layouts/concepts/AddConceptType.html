@@ -15,7 +15,7 @@
 	                  </td>
 	                  <td>
 	                     <input type="text" th:field="*{typeName}" class="form-control" placeholder="Enter type name....">
-	                     <div th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}"></div>
+	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}"></div>
 	                  </td>
 	               </tr>
 	               <tr>
@@ -24,7 +24,7 @@
 	                  </td>
 	                  <td>
 	                     <textarea class="form-control" th:field="*{typeDescription}" rows="3" placeholder="Enter type description...."></textarea>
-	                     <div th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeName}"></div>
+	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeName}"></div>
 	                  </td>
 	               </tr>
 	               <tr>
@@ -33,7 +33,7 @@
 	                  </td>
 	                  <td>
 	                     <textarea class="form-control" th:path="*{matches}" rows="3"></textarea>
-	                     <div th:if="${#fields.hasErrors('matches')}" th:errors="*{matches}"></div>
+	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('matches')}" th:errors="*{matches}"></div>
 	                  </td>
 	               </tr>
 	               <tr>
@@ -43,7 +43,7 @@
 	                  <td>
 	                  	<div class="custom-dropdown">
 		                     <select th:path="*{superType}">
-		                     	<option>N/A</option>
+		                     	<option th:selected=true value="" >Please select an option</option>
 							    <option th:each="types: ${conceptTypeAddForm.types}" th:value="${types.value}" th:text="${types.value}">
 							    </option>
 					 		</select>

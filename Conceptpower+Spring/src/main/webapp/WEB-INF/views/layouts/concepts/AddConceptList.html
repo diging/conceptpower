@@ -17,7 +17,7 @@
 	                     </td>
 	                     <td>
 	                        <input type="text" class="form-control" th:field="*{listName}" placeholder="Enter List name....">
-	                        <div th:if="${#fields.hasErrors('listName')}" th:errors="*{listName}"></div>
+	                        <div class="formErrorAlert" th:if="${#fields.hasErrors('listName')}" th:errors="*{listName}"></div>
 	                     </td>
 	                  </tr>
 	                  <tr>
@@ -26,7 +26,7 @@
 	                     </td>
 	                     <td>
 	                        <textarea class="form-control" th:field="*{description}" placeholder="Enter List description...."></textarea>
-	                        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+	                        <div class="formErrorAlert" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
 	                     </td>
 	                  </tr>
 	               </tbody>

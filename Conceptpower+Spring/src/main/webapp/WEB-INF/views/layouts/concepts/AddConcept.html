@@ -493,7 +493,7 @@
                      </td>
                      <td>
                         <input type="text" class="form-control" th:field="*{name}" placeholder="Enter concept....">
-                        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -510,7 +510,7 @@
                               <option value="adjective">Adjective</option>
                               <option value="other">Other</option>
                            </select>
-                           <div th:if="${#fields.hasErrors('pos')}" th:errors="*{pos}"></div>
+                           <div class="formErrorAlert" th:if="${#fields.hasErrors('pos')}" th:errors="*{pos}"></div>
                         </div>
                      </td>
                   </tr>
@@ -524,7 +524,7 @@
                                <option th:each="item: ${conceptAddBean.lists}" th:value="${item.key}" th:text="${item.value}">
                                </option>
                             </select>
-                            <div th:if="${#fields.hasErrors('selectedList')}" th:errors="*{selectedList}"></div>
+                            <div class="formErrorAlert" th:if="${#fields.hasErrors('selectedList')}" th:errors="*{selectedList}"></div>
                          </div>
                      </td>
                   </tr>
@@ -559,7 +559,7 @@
                               <option th:each="type: ${conceptAddBean.types}" th:value="${type.key}" th:text="${type.value}">
                               </option>
                            </select>
-                           <div th:if="${#fields.hasErrors('selectedTypes')}" th:errors="*{selectedTypes}"></div>
+                           <div class="formErrorAlert" th:if="${#fields.hasErrors('selectedTypes')}" th:errors="*{selectedTypes}"></div>
                         </div>
                      </td>
                   </tr>

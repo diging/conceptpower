@@ -71,7 +71,7 @@
                      </td>
                      <td>
                         <input type="text" class="form-control" name="word" th:value="${conceptsMergeBean.word}">
-                        <div th:if="${#fields.hasErrors('word')}" th:errors="*{word}"></div>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('word')}" th:errors="*{word}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -85,7 +85,7 @@
                               </option>
                            </select>
                         </div>
-                        <div th:if="${#fields.hasErrors('selectedPosValue')}" th:errors="*{selectedPosValue}"></div>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('selectedPosValue')}" th:errors="*{selectedPosValue}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -99,7 +99,7 @@
                               </option>
                            </select>
                         </div>
-                        <div th:if="${#fields.hasErrors('selectedListName')}" th:errors="*{selectedListName}"></div>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('selectedListName')}" th:errors="*{selectedListName}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -126,7 +126,7 @@
                               <option th:each="item: ${types}" th:value="${item.typeId}" th:text="${item.typeName}">
                               </option>
                            </select>
-                           <div th:if="${#fields.hasErrors('selectedTypeId')}" th:errors="*{selectedTypeId}"></div>
+                           <div class="formErrorAlert" th:if="${#fields.hasErrors('selectedTypeId')}" th:errors="*{selectedTypeId}"></div>
                         </div>
                      </td>
                   </tr>

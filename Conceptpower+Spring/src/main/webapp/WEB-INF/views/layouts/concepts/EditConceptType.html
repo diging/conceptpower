@@ -17,7 +17,7 @@
 	                     <input type="text" th:name="typeName" class="form-control" th:value="${conceptTypeAddForm.typeName}">
 	                     <input type="hidden" th:value="${conceptTypeAddForm.oldTypeName}" name="oldTypeName" />
 	                     <input type="hidden" th:value="${conceptTypeAddForm.typeid}" name="typeid" />
-	                    <div th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}"></div>
+	                    <div class="formErrorAlert" th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}"></div>
 	                  </td>
 	               </tr>
 	               <tr>
@@ -26,7 +26,7 @@
 	                  </td>
 	                  <td>
 	                     <textarea class="form-control" th:name="typeDescription" rows="3" th:text="${conceptTypeAddForm.typeDescription}"></textarea>
-	                     <div th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeName}"></div>
+	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeName}"></div>
 	                  </td>
 	               </tr>
 	               <tr>
@@ -35,7 +35,7 @@
 	                  </td>
 	                  <td>
 	                     <textarea class="form-control" th:name="matches" rows="3" th:text="${conceptTypeAddForm.matches}"></textarea>
-	                     <div th:if="${#fields.hasErrors('matches')}" th:errors="*{matches}"></div>
+	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('matches')}" th:errors="*{matches}"></div>
 	                  </td>
 	               </tr>
 	               <tr>

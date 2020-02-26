@@ -15,7 +15,7 @@
                      </td>
                      <td>
                         <input type="text" class="form-control" name="username" placeholder="Enter your user name....">
-                        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -24,7 +24,7 @@
                      </td>
                      <td>
                         <input type="text" class="form-control" name="fullname"  placeholder="Enter your full name....">
-                        <div th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></div>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -33,7 +33,7 @@
                      </td>
                      <td>
                         <input type="email" class="form-control" name="email" placeholder="Enter your email id....">
-                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -55,7 +55,7 @@
                      </td>
                      <td>
                         <input type="password" class="form-control" name="password" placeholder="Atleast 4 characters long....">
-                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                      </td>
                   </tr>
                   <tr>
@@ -64,7 +64,7 @@
                      </td>
                      <td>
                         <input type="password" class="form-control" name="retypedPassword" placeholder="Retype Password....">
-                        <div th:if="${#fields.hasErrors('retypedPassword')}" th:errors="*{retypedPassword}"></div>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('retypedPassword')}" th:errors="*{retypedPassword}"></div>
                      </td>
                   </tr>
                </tbody>
