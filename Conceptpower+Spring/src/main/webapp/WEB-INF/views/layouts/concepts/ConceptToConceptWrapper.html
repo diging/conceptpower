@@ -1,0 +1,118 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <head>
+   	<script>
+	    $(document).on('click', '#conceptDetails', function(e) {
+	        var conceptid = $(this).data('conceptid');
+	
+	        $.ajax({
+	            type: "GET",
+	            url: "/conceptpower/conceptDetail",
+	            data: {
+	                conceptid: conceptid
+	            },
+	            success: function(details) {
+	                details = $.parseJSON(details);
+	                var token = $("meta[name='_csrf_token']").attr("content");
+	            	
+	                //Ajax Call to plugin a pre populated Concepet Details Modal
+	                $.ajax({
+	                    type: "POST",
+	                    url: "/conceptpower/conceptdetails?_csrf=" + token.trim(),
+	                    data: JSON.stringify(details),
+	                    contentType: "application/json",
+	                    success: function(data) {
+	                        $('#conceptDetailsPlugin').html(data);
+	                        $('#conceptDetailsModal').modal('show');
+	                    }
+	                });
+	                
+	            }
+	        });
+	    });
+	    
+	    $(document).on('click', '#openDeleteModal', function(e) {
+            var conceptId = $(this).data().conceptid;
+            $.ajax({
+                type: "GET",
+                url: '/conceptpower/auth/conceptlist/deleteconcept/' + conceptId,
+                contentType: "application/json",
+                success: function(data) {
+                    $('#deleteModalPlugin').html(data);
+                    $('#deleteConcept').modal('show');
+                }
+            });
+        });
+	    
+	    $(document).on('hidden.bs.modal', '#deleteModalPlugin', function(event) {
+	          $('#deleteModalPlugin').empty();
+	    });
+	    
+	    $(document).on('hidden.bs.modal', '#conceptDetailsModal', function(event) {
+            $('#conceptDetailsPlugin').empty();
+        });
+   	</script>
+   </head>
+   <body class="body" layout:fragment="content">
+      <div class="resultsSection">
+         <div class="headerSection">
+            <div style="display: block;">
+               <h3 class="titleHeader">Concept List: <span th:text="${listid}"></span></h3>
+               <h4 class="subHeader">Here you will find all stored concept lists</h4>
+            </div>
+         </div>
+	     <font color="red" th:text="${luceneError}"></font>
+		 <font color="red" th:text="${IndexerStatus}"></font>
+         <table class="table table-striped resultTable tableStyles" th:if="${result.size() > 0}" >
+            <thead>
+                <tr>
+	                <th></th>
+	                <th>Term</th>
+	                <th>ID</th>
+	                <th>Wordnet ID</th>
+	                <th>POS</th>
+	                <th>Concept List</th>
+	                <th>Description</th>
+	                <th>Type</th>
+	                <th>Synonyms</th>
+	                <th>Created By</th>
+            	</tr>
+            </thead>
+            <tbody>
+               <tr th:each="list : ${result}">
+                  <td sec:authorize="isAuthenticated()" id="editConceptModal">
+      
+                  <a th:href="@{'/auth/conceptlist/editconcept/'+${list.entry.id}}" 
+	                     role="button" aria-expanded="false">
+	                    	<i class="fa fa-pencil-square-o dropright" aria-hidden="true">
+	                    	</i>
+               	  </a>
+                  <i class="fa fa-trash-o" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${list.entry.id}" data-toggle="modal" data-target="#deleteConcept"></i>
+                        	
+                  </td>
+                  <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${list.entry.id}" th:text="${list.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
+                  <td th:text="${list.entry.id}"></td>
+                  
+                  <td th:text="${list.entry.wordnetId}" id="wordnet"> </td>
+                  <td th:text="${list.entry.pos}"></td>
+                  <td th:text="${list.entry.conceptList}"></td>
+                  <td th:text="${list.description}"></td>
+                  <td th:text="${list.type != null ? list.type.typeName : ''}"></td>
+                  <td>
+                  	<div th:each="syn : ${list.synonyms}">
+                     		<div th:text="'->'+${syn.word}"></div>
+                    </div>
+                  </td>
+                  <td th:text="${list.creator.username}"></td>
+               </tr>
+            </tbody>
+         </table>
+         <div th:if="${result.size() <= 0}">No Concept Lists to display</div>
+      </div>
+      <div id="deleteModalPlugin"></div>
+      <div id="conceptDetailsPlugin"></div>
+   </body>
+</html>

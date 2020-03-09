@@ -91,7 +91,6 @@ public class ConceptEditController {
     @RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
     public String prepareEditConcept(@PathVariable("conceptid") String conceptid,
             @RequestParam(value = "fromHomeScreen", required = false) String fromHomeScreen,
-            @RequestParam(value = "searchWord", required = true) String searchWord,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model, BindingResult results)
             throws LuceneException {
 
@@ -120,7 +119,7 @@ public class ConceptEditController {
         conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
         
-        return "/layouts/concepts/EditConceptdiffId";
+        return "/layouts/concepts/EditConcept";
     }
 
     /**
@@ -183,7 +182,7 @@ public class ConceptEditController {
             model.addAttribute("show_error_alert", true);
             model.addAttribute("error_alert_msg", indexerRunning);
             model.addAttribute(indexerStatus, indexerRunning);
-            return "/layouts/concepts/EditConceptdiffId";
+            return "/layouts/concepts/EditConcept";
         }
 
         conceptEditService.editConcepts(conceptEntry, conceptEditBean.getExistingWordnetIds(),
