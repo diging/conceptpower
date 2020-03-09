@@ -481,3 +481,6 @@ a:hover {
     color: red;
 }
 
+table#addedSynonymsTable {
+    font-size: 14px;
+}

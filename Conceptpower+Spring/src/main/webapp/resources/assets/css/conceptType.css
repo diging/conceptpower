@@ -33,7 +33,7 @@
 	margin-top: 60px;
 }
 
-#addConceptTypeBtn {
+.submitFormBtn {
 	height: 44px;
 	width: 300px;
 	background-color: #4f3acc;
@@ -41,7 +41,7 @@
 	border-radius: 30px;
 }
 
-#addConceptTypeBtn:hover {
+.submitFormBtn:hover {
 	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
 }
 
