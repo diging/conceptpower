@@ -33,7 +33,6 @@
 	
 	
 	      $(document).ready(function() {
-	
 	          function removeColumnFromTable(str) {
 	              var target = $('.resultTable').find('th[data-name="' + str + '"]');
 	              var index = (target).index();
@@ -343,7 +342,7 @@
       
                      <a 
                      th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}"
-                     th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'+'&searchWord='+${conceptSearchBean.word}}" 
+                     th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" 
                         role="button" aria-expanded="false">
                        	<i class="fa fa-pencil-square-o dropright" aria-hidden="true">
                        	</i>
@@ -357,7 +356,7 @@
                        	</i>
                   	</a>
                   	
-                    <i class="fa fa-trash-o" th:if="${#strings.containsIgnoreCase(concept.entry.id, 'WID')}" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept"></i>
+                    <i class="fa fa-trash-o" th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept"></i>
                         	
                   </td>
                   <td sec:authorize="isAuthenticated()">
