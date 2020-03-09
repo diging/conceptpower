@@ -341,12 +341,23 @@
                <tr th:each="concept: ${conceptSearchBean.foundConcepts}">
                   <td sec:authorize="isAuthenticated()" id="editConceptModal">
       
-                     <a th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'+'&searchWord='+${conceptSearchBean.word}}" 
+                     <a 
+                     th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}"
+                     th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'+'&searchWord='+${conceptSearchBean.word}}" 
                         role="button" aria-expanded="false">
                        	<i class="fa fa-pencil-square-o dropright" aria-hidden="true">
                        	</i>
                   	</a>
-                    <i class="fa fa-trash-o" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept"></i>
+                  	
+                  	<a 
+                     th:if="${#strings.containsIgnoreCase(concept.entry.id, 'WID')}"
+                     th:href="@{'/auth/conceptlist/addconceptwrapper?wrapperId='+${concept.entry.id}}" 
+                        role="button" aria-expanded="false">
+                       	<i class="fa fa-pencil-square-o dropright" aria-hidden="true">
+                       	</i>
+                  	</a>
+                  	
+                    <i class="fa fa-trash-o" th:if="${#strings.containsIgnoreCase(concept.entry.id, 'WID')}" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept"></i>
                         	
                   </td>
                   <td sec:authorize="isAuthenticated()">
@@ -354,6 +365,7 @@
                   </td>
                   <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
                   <td th:text="${concept.entry.id}"></td>
+                  
                   <td th:text="${concept.entry.wordnetId}" id="wordnet"> </td>
                   <td th:text="${concept.entry.pos}"></td>
                   <td th:text="${concept.entry.conceptList}"></td>
