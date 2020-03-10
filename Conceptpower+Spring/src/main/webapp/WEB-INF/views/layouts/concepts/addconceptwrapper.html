@@ -338,7 +338,7 @@
       </script>
    </head>
    <body class="body" layout:fragment="content">
-      <div class="newConcept">
+      <div class="newConcept addWrapper">
          <h2 style="text-align: center;">Add a new WordNet concept wrapper</h2>
          <h4 style="text-align: center;">Add a wrapper for concept in WordNet. Do that if you, for example, want to attach an<br/>"equals to" URI to a concept that already exists in WordNet.</h4>
          <form 
@@ -480,6 +480,6 @@
          </form>
       </div>
       <div id="conceptDetailsPlugin"></div>
-      <div th:insert="layouts/modals/Synonyms :: synonyms"></div>
+      <div th:insert="layouts/modals/synonyms :: synonyms"></div>
    </body>
 </html>

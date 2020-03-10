@@ -79,25 +79,25 @@ public class ForgottenPasswordController {
         emailBean.setToken(token);
         model.addAttribute("emailBackBean", emailBean);
 
-        return "/layouts/user/resetPassword";
+        return "/layouts/user/resetpassword";
     }
 
     @RequestMapping(value = "/reset")
     public String doReset(Model model, @Valid EmailBackBean emailBean, BindingResult result) {
         if (result.hasErrors()) {
             model.addAttribute("emailBackBean", emailBean);
-            return "/layouts/user/resetPassword";
+            return "/layouts/user/resetpassword";
         }
 
         Token token = userManager.findToken(emailBean.getToken());
 
         if (token == null) {
             model.addAttribute("errormsg", "Sorry, but Conceptpower is unable to verify the user.");
-            return "/layouts/user/resetError";
+            return "/layouts/user/reseterror";
         }
         if (!token.getUser().getEmail().equals(emailBean.getEmail().trim())) {
             model.addAttribute("errormsg", "Sorry, but Conceptpower is unable to verify the user.");
-            return "/layouts/user/resetError";
+            return "/layouts/user/reseterror";
         }
 
         DateTime creationDate = new DateTime(token.getCreationDate());
@@ -105,7 +105,7 @@ public class ForgottenPasswordController {
         if (!currentDate.isAfter(creationDate) || !creationDate.plusHours(expirationHours).isAfter(currentDate)) {
             userManager.deleteToken(token.getToken());
             model.addAttribute("errormsg", "Sorry, but your reset link has expired.");
-            return "/layouts/user/resetError";
+            return "/layouts/user/reseterror";
         }
 
         UserBacking userBacking = new UserBacking(token.getUser().getUsername(), token.getUser().getFullname());
@@ -128,13 +128,13 @@ public class ForgottenPasswordController {
 
         if (uUser == null) {
             model.addAttribute("errormsg", "Sorry, we could not complete the reset process.");
-            return "/layouts/user/resetError";
+            return "/layouts/user/reseterror";
         }
 
         uUser.setPw(user.getPassword());
 
         userManager.deleteToken(user.getToken());
         userManager.storeModifiedPassword(uUser);
-        return "/layouts/user/resetComplete";
+        return "/layouts/user/resetcomplete";
     }
 }

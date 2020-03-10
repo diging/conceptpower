@@ -106,7 +106,7 @@
                      		<div th:text="'->'+${syn.word}"></div>
                     </div>
                   </td>
-                  <td th:text="${list.creator.username}"></td>
+                  <td th:text="${list.creator != null ? list.creator.name : '' }"></td>
                </tr>
             </tbody>
          </table>
