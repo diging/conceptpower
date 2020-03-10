@@ -26,6 +26,7 @@
 
 html,body{
 	height: 100%;
+	font-family:Nunito Sans;
   	margin: 0;
 }
 
@@ -135,7 +136,6 @@ thead{
 
 .pagination {
 	margin: 0px 20px 0px 20px;
-	font-family: Nunito Sans;
 }
 
 .pagination>li>a {
@@ -317,7 +317,6 @@ a:hover {
 
 .custom-select {
   position: relative;
-  font-family: Arial;
 }
 
 .custom-select select {

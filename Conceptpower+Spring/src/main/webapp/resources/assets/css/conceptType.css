@@ -1,4 +1,4 @@
-.conceptType {
+.conceptPowerWrapper {
 	width: 50%;
 	margin: 0px auto 100px auto;
 }
@@ -16,7 +16,6 @@
 
 .formlabel {
 	display: block;
-	font-family: Nunito Sans;
 	font-size: 18px;
 	color: #333;
 	width: 20%;
@@ -33,7 +32,7 @@
 .conceptPowerForm {
 	border-collapse: separate;
 	border-spacing: 0px 25px;
-	margin-top: 60px;
+	margin-top: 30px;
 }
 
 .submitFormBtn {
@@ -67,7 +66,7 @@
 
 .btnCenter {
 	text-align: center;
-	margin-top: 45px;
+	margin-top: 15px;
 }
 
 #dropdownMenu1 {
@@ -81,13 +80,11 @@
 }
 
 .titleHeader{
-	font-family:Nunito Sans;
 	font-size: 28px;
 	color: #333;
 }
 
 .subHeader {
-	font-family:Nunito Sans;
 	font-size: 18px;
 	color: #333;
 }
@@ -102,7 +99,6 @@
 	width: 60%;
 	margin: auto;
 	display: block;
-	font-family: Nunito Sans;
 }
 
 .btn-group.dropdown {
@@ -172,4 +168,8 @@ label {
 	width: 70%;
 	border-collapse: separate;
 	border-spacing: 0 15px;
+}
+
+.changePassword .formlabel{
+	width: unset;
 }
