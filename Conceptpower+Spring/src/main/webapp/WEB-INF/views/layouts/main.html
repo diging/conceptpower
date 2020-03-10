@@ -1,43 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
    <head>
-   	<meta name="_csrf_token" th:content="${_csrf.token}"/>
-	<meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
-	
-	<script
-		th:src="@{/resources/js/jquery-3.1.0.min.js}"></script>
+      <meta name="_csrf_token" th:content="${_csrf.token}"/>
+      <meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
 
-	<script
-		th:src="@{/resources/js/jquery-ui-1.12.js}"></script>
-
-	<script
-		th:src="@{/resources/js/bootstrap.min.js}"></script>
-	<script
-		th:src="@{/resources/assets/js/headroom.min.js}"></script>
-	<script
-		th:src="@{/resources/assets/js/jQuery.headroom.min.js}"></script>
-	<script
-		th:src="@{/resources/assets/js/template.js}"></script>
-	<script
-		th:src="@{/resources/js/datatable/js/jquery.dataTables.js}"></script>
-	<script
-		th:src="@{/resources/js/datatable/js/dataTables.bootstrap.min.js}"></script>
-
-
-	<script
-		th:src="@{/resources/js/moment.js}"></script>
-	<script
-		th:src="@{/resources/js/moment-timezone-with-data.js}"></script>
-      
-     
+      <script
+         th:src="@{/resources/js/jquery-3.1.0.min.js}"></script>
+      <script
+         th:src="@{/resources/js/jquery-ui-1.12.js}"></script>
+      <script
+         th:src="@{/resources/js/bootstrap.min.js}"></script>
+      <script
+         th:src="@{/resources/assets/js/headroom.min.js}"></script>
+      <script
+         th:src="@{/resources/assets/js/jQuery.headroom.min.js}"></script>
+      <script
+         th:src="@{/resources/assets/js/template.js}"></script>
+      <script
+         th:src="@{/resources/js/datatable/js/jquery.dataTables.js}"></script>
+      <script
+         th:src="@{/resources/js/datatable/js/dataTables.bootstrap.min.js}"></script>
+      <script
+         th:src="@{/resources/js/moment.js}"></script>
+      <script
+         th:src="@{/resources/js/moment-timezone-with-data.js}"></script>
+         
       <link th:href="@{/resources/js/datatable/css/dataTables.bootstrap.min.css}" rel="stylesheet" />
       <link th:href="@{/resources/js/datatable/css/jquery.dataTables_themeroller.css}" rel="stylesheet" />
       <link th:href="@{/resources/js/datatable/css/jquery.dataTables.css}" rel="stylesheet" />
       <link th:href="@{/resources/js/datatable/css/jquery.dataTables.min.css}" rel="stylesheet" />
-      
-      
       <link th:href="@{/resources/assets/css/bootstrap.min.css}" rel="stylesheet" />
       <link th:href="@{/resources/assets/css/homepage.css}" rel="stylesheet" />
       <link th:href="@{/resources/assets/css/conceptType.css}" rel="stylesheet" />
@@ -47,9 +40,13 @@
    <body class = "body">
       <main class="wrapper">
          <div th:insert="layouts/navbar :: navbar"></div>
+         <p sec:authorize="isAuthenticated()" class="userProfile">
+            <a th:href="@{/auth/profile}"><i class="fa fa-user"></i>
+            <span sec:authentication="name"></span></a>
+         </p>
          <div layout:fragment="content"></div>
          <div class='push'></div>
-      </main>  
+      </main>
       <div th:insert="~{layouts/footer}"></div>
    </body>
 </html>

@@ -29,24 +29,24 @@ html,body{
   	margin: 0;
 }
 
-.modal-content{
-	width: 300px;
+#conceptDetailsModal .modal-content{
+  	width: 300px;
 	border-radius:30px;
 	height: auto;
 	font-weight: 400;
-	font-size: 16px;
+	font-size: 13px;
 	padding: 15px;
 }
 
+#conceptDetailsModal .modal-header{
+	background-color:#4f3acc;
+	color:white;
+	font-size:15px;
+}
 .form-control{
 	border-radius: 30px;
 }
 
-h3{
-	margin-top:10px;
-	margin-botton:5px;
-	font-size:16px;
-}
 
 #modalFooter {
     margin-top: 25px;
@@ -269,10 +269,18 @@ table{
 }
 
 #conceptDetailsModal .modal-content{
-	width:40%;
+	width:35%;
 	overflow:auto;
 	margin: auto;
 	margin-top: 200px;
+}
+
+#conceptDetailsModal .modal-title{
+	display: inline-block
+}
+
+.close, .close:hover, .close:focus{
+	opacity:unset;
 }
 
 .list-group-item-info {  
@@ -283,15 +291,20 @@ table{
 .list-group-item {
     margin-bottom: unset;
     border: unset;
-    padding: 10px 25px 10px 25px;
+    padding: 5px 0px 5px 0px;
     display:flex;
 }
 
 .conceptDetailsKey {
-	width: 100px;
+	width: 15%;
     margin-right: 50px;
     display: inline-table;
     text-align: right;
+    color: #4f3acc;
+}
+
+.conceptDetailsValue {
+	width: 80%;
 }
 
 a {

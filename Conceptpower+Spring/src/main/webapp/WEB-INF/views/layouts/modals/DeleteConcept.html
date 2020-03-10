@@ -3,32 +3,29 @@
    xmlns:th="http://www.thymeleaf.org"
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<body class="body" layout:fragment="content">
-   <div class="modal fade" id="deleteConcept" role="dialog" th:fragment="deleteConcept">
-      <div class="modal-dialog" id="requestBox" style="margin-right: auto;margin-top: 300px;">
-         <div class="modal-content" >
-            <div class="modal-body">
-            	<form
-            		th:action="@{'/auth/conceptlist/deleteconceptconfirm/'+${conceptid}+'?fromHomeScreenDelete='+${fromHomeScreenDelete}+'&listName='+${conceptList}}"
-					method='post' id="deleteConfirmForm">
-					<ul class="list-group" style="margin-bottom: 0px;">
-	                  <li class="list-group-item">
-	                     <span class="conceptDetailsKey">Concept Id:</span>
-	                     <p class="conceptDetailsValue" th:text="${conceptId}" ></p>
-	                  </li>
-	                  <li class="list-group-item list-group-item-info">
-	                     <span class="conceptDetailsKey">Word:</span>
-	                     <p class="conceptDetailsValue" th:text="${word}"></p>
-	                  </li>
-                  </ul>
-	            	   	<input type="submit" value="Delete" class="btn btn-primary deleteBtn" />
-	                   	<!--  <button type="submit" class="btn btn-primary deleteBtn" id="deleteBtn" data-toggle="modal" data-target="#deleteButton">Delete
-	                   	</button>-->
-         
-                </form>
-            </div>   
+   <body class="body" layout:fragment="content">
+      <div class="modal fade" id="deleteConcept" role="dialog" th:fragment="deleteConcept">
+         <div class="modal-dialog" id="requestBox" style="margin-right: auto;margin-top: 300px;">
+            <div class="modal-content" >
+               <div class="modal-body">
+                  <form
+                     th:action="@{'/auth/conceptlist/deleteconceptconfirm/'+${conceptid}+'?fromHomeScreenDelete='+${fromHomeScreenDelete}+'&listName='+${conceptList}}"
+                     method='post' id="deleteConfirmForm">
+                     <ul class="list-group" style="margin-bottom: 0px;">
+                        <li class="list-group-item">
+                           <span class="conceptDetailsKey">Concept Id:</span>
+                           <p class="conceptDetailsValue" th:text="${conceptId}" ></p>
+                        </li>
+                        <li class="list-group-item list-group-item-info">
+                           <span class="conceptDetailsKey">Word:</span>
+                           <p class="conceptDetailsValue" th:text="${word}"></p>
+                        </li>
+                     </ul>
+                     <input type="submit" value="Delete" class="btn btn-primary deleteBtn" />
+                  </form>
+               </div>
+            </div>
          </div>
       </div>
-   </div>
-</body>
+   </body>
 </html>

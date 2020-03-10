@@ -8,12 +8,6 @@
 	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
 }
 
-.title {
-	font-family: Nunito Sans;
-	font-size: 44px;
-	color: #333;
-	text-align: center;
-}
 
 .form-group {
 	display: flex;
@@ -23,8 +17,17 @@
 .formlabel {
 	display: block;
 	font-family: Nunito Sans;
-	font-size: 22px;
+	font-size: 18px;
 	color: #333;
+	width: 20%;
+}
+
+.form-control {
+	width: 80%;
+}
+
+.formField{
+	widht:80%;
 }
 
 .conceptPowerForm {
@@ -90,12 +93,9 @@
 }
 
 .showDrp {
-
     display: flex;
-    width: 150px;
     justify-content: space-between;
     align-items: baseline;
-
 }
 
 .newConcept {
@@ -130,9 +130,6 @@ a:hover {
 	color: #333;
 }
 
-.wordnet1 {
-	margin-top: 45px;
-}
 
 label {
 	display: inline-table;
@@ -150,7 +147,7 @@ label {
 .sectionHeading {
 	display: flex;
 	align-items: center;
-	margin: 60px 0px 30px 0px;
+	margin: 20px 0px 5px 0px;
 }
 
 .row {
