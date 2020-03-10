@@ -4,7 +4,7 @@
    layout:decorate="~{layouts/main}"
    >
    <body class="body" layout:fragment="content">
-         <div class="conceptType">
+         <div class="conceptPowerWrapper">
             <h3 class="title">Edit User</h3>
             <form  th:object="${user}" th:action="@{/auth/user/edituser/store}" method='post'>
         <table class="conceptPowerForm">
