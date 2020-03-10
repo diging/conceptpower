@@ -115,7 +115,7 @@ public class ConceptAddController {
         }
         conceptAddBean.setLists(lists);
 
-        return "/layouts/concepts/AddConcept";
+        return "/layouts/concepts/addconcept";
     }
 
     /**
@@ -173,7 +173,7 @@ public class ConceptAddController {
         }
         model.addAttribute("entry", conceptEntry);
         model.addAttribute("uri", uriHelper.getURI(conceptEntry));
-        return "/layouts/concepts/AddConceptReview";
+        return "/layouts/concepts/addconceptreview";
     }
 
     /**

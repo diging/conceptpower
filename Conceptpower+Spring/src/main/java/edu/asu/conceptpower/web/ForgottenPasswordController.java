@@ -70,7 +70,7 @@ public class ForgottenPasswordController {
         }
 
         model.addAttribute("email", email);
-        return "/layouts/user/PassEmailClick";
+        return "/layouts/user/emailsuccessful";
     }
 
     @RequestMapping(value = "/beginReset/{token}")

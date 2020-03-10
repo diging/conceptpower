@@ -63,7 +63,7 @@ public class UserEditController {
         if (!model.containsAttribute("user")) {
             model.addAttribute("user", userBacking);
         }
-        return "layouts/user/EditUser";
+        return "layouts/user/edituser";
     }
 
     /**

@@ -11,14 +11,11 @@
          } */
           	
           	$(document).on('click','#paginate', function(e){
-          		console.log($(this).data());
           		window.location = 'concepttype?page=' + $(this).data().page + '&sortDir=' + $(this).data().sortdir + '&sortColumn=' + $(this).data().sortcolumn;
           	})
 
 		   $(document).on('click','.deleteBtn', function(e){
-			   console.log($(this).data())
 			   var typeId = $(this).data().typeid;
-			   console.log($(this).data())
 			    $.ajax({
 					type : "GET",
 					url : '/conceptpower/auth/concepttype/deletetype/'+typeId,

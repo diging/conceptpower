@@ -427,7 +427,6 @@
          	$('#loadingIcon').html('<span for="loading">Search</span>');
          }
          function showLoadingIcon() {
-         	console.log('show');
              $('#loadingIcon').html('<i id="loading" class="fa fa-circle-o-notch fa-spin" ></i><span for="loading"> Wait</span>');
          }
          
@@ -594,6 +593,6 @@
             </div>
          </form>
       </div>
-      <div th:insert="layouts/modals/Synonyms :: synonyms"></div>
+      <div th:insert="layouts/modals/synonyms :: synonyms"></div>
    </body>
 </html>

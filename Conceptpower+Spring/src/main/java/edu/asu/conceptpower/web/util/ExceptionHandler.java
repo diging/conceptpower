@@ -23,6 +23,6 @@ public class ExceptionHandler {
             IllegalAccessException.class, BadCredentialsException.class, AccessDeniedException.class })
 	public String handle(Exception e) {
 		logger.error("ExceptionHandler caught exception.", e);
-		return "/layouts/exceptions/Exception";
+		return "/layouts/exceptions/exception";
 	}
 }

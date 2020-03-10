@@ -54,7 +54,7 @@ public class AddUserController {
     public String createUser(HttpServletRequest req, ModelMap model,
             @ModelAttribute("user") @Validated UserBacking user, BindingResult result) {
         if (result.hasErrors()) {
-            return "/layouts/user/AddUser";
+            return "/layouts/user/adduser";
         }
 
         User storeUser = new User();
@@ -79,7 +79,7 @@ public class AddUserController {
     @RequestMapping(value = "auth/user/add")
     public String prepareUserPage(ModelMap model) {
         model.addAttribute("user", new UserBacking());
-        return "/layouts/user/AddUser";
+        return "/layouts/user/adduser";
     }
 
 }

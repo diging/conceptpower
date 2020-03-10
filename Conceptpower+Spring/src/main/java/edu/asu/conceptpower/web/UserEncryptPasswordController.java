@@ -27,7 +27,7 @@ public class UserEncryptPasswordController {
 		model.addAttribute("username", username);
 		model.addAttribute("isEncrypted", user.getIsEncrypted());
 		
-		return "layouts/profile/EncryptPassword";
+		return "layouts/profile/encryptpassword";
 	}
 	
 	@RequestMapping(value = "auth/user/encryptpassword", method = RequestMethod.POST)

@@ -58,7 +58,7 @@ public class ConceptTypeAddController {
             types.put(conceptType.getTypeId(), conceptType.getTypeName());
         }
         conceptTypeAddForm.setTypes(types);
-        return "layouts/concepts/AddConceptType";
+        return "layouts/concepts/addconcepttype";
     }
 
     /**
@@ -76,7 +76,7 @@ public class ConceptTypeAddController {
             BindingResult results) {
 
         if (results.hasErrors()) {
-            return "layouts/concepts/AddConceptType";
+            return "layouts/concepts/addconcepttype";
         }
         ConceptType type = new ConceptType();
         type.setTypeName(conceptTypeAddForm.getTypeName());

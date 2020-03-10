@@ -77,7 +77,7 @@ public class ConceptListEditController {
         conceptListAddForm.setListName(list.getConceptListName());
         conceptListAddForm.setDescription(list.getDescription());
         conceptListAddForm.setOldListName(listName);
-        return "/layouts/concepts/EditConceptList";
+        return "/layouts/concepts/editconceptlist";
     }
 
     /**

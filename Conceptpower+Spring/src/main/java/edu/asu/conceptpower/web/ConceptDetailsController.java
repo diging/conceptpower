@@ -13,7 +13,7 @@ public class ConceptDetailsController {
     @RequestMapping(value="/conceptdetails", method=RequestMethod.POST)
     public String getConceptDetails(@RequestBody Map<String, String> details, Model model) {
         model.addAttribute("details", details);
-        return "layouts/modals/ConceptDetails";
+        return "layouts/modals/conceptdetails";
     }
 
 }

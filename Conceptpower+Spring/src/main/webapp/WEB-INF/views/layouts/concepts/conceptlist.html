@@ -9,13 +9,11 @@
 	$(document).ready(function() {
 	   $(document).on('click','.deleteBtn', function(e){
 		   var listName = $(this).data().listname;
-		   console.log('click' + listName)
 		    $.ajax({
 				type : "GET",
 				url : '/conceptpower/auth/conceptlist/deletelist/'+listName,
 				contentType:"application/json",
 				success : function(data) {
-					console.log(data)
 	 				$('#deleteModalPlugin').html(data);
 					$('#deleteList').modal('show');
 				}

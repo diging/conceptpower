@@ -240,7 +240,6 @@
          
              if (x != null) {
                  var new_row = x.rows[0].cloneNode(true);
-                 console.log(new_row)
                  new_row.cells[0].innerHTML = '<a onclick="synonymRemove(\'' + x.rows.length
                          + '\')">Remove</a>' + '</font></td>'
                  new_row.cells[1].innerHTML = term;

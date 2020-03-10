@@ -119,7 +119,7 @@ public class ConceptEditController {
         conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
         
-        return "/layouts/concepts/EditConcept";
+        return "/layouts/concepts/editconcept";
     }
 
     /**
@@ -182,7 +182,7 @@ public class ConceptEditController {
             model.addAttribute("show_error_alert", true);
             model.addAttribute("error_alert_msg", indexerRunning);
             model.addAttribute(indexerStatus, indexerRunning);
-            return "/layouts/concepts/EditConcept";
+            return "/layouts/concepts/editconcept";
         }
 
         conceptEditService.editConcepts(conceptEntry, conceptEditBean.getExistingWordnetIds(),

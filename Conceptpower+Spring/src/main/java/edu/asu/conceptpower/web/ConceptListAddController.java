@@ -37,7 +37,7 @@ public class ConceptListAddController {
     @RequestMapping(value = "auth/conceptlist/addconceptlist")
     public String listAddView(@ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm)
             throws Exception {
-        return "layouts/concepts/AddConceptList";
+        return "layouts/concepts/addconceptlist";
     }
 
     /**
@@ -55,7 +55,7 @@ public class ConceptListAddController {
             BindingResult result) {
 
         if (result.hasErrors()) {
-            return "/layouts/concepts/AddConceptList";
+            return "/layouts/concepts/addconceptlist";
         }
         conceptListManager.addConceptList(conceptListAddForm.getListName(), conceptListAddForm.getDescription());
         return "redirect:/auth/conceptlist";

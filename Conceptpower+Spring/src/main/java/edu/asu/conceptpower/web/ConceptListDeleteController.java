@@ -54,7 +54,7 @@ public class ConceptListDeleteController {
 
         model.addAttribute("enabledelete", enableDelete);
 
-        return "/layouts/modals/DeleteList";
+        return "/layouts/modals/deletelist";
     }
 
     /**

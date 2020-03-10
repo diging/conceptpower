@@ -69,6 +69,6 @@ public class ConceptTypesController {
         model.addAttribute("count", pageCount);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("sortColumn", sortColumn);
-        return "layouts/concepts/ConceptTypes";
+        return "layouts/concepts/concepttypes";
     }
 }

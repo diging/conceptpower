@@ -93,7 +93,7 @@ public class ConceptWrapperAddController {
                 entry = conceptManager.getWordnetConceptEntry(wrapperId);
             } catch (LuceneException ex) {
                 logger.error("Error while fetching concepts based on concept id", ex);
-                return "/layouts/concepts/AddConceptWrapper";
+                return "/layouts/concepts/addconceptwrapper";
             }
 
             conceptWrapperAddBean.setDescription(entry.getDescription());
@@ -103,7 +103,7 @@ public class ConceptWrapperAddController {
             conceptWrapperAddBean.setWrapperids(wrapperId);
         }
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
-        return "/layouts/concepts/AddConceptWrapper";
+        return "/layouts/concepts/addconceptwrapper";
     }
 
     /**
@@ -127,7 +127,7 @@ public class ConceptWrapperAddController {
         if (result.hasErrors()) {
             model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
             model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
-            return "/layouts/concepts/AddConceptWrapper";
+            return "/layouts/concepts/addconceptwrapper";
         }
 
         String[] wrappers = conceptWrapperAddBean.getWrapperids().split(Constants.CONCEPT_SEPARATOR);
@@ -147,7 +147,7 @@ public class ConceptWrapperAddController {
             if (indexService.isIndexerRunning()) {
                 model.addAttribute("show_error_alert", true);
                 model.addAttribute("error_alert_msg", indexerRunning);
-                return "forward:/layouts/concepts/AddConceptWrapper";
+                return "forward:/layouts/concepts/addconceptwrapper";
             }
             conceptManager.addConceptListEntry(conceptEntry, principal.getName());
         }
@@ -195,7 +195,7 @@ public class ConceptWrapperAddController {
         model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
 
-        return "layouts/concepts/AddConceptWrapper";
+        return "layouts/concepts/addconceptwrapper";
     }
 
     /**
