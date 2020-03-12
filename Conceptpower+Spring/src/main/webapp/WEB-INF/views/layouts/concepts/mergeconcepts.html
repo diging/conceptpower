@@ -126,8 +126,8 @@
                               <option th:each="item: ${types}" th:value="${item.typeId}" th:text="${item.typeName}">
                               </option>
                            </select>
-                           <div class="formErrorAlert" th:if="${#fields.hasErrors('selectedTypeId')}" th:errors="*{selectedTypeId}"></div>
                         </div>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('selectedTypeId')}" th:errors="*{selectedTypeId}"></div>
                      </td>
                   </tr>
                   <tr>

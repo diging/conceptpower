@@ -83,7 +83,7 @@
             </thead>
             <tbody>
                <tr th:each="list : ${result}">
-                  <td sec:authorize="isAuthenticated()" id="editConceptModal">
+                  <td id="editConceptModal">
       
                   <a th:href="@{'/auth/conceptlist/editconcept/'+${list.entry.id}}" 
 	                     role="button" aria-expanded="false">
@@ -106,7 +106,7 @@
                      		<div th:text="'->'+${syn.word}"></div>
                     </div>
                   </td>
-                  <td th:text="${list.creator != null ? list.creator.name : '' }"></td>
+                  <td th:text="${list.creator != null ? list.creator.username : ''}"></td>
                </tr>
             </tbody>
          </table>

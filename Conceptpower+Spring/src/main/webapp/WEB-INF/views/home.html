@@ -387,7 +387,7 @@
          </ul>
       </div>
       <div id="conceptDetailsPlugin"></div>
-      <div th:insert="layouts/modals/signin :: signin"></div>
+      <div sec:authorize="!isAuthenticated()" th:insert="layouts/modals/signin :: signin"></div>
       <div id="deleteModalPlugin"></div>
    </body>
 </html>

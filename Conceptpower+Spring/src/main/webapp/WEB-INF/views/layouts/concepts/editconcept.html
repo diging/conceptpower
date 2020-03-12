@@ -73,19 +73,19 @@ $(document).ready(function() {
             },
             success : function(response) {
                 var t = $('#conceptSearch').dataTable();
-                t.clear().draw();
+                t.fnClearTable();
                 for(var i=0; i< response.length; i++) {
                     var conceptEntry = response[i].entry;
                     
                     var t = $('#conceptSearch').dataTable();
-                    t.row.add( [
+                    t.fnAddData([
 								"<span id=\"clickableIcon\"><i title=\"Click to add wordnet id\" class=\"fa fa-plus\" id=\"addwrapper\" name=\"addwrapper\" aria-hidden=\"true\"></i></span>",
                                 conceptEntry.word,
                                 conceptEntry.id,
                                 conceptEntry.wordnetId,
                                 conceptEntry.pos,
                                 conceptEntry.description
-                            ] ).draw( false );
+                            ] );
                     
                     // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
                 }
@@ -291,66 +291,13 @@ $(document).ready(function() {
    <body class="body" layout:fragment="content">
       <div class="newConcept">
          <h3 class="title">Edit concept</h3>
+         <h2 th:text="${conceptEditBean.word}"></h2>
+    	 <p th:text="${conceptEditBean.description}"></p>
          <form
             th:action="@{'/auth/conceptlist/editconcept/edit/'+${conceptId}}"
             th:object="${conceptEditBean}" method='post'
             id="createconceptform">
-            
-            <div class="sectionHeading">
-               <h4 class="numeration">1</h4>
-               <label class="formlabel">Search for WordNet concept</label>
-            </div>
-            <div>
-               <div class="formlabel row">
-                  <label style="width: 300px;">Create wrapper for concept</label>
-                  <input type="text" class="form-control" id="name" placeholder="Enter wrapper....">
-               </div>
-               <div class="row1-2">
-                  <label for="selectDropdown" class="formlabel">POS</label>
-                  <div class="custom-dropdown">
-                     <select class="selectDropdown" id="pos">
-                        <option value="noun">Noun</option>
-	                    <option value="verb">Verb</option>
-	                    <option value="adverb">Adverb</option>
-	                    <option value="adjective">Adjective</option>
-	                    <option value="other">Other</option>
-                     </select>
-                  </div>
-	                  <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="searchconcept" name="searchconcept" type="button" style="margin: 0;">
-	                  	Search
-	                  </button>
-               </div>
-            </div>
-            
-             <div class="sectionHeading">
-               <h4 class="numeration">2</h4>
-               <label class="formlabel">Select Wordnet concept from search results</label>
-            </div>
-            <div id="conceptSearchDiv">
-               <h4>The following concepts were found:</h4>
-               Click on the row to add the wordNet id
-               <p></p>
-               <table class="table table-striped table-bordered"
-                  id="conceptSearch">
-                  <thead>
-                     <tr>
-                        <th></th>
-                        <th>Term</th>
-                        <th>ID</th>
-                        <th>Wordnet ID</th>
-                        <th>POS</th>
-                        <th>Description</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-               </table>
-            </div>
-            <div class="sectionHeading">
-               <h4 class="numeration">3</h4>
-               <label class="formlabel">Enter Additional Information</label>
-            </div>
-            
+ 
             <table class="conceptPowerForm" style="margin-top: 0px;">
                <tbody>
                   <tr>
@@ -360,6 +307,19 @@ $(document).ready(function() {
                      <td>
                         <input type="text" class="form-control" th:field="*{word}">
                      </td>
+                  </tr>
+                  <tr>
+	                  <td>
+	                  	<label for="selectedPosValue" class="formlabel">POS</label>
+	                  </td>
+	                  <td>
+		                  <div class="custom-dropdown">
+		                     <select class="selectDropdown" th:field="*{selectedPosValue}">
+		                        <option th:each="item: ${conceptEditBean.posMap}" th:value="${item.value}" th:text="${item.key}">
+                              </option>
+		                     </select>
+		                  </div>
+	                  </td>
                   </tr>
                   <tr>
                      <td style="width:172px;">
@@ -450,6 +410,54 @@ $(document).ready(function() {
         		</tr>
                </tbody>
             </table>
+            
+              <div class="sectionHeading">
+               <h4 class="numeration">1</h4>
+               <label class="formlabel">Search for WordNet concept</label>
+            </div>
+            <div>
+               <div class="formlabel row">
+                  <label style="width: 300px;">Create wrapper for wordnet concept:</label>
+                  <input type="text" class="form-control" id="name" placeholder="Enter wrapper....">
+               </div>
+               <div class="row1-2">
+                  <label for="selectDropdown" class="formlabel">POS</label>
+                  <div class="custom-dropdown">
+                     <select class="selectDropdown" id="pos">
+                        <option value="noun">Noun</option>
+	                    <option value="verb">Verb</option>
+	                    <option value="adverb">Adverb</option>
+	                    <option value="adjective">Adjective</option>
+	                    <option value="other">Other</option>
+                     </select>
+                  </div>
+	                  <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="searchconcept" name="searchconcept" type="button" style="margin: 0;">
+	                  	Search
+	                  </button>
+               </div>
+            </div>
+            
+            <div id="conceptSearchDiv" style="display:none;">
+               <h4>The following concepts were found:</h4>
+               Click on the row to add the wordNet id
+               <p></p>
+               <table class="table table-striped table-bordered"
+                  id="conceptSearch">
+                  <thead>
+                     <tr>
+                        <th></th>
+                        <th>Term</th>
+                        <th>ID</th>
+                        <th>Wordnet ID</th>
+                        <th>POS</th>
+                        <th>Description</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+               </table>
+            </div>
+            
             <div class="btnCenter">
                <a th:href="@{'/home/conceptsearch/?word='+${searchWord}+'&pos='+${conceptEditBean.selectedPosValue}}"><button class="btn btn-outline-success my-2 my-sm-0 cancelTypeBtn" type="button" >
                Cancel
@@ -462,7 +470,7 @@ $(document).ready(function() {
             <input type="hidden" th:field="*{fromHomeScreen}" />
          </form>
       </div>
-      <div th:insert="layouts/modals/Synonyms :: synonyms"></div>
+      <div th:insert="layouts/modals/synonyms :: synonyms"></div>
    </body>
 </html>
 
