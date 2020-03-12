@@ -227,19 +227,6 @@ table{
 	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
 }
 
-#deleteBtn {
-	background-color: transparent;
-	border: 2px solid #d54854;
-	color: #d54854;
-}
-
-#deleteBtn:hover {
-	background-color: #d54854;
-	border: 2px solid #d54854;
-	color: white;
-	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
-}
-
 .fa-trash-o{
 	color:	#d54854;
 	cursor: pointer;

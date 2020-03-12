@@ -7,7 +7,7 @@
    <script>
    	
 	$(document).ready(function() {
-	   $(document).on('click','.deleteBtn', function(e){
+	   $(document).on('click','#deleteBtn', function(e){
 		   var username = $(this).data().username;
 		    $.ajax({
 				type : "GET",
@@ -19,6 +19,10 @@
 				}
 	  		 });
 	   });
+	   
+	   $(document).on('hidden.bs.modal', '#deleteModalPlugin',function(event) {
+			$('#deleteModalPlugin').empty();
+		});
    });
    </script>
    </head>
@@ -46,17 +50,8 @@
                <tbody>
                   <tr th:each="user : ${users}">
                      <td>
-                        <div class="dropdown">
-                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                           <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                           <div class="cardLayout dropdown-menu" role="menu">
-                              <div class="card-body">
-                                 <a th:href="@{'/auth/user/edituser/'+${user.username}}" class="btn btn-primary" id="editBtn">Edit User</a>
-                                 <button class="btn btn-primary deleteBtn" type="button" th:data-username="${user.username}" id="deleteBtn" data-toggle="modal" data-target="#deleteButton">Delete</button>
-                                 
-                              </div>
-                           </div>
-                        </div>
+                        <a th:href="@{'/auth/user/edituser/'+${user.username}}"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                     	<i class="fa fa-trash-o" id="deleteBtn"th:data-username="${user.username}" data-toggle="modal" data-target="#deleteButton"  aria-hidden="true" ></i>
                      </td>
                      <td th:text="${user.username}"></td>
                      <td th:text="${user.fullname}"></td>

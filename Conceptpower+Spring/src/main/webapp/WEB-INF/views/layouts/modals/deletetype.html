@@ -9,13 +9,13 @@
          <div class="modal-content" >
             <div class="modal-body">
 					<div th:if="${enabledelete == false}">
-						<h4>You cannot delete this type since some concepts are using this type.</h4>
-						<h4>Delete all existing concepts that use this type to enable delete.</h4>
+						<h5>You cannot delete this type since some concepts are using this type.</h5>
+						<h5>Delete all existing concepts that use this type to enable delete.</h5>
 					</div>
 					<div th:if="${enabledelete == true || enabledelete == null}">
-	            	   	<h4 style="text-align: center;">Are you sure you want to delete?</h4>
+	            	   	<h5 style="text-align: center;">Are you sure you want to delete?</h5>
 	            	   	<a th:href="@{'/auth/concepttype/deleteconcepttypeconfirm/'+${typeid}}">
-							<input type="submit" value="Delete" class="btn btn-primary deleteBtn" id="deleteBtn" />
+							<button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:25%">Delete Concept</button>
 						</a>
                    	</div>
             </div>   

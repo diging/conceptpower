@@ -24,7 +24,7 @@
 	                  </td>
 	                  <td>
 	                     <textarea class="form-control" th:field="*{typeDescription}" rows="3" placeholder="Enter type description...."></textarea>
-	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeName}"></div>
+	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeDescription}"></div>
 	                  </td>
 	               </tr>
 	               <tr>
@@ -43,7 +43,7 @@
 	                  <td>
 	                  	<div class="custom-dropdown">
 		                     <select th:path="*{superType}">
-		                     	<option th:selected=true value="" >Please select an option</option>
+		                     	<option th:selected=true value="" >Select a type </option>
 							    <option th:each="types: ${conceptTypeAddForm.types}" th:value="${types.value}" th:text="${types.value}">
 							    </option>
 					 		</select>

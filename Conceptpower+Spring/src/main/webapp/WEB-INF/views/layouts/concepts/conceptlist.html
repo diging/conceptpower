@@ -7,7 +7,7 @@
    <script>
    	
 	$(document).ready(function() {
-	   $(document).on('click','.deleteBtn', function(e){
+	   $(document).on('click','#deleteBtn', function(e){
 		   var listName = $(this).data().listname;
 		    $.ajax({
 				type : "GET",
@@ -49,16 +49,8 @@
             <tbody>
                <tr th:each="list : ${result}">
                   <td>
-                     <div class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                        <div class="cardLayout dropdown-menu" role="menu">
-                           <div class="card-body">
-                              <a th:href="@{'/auth/conceptlist/editlist/'+${list.conceptListName}}" class="btn btn-primary" id="editBtn">Edit Item</a>
-                              <button class="btn btn-primary deleteBtn" id="deleteBtn" th:data-listname="${list.conceptListName}" data-toggle="modal" data-target="#deleteList">Delete</button>
-                           </div>
-                        </div>
-                     </div>
+                     <a th:href="@{'/auth/conceptlist/editlist/'+${list.conceptListName}}"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                     <i class="fa fa-trash-o" id="deleteBtn" th:data-listname="${list.conceptListName}" data-toggle="modal" data-target="#deleteList"  aria-hidden="true" ></i>
                   </td>
                   <td >
                   <font size="2"><a

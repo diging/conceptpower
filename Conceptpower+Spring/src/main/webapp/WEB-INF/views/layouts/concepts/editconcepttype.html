@@ -45,7 +45,7 @@
 	                  <td>
 	                  	<div class="custom-dropdown">
 	                     <select th:name="superType" >
-	                     	<option>N/A</option>
+	                     	<option th:selected="${conceptTypeAddForm.superType == null}" th:value='null' >No super type selected</option>
 						    <option th:each="types: ${conceptTypeAddForm.types}" th:selected="${types.value == conceptTypeAddForm.superType}" th:value="${types.value}" th:text="${types.value}">
 						    </option>
 				 		 </select>
