@@ -26,7 +26,7 @@
 	                    contentType: "application/json",
 	                    success: function(data) {
 	                        $('#conceptDetailsPlugin').html(data);
-	                        $('#conceptDetailsModal').modal('show');
+	                        $('#conceptDetail').modal('show');
 	                    }
 	                });
 	                
@@ -51,7 +51,7 @@
 	          $('#deleteModalPlugin').empty();
 	    });
 	    
-	    $(document).on('hidden.bs.modal', '#conceptDetailsModal', function(event) {
+	    $(document).on('hidden.bs.modal', '#conceptDetail', function(event) {
             $('#conceptDetailsPlugin').empty();
         });
    	</script>
@@ -93,7 +93,7 @@
                   <i class="fa fa-trash-o" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${list.entry.id}" data-toggle="modal" data-target="#deleteConcept"></i>
                         	
                   </td>
-                  <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${list.entry.id}" th:text="${list.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
+                  <td data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" th:data-conceptid="${list.entry.id}" th:text="${list.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
                   <td th:text="${list.entry.id}"></td>
                   
                   <td th:text="${list.entry.wordnetId}" id="wordnet"> </td>

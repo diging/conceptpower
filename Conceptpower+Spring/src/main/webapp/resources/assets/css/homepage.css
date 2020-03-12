@@ -30,16 +30,15 @@ html,body{
   	margin: 0;
 }
 
-#conceptDetailsModal .modal-content{
-  	width: 300px;
+.conceptDetailsModal .modal-content{
 	border-radius:30px;
-	height: auto;
-	font-weight: 400;
-	font-size: 13px;
-	padding: 15px;
+	width:35%;
+	overflow:auto;
+	margin: auto;
+	margin-top: 200px;
 }
 
-#conceptDetailsModal .modal-header{
+.conceptDetailsModal .modal-header{
 	background-color:#4f3acc;
 	color:white;
 	font-size:15px;
@@ -251,18 +250,12 @@ table{
     right: unset;
 }
 
-#conceptDetailsModal .modal-content, #conceptDetailsModal .modal-body{
+.conceptDetailsModal .modal-content, .conceptDetailsModal .modal-body{
 	padding: unset;	
 }
 
-#conceptDetailsModal .modal-content{
-	width:35%;
-	overflow:auto;
-	margin: auto;
-	margin-top: 200px;
-}
 
-#conceptDetailsModal .modal-title{
+.conceptDetailsModal .modal-title{
 	display: inline-block
 }
 

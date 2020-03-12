@@ -141,7 +141,7 @@
                              contentType: "application/json",
                              success: function(data) {
                                  $('#conceptDetailsPlugin').html(data);
-                                 $('#conceptDetailsModal').modal('show');
+                                 $('#conceptDetail').modal('show');
                              }
                          });
          
@@ -173,7 +173,7 @@
                  });
              });
          
-             $(document).on('hidden.bs.modal', '#conceptDetailsModal', function(event) {
+             $(document).on('hidden.bs.modal', '#conceptDetail', function(event) {
                  $('#conceptDetailsPlugin').empty();
              });
          
@@ -356,7 +356,7 @@
                   <td sec:authorize="isAuthenticated()">
                      <input type="checkbox"  id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
                   </td>
-                  <td data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
+                  <td data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #4f3acc; cursor: pointer;"></td>
                   <td th:text="${concept.entry.id}"></td>
                   <td th:text="${concept.entry.wordnetId}" id="wordnet"> </td>
                   <td th:text="${concept.entry.pos}"></td>

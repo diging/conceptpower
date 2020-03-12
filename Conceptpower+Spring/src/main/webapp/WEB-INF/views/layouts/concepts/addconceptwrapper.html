@@ -149,7 +149,7 @@
                              contentType: "application/json",
                              success: function(data) {
                                  $('#conceptDetailsPlugin').html(data);
-                                 $('#conceptDetailsModal').modal('show');
+                                 $('#conceptDetail').modal('show');
                              }
                          });
                          
@@ -158,7 +158,7 @@
              });
          });
          
-         $(document).on('hidden.bs.modal', '#conceptDetailsModal', function(event) {
+         $(document).on('hidden.bs.modal', '#conceptDetail', function(event) {
              $('#conceptDetailsPlugin').empty();
          });
          
@@ -317,7 +317,7 @@
          
                              html += '<div id="'+ conceptEntry.id +'div">';
                              
-                             html += '<a data-toggle="modal" role="button" data-target="#conceptDetailsModal" id="conceptDetails" data-conceptid="';
+                             html += '<a data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" data-conceptid="';
                              html += conceptEntry.id+'" >';
                              html += '<h5>' + conceptEntry.lemma + '</h5>';
                              html += "</a>";
