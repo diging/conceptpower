@@ -291,9 +291,6 @@
              });
          }
          
-         $(function() {
-         
-         });
          $(document).ready(defineServicedatatable);
          function defineServicedatatable() {
              $('#serviceResultTable').dataTable(
@@ -366,51 +363,42 @@
                  var ret = true;
                  if ($("#name").val() === "") {
                      $("#nameerror").html('Please enter a name for concept.');
-                     hideFormProcessing();
+                    hideFormProcessing();
                      ret = false;
                  } else {
                      $("#nameerror").html('');
                  }
                  if ($("#pos").val() === "") {
                      $("#poserror").html('Please select a pos.');
-                     hideFormProcessing();
+                   hideFormProcessing();
                      ret = false;
                  } else {
                      $("#poserror").html('');
                  }
                  if ($("#selectedList").val() === "") {
                      $("#listerror").html('Please select a concept list.');
-                     hideFormProcessing();
+                  hideFormProcessing();
                      ret = false;
                  } else {
                      $("#listerror").html('');
                  }
                  if ($("#selectedTypes").val() === "") {
                      $("#typeerror").html('Please select a concept type.');
-                     hideFormProcessing();
+                    hideFormProcessing();
                      ret = false;
                  } else {
                      $("#typeerror").html('');
                  }
                  return ret;
+                 
              });    
          });
          
-         $(document).ready(showAjaxProcessing);
-         function showAjaxProcessing() {
-             var $loading = $('#loadingDiv').hide();
-             $(document).ajaxStart(function() {
-                 $loading.show();
-             }).ajaxStop(function() {
-                 $loading.hide();
-             });
-         }
-         $(document).ready(hideFormProcessing);
          function hideFormProcessing() {
-             $('#loadingDiv').hide();
+          $('#loadingDiv').html('<span for="loadingDiv">Add Concept</span>');
          }
          function showFormProcessing() {
-             $('#loadingDiv').show();
+             $('#loadingDiv').html('<i id="loadingDiv" class="fa fa-circle-o-notch fa-spin" ></i><span for="loading"> Processing</span>');
          }
          
          
@@ -431,6 +419,7 @@
          }
          
          $(document).ready(hideLoadingIcon());
+         $(document).ready(hideFormProcessing);
       </script>
    </head>
    <body class="body" layout:fragment="content">
@@ -491,7 +480,7 @@
                      </td>
                      <td>
                         <input type="text" class="form-control" th:field="*{name}" placeholder="Enter concept....">
-                        <div class="formErrorAlert" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        <div class="formErrorAlert" id="nameerror"></div>
                      </td>
                   </tr>
                   <tr>
@@ -508,22 +497,23 @@
                               <option value="adjective">Adjective</option>
                               <option value="other">Other</option>
                            </select>
-                           <div class="formErrorAlert" th:if="${#fields.hasErrors('pos')}" th:errors="*{pos}"></div>
                         </div>
+                        <div class="formErrorAlert" id="poserror"></div>
                      </td>
                   </tr>
                   <tr>
                      <td style="width:172px;">
-                         <label for="selectedList" class="formlabel">Concept List</label>
+                        <label for="selectedList" class="formlabel">Concept List</label>
                      </td>
                      <td>
-                         <div class="custom-dropdown" >
-                            <select th:field="*{selectedList}" class="POS">
-                               <option th:each="item: ${conceptAddBean.lists}" th:value="${item.key}" th:text="${item.value}">
-                               </option>
-                            </select>
-                            <div class="formErrorAlert" th:if="${#fields.hasErrors('selectedList')}" th:errors="*{selectedList}"></div>
-                         </div>
+                        <div class="custom-dropdown" >
+                           <select th:field="*{selectedList}" class="POS">
+                              <option value="">Please select</option>
+                              <option th:each="item: ${conceptAddBean.lists}" th:value="${item.key}" th:text="${item.value}">
+                              </option>
+                           </select>
+                        </div>
+                        <div class="formErrorAlert" id="listerror"></div>
                      </td>
                   </tr>
                   <tr>
@@ -553,12 +543,13 @@
                      </td>
                      <td class="drpSpacing">
                         <div class="custom-dropdown">
-                           <select th:name="selectedTypes" class="POS">
+                           <select th:field="*{selectedTypes}" class="POS">
+                              <option value="">Please select</option>
                               <option th:each="type: ${conceptAddBean.types}" th:value="${type.key}" th:text="${type.value}">
                               </option>
                            </select>
-                           <div class="formErrorAlert" th:if="${#fields.hasErrors('selectedTypes')}" th:errors="*{selectedTypes}"></div>
                         </div>
+                        <div class="formErrorAlert" id="typeerror"></div>
                      </td>
                   </tr>
                   <tr>
@@ -586,9 +577,8 @@
                </tbody>
             </table>
             <div class="btnCenter">
-               <button class="btn btn-outline-success my-2 my-sm-0 submitFormBtn"  type="submit"  th:onclick="'showFormProcessing()'"
-                  th:onsubmit="'hideFormProcessing()'">
-               Add Concept
+               <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" type="submit" th:onclick="'showFormProcessing()'" th:onsubmit="'hideFormProcessing()'">
+                  <div id="loadingDiv">Add Concept</div>
                </button>
             </div>
          </form>

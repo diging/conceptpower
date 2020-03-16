@@ -172,3 +172,10 @@ label {
 .addWrapper .formlabel{
 	width: 20%;
 }
+
+#conceptDetailForm .modal-content {
+    border-radius: unset;
+    width: 60%;
+    overflow: unset;
+    margin-top: 20px;
+}	
