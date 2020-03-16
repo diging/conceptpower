@@ -4,60 +4,60 @@
    layout:decorate="~{layouts/main}"
    >
    <body class="body" layout:fragment="content">
-         <div class="conceptPowerWrapper">
+      <div class="conceptPowerWrapper">
          <h3 class="title">Add a new concept type</h3>
          <form th:action="@{/auth/concepts/createconcepttype}" method="post" th:object="${conceptTypeAddForm}">
-	         <table class="conceptPowerForm">
-	            <tbody>
-	               <tr>
-	                  <td style="width:40px;">
-	                     <label for="typeName"  class="formlabel">Type name</label>
-	                  </td>
-	                  <td>
-	                     <input type="text" th:field="*{typeName}" class="form-control" placeholder="Enter type name....">
-	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}"></div>
-	                  </td>
-	               </tr>
-	               <tr>
-	                  <td style="width:172px;">
-	                     <label for="typeDescription"  class="formlabel">Type description</label>
-	                  </td>
-	                  <td>
-	                     <textarea class="form-control" th:field="*{typeDescription}" rows="3" placeholder="Enter type description...."></textarea>
-	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeDescription}"></div>
-	                  </td>
-	               </tr>
-	               <tr>
-	                  <td style="width:40px;">
-	                     <label for="matches"  class="formlabel">Matches</label>
-	                  </td>
-	                  <td>
-	                     <textarea class="form-control" th:path="*{matches}" rows="3"></textarea>
-	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('matches')}" th:errors="*{matches}"></div>
-	                  </td>
-	               </tr>
-	               <tr>
-	                  <td style="width:40px;">
-	                     <label for="SuperType" class="formlabel">Super Type</label>
-	                  </td>
-	                  <td>
-	                  	<div class="custom-dropdown">
-		                     <select th:field="*{superType}">
-		                     	<option th:selected=true value="" >Select a type </option>
-							    <option th:each="types: ${conceptTypeAddForm.types}" th:value="${types.value}" th:text="${types.value}">
-							    </option>
-					 		</select>
-				 		</div>
-	                  </td>
-	               </tr>
-	            </tbody>
-	         </table>
-	         <div class="btnCenter">
-	         <button class="btn btn-outline-success my-2 my-sm-0 submitFormBtn" type="submit">
-	         	Create concept type
-	         </button>
-	         </div>
-	         </form>
-         </div>
+            <table class="conceptPowerForm">
+               <tbody>
+                  <tr>
+                     <td style="width:40px;">
+                        <label for="typeName"  class="formlabel">Type name</label>
+                     </td>
+                     <td>
+                        <input type="text" th:field="*{typeName}" class="form-control" placeholder="Enter type name....">
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}"></div>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width:172px;">
+                        <label for="typeDescription"  class="formlabel">Type description</label>
+                     </td>
+                     <td>
+                        <textarea class="form-control" th:field="*{typeDescription}" rows="3" placeholder="Enter type description...."></textarea>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeDescription}"></div>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width:40px;">
+                        <label for="matches"  class="formlabel">Matches</label>
+                     </td>
+                     <td>
+                        <textarea class="form-control" th:path="*{matches}" rows="3"></textarea>
+                        <div class="formErrorAlert" th:if="${#fields.hasErrors('matches')}" th:errors="*{matches}"></div>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width:40px;">
+                        <label for="SuperType" class="formlabel">Super Type</label>
+                     </td>
+                     <td>
+                        <div class="custom-dropdown">
+                           <select th:field="*{superType}">
+                              <option th:selected=true value="" >Select a type </option>
+                              <option th:each="types: ${conceptTypeAddForm.types}" th:value="${types.value}" th:text="${types.value}">
+                              </option>
+                           </select>
+                        </div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <div class="btnCenter">
+               <button class="btn btn-outline-success my-2 my-sm-0 submitFormBtn" type="submit">
+               Create concept type
+               </button>
+            </div>
+         </form>
+      </div>
    </body>
 </html>

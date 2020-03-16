@@ -3,16 +3,16 @@
    xmlns:th="http://www.thymeleaf.org"
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-      <div class="modal fade conceptDetailsModal" id="deleteConcept" role="dialog">
-            <div class="modal-content" >
-            	<div class="modal-header" style="background-color: #df4141;">
-		            <div class="modal-title" style="font-size: 24px;" >Are you sure want to delete?  <span th:text="${word}"></span></div>
-		            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		            <span aria-hidden="true" style="color:white;">&times;</span>
-		            </button>
-         		</div>
-               <div class="modal-body">
-               	<ul class="list-group" style="margin-bottom: 0px;">
+   <div class="modal fade conceptDetailsModal" id="deleteConcept" role="dialog">
+      <div class="modal-content" >
+         <div class="modal-header" style="background-color: #df4141;">
+            <div class="modal-title" style="font-size: 24px;" >Are you sure want to delete?  <span th:text="${word}"></span></div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" style="color:white;">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <ul class="list-group" style="margin-bottom: 0px;">
                <li class="list-group-item">
                   <span class="conceptDetailsKey">ID:</span>
                   <p class="conceptDetailsValue" id="conceptDetailsId" th:text="${conceptId}" ></p>
@@ -50,22 +50,22 @@
                   <p class="conceptDetailsValue" id="conceptDetailsCreator" th:text="${user}"></p>
                </li>
             </ul>
-                  <form
-                     th:action="@{'/auth/conceptlist/deleteconceptconfirm/'+${conceptid}+'?fromHomeScreenDelete='+${fromHomeScreenDelete}+'&listName='+${conceptList}}"
-                     method='post' id="deleteConfirmForm">
-                     <ul class="list-group" style="margin-bottom: 0px;">
-                        <li class="list-group-item">
-                           <span class="conceptDetailsKey">Concept Id:</span>
-                           <p class="conceptDetailsValue" th:text="${conceptId}" ></p>
-                        </li>
-                        <li class="list-group-item list-group-item-info">
-                           <span class="conceptDetailsKey">Word:</span>
-                           <p class="conceptDetailsValue" th:text="${word}"></p>
-                        </li>
-                     </ul>
-                     <button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:41%; background-color: #df4141;">Delete Concept</button>
-                  </form>
-               </div>
-            </div>
+            <form
+               th:action="@{'/auth/conceptlist/deleteconceptconfirm/'+${conceptid}+'?fromHomeScreenDelete='+${fromHomeScreenDelete}+'&listName='+${conceptList}}"
+               method='post' id="deleteConfirmForm">
+               <ul class="list-group" style="margin-bottom: 0px;">
+                  <li class="list-group-item">
+                     <span class="conceptDetailsKey">Concept Id:</span>
+                     <p class="conceptDetailsValue" th:text="${conceptId}" ></p>
+                  </li>
+                  <li class="list-group-item list-group-item-info">
+                     <span class="conceptDetailsKey">Word:</span>
+                     <p class="conceptDetailsValue" th:text="${word}"></p>
+                  </li>
+               </ul>
+               <button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:41%; background-color: #df4141;">Delete Concept</button>
+            </form>
+         </div>
       </div>
+   </div>
 </html>

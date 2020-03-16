@@ -4,69 +4,67 @@
    layout:decorate="~{layouts/main}"
    >
    <head>
-   <script>
-   	
-	$(document).ready(function() {
-	   $(document).on('click','#deleteBtn', function(e){
-		   var username = $(this).data().username;
-		    $.ajax({
-				type : "GET",
-				url : '/conceptpower/auth/user/deleteuser/'+username,
-				contentType:"application/json",
-				success : function(data) {
-					$('#deleteModalPlugin').html(data);
-					$('#deleteButton').modal('show');
-				}
-	  		 });
-	   });
-	   
-	   $(document).on('hidden.bs.modal', '#deleteModalPlugin',function(event) {
-			$('#deleteModalPlugin').empty();
-		});
-   });
-   </script>
+      <script>
+         $(document).ready(function() {
+            $(document).on('click','#deleteBtn', function(e){
+         	   var username = $(this).data().username;
+         	    $.ajax({
+         			type : "GET",
+         			url : '/conceptpower/auth/user/deleteuser/'+username,
+         			contentType:"application/json",
+         			success : function(data) {
+         				$('#deleteModalPlugin').html(data);
+         				$('#deleteButton').modal('show');
+         			}
+           		 });
+            });
+            
+            $(document).on('hidden.bs.modal', '#deleteModalPlugin',function(event) {
+         		$('#deleteModalPlugin').empty();
+         	});
+           });
+           
+      </script>
    </head>
    <body class="body" layout:fragment="content">
-         <div class="resultsSection">
-            <div class="headerSection">
-               <div style="display: block;">
-                  <h3 class="titleHeader">User Management</h3>
-                  <h4 class="subHeader">See existing users and modify user profiles.</h4>
-               </div>
-               <a th:href="@{/auth/user/add}"><button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" >
-               <i class="fa fa-plus" aria-hidden="true"></i> Add new user
-               </button></a>
+      <div class="resultsSection">
+         <div class="headerSection">
+            <div style="display: block;">
+               <h3 class="titleHeader">User Management</h3>
+               <h4 class="subHeader">See existing users and modify user profiles.</h4>
             </div>
-            <table class="table table-striped resultTable tableStyles" th:if="${users.length > 0}">
-               <thead>
-                  <tr>
-                     <th scope="col"></th>
-                     <th scope="col">Username</th>
-                     <th scope="col">Name</th>
-                     <th scope="col">Email Id</th>
-                     <th scope="col">Admin rights</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <tr th:each="user : ${users}">
-                     <td>
-                        <a th:href="@{'/auth/user/edituser/'+${user.username}}"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                     	<i class="fa fa-trash-o" id="deleteBtn"th:data-username="${user.username}" data-toggle="modal" data-target="#deleteButton"  aria-hidden="true" ></i>
-                     </td>
-                     <td th:text="${user.username}"></td>
-                     <td th:text="${user.fullname}"></td>
-                     <td th:text="${user.email}"></td>
-                     <td>
-                     	<i class="fa fa-check-square" aria-hidden="true" th:if="${user.isAdmin == true}" style="color:green;"></i>
-                     	<i class="fa fa-window-close" aria-hidden="true" th:if="${user.isAdmin == false}" style="color:red;"></i>
-                     	
-                     </td>
-                  </tr>
-                  
-               </tbody>
-            </table>
-            <div th:if="${users.length <= 0}">No Users exist</div>
+            <a th:href="@{/auth/user/add}"><button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" >
+            <i class="fa fa-plus" aria-hidden="true"></i> Add new user
+            </button></a>
          </div>
-         <div id="deleteModalPlugin"></div>
+         <table class="table table-striped resultTable tableStyles" th:if="${users.length > 0}">
+            <thead>
+               <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Username</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email Id</th>
+                  <th scope="col">Admin rights</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr th:each="user : ${users}">
+                  <td>
+                     <a th:href="@{'/auth/user/edituser/'+${user.username}}"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                     <i class="fa fa-trash-o" id="deleteBtn"th:data-username="${user.username}" data-toggle="modal" data-target="#deleteButton"  aria-hidden="true" ></i>
+                  </td>
+                  <td th:text="${user.username}"></td>
+                  <td th:text="${user.fullname}"></td>
+                  <td th:text="${user.email}"></td>
+                  <td>
+                     <i class="fa fa-check-square" aria-hidden="true" th:if="${user.isAdmin == true}" style="color:green;"></i>
+                     <i class="fa fa-window-close" aria-hidden="true" th:if="${user.isAdmin == false}" style="color:red;"></i>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+         <div th:if="${users.length <= 0}">No Users exist</div>
+      </div>
+      <div id="deleteModalPlugin"></div>
    </body>
 </html>

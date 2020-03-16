@@ -13,28 +13,27 @@
           	$(document).on('click','#paginate', function(e){
           		window.location = 'concepttype?page=' + $(this).data().page + '&sortDir=' + $(this).data().sortdir + '&sortColumn=' + $(this).data().sortcolumn;
           	})
-
-		   $(document).on('click','#deleteBtn', function(e){
-			   var typeId = $(this).data().typeid;
-			    $.ajax({
-					type : "GET",
-					url : '/conceptpower/auth/concepttype/deletetype/'+typeId,
-					contentType:"application/json",
-					success : function(data) {
-			 			$('#deleteModalPlugin').html(data);
-				 		$('#deleteType').modal('show'); 
-					}
-		  		 });
-		   });
+         
+         $(document).on('click','#deleteBtn', function(e){
+         var typeId = $(this).data().typeid;
+         $.ajax({
+         type : "GET",
+         url : '/conceptpower/auth/concepttype/deletetype/'+typeId,
+         contentType:"application/json",
+         success : function(data) {
+         $('#deleteModalPlugin').html(data);
+         $('#deleteType').modal('show'); 
+         }
+         });
+         });
          
          	$(document).on('hidden.bs.modal', '#deleteModalPlugin',function(event) {
-    			$('#deleteModalPlugin').empty();
-    		});
-    	    
- 
+         $('#deleteModalPlugin').empty();
+         });
+         
+         
       </script>
    </head>
-   
    <body class="body" layout:fragment="content">
       <div class="resultsSection">
          <div class="headerSection">
@@ -75,8 +74,7 @@
                </tr>
             </tbody>
          </table>
-         
-      	<div th:if="${result.size()<=0}"> No Concept Types to display</div>
+         <div th:if="${result.size()<=0}"> No Concept Types to display</div>
       </div>
       <div class="pagination" th:if="${result.size() > 0}">
          <ul class="pagination">

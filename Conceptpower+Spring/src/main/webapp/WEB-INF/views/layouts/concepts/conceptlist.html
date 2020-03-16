@@ -4,27 +4,27 @@
    layout:decorate="~{layouts/main}"
    >
    <head>
-   <script>
-   	
-	$(document).ready(function() {
-	   $(document).on('click','#deleteBtn', function(e){
-		   var listName = $(this).data().listname;
-		    $.ajax({
-				type : "GET",
-				url : '/conceptpower/auth/conceptlist/deletelist/'+listName,
-				contentType:"application/json",
-				success : function(data) {
-	 				$('#deleteModalPlugin').html(data);
-					$('#deleteList').modal('show');
-				}
-	  		 });
-	   });
-   });
-	
-	$(document).on('hidden.bs.modal', '#deleteModalPlugin',function(event) {
-		$('#deleteModalPlugin').empty();
-	});
-   </script>
+      <script>
+         $(document).ready(function() {
+            $(document).on('click','#deleteBtn', function(e){
+         	   var listName = $(this).data().listname;
+         	    $.ajax({
+         			type : "GET",
+         			url : '/conceptpower/auth/conceptlist/deletelist/'+listName,
+         			contentType:"application/json",
+         			success : function(data) {
+          				$('#deleteModalPlugin').html(data);
+         				$('#deleteList').modal('show');
+         			}
+           		 });
+            });
+           });
+         
+         $(document).on('hidden.bs.modal', '#deleteModalPlugin',function(event) {
+         	$('#deleteModalPlugin').empty();
+         });
+           
+      </script>
    </head>
    <body class="body" layout:fragment="content">
       <div class="resultsSection">
@@ -37,7 +37,6 @@
             <i class="fa fa-plus" aria-hidden="true"></i> Add New Concept List
             </button></a>
          </div>
-         
          <table class="table table-striped resultTable tableStyles" th:if="${result.size() > 0}" >
             <thead>
                <tr>
@@ -53,9 +52,10 @@
                      <i class="fa fa-trash-o" id="deleteBtn" th:data-listname="${list.conceptListName}" data-toggle="modal" data-target="#deleteList"  aria-hidden="true" ></i>
                   </td>
                   <td >
-                  <font size="2"><a
-                  			style="text-decoration:none;"
-							th:href="@{'/auth/'+${list.conceptListName}+'/concepts'}" th:text="${list.conceptListName}"></a></font></td>
+                     <font size="2"><a
+                        style="text-decoration:none;"
+                        th:href="@{'/auth/'+${list.conceptListName}+'/concepts'}" th:text="${list.conceptListName}"></a></font>
+                  </td>
                   <td th:text="${list.description}"></td>
                </tr>
             </tbody>

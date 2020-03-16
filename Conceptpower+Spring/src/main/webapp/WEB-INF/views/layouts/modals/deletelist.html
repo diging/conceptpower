@@ -3,28 +3,28 @@
    xmlns:th="http://www.thymeleaf.org"
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<body class="body" layout:fragment="content">
-   <div class="modal fade" id="deleteList" role="dialog">
-      <div class="modal-dialog" id="requestBox" style="margin-right: auto;margin-top: 300px;">
-         <div class="modal-content" >
-            <div class="modal-body">
-            	<form
-            		th:action="@{'/auth/conceptlist/deleteconceptlistconfirm/'+${listName}}"
-					method='get' id="edituserform">
-					<div th:if="${enabledelete == false}">
-						<h4>You cannot delete this type since some concepts are using this type.</h4>
-						<h4>Delete all existing concepts that use this type to enable delete.</h4>
-					</div>
-					<div th:if="${enabledelete == true || enabledelete == null}">
-						<input type="hidden" th:value="${listName}" name="listname" />
-						<input type="hidden" th:value="${description}" name="description" />
-	            	   	<h4 style="text-align: center;">Are you sure you want to delete?</h4>
-	            	   	<button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:33%">Delete List</button>
-                   	</div>
-                </form>
-            </div>   
+   <body class="body" layout:fragment="content">
+      <div class="modal fade" id="deleteList" role="dialog">
+         <div class="modal-dialog" id="requestBox" style="margin-right: auto;margin-top: 300px;">
+            <div class="modal-content" >
+               <div class="modal-body">
+                  <form
+                     th:action="@{'/auth/conceptlist/deleteconceptlistconfirm/'+${listName}}"
+                     method='get' id="edituserform">
+                     <div th:if="${enabledelete == false}">
+                        <h4>You cannot delete this type since some concepts are using this type.</h4>
+                        <h4>Delete all existing concepts that use this type to enable delete.</h4>
+                     </div>
+                     <div th:if="${enabledelete == true || enabledelete == null}">
+                        <input type="hidden" th:value="${listName}" name="listname" />
+                        <input type="hidden" th:value="${description}" name="description" />
+                        <h4 style="text-align: center;">Are you sure you want to delete?</h4>
+                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:33%">Delete List</button>
+                     </div>
+                  </form>
+               </div>
+            </div>
          </div>
       </div>
-   </div>
-</body>
+   </body>
 </html>
