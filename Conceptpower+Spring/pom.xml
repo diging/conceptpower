@@ -374,7 +374,13 @@
 			<version>1.5.0-b01</version>
 		</dependency>
 
-
+		<!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
+		<dependency>
+		    <groupId>commons-beanutils</groupId>
+		    <artifactId>commons-beanutils</artifactId>
+		    <version>1.6</version>
+		</dependency>
+				
 		<!-- Joda Time -->
 		<dependency>
 			<groupId>joda-time</groupId>
