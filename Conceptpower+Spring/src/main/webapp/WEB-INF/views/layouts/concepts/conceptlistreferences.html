@@ -15,21 +15,19 @@
                      conceptid: conceptid
                  },
                  success: function(details) {
-                     details = $.parseJSON(details);
-                     var token = $("meta[name='_csrf_token']").attr("content");
-                 	
-                     //Ajax Call to plugin a pre populated Concepet Details Modal
-                     $.ajax({
-                         type: "POST",
-                         url: "/conceptpower/conceptdetails?_csrf=" + token.trim(),
-                         data: JSON.stringify(details),
-                         contentType: "application/json",
-                         success: function(data) {
-                             $('#conceptDetailsPlugin').html(data);
-                             $('#conceptDetail').modal('show');
-                         }
-                     });
-                     
+                	 details = $.parseJSON(details);
+                	 $("#conceptDetailsName").text(details.name);
+					 $("#conceptDetailsId").text(details.id);
+					 $("#conceptDetailsUri").text(details.uri);
+					 $("#conceptDetailsWordnetId").text(details.wordnetid);
+					 $("#conceptDetailsPos").text(details.pos);
+					 $("#conceptDetailsList").text(details.conceptlist);
+					 $("#conceptDetailsType").text(details.type);
+					 $("#conceptDetailsEqualTo").text(details.equalto);
+					 $("#conceptDetailsSimilarTo").text(details.similarto);
+					 $("#conceptDetailsCreator").text(details.creator);
+					 $("#conceptDetailsDesc").html(details.description);
+					 $("#conceptDetailsMergedIds").html(details.mergedIds);
                  }
              });
          });
@@ -110,6 +108,6 @@
          <div th:if="${result.size() <= 0}">No Concept Lists to display</div>
       </div>
       <div id="deleteModalPlugin"></div>
-      <div id="conceptDetailsPlugin"></div>
+      <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
    </body>
 </html>

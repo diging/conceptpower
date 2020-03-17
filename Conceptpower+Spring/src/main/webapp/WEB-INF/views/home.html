@@ -131,19 +131,19 @@
                      },
                      success: function(details) {
                          details = $.parseJSON(details);
-                         var token = $("meta[name='_csrf_token']").attr("content");
-         
-                         //Ajax Call to plugin a pre populated Concepet Details Modal
-                         $.ajax({
-                             type: "POST",
-                             url: "/conceptpower/conceptdetails?_csrf=" + token.trim(),
-                             data: JSON.stringify(details),
-                             contentType: "application/json",
-                             success: function(data) {
-                                 $('#conceptDetailsPlugin').html(data);
-                                 $('#conceptDetail').modal('show');
-                             }
-                         });
+                    	 $("#conceptDetailsName").text(details.name);
+    					 $("#conceptDetailsId").text(details.id);
+    					 $("#conceptDetailsUri").text(details.uri);
+    					 $("#conceptDetailsWordnetId").text(details.wordnetid);
+    					 $("#conceptDetailsPos").text(details.pos);
+    					 $("#conceptDetailsList").text(details.conceptlist);
+    					 $("#conceptDetailsType").text(details.type);
+    					 $("#conceptDetailsEqualTo").text(details.equalto);
+    					 $("#conceptDetailsSimilarTo").text(details.similarto);
+    					 $("#conceptDetailsCreator").text(details.creator);
+    					 $("#conceptDetailsDesc").html(details.description);
+    					 $("#conceptDetailsMergedIds").html(details.mergedIds);
+                     
          
                          if (details.mergedIds) {
                              $.ajax({
@@ -165,7 +165,7 @@
                                          mergedIdsHtml += "<i>" + conceptEntry.id + "</i>";
                                          mergedIdsHtml += "</span>";
                                      });
-                                     $("#detailsmergedIds").html(mergedIdsHtml);
+                                     $("#conceptDetailsMergedIds").html(mergedIdsHtml);
                                  }
                              });
                          }
@@ -368,12 +368,16 @@
             </tbody>
          </table>
       </div>
-      <div class="pagination" id="paginationSection" th:if="${conceptSearchBean.foundConcepts != null}" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
+      <div class="pagination" id="paginationSection" th:if="${conceptSearchBean.foundConcepts != null && conceptSearchBean.foundConcepts.size() > 0}" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
          th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}">
          <ul class="pagination">
             <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
                   th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" th:data-numRecords="${numRecords}" id="paginationTag">Previous</span>
+            </li>
+            <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+               <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="1" th:data-numRecords="${numRecords}" id="paginationTag">First</span>
             </li>
             <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
@@ -382,11 +386,15 @@
             </li>
             <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${count}" th:data-numRecords="${numRecords}" id="paginationTag">Last</span>
+            </li>
+            <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+               <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
                   th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" th:data-numRecords="${numRecords}" id="paginationTag">Next</span>
             </li>
          </ul>
       </div>
-      <div id="conceptDetailsPlugin"></div>
+      <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
       <div sec:authorize="!isAuthenticated()" th:insert="layouts/modals/signin :: signin"></div>
       <div id="deleteModalPlugin"></div>
    </body>
