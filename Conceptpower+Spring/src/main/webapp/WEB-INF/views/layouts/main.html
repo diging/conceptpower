@@ -43,10 +43,6 @@
    <body class = "body">
       <main class="wrapper">
          <div th:insert="layouts/navbar :: navbar"></div>
-         <p sec:authorize="isAuthenticated()" class="userProfile">
-            <a th:href="@{/auth/profile}"><i class="fa fa-user"></i>
-            <span sec:authentication="name"></span></a>
-         </p>
          <div layout:fragment="content"></div>
          <div class='push'></div>
       </main>

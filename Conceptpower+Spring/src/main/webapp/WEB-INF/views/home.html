@@ -15,7 +15,7 @@
          
          
          //Function to get required data for sorting
-         $(document).on('click', '#sortTag', function(e) {
+         $(document).on('click', '.sortTag', function(e) {
              var sortData = $(this).data();
              paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos, sortData.numrecords)
          });
@@ -290,48 +290,48 @@
                   <th scope="col" sec:authorize="isAuthenticated()" th:data-name='edit'></th>
                   <th scope="col" sec:authorize="isAuthenticated()" th:data-name='merge'></th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="word" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" th:data-numRecords="${numRecords}" id="sortTag">Term
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" th:data-numRecords="${numRecords}" class="sortTag" style="width: 10%;">Term
                      <i th:if="${sortColumn == 'word' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'word' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'word'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="id" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag">Id
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 15%;">Id
                      <i th:if="${sortColumn == 'id' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'id' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'id'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag">WordNet ID
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 15%;">WordNet ID
                      <i th:if="${sortColumn == 'wordnetid' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'wordnetid' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'wordnetid'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="pos" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag" style="width: 100px;">POS
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 6%;">POS
                      <i th:if="${sortColumn == 'pos' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'pos' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'pos'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="listname" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag" style="width: 200px;">Concept List
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 10%;">Concept List
                      <i th:if="${sortColumn == 'listName' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'liestName' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'listName'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="description" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag">Description
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 30%;">Description
                      <i th:if="${sortColumn == 'description' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'description' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'description' }" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="types" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" id="sortTag" style="width: 100px;">Type
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 5%;">Type
                      <i th:if="${sortColumn == 'types' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'types' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'types'}" class="fa fa-sort"></i>
                   </th>
-                  <th style="width:120px;" scope="col">Review Status</th>
+                  <th style="width: 5%;" scope="col">Review Status</th>
                </tr>
             </thead>
             <tbody id="tableData">

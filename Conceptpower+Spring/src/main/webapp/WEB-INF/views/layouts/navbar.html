@@ -63,6 +63,11 @@
                <i class="fa fa-user-circle-o fa-10x" aria-hidden="true"></i>
                </a>
                <ul class="dropdown-menu" role="menu">
+               	  <li>
+                     <a th:href="@{/auth/profile}"><i class="fa fa-user" aria-hidden="true"></i>
+                     	View Profile
+                     </a>
+                  </li>
                   <li>
                      <a th:href="@{/auth/profile/password/change}"><i class="fa fa-unlock-alt" aria-hidden="true"></i>
                      Change password
@@ -79,10 +84,10 @@
                </ul>
             </div>
          </div>
-         <button sec:authorize="!isAuthenticated()" class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="signInBtn" type="submit" data-toggle="modal" data-target="#siginModal">
+         <a sec:authorize="!isAuthenticated()" id="signInBtn" type="submit" data-toggle="modal" data-target="#siginModal">
          Sign In
          <i class="fa fa-sign-in"></i>
-         </button>
+         </a>
       </div>
    </nav>
 </html>
