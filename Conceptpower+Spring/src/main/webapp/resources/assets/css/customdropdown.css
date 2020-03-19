@@ -3,7 +3,7 @@
   display: inline-block;
   vertical-align: middle;
   cursor: pointer;
-  border: 1.5px solid #4f3acc;
+  border: 1.5px solid #A34D63;
   border-radius: 30px;
   background-color: transparent;
 }
@@ -66,7 +66,7 @@
 }
 
 .custom-dropdown::after {
-  color: #4f3acc;	
+  color: #A34D63;	
   cursor: pointer;
 }
 

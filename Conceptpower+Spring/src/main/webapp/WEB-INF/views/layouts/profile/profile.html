@@ -16,11 +16,11 @@
                <span class="label label-danger">Admin</span>
             </div>
             <div th:if="${currentUser.isAdmin != true}">
-               <span class="label label-info" style="background-color: #4f3acc;">Regular User</span>
+               <span class="label label-info" style="background-color: #A34D63;">Regular User</span>
             </div>
          </div>
          <p class="text-right">
-            <a class="btn btn-primary btn-sm" th:href="@{/auth/profile/password/change}" style="background-color: #4f3acc; border-color: #4f3acc; width:unset;">Change Password</a>
+            <a class="btn btn-primary btn-sm" th:href="@{/auth/profile/password/change}" style="background-color: #A34D63; border-color: #A34D63; width:unset;">Change Password</a>
          </p>
       </div>
    </body>

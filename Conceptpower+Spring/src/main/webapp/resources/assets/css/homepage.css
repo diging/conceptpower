@@ -19,7 +19,7 @@
 	border-radius: 30px;
 	width: 115px;
 	height: 44px;
-	background-color: #4f3acc;
+	background-color: #A34D63;
 	color: white;
 	padding: 0px 20px 0px 20px;
 }
@@ -39,7 +39,7 @@ html,body{
 }
 
 .conceptDetailsModal .modal-header{
-	background-color:#4f3acc;
+	background-color:#A34D63;
 	color:white;
 	font-size:15px;
 }
@@ -108,7 +108,7 @@ html,body{
 }
 
 .footerBox {
-	color: #4f3acc;
+	color: #A34D63;
     width: 100%;
 }
 
@@ -124,7 +124,7 @@ html,body{
 }
 
 thead{
-	background-color:#4f3acc;
+	background-color:#A34D63;
 	color:white;
 }
 
@@ -137,20 +137,20 @@ thead{
 }
 
 .pagination>li>a {
-	color: #4f3acc;
+	color: #A34D63;
 }
 
 .pagination>li>a:hover {
-	color: #4f3acc;
+	color: #A34D63;
 }
 
 .pagination>.active>span {
-	background-color: #4f3acc;
+	background-color: #A34D63;
 	border-color: transparent;
 }
 
 .pagination>.active>span:hover {
-	background-color: #4f3acc;
+	background-color: #A34D63;
 	cursor: pointer;
 }
 
@@ -186,12 +186,12 @@ table{
 
 .fa-user-circle-o {
     font-size: 38px !important;
-    color: #4f3acc;
+    color: #A34D63;
 }
 
 .conceptPowerBtn {
     margin: 15px 0px 15px 0px;
-    background-color: #4f3acc;
+    background-color: #A34D63;
     color: white;
     border-radius: 30px;
     height: 36px;
@@ -213,13 +213,13 @@ table{
 }
 
 #editBtn {
-	background-color: #4f3acc;
+	background-color: #A34D63;
 	border-color: transparent;
 	color: white;
 }
 
 #editBtn:hover {
-	background-color: #4f3acc;
+	background-color: #A34D63;
 	border-color: transparent;
 	color: white;
 	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
@@ -232,7 +232,7 @@ table{
 
 
 .signInBtn:hover {
-	background-color: #4f3acc;
+	background-color: #A34D63;
 	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
 	
 }
@@ -279,7 +279,7 @@ table{
     margin-right: 15px;
     display: inline-table;
     text-align: right;
-    color: #4f3acc;
+    color: #A34D63;
 }
 
 .conceptDetailsValue {
@@ -287,7 +287,7 @@ table{
 }
 
 a {
-	color: #4f3acc;
+	color: #A34D63;
 }
 
 a:hover {
