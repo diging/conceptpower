@@ -37,7 +37,7 @@
                      function() {
                          $.ajax({
                              type : "GET",
-                             url : "/conceptpower/getExistingConcepts",
+                             url : "[[@{'/getExistingConcepts'}]]",
                              data : {
                                  conceptname : $(this).val()
                              },
@@ -111,7 +111,7 @@
                          var synonymname = $("#synonymname").val();
                          $.ajax({
                              type : "GET",
-                             url : "/conceptpower/conceptAddSynonymView",
+                             url : "[[@{'/conceptAddSynonymView'}]]",
                              data : {
                                  synonymname : synonymname,
                                  addedsynonym : addedsynonym
@@ -261,7 +261,7 @@
              var serviceid = $("#selectedServiceNameIdMap").val();
              $.ajax({
                  type : "GET",
-                 url : "/conceptpower/serviceSearch",
+                 url : "[[@{'/serviceSearch'}]]",
                  data : {
                      serviceterm : serviceterm,
                      serviceid : serviceid

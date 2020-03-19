@@ -105,6 +105,10 @@ html,body{
 
 #searchBtn {
     margin-top: 5px;
+    padding: 7px;
+    width: unset;
+    padding: 4px 10px 4px 10px;
+    height: unset;
 }
 
 .footerBox {
@@ -194,8 +198,7 @@ table{
     background-color: #A34D63;
     color: white;
     border-radius: 30px;
-    height: 36px;
-    padding: 0px 15px 0px 15px;
+    padding: 4px 10px 4px 10px
 }
 
 .cardLayout {

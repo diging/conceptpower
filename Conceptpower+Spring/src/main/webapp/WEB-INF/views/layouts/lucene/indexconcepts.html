@@ -25,7 +25,7 @@
                         run_waitMe(current_effect);
                         return $
                             .ajax({
-                                url: "/conceptpower/auth/index/delete?_csrf=" + token.trim(),
+                                url: "[[@{'/auth/index/delete?_csrf='}]]" + token.trim(),
                                 type: "POST",
                                 timeout: 3600000,
                                 success: function(
@@ -47,7 +47,7 @@
                     function index() {
                         run_waitMe(current_effect);
                         $.ajax({
-                            url: "/conceptpower/auth/index/start?_csrf=" + token.trim(),
+                            url: "[[@{'/auth/index/start?_csrf='}]]" + token.trim(),
                             type: "POST",
                             success: function(
                                 result) {
@@ -68,7 +68,7 @@
          
             function checkIndexerStatus() {
                 $.ajax({
-                    url: "/conceptpower/auth/index/status?_csrf=" + token.trim(),
+                    url: "[[@{'/auth/index/status?_csrf='}]]" + token.trim(),
                     type: "POST",
                     success: function(result, status,
                         jqXHR) {

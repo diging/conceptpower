@@ -133,7 +133,7 @@
          
                  $.ajax({
                      type: "GET",
-                     url: "/conceptpower/conceptDetail",
+                     url: "[[@{'/conceptDetail'}]]",
                      data: {
                          conceptid: conceptid
                      },
@@ -144,7 +144,7 @@
                          //Ajax Call to plugin a pre populated Concepet Details Modal
                          $.ajax({
                              type: "POST",
-                             url: "/conceptpower/conceptdetails?_csrf=" + token.trim(),
+                             url: "[[@{'/conceptdetails?_csrf='}]]" + token.trim(),
                              data: JSON.stringify(details),
                              contentType: "application/json",
                              success: function(data) {
@@ -205,7 +205,7 @@
                          var synonymname = $("#synonymname").val();
                          $.ajax({
                              type : "GET",
-                             url : "/conceptpower/conceptAddSynonymView",
+                             url : "[[@{'/conceptAddSynonymView'}]]",
                              data : {
                                  synonymname : synonymname,
                                  addedsynonym : addedsynonym
@@ -308,7 +308,7 @@
                          Accept: "application/json",         
                      } ,
                      type : "GET",
-                     url : "/conceptpower/rest/Concepts",
+                     url : "[[@{'/rest/Concepts'}]]",
                      data : {
                          ids : wrappers
                      },

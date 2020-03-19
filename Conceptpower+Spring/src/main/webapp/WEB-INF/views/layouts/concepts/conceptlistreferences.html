@@ -10,7 +10,7 @@
          
              $.ajax({
                  type: "GET",
-                 url: "/conceptpower/conceptDetail",
+                 url: "[[@{'/conceptDetail'}]]",
                  data: {
                      conceptid: conceptid
                  },
@@ -36,7 +36,7 @@
                 var conceptId = $(this).data().conceptid;
                 $.ajax({
                     type: "GET",
-                    url: '/conceptpower/auth/conceptlist/deleteconcept/' + conceptId,
+                    url: "[[@{'/auth/conceptlist/deleteconcept/'}]]" + conceptId,
                     contentType: "application/json",
                     success: function(data) {
                         $('#deleteModalPlugin').html(data);

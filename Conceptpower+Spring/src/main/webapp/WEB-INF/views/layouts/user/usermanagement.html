@@ -10,7 +10,7 @@
          	   var username = $(this).data().username;
          	    $.ajax({
          			type : "GET",
-         			url : '/conceptpower/auth/user/deleteuser/'+username,
+         			url : "[[@{'/auth/user/deleteuser/'}]]"+username,
          			contentType:"application/json",
          			success : function(data) {
          				$('#deleteModalPlugin').html(data);

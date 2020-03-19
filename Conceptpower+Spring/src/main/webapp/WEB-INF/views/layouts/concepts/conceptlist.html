@@ -10,7 +10,7 @@
          	   var listName = $(this).data().listname;
          	    $.ajax({
          			type : "GET",
-         			url : '/conceptpower/auth/conceptlist/deletelist/'+listName,
+         			url : "[[@{'/auth/conceptlist/deletelist/'}]]"+listName,
          			contentType:"application/json",
          			success : function(data) {
           				$('#deleteModalPlugin').html(data);

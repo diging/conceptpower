@@ -17,7 +17,7 @@
     		var typeId = $(this).data().typeid;
     		$.ajax({
     			type: "GET",
-    			url: '/conceptpower/auth/concepttype/deletetype/' + typeId,
+    			url: "[[@{'/auth/concepttype/deletetype/'}]]" + typeId,
     			contentType: "application/json",
     			success: function (data) {
     				$('#deleteModalPlugin').html(data);

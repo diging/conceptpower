@@ -63,7 +63,7 @@
              $("#searchconcept").click(function() {
                  $.ajax({
                      type : "GET",
-                     url : "/conceptpower/conceptEdit/search",
+                     url : "[[@{'/conceptEdit/search'}]]",
                      data : {
                          concept : $("#name").val(),
                          pos : $("#pos").val()
@@ -149,7 +149,7 @@
                                      $
                                              .ajax({
                                                  type : "GET",
-                                                 url : "/conceptpower/conceptAddSynonymView",
+                                                 url : ""[[@{'/conceptAddSynonymView",
                                                  data : {
                                                      synonymname : synonymname,
                                                      addedsynonym : addedsynonym
@@ -236,7 +236,7 @@
                                  $
                                          .ajax({
                                              type : "GET",
-                                             url : "/conceptpower/getConceptEditSynonyms",
+                                             url : ""[[@{'/getConceptEditSynonyms",
                                              data : {
                                                  conceptid : conceptid
                                              },

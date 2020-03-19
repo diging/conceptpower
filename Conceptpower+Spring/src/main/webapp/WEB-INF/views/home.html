@@ -26,7 +26,7 @@
              if (conceptIdsToBeMerged.length < 2) {
                  $('#mergeError').show();
              } else {
-                 window.location = '/conceptpower/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;
+                 window.location = "[[@{'/auth/concepts/merge?mergeIds='}]]" + conceptIdsToMerge;
              }
          }
          
@@ -125,7 +125,7 @@
          
                  $.ajax({
                      type: "GET",
-                     url: "/conceptpower/conceptDetail",
+                     url: "[[@{'/conceptDetail'}]]",
                      data: {
                          conceptid: conceptid
                      },
@@ -147,7 +147,7 @@
          
                          if (details.mergedIds) {
                              $.ajax({
-                                 url: '/conceptpower/rest/OriginalConcepts',
+                                 url: "[[@{'/rest/OriginalConcepts'}]]",
                                  type: 'GET',
                                  headers: {
                                      Accept: "application/json",
@@ -209,7 +209,7 @@
                  var conceptId = $(this).data().conceptid;
                  $.ajax({
                      type: "GET",
-                     url: '/conceptpower/auth/conceptlist/deleteconcept/' + conceptId + '?fromHomeScreenDelete=true',
+                     url: "[[@{'/auth/conceptlist/deleteconcept/'}]]" + conceptId + '?fromHomeScreenDelete=true',
                      contentType: "application/json",
                      success: function(data) {
                          $('#deleteModalPlugin').html(data);
