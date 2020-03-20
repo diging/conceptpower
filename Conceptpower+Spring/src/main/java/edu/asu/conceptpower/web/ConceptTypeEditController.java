@@ -111,12 +111,10 @@ public class ConceptTypeEditController {
 
         String userId = usersManager.findUser(principal.getName()).getUsername();
         String modified = type.getModified() != null ? type.getModified() : "";
-//        if (!modified.trim().isEmpty()) 
-//           modified+=",";
-            
-        type.setModified(userId + "@" + (new Date()).toString());
+        if (!modified.trim().isEmpty())
+            modified += ", ";
+        type.setModified(modified + userId + "@" + (new Date()).toString());
         
-
         typeManager.storeModifiedConceptType(type);
         return "redirect:/auth/concepttype";
     }
