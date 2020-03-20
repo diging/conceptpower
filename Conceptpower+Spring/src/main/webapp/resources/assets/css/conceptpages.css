@@ -1,6 +1,5 @@
 .conceptPowerWrapper {
-	width: 50%;
-	margin: 0px auto 100px auto;
+	margin: 0px 5%;
 }
 
 .btn:hover {
@@ -21,11 +20,7 @@
 }
 
 .form-control {
-	width: 80%;
-}
-
-.formField{
-	widht:80%;
+	width: 50%;
 }
 
 .conceptPowerForm {
@@ -64,8 +59,7 @@
 }
 
 .btnCenter {
-	text-align: center;
-	margin-top: 15px;
+	margin-left: 20%;
 }
 
 #dropdownMenu1 {
@@ -95,8 +89,7 @@
 }
 
 .newConcept {
-	width: 60%;
-	margin: auto;
+	margin: 0px 4%;
 	display: block;
 }
 
