@@ -149,7 +149,7 @@
                                      $
                                              .ajax({
                                                  type : "GET",
-                                                 url : ""[[@{'/conceptAddSynonymView",
+                                                 url : "[[@{'/conceptAddSynonymView'}]]",
                                                  data : {
                                                      synonymname : synonymname,
                                                      addedsynonym : addedsynonym
@@ -236,7 +236,7 @@
                                  $
                                          .ajax({
                                              type : "GET",
-                                             url : ""[[@{'/getConceptEditSynonyms",
+                                             url : "[[@{'/getConceptEditSynonyms'}]]",
                                              data : {
                                                  conceptid : conceptid
                                              },
@@ -336,7 +336,7 @@
                         <label for="description" class="formlabel">Description</label>
                      </td>
                      <td>
-                        <textarea class="form-control" th:field="*{description}" rows="3"></textarea>
+                        <textarea class="form-control" th:field="*{description}" rows="3" style="height:9em;"></textarea>
                      </td>
                   </tr>
                   <tr>

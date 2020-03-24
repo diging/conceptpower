@@ -143,7 +143,6 @@
     					 $("#conceptDetailsCreator").text(details.creator);
     					 $("#conceptDetailsDesc").html(details.description);
     					 $("#conceptDetailsMergedIds").html(details.mergedIds);
-                     
          
                          if (details.mergedIds) {
                              $.ajax({
@@ -174,7 +173,8 @@
              });
          
              $(document).on('hidden.bs.modal', '#conceptDetail', function(event) {
-                 $('#conceptDetailsPlugin').empty();
+                 $('#conceptDetailsValue').empty();
+                 $('#conceptDetailsName').empty();
              });
          
              $('#posList div div').on('click', function() {

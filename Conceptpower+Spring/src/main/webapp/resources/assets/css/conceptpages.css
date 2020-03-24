@@ -23,6 +23,9 @@
 	width: 50%;
 }
 
+.newConcept .form-control {
+	width: 100%;
+}
 .conceptPowerForm {
 	border-collapse: separate;
 	border-spacing: 0px 25px;

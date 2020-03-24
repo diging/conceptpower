@@ -103,7 +103,7 @@ html,body{
 	font-size: 16px;
 }
 
-#searchBtn {
+#searchBtn, #modalSignInBtn {
     margin-top: 10px;
     width: unset;
     padding: 4px 10px 4px 10px;
@@ -355,7 +355,7 @@ a:hover {
 }
 
 .pagination>li>a, .pagination>li>span, .pagination>li>span:hover{
-	color: #4f39cc;
+	color: #A34D63;
 }
 
 #sortTag, #paginationTag{
