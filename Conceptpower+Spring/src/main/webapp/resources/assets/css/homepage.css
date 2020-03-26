@@ -405,3 +405,7 @@ table#addedSynonymsTable {
     float: right;
     margin-right: 2%;
 }
+
+.error {
+    color: red;
+}

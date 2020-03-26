@@ -143,7 +143,7 @@
     					 $("#conceptDetailsCreator").text(details.creator);
     					 $("#conceptDetailsDesc").html(details.description);
     					 $("#conceptDetailsMergedIds").html(details.mergedIds);
-         
+    					 
                          if (details.mergedIds) {
                              $.ajax({
                                  url: "[[@{'/rest/OriginalConcepts'}]]",
@@ -207,17 +207,42 @@
          $(document).ready(function() {
              $(document).on('click', '#openDeleteModal', function(e) {
                  var conceptId = $(this).data().conceptid;
+                 var searchword = $(this).data().searchword;
                  $.ajax({
                      type: "GET",
-                     url: "[[@{'/auth/conceptlist/deleteconcept/'}]]" + conceptId + '?fromHomeScreenDelete=true',
+                     url: "[[@{'/auth/conceptlist/deleteconcept/'}]]" + conceptId + '?fromHomeScreenDelete=true&searchword='+searchword,
                      contentType: "application/json",
                      success: function(data) {
-                         $('#deleteModalPlugin').html(data);
+                    	 details = $.parseJSON(data);
+                    	 $("#conceptDeleteDetailsId").text(details.conceptId);
+                    	 $("#conceptDeleteId").text(details.conceptId);
+    					 $("#conceptDeleteWord").text(details.word);
+    					 $("#conceptDeleteDetailsWord").text(details.word);
+    					 $("#conceptDeleteDetailsWordnetId").text(details.wordnetid);
+    					 $("#conceptDeleteDetailsPos").text(details.pos);
+    					 $("#conceptDeleteDetailsList").text(details.conceptList);
+    					 $("#conceptDeleteDetailsType").text(details.type);
+    					 $("#conceptDeleteDetailsEqualTo").text(details.equalto);
+    					 $("#conceptDeleteDetailsSimilarTo").text(details.similarto);
+    					 $("#conceptDeleteDetailsCreator").text(details.creator);
+    					 $("#conceptDeleteDetailsDesc").text(details.description);
+    					 $("#conceptDeleteDetailsModified").text(details.modified);
+    					 $("#conceptDeleteDetailsSynonyms").text(details.synonyms);
+    					 
+    					 /* Set the delete url to an Id, so that it can be used for delete operation */
+    					 $("#deleteUrl").val("[[@{'/auth/conceptlist/deleteconceptconfirm/'}]]"+details.conceptId+"?fromHomeScreenDelete=true"+"&listName="+details.conceptList+"&searchword="+details.searchword)
                          $('#deleteConcept').modal('show');
                      }
                  });
              });
          });
+         
+         $(document).on('submit','#deleteConfirmForm', function (event){
+        	 var action = '';
+        	 var url = $("#deleteUrl").val();
+        	 if(url)
+        	 	$(this).attr('action', $("#deleteUrl").val());
+        });
          
          $(document).on('hidden.bs.modal', '#deleteModalPlugin', function(event) {
              $('#deleteModalPlugin').empty();
@@ -242,6 +267,7 @@
             </div>
          </div>
          <div class="error" id="searchAlert"></div>
+         <div class="error" th:if="${show_error_alert == true}" th:text="${error_alert_msg}"></div>
          <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit" th:onclick="'showFormProcessing()'" th:onsubmit="'hideFormProcessing()'">
          Search
          <i class="fa fa-search" aria-hidden="true"></i>
@@ -351,7 +377,7 @@
                      <i class="fa fa-pencil-square-o dropright" aria-hidden="true">
                      </i>
                      </a>
-                     <i class="fa fa-trash-o" th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" data-toggle="modal" data-target="#deleteConcept"></i>
+                     <i class="fa fa-trash-o" th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" th:data-searchword="${conceptSearchBean.word}" data-toggle="modal" data-target="#deleteConcept"></i>
                   </td>
                   <td sec:authorize="isAuthenticated()">
                      <input type="checkbox"  id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
@@ -394,8 +420,9 @@
             </li>
          </ul>
       </div>
+      <input type='hidden' id='deleteUrl'/>
       <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
       <div sec:authorize="!isAuthenticated()" th:insert="layouts/modals/signin :: signin"></div>
-      <div id="deleteModalPlugin"></div>
+      <div th:insert="layouts/modals/deleteconcept :: deleteConcept"></div>
    </body>
 </html>

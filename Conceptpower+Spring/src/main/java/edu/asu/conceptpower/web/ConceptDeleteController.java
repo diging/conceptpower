@@ -1,10 +1,16 @@
 package edu.asu.conceptpower.web;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,29 +62,35 @@ public class ConceptDeleteController {
      * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
-    public String prepareDeleteConcept(@PathVariable("conceptid") String conceptid, ModelMap model,
-            @RequestParam(value = "fromHomeScreenDelete", required = false) String fromHomeScreenDelete)
+    public ResponseEntity<String> prepareDeleteConcept(@PathVariable("conceptid") String conceptid,
+            @RequestParam(value = "fromHomeScreenDelete", required = false) String fromHomeScreenDelete,
+            @RequestParam(value = "searchword", required = false) String searchword)
                     throws LuceneException, IndexerRunningException {
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-        model.addAttribute("word", concept.getWord());
-        model.addAttribute("description", concept.getDescription());
-        model.addAttribute("conceptId", concept.getId());
-        model.addAttribute("wordnetId", concept.getWordnetId());
-        model.addAttribute("pos", concept.getPos());
-        model.addAttribute("conceptList", concept.getConceptList());
-        model.addAttribute("type", concept.getTypeId());
-        model.addAttribute("equal", concept.getEqualTo());
-        model.addAttribute("similar", concept.getSimilarTo());
-        model.addAttribute("user", concept.getModified());
-        model.addAttribute("modified", concept.getModified());
-        model.addAttribute("synonyms", concept.getSynonymIds());
-
+        Map<String, String> details = new HashMap<String, String>();
+        
+        details.put("word", concept.getWord());
+        details.put("description", concept.getDescription());
+        details.put("conceptId", concept.getId());
+        details.put("wordnetId", concept.getWordnetId());
+        details.put("pos", concept.getPos());
+        details.put("conceptList", concept.getConceptList());
+        details.put("type", concept.getTypeId());
+        details.put("equal", concept.getEqualTo());
+        details.put("similar", concept.getSimilarTo());
+        details.put("user", concept.getModified());
+        details.put("modified", concept.getModified());
+        details.put("synonyms", concept.getSynonymIds());
+        details.put("searchword", searchword);
+        
         if (fromHomeScreenDelete != null) {
-            model.addAttribute("fromHomeScreenDelete", fromHomeScreenDelete);
+            details.put("fromHomeScreenDelete", fromHomeScreenDelete);
         } else {
-            model.addAttribute("fromHomeScreenDelete", false);
+            details.put("fromHomeScreenDelete", "false");
         }
-        return "/layouts/modals/deleteconcept";
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+        return new ResponseEntity<String>(new JSONObject(details).toString(), responseHeaders, HttpStatus.OK);
     }
 
     /**
@@ -117,6 +129,7 @@ public class ConceptDeleteController {
     @RequestMapping(value = "auth/conceptlist/deleteconceptconfirm/{id}", method = RequestMethod.POST)
     public ModelAndView confirmDelete(@PathVariable("id") String id,
             @RequestParam(value = "fromHomeScreenDelete") String fromHomeScreenDelete,
+            @RequestParam(value = "searchword") String searchword,
             @RequestParam(value = "listName") String listName, Principal principal,
             RedirectAttributes redirectAttributes) throws LuceneException, IndexerRunningException {
         ModelAndView model = new ModelAndView();
@@ -132,7 +145,7 @@ public class ConceptDeleteController {
 
         conceptManager.deleteConcept(conceptManager.getConceptEntry(id), principal.getName());
         if (fromHomeScreenDelete.equalsIgnoreCase("true")) {
-            model.setViewName("redirect:/home/conceptsearch?word="+concept.getWord()+"&pos="+concept.getPos());
+            model.setViewName("redirect:/home/conceptsearch?word="+searchword+"&pos="+concept.getPos());
             return model;
         }
         model.setViewName("redirect:/auth/" + listName + "/concepts");

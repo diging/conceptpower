@@ -325,7 +325,7 @@
                      <td class="drpSpacing">
                         <div class="custom-dropdown">
                            <select th:field="*{conceptListValue}" class="POS">
-                              <option th:each="item: ${conceptEditBean.conceptList}" th:value="${item.id}" th:text="${item.conceptListName}">
+                              <option th:each="item: ${conceptEditBean.conceptList}" th:value="${item.conceptListName}" th:text="${item.conceptListName}">
                               </option>
                            </select>
                         </div>
