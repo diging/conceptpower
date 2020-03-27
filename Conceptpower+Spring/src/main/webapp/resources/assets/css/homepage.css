@@ -228,8 +228,12 @@ table{
 }
 
 .fa-trash-o{
-	color:	#d54854;
+	color:	#888888;
 	cursor: pointer;
+}
+
+.fa-trash-o:hover{
+    color:red;
 }
 
 

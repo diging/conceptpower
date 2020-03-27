@@ -313,8 +313,8 @@
          <table class="table table-striped resultTable tableStyles" >
             <thead>
                <tr>
-                  <th scope="col" sec:authorize="isAuthenticated()" th:data-name='edit'></th>
-                  <th scope="col" sec:authorize="isAuthenticated()" th:data-name='merge'></th>
+                  <th scope="col" sec:authorize="isAuthenticated()" th:data-name='edit' style="width: 4%;"></th>
+                  <th scope="col" sec:authorize="isAuthenticated()" th:data-name='merge'style="width: 4%;"></th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="word" 
                      th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" th:data-numRecords="${numRecords}" class="sortTag" style="width: 10%;">Term
                      <i th:if="${sortColumn == 'word' && sortDir == '1'}" class="fa fa-sort-desc"></i>
@@ -357,7 +357,7 @@
                      <i th:if="${sortColumn == 'types' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'types'}" class="fa fa-sort"></i>
                   </th>
-                  <th style="width: 5%;" scope="col">Review Status</th>
+                 <!--  <th style="width: 5%;" scope="col">Review Status</th>  -->
                </tr>
             </thead>
             <tbody id="tableData">
@@ -389,7 +389,7 @@
                   <td th:text="${concept.entry.conceptList}"></td>
                   <td th:text="${concept.description}"></td>
                   <td th:text="${concept.type != null ? concept.type.typeName : ''}"></td>
-                  <td><i class="fa fa-comment" aria-hidden="true"></i></td>
+                 <!--  <td><i class="fa fa-comment" aria-hidden="true"></i></td>  -->
                </tr>
             </tbody>
          </table>
