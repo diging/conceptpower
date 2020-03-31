@@ -16,7 +16,10 @@
                         <input type="hidden" th:value="${user.username}" name="username" />
                         <input type="hidden" th:value="${user.fullname}" name="fullname" />
                         <h4 style="text-align: center;">Are you sure you want to delete?</h4>
-                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:29%">Delete User</button>
+                        <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" data-dismiss="modal" type="button"  style="margin-left:15%">
+               				Cancel
+               			</button>
+                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:5%">Delete User</button>
                      </div>
                   </form>
                </div>

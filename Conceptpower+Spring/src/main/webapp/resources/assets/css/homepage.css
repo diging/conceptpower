@@ -362,6 +362,11 @@ a:hover {
 	color: #A34D63;
 }
 
+.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
+    background-color: #A34D63 !important;
+    border-color: #A34D63 !important;
+}
+
 #sortTag, #paginationTag{
 	cursor: pointer;
 }

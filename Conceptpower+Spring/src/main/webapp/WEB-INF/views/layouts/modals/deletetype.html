@@ -14,8 +14,11 @@
                   </div>
                   <div th:if="${enabledelete == true || enabledelete == null}">
                      <h5 style="text-align: center;">Are you sure you want to delete?</h5>
+                     <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" data-dismiss="modal" type="button"  style="margin-left:15%">
+               			Cancel
+               		</button>
                      <a th:href="@{'/auth/concepttype/deleteconcepttypeconfirm/'+${typeid}}">
-                     <button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:25%">Delete Concept</button>
+                     <button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:5%">Delete Type</button>
                      </a>
                   </div>
                </div>

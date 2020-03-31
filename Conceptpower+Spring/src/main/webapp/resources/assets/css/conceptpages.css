@@ -19,16 +19,9 @@
 	color: #333;
 }
 
-.form-control {
-	width: 50%;
-}
-
-.newConcept .form-control {
-	width: 100%;
-}
 .conceptPowerForm {
 	border-collapse: separate;
-	border-spacing: 0px 25px;
+	border-spacing: 0px 15px;
 	margin-top: 30px;
 }
 
@@ -62,7 +55,7 @@
 }
 
 .btnCenter {
-	margin-left: 20%;
+	margin-left: 18%;
 }
 
 #dropdownMenu1 {
@@ -138,7 +131,6 @@ label {
 .sectionHeading {
 	display: flex;
 	align-items: center;
-	margin: 20px 0px 5px 0px;
 }
 
 .row {
@@ -165,10 +157,6 @@ label {
 	border-spacing: 0 15px;
 }
 
-.addWrapper .formlabel{
-	width: 20%;
-}
-
 #conceptDetailForm .modal-content {
     border-radius: unset;
     width: 60%;
@@ -180,4 +168,9 @@ li.page-item.disabled{
 	pointer-events: none;
     opacity: 0.4;
     cursor:not-allowed;
+}
+
+#addedSynonyms {
+    display: inline-block;
+    padding-left: 8%;
 }
