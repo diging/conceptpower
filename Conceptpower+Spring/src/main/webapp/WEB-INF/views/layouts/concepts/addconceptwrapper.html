@@ -338,12 +338,12 @@
    </head>
    <body class="body" layout:fragment="content">
       <div class="newConcept addWrapper">
-         <h2 style="text-align: center;">Add a new WordNet concept wrapper</h2>
-         <h4 style="text-align: center;">Add a wrapper for concept in WordNet. Do that if you, for example, want to attach an<br/>"equals to" URI to a concept that already exists in WordNet.</h4>
-         <form 
+         <h2>Add a new WordNet concept wrapper</h2>
+         <h4>Add a wrapper for concept in WordNet. Do that if you, for example, want to attach an<br/>"equals to" URI to a concept that already exists in WordNet.</h4>
+          <form 
             th:action="@{'/auth/conceptlist/addconceptwrapper/conceptsearch'}" 
             method='post' id="createconceptform">
-            <div class="wrapperSection">
+          <div class="wrapperSection">
                <div class="sectionHeading">
                   <h4 class="numeration">1</h4>
                   <label class="formlabel">Search for WordNet concept</label>
@@ -372,17 +372,15 @@
                   </div>
                </div>
             </div>
-         </form>
-         <form th:action="@{/auth/conceptlist/addconceptwrapper/add}" method='post' th:object="${conceptWrapperAddBean}">
-            <div class="wrapperSection">
+            <div class="wrapperSection" >
                <div class="sectionHeading">
                   <h4 class="numeration">2</h4>
                   <label class="formlabel" style="width: 500px;">Select WordNet concept from search results</label>
                </div>
-               <h4 style="text-align: center;">The following concepts were found.<br/>Remember! You can only create wrapper for concepts in WordNet.</h4>
+               <h4 th:if="${result!=null && result.size() > 0}">The following concepts were found.<br/>Remember! You can only create wrapper for concepts in WordNet.</h4>
                <div id="selectedconcepts"></div>
                <div th:if="${result!=null && result.size() > 0}">
-                  <table class="table table-striped resultTable tableStyles" >
+                  <table class="table table-striped resultTable tableStyles">
                      <thead>
                         <tr>
                            <th></th>
@@ -415,68 +413,101 @@
                      </tbody>
                   </table>
                </div>
+               <div th:if="${result == null || result.size() <= 0}">No Concept to display</div>
             </div>
-            <div class="wrapperSection">
+         </form>
+         <form th:action="@{/auth/conceptlist/addconceptwrapper/add}" method='post' th:object="${conceptWrapperAddBean}">
+          	<div class="wrapperSection">
                <div class="sectionHeading">
                   <h4 class="numeration">3</h4>
                   <label class="formlabel">Enter additional information</label>
-               </div>
-               <div class="formElements row">
-                  <label  class="formlabel">Word</label>
-                  <input type="text" class="form-control" id="exampleFormControlInput1" th:field="*{word}">
-               </div>
-               <div class="formElements row">
-                  <label for="lists" class="formlabel">Concept list</label>
-                  <div class="formField">
-                     <div class="custom-dropdown">
-                        <select th:name="lists"  th:field="*{selectedConceptList}" class="POS">
-                           <option th:each="item: ${lists}" th:value="${item.key}" th:text="${item.value}">
-                           </option>
-                        </select>
-                     </div>
-                  </div>
-               </div>
-               <div class="formElements row">
-                  <label class="formlabel">Description</label>
-                  <textarea class="form-control" rows="3" th:field="*{description}" placeholder="Enter description...." style="height:9em;"></textarea>
-               </div>
-               <div class="formElements row">
-                  <label  class="formlabel">Synonyms</label>
-                  <div class="formField">
-                     <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin:0;" 
-                        id="addsynonym" data-toggle="modal" data-target="#synonyms"type="button" >
-                     <i class="fa fa-plus" aria-hidden="true"></i> Synonyms	
-                     </button>
-                  </div>
-                  <div id="addedSynonyms"></div>
-               </div>
-               <div class="formElements row">
-                  <label for="types" class="formlabel">Concept type</label>
-                  <div class="custom-dropdown">
-                     <select class="POS" th:field="*{selectedType}" th:name="types">
-                        <option th:each="type: ${types}" 
-                           th:value="${type.key}" th:text="${type.value}">
-                        </option>
-                     </select>
-                  </div>
-               </div>
-               <div class="formElements row">
-                  <label  class="formlabel">Equals</label>
-                  <input th:field="*{equals}" id="equals" type="text" class="form-control" placeholder="Equals to....">
-               </div>
-               <div class="formElements row">
-                  <label class="formlabel">Similar to</label>
-                  <input th:field="*{similar}" id="similar" type="text" class="form-control" placeholder="Similar to...." >
-               </div>
+               </div>    
             </div>
+            <table class="conceptPowerForm">
+              <tbody>
+                 <tr>
+                 	<td style="width: 172px;">
+                 		<label  class="formlabel">Word</label>
+                 	</td>
+                 	<td>
+                 		<input type="text" class="form-control" th:field="*{word}" placeholder="Word...">
+                 	</td>
+                </tr>
+                <tr>
+                	<td style="width: 172px;">
+                		<label class="formlabel">Description</label>
+                	</td>
+                	<td>
+                		<textarea class="form-control" rows="3" th:field="*{description}" placeholder="Enter description...." style="height:9em;"></textarea>
+                	</td>
+                </tr>
+                <tr>
+                	<td style="width: 172px;">
+                		<label  class="formlabel">Synonyms</label>
+                	</td>
+                	<td>
+                     	<button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin:0;" 
+                        	id="addsynonym" data-toggle="modal" data-target="#synonyms"type="button" >
+                     	<i class="fa fa-plus" aria-hidden="true"></i> Synonyms	
+                     	</button>
+                  		<div id="addedSynonyms"></div>
+                	</td>
+                </tr>
+                <tr>
+                	<td style="width: 172px;">
+                		<label for="types" class="formlabel">Concept type</label>
+                	</td>
+                	<td>
+                		<div class="custom-dropdown">
+	                     <select class="POS" th:field="*{selectedType}" th:name="types">
+	                        <option th:each="type: ${types}" 
+	                           th:value="${type.key}" th:text="${type.value}">
+	                        </option>
+	                     </select>
+                  		</div>
+                	</td>
+                </tr>
+                <tr>
+                	<td style="width: 172px;">
+                		<label for="lists" class="formlabel">Concept list</label>
+                	</td>
+                	<td>
+	               		<div class="formField">
+	                     <div class="custom-dropdown">
+	                        <select th:name="lists"  th:field="*{selectedConceptList}" class="POS">
+	                           <option th:each="item: ${lists}" th:value="${item.key}" th:text="${item.value}">
+	                           </option>
+	                        </select>
+	                     </div>
+	                 	</div>
+                	</td>
+                </tr>
+                <tr>
+                	<td style="width: 172px;">
+                		<label  class="formlabel">Equals</label>
+                	</td>
+                	<td>
+                		<input th:field="*{equals}" id="equals" type="text" class="form-control" placeholder="Equals to....">
+                	</td>
+                </tr>
+                <tr>
+                	<td style="width: 172px;">
+	                  <label class="formlabel">Similar to</label>
+                	</td>
+                	<td>
+                	  <input th:field="*{similar}" id="similar" type="text" class="form-control" placeholder="Similar to...." >
+                	</td>
+                </tr>
+              </tbody>
+            </table>
             <input type="hidden" th:field="*{wrapperids}" id="wrapperids" />
             <input type="hidden" th:field="*{synonymids}" id="synonymids" />
             <div class="btnCenter">
-               <button class="btn btn-outline-success my-2 my-sm-0 submitFormBtn" type="submit" id="createwrapper">
+               <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" type="submit" id="createwrapper">
                Create WordNet concept wrapper
                </button>
             </div>
-         </form>
+         </form> 
       </div>
       <div id="conceptDetailsPlugin"></div>
       <div th:insert="layouts/modals/synonyms :: synonyms"></div>

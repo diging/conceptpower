@@ -408,6 +408,8 @@ a:hover {
 
 table#addedSynonymsTable {
     font-size: 14px;
+    width: 90%;
+    margin-left: 5%;
 }
 
 .userProfile {

@@ -25,18 +25,6 @@
 	margin-top: 30px;
 }
 
-.submitFormBtn {
-	height: 44px;
-	width: 300px;
-	background-color: #A34D63;
-	color: white;
-	border-radius: 30px;
-}
-
-.submitFormBtn:hover {
-	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
-}
-
 .cancelTypeBtn {
 	height: 44px;
 	width: 300px;
