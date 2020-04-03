@@ -44,7 +44,7 @@ html,body{
 	font-size:15px;
 }
 .form-control{
-	border-radius: 30px;
+	border-radius: 15px;
 }
 
 
@@ -233,7 +233,7 @@ table{
 }
 
 .fa-trash-o:hover{
-    color:red;
+    color:#383838;
 }
 
 

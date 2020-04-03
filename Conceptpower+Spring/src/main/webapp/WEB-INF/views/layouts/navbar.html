@@ -13,17 +13,6 @@
                   <ul class="nav navbar-nav">
                      <li><a th:href="@{/}">Home</a></li>
                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Concept Type <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                           <li><a
-                              th:href="@{/auth/concepttype}"><i
-                              class="fa fa-list"></i> Concept Types</a></li>
-                           <li><a
-                              th:href="@{/auth/concepttype/addtype}"><i
-                              class="fa fa-plus-circle"></i> Add New Type</a></li>
-                        </ul>
-                     </li>
-                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Concept Lists <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                            <li><a
@@ -40,6 +29,17 @@
                            <li><a
                               th:href="@{/auth/conceptlist/addconceptwrapper}"><i
                               class="fa fa-plus-circle"></i> Add New WordNet Concept Wrapper</a></li>
+                        </ul>
+                     </li>
+                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Concept Type <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                           <li><a
+                              th:href="@{/auth/concepttype}"><i
+                              class="fa fa-list"></i> Concept Types</a></li>
+                           <li><a
+                              th:href="@{/auth/concepttype/addtype}"><i
+                              class="fa fa-plus-circle"></i> Add New Type</a></li>
                         </ul>
                      </li>
                      <li class="dropdown">

@@ -21,8 +21,7 @@
 
 .conceptPowerForm {
 	border-collapse: separate;
-	border-spacing: 0px 15px;
-	margin-top: 30px;
+	border-spacing: 0px 10px;
 }
 
 .cancelTypeBtn {
@@ -82,7 +81,7 @@
 }
 
 .drpSpacing {
-width:260px;
+width:246px;
 display: flex;
 justify-content: space-between;
 }
@@ -160,5 +159,4 @@ li.page-item.disabled{
 
 #addedSynonyms {
     display: inline-block;
-    padding-left: 8%;
 }
