@@ -5,295 +5,312 @@
    >
    <head>
       <script>
-         $(function() {
-             $("#synonymModal").dialog({
-                 autoOpen : false
-             });
-         });
-         
-         $(document).ready(function(){
-        	 $("#success-alert").hide();
-        	 
-             oTable = $('#conceptSearch').dataTable({
-                 "bJQueryUI" : true,
-                 "sPaginationType" : "full_numbers",
-                 "bAutoWidth" : false,
-                 //set row class to gradeX even if the row is selectable
-                 "fnRowCallback" : function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                     if (aData[2] == aData[3]) {
-                         $(nRow).removeClass('odd');
-                         $(nRow).removeClass('even');
-                         $(nRow).addClass('gradeX even');
-                     } else {
-                         $(nRow).removeClass('odd');
-                         $(nRow).removeClass('even');
-                         $(nRow).addClass('gradeX odd');
-                     }
-                 }
-             
-             });
-             
-         //     Used for loading the wordnet ids when clicked on a row
-             $('body').delegate('#conceptSearch tbody tr', "click", "td button", function() {
-                 var aData = oTable.fnGetData(this); // get datarow
-                 
-                 if (null != aData) // null if we clicked on title row
-                 {
-                     var wordnetID = aData[2];
-                     var isDuplicate = true;
-                     var selectedWordNetIds = $("#wordnetIds").val();
-                     if(selectedWordNetIds.length == 0) {
-                         // Then just append
-                         selectedWordNetIds = wordnetID;
-                         isDuplicate = false;
-                     } else if(selectedWordNetIds.indexOf(wordnetID) == -1) {
-                         selectedWordNetIds = selectedWordNetIds+','+wordnetID;
-                         isDuplicate = false;
-                     }
-                     
-                     if(isDuplicate){
-                    	 $("#succesInfo").html("The selected concept is added already.");
-                     }else{
-                    	 $("#succesInfo").html("Concept id "+ wordnetID +" is added successfully.");
-                       
-                     }
-                     
-                     $("#success-alert").fadeTo(1500, 500).slideUp(500, function(){
-                   	  	$("#success-alert").slideUp(500);
-                   	 });
-                     
-                     $("#wordnetIds").val(selectedWordNetIds);
-                 }
-             });
-             
-         });
-         
-          
-         $(document).ready(function() {
-             
-             $('#name').keydown(function(event){
-                 if(event.keyCode == 13) {
-                   event.preventDefault();
-                   $("#searchconcept").trigger("click");
-                 }
-         	});
-             
-             $("#searchconcept").click(function() {
-                 $.ajax({
-                     type : "GET",
-                     url : "[[@{'/conceptEdit/search'}]]",
-                     data : {
-                         concept : $("#name").val(),
-                         pos : $("#pos").val()
-                     },
-                     success : function(response) {
-                         var t = $('#conceptSearch').dataTable();
-                         t.fnClearTable();
-                         for(var i=0; i< response.length; i++) {
-                             var conceptEntry = response[i].entry;
-                             
-                             var t = $('#conceptSearch').dataTable();
-                             t.fnAddData([
-         								"<span id=\"clickableIcon\"><i title=\"Click to add wordnet id\" class=\"fa fa-plus\" id=\"addwrapper\" name=\"addwrapper\" aria-hidden=\"true\"></i></span>",
-                                         conceptEntry.word,
-                                         conceptEntry.id,
-                                         conceptEntry.wordnetId,
-                                         conceptEntry.pos,
-                                         conceptEntry.description
-                                     ] );
-                             
-                             // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
-                         }
-                         $('#conceptSearchDiv').show();  
-                     }, error : function(response) {
-                         var t = $('#conceptSearch').dataTable();
-                         t.clear().draw();
-                     }
-                 });
-             });
-         	});
-             $(function() {
-                 $("#addsynonym").click(function() {
-                     var addedSynonymsTable = $('#addedSynonyms');
-                     $('#synonymstable').dataTable().fnClearTable();
-                     $("#synonymModal").dialog('open');
-                     $("#synonymsDialogTable").show();
-                 });
-             });
-             $(document).ready(definedatatable);
-             $(document).ready(definedatatableForSynonymAdd);
-             function definedatatable() {
-                 $('#synonymstable').dataTable(
-                         {
-                             "bJQueryUI" : true,
-                             "sPaginationType" : "full_numbers",
-                             "bAutoWidth" : false,
-                             "bStateSave" : true,
-                             "aoColumns" : [ {
-                                 "sTitle" : "Term",
-                                 "mDataProp" : "word",
-                             }, {
-                                 "sTitle" : "POS",
-                                 "mDataProp" : "pos",
-                             }, {
-                                 "sTitle" : "Description",
-                                 "mDataProp" : "description",
-                             }, {
-                                 "sTitle" : "Add",
-                                 "mDataProp" : "id"
-                             } ],
-                             "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
-                                 var description = aData.description;
-                                 description = description != null ? description
-                                         .replace(/"/g, '&quot;') : "";
-                                 $('td:eq(3)', nRow).html(
-                                         '<a onclick="synonymAdd(\'' + aData.id
-                                                 + '\',\'' + aData.word + '\',\''
-                                                 + description + '\')">Add</a>');
-                                 return nRow;
-                             }
-                         });
-             };
-             $(function() {
-                 $("#synonymsearch")
-                         .click(
-                                 function() {
-                                     $("#synonymViewDiv").show();
-                                     $('#synonymstable').dataTable().fnClearTable();
-                                     $("#synonymstable").show();
-                                     
-             var addedsynonym = $('#synonymsids').val();
-                                     var synonymname = $("#synonymname").val();
-                                     $
-                                             .ajax({
-                                                 type : "GET",
-                                                 url : "[[@{'/conceptAddSynonymView'}]]",
-                                                 data : {
-                                                     synonymname : synonymname,
-                                                     addedsynonym : addedsynonym
-                                                 },
-                                                 success : function(response) {
-                                                     var data = jQuery
-                                                             .parseJSON(response);
-                                                     $('#synonymstable').dataTable()
-                                                             .fnClearTable();
-                                                     $('#synonymstable').dataTable()
-                                                             .fnAddData(data);
-                                                 },
-                                                 error : function(httpStatus, response) {
-                                                     if (httpStatus.status == 409) {
-                                                         var errorMessage = "<i class=\"fa fa-exclamation-triangle\">"
-                                                                 + httpStatus.responseText
-                                                                 + "</i>";
-                                                         $("#synonymModal").dialog(
-                                                                 "close");
-                                                         $('#synonymModal').modal(
-                                                                 'toggle');
-                                                         $('#errorMessage').show();
-                                                         $('#error_alert_msg').html(
-                                                                 errorMessage);
-                                                     }
-                                                 }
-                                             });
-                                 });
-             });
-             var synonymAdd = function(idValue, wrd, desc) {
-                 $("#synonymModal").dialog("close");
-                 $('#synonymModal').modal('toggle');
-                 $("#synonymsDialogTable").hide();
-                 var eachSynonym = {
-                     Id : idValue,
-                     Description : desc,
-                     Word : wrd
-                 };
-                 //Adding synonymId to the existing list
-                 var list = document.getElementById("synonymsids").value;
-                 list += eachSynonym.Id + ',';
-                 $("#synonymsids").val(list);
-                 $("#addedSynonyms").show();
-                 $("#addedSynonymsTable").show();
-                 $('#addedSynonymsTable').dataTable().fnAddData(eachSynonym);
-             }
-             function definedatatableForSynonymAdd() {
-                 $('#addedSynonymsTable').dataTable(
-                         {
-                             "bJQueryUI" : true,
-                             "bAutoWidth" : false,
-                             "bStateSave" : true,
-                             "aoColumns" : [ {
-                                 "sTitle" : "Remove",
-                                 "mDataProp" : "Id"
-                             }, {
-                                 "sTitle" : "Word",
-                                 "mDataProp" : "Word",
-                             }, {
-                                 "sTitle" : "Description",
-                                 "mDataProp" : "Description",
-                             } ],
-                             "fnRowCallback" : function(nRow, aData, iDisplayIndex) {
-                                 $('td:eq(0)', nRow).html(
-                                         '<a onclick="synonymTemporaryRemove(\''
-                                                 + aData.Id + '\')">Remove</a>');
-                                 return nRow;
-                             },
-                             "fnCreatedRow" : function(nRow, aData, iDataIndex) {
-                                 $(nRow).attr('id', aData.Id);
-                                 $(nRow).attr('class', '');
-                             }
-                         });
-             };
-             $(document)
-                     .ready(
-                             function() {
-                                 var conceptid = $('#conceptid').val();
-                                 $
-                                         .ajax({
-                                             type : "GET",
-                                             url : "[[@{'/getConceptEditSynonyms'}]]",
-                                             data : {
-                                                 conceptid : conceptid
-                                             },
-                                             success : function(response) {
-                                                 var border = response.length > 0 ? 1
-                                                         : 0;
-                                                 var synonym = JSON.parse(response);
-                                                 var total = synonym.Total;
-                                                 for (var i = 0; i < total; i++) {
-                                                     $('#addedSynonymsTable')
-                                                             .dataTable()
-                                                             .fnAddData(
-                                                                     synonym.synonyms[i]);
-                                                 }
-                                                 if (total > 0) {
-                                                     $("#addedSynonyms").show();
-                                                     $("#addedSynonymsTable").show();
-                                                 }
-                                             }
-                                         });
-                             });
-             
-             var synonymTemporaryRemove = function(synonymid) {
-                 var count = $('#addedSynonymsTable tr').length;
-                 var synonymTable = $("#addedSynonymsTable").dataTable();
-                 var tableRow = $('#' + synonymid);
-                 synonymTable.fnDeleteRow(synonymTable
-                         .fnGetPosition(tableRow.find('td')[0])[0]);
-                 //Removing synonymId from existing list
-                 var list = document.getElementById("synonymsids").value;
-                 document.getElementById("synonymsids").value = removeList(list,
-                         synonymid, ',');
-             };
-             var removeList = function(list, synonymid, separator) {
-                 separator = separator || ",";
-                 var values = list.split(separator);
-                 for (var i = 0; i < values.length; i++) {
-                     if (values[i] == synonymid) {
-                         values.splice(i, 1);
-                         return values.join(separator);
-                     }
-                 }
-                 return list;
-             };
+      	$(function() {
+    	    $("#synonymModal").dialog({
+    	        autoOpen: false
+    	    });
+    	});
+
+    	$(document).ready(function() {
+    	    $("#success-alert").hide();
+
+    	    oTable = $('#conceptSearch').dataTable({
+    	        "bJQueryUI": true,
+    	        "sPaginationType": "full_numbers",
+    	        "bAutoWidth": false,
+    	        //set row class to gradeX even if the row is selectable
+    	        "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+    	            if (aData[2] == aData[3]) {
+    	                $(nRow).removeClass('odd');
+    	                $(nRow).removeClass('even');
+    	                $(nRow).addClass('gradeX even');
+    	            } else {
+    	                $(nRow).removeClass('odd');
+    	                $(nRow).removeClass('even');
+    	                $(nRow).addClass('gradeX odd');
+    	            }
+    	        }
+
+    	    });
+
+    	    //     Used for loading the wordnet ids when clicked on a row
+    	    $('body').delegate('#conceptSearch tbody tr', "click", "td button", function() {
+    	        var aData = oTable.fnGetData(this); // get datarow
+
+    	        if (null != aData) // null if we clicked on title row
+    	        {
+    	            var wordnetID = aData[2];
+    	            var isDuplicate = true;
+    	            var selectedWordNetIds = $("#wordnetIds").val();
+    	            if (selectedWordNetIds.length == 0) {
+    	                // Then just append
+    	                selectedWordNetIds = wordnetID;
+    	                isDuplicate = false;
+    	            } else if (selectedWordNetIds.indexOf(wordnetID) == -1) {
+    	                selectedWordNetIds = selectedWordNetIds + ',' + wordnetID;
+    	                isDuplicate = false;
+    	            }
+
+    	            if (isDuplicate) {
+    	                $("#succesInfo").html("The selected concept is added already.");
+    	            } else {
+    	                $("#succesInfo").html("Concept id " + wordnetID + " is added successfully.");
+
+    	            }
+
+    	            $("#success-alert").fadeTo(1500, 500).slideUp(500, function() {
+    	                $("#success-alert").slideUp(500);
+    	            });
+
+    	            $("#wordnetIds").val(selectedWordNetIds);
+    	        }
+    	    });
+
+    	});
+
+
+    	$(document).ready(function() {
+
+    	    $('#name').keydown(function(event) {
+    	        if (event.keyCode == 13) {
+    	            event.preventDefault();
+    	            $("#searchconcept").trigger("click");
+    	        }
+    	    });
+
+    	    $("#searchconcept").click(function() {
+    	        $.ajax({
+    	            type: "GET",
+    	            url: "[[@{'/conceptEdit/search'}]]",
+    	            data: {
+    	                concept: $("#name").val(),
+    	                pos: $("#pos").val()
+    	            },
+    	            success: function(response) {
+    	                var t = $('#conceptSearch').dataTable();
+    	                t.fnClearTable();
+    	                for (var i = 0; i < response.length; i++) {
+    	                    var conceptEntry = response[i].entry;
+
+    	                    var t = $('#conceptSearch').dataTable();
+    	                    t.fnAddData([
+    	                        "<span id=\"clickableIcon\"><i title=\"Click to add wordnet id\" class=\"fa fa-plus\" id=\"addwrapper\" name=\"addwrapper\" aria-hidden=\"true\"></i></span>",
+    	                        conceptEntry.word,
+    	                        conceptEntry.id,
+    	                        conceptEntry.wordnetId,
+    	                        conceptEntry.pos,
+    	                        conceptEntry.description
+    	                    ]);
+
+    	                    // $('#conceptSearch tr:last').after('<tr><td>'+ conceptEntry.word +'</td><td>'+ conceptEntry.id + '</td> <td>'+ conceptEntry.wordnetId +'</td> <td>'+ conceptEntry.pos+'</td> </tr>');
+    	                }
+    	                $('#conceptSearchDiv').show();
+    	            },
+    	            error: function(response) {
+    	                var t = $('#conceptSearch').dataTable();
+    	                t.clear().draw();
+    	            }
+    	        });
+    	    });
+    	});
+    	$(function() {
+    	    $("#addsynonym").click(function() {
+    	        var addedSynonymsTable = $('#addedSynonyms');
+    	        $('#synonymstable').dataTable().fnClearTable();
+    	        $("#synonymModal").dialog('open');
+    	        $("#synonymsDialogTable").show();
+    	    });
+    	});
+    	$(document).ready(definedatatable);
+    	$(document).ready(definedatatableForSynonymAdd);
+
+    	function definedatatable() {
+    	    $('#synonymstable').dataTable({
+    	        "bJQueryUI": true,
+    	        "sPaginationType": "full_numbers",
+    	        "bAutoWidth": false,
+    	        "bStateSave": true,
+    	        "aoColumns": [{
+    	            "sTitle": "Term",
+    	            "mDataProp": "word",
+    	        }, {
+    	            "sTitle": "POS",
+    	            "mDataProp": "pos",
+    	        }, {
+    	            "sTitle": "Description",
+    	            "mDataProp": "description",
+    	        }, {
+    	            "sTitle": "Add",
+    	            "mDataProp": "id"
+    	        }],
+    	        "fnRowCallback": function(nRow, aData, iDisplayIndex) {
+    	            var description = aData.description;
+    	            description = description != null ? description
+    	                .replace(/"/g, '&quot;') : "";
+    	            description = description
+    	                .replace(/'/g, "\\'")
+    	                console.log(document.getElementById("synonymsids").value)
+    	                
+    	            var id = aData.id
+	        	    id = id != null ? id.replace(/'/g, "\\'") : "";
+	        	    id = 'id-'+id; 
+	        	    
+    	            $('td:eq(3)', nRow).html(
+    	                '<a id="'+id+'"onclick="synonymAdd(\'' + aData.id +
+    	                '\',\'' + aData.word + '\',\'' +
+    	                description + '\')">Add</a>');
+    	            return nRow;
+    	        }
+    	    });
+    	};
+    	$(function() {
+    	    $("#synonymsearch")
+    	        .click(
+    	            function() {
+    	                $("#synonymViewDiv").show();
+    	                $('#synonymstable').dataTable().fnClearTable();
+    	                $("#synonymstable").show();
+
+    	                var addedsynonym = $('#synonymsids').val();
+    	                var synonymname = $("#synonymname").val();
+    	                $
+    	                    .ajax({
+    	                        type: "GET",
+    	                        url: "[[@{'/conceptAddSynonymView'}]]",
+    	                        data: {
+    	                            synonymname: synonymname,
+    	                            addedsynonym: addedsynonym
+    	                        },
+    	                        success: function(response) {
+    	                            var data = jQuery
+    	                                .parseJSON(response);
+    	                            $('#synonymstable').dataTable()
+    	                                .fnClearTable();
+    	                            $('#synonymstable').dataTable()
+    	                                .fnAddData(data);
+    	                        },
+    	                        error: function(httpStatus, response) {
+    	                            if (httpStatus.status == 409) {
+    	                                var errorMessage = "<i class=\"fa fa-exclamation-triangle\">" +
+    	                                    httpStatus.responseText +
+    	                                    "</i>";
+    	                                $("#synonymModal").dialog(
+    	                                    "close");
+    	                                $('#synonymModal').modal(
+    	                                    'toggle');
+    	                                $('#errorMessage').show();
+    	                                $('#error_alert_msg').html(
+    	                                    errorMessage);
+    	                            }
+    	                        }
+    	                    });
+    	            });
+    	});
+    	var synonymAdd = function(idValue, wrd, desc) {
+    	    $("#synonymModal").dialog("close");
+    	    $('#synonymModal').modal('toggle');
+    	    $("#synonymsDialogTable").hide();
+    	    var eachSynonym = {
+    	        Id: idValue,
+    	        Description: desc,
+    	        Word: wrd
+    	    };
+    	    //Adding synonymId to the existing list
+    	    var list = document.getElementById("synonymsids").value;
+    	    list += eachSynonym.Id + ',';
+    	    $("#synonymsids").val(list);
+    	    $("#addedSynonyms").show();
+    	    $("#addedSynonymsTable").show();
+    	    $('#addedSynonymsTable').dataTable().fnAddData(eachSynonym);
+    	    
+    	    var id = '#id-'+idValue
+    	    $(id).fadeTo('slow',.6);
+    	    $(id).addClass('disable');
+    	}
+
+    	function definedatatableForSynonymAdd() {
+    	    $('#addedSynonymsTable').dataTable({
+    	        "bJQueryUI": true,
+    	        "bAutoWidth": false,
+    	        "bStateSave": true,
+    	        "aoColumns": [{
+    	            "sTitle": "Remove",
+    	            "mDataProp": "Id"
+    	        }, {
+    	            "sTitle": "Word",
+    	            "mDataProp": "Word",
+    	        }, {
+    	            "sTitle": "Description",
+    	            "mDataProp": "Description",
+    	        }],
+    	        "fnRowCallback": function(nRow, aData, iDisplayIndex) {
+	        	   	var id = aData.Id
+	        	    id = id != null ? id.replace(/'/g, "\\'") : "";
+	        	   	
+    	            $('td:eq(0)', nRow).html(
+    	                '<a onclick="synonymTemporaryRemove(\'' +
+    	                id + '\')">Remove</a>');
+    	            return nRow;
+    	        },
+    	        "fnCreatedRow": function(nRow, aData, iDataIndex) {
+    	            $(nRow).attr('id', aData.Id);
+    	            $(nRow).attr('class', '');
+    	        }
+    	    });
+    	};
+    	$(document)
+    	    .ready(
+    	        function() {
+    	            var conceptid = $('#conceptid').val();
+    	            $
+    	                .ajax({
+    	                    type: "GET",
+    	                    url: "[[@{'/getConceptEditSynonyms'}]]",
+    	                    data: {
+    	                        conceptid: conceptid
+    	                    },
+    	                    success: function(response) {
+    	                        var border = response.length > 0 ? 1 :
+    	                            0;
+    	                        var synonym = JSON.parse(response);
+    	                        var total = synonym.Total;
+    	                        for (var i = 0; i < total; i++) {
+    	                            $('#addedSynonymsTable')
+    	                                .dataTable()
+    	                                .fnAddData(
+    	                                    synonym.synonyms[i]);
+    	                        }
+    	                        if (total > 0) {
+    	                            $("#addedSynonyms").show();
+    	                            $("#addedSynonymsTable").show();
+    	                        }
+    	                    }
+    	                });
+    	        });
+
+    	var synonymTemporaryRemove = function(synonymid) {
+    	    var count = $('#addedSynonymsTable tr').length;
+    	    var synonymTable = $("#addedSynonymsTable").dataTable();
+    	    synonymid = synonymid.replace(/'/g, "\\'")
+    	    var tableRow = $('#' + synonymid);
+    	    synonymTable.fnDeleteRow(synonymTable
+    	        .fnGetPosition(tableRow.find('td')[0])[0]);
+    	    //Removing synonymId from existing list
+    	    var list = document.getElementById("synonymsids").value;
+    	    document.getElementById("synonymsids").value = removeList(list,
+    	        synonymid, ',');
+    	};
+    	var removeList = function(list, synonymid, separator) {
+    	    separator = separator || ",";
+    	    var values = list.split(separator);
+    	    for (var i = 0; i < values.length; i++) {
+    	        if (values[i] == synonymid) {
+    	            values.splice(i, 1);
+    	            return values.join(separator);
+    	        }
+    	    }
+    	    return list;
+    	};
       </script>
    </head>
    <body class="body" layout:fragment="content">
