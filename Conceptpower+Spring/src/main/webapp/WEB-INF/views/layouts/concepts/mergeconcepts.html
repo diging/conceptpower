@@ -44,25 +44,43 @@
    </head>
    <body class="body" layout:fragment="content">
       <div class="conceptPowerWrapper">
-         <h3 class="title">Merge Concepts</h3>
-         The following concepts are being merged.
-         <table class="table table-striped resultTable tableStyles">
-            <thead>
-               <tr>
-                  <th th:text="Word"></th>
-                  <th th:text="Id"></th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr th:each="conceptEntry: ${conceptEntries}">
-                  <td th:text="${conceptEntry.word}"></td>
-                  <td th:text="${conceptEntry.id}"></td>
-               </tr>
-            </tbody>
-         </table>
+         
          <form
             th:action="@{/auth/concepts/merge}"
             th:object="${conceptsMergeBean}" method='post'>
+            <div th:if="${conceptsMergeBean.errorMessages != null && conceptsMergeBean.errorMessages.size() > 0}">
+            	<div class="alert alert-warning alert-dismissable">
+            		<p th:each="error : ${conceptsMergeBean.errorMessages}" th:text=${error.errorCode}></p>
+            	</div>
+            </div>
+            <div class="formErrorAlert" th:if="${#fields.hasErrors('mergeIds')}" th:errors="*{mergeIds}"></div>
+            <div th:field="*{mergeIds}"></div>
+            <h3 class="title">Merge Concepts</h3>
+         	<h5>The following concepts are being merged.</h5>
+        	<table class="table table-striped resultTable tableStyles">
+	            <thead>
+	               <tr>
+	                  <th th:text="Word"></th>
+	                  <th th:text="Id"></th>
+	               </tr>
+	            </thead>
+	            <tbody>
+	               <tr th:each="conceptEntry: ${conceptEntries}">
+	                  <td th:text="${conceptEntry.word}"></td>
+	                  <td th:text="${conceptEntry.id}"></td>
+	               </tr>
+	            </tbody>
+	        </table>
+	        
+	        <div th:if="${localConceptIds != null && localConceptIds.size() > 0}">
+         		<label class="col-sm-1 control-label">Concept Id</label>
+         		<div th:each="ids: ${localConceptIds}">
+         			<input type="radio" th:field="*{selectedConceptId}" th:value="${ids}" th:text="${ids}"/>
+         		</div>
+         	</div>
+         	<div th:if="${localConceptIds != null && localConceptIds.size() == 0}" style="color:green">
+         		A new id will be generated for the merged concepts.
+         	</div>
             <table class="conceptPowerForm">
                <tbody>
                   <tr>
