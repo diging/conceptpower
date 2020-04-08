@@ -63,6 +63,15 @@
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
+				
+				
+				<!-- DB config -->
+		        <db.driver>com.mysql.jdbc.Driver</db.driver>
+		        <db.database.url></db.database.url>
+		        <db.user></db.user>
+		        <db.password></db.password>
+		        <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
+		        <hibernate.log.sql>false</hibernate.log.sql>
 			</properties>
 		</profile>
 		<profile>
@@ -311,12 +320,12 @@
 		</dependency>
 
 		<!-- MySQL database driver -->
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.15</version>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>8.0.19</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>commons-httpclient</groupId>
@@ -387,13 +396,42 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.10.1</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>6.0.15.Final</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-entitymanager</artifactId>
+		    <version>5.4.14.Final</version>
+		</dependency>
+		
+		<!-- Spring Data JPA -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
+		<dependency>
+		    <groupId>org.springframework.data</groupId>
+		    <artifactId>spring-data-jpa</artifactId>
+		    <version>2.2.6.RELEASE</version>
+		</dependency>
+		
+		 <!-- DataSource (HikariCP) -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+		
+				
+		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+		<dependency>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		    <version>42.2.12</version>
+		</dependency>
+		
 		<!-- DB4O -->
 		<dependency>
 			<groupId>com.db4o</groupId>
