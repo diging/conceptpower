@@ -1,6 +1,7 @@
 <div class="footerBox">
    <div class="footer">
-      <h5>Version</h5>
+      <h5>Version: <span th:text="${buildNumber}"></span> 
+      <span th:if="${pullrequest != null}" >, Pull Request: <span th:text="${pullrequest}"></span></span></h5>
       <h5 style="font-weight:bolder;"><i class="fa fa-copyright" aria-hidden="true"></i>DigInG   2019</h5>
    </div>
 </div>
