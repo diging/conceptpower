@@ -118,8 +118,10 @@
                              },
                              success : function(response) {
                                  var data = jQuery.parseJSON(response);
-                                 $('#synonymstable').dataTable().fnClearTable();
-                                 $('#synonymstable').dataTable().fnAddData(data);
+                                 if(data.length > 0){
+	                                 $('#synonymstable').dataTable().fnClearTable();
+	                                 $('#synonymstable').dataTable().fnAddData(data);
+                                 }
                              },
                              error : function(httpStatus, response) {
                                  if (httpStatus.status == 409) {
