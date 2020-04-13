@@ -365,7 +365,7 @@
                   <td sec:authorize="isAuthenticated()" id="editConceptModal">
                      <a 
                         th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}"
-                        th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" 
+                        th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true&searchWord='+${conceptSearchBean.word}}" 
                         role="button" aria-expanded="false">
                      <i class="fa fa-pencil-square-o dropright" aria-hidden="true">
                      </i>

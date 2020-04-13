@@ -5,6 +5,10 @@
    >
    <head>
       <script>
+	      $(document).on('click', '#paginationTag', function(e) {
+	          var paginateData = $(this).data()
+	          window.location = "[[@{'/'}]]"+'auth/'+paginateData.listid+'/concepts?page='+paginateData.page;
+	      })
          $(document).on('click', '#conceptDetails', function(e) {
              var conceptid = $(this).data('conceptid');
          
@@ -59,7 +63,7 @@
          <div class="headerSection">
             <div style="display: block;">
                <h3 class="titleHeader">Concept List: <span th:text="${listid}"></span></h3>
-               <h4 class="subHeader">Here you will find all stored concept lists</h4>
+               <h4 class="subHeader">Here you find all stored concept list in the selected concept list</h4>
             </div>
          </div>
          <font color="red" th:text="${luceneError}"></font>
@@ -107,6 +111,27 @@
          </table>
          <div th:if="${result.size() <= 0}">No Concept Lists to display</div>
       </div>
+      
+	    <div class="pagination" id="paginationSection" th:if="${result != null && result.size() > 0}">
+	      <ul class="pagination">
+	         <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}" th:data-page="${page - 1}" th:data-listid="${listid}" id="paginationTag">Previous</span>
+	         </li>
+	         <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}"  th:data-page="1" th:data-listid="${listid}" id="paginationTag">First</span>
+	         </li>
+	         <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}" th:data-page="${i}" th:data-listid="${listid}" id="paginationTag" th:text="${i}">
+	            <span class="sr-only">(current)</span></span>
+	         </li>
+	         <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}"  th:data-page="${count}" th:data-listid="${listid}" id="paginationTag">Last</span>
+	         </li>
+	         <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}"  th:data-page="${page + 1}" th:data-listid="${listid}" id="paginationTag">Next</span>
+	         </li>
+	      </ul>
+		</div>
       <div id="deleteModalPlugin"></div>
       <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
    </body>
