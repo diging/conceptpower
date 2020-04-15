@@ -37,6 +37,15 @@
 		<concept.list.url>https://www.dropbox.com/s/r82nymnt2247zz4/conceptLists.db?raw=1</concept.list.url>
 		<concept.types.url>https://www.dropbox.com/s/nwn15s84fzz37s5/conceptTypes.db?raw=1</concept.types.url>
 		<users.url>https://www.dropbox.com/s/p6h3974hmlouq0i/users.db?raw=1</users.url>
+		
+		
+				<!-- DB config -->
+		        <db.driver>com.mysql.jdbc.Driver</db.driver>
+		        <db.database.url></db.database.url>
+		        <db.user></db.user>
+		        <db.password></db.password>
+		        <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
+		        <hibernate.log.sql>false</hibernate.log.sql>
 	</properties>
 
 	<repositories>
