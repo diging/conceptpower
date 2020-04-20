@@ -130,7 +130,6 @@
          
              $(document).on('click', '#conceptDetails', function(e) {
                  var conceptid = $(this).data('conceptid');
-         
                  $.ajax({
                      type: "GET",
                      url: "[[@{'/conceptDetail'}]]",
@@ -139,19 +138,19 @@
                      },
                      success: function(details) {
                          details = $.parseJSON(details);
-                         var token = $("meta[name='_csrf_token']").attr("content");
-                     	
-                         //Ajax Call to plugin a pre populated Concepet Details Modal
-                         $.ajax({
-                             type: "POST",
-                             url: "[[@{'/conceptdetails?_csrf='}]]" + token.trim(),
-                             data: JSON.stringify(details),
-                             contentType: "application/json",
-                             success: function(data) {
-                                 $('#conceptDetailsPlugin').html(data);
-                                 $('#conceptDetail').modal('show');
-                             }
-                         });
+                         
+                         $("#conceptDetailsName").text(details.name);
+    					 $("#conceptDetailsId").text(details.id);
+    					 $("#conceptDetailsUri").text(details.uri);
+    					 $("#conceptDetailsWordnetId").text(details.wordnetid);
+    					 $("#conceptDetailsPos").text(details.pos);
+    					 $("#conceptDetailsList").text(details.conceptlist);
+    					 $("#conceptDetailsType").text(details.type);
+    					 $("#conceptDetailsEqualTo").text(details.equalto);
+    					 $("#conceptDetailsSimilarTo").text(details.similarto);
+    					 $("#conceptDetailsCreator").text(details.creator);
+    					 $("#conceptDetailsDesc").html(details.description);
+    					 $("#conceptDetailsMergedIds").html(details.mergedIds);
                          
                      }
                  });
@@ -326,6 +325,7 @@
                              html += '<p>' + conceptEntry.description + '</p></div>';     
                          });
                          $("#selectedconcepts").append(html); 
+                         $("#noConceptAlert").hide();
                      }
                  });
                  
@@ -380,10 +380,9 @@
                <h4 th:if="${result!=null && result.size() > 0}">The following concepts were found.<br/>Remember! You can only create wrapper for concepts in WordNet.</h4>
                <div id="selectedconcepts"></div>
                <div th:if="${result!=null && result.size() > 0}">
-                  <table class="table table-striped resultTable tableStyles">
+                  <table class="table table-striped conceptSearch tableStyles" id="conceptSearch" style="border-bottom:unset">
                      <thead>
                         <tr>
-                           <th></th>
                            <th scope="col">Term</th>
                            <th scope="col">ID</th>
                            <th scope="col">WordNet ID</th>
@@ -395,9 +394,8 @@
                         </tr>
                      </thead>
                      <tbody>
-                        <tr th:each="concept : ${result}">
-                           <td></td>
-                           <td th:text="${concept.entry.word}"></td>
+                        <tr th:each="concept : ${result}" title="${concept.uri}">
+                           <td><a data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}"></a></td>
                            <td th:text="${concept.entry.id}"></td>
                            <td th:text="${concept.entry.wordnetId}"></td>
                            <td th:text="${concept.entry.pos}"></td>
@@ -413,7 +411,7 @@
                      </tbody>
                   </table>
                </div>
-               <div th:if="${result == null || result.size() <= 0}">No Concept to display</div>
+               <div id="noConceptAlert" th:if="${result == null || result.size() <= 0}">No Concept to display</div>
             </div>
          </form>
          <form th:action="@{/auth/conceptlist/addconceptwrapper/add}" method='post' th:object="${conceptWrapperAddBean}">
@@ -426,7 +424,7 @@
             <table class="conceptPowerForm">
               <tbody>
                  <tr>
-                 	<td style="width: 172px;">
+                 	<td style="width: 172px; vertical-align:top;">
                  		<label  class="formlabel">Word</label>
                  	</td>
                  	<td>
@@ -434,7 +432,7 @@
                  	</td>
                 </tr>
                 <tr>
-                	<td style="width: 172px;">
+                	<td style="width: 172px; vertical-align:top;">
                 		<label class="formlabel">Description</label>
                 	</td>
                 	<td>
@@ -442,7 +440,7 @@
                 	</td>
                 </tr>
                 <tr>
-                	<td style="width: 172px;">
+                	<td style="width: 172px; vertical-align:top;">
                 		<label  class="formlabel">Synonyms</label>
                 	</td>
                 	<td>
@@ -454,7 +452,7 @@
                 	</td>
                 </tr>
                 <tr>
-                	<td style="width: 172px;">
+                	<td style="width: 172px; vertical-align:top;">
                 		<label for="types" class="formlabel">Concept type</label>
                 	</td>
                 	<td>
@@ -468,7 +466,7 @@
                 	</td>
                 </tr>
                 <tr>
-                	<td style="width: 172px;">
+                	<td style="width: 172px; vertical-align:top;">
                 		<label for="lists" class="formlabel">Concept list</label>
                 	</td>
                 	<td>
@@ -483,7 +481,7 @@
                 	</td>
                 </tr>
                 <tr>
-                	<td style="width: 172px;">
+                	<td style="width: 172px; vertical-align:top;">
                 		<label  class="formlabel">Equals</label>
                 	</td>
                 	<td>
@@ -491,7 +489,7 @@
                 	</td>
                 </tr>
                 <tr>
-                	<td style="width: 172px;">
+                	<td style="width: 172px; vertical-align:top;">
 	                  <label class="formlabel">Similar to</label>
                 	</td>
                 	<td>
@@ -509,7 +507,7 @@
             </div>
          </form> 
       </div>
-      <div id="conceptDetailsPlugin"></div>
+      <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
       <div th:insert="layouts/modals/synonyms :: synonyms"></div>
    </body>
 </html>
