@@ -232,6 +232,10 @@
     	    $('#addedSynonymsTable').dataTable({
     	        "bJQueryUI": true,
     	        "bAutoWidth": false,
+    	        "bFilter":false,
+    	        "bLengthChange":false,
+    	        "bPaginate":false,
+    	        "bInfo":false,
     	        "bStateSave": true,
     	        "aoColumns": [{
     	            "sTitle": "Remove",
@@ -325,7 +329,7 @@
             <table class="conceptPowerForm" style="margin-top: 0px;">
                <tbody>
                   <tr>
-                     <td style="width:172px;">
+                     <td style="width:172px; vertical-align:top;">
                         <label for="word" class="formlabel">Concept</label>
                      </td>
                      <td>
@@ -346,7 +350,7 @@
                      </td>
                   </tr>
                   <tr>
-                     <td style="width:172px;">
+                     <td style="width:172px; vertical-align:top;">
                         <div>
                            <label for="conceptListValue" class="formlabel">Concept List</label>
                         </div>
@@ -361,7 +365,7 @@
                      </td>
                   </tr>
                   <tr>
-                     <td style="width:172px;">
+                     <td style="width:172px; vertical-align:top;">
                         <label for="description" class="formlabel">Description</label>
                      </td>
                      <td>
@@ -369,12 +373,12 @@
                      </td>
                   </tr>
                   <tr>
-                     <td style="width:172px;">
+                     <td style="width:172px; vertical-align:top;">
                         <label for="synonym" class="formlabel">Synonyms</label>
                      </td>
                      <td>
                         <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="addsynonym" name="synonym" type="button" data-toggle="modal" data-target="#synonyms" 
-                        style="vertical-align: top;">
+                        style="vertical-align: top; display:block;">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add Synonym	
                         </button>
                         <input type="hidden" th:field="*{synonymsids}"></input> 
@@ -388,7 +392,7 @@
                      </td>
                   </tr>
                   <tr>
-                     <td style="width:172px;">
+                     <td style="width:172px; vertical-align:top;">
                         <label for="selectedTypes" class="formlabel">Concept Type</label>
                      </td>
                      <td class="drpSpacing">
@@ -401,7 +405,7 @@
                      </td>
                   </tr>
                   <tr>
-                     <td style="width:172px;">
+                     <td style="width:172px; vertical-align:top;">
                         <label for="equals" class="formlabel">External Authority Service Links</label>
                      </td>
                      <td>
@@ -409,7 +413,7 @@
                      </td>
                   </tr>
                   <tr>
-                     <td style="width:172px;">
+                     <td style="width:172px; vertical-align:top;">
                         <label for="similar" class="formlabel">Links to other services</label>
                      </td>
                      <td>
@@ -417,7 +421,7 @@
                      </td>
                   </tr>
                   <tr>
-                     <td style="width:172px;">
+                     <td style="width:172px; vertical-align:top;">
                         <label for="wordnetIds" class="formlabel">WordNet</label>
                      </td>
                      <td>

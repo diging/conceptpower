@@ -43,11 +43,35 @@
                     url: "[[@{'/auth/conceptlist/deleteconcept/'}]]" + conceptId,
                     contentType: "application/json",
                     success: function(data) {
-                        $('#deleteModalPlugin').html(data);
-                        $('#deleteConcept').modal('show');
+                    	details = $.parseJSON(data);
+                    	console.log(details.conceptId)
+                    	$("#conceptDeleteDetailsId").text(details.conceptId);
+                   	$("#conceptDeleteId").text(details.conceptId);
+   						$("#conceptDeleteWord").text(details.word);
+   					 	$("#conceptDeleteDetailsWord").text(details.word);
+   					 	$("#conceptDeleteDetailsWordnetId").text(details.wordnetid);
+   					 	$("#conceptDeleteDetailsPos").text(details.pos);
+   					 	$("#conceptDeleteDetailsList").text(details.conceptList);
+   					 	$("#conceptDeleteDetailsType").text(details.type);
+   					 	$("#conceptDeleteDetailsEqualTo").text(details.equalto);
+   					 	$("#conceptDeleteDetailsSimilarTo").text(details.similarto);
+   					 	$("#conceptDeleteDetailsCreator").text(details.creator);
+   					 	$("#conceptDeleteDetailsDesc").text(details.description);
+   					 	$("#conceptDeleteDetailsModified").text(details.modified);
+   					 	$("#conceptDeleteDetailsSynonyms").text(details.synonyms);
+   					 	
+	   					/* Set the delete url to an Id, so that it can be used for delete operation */
+	   					$("#deleteUrl").val("[[@{'/auth/conceptlist/deleteconceptconfirm/'}]]"+details.conceptId+"?fromHomeScreenDelete=false"+"&listName="+details.conceptList+"&searchword="+details.searchword)
+	   					$('#deleteConcept').modal('show');
                     }
                 });
             });
+         $(document).on('submit','#deleteConfirmForm', function (event){
+        	 var action = '';
+        	 var url = $("#deleteUrl").val();
+        	 if(url)
+        	 	$(this).attr('action', $("#deleteUrl").val());
+        });
          
          $(document).on('hidden.bs.modal', '#deleteModalPlugin', function(event) {
                $('#deleteModalPlugin').empty();
@@ -132,7 +156,8 @@
 	         </li>
 	      </ul>
 		</div>
-      <div id="deleteModalPlugin"></div>
+		<input type='hidden' id='deleteUrl'/>
+      <div th:insert="layouts/modals/deleteconcept :: deleteConcept"></div>
       <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
    </body>
 </html>
