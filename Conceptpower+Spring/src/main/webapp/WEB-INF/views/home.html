@@ -290,7 +290,7 @@
       <input type='hidden' id='conceptIdsToMerge' th:value='${conceptIdsToMerge}' />
       <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection"  th:with="sortDirection = ${sortDir == '1' ? '-1' : '1'}">
          <h4>Results</h4>
-         <div style="display:flex; justify-content: space-between; align-items: center;">
+         <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
             <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="prepareMergeConcept" sec:authorize="isAuthenticated()">
             Select Concepts To merge
             </button>
@@ -298,8 +298,8 @@
             <div id="mergeError" class="alert alert-danger"> Please select at least two concepts to merge.</div>
             <div class="btn-group showDrp">
                <label for="dropdown">Show</label>
-               <div class='custom-dropdown' style="margin:0px 5px 0px 5px">
-                  <select class="selectDropdown" id="numRecordsPerPage" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
+               <div class='custom-dropdown' style="margin:0px 5px 0px 5px;">
+                  <select class="selectDropdown" style="padding:0 2.5em 0 .3em;" id="numRecordsPerPage" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
                      th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}">
                      <option th:value="5" th:text="5"   th:selected="${numRecords == 5}"></option>
                      <option th:value="10" th:text="10" th:selected="${numRecords == 10}"></option>
@@ -365,7 +365,7 @@
                   <td sec:authorize="isAuthenticated()" id="editConceptModal">
                      <a 
                         th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}"
-                        th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true'}" 
+                        th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true&searchWord='+${conceptSearchBean.word}}" 
                         role="button" aria-expanded="false">
                      <i class="fa fa-pencil-square-o dropright" aria-hidden="true">
                      </i>

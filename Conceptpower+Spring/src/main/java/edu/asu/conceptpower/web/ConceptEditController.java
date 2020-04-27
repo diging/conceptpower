@@ -91,6 +91,7 @@ public class ConceptEditController {
     @RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
     public String prepareEditConcept(@PathVariable("conceptid") String conceptid,
             @RequestParam(value = "fromHomeScreen", required = false) String fromHomeScreen,
+            @RequestParam(value = "searchWord", required = false) String searchWord,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model, BindingResult results)
             throws LuceneException {
 
@@ -118,6 +119,7 @@ public class ConceptEditController {
         conceptEditBean.setWordnetIds(concept.getWordnetId());
         conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
+        model.addAttribute("searchWord", searchWord);
         
         return "/layouts/concepts/editconcept";
     }

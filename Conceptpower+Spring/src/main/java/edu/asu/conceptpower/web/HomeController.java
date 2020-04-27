@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 public class HomeController {
-    
 	/**
 	 * This method simply selects the home view to render by returning its name.
 	 */
