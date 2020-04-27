@@ -1,7 +1,7 @@
 <div class="footerBox">
    <div class="footer">
-      <h5>Version: <span th:text="${#strings.defaultString(build,'')}"></span> 
-      <span th:if="${pullrequest != null}" >, Pull Request: <span th:text="${#strings.defaultString(pullrequest,'')}"></span></span></h5>
-      <h5 style="font-weight:bolder;"><i class="fa fa-copyright" aria-hidden="true"></i>DigInG   2019</h5>
+      <h5>Version: <span th:text="${#strings.defaultString(@environment.getProperty('buildNum'),'')}"></span> 
+      <span th:if="${@environment.getProperty('pullReq') != null}" >, Pull Request: <span th:text="${#strings.defaultString(@environment.getProperty('pullReq'),'')}"></span></span></h5>
+      <h5 style="font-weight:bolder;"><i class="fa fa-copyright" aria-hidden="true"></i>DigInG   2020</h5>
    </div>
 </div>

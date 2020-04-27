@@ -239,10 +239,10 @@
          
              if (x != null) {
                  var new_row = x.rows[0].cloneNode(true);
-                 new_row.cells[0].innerHTML = '<a onclick="synonymRemove(\'' + x.rows.length
+                 new_row.cells[0].innerHTML = '<font size="2"><a onclick="synonymRemove(\'' + x.rows.length
                          + '\')">Remove</a>' + '</font></td>'
-                 new_row.cells[1].innerHTML = term;
-                 new_row.cells[2].innerHTML = decodedDescription;
+                 new_row.cells[1].innerHTML = "<font size='2'>"+term+"</font>";
+                 new_row.cells[2].innerHTML = "<font size='2'>"+decodedDescription+"</font>";
                  new_row.cells[3].innerHTML = id;
                  new_row.cells[3].hidden = true;
          
