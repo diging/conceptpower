@@ -14,6 +14,16 @@ public class MigrationController{
     
     @RequestMapping(value = "/auth/migrate")
     public String landingPage() {
-        return "/layouts/migration/landingpage";
+        return "/layouts/migration/migrate";
+    }
+    
+    @RequestMapping(value = "/auth/migrate/startmigration")
+    public String startMigration() {
+        return "";
+    }
+    
+    @RequestMapping(value = "/auth/migrate/status")
+    public String migrationStatus() {
+        return "";
     }
 }

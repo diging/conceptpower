@@ -76,7 +76,7 @@
 				
 				
 				<!-- DB config -->
-		        <db.driver>com.mysql.jdbc.Driver</db.driver>
+		        <db.driver>com.mysql.cj.jdbc.Driver</db.driver>
 		        <db.database.url></db.database.url>
 		        <db.user></db.user>
 		        <db.password></db.password>
