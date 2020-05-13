@@ -1,13 +1,16 @@
 package edu.asu.conceptpower.app.db;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
+import com.db4o.config.TSerializable;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ServerConfiguration;
 
 import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ReviewRequest;
 
 public class DatabaseManager implements Serializable {
 
@@ -27,6 +30,9 @@ public class DatabaseManager implements Serializable {
         // Added to make sure list has been added to the database
         // Ref: http://www.resolvinghere.com/sof/12343387.shtml
         configuration.common().objectClass(ConceptEntry.class).updateDepth(2);
+        configuration.common().objectClass(ReviewRequest.class).updateDepth(2);
+        //Serializing and storing the objects since complex objects with transient states are not supported in db4o.
+        configuration.common().objectClass(OffsetDateTime.class).translate(new TSerializable());
         server = Db4oClientServer.openServer(configuration, databasePath, 0);
 
     }

@@ -1,14 +1,32 @@
 package edu.asu.conceptpower.core;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReviewRequest {
 
-
+    private String id;
     private String conceptId;
     private String request;
     private ReviewStatus status;
     private String requester;
     private String resolver;
+    private List<Comment> comments;
+    private OffsetDateTime createdAt;
+    
+    
+    public ReviewRequest() {
+        comments = new ArrayList<>();
+    }
+    
+    public String getId() {
+        return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
     
     public String getConceptId() {
         return conceptId;
@@ -49,5 +67,20 @@ public class ReviewRequest {
     public void setResolver(String resolver) {
         this.resolver = resolver;
     }  
-
+    
+    public List<Comment> getComments() {
+        return comments;
+    }
+    
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+    
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+    
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
