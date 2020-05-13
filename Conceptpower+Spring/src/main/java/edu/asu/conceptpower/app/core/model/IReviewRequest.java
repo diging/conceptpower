@@ -2,6 +2,12 @@ package edu.asu.conceptpower.app.core.model;
 
 import edu.asu.conceptpower.core.ReviewStatus;
 
+/**
+ * 
+ * @author Keerthivasan
+ * 
+ */
+
 public interface IReviewRequest{
     
     public abstract String getConceptId();

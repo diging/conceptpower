@@ -8,7 +8,12 @@ import javax.persistence.Index;
 import edu.asu.conceptpower.app.core.model.IReviewRequest;
 import edu.asu.conceptpower.core.ReviewStatus;
 
-@Entity
+/**
+ * 
+ * @author Keerthivasan
+ * 
+ */
+
 @Table(
         name="",
         indexes= {

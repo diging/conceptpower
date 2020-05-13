@@ -7,6 +7,13 @@
 	   	<script>
 	   		$(document).on('click', '#startMigration', function(e){
 	   			
+	   			$.ajax({
+	   				url:"[@{'/auth/migrate/startmigration'}]]"
+	   				type:'GET'
+	   				success:function(response){
+	   					console.log("Someting returned  -->", response);
+	   				}
+	   			});
 	   		})
 	   	</script>
    </head>
