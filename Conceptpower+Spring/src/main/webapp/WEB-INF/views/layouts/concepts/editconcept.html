@@ -149,7 +149,6 @@
     	                .replace(/"/g, '&quot;') : "";
     	            description = description
     	                .replace(/'/g, "\\'")
-    	                console.log(document.getElementById("synonymsids").value)
     	                
     	            var id = aData.id
 	        	    id = id != null ? id.replace(/'/g, "\\'") : "";
@@ -442,27 +441,36 @@
                <h4 class="numeration">1</h4>
                <label class="formlabel">Search for WordNet concept</label>
             </div>
-            <div>
-               <div class="formlabel row" style="width:70%;">
-                  <label style="width: 172px;" class="formLabel">Create wrapper for wordnet concept:</label>
-                  <input style="margin-left: 1%;" type="text" class="form-control" id="name" placeholder="Enter wrapper....">
-               </div>
-               <div class="row1-2">
-                  <label for="selectDropdown" class="formlabel">POS</label>
-                  <div class="custom-dropdown">
-                     <select class="selectDropdown" id="pos">
-                        <option value="noun">Noun</option>
-                        <option value="verb">Verb</option>
-                        <option value="adverb">Adverb</option>
-                        <option value="adjective">Adjective</option>
-                        <option value="other">Other</option>
-                     </select>
-                  </div>
-                  <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="searchconcept" name="searchconcept" type="button" style="margin: 0;">
-                  Search
-                  </button>
-               </div>
-            </div>
+            <table>
+            	<tr>
+            		<td style="width:172px; vertical-align:top;">
+            			<label for="name" class="formlabel">Create wrapper for wordnet concept</label>
+            		</td>
+            		<td>
+            			<input type="text" class="form-control" id="name" placeholder="Enter wrapper....">
+            		</td>
+            	</tr>
+            	<tr style="border-collapse: separate; border-spacing: 0px 10px;">
+            		<td style="width:172px;">
+            			<label for="selectDropdown" class="formlabel">POS</label>
+            		</td>
+            		<td>
+            		   <div class="custom-dropdown">
+            				<select class="selectDropdown" id="pos">
+		                        <option value="noun">Noun</option>
+		                        <option value="verb">Verb</option>
+		                        <option value="adverb">Adverb</option>
+		                        <option value="adjective">Adjective</option>
+		                        <option value="other">Other</option>
+	                     	</select>
+	                  </div>
+	                  <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="searchconcept" name="searchconcept" type="button" style="margin-left: 5%;">
+	                  	Search
+	                  </button>
+            		</td>
+            	</tr>
+            </table>
+          
             
             <div class="alert alert-success" id="success-alert" style="width:50%">
 			  <button type="button" class="close" data-dismiss="alert">x</button>

@@ -55,6 +55,7 @@
              });
          
              var words = [];
+             var descriptions = [];
              
              //ajax call to add the concept selected for wrappping
              $('body').delegate('#conceptSearch tbody tr', "click", function() {
@@ -80,10 +81,12 @@
                              $("#selectedconcepts").append(html);
                              
                              words.push(wordField);
+                             descriptions.push(description);
+                             
                              if($('#word').val().length < wordField.length) {
                                  $('#word').val(wordField);
+                                 $('#description').val(description);
                              }
-                             
                          } else {
                              wrapperids = $("#wrapperids").val();
                              wrapperids = wrapperids.replace(wordnetID + ',', '');
@@ -101,17 +104,21 @@
                                  }
                              }
                              words.splice(index, 1);
+                             descriptions.splice(index, 1);
                              
                              // Set the correct word in word field.
                              var maxLength = 0;
                              var maxWord = '';
+                             var maxDesc = '';
                              for(var i=0; i< words.length; i++) {
                                  if(words[i].length > maxLength) {
                                      maxLength = words[i].length;
                                      maxWord = words[i];
+                                     maxDesc = descriptions[i];
                                  }
                              }
-                             $('#word').val(maxWord);         
+                             $('#word').val(maxWord);  
+                             $('#description').val(maxDesc)
                          }
          
                          var wrapperconcepts = wrapperids.split(',');
@@ -128,7 +135,7 @@
          
              });
          
-             $(document).on('click', '#conceptDetails', function(e) {
+             $(document).on('click', '.conceptDetails', function(e) {
                  var conceptid = $(this).data('conceptid');
                  $.ajax({
                      type: "GET",
@@ -138,20 +145,18 @@
                      },
                      success: function(details) {
                          details = $.parseJSON(details);
-                         
                          $("#conceptDetailsName").text(details.name);
-    					 $("#conceptDetailsId").text(details.id);
-    					 $("#conceptDetailsUri").text(details.uri);
-    					 $("#conceptDetailsWordnetId").text(details.wordnetid);
-    					 $("#conceptDetailsPos").text(details.pos);
-    					 $("#conceptDetailsList").text(details.conceptlist);
-    					 $("#conceptDetailsType").text(details.type);
-    					 $("#conceptDetailsEqualTo").text(details.equalto);
-    					 $("#conceptDetailsSimilarTo").text(details.similarto);
-    					 $("#conceptDetailsCreator").text(details.creator);
-    					 $("#conceptDetailsDesc").html(details.description);
-    					 $("#conceptDetailsMergedIds").html(details.mergedIds);
-                         
+                         $("#conceptDetailsId").text(details.id);
+                         $("#conceptDetailsUri").text(details.uri);
+                         $("#conceptDetailsWordnetId").text(details.wordnetid);
+                         $("#conceptDetailsPos").text(details.pos);
+                         $("#conceptDetailsList").text(details.conceptlist);
+                         $("#conceptDetailsType").text(details.type);
+			             $("#conceptDetailsEqualTo").text(details.equalto);
+			             $("#conceptDetailsSimilarTo").text(details.similarto);
+			             $("#conceptDetailsCreator").text(details.creator);
+			             $("#conceptDetailsDesc").html(details.description);
+			             $("#conceptDetailsMergedIds").html(details.mergedIds);        
                      }
                  });
              });
@@ -187,8 +192,14 @@
                              var description = aData.description;
                              description = description != null ? description.replace(/"/g, '&quot;')
                                      : "";
+                             description = description.replace(/'/g, "\\'")
+         	                
+                             var id = aData.id
+                             id = id != null ? id.replace(/'/g, "\\'") : "";
+                             id = 'id-'+id;
+         	        	    
                              $('td:eq(3)', nRow).html(
-                                     '<a onclick="synonymAdd(\'' + aData.id + '\',\'' + aData.word
+                                     '<a id='+id+' onclick="synonymAdd(\'' + aData.id + '\',\'' + aData.word
                                              + '\',\'' + description + '\')">Add</a>');
                              return nRow;
                          }
@@ -273,6 +284,10 @@
                  synonyms += table.rows[r].cells[3].innerHTML + ',';
              }
              $("#synonymsids").val(synonyms);
+             
+             var idVal = '#id-'+id;
+             $(idVal).fadeTo('slow',.6);
+             $(idVal).addClass('disable');
          };
          
          var synonymRemove = function(row) {
@@ -316,7 +331,7 @@
          
                              html += '<div id="'+ conceptEntry.id +'div">';
                              
-                             html += '<a data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" data-conceptid="';
+                             html += '<a data-toggle="modal" role="button" data-target="#conceptDetail" class="conceptDetails" data-conceptid="';
                              html += conceptEntry.id+'" >';
                              html += '<h5>' + conceptEntry.lemma + '</h5>';
                              html += "</a>";
@@ -340,36 +355,44 @@
       <div class="newConcept addWrapper">
          <h2>Add a new WordNet concept wrapper</h2>
          <h4>Add a wrapper for concept in WordNet. Do that if you, for example, want to attach an<br/>"equals to" URI to a concept that already exists in WordNet.</h4>
-          <form 
+         <form 
             th:action="@{'/auth/conceptlist/addconceptwrapper/conceptsearch'}" 
             method='post' id="createconceptform">
-          <div class="wrapperSection">
+            <div class="wrapperSection">
                <div class="sectionHeading">
                   <h4 class="numeration">1</h4>
                   <label class="formlabel">Search for WordNet concept</label>
                </div>
                <div>
-                  <div class="formElements row">
-                     <label for="name" class="formlabel">Create wrapper for concept</label>
-                     <input type="text" class="form-control" name="name" id="name" placeholder="Enter wrapper....">
-                  </div>
-                  <div class="row1-2">
-                     <label for="pos" class="formlabel">POS</label>
-                     <div class="formField">
-                        <div class="custom-dropdown">
-                           <select name="pos">
-                              <option value="noun">Noun</option>
-                              <option value="verb">Verb</option>
-                              <option value="adverb">Adverb</option>
-                              <option value="adjective">Adjective</option>
-                              <option value="other">Other</option>
-                           </select>
-                        </div>
-                        <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin: 0;" type="submit">
-                        Search
-                        </button>
-                     </div>
-                  </div>
+                  <table>
+                     <tr>
+                        <td style="width:172px; vertical-align:top;">
+                           <label for="name" class="formlabel">Create wrapper for wordnet concept</label>
+                        </td>
+                        <td>
+                           <input type="text" class="form-control" name="name" id="name" placeholder="Enter wrapper....">
+                        </td>
+                     </tr>
+                     <tr style="border-collapse: separate; border-spacing: 0px 10px;">
+                        <td style="width:172px;">
+                           <label for="selectDropdown" class="formlabel">POS</label>
+                        </td>
+                        <td>
+                           <div class="custom-dropdown">
+                              <select class="selectDropdown" name="pos">
+                                 <option value="noun">Noun</option>
+                                 <option value="verb">Verb</option>
+                                 <option value="adverb">Adverb</option>
+                                 <option value="adjective">Adjective</option>
+                                 <option value="other">Other</option>
+                              </select>
+                           </div>
+                           <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" type="submit" style="margin-left: 5%;">
+                           Search
+                           </button>
+                        </td>
+                     </tr>
+                  </table>
                </div>
             </div>
             <div class="wrapperSection" >
@@ -395,7 +418,8 @@
                      </thead>
                      <tbody>
                         <tr th:each="concept : ${result}" title="${concept.uri}">
-                           <td><a data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}"></a></td>
+                           <td><a data-toggle="modal" role="button" data-target="#conceptDetail" class="conceptDetails" th:id="${concept.entry.id}" 
+                              th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}"></a></td>
                            <td th:text="${concept.entry.id}"></td>
                            <td th:text="${concept.entry.wordnetId}"></td>
                            <td th:text="${concept.entry.pos}"></td>
@@ -415,88 +439,88 @@
             </div>
          </form>
          <form th:action="@{/auth/conceptlist/addconceptwrapper/add}" method='post' th:object="${conceptWrapperAddBean}">
-          	<div class="wrapperSection">
+            <div class="wrapperSection">
                <div class="sectionHeading">
                   <h4 class="numeration">3</h4>
                   <label class="formlabel">Enter additional information</label>
-               </div>    
+               </div>
             </div>
             <table class="conceptPowerForm">
-              <tbody>
-                 <tr>
-                 	<td style="width: 172px; vertical-align:top;">
-                 		<label  class="formlabel">Word</label>
-                 	</td>
-                 	<td>
-                 		<input type="text" class="form-control" th:field="*{word}" placeholder="Word...">
-                 	</td>
-                </tr>
-                <tr>
-                	<td style="width: 172px; vertical-align:top;">
-                		<label class="formlabel">Description</label>
-                	</td>
-                	<td>
-                		<textarea class="form-control" rows="3" th:field="*{description}" placeholder="Enter description...." style="height:9em;"></textarea>
-                	</td>
-                </tr>
-                <tr>
-                	<td style="width: 172px; vertical-align:top;">
-                		<label  class="formlabel">Synonyms</label>
-                	</td>
-                	<td>
-                     	<button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin:0; vertical-align:top;" 
-                        	id="addsynonym" data-toggle="modal" data-target="#synonyms"type="button" >
-                     	<i class="fa fa-plus" aria-hidden="true"></i> Synonyms	
-                     	</button>
-                  		<div id="addedSynonyms"></div>
-                	</td>
-                </tr>
-                <tr>
-                	<td style="width: 172px; vertical-align:top;">
-                		<label for="types" class="formlabel">Concept type</label>
-                	</td>
-                	<td>
-                		<div class="custom-dropdown">
-	                     <select class="POS" th:field="*{selectedType}" th:name="types">
-	                        <option th:each="type: ${types}" 
-	                           th:value="${type.key}" th:text="${type.value}">
-	                        </option>
-	                     </select>
-                  		</div>
-                	</td>
-                </tr>
-                <tr>
-                	<td style="width: 172px; vertical-align:top;">
-                		<label for="lists" class="formlabel">Concept list</label>
-                	</td>
-                	<td>
-	               		<div class="formField">
-	                     <div class="custom-dropdown">
-	                        <select th:name="lists"  th:field="*{selectedConceptList}" class="POS">
-	                           <option th:each="item: ${lists}" th:value="${item.key}" th:text="${item.value}">
-	                           </option>
-	                        </select>
-	                     </div>
-	                 	</div>
-                	</td>
-                </tr>
-                <tr>
-                	<td style="width: 172px; vertical-align:top;">
-                		<label  class="formlabel">Equals</label>
-                	</td>
-                	<td>
-                		<input th:field="*{equals}" id="equals" type="text" class="form-control" placeholder="Equals to....">
-                	</td>
-                </tr>
-                <tr>
-                	<td style="width: 172px; vertical-align:top;">
-	                  <label class="formlabel">Similar to</label>
-                	</td>
-                	<td>
-                	  <input th:field="*{similar}" id="similar" type="text" class="form-control" placeholder="Similar to...." >
-                	</td>
-                </tr>
-              </tbody>
+               <tbody>
+                  <tr>
+                     <td style="width: 172px; vertical-align:top;">
+                        <label  class="formlabel">Word</label>
+                     </td>
+                     <td>
+                        <input type="text" class="form-control" th:field="*{word}" placeholder="Word...">
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width: 172px; vertical-align:top;">
+                        <label class="formlabel">Description</label>
+                     </td>
+                     <td>
+                        <textarea class="form-control" rows="3" th:field="*{description}" placeholder="Enter description...." style="height:9em;"></textarea>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width: 172px; vertical-align:top;">
+                        <label  class="formlabel">Synonyms</label>
+                     </td>
+                     <td>
+                        <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin:0; vertical-align:top;" 
+                           id="addsynonym" data-toggle="modal" data-target="#synonyms"type="button" >
+                        <i class="fa fa-plus" aria-hidden="true"></i> Synonyms	
+                        </button>
+                        <div id="addedSynonyms"></div>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width: 172px; vertical-align:top;">
+                        <label for="types" class="formlabel">Concept type</label>
+                     </td>
+                     <td>
+                        <div class="custom-dropdown">
+                           <select class="POS" th:field="*{selectedType}" th:name="types">
+                              <option th:each="type: ${types}" 
+                                 th:value="${type.key}" th:text="${type.value}">
+                              </option>
+                           </select>
+                        </div>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width: 172px; vertical-align:top;">
+                        <label for="lists" class="formlabel">Concept list</label>
+                     </td>
+                     <td>
+                        <div class="formField">
+                           <div class="custom-dropdown">
+                              <select th:name="lists"  th:field="*{selectedConceptList}" class="POS">
+                                 <option th:each="item: ${lists}" th:value="${item.key}" th:text="${item.value}">
+                                 </option>
+                              </select>
+                           </div>
+                        </div>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width: 172px; vertical-align:top;">
+                        <label  class="formlabel">Equals</label>
+                     </td>
+                     <td>
+                        <input th:field="*{equals}" id="equals" type="text" class="form-control" placeholder="Equals to....">
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width: 172px; vertical-align:top;">
+                        <label class="formlabel">Similar to</label>
+                     </td>
+                     <td>
+                        <input th:field="*{similar}" id="similar" type="text" class="form-control" placeholder="Similar to...." >
+                     </td>
+                  </tr>
+               </tbody>
             </table>
             <input type="hidden" th:field="*{wrapperids}" id="wrapperids" />
             <input type="hidden" th:field="*{synonymids}" id="synonymids" />
@@ -505,7 +529,7 @@
                Create WordNet concept wrapper
                </button>
             </div>
-         </form> 
+         </form>
       </div>
       <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
       <div th:insert="layouts/modals/synonyms :: synonyms"></div>
