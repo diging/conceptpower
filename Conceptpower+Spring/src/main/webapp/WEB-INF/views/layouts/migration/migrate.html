@@ -6,10 +6,10 @@
    <head>
 	   	<script>
 	   		$(document).on('click', '#startMigration', function(e){
-	   			
+	   			console.log("About to start migration")
 	   			$.ajax({
-	   				url:"[@{'/auth/migrate/startmigration'}]]"
-	   				type:'GET'
+	   				url:"[[@{'/auth/migrate/startmigration'}]]",
+	   				type:'GET',
 	   				success:function(response){
 	   					console.log("Someting returned  -->", response);
 	   				}

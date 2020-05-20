@@ -19,7 +19,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {
-        "edu.asu.diging.conceptpower"
+        "edu.asu.conceptpower"
 })
 @EnableTransactionManagement
 public class PersistentContext {
@@ -41,7 +41,7 @@ public class PersistentContext {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        entityManagerFactoryBean.setPackagesToScan("edu.asu.diging.conceptpower.core.model", "edu.asu.diging.conceptpower.core.apps");
+        entityManagerFactoryBean.setPackagesToScan("edu.asu.conceptpower.app.core.model");
  
         Properties jpaProperties = new Properties();
      

@@ -9,6 +9,10 @@ import edu.asu.conceptpower.core.ReviewStatus;
  */
 
 public interface IReviewRequest{
+        
+    public abstract String getId();
+    
+    public abstract void setId(String id);
     
     public abstract String getConceptId();
     

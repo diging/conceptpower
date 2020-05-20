@@ -1,9 +1,9 @@
 package edu.asu.conceptpower.app.core.model.impl;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Index;
 
 import edu.asu.conceptpower.app.core.model.IReviewRequest;
 import edu.asu.conceptpower.core.ReviewStatus;
@@ -13,17 +13,13 @@ import edu.asu.conceptpower.core.ReviewStatus;
  * @author Keerthivasan
  * 
  */
+@Entity
+public class ReviewRequest implements IReviewRequest, Serializable{
 
-@Table(
-        name="",
-        indexes= {
-        @Index(name="conceptId", columnList=""),
-        @Index(name="request", columnList=""),
-        @Index(name="status", columnList=""),
-        @Index(name="requester", columnList=""),
-        @Index(name="resolver", columnList=""),
-})
-public class ReviewRequest implements IReviewRequest{
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     @Id private String id;
     
@@ -82,5 +78,16 @@ public class ReviewRequest implements IReviewRequest{
     @Override
     public void setResolver(String resolver) {
         this.resolver = resolver;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+        
     }  
 }

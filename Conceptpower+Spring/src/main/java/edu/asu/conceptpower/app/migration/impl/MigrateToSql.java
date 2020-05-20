@@ -1,14 +1,17 @@
 package edu.asu.conceptpower.app.migration.impl;
 
-import java.util.Arrays;
+import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
-import edu.asu.conceptpower.app.repository.impl.ConceptTypeRepository;
+import edu.asu.conceptpower.app.core.model.impl.ReviewRequest;
+import edu.asu.conceptpower.app.core.service.impl.ReviewRequestService;
 import edu.asu.conceptpower.core.ConceptType;
 
 /**
@@ -23,15 +26,15 @@ public class MigrateToSql {
     private IConceptTypeManger typesManager;
     
     @Autowired
-    private ConceptTypeRepository conceptTypeRepository;
+    private ReviewRequestService reviewRequestService;
     
     @Async
     public Future<MigrationResult> migrateReviewRequestData(){
         ConceptType[] conceptTypeDump = typesManager.getAllTypes();
         if(conceptTypeDump != null && conceptTypeDump.length > 0) {
-            conceptTypeRepository.saveAll(Arrays.asList(conceptTypeDump));
+            List<ReviewRequest> r = reviewRequestService.findAll();
+            System.out.println("Number of rows returned:"+r.size());
         }
-        
-        return null;//new AsyncResult<MigrationResult>(new MigrationResult());
+        return new AsyncResult<MigrationResult>(new MigrationResult(0, ZonedDateTime.now()));
     }
 }

@@ -3,10 +3,8 @@ package edu.asu.conceptpower.core;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
 public class ReviewRequest {
 
     @Id private String id;
