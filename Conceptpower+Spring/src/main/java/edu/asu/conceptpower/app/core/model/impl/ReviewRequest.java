@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.app.core.model.impl;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -28,7 +29,7 @@ public class ReviewRequest implements IReviewRequest, Serializable{
     private ReviewStatus status;
     private String requester;
     private String resolver;
-    
+    private OffsetDateTime createdAt;
     
     @Override
     public String getConceptId() {
@@ -89,5 +90,15 @@ public class ReviewRequest implements IReviewRequest, Serializable{
     public void setId(String id) {
         this.id = id;
         
+    }  
+    
+    @Override
+    public OffsetDateTime getCreatedAt() {
+       return createdAt;
+    }
+
+    @Override
+    public void setCreatedAt(OffsetDateTime createdAt) {
+       this.createdAt = createdAt;
     }  
 }

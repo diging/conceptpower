@@ -10,7 +10,7 @@ import edu.asu.conceptpower.app.core.model.impl.ReviewRequest;
  * 
  */
 public interface IReviewRequestRepository {
-
+    
     ReviewRequest findOne(long id);
 
     List<ReviewRequest> findAll();

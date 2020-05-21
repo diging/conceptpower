@@ -1,5 +1,7 @@
 package edu.asu.conceptpower.app.core.model;
 
+import java.time.OffsetDateTime;
+
 import edu.asu.conceptpower.core.ReviewStatus;
 
 /**
@@ -24,7 +26,7 @@ public interface IReviewRequest{
 
     public abstract String getRequest();
 
-    public abstract void setRequest(String request) ;
+    public abstract void setRequest(String request);
 
     public abstract String getRequester();
 
@@ -33,4 +35,9 @@ public interface IReviewRequest{
     public abstract String getResolver();
 
     public abstract void setResolver(String resolver);
+    
+    public abstract OffsetDateTime getCreatedAt();
+    
+    public abstract void setCreatedAt(OffsetDateTime createdAt);
+    
 }
