@@ -49,14 +49,6 @@
 		        <hibernate.log.sql>false</hibernate.log.sql>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>objectdb</id>
-			<name>ObjectDB Repository</name>
-			<url>http://m2.objectdb.com</url>
-		</repository>
-	</repositories>
-
 	<profiles>
 		<profile>
 			<id>dev</id>
@@ -448,13 +440,7 @@
 			<artifactId>db4o-full-java5</artifactId>
 			<version>8.0</version>
 		</dependency>
-
-		<!-- Object DB -->
-		<dependency>
-			<groupId>com.objectdb</groupId>
-			<artifactId>objectdb</artifactId>
-			<version>2.6.3</version>
-		</dependency>
+		
 		<dependency>	
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>javax.persistence</artifactId>
