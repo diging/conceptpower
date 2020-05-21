@@ -10,10 +10,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
+import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.model.impl.ReviewRequest;
 import edu.asu.conceptpower.app.core.service.impl.ConceptTypeService;
 import edu.asu.conceptpower.app.core.service.impl.ReviewRequestService;
+import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 
 /**
@@ -26,6 +28,9 @@ public class MigrateToSql {
     
     @Autowired
     private IConceptTypeManger typesManager;
+    
+    @Autowired
+    private IConceptListManager listManager;
     
     @Autowired
     private ReviewRequestService reviewRequestService;
@@ -56,6 +61,18 @@ public class MigrateToSql {
         
         return new AsyncResult<MigrationResult>(new MigrationResult(0, ZonedDateTime.now()));
     }
+    
+    public Future<MigrationResult> migrateConceptList() {
+    
+        List<ConceptList> conceptListDump = listManager.getAllConceptLists();
+        
+        if(conceptListDump != null && conceptListDump.size() > 0) {
+
+        }
+        
+        return new AsyncResult<MigrationResult>(new MigrationResult(0, ZonedDateTime.now()));
+    }
+    
     
     public List<edu.asu.conceptpower.app.core.model.impl.ConceptType> mapConceptType(ConceptType[] conceptTypeList){
         
