@@ -27,8 +27,6 @@ public class ReviewRequestService implements IReviewRequestService{
         super();
     }
 
-    // API
-
     public void create(final ReviewRequest entity) {
         dao.create(entity);
     }

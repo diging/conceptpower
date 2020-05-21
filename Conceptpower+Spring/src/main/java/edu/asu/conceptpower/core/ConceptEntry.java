@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
@@ -25,7 +24,6 @@ import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
  * @author Julia Damerow
  * 
  */
-@Entity
 public class ConceptEntry implements Serializable {
 
     private static final long serialVersionUID = 4569090620671054560L;

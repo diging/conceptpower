@@ -23,7 +23,11 @@
 // */
 //@Entity
 //public class ConceptEntry implements IConceptEntry, Serializable{
-//    private static final long serialVersionUID = 4569090620671054560L;
+//
+//    /**
+//     * 
+//     */
+//    private static final long serialVersionUID = -2996311266459722841L;
 //
 //    @Id
 //    private String id;
