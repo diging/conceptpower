@@ -153,9 +153,13 @@
                         <label for="equalsValues" class="formlabel">Equals</label>
                      </td>
                      <td>
-                        <input class="form-control" name="equalsValues" 
-                           placeholder="Equals to..."
-                           th:value="${conceptsMergeBean.equalsValues.size() > 0 ? conceptsMergeBean.equalsValues : ''}" ></input>
+                        <div contenteditable="true" id="equalValuesDiv" class="equalValuesDiv form-control" style="height:unset;">
+                           <div th:each="equal: ${conceptsMergeBean.equalsValues}">
+                              <p th:value="${equal}" th:text="${equal}">
+                              </p>
+                           </div>
+                        </div>
+                        <input type="hidden" th:field="*{equalsValues}"/>
                      </td>
                   </tr>
                   <tr>
