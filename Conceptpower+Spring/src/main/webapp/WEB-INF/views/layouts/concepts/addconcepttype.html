@@ -32,7 +32,7 @@
                         <label for="matches"  class="formlabel">Matches</label>
                      </td>
                      <td>
-                        <textarea class="form-control" th:path="*{matches}" rows="3"></textarea>
+                        <textarea class="form-control" th:field="*{matches}" rows="3"></textarea>
                         <div class="formErrorAlert" th:if="${#fields.hasErrors('matches')}" th:errors="*{matches}"></div>
                      </td>
                   </tr>
