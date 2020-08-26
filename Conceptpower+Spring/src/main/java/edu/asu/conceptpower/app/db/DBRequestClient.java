@@ -58,5 +58,10 @@ public class DBRequestClient implements IRequestsDBManager{
         
         return client.queryByExample(request);
     }
+
+    @Override
+    public List<ReviewRequest> getAllReviews() {
+        return client.query(ReviewRequest.class);
+    }
     
 }

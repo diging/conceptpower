@@ -105,4 +105,9 @@ public  class RequestsManager implements IRequestsManager{
             id = prefix + UUID.randomUUID().toString();
         }
     }
+
+    @Override
+    public List<ReviewRequest> getAllReviews() {
+       return dbClient.getAllReviews();
+    }
 }
