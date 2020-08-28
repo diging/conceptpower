@@ -625,4 +625,9 @@ public class ConceptManager implements IConceptManager {
 
         return null;
     }
+
+    @Override
+    public List<ConceptEntry> getAllConcepts() {
+        return client.getAllConcepts();
+    }
 }

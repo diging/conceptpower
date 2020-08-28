@@ -416,5 +416,10 @@ public class DatabaseClient implements IConceptDBManager {
             dictionaryClient.commit();
         }
     }
+
+    @Override
+    public List<ConceptEntry> getAllConcepts() {
+        return dictionaryClient.query(ConceptEntry.class);
+    }
     
 }

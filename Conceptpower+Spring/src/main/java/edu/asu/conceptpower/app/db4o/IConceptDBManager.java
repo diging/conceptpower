@@ -50,5 +50,7 @@ public interface IConceptDBManager {
     public List<ConceptEntry> getAllEntriesByTypeId(String typeId);
 
     public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId);
+    
+    public List<ConceptEntry> getAllConcepts();
 
 }

@@ -196,4 +196,10 @@ public interface IConceptManager {
      * @return
      */
     public ConceptEntry getOriginalConceptEntry(String id);
+    
+    /**
+     * 
+     * @return - List<ConceptEntry> return all the concepts stored in the database
+     */
+    public List<ConceptEntry> getAllConcepts();
 }
