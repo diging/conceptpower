@@ -7,14 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import edu.asu.conceptpower.app.core.model.IConceptType;
+/**
+ * 
+ * @author Keerthivasan
+ * 
+ */
 
 @Entity
-@Table(name="concepttype")
-public class ConceptType implements IConceptType, Serializable{
-    /**
-     * 
-     */
+@Table(name="concept_type")
+public class ConceptType implements Serializable{
+
     private static final long serialVersionUID = -2034845185818014711L;
     
     @Id 
@@ -74,31 +76,6 @@ public class ConceptType implements IConceptType, Serializable{
 
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((typeId == null) ? 0 : typeId.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ConceptType other = (ConceptType) obj;
-        if (typeId == null) {
-            if (other.typeId != null)
-                return false;
-        } else if (!typeId.equals(other.typeId))
-            return false;
-        return true;
     }
 
     public String getCreatorId() {

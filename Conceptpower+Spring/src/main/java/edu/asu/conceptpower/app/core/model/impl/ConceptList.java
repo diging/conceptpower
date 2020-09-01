@@ -2,20 +2,31 @@ package edu.asu.conceptpower.app.core.model.impl;
 
 import java.io.Serializable;
 
-import edu.asu.conceptpower.app.core.model.IConceptList;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class ConceptList implements IConceptList,Serializable{
 
-    /**
-     * 
-     */
+/**
+ * 
+ * @author Keerthivasan
+ * 
+ */
+@Entity
+@Table(name="concept_list")
+public class ConceptList implements Serializable{
+
     private static final long serialVersionUID = 2325716955354296983L;
     
+    @Id
+    private String id;
+    
+    @Column(name="concept_list_name")
     private String conceptListName;
     
+    @Column(name="description")
     private String description;
-    
-    private String id;
     
     public String getConceptListName() {
         return conceptListName;

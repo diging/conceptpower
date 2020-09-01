@@ -2,11 +2,15 @@ package edu.asu.conceptpower.app.core.model.impl;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-import edu.asu.conceptpower.app.core.model.IReviewRequest;
 import edu.asu.conceptpower.core.ReviewStatus;
 
 /**
@@ -15,89 +19,97 @@ import edu.asu.conceptpower.core.ReviewStatus;
  * 
  */
 @Entity
-public class ReviewRequest implements IReviewRequest, Serializable{
+@Table(name="review_request")
+public class ReviewRequest implements Serializable{
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8547190657638028543L;
 
-    @Id private String id;
+    @Id
+    @Column(name="review_id")
+    private String id;
     
+    @Column(name="concept_id")
     private String conceptId;
+    
+    @Column(name="request_desc")
     private String request;
+    
+    @Column(name="status")
     private ReviewStatus status;
+    
+    @Column(name="requestor")
     private String requester;
+    
+    @Column(name="resolver")
     private String resolver;
+    
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+    
+    @Column(name="created_at")
     private OffsetDateTime createdAt;
     
-    @Override
+    
     public String getConceptId() {
         return conceptId;
     }
-
-    @Override
+    
     public void setConceptId(String conceptId) {
         this.conceptId = conceptId;
     }  
-   
-    @Override
+    
     public ReviewStatus getStatus() {
         return status;
     }
-
-    @Override
+    
     public void setStatus(ReviewStatus status) {
         this.status = status;
     }
-
-    @Override
+    
     public String getRequest() {
         return request;
     }
-
-    @Override
+    
     public void setRequest(String request) {
         this.request = request;
     }
-
-    @Override
+    
     public String getRequester() {
         return requester;
     }
-
-    @Override
+    
     public void setRequester(String requester) {
         this.requester = requester;
     }
-
-    @Override
+    
     public String getResolver() {
         return resolver;
     }
 
-    @Override
     public void setResolver(String resolver) {
         this.resolver = resolver;
     }
 
-    @Override
     public String getId() {
         return id;
     }
-
-    @Override
+  
     public void setId(String id) {
         this.id = id;
-        
-    }  
+    } 
     
-    @Override
+    public List<Comment> getComments(){
+        return this.comments;
+    }
+    
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+      
     public OffsetDateTime getCreatedAt() {
        return createdAt;
     }
 
-    @Override
     public void setCreatedAt(OffsetDateTime createdAt) {
        this.createdAt = createdAt;
     }  
