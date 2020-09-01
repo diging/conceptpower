@@ -8,4 +8,5 @@ import edu.asu.conceptpower.app.core.model.impl.ReviewRequest;
  * 
  */
 public interface IReviewRequestRepository extends IRepository<ReviewRequest>{
+    
 }
