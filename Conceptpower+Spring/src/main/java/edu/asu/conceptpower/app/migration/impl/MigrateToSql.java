@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.app.migration.impl;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -13,12 +12,15 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IRequestsManager;
-import edu.asu.conceptpower.app.core.model.impl.ReviewRequest;
-import edu.asu.conceptpower.app.core.service.impl.ConceptListService;
-import edu.asu.conceptpower.app.core.service.impl.ConceptTypeService;
-import edu.asu.conceptpower.app.core.service.impl.ReviewRequestService;
+import edu.asu.conceptpower.app.core.service.IConceptEntryService;
+import edu.asu.conceptpower.app.core.service.IConceptListService;
+import edu.asu.conceptpower.app.core.service.IConceptTypeService;
+import edu.asu.conceptpower.app.core.service.IReviewRequestService;
+import edu.asu.conceptpower.app.db4o.IConceptDBManager;
+import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.core.ReviewRequest;
 
 /**
  * 
@@ -36,107 +38,112 @@ public class MigrateToSql {
     private IConceptListManager listManager;
     
     @Autowired
-    private IRequestsManager reviewRquestManager;
+    private IRequestsManager reviewRequestManager;
     
     @Autowired
-    private ReviewRequestService reviewRequestService;
+    private IConceptDBManager conceptManager;
     
     @Autowired
-    private ConceptTypeService conceptTypeService;
+    private IReviewRequestService reviewRequestService;
     
     @Autowired
-    private ConceptListService conceptListService;
+    private IConceptTypeService conceptTypeService;
+    
+    @Autowired
+    private IConceptListService conceptListService;
+    
+    @Autowired
+    private IConceptEntryService conceptEntryService; 
     
     @Async
-    public Future<MigrationResult> migrateReviewRequestTable(){
-        ConceptType[] conceptTypeDump = typesManager.getAllTypes();
+    public Future<MigrationResult> migrateTable(ConceptpowerTable table){
+        int count = 0;
         
-        if(conceptTypeDump != null && conceptTypeDump.length > 0) {
-            List<ReviewRequest> r = reviewRequestService.findAll();
-            System.out.println("Number of rows returned:"+r.size());
+        switch(table) {
+            case REVIEW_REQUEST:
+                count = migrateReviewRequestTable();
+                break;
+            case CONCEPT_ENTRY:
+                count = migrateConceptEntryTable();
+                break;
+            case CONCEPT_LIST:
+                count = migrateConceptListTable();
+                break;
+            case CONCEPT_TYPE:
+                count = migrateConceptTypeTable();
+                break;
+            default:
+                break;
         }
         
-        return new AsyncResult<>(new MigrationResult(0, ZonedDateTime.now()));
+        return new AsyncResult<>(new MigrationResult(count, ZonedDateTime.now()));
+    }
+    
+    public int migrateReviewRequestTable(){
+        List<ReviewRequest> reviewRequestsDump = reviewRequestManager.getAllReviews();
+        int count = 0;
+        if(reviewRequestsDump != null && !reviewRequestsDump.isEmpty()) {
+            List<edu.asu.conceptpower.app.core.model.impl.ReviewRequest> mappedReviewRequest = ModelMapperUtil.reviewRequestMapper(reviewRequestsDump);
+            for(edu.asu.conceptpower.app.core.model.impl.ReviewRequest r : mappedReviewRequest) {
+                reviewRequestService.create(r);
+                count++;
+            }
+        }
+        
+        return count;
     }
     
     
-    public Future<MigrationResult> migrateConceptTypeTable() {
+    @Async
+    public int migrateConceptTypeTable() {
         ConceptType[] conceptTypeDump = typesManager.getAllTypes();
+        int count = 0;
+        
         if(conceptTypeDump != null && conceptTypeDump.length > 0) {
-            List<edu.asu.conceptpower.app.core.model.impl.ConceptType> mappedConceptType = conceptTypeMapper(conceptTypeDump);
+            List<edu.asu.conceptpower.app.core.model.impl.ConceptType> mappedConceptType = ModelMapperUtil.conceptTypeMapper(conceptTypeDump);
+            
             for(edu.asu.conceptpower.app.core.model.impl.ConceptType c : mappedConceptType) {
                 conceptTypeService.create(c);
+                count++;
             }
         }
         
-        return new AsyncResult<>(new MigrationResult(0, ZonedDateTime.now()));
+        return count;
     }
     
-    public Future<MigrationResult> migrateConceptListTable() {
+    @Async
+    public int migrateConceptListTable() {
         List<ConceptList> conceptListDump = listManager.getAllConceptLists();
+        int count = 0;
         
         if(conceptListDump != null && !conceptListDump.isEmpty()) {
-            List<edu.asu.conceptpower.app.core.model.impl.ConceptList> tempConceptList = conceptListMapper(conceptListDump);
+            List<edu.asu.conceptpower.app.core.model.impl.ConceptList> mappedConceptList = ModelMapperUtil.conceptListMapper(conceptListDump);
             
-            for(edu.asu.conceptpower.app.core.model.impl.ConceptList c : tempConceptList) {
+            for(edu.asu.conceptpower.app.core.model.impl.ConceptList c : mappedConceptList) {
                 conceptListService.create(c);
+                count++;
             }
         }
         
-        return new AsyncResult<>(new MigrationResult(0, ZonedDateTime.now()));
+        return count;
+    }
+    
+    @Async
+    public int migrateConceptEntryTable(){
+        List<ConceptEntry> conceptEntryDump = conceptManager.getAllConcepts();
+        int count = 0;
+        
+        if(conceptEntryDump != null && !conceptEntryDump.isEmpty()) {
+            List<edu.asu.conceptpower.app.core.model.impl.ConceptEntry> mappedConceptEntries = ModelMapperUtil.conceptEntryMapper(conceptEntryDump);
+            
+            for(edu.asu.conceptpower.app.core.model.impl.ConceptEntry c : mappedConceptEntries) {
+                conceptEntryService.create(c);
+                count++;
+            }
+        }
+        
+        return count;
     }
     
     
-    private List<edu.asu.conceptpower.app.core.model.impl.ConceptType> conceptTypeMapper(ConceptType[] conceptTypeList){
-        
-        List<edu.asu.conceptpower.app.core.model.impl.ConceptType> mappedConceptType = new ArrayList<>();
-        
-        for(ConceptType conceptType : conceptTypeList) {
-            edu.asu.conceptpower.app.core.model.impl.ConceptType tempConceptType = new edu.asu.conceptpower.app.core.model.impl.ConceptType();
-            tempConceptType.setTypeId(conceptType.getTypeId());
-            tempConceptType.setCreatorId(conceptType.getCreatorId());
-            tempConceptType.setTypeName(conceptType.getTypeName());
-            tempConceptType.setDescription(conceptType.getDescription());
-            tempConceptType.setMatches(conceptType.getMatches());
-            tempConceptType.setModified(conceptType.getModified());
-            tempConceptType.setSupertypeId(conceptType.getSupertypeId());
-            
-            mappedConceptType.add(tempConceptType);
-        }
-        return mappedConceptType;
-    }
-   
-    private List<edu.asu.conceptpower.app.core.model.impl.ConceptList> conceptListMapper(List<ConceptList> conceptLists){
-        
-        List<edu.asu.conceptpower.app.core.model.impl.ConceptList> mappedConceptLists = new ArrayList<>();
-        
-        for(ConceptList conceptList : conceptLists) {
-            edu.asu.conceptpower.app.core.model.impl.ConceptList tempConceptList= new edu.asu.conceptpower.app.core.model.impl.ConceptList();
-            tempConceptList.setConceptListName(conceptList.getConceptListName());
-            tempConceptList.setDescription(conceptList.getDescription());
-            tempConceptList.setId(conceptList.getId());
-            
-            mappedConceptLists.add(tempConceptList);
-        }
-        return mappedConceptLists;
-    }
-    
-    private List<edu.asu.conceptpower.app.core.model.impl.ReviewRequest> reviewRequestMapper(List<ReviewRequest> reviewRequests){
-        List<edu.asu.conceptpower.app.core.model.impl.ReviewRequest> mappedReviewRequests = new ArrayList<>();
-        
-        for(ReviewRequest reviewRequest: reviewRequests) {
-            edu.asu.conceptpower.app.core.model.impl.ReviewRequest tempReviewRequest = new edu.asu.conceptpower.app.core.model.impl.ReviewRequest();
-            tempReviewRequest.setConceptId(reviewRequest.getConceptId());
-            tempReviewRequest.setCreatedAt(reviewRequest.getCreatedAt());
-            tempReviewRequest.setId(reviewRequest.getId());
-            tempReviewRequest.setRequest(reviewRequest.getRequest());
-            tempReviewRequest.setRequester(reviewRequest.getRequester());
-            tempReviewRequest.setResolver(reviewRequest.getResolver());
-            tempReviewRequest.setStatus(reviewRequest.getStatus());
-            
-            mappedReviewRequests.add(tempReviewRequest);
-        }
-        
-        return mappedReviewRequests;
-    }
 }
