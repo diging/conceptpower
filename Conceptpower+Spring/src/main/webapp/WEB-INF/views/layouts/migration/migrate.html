@@ -6,12 +6,11 @@
    <head>
 	   	<script>
 	   		$(document).on('click', '#startMigration', function(e){
-	   			console.log("About to start migration")
 	   			$.ajax({
 	   				url:"[[@{'/auth/migrate/startmigration'}]]",
 	   				type:'GET',
 	   				success:function(response){
-	   					console.log("Someting returned  -->", response);
+	   					
 	   				}
 	   			});
 	   		})
@@ -20,9 +19,11 @@
    <body class="body" layout:fragment="content">
    		<div class="migrationSection" style="padding-left:3%;">
 			<div>Migrate Data</div>
-			<button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="startMigration"type="submit">
+			<button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" 
+				id="startMigration" type="submit" th:classappend="${isRunning == false} ? '' : disabled ">
 		        Start Migration
-	       </button>
+	        </button>
+	       <div class="migrationAlert" th:if="${isRunning == true}">Migration is running</div>
        </div>
    </body>
 </html>

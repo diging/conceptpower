@@ -23,7 +23,7 @@ public class MigrationManager{
     private Future<MigrationResult> migrationResult;
         
     public void runMigrations() {
-        migrationResult = migrateToSql.migrateTable(ConceptpowerTable.CONCEPT_ENTRY);
+        migrationResult = migrateToSql.migrateTable();
     }
     
     public MigrationResult migrationStatus() throws InterruptedException, ExecutionException {

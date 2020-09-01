@@ -56,27 +56,23 @@ public class MigrateToSql {
     private IConceptEntryService conceptEntryService; 
     
     @Async
-    public Future<MigrationResult> migrateTable(ConceptpowerTable table){
-        int count = 0;
+    public Future<MigrationResult> migrateTable(){
+        /*counter reference to keep track of cumulative number of row insertions*/
+        int fileCount = 0;
+     
+        /* Review Request Table */
+        fileCount += migrateReviewRequestTable();
         
-        switch(table) {
-            case REVIEW_REQUEST:
-                count = migrateReviewRequestTable();
-                break;
-            case CONCEPT_ENTRY:
-                count = migrateConceptEntryTable();
-                break;
-            case CONCEPT_LIST:
-                count = migrateConceptListTable();
-                break;
-            case CONCEPT_TYPE:
-                count = migrateConceptTypeTable();
-                break;
-            default:
-                break;
-        }
+        /* Concept Entry Table */
+        fileCount += migrateConceptEntryTable();
+         
+        /* Concept List Table */
+        fileCount += migrateConceptListTable();
         
-        return new AsyncResult<>(new MigrationResult(count, ZonedDateTime.now()));
+        /* Concept Type Table */
+        fileCount += migrateConceptTypeTable();
+
+        return new AsyncResult<>(new MigrationResult(fileCount, ZonedDateTime.now()));
     }
     
     public int migrateReviewRequestTable(){
