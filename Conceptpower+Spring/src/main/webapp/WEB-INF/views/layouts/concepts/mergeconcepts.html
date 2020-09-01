@@ -73,10 +73,12 @@
 	        </table>
 	        
 	        <div th:if="${localConceptIds != null && localConceptIds.size() > 0}">
-         		<label class="col-sm-1 control-label">Concept Id</label>
+         		<div>Concept Id</div>
          		<div th:each="ids: ${localConceptIds}">
-         			<input type="radio" th:field="*{selectedConceptId}" th:value="${ids}" th:text="${ids}"/>
+         			<input type="radio" th:field="*{selectedConceptId}" th:value="${ids}" th:text="${ids}" style="margin-right:1%"/>
          		</div>
+         		<input type="radio" id="selectedConceptId" name="selectedConceptId" value="" style="margin-right:10px"/>
+         		<label for="selectedConceptId" style="color:#333; font-weight:unset;">Generate new id</label>
          	</div>
          	<div th:if="${localConceptIds != null && localConceptIds.size() == 0}" style="color:green">
          		A new id will be generated for the merged concepts.
@@ -153,9 +155,13 @@
                         <label for="equalsValues" class="formlabel">Equals</label>
                      </td>
                      <td>
-                        <input class="form-control" name="equalsValues" 
-                           placeholder="Equals to..."
-                           th:value="${conceptsMergeBean.equalsValues.size() > 0 ? conceptsMergeBean.equalsValues : ''}" ></input>
+                        <div contenteditable="true" id="equalValuesDiv" class="equalValuesDiv form-control" style="height:unset;">
+                           <div th:each="equal: ${conceptsMergeBean.equalsValues}">
+                              <p th:value="${equal}" th:text="${equal}">
+                              </p>
+                           </div>
+                        </div>
+                        <input type="hidden" th:field="*{equalsValues}"/>
                      </td>
                   </tr>
                   <tr>

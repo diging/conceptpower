@@ -95,8 +95,16 @@
                              var description = aData.description;
                              description = description != null ? description.replace(/"/g, '&quot;')
                                      : "";
+                             
+                             description = description.replace(/'/g, "\\'")
+          	                
+                             var id = aData.id
+                             id = id != null ? id.replace(/'/g, "\\'") : "";
+                             id = 'id-'+id;
+                             
+                             
                              $('td:eq(3)', nRow).html(
-                                     '<a onclick="synonymAdd(\'' + aData.id + '\',\'' + aData.word
+                                     '<a id='+id+' onclick="synonymAdd(\'' + aData.id + '\',\'' + aData.word
                                              + '\',\'' + description + '\')">Add</a>');
                              return nRow;
                          }
@@ -150,10 +158,10 @@
              var addedsynonym = $('#addedSynonnym').val();
              if (x != null) {
                  var new_row = x.rows[0].cloneNode(true);
-                 new_row.cells[0].innerHTML = '<a onclick="synonymRemove(\'' + x.rows.length
+                 new_row.cells[0].innerHTML = '<font size="2"><a onclick="synonymRemove(\'' + x.rows.length
                          + '\')">Remove</a>' + '</font></td>'
-                 new_row.cells[1].innerHTML = term;
-                 new_row.cells[2].innerHTML = description;
+                 new_row.cells[1].innerHTML = "<font size='2'>"+term+"</font>";
+                 new_row.cells[2].innerHTML = "<font size='2'>"+description+"</font>";
                  new_row.cells[3].innerHTML = id;
                  new_row.cells[3].hidden = true;
                  if (onLoad == false) {
@@ -195,6 +203,10 @@
                  synonyms += table.rows[r].cells[3].innerHTML + ',';
              }
              $("#synonymsids").val(synonyms);
+             
+             var idVal = '#id-'+id;
+             $(idVal).fadeTo('slow',.6);
+             $(idVal).addClass('disable');
          };
          var synonymRemove = function(row) {
              bindingRemoval(row);
