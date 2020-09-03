@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IRequestsManager;
-import edu.asu.conceptpower.app.core.service.IConceptEntryService;
-import edu.asu.conceptpower.app.core.service.IConceptListService;
-import edu.asu.conceptpower.app.core.service.IConceptTypeService;
-import edu.asu.conceptpower.app.core.service.IReviewRequestService;
+import edu.asu.conceptpower.app.core.repository.IConceptEntryRepository;
+import edu.asu.conceptpower.app.core.repository.IConceptListRepository;
+import edu.asu.conceptpower.app.core.repository.IConceptTypeRepository;
+import edu.asu.conceptpower.app.core.repository.IReviewRequestRepository;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
@@ -44,17 +44,17 @@ public class MigrateToSql {
     private IConceptDBManager conceptManager;
     
     @Autowired
-    private IReviewRequestService reviewRequestService;
+    private IReviewRequestRepository reviewRequestRepository;
     
     @Autowired
-    private IConceptTypeService conceptTypeService;
+    private IConceptTypeRepository conceptTypeRepository;
     
     @Autowired
-    private IConceptListService conceptListService;
-    
+    private IConceptListRepository conceptListRepository;
+     
     @Autowired
-    private IConceptEntryService conceptEntryService; 
-    
+    private IConceptEntryRepository conceptEntryRepository;
+   
     @Async
     public Future<MigrationResult> migrateTable(){
         /*counter reference to keep track of cumulative number of row insertions*/
@@ -81,7 +81,7 @@ public class MigrateToSql {
         if(reviewRequestsDump != null && !reviewRequestsDump.isEmpty()) {
             List<edu.asu.conceptpower.app.core.model.impl.ReviewRequest> mappedReviewRequest = ModelMapperUtil.reviewRequestMapper(reviewRequestsDump);
             for(edu.asu.conceptpower.app.core.model.impl.ReviewRequest r : mappedReviewRequest) {
-                reviewRequestService.create(r);
+                reviewRequestRepository.save(r);
                 count++;
             }
         }
@@ -99,7 +99,7 @@ public class MigrateToSql {
             List<edu.asu.conceptpower.app.core.model.impl.ConceptType> mappedConceptType = ModelMapperUtil.conceptTypeMapper(conceptTypeDump);
             
             for(edu.asu.conceptpower.app.core.model.impl.ConceptType c : mappedConceptType) {
-                conceptTypeService.create(c);
+                conceptTypeRepository.save(c);
                 count++;
             }
         }
@@ -116,7 +116,7 @@ public class MigrateToSql {
             List<edu.asu.conceptpower.app.core.model.impl.ConceptList> mappedConceptList = ModelMapperUtil.conceptListMapper(conceptListDump);
             
             for(edu.asu.conceptpower.app.core.model.impl.ConceptList c : mappedConceptList) {
-                conceptListService.create(c);
+                conceptListRepository.save(c);
                 count++;
             }
         }
@@ -133,7 +133,7 @@ public class MigrateToSql {
             List<edu.asu.conceptpower.app.core.model.impl.ConceptEntry> mappedConceptEntries = ModelMapperUtil.conceptEntryMapper(conceptEntryDump);
             
             for(edu.asu.conceptpower.app.core.model.impl.ConceptEntry c : mappedConceptEntries) {
-                conceptEntryService.create(c);
+                conceptEntryRepository.save(c);
                 count++;
             }
         }
