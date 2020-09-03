@@ -75,6 +75,7 @@ public class MigrateToSql {
         return new AsyncResult<>(new MigrationResult(fileCount, ZonedDateTime.now()));
     }
     
+    @Async
     public int migrateReviewRequestTable(){
         List<ReviewRequest> reviewRequestsDump = reviewRequestManager.getAllReviews();
         int count = 0;
@@ -140,6 +141,4 @@ public class MigrateToSql {
         
         return count;
     }
-    
-    
 }

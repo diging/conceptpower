@@ -40,7 +40,7 @@ public  class RequestsManager implements IRequestsManager{
     public ReviewRequest getLatestReview(String conceptId) {
         List<ReviewRequest> reviewRequests = getAllReviews(conceptId);
        
-        if(reviewRequests!= null && reviewRequests.size() > 0) {
+        if(reviewRequests!= null && !reviewRequests.isEmpty()) {
             return reviewRequests.get(reviewRequests.size() - 1);
         }
         
@@ -53,13 +53,13 @@ public  class RequestsManager implements IRequestsManager{
     public List<ReviewRequest> getAllReviews(String conceptId){
         List<ReviewRequest> reviewRequests = dbClient.getAllReviews(conceptId);
         
-        if(reviewRequests!= null && reviewRequests.size() > 0) {
+        if(reviewRequests!= null && !reviewRequests.isEmpty()) {
             reviewRequests = new ArrayList<>(reviewRequests);
             Collections.sort(reviewRequests, Comparator.comparing(ReviewRequest :: getCreatedAt, Comparator.nullsFirst(Comparator.naturalOrder())));
             return reviewRequests;
         }
         
-        return null;
+        return Collections.emptyList();
     }
     
     /* (non-Javadoc)
