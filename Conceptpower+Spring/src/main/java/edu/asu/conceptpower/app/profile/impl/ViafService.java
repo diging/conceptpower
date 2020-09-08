@@ -1,14 +1,27 @@
 package edu.asu.conceptpower.app.profile.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import edu.asu.conceptpower.app.jaxb.viaf.Item;
@@ -25,6 +38,8 @@ import edu.asu.conceptpower.app.profile.IService;
 
 @Service
 public class ViafService implements IService {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private ISearchResult searchResult;
@@ -34,10 +49,6 @@ public class ViafService implements IService {
 
 	private String serviceid;
 	private String name;
-
-	@Inject
-	@Named("restTemplateViaf")
-	RestTemplate restTemplate;
 
 	@Autowired
 	@Qualifier("viafURL")
@@ -54,6 +65,10 @@ public class ViafService implements IService {
 	@Autowired
 	@Qualifier("searchViafURLPath2")
 	private String searchViafURLPath2;
+	
+	@Inject
+	@Named("restTemplateViaf")
+	private RestTemplate restTemplate;
 
 	@Override
 	public void setServiceId(String serviceid) {
@@ -96,19 +111,33 @@ public class ViafService implements IService {
 	public List<ISearchResult> search(String word) {
 
 		String startIndex = "1";
-
-		List<Item> items = null;
+        List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
 		String fullUrl;
 
-		fullUrl = viafURL.trim() + searchViafURLPath.trim() + " " + word.trim()
-				+ searchViafURLPath1.trim() + startIndex.trim()
-				+ searchViafURLPath2.trim();
+		try {
+             fullUrl = viafURL.trim() + searchViafURLPath.trim() + "%20" + URLEncoder.encode(word.trim(), "UTF-8")
+             + searchViafURLPath1.trim() + startIndex.trim()+ searchViafURLPath2.trim();
+       		} catch (UnsupportedEncodingException e1) {
+            	      logger.error("Error in URL Encoding.", e1);
+            	      return searchResults;
+        	}
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_RSS_XML));
 
-		ViafReply rep = (ViafReply) restTemplate.getForObject(fullUrl,
-				ViafReply.class);
+		HttpEntity<ViafReply> entity = new HttpEntity<ViafReply>(headers);
+		ResponseEntity<ViafReply> reply ;
+
+	        try {
+           	      reply = restTemplate.exchange(new URI(fullUrl),HttpMethod.GET, entity, ViafReply.class);
+                } catch (RestClientException | URISyntaxException e) {
+                      logger.error("Error during contacting VIAF.", e);
+                      return searchResults;
+                }
+		ViafReply rep = reply.getBody();
+		
+		List<Item> items = null;
 		items = rep.getChannel().getItems();
 
-		List<ISearchResult> searchResults = new ArrayList<ISearchResult>();
 		if (items != null) {
 			for (Item i : items) {
 				ISearchResult searchResult = searchResultFactory

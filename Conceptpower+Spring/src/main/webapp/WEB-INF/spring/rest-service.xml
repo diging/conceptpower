@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans.xsd 
 	http://www.springframework.org/schema/aop
-    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<!-- This file contains the spring RestTemplate configuration details. To 
 		implement marshalling for any class simply add the class name under the value 
@@ -20,7 +20,7 @@
 
 	<bean id="searchViafURLPath" class="java.lang.String">
 		<constructor-arg>
-			<value>?query=local.names all
+			<value>?query=local.names%20all
 			</value>
 		</constructor-arg>
 	</bean>
@@ -36,7 +36,7 @@
 	<bean id="searchViafURLPath2" class="java.lang.String">
 		<constructor-arg>
 			<value>
-				&amp;sortKeys=holdingscount&amp;httpAccept=application/rss+xml
+				&amp;sortKeys=holdingscount
 			</value>
 		</constructor-arg>
 	</bean>

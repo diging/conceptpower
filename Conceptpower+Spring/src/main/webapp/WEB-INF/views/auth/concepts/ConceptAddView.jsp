@@ -440,7 +440,7 @@
         <td>
             <form:form
                 action="${pageContext.servletContext.contextPath}/auth/conceptlist/addconcept/add"
-                commandName="conceptAddBean" method='post'
+                modelAttribute="conceptAddBean" method='post'
                 id="createconceptform">
 
                 <table>

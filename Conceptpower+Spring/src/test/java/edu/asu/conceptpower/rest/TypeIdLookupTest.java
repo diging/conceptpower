@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,7 +67,7 @@ public class TypeIdLookupTest {
         final String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
         final String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
 
-        final String expectedOutput = IOUtil
+        final String expectedOutput = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptType.xml"));
 
         ConceptType type = new ConceptType();
@@ -95,7 +95,7 @@ public class TypeIdLookupTest {
         final String typeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0b";
         final String superTypeId = "0c2a2a8c-c6d8-4d25-8f07-689fd8c27b0c";
 
-        final String expectedOutput = IOUtil
+        final String expectedOutput = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptType.json"));
 
         ConceptType type = new ConceptType();

@@ -24,6 +24,7 @@ import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.reflect.SearchField;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
+
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
 @Component
@@ -415,4 +416,5 @@ public class DatabaseClient implements IConceptDBManager {
             dictionaryClient.commit();
         }
     }
+    
 }

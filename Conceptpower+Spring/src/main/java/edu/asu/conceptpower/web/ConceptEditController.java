@@ -8,12 +8,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.jettison.json.JSONException;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.app.bean.ConceptEditBean;
 import edu.asu.conceptpower.app.core.Constants;
@@ -114,7 +114,7 @@ public class ConceptEditController {
         conceptEditBean.setEquals(concept.getEqualTo());
         conceptEditBean.setSimilar(concept.getSimilarTo());
         conceptEditBean.setConceptId(concept.getId());
-        conceptEditBean.setConceptEntryList(new ArrayList());
+        conceptEditBean.setConceptEntryList(new ArrayList<>());
         conceptEditBean.setWordnetIds(concept.getWordnetId());
         conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
@@ -153,8 +153,8 @@ public class ConceptEditController {
      * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
-    public ModelAndView confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
-            @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, BindingResult result)
+    public String confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
+            @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, BindingResult result, Model model)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
         conceptEntry.setWord(conceptEditBean.getWord());
@@ -170,32 +170,28 @@ public class ConceptEditController {
 
         String userId = usersManager.findUser(principal.getName()).getUsername();
         conceptEntry.setModified(userId);
-        ModelAndView model = new ModelAndView();
-
+        
         if (indexService.isIndexerRunning()) {
             List<ConceptList> allLists = conceptListManager.getAllConceptLists();
             conceptEditBean.setConceptList(allLists);
             ConceptType[] allTypes = conceptTypesManager.getAllTypes();
             conceptEditBean.setTypes(allTypes);
             conceptEditBean.setConceptId(conceptEntry.getId());
-            model.addObject("conceptId", conceptEntry.getId());
-            model.addObject("show_error_alert", true);
-            model.addObject("error_alert_msg", indexerRunning);
-            model.addObject(indexerStatus, indexerRunning);
-            model.setViewName("/auth/conceptlist/editconcept");
-            return model;
+            model.addAttribute("conceptId", conceptEntry.getId());
+            model.addAttribute("show_error_alert", true);
+            model.addAttribute("error_alert_msg", indexerRunning);
+            model.addAttribute(indexerStatus, indexerRunning);
+            return "/auth/conceptlist/editconcept";
         }
 
         conceptEditService.editConcepts(conceptEntry, conceptEditBean.getExistingWordnetIds(),
                 conceptEditBean.getWordnetIds(), principal.getName());
 
         if (conceptEditBean.isFromHomeScreen()) {
-            model.setViewName("redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="
-                    + conceptEditBean.getSelectedPosValue());
-            return model;
+            return "redirect:/home/conceptsearch?word=" + conceptEditBean.getWord() + "&pos="
+                    + conceptEditBean.getSelectedPosValue();
         }
-        model.setViewName("redirect:/auth/" + conceptEditBean.getConceptListValue() + "/concepts");
-        return model;
+        return "redirect:/auth/" + conceptEditBean.getConceptListValue() + "/concepts";
     }
 
     /**

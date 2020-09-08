@@ -54,4 +54,5 @@ public class DatabaseManager implements Serializable {
     public void shutdown() {
         close();
     }
+    
 }

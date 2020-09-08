@@ -1,1 +1,156 @@
-{"conceptEntries":[{"id":"WID-10954498-N-01-Einstein","lemma":"einstein","pos":"noun","description":"physicist born in Germany who formulated the special theory of relativity and the general theory of relativity; Einstein also proposed that light consists of discrete quantized bundles of energy (later called photons) (1879-1955)","conceptList":"WordNet","deleted":false,"alternativeIds":[{"concept_id":"WID-10954498-N-01-Einstein","concept_uri":"http://www.digitalhps.org/concepts/WID-10954498-N-01-Einstein"}],"concept_uri":"http://www.digitalhps.org/concepts/WID-10954498-N-01-Einstein","creator_id":"","equal_to":"","modified_by":"","similar_to":"","synonym_ids":"WID-10954498-N-02-Albert_Einstein,","wordnet_id":"WID-10954498-N-01-Einstein"},{"id":"WID-10126926-N-05-Einstein","lemma":"einstein","pos":"noun","description":"someone who has exceptional intellectual ability and originality; \"Mozart was a child genius\"; \"he's smart but he's no Einstein\"","conceptList":"WordNet","deleted":false,"alternativeIds":[{"concept_id":"WID-10126926-N-05-Einstein","concept_uri":"http://www.digitalhps.org/concepts/WID-10126926-N-05-Einstein"}],"concept_uri":"http://www.digitalhps.org/concepts/WID-10126926-N-05-Einstein","creator_id":"","equal_to":"","modified_by":"","similar_to":"","synonym_ids":"WID-10126926-N-01-genius,WID-10126926-N-02-mastermind,WID-10126926-N-03-brain,WID-10126926-N-04-brainiac,","wordnet_id":"WID-10126926-N-05-Einstein"},{"id":"WID-10954498-N-02-Albert_Einstein","lemma":"albert einstein","pos":"noun","description":"physicist born in Germany who formulated the special theory of relativity and the general theory of relativity; Einstein also proposed that light consists of discrete quantized bundles of energy (later called photons) (1879-1955)","conceptList":"WordNet","deleted":false,"alternativeIds":[{"concept_id":"WID-10954498-N-02-Albert_Einstein","concept_uri":"http://www.digitalhps.org/concepts/WID-10954498-N-02-Albert_Einstein"}],"concept_uri":"http://www.digitalhps.org/concepts/WID-10954498-N-02-Albert_Einstein","creator_id":"","equal_to":"","modified_by":"","similar_to":"","synonym_ids":"WID-10954498-N-01-Einstein,","wordnet_id":"WID-10954498-N-02-Albert_Einstein"},{"id":"WID-05875723-N-01-Bose-Einstein_statistics","lemma":"bose-einstein statistics","pos":"noun","description":"(physics) statistical law obeyed by a system of particles whose wave function is not changed when two particles are interchanged (the Pauli exclusion principle does not apply)","conceptList":"WordNet","deleted":false,"alternativeIds":[{"concept_id":"WID-05875723-N-01-Bose-Einstein_statistics","concept_uri":"http://www.digitalhps.org/concepts/WID-05875723-N-01-Bose-Einstein_statistics"}],"concept_uri":"http://www.digitalhps.org/concepts/WID-05875723-N-01-Bose-Einstein_statistics","creator_id":"","equal_to":"","modified_by":"","similar_to":"","synonym_ids":"","wordnet_id":"WID-05875723-N-01-Bose-Einstein_statistics"}],"pagination":{"pageNumber":1,"totalNumberOfRecords":4}}
+{
+    "conceptEntries": [
+        {
+            "id": "WID-10954498-N-01-Einstein",
+            "lemma": "einstein",
+            "pos": "noun",
+            "description": "physicist born in Germany who formulated the special theory of relativity and the general theory of relativity; Einstein also proposed that light consists of discrete quantized bundles of energy (later called photons) (1879-1955)",
+            "conceptList": "WordNet",
+            "deleted": false,
+            "concept_uri": "http://www.digitalhps.org/concepts/WID-10954498-N-01-Einstein",
+            "creator_id": "",
+            "equal_to": "",
+            "modified_by": "",
+            "similar_to": "",
+            "synonym_ids": "WID-10954498-N-02-Albert_Einstein,",
+            "wordnet_id": "WID-10954498-N-01-Einstein",
+            "alternativeIds": [
+                {
+                    "concept_id": "WID-10954498-N-01-Einstein",
+                    "concept_uri": "http://www.digitalhps.org/concepts/WID-10954498-N-01-Einstein"
+                }
+            ]
+        },
+        {
+            "id": "WID-10126926-N-05-Einstein",
+            "lemma": "einstein",
+            "pos": "noun",
+            "description": "someone who has exceptional intellectual ability and originality; \\\"Mozart was a child genius\\\"; \\\"he's smart but he's no Einstein\\\"",
+            "conceptList": "WordNet",
+            "deleted": false,
+            "concept_uri": "http://www.digitalhps.org/concepts/WID-10126926-N-05-Einstein",
+            "creator_id": "",
+            "equal_to": "",
+            "modified_by": "",
+            "similar_to": "",
+            "synonym_ids": "WID-10126926-N-01-genius,WID-10126926-N-02-mastermind,WID-10126926-N-03-brain,WID-10126926-N-04-brainiac,",
+            "wordnet_id": "WID-10126926-N-05-Einstein",
+            "alternativeIds": [
+                {
+                    "concept_id": "WID-10126926-N-05-Einstein",
+                    "concept_uri": "http://www.digitalhps.org/concepts/WID-10126926-N-05-Einstein"
+                }
+            ]
+        },
+        {
+            "id": "WID-10954498-N-02-Albert_Einstein",
+            "lemma": "albert einstein",
+            "pos": "noun",
+            "description": "physicist born in Germany who formulated the special theory of relativity and the general theory of relativity; Einstein also proposed that light consists of discrete quantized bundles of energy (later called photons) (1879-1955)",
+            "conceptList": "WordNet",
+            "deleted": false,
+            "concept_uri": "http://www.digitalhps.org/concepts/WID-10954498-N-02-Albert_Einstein",
+            "creator_id": "",
+            "equal_to": "",
+            "modified_by": "",
+            "similar_to": "",
+            "synonym_ids": "WID-10954498-N-01-Einstein,",
+            "wordnet_id": "WID-10954498-N-02-Albert_Einstein",
+            "alternativeIds": [
+                {
+                    "concept_id": "WID-10954498-N-02-Albert_Einstein",
+                    "concept_uri": "http://www.digitalhps.org/concepts/WID-10954498-N-02-Albert_Einstein"
+                }
+            ]
+        },
+        {
+            "id": "WID-05875723-N-01-Bose-Einstein_statistics",
+            "lemma": "bose-einstein statistics",
+            "pos": "noun",
+            "description": "(physics) statistical law obeyed by a system of particles whose wave function is not changed when two particles are interchanged (the Pauli exclusion principle does not apply)",
+            "conceptList": "WordNet",
+            "deleted": false,
+            "concept_uri": "http://www.digitalhps.org/concepts/WID-05875723-N-01-Bose-Einstein_statistics",
+            "creator_id": "",
+            "equal_to": "",
+            "modified_by": "",
+            "similar_to": "",
+            "synonym_ids": "",
+            "wordnet_id": "WID-05875723-N-01-Bose-Einstein_statistics",
+            "alternativeIds": [
+                {
+                    "concept_id": "WID-05875723-N-01-Bose-Einstein_statistics",
+                    "concept_uri": "http://www.digitalhps.org/concepts/WID-05875723-N-01-Bose-Einstein_statistics"
+                }
+            ]
+        },
+        {
+            "id": "WID-06106502-N-04-Einstein's_theory_of_relativity",
+            "lemma": "einstein's theory of relativity",
+            "pos": "noun",
+            "description": "(physics) the theory that space and time are relative concepts rather than absolute concepts",
+            "conceptList": "WordNet",
+            "deleted": false,
+            "concept_uri": "http://www.digitalhps.org/concepts/WID-06106502-N-04-Einstein's_theory_of_relativity",
+            "creator_id": "",
+            "equal_to": "",
+            "modified_by": "",
+            "similar_to": "",
+            "synonym_ids": "WID-06106502-N-01-relativity,WID-06106502-N-02-theory_of_relativity,WID-06106502-N-03-relativity_theory,",
+            "wordnet_id": "WID-06106502-N-04-Einstein's_theory_of_relativity",
+            "alternativeIds": [
+                {
+                    "concept_id": "WID-06106502-N-04-Einstein's_theory_of_relativity",
+                    "concept_uri": "http://www.digitalhps.org/concepts/WID-06106502-N-04-Einstein's_theory_of_relativity"
+                }
+            ]
+        },
+        {
+            "id": "WID-06106820-N-04-Einstein's_general_theory_of_relativity",
+            "lemma": "einstein's general theory of relativity",
+            "pos": "noun",
+            "description": "a generalization of special relativity to include gravity (based on the principle of equivalence)",
+            "conceptList": "WordNet",
+            "deleted": false,
+            "concept_uri": "http://www.digitalhps.org/concepts/WID-06106820-N-04-Einstein's_general_theory_of_relativity",
+            "creator_id": "",
+            "equal_to": "",
+            "modified_by": "",
+            "similar_to": "",
+            "synonym_ids": "WID-06106820-N-01-general_relativity,WID-06106820-N-02-general_theory_of_relativity,WID-06106820-N-03-general_relativity_theory,",
+            "wordnet_id": "WID-06106820-N-04-Einstein's_general_theory_of_relativity",
+            "alternativeIds": [
+                {
+                    "concept_id": "WID-06106820-N-04-Einstein's_general_theory_of_relativity",
+                    "concept_uri": "http://www.digitalhps.org/concepts/WID-06106820-N-04-Einstein's_general_theory_of_relativity"
+                }
+            ]
+        },
+        {
+            "id": "WID-06107083-N-04-Einstein's_special_theory_of_relativity",
+            "lemma": "einstein's special theory of relativity",
+            "pos": "noun",
+            "description": "a physical theory of relativity based on the assumption that the speed of light in a vacuum is a constant and the assumption that the laws of physics are invariant in all inertial systems",
+            "conceptList": "WordNet",
+            "deleted": false,
+            "concept_uri": "http://www.digitalhps.org/concepts/WID-06107083-N-04-Einstein's_special_theory_of_relativity",
+            "creator_id": "",
+            "equal_to": "",
+            "modified_by": "",
+            "similar_to": "",
+            "synonym_ids": "WID-06107083-N-01-special_relativity,WID-06107083-N-02-special_theory_of_relativity,WID-06107083-N-03-special_relativity_theory,",
+            "wordnet_id": "WID-06107083-N-04-Einstein's_special_theory_of_relativity",
+            "alternativeIds": [
+                {
+                    "concept_id": "WID-06107083-N-04-Einstein's_special_theory_of_relativity",
+                    "concept_uri": "http://www.digitalhps.org/concepts/WID-06107083-N-04-Einstein's_special_theory_of_relativity"
+                }
+            ]
+        }
+    ],
+    "pagination": {
+        "pageNumber": 1,
+        "totalNumberOfRecords": 7,
+        "totalNumberofPages": 1
+    }
+}

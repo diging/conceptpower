@@ -59,12 +59,16 @@ public class WordNetManager {
 	}
     
     public ConceptEntry getConcept(String id) {
+        
+        if (id == null || id.equals("null")) {
+            return null;
+        }
 
         IWordID wordId = null;
         try {
             wordId = WordID.parseWordID(id);
         } catch (IllegalArgumentException e) {
-            logger.error("Could not find id '" + id + "' in WordNet.", e);
+            logger.warn("Could not find id '" + id + "' in WordNet.", e);
             return null;
         }
 

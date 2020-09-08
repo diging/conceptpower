@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -22,7 +23,6 @@ import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
-import junit.framework.Assert;
 
 public class ConceptManagerTest {
 
@@ -148,7 +148,7 @@ public class ConceptManagerTest {
         newConcept.setPos("noun");
         newConcept.setWord("test new");
         newConcept.setWordnetId("WID-1");
-        String id = managerToTest.addConceptListEntry(newConcept, "testuser");
+        String id = managerToTest.addConceptListEntry(newConcept, "testuser").getId();
         Assert.assertNotNull(newConcept.getChangeEvents());
         Mockito.verify(indexService).insertConcept(newConcept, "testuser");
         Assert.assertNotNull(id);
@@ -165,7 +165,7 @@ public class ConceptManagerTest {
         newConcept.setWordnetId("WID-1");
 
         String id = null;
-        id = managerToTest.addConceptListEntry(newConcept, "testuser");
+        id = managerToTest.addConceptListEntry(newConcept, "testuser").getId();
 
         Assert.assertNull(id);
     }
@@ -181,7 +181,7 @@ public class ConceptManagerTest {
         newConcept.setWordnetId("WID-1");
 
         String id = null;
-        id = managerToTest.addConceptListEntry(newConcept, "testuser");
+        id = managerToTest.addConceptListEntry(newConcept, "testuser").getId();
 
         Assert.assertNull(id);
     }

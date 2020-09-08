@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -136,7 +136,7 @@ public class ConceptSearchTest {
             throws IllegalArgumentException, IllegalAccessException, IndexerRunningException, LuceneException,
             ParserConfigurationException, SAXException, IOException, InvocationTargetException, IntrospectionException {
 
-        final String expectedOutput = IOUtil
+        final String expectedOutput = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptSearch.xml"));
         Mockito.when(result.hasErrors()).thenReturn(false);
         ResponseEntity<String> output = conceptSearch.searchConcept(conceptSearchParameter, result,
@@ -160,7 +160,7 @@ public class ConceptSearchTest {
             throws IllegalAccessException, LuceneException, IndexerRunningException, IllegalArgumentException,
             JSONException, IOException, InvocationTargetException, IntrospectionException {
 
-        final String expectedOutput = IOUtil
+        final String expectedOutput = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/conceptSearch.json"));
         Mockito.when(result.hasErrors()).thenReturn(false);
 
@@ -185,7 +185,7 @@ public class ConceptSearchTest {
             throws IllegalAccessException, LuceneException, IndexerRunningException, IllegalArgumentException,
             JSONException, IOException, InvocationTargetException, IntrospectionException {
 
-        final String jsonNoRecordsFoundError = IOUtil
+        final String jsonNoRecordsFoundError = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/recordsNotFound.json"));
         Mockito.when(result.hasErrors()).thenReturn(false);
         Map<String, String> map = new HashMap<>();
@@ -222,7 +222,7 @@ public class ConceptSearchTest {
             throws IllegalAccessException, LuceneException, IndexerRunningException, IllegalArgumentException,
             JSONException, IOException, InvocationTargetException, IntrospectionException {
 
-        final String xmlNoRecordsFoundError = IOUtil
+        final String xmlNoRecordsFoundError = IOUtils
                 .toString(this.getClass().getClassLoader().getResourceAsStream("unitTestOutput/recordsNotFound.xml"));
 
         Mockito.when(result.hasErrors()).thenReturn(false);

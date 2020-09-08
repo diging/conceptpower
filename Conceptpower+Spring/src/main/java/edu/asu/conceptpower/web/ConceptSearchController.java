@@ -2,6 +2,7 @@ package edu.asu.conceptpower.web;
 
 import java.util.List;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ import edu.asu.conceptpower.core.ConceptEntry;
  */
 @Controller
 public class ConceptSearchController {
-
+    
     @Autowired
     private IConceptManager conceptManager;
 
@@ -60,7 +61,7 @@ public class ConceptSearchController {
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
-        binder.setValidator(validator);
+        binder.setValidator(this.validator);
     }
 
     /**
@@ -82,11 +83,13 @@ public class ConceptSearchController {
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(required = false) String sortColumn,
             @RequestParam(required = false) String conceptIdsToMerge,
-            @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results)
+            @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results, ServletRequest request)
                     throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
             return "conceptsearch";
-        }
+        }   
+        
+        conceptSearchBean.setWord(conceptSearchBean.getWord().trim());
         
         if (conceptIdsToMerge != null) {
             model.addAttribute("conceptIdsToMerge", conceptIdsToMerge);
@@ -94,7 +97,7 @@ public class ConceptSearchController {
 
         List<ConceptEntryWrapper> foundConcepts = null;
         ConceptEntry[] found = null;
-        
+               
         if (indexService.isIndexerRunning()) {
             model.addAttribute("show_error_alert", true);
             model.addAttribute("error_alert_msg", indexerRunning);
@@ -116,8 +119,11 @@ public class ConceptSearchController {
             model.addAttribute(indexerStatus, e.getMessage());
             return "conceptsearch";
         }
+       
+       
         foundConcepts = wrapperCreator.createWrappers(found);
         conceptSearchBean.setFoundConcepts(foundConcepts);
+        
         if (pageInt < 1) {
             pageInt = 1;
         }
@@ -133,7 +139,7 @@ public class ConceptSearchController {
         model.addAttribute("count", pageCount);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("sortColumn", sortColumn);
-
+        
         return "conceptsearch";
     }
 

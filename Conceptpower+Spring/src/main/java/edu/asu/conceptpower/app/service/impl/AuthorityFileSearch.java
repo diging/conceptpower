@@ -1,6 +1,5 @@
 package edu.asu.conceptpower.app.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import edu.asu.conceptpower.app.profile.ISearchResult;
 import edu.asu.conceptpower.app.profile.IService;
 import edu.asu.conceptpower.app.profile.IServiceRegistry;
 import edu.asu.conceptpower.app.service.IAuthorityFileSearch;
-import edu.asu.conceptpower.web.backing.SearchResultBackBean;
 
 /**
  * This class query a specified service and returns the results.
