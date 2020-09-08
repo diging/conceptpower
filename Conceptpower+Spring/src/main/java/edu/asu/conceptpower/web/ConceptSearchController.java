@@ -110,11 +110,11 @@ public class ConceptSearchController {
         try {
             found = conceptManager.getConceptListEntriesForWordPOSDescription(conceptSearchBean.getWord(),
                     conceptSearchBean.getPos(),
-                    conceptSearchBean.isSearchOnDescription() ? conceptSearchBean.getWord() : null, null, pageInt,
+                    conceptSearchBean.isSearchOnDescription(), null, pageInt,
                     defaultPageSize, sortColumn, sortDirInt);
             pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
                     conceptSearchBean.getPos(),
-                    conceptSearchBean.isSearchOnDescription() ? conceptSearchBean.getWord() : null, null);
+                    conceptSearchBean.isSearchOnDescription(), null);
         } catch (IndexerRunningException e) {
             model.addAttribute(indexerStatus, e.getMessage());
             return "conceptsearch";

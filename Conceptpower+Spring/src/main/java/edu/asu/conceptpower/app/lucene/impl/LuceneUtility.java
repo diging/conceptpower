@@ -46,6 +46,7 @@ import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopDocsCollector;
 import org.apache.lucene.search.TopFieldCollector;
@@ -503,7 +504,7 @@ public class LuceneUtility implements ILuceneUtility {
         }
         
         java.lang.reflect.Field[] fields = ConceptEntry.class.getDeclaredFields();
-
+        
         for (java.lang.reflect.Field field : fields) {
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (luceneFieldAnnotation != null) {
@@ -623,7 +624,7 @@ public class LuceneUtility implements ILuceneUtility {
                         (qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), Occur.SHOULD));
                 tokenizedQueryBuilder.add(analyzedBuilder.build(), Occur.MUST);
             } else {
-                tokenizedQueryBuilder.add(new TermQuery(new Term(luceneFieldAnnotation.lucenefieldName(), searchValue)),
+                tokenizedQueryBuilder.add(new TermQuery(new Term(luceneFieldAnnotation.lucenefieldName(), searchString)),
                         Occur.MUST);
             }
         }

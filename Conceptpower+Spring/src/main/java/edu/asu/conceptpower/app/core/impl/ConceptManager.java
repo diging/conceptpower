@@ -134,7 +134,7 @@ public class ConceptManager implements IConceptManager {
     @Override
     public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
-        return getConceptListEntriesForWordPOSDescription(word, pos, null, conceptList, -1, -1, null, 0);
+        return getConceptListEntriesForWordPOSDescription(word, pos, false, conceptList, -1, -1, null, 0);
     }
 
     /*
@@ -146,19 +146,17 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos, String description,
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos, boolean isSearchOnDescription,
             String conceptList, int page, int numberOfRecordsPerPage, String sortField, int sortOrder)
                     throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)
             return null;
 
-        Map<String, String> fieldMap = new HashMap<String, String>();
-        fieldMap.put(SearchFieldNames.WORD, word);
+        Map<String, String> fieldMap = new HashMap<>();
+        
+        fieldMap.put(isSearchOnDescription ? SearchFieldNames.DESCRIPTION :SearchFieldNames.WORD, word );
         fieldMap.put(SearchFieldNames.POS, pos);
         fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
-        if (description != null) {
-            fieldMap.put(SearchFieldNames.DESCRIPTION, description);
-        }
 
         CCPSort ccpSort = null;
         if (sortField != null) {
@@ -169,9 +167,9 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public int getPageCountForConceptEntries(String word, String pos, String description, String conceptList)
+    public int getPageCountForConceptEntries(String word, String pos, boolean isSearchOnDescription, String conceptList)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
-        int totalEntries = getConceptListEntriesForWordPOSDescription(word, pos, description, conceptList, -1, -1, null,
+        int totalEntries = getConceptListEntriesForWordPOSDescription(word, pos, isSearchOnDescription, conceptList, -1, -1, null,
                 0).length;
         return (int) Math.ceil(new Double(totalEntries) / new Double(defaultPageSize));
     }

@@ -166,7 +166,7 @@ public interface IConceptManager {
      * @throws IllegalAccessException
      * @throws IndexerRunningException
      */
-    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos, String description,
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos, boolean isSearchOnDescription,
             String conceptList, int page, int numberOfRecordsPerPage, String sortField, int sortOrder)
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
 
@@ -186,7 +186,7 @@ public interface IConceptManager {
 
     public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException;
 
-    public int getPageCountForConceptEntries(String word, String pos, String description, String conceptList)
+    public int getPageCountForConceptEntries(String word, String pos, boolean isSearchOnDescription, String conceptList)
             throws IllegalAccessException, LuceneException, IndexerRunningException;
 
     /**
