@@ -117,7 +117,7 @@ $(document).ready(function() {
         $("#mergeConcept").show();
         $("#prepareMergeConcept").hide();
     });
-    $(':checkbox').change(function(e) {
+    $('.conceptMergeCheckbox').on('change', function(e) {
         if(this.checked) {
           mergeConcepts($(this).val())
         } else {
@@ -169,12 +169,12 @@ function finalizeMerge() {
         window.location = '${pageContext.servletContext.contextPath}/auth/concepts/merge?mergeIds=' + conceptIdsToMerge;      
     }
 }
-function paginate(page, sortDir, sortColumn, word, pos) {
+function paginate(page, sortDir, sortColumn, word, pos, searchOnDescription) {
       var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
       if(conceptIdsToMerge) {
-        window.location = '${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge;  
+        window.location = '${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&conceptIdsToMerge=' + conceptIdsToMerge + '&searchOnDescription='+searchOnDescription;  
       } else {
-        window.location = '${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos;  
+        window.location = '${pageContext.servletContext.contextPath}/home/conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&searchOnDescription='+searchOnDescription;;  
       }
       
     }
@@ -265,12 +265,19 @@ $(document).ready(function(){
         onclick="showFormProcessing()" onsubmit="hideFormProcessing()">
     </div>
   </div>
-
+  
   <div class="row">
     <div class='col-sm-2 form-check'>
-       <label class="form-check-label">
-          <form:checkbox path='searchOnDescription' name='searchOnDescription' title='Search on description' class="form-check-input" />
-          Search on description.
+    	<label class="form-check-label">
+    		<c:choose>
+    			<c:when test="${conceptSearchBean.searchOnDescription == true}">
+			      <input type="checkbox" name="searchOnDescription" title='Search on description' checked/>
+			    </c:when>
+			    <c:otherwise>
+			    	<input type="checkbox" name="searchOnDescription" title='Search on description' />
+			    </c:otherwise>
+    		</c:choose>
+    		Search on description.
         </label>
     </div>
   </div>
@@ -335,14 +342,14 @@ $(document).ready(function(){
           <th data-name='merge'></th>
         </sec:authorize>
         <th>
-          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
+          <a href="#" onclick="paginate('${page}', '${sortDirection}', 'word', '${conceptSearchBean.word}', '${conceptSearchBean.pos}', '${conceptSearchBean.searchOnDescription}');" >Term  <c:choose><c:when test="${sortColumn == 'word' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'word' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose>
           </a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
-        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" >Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'id', '${conceptSearchBean.word}', '${conceptSearchBean.pos}','${conceptSearchBean.searchOnDescription}');" >ID  <c:choose><c:when test="${sortColumn == 'id' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'id' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'wordnetid', '${conceptSearchBean.word}', '${conceptSearchBean.pos}','${conceptSearchBean.searchOnDescription}');" >Wordnet ID  <c:choose><c:when test="${sortColumn == 'wordnetid' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'wordnetid' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'pos', '${conceptSearchBean.word}', '${conceptSearchBean.pos}','${conceptSearchBean.searchOnDescription}');" >POS  <c:choose><c:when test="${sortColumn == 'pos' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'pos' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'listName', '${conceptSearchBean.word}', '${conceptSearchBean.pos}','${conceptSearchBean.searchOnDescription}');" >Concept List  <c:choose><c:when test="${sortColumn == 'listName' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'listName' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'description', '${conceptSearchBean.word}', '${conceptSearchBean.pos}','${conceptSearchBean.searchOnDescription}');" >Description  <c:choose><c:when test="${sortColumn == 'description' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'description' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
+        <th><a href="#" onclick="paginate('${page}', '${sortDirection}', 'types', '${conceptSearchBean.word}', '${conceptSearchBean.pos}','${conceptSearchBean.searchOnDescription}');" >Type  <c:choose><c:when test="${sortColumn == 'types' && sortDir == 1}"><i class="fa fa-sort-desc"></i></c:when><c:when test="${sortColumn == 'types' && sortDir == -1}"><i class="fa fa-sort-asc"></i></c:when><c:otherwise><i class="fa fa-sort"></i></c:otherwise></c:choose></a></th>
           <th><div style="color:#19586B">Review Status</div></th>
       </tr>
     </thead>
@@ -384,7 +391,7 @@ $(document).ready(function(){
             </td>
 
             <td>
-              <input type="checkbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" value="${concept.entry.id }" />
+              <input type="checkbox" class="conceptMergeCheckbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" value="${concept.entry.id }" />
             </td>
 
           </sec:authorize>
@@ -428,15 +435,15 @@ $(document).ready(function(){
   <nav aria-label="Page navigation">
       <ul class="pagination">
         <li <c:if test="${page == 1}">class="disabled"</c:if>>
-          <a <c:if test="${page > 1}"> href="#" onclick="paginate('${page - 1}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');"</c:if> aria-label="Previous" >
+          <a <c:if test="${page > 1}"> href="#" onclick="paginate('${page - 1}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}', '${conceptSearchBean.searchOnDescription}');"</c:if> aria-label="Previous" >
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
     <c:forEach begin="1" end="${count}" var="val">
-        <li <c:if test="${val == page}">class="active"</c:if>><a href="#" onclick="paginate('${val}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');" ><c:out value="${val}"/></a></li>
+        <li <c:if test="${val == page}">class="active"</c:if>><a href="#" onclick="paginate('${val}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}','${conceptSearchBean.searchOnDescription}');" ><c:out value="${val}"/></a></li>
     </c:forEach>
         <li <c:if test="${page == count}">class="disabled"</c:if>>
-          <a <c:if test="${page < count}"> href="#" onclick="paginate('${page + 1}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}');"</c:if> aria-label="Next">
+          <a <c:if test="${page < count}"> href="#" onclick="paginate('${page + 1}', '${sortDir}', '${sortColumn}', '${conceptSearchBean.word}', '${conceptSearchBean.pos}', '${conceptSearchBean.searchOnDescription}');"</c:if> aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>

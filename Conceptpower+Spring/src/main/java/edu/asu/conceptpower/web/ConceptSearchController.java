@@ -83,6 +83,7 @@ public class ConceptSearchController {
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(required = false) String sortColumn,
             @RequestParam(required = false) String conceptIdsToMerge,
+            @RequestParam(required = false) String searchOnDescription,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results, ServletRequest request)
                     throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
