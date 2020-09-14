@@ -277,7 +277,7 @@ $(document).ready(function(){
 			    	<input type="checkbox" name="searchOnDescription" title='Search on description' />
 			    </c:otherwise>
     		</c:choose>
-    		Search on description.
+    		Search in description field
         </label>
     </div>
   </div>
