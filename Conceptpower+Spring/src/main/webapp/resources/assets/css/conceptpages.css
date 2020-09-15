@@ -1,0 +1,172 @@
+.conceptPowerWrapper {
+	margin: 0px 5%;
+}
+
+.btn:hover {
+	color: white;
+	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+}
+
+
+.form-group {
+	display: flex;
+	margin-top: 20px;
+}
+
+.formlabel {
+	display: block;
+	font-size: 18px;
+	color: #333;
+}
+
+.conceptPowerForm {
+	border-collapse: separate;
+	border-spacing: 0px 10px;
+}
+
+.cancelTypeBtn {
+	height: 44px;
+	width: 300px;
+	background-color: transparent;
+	border: 2px solid #A34D63;
+	color: #A34D63;
+	border-radius: 30px;
+	margin-right: 30px;
+}
+
+.cancelTypeBtn:hover {
+	background-color: #A34D63;
+	border: 2px solid #A34D63;
+	color: white;
+	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+}
+
+.btnCenter {
+	text-align: center;
+}
+
+#dropdownMenu1 {
+    border-radius: 30px;
+}
+
+.headerSection {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 25px;
+}
+
+.titleHeader{
+	font-size: 28px;
+	color: #333;
+}
+
+.subHeader {
+	font-size: 18px;
+	color: #333;
+}
+
+.showDrp {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.newConcept {
+	margin: 0px 4%;
+	display: block;
+}
+
+.btn-group.dropdown {
+    margin-left: 30px;
+}
+
+.drpSpacing {
+width:246px;
+display: flex;
+justify-content: space-between;
+}
+
+.termSpacing {
+	display: flex;
+	width: 400px;
+	justify-content: space-between;
+	
+}
+
+a {
+	color: #A34D63;
+}
+
+a:hover {
+	color: #333;
+}
+
+
+label {
+	display: inline-table;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.row1-2 {
+	width: 300px;
+	justify-content: space-between;
+	display: flex;
+	margin-bottom: 25px;
+	margin-top: 2%;
+}
+
+.sectionHeading {
+	display: flex;
+	align-items: center;
+}
+
+.row {
+	display: flex;
+}
+
+.numeration {
+	height: 35px;
+	width: 35px;
+	text-align: center;
+	font-size: 17px;
+	color:white;
+	background-color: #2f2e2f;
+	border-radius: 50%;
+	margin-right: 30px;
+	line-height: 40px;
+	font-weight: 700;
+}
+
+.resetPassForm {
+	width: 70%;
+	border-collapse: separate;
+	border-spacing: 0 15px;
+}
+
+#conceptDetailForm .modal-content {
+    border-radius: unset;
+    width: 60%;
+    overflow: unset;
+    margin-top: 20px;
+}	
+
+li.page-item.disabled{
+	pointer-events: none;
+    opacity: 0.4;
+    cursor:not-allowed;
+}
+
+#addedSynonyms {
+    margin-top: 1%;
+}
+
+#addedSynonymsTable{
+	margin: unset !important;
+
+}
+
+.disable{
+	color:#b3b3b3;
+	pointer-events:none;
+}

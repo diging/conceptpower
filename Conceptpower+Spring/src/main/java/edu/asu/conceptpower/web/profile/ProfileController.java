@@ -24,6 +24,6 @@ public class ProfileController {
         }
         
         model.addAttribute("currentUser", user);
-        return "auth/profile";
+        return "/layouts/profile/profile";
     }
 }

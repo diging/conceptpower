@@ -1,0 +1,46 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <body class="body" layout:fragment="content">
+         <div class="conceptPowerWrapper">
+            <h3 class="title">Edit Concept List.</h3>
+            <form
+				th:action="@{/auth/conceptlist/storeeditlist}"
+				th:object="${conceptListAddForm}" method='post'>
+	            <table class="conceptPowerForm">
+	               <tbody>
+	                  <tr>
+	                     <td style="width:40px; vertical-align:top;">
+	                        <label for="listName" class="formlabel">List name</label>
+	                     </td>
+	                     <td>
+	                        <input type="text" class="form-control" name="listName" th:value="${conceptListAddForm.listName}">
+	                        <input type="hidden" th:value="${conceptListAddForm.oldListName}" name="oldListName" />
+	                        <div class="formErrorAlert" th:if="${#fields.hasErrors('listName')}" th:errors="*{listName}"></div>
+	                     </td>
+	                  </tr>
+	                  <tr>
+	                     <td style="width:172px; vertical-align:top;">
+	                        <label for="description" class="formlabel">List description</label>
+	                     </td>
+	                     <td>
+	                        <textarea class="form-control" name="description" th:text="${conceptListAddForm.description}"></textarea>
+	                        <div class="formErrorAlert" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+	                     </td>
+	                  </tr>
+	               </tbody>
+	            </table>
+	            <div class="btnCenter">
+	            <a th:href="@{/auth/conceptlist}"><button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" type="button" >
+               		Cancel
+               	</button></a>
+	               <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" type="submit">
+	               		Save Changes
+	               </button>
+	            </div>
+            </form>
+         </div>
+   </body>
+</html>

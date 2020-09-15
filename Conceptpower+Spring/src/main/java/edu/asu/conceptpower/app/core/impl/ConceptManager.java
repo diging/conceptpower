@@ -166,9 +166,9 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public int getPageCountForConceptEntries(String word, String pos, String conceptList) throws IllegalAccessException, LuceneException, IndexerRunningException {
+    public int getPageCountForConceptEntries(String word, String pos, String conceptList, int numRecords) throws IllegalAccessException, LuceneException, IndexerRunningException {
         int totalEntries = getConceptListEntriesForWordPOS(word, pos, conceptList, -1, -1, null, 0).length;
-        return (int) Math.ceil(new Double(totalEntries) / new Double(defaultPageSize));
+        return (int) Math.ceil(new Double(totalEntries) / new Double(numRecords));
     }
 
     /**

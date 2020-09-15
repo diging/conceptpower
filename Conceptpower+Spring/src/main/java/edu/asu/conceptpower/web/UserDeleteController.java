@@ -37,7 +37,8 @@ public class UserDeleteController {
         userBacking.setIsAdmin(user.getIsAdmin());
 
         model.addAttribute("user", userBacking);
-        return "auth/user/deleteuser";
+        
+        return "/layouts/modals/deleteuser";
     }
 
     /**

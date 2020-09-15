@@ -56,10 +56,10 @@ public class ConceptWrapperAddController {
 
     @Autowired
     private IIndexService indexService;
-    
+
     @Autowired
     private IConceptWrapperService conceptWrapperService;
-    
+
     @Value("#{messages['INDEXER_RUNNING']}")
     private String indexerRunning;
 
@@ -77,57 +77,59 @@ public class ConceptWrapperAddController {
      * This method provides required information for concept wrapper creation
      * 
      * @param model
-     *            A generic model holder for Servlet
-     * @return String value which redirects user to creating concept wrappers
-     *         page
+     *                  A generic model holder for Servlet
+     * @return String value which redirects user to creating concept wrappers page
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper")
     public String prepareConceptWrapperAdd(@RequestParam(value = "wrapperId", required = false) String wrapperId,
-            HttpServletRequest req, ModelMap model){
+            HttpServletRequest req, ModelMap model) {
         model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
         model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
         ConceptEntry entry = null;
-        try {
-            entry = conceptManager.getWordnetConceptEntry(wrapperId);
-        } catch (LuceneException ex) {
-            logger.error("Error while fetching concepts based on concept id", ex);
-            return "/auth/conceptlist/addconceptwrapper";
-        }
         ConceptWrapperAddBean conceptWrapperAddBean = new ConceptWrapperAddBean();
-        conceptWrapperAddBean.setDescription(entry.getDescription());
-        conceptWrapperAddBean.setWord(entry.getWord());
-        conceptWrapperAddBean.setSelectedConceptList(entry.getConceptList());
-        conceptWrapperAddBean.setPos(entry.getPos());
-        conceptWrapperAddBean.setWrapperids(wrapperId);
+
+        if (wrapperId != null && !wrapperId.trim().isEmpty()) {
+            try {
+                entry = conceptManager.getWordnetConceptEntry(wrapperId);
+            } catch (LuceneException ex) {
+                logger.error("Error while fetching concepts based on concept id", ex);
+                return "/layouts/concepts/addconceptwrapper";
+            }
+
+            conceptWrapperAddBean.setDescription(entry.getDescription());
+            conceptWrapperAddBean.setWord(entry.getWord());
+            conceptWrapperAddBean.setSelectedConceptList(entry.getConceptList());
+            conceptWrapperAddBean.setPos(entry.getPos());
+            conceptWrapperAddBean.setWrapperids(wrapperId);
+        }
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
-        return "/auth/conceptlist/addconceptwrapper";
+        return "/layouts/concepts/addconceptwrapper";
     }
 
     /**
      * This method creates a concept wrapper for the selected concept entries
      * 
      * @param req
-     *            Holds the HTTP request information
+     *                      Holds the HTTP request information
      * @param principal
-     *            Holds logged in user information
-     * @return String value which redirects user to a particular concept list
-     *         page
+     *                      Holds logged in user information
+     * @return String value which redirects user to a particular concept list page
      * @throws DictionaryModifyException
      * @throws DictionaryDoesNotExistException
-     * @throws IllegalAccessException 
-     * @throws IndexerRunningException 
+     * @throws IllegalAccessException
+     * @throws IndexerRunningException
      */
     @RequestMapping(value = "auth/conceptlist/addconceptwrapper/add", method = RequestMethod.POST)
     public String addConcept(@Validated @ModelAttribute ConceptWrapperAddBean conceptWrapperAddBean,
             BindingResult result, Principal principal, Model model) throws DictionaryDoesNotExistException,
-                    DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
+            DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
 
         if (result.hasErrors()) {
             model.addAttribute("types", conceptWrapperService.fetchAllConceptTypes());
             model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
-            return "/auth/conceptlist/addconceptwrapper";
+            return "/layouts/concepts/addconceptwrapper";
         }
-        
+
         String[] wrappers = conceptWrapperAddBean.getWrapperids().split(Constants.CONCEPT_SEPARATOR);
         if (wrappers.length > 0) {
             ConceptEntry conceptEntry = new ConceptEntry();
@@ -145,7 +147,7 @@ public class ConceptWrapperAddController {
             if (indexService.isIndexerRunning()) {
                 model.addAttribute("show_error_alert", true);
                 model.addAttribute("error_alert_msg", indexerRunning);
-                return "forward:/auth/conceptlist/addconceptwrapper";
+                return "forward:/layouts/concepts/addconceptwrapper";
             }
             conceptManager.addConceptListEntry(conceptEntry, principal.getName());
         }
@@ -157,11 +159,10 @@ public class ConceptWrapperAddController {
      * This method provides search result for a particular concept search query
      * 
      * @param req
-     *            Holds HTTP request information
+     *                  Holds HTTP request information
      * @param model
-     *            A generic model holder for Servlet
-     * @return String value which redirects user to concept wrapper creation
-     *         page
+     *                  A generic model holder for Servlet
+     * @return String value which redirects user to concept wrapper creation page
      * @throws IllegalAccessException
      */
     @RequestMapping(value = "/auth/conceptlist/addconceptwrapper/conceptsearch", method = RequestMethod.POST)
@@ -173,7 +174,7 @@ public class ConceptWrapperAddController {
         if (!concept.trim().isEmpty()) {
 
             ConceptEntry[] found = null;
-            
+
             if (indexService.isIndexerRunning()) {
                 model.addAttribute("show_error_alert", true);
                 model.addAttribute("error_alert_msg", indexerRunning);
@@ -181,8 +182,7 @@ public class ConceptWrapperAddController {
             }
 
             try {
-                found = conceptManager.getConceptListEntriesForWordPOS(concept, pos,
-                        Constants.WORDNET_DICTIONARY);
+                found = conceptManager.getConceptListEntriesForWordPOS(concept, pos, Constants.WORDNET_DICTIONARY);
             } catch (IndexerRunningException ie) {
                 model.addAttribute(indexerRunning, ie.getMessage());
                 return "/login";
@@ -195,19 +195,21 @@ public class ConceptWrapperAddController {
         model.addAttribute("lists", conceptWrapperService.fetchAllConceptLists());
         model.addAttribute("conceptWrapperAddBean", conceptWrapperAddBean);
 
-        return "/auth/conceptlist/addconceptwrapper";
+        return "layouts/concepts/addconceptwrapper";
     }
 
     /**
      * This method provides array of concepts for a given string
      * 
      * @param synonymname
-     *            A synonym string for which we need to find existing concepts
+     *                        A synonym string for which we need to find existing
+     *                        concepts
      * @return Returns array of concepts found for synonym name
-     * @throws IllegalAccessException 
+     * @throws IllegalAccessException
      */
     @RequestMapping(method = RequestMethod.GET, value = "conceptWrapperAddSynonymView")
-    public ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname) throws IllegalAccessException {
+    public ResponseEntity<String> getSynonyms(@RequestParam("synonymname") String synonymname)
+            throws IllegalAccessException {
         ConceptEntry[] entries = null;
         try {
             entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());

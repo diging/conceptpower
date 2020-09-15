@@ -185,7 +185,7 @@ public interface IConceptManager {
 
     public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException;
 
-    public int getPageCountForConceptEntries(String word, String pos, String conceptList)
+    public int getPageCountForConceptEntries(String word, String pos, String conceptList, int numRecords)
             throws IllegalAccessException, LuceneException, IndexerRunningException;
 
     /**

@@ -91,13 +91,14 @@ public class ConceptEditController {
     @RequestMapping(value = "auth/conceptlist/editconcept/{conceptid}", method = RequestMethod.GET)
     public String prepareEditConcept(@PathVariable("conceptid") String conceptid,
             @RequestParam(value = "fromHomeScreen", required = false) String fromHomeScreen,
+            @RequestParam(value = "searchWord", required = false) String searchWord,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, ModelMap model, BindingResult results)
             throws LuceneException {
 
         if (fromHomeScreen != null) {
             conceptEditBean.setFromHomeScreen(true);
         }
-
+        
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
         ConceptType[] allTypes = conceptTypesManager.getAllTypes();
         List<ConceptList> allLists = conceptListManager.getAllConceptLists();
@@ -118,7 +119,9 @@ public class ConceptEditController {
         conceptEditBean.setWordnetIds(concept.getWordnetId());
         conceptEditBean.setExistingWordnetIds(concept.getWordnetId());
         model.addAttribute("conceptId", concept.getId());
-        return "/auth/conceptlist/editconcept";
+        model.addAttribute("searchWord", searchWord);
+        
+        return "/layouts/concepts/editconcept";
     }
 
     /**
@@ -181,7 +184,7 @@ public class ConceptEditController {
             model.addAttribute("show_error_alert", true);
             model.addAttribute("error_alert_msg", indexerRunning);
             model.addAttribute(indexerStatus, indexerRunning);
-            return "/auth/conceptlist/editconcept";
+            return "/layouts/concepts/editconcept";
         }
 
         conceptEditService.editConcepts(conceptEntry, conceptEditBean.getExistingWordnetIds(),

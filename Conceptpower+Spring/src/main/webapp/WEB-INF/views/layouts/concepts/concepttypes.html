@@ -1,0 +1,92 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <head>
+      <script>
+      	function paginate(page, sortDir, sortColumn, word, pos) {
+    		var paginationElement = document.getElementById("paginationSection");
+    		window.location = 'concepttype?page=' + page + '&sortDir=' + paginationElement.getAttribute('data-sortdir') + '&sortColumn=' + paginationElement.getAttribute('data-searchcolumn');
+    	}
+    	$(document).on('click', '#paginate', function (e) {
+    		window.location = 'concepttype?page=' + $(this).data().page + '&sortDir=' + $(this).data().sortdir + '&sortColumn=' + $(this).data().sortcolumn;
+    	})
+
+    	$(document).on('click', '#deleteBtn', function (e) {
+    		var typeId = $(this).data().typeid;
+    		$.ajax({
+    			type: "GET",
+    			url: "[[@{'/auth/concepttype/deletetype/'}]]" + typeId,
+    			contentType: "application/json",
+    			success: function (data) {
+    				$('#deleteModalPlugin').html(data);
+    				$('#deleteType').modal('show');
+    			}
+    		});
+    	});
+
+    	$(document).on('hidden.bs.modal', '#deleteModalPlugin', function (event) {
+    		$('#deleteModalPlugin').empty();
+    	});
+      </script>
+   </head>
+   <body class="body" layout:fragment="content">
+      <div class="resultsSection">
+         <div class="headerSection">
+            <div style="display: block;">
+               <h3 class="titleHeader">Concept types</h3>
+               <h4 class="subHeader">See existing types below.</h4>
+            </div>
+            <a th:href="@{/auth/concepttype/addtype}"><button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" >
+            <i class="fa fa-plus" aria-hidden="true"></i> Add new type
+            </button></a>
+         </div>
+         <table class="table table-striped resultTable tableStyles" th:if="${result.size() > 0}">
+            <thead>
+               <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Type URI</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Super type</th>
+                  <th scope="col">Matches</th>
+                  <th scope="col">Created by</th>
+                  <th scope="col">Modified</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr th:each="types : ${result}">
+                  <td>
+                     <a th:href="@{'/auth/concepttype/edittype/'+${types.typeId}}"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                     <i class="fa fa-trash-o" aria-hidden="true"  id="deleteBtn" th:data-typeid="${types.typeId}" data-toggle="modal" data-target=#deleteType></i>
+                  </td>
+                  <td th:text="${types.typeName}"></td>
+                  <td th:text="${types.typeId}"></td>
+                  <td th:text="${types.description}"></td>
+                  <td th:text="${types.supertypeId}"></td>
+                  <td th:text="${types.matches}"></td>
+                  <td th:text="${types.creatorId}"></td>
+                  <td th:text="${types.modified}"></td>
+               </tr>
+            </tbody>
+         </table>
+         <div th:if="${result.size()<=0}"> No Concept Types to display</div>
+      </div>
+      <div class="pagination" th:if="${result.size() > 0}">
+         <ul class="pagination">
+            <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+               <span class="page-link" th:data-sortDir="${sortDir}" th:data-sortColumn="${sortColumn}" th:data-page="${page - 1}" id="paginate" >Previous</span>
+            </li>
+            <li th:each="i: ${#numbers.sequence(0, count-1)}" th:class="page-item" th:classappend="${page == i+1} ? active: '' ">
+               <span class="page-link" th:data-sortDir="${sortDir}" th:data-sortColumn="${sortColumn}" th:data-page="${i+1}" id="paginate" th:text="${i+1}">
+               <span class="sr-only">(current)</span></span>
+            </li>
+            <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+               <a class="page-link" th:data-sortDir="${sortDir}" th:data-sortColumn="${sortColumn}" th:data-page="${page + 1}" id="paginate">Next</a>
+            </li>
+         </ul>
+      </div>
+      <div id="deleteModalPlugin"></div>
+   </body>
+</html>
