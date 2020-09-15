@@ -14,15 +14,17 @@ import javax.persistence.Table;
 import edu.asu.conceptpower.core.ReviewStatus;
 
 /**
+ * This model helps to keep track of information about a specific review request
  * 
- * @author Keerthivasan
+ * @author Keerthivasan Krishnamurthy
  * 
  */
+
 @Entity
 @Table(name="review_request")
 public class ReviewRequest implements Serializable{
 
-    private static final long serialVersionUID = 8547190657638028543L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name="review_id")

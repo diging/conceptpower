@@ -10,11 +10,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * This model helps in storing the information a specific comment
+ * 
+ * @author Keerthivasan Krishnamurthy
+ * 
+ */
 @Entity
 @Table(name="comment")
 public class Comment implements Serializable{
     
-    private static final long serialVersionUID = -6643011518760788400L;
+    private static final long serialVersionUID = 1L;
     
     @Id
     @Column(name="comment_id")

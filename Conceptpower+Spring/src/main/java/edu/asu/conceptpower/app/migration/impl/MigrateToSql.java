@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.app.migration.impl;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,9 @@ import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ReviewRequest;
 
 /**
+ * Service to perform SQL migration for all the tables in Conceptpower
  * 
- * @author Keerthivasan
+ * @author Keerthivasan Krishnamurthy
  * 
  */
 
@@ -54,6 +54,9 @@ public class MigrateToSql {
      
     @Autowired
     private IConceptEntryRepository conceptEntryRepository;
+    
+    @Autowired
+    private ModelMapperUtil modelMapperUtil;
    
     @Async
     public Future<MigrationResult> migrateTable(){
@@ -77,14 +80,12 @@ public class MigrateToSql {
     
     @Async
     public int migrateReviewRequestTable(){
-        List<ReviewRequest> reviewRequestsDump = reviewRequestManager.getAllReviews();
         int count = 0;
-        if(reviewRequestsDump != null && !reviewRequestsDump.isEmpty()) {
-            List<edu.asu.conceptpower.app.core.model.impl.ReviewRequest> mappedReviewRequest = ModelMapperUtil.reviewRequestMapper(reviewRequestsDump);
-            for(edu.asu.conceptpower.app.core.model.impl.ReviewRequest r : mappedReviewRequest) {
-                reviewRequestRepository.save(r);
-                count++;
-            }
+        
+        for(ReviewRequest r: reviewRequestManager.getAllReviews()) {
+            /* Re map and save the model to the database */
+            reviewRequestRepository.save(modelMapperUtil.mapReviewRequest(r));
+            count++;
         }
         
         return count;
@@ -93,16 +94,11 @@ public class MigrateToSql {
     
     @Async
     public int migrateConceptTypeTable() {
-        ConceptType[] conceptTypeDump = typesManager.getAllTypes();
         int count = 0;
         
-        if(conceptTypeDump != null && conceptTypeDump.length > 0) {
-            List<edu.asu.conceptpower.app.core.model.impl.ConceptType> mappedConceptType = ModelMapperUtil.conceptTypeMapper(conceptTypeDump);
-            
-            for(edu.asu.conceptpower.app.core.model.impl.ConceptType c : mappedConceptType) {
-                conceptTypeRepository.save(c);
-                count++;
-            }
+        for(ConceptType c : typesManager.getAllTypes()) {
+          conceptTypeRepository.save(modelMapperUtil.mapConceptType(c));
+          count++;
         }
         
         return count;
@@ -110,16 +106,11 @@ public class MigrateToSql {
     
     @Async
     public int migrateConceptListTable() {
-        List<ConceptList> conceptListDump = listManager.getAllConceptLists();
         int count = 0;
         
-        if(conceptListDump != null && !conceptListDump.isEmpty()) {
-            List<edu.asu.conceptpower.app.core.model.impl.ConceptList> mappedConceptList = ModelMapperUtil.conceptListMapper(conceptListDump);
-            
-            for(edu.asu.conceptpower.app.core.model.impl.ConceptList c : mappedConceptList) {
-                conceptListRepository.save(c);
-                count++;
-            }
+        for(ConceptList c:listManager.getAllConceptLists()) {
+            conceptListRepository.save(modelMapperUtil.mapConceptList(c));
+            count++;
         }
         
         return count;
@@ -127,16 +118,11 @@ public class MigrateToSql {
     
     @Async
     public int migrateConceptEntryTable(){
-        List<ConceptEntry> conceptEntryDump = conceptManager.getAllConcepts();
         int count = 0;
         
-        if(conceptEntryDump != null && !conceptEntryDump.isEmpty()) {
-            List<edu.asu.conceptpower.app.core.model.impl.ConceptEntry> mappedConceptEntries = ModelMapperUtil.conceptEntryMapper(conceptEntryDump);
-            
-            for(edu.asu.conceptpower.app.core.model.impl.ConceptEntry c : mappedConceptEntries) {
-                conceptEntryRepository.save(c);
-                count++;
-            }
+        for(ConceptEntry c : conceptManager.getAllConcepts()) {
+            conceptEntryRepository.save(modelMapperUtil.mapConceptEntry(c));
+            count++;
         }
         
         return count;

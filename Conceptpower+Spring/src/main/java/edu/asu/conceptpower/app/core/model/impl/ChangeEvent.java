@@ -12,14 +12,22 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
-
+/**
+ * This Model holds information about the change events for a specific concept
+ * 
+ * @author Keerthivasan Krishnamurthy
+ * 
+ */
 
 @Entity
 @Table(name="change_event")
 public class ChangeEvent implements Serializable {
 
-    private static final long serialVersionUID = 1635835636441631877L;
+    private static final long serialVersionUID = 1L;
+    
+    public enum ChangeEventTypes {
+        MODIFICATION, CREATION, DELETION
+    }
     
     @Id
     @Column(name="change_event_id")

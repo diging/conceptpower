@@ -9,7 +9,9 @@ import javax.persistence.Table;
 
 /**
  * 
- * @author Keerthivasan
+ * This model helps to keep track of information about a specific concept type
+ * 
+ * @author Keerthivasan Krishnamurthy
  * 
  */
 
@@ -17,7 +19,7 @@ import javax.persistence.Table;
 @Table(name="concept_type")
 public class ConceptType implements Serializable{
 
-    private static final long serialVersionUID = -2034845185818014711L;
+    private static final long serialVersionUID = 1L;
     
     @Id 
     @Column(name="type_id")

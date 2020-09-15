@@ -12,8 +12,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
+ * This model helps to keep track of information about a specific concept
  * 
- * @author Keerthivasan
+ * @author Keerthivasan Krishnamurthy
  * 
  */
 
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 @Table(name="concept_entry")
 public class ConceptEntry implements Serializable{
 
-    private static final long serialVersionUID = -2996311266459722841L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name="concept_id")
@@ -216,8 +217,11 @@ public class ConceptEntry implements Serializable{
          return this.changeEvents;
     }
    
-    public void setChangeEvents(List<ChangeEvent> changeEvents) {
-        this.changeEvents = changeEvents;
+    public void setChangeEvents(ChangeEvent changeEvent) {
+        if(this.changeEvents == null) {
+            this.changeEvents = new ArrayList<>();
+        }
+        this.changeEvents.add(changeEvent);
     }
    
     public String getModifiedUser() {

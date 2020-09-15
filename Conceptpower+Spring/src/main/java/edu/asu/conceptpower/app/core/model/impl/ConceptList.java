@@ -9,15 +9,16 @@ import javax.persistence.Table;
 
 
 /**
+ * This model helps to keep track of information about a specific concept list
  * 
- * @author Keerthivasan
+ * @author Keerthivasan Krishnamurthy
  * 
  */
 @Entity
 @Table(name="concept_list")
 public class ConceptList implements Serializable{
 
-    private static final long serialVersionUID = 2325716955354296983L;
+    private static final long serialVersionUID = 1L;
     
     @Id
     private String id;

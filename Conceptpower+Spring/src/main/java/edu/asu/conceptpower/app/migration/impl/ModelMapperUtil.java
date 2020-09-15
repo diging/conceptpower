@@ -1,9 +1,10 @@
 package edu.asu.conceptpower.app.migration.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
+import org.springframework.stereotype.Component;
+
+import edu.asu.conceptpower.app.core.model.impl.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
@@ -11,121 +12,101 @@ import edu.asu.conceptpower.core.ReviewRequest;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
 /**
+ * Util Component to map the models from db4o version to SQL version
  * 
- * @author Keerthivasan
+ * @author Keerthivasan Krishnamurthy
  * 
  */
 
+@Component
 public class ModelMapperUtil {
     
-    /*Avoid Instantiation of this utility class*/
-    private ModelMapperUtil() {}
-    
-    public static List<edu.asu.conceptpower.app.core.model.impl.ConceptType> conceptTypeMapper(ConceptType[] conceptTypeList){  
-        List<edu.asu.conceptpower.app.core.model.impl.ConceptType> mappedConceptType = new ArrayList<>();
+    public edu.asu.conceptpower.app.core.model.impl.ConceptType mapConceptType(ConceptType conceptType){  
+        edu.asu.conceptpower.app.core.model.impl.ConceptType mappedConceptType = new edu.asu.conceptpower.app.core.model.impl.ConceptType();
+        mappedConceptType.setTypeId(conceptType.getTypeId());
+        mappedConceptType.setCreatorId(conceptType.getCreatorId());
+        mappedConceptType.setTypeName(conceptType.getTypeName());
+        mappedConceptType.setDescription(conceptType.getDescription());
+        mappedConceptType.setMatches(conceptType.getMatches());
+        mappedConceptType.setModified(conceptType.getModified());
+        mappedConceptType.setSupertypeId(conceptType.getSupertypeId());
         
-        for(ConceptType conceptType : conceptTypeList) {
-            edu.asu.conceptpower.app.core.model.impl.ConceptType tempConceptType = new edu.asu.conceptpower.app.core.model.impl.ConceptType();
-            tempConceptType.setTypeId(conceptType.getTypeId());
-            tempConceptType.setCreatorId(conceptType.getCreatorId());
-            tempConceptType.setTypeName(conceptType.getTypeName());
-            tempConceptType.setDescription(conceptType.getDescription());
-            tempConceptType.setMatches(conceptType.getMatches());
-            tempConceptType.setModified(conceptType.getModified());
-            tempConceptType.setSupertypeId(conceptType.getSupertypeId());
-            
-            mappedConceptType.add(tempConceptType);
-        }
         return mappedConceptType;
     }
    
-    public static List<edu.asu.conceptpower.app.core.model.impl.ConceptList> conceptListMapper(List<ConceptList> conceptLists){
-        List<edu.asu.conceptpower.app.core.model.impl.ConceptList> mappedConceptLists = new ArrayList<>();
+    public edu.asu.conceptpower.app.core.model.impl.ConceptList mapConceptList(ConceptList conceptList){
+        edu.asu.conceptpower.app.core.model.impl.ConceptList mappedConceptList= new edu.asu.conceptpower.app.core.model.impl.ConceptList();
+        mappedConceptList.setConceptListName(conceptList.getConceptListName());
+        mappedConceptList.setDescription(conceptList.getDescription());
+        mappedConceptList.setId(conceptList.getId());
         
-        for(ConceptList conceptList : conceptLists) {
-            edu.asu.conceptpower.app.core.model.impl.ConceptList tempConceptList= new edu.asu.conceptpower.app.core.model.impl.ConceptList();
-            tempConceptList.setConceptListName(conceptList.getConceptListName());
-            tempConceptList.setDescription(conceptList.getDescription());
-            tempConceptList.setId(conceptList.getId());
-            
-            mappedConceptLists.add(tempConceptList);
-        }
-        return mappedConceptLists;
+        return mappedConceptList;
     }
     
-    public static List<edu.asu.conceptpower.app.core.model.impl.ReviewRequest> reviewRequestMapper(List<ReviewRequest> reviewRequests){
-        List<edu.asu.conceptpower.app.core.model.impl.ReviewRequest> mappedReviewRequests = new ArrayList<>();
+    public edu.asu.conceptpower.app.core.model.impl.ReviewRequest mapReviewRequest(ReviewRequest reviewRequest){
         
-        for(ReviewRequest reviewRequest: reviewRequests) {
-            edu.asu.conceptpower.app.core.model.impl.ReviewRequest tempReviewRequest = new edu.asu.conceptpower.app.core.model.impl.ReviewRequest();
-            tempReviewRequest.setConceptId(reviewRequest.getConceptId());
-            tempReviewRequest.setCreatedAt(reviewRequest.getCreatedAt());
-            tempReviewRequest.setId(reviewRequest.getId());
-            tempReviewRequest.setRequest(reviewRequest.getRequest());
-            tempReviewRequest.setRequester(reviewRequest.getRequester());
-            tempReviewRequest.setResolver(reviewRequest.getResolver());
-            tempReviewRequest.setStatus(reviewRequest.getStatus());
-            
-            mappedReviewRequests.add(tempReviewRequest);
-        }
+        edu.asu.conceptpower.app.core.model.impl.ReviewRequest mappedRequest = new edu.asu.conceptpower.app.core.model.impl.ReviewRequest();
+        mappedRequest.setConceptId(reviewRequest.getConceptId());
+        mappedRequest.setCreatedAt(reviewRequest.getCreatedAt());
+        mappedRequest.setId(reviewRequest.getId());
+        mappedRequest.setRequest(reviewRequest.getRequest());
+        mappedRequest.setRequester(reviewRequest.getRequester());
+        mappedRequest.setResolver(reviewRequest.getResolver());
+        mappedRequest.setStatus(reviewRequest.getStatus());
         
-        return mappedReviewRequests;
+        return mappedRequest;
     }
     
-    public static List<edu.asu.conceptpower.app.core.model.impl.ConceptEntry> conceptEntryMapper(List<ConceptEntry> conceptEntries) {
-        List<edu.asu.conceptpower.app.core.model.impl.ConceptEntry> mappedConceptEntries = new ArrayList<>();
+    public edu.asu.conceptpower.app.core.model.impl.ConceptEntry mapConceptEntry(ConceptEntry conceptEntry) {
         
-        for(ConceptEntry conceptEntry: conceptEntries) {
-            edu.asu.conceptpower.app.core.model.impl.ConceptEntry tempConceptEntry = new edu.asu.conceptpower.app.core.model.impl.ConceptEntry();
-            tempConceptEntry.setId(conceptEntry.getId());
-            tempConceptEntry.setWordnetId(conceptEntry.getWordnetId());
-            tempConceptEntry.setWord(conceptEntry.getWord());
-            tempConceptEntry.setDescription(conceptEntry.getDescription());
-            tempConceptEntry.setPos(conceptEntry.getPos());
-            tempConceptEntry.setConceptList(conceptEntry.getConceptList());
-            tempConceptEntry.setTypeId(conceptEntry.getTypeId());
-            tempConceptEntry.setEqualTo(conceptEntry.getEqualTo());
-            tempConceptEntry.setSimilarTo(conceptEntry.getSimilarTo());
-            tempConceptEntry.setSynonymIds(conceptEntry.getSynonymIds());
-            tempConceptEntry.setSynsetIds(conceptEntry.getSynsetIds());
-            tempConceptEntry.setNarrows(conceptEntry.getNarrows());
-            tempConceptEntry.setBroadens(conceptEntry.getBroadens());
-            tempConceptEntry.setCreatorId(conceptEntry.getCreatorId());
-            tempConceptEntry.setModified(conceptEntry.getModified());
-            tempConceptEntry.setMergedIds(conceptEntry.getMergedIds());
-            tempConceptEntry.setDeleted(conceptEntry.isDeleted());
-            tempConceptEntry.setModifiedUser(conceptEntry.getModifiedUser());
-            tempConceptEntry.setAlternativeIds(setToCommaString(conceptEntry.getAlternativeIds()));
-            tempConceptEntry.setChangeEvents(changeEventMapper(conceptEntry.getChangeEvents(),conceptEntry.getId()));
+        edu.asu.conceptpower.app.core.model.impl.ConceptEntry mappedConceptEntry = new edu.asu.conceptpower.app.core.model.impl.ConceptEntry();
+        mappedConceptEntry.setId(conceptEntry.getId());
+        mappedConceptEntry.setWordnetId(conceptEntry.getWordnetId());
+        mappedConceptEntry.setWord(conceptEntry.getWord());
+        mappedConceptEntry.setDescription(conceptEntry.getDescription());
+        mappedConceptEntry.setPos(conceptEntry.getPos());
+        mappedConceptEntry.setConceptList(conceptEntry.getConceptList());
+        mappedConceptEntry.setTypeId(conceptEntry.getTypeId());
+        mappedConceptEntry.setEqualTo(conceptEntry.getEqualTo());
+        mappedConceptEntry.setSimilarTo(conceptEntry.getSimilarTo());
+        mappedConceptEntry.setSynonymIds(conceptEntry.getSynonymIds());
+        mappedConceptEntry.setSynsetIds(conceptEntry.getSynsetIds());
+        mappedConceptEntry.setNarrows(conceptEntry.getNarrows());
+        mappedConceptEntry.setBroadens(conceptEntry.getBroadens());
+        mappedConceptEntry.setCreatorId(conceptEntry.getCreatorId());
+        mappedConceptEntry.setModified(conceptEntry.getModified());
+        mappedConceptEntry.setMergedIds(conceptEntry.getMergedIds());
+        mappedConceptEntry.setDeleted(conceptEntry.isDeleted());
+        mappedConceptEntry.setModifiedUser(conceptEntry.getModifiedUser());
+        mappedConceptEntry.setAlternativeIds(setToCommaString(conceptEntry.getAlternativeIds()));
+        
+        for(ChangeEvent changeEvent: conceptEntry.getChangeEvents()) {
+            mappedConceptEntry.setChangeEvents(mapChangeEvent(changeEvent));
+        }
 
-            mappedConceptEntries.add(tempConceptEntry);
-        }
-        
-        return mappedConceptEntries;
+        return mappedConceptEntry;
     }
     
-    private static String setToCommaString(Set<String> alternativeIds) {
+    private String setToCommaString(Set<String> alternativeIds) {
         StringBuilder sb = new StringBuilder();
         
         for(String s: alternativeIds) {
             sb.append(s).append(",");
         }
         
-        return sb.substring(0,sb.length()-1); 
+        if(sb.length() > 0) {
+           return sb.substring(0,sb.length()-1); 
+        }
+        return null;
     }
     
-    private static List<edu.asu.conceptpower.app.core.model.impl.ChangeEvent> changeEventMapper(List<ChangeEvent> changeEvents, String conceptId){
-        List<edu.asu.conceptpower.app.core.model.impl.ChangeEvent> mappedChangeEvents = new ArrayList<>();
-        
-        for(ChangeEvent changeEvent: changeEvents) {
-            edu.asu.conceptpower.app.core.model.impl.ChangeEvent tempChangeEvent = new edu.asu.conceptpower.app.core.model.impl.ChangeEvent();
-            tempChangeEvent.setType(changeEvent.getType());
-            tempChangeEvent.setUserName(changeEvent.getUserName());
-            tempChangeEvent.setDate(changeEvent.getDate());
-            
-            mappedChangeEvents.add(tempChangeEvent);
-        }
-        
-        return mappedChangeEvents;
+    private edu.asu.conceptpower.app.core.model.impl.ChangeEvent mapChangeEvent(ChangeEvent changeEvent){
+       
+        edu.asu.conceptpower.app.core.model.impl.ChangeEvent mappedChangeEvent = new edu.asu.conceptpower.app.core.model.impl.ChangeEvent();
+        mappedChangeEvent.setType(ChangeEventTypes.values()[changeEvent.getType().ordinal()]);
+        mappedChangeEvent.setUserName(changeEvent.getUserName());
+        mappedChangeEvent.setDate(changeEvent.getDate());
+
+        return mappedChangeEvent;
     }
 }
