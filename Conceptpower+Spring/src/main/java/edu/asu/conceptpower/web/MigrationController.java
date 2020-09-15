@@ -12,8 +12,8 @@ import edu.asu.conceptpower.app.migration.impl.MigrationManager;
 import edu.asu.conceptpower.app.migration.impl.MigrationResult;
 
 /**
- * 
- * @author Keerthivasan
+ * Controller to initiate Migration process and render Migration page
+ * @author Keerthivasan Krishnamurthy
  * 
  */
 

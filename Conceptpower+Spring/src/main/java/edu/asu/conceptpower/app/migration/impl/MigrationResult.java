@@ -2,6 +2,13 @@ package edu.asu.conceptpower.app.migration.impl;
 
 import java.time.ZonedDateTime;
 
+/**
+ * Class to keep track of details about ongoing migration
+ * 
+ * @author Keerthivasan Krishnamurthy
+ * 
+ */
+
 public class MigrationResult{
     private int migratedFiles;
     private ZonedDateTime finished;

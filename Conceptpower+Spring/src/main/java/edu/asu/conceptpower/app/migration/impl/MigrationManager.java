@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 /**
+ * Class to Manage the entire migration process
  * 
  * @author Keerthivasan Krishnamurthy
  * 
