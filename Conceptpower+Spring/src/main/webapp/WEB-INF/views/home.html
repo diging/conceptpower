@@ -266,6 +266,11 @@
                </select>
             </div>
          </div>
+         <label class="form-check-label">
+ 			 <input th:if = "${conceptSearchBean.searchOnDescription == true}" type="checkbox" name="searchOnDescription" title='Search on description' checked/>
+ 			 <input th:if = "${conceptSearchBean.searchOnDescription != true}" type="checkbox" name="searchOnDescription" title='Search on description' />
+ 			 Search on description
+         </label>
          <div class="error" id="searchAlert"></div>
          <div class="error" th:if="${show_error_alert == true}" th:text="${error_alert_msg}"></div>
          <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit" th:onclick="'showFormProcessing()'" th:onsubmit="'hideFormProcessing()'">
