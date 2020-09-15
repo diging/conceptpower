@@ -1,0 +1,163 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <head>
+      <script>
+	      $(document).on('click', '#paginationTag', function(e) {
+	          var paginateData = $(this).data()
+	          window.location = "[[@{'/'}]]"+'auth/'+paginateData.listid+'/concepts?page='+paginateData.page;
+	      })
+         $(document).on('click', '#conceptDetails', function(e) {
+             var conceptid = $(this).data('conceptid');
+         
+             $.ajax({
+                 type: "GET",
+                 url: "[[@{'/conceptDetail'}]]",
+                 data: {
+                     conceptid: conceptid
+                 },
+                 success: function(details) {
+                	 details = $.parseJSON(details);
+                	 $("#conceptDetailsName").text(details.name);
+					 $("#conceptDetailsId").text(details.id);
+					 $("#conceptDetailsUri").text(details.uri);
+					 $("#conceptDetailsWordnetId").text(details.wordnetid);
+					 $("#conceptDetailsPos").text(details.pos);
+					 $("#conceptDetailsList").text(details.conceptlist);
+					 $("#conceptDetailsType").text(details.type);
+					 $("#conceptDetailsEqualTo").text(details.equalto);
+					 $("#conceptDetailsSimilarTo").text(details.similarto);
+					 $("#conceptDetailsCreator").text(details.creator);
+					 $("#conceptDetailsDesc").html(details.description);
+					 $("#conceptDetailsMergedIds").html(details.mergedIds);
+                 }
+             });
+         });
+         
+         $(document).on('click', '#openDeleteModal', function(e) {
+                var conceptId = $(this).data().conceptid;
+                $.ajax({
+                    type: "GET",
+                    url: "[[@{'/auth/conceptlist/deleteconcept/'}]]" + conceptId,
+                    contentType: "application/json",
+                    success: function(data) {
+                    	details = $.parseJSON(data);
+                    	console.log(details.conceptId)
+                    	$("#conceptDeleteDetailsId").text(details.conceptId);
+                   	$("#conceptDeleteId").text(details.conceptId);
+   						$("#conceptDeleteWord").text(details.word);
+   					 	$("#conceptDeleteDetailsWord").text(details.word);
+   					 	$("#conceptDeleteDetailsWordnetId").text(details.wordnetid);
+   					 	$("#conceptDeleteDetailsPos").text(details.pos);
+   					 	$("#conceptDeleteDetailsList").text(details.conceptList);
+   					 	$("#conceptDeleteDetailsType").text(details.type);
+   					 	$("#conceptDeleteDetailsEqualTo").text(details.equalto);
+   					 	$("#conceptDeleteDetailsSimilarTo").text(details.similarto);
+   					 	$("#conceptDeleteDetailsCreator").text(details.creator);
+   					 	$("#conceptDeleteDetailsDesc").text(details.description);
+   					 	$("#conceptDeleteDetailsModified").text(details.modified);
+   					 	$("#conceptDeleteDetailsSynonyms").text(details.synonyms);
+   					 	
+	   					/* Set the delete url to an Id, so that it can be used for delete operation */
+	   					$("#deleteUrl").val("[[@{'/auth/conceptlist/deleteconceptconfirm/'}]]"+details.conceptId+"?fromHomeScreenDelete=false"+"&listName="+details.conceptList+"&searchword="+details.searchword)
+	   					$('#deleteConcept').modal('show');
+                    }
+                });
+            });
+         $(document).on('submit','#deleteConfirmForm', function (event){
+        	 var action = '';
+        	 var url = $("#deleteUrl").val();
+        	 if(url)
+        	 	$(this).attr('action', $("#deleteUrl").val());
+        });
+         
+         $(document).on('hidden.bs.modal', '#deleteModalPlugin', function(event) {
+               $('#deleteModalPlugin').empty();
+         });
+         
+         $(document).on('hidden.bs.modal', '#conceptDetail', function(event) {
+                $('#conceptDetailsPlugin').empty();
+            });
+      </script>
+   </head>
+   <body class="body" layout:fragment="content">
+      <div class="resultsSection">
+         <div class="headerSection">
+            <div style="display: block;">
+               <h3 class="titleHeader">Concept List: <span th:text="${listid}"></span></h3>
+               <h4 class="subHeader">Here you find all stored concept list in the selected concept list</h4>
+            </div>
+         </div>
+         <font color="red" th:text="${luceneError}"></font>
+         <font color="red" th:text="${IndexerStatus}"></font>
+         <table class="table table-striped resultTable tableStyles" th:if="${result.size() > 0}" >
+            <thead>
+               <tr>
+                  <th></th>
+                  <th>Term</th>
+                  <th>ID</th>
+                  <th>Wordnet ID</th>
+                  <th>POS</th>
+                  <th>Concept List</th>
+                  <th>Description</th>
+                  <th>Type</th>
+                  <th>Synonyms</th>
+                  <th>Created By</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr th:each="list : ${result}">
+                  <td id="editConceptModal">
+                     <a th:href="@{'/auth/conceptlist/editconcept/'+${list.entry.id}}" 
+                        role="button" aria-expanded="false">
+                     <i class="fa fa-pencil-square-o dropright" aria-hidden="true">
+                     </i>
+                     </a>
+                     <i class="fa fa-trash-o" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${list.entry.id}" data-toggle="modal" data-target="#deleteConcept"></i>
+                  </td>
+                  <td data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" th:data-conceptid="${list.entry.id}" th:text="${list.entry.word}" style="color: #A34D63; cursor: pointer;"></td>
+                  <td th:text="${list.entry.id}"></td>
+                  <td th:text="${list.entry.wordnetId}" id="wordnet"> </td>
+                  <td th:text="${list.entry.pos}"></td>
+                  <td th:text="${list.entry.conceptList}"></td>
+                  <td th:text="${list.description}"></td>
+                  <td th:text="${list.type != null ? list.type.typeName : ''}"></td>
+                  <td>
+                     <div th:each="syn : ${list.synonyms}">
+                        <div th:text="'->'+${syn.word}"></div>
+                     </div>
+                  </td>
+                  <td th:text="${list.creator != null ? list.creator.username : ''}"></td>
+               </tr>
+            </tbody>
+         </table>
+         <div th:if="${result.size() <= 0}">No Concept Lists to display</div>
+      </div>
+      
+	    <div class="pagination" id="paginationSection" th:if="${result != null && result.size() > 0}">
+	      <ul class="pagination">
+	         <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}" th:data-page="${page - 1}" th:data-listid="${listid}" id="paginationTag">Previous</span>
+	         </li>
+	         <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}"  th:data-page="1" th:data-listid="${listid}" id="paginationTag">First</span>
+	         </li>
+	         <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}" th:data-page="${i}" th:data-listid="${listid}" id="paginationTag" th:text="${i}">
+	            <span class="sr-only">(current)</span></span>
+	         </li>
+	         <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}"  th:data-page="${count}" th:data-listid="${listid}" id="paginationTag">Last</span>
+	         </li>
+	         <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}"  th:data-page="${page + 1}" th:data-listid="${listid}" id="paginationTag">Next</span>
+	         </li>
+	      </ul>
+		</div>
+		<input type='hidden' id='deleteUrl'/>
+      <div th:insert="layouts/modals/deleteconcept :: deleteConcept"></div>
+      <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
+   </body>
+</html>

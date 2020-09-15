@@ -44,7 +44,7 @@ public class LuceneIndexController {
     public String onLoadLucene(ModelMap model) {
         IndexingEvent bean = manager.getTotalNumberOfWordsIndexed();
         model.addAttribute("bean", bean);
-        return "/auth/reIndex";
+        return "/layouts/lucene/indexconcepts";
     }
 
     /**

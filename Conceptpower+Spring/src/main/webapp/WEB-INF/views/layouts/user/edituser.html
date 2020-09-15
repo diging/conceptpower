@@ -1,0 +1,75 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <body class="body" layout:fragment="content">
+      <div class="conceptPowerWrapper">
+         <h3 class="title">Edit User</h3>
+         <form  th:object="${user}" th:action="@{/auth/user/edituser/store}" method='post'>
+            <table class="conceptPowerForm">
+               <tbody>
+                  <tr>
+                     <td>
+                        <input type="hidden" class="form-control" name="username" th:value="${user.username}" >
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width:172px; vertical-align:top;">
+                        <label for="fullname" class="formlabel">Full Name</label>
+                     </td>
+                     <td>
+                        <input type="text" class="form-control" name="fullname"  th:value="${user.fullname}" placeholder="Enter your full name....">
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width:40px; vertical-align:top;">
+                        <label for="email" class="formlabel">Email Id</label>
+                     </td>
+                     <td>
+                        <input type="email" class="form-control" name="email" th:value="${user.email}" placeholder="Enter your email id....">
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width:40px; vertical-align:top;">
+                        <label for="isAdmin" class="formlabel">Admin</label>
+                     </td>
+                     <td>
+                        <div class='custom-dropdown'>
+                           <select th:name="isAdmin" >
+                              <option th:value="yes" th:selected="${user.isAdmin == true}"  th:text="Yes"></option>
+                              <option th:value="no" th:selected="${user.isAdmin == false}"  th:text="No"></option>
+                           </select>
+                        </div>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width:172px; vertical-align:top;">
+                        <label for="password" class="formlabel">Password</label>
+                     </td>
+                     <td>
+                        <input type="password" class="form-control" name="password"  th:value="${user.password}" placeholder="Atleast 8 characters....">
+                     </td>
+                  </tr>
+                  <tr>
+                     <td style="width:172px; vertical-align:top;">
+                        <label for="retype pass" class="formlabel">Retype password</label>
+                     </td>
+                     <td>
+                        <input type="password" class="form-control" name="retype pass"  placeholder="Retype your password....">
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <div class="btnCenter">
+               <a th:href="@{/auth/user/list}"><button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" type="button" >
+               Cancel
+               </button></a>
+               <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" type="submit">
+               Save Changes
+               </button>              
+            </div>
+         </form>
+      </div>
+   </body>
+</html>

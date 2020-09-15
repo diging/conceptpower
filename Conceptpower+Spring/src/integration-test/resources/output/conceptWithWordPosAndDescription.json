@@ -4,7 +4,7 @@
 		"lemma": "indian pony",
 		"pos": "noun",
 		"description": "a small native range horse",
-		"conceptList": "WordNet",
+		"conceptList": "wordnet",
 		"deleted": false,
 		"concept_uri": "http://www.digitalhps.org/concepts/WID-02382039-N-02-Indian_pony",
 		"creator_id": "",

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   <div class="modal fade" id="siginModal" role="dialog" th:fragment="signin">
+      <div class="modal-dialog" id="requestBox">
+         <div class="modal-content" >
+            <div class="modal-body">
+               <div class="form-field">
+                  <div class="floatingform" >
+                     <div>
+                        <form th:action="@{/login}" method="post">
+                           <div>
+                              <h4>Username</h4>
+                           </div>
+                           <div>
+                              <input type='text' id="username" name='username' class="form-control" value='' placeholder="Enter username..." style="width:100%;">
+                           </div>
+                           <div>
+                              <h4>Password</h4>
+                           </div>
+                           <div><input type='password' name='password' class="form-control" id="password" placeholder="Enter Password..." style="width:100%;"/>
+                           </div>
+                           <div id="modalFooter">
+                              <div >
+                                 <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" name="submit" value="Login" type="submit" id="modalSignInBtn" >
+                                 Sign In
+                                 <i class="fa fa-sign-in"></i>
+                                 </button>
+                              </div>
+                              <div id="forgotPwd">
+                                 <a th:href="@{/forgot}">Forgot <br/> Password ?</a>
+                              </div>
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</html>

@@ -1,0 +1,69 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <body class="body" layout:fragment="content">
+         <div class="conceptPowerWrapper">
+         <h3 class="title">Edit concept type</h3>
+         <form th:action="@{/auth/concepttype/storeedittype}" method="post" th:object="${conceptTypeAddForm}">
+	         <table class="conceptPowerForm">
+	            <tbody>
+	               <tr>
+	                  <td style="width:40px; vertical-align:top;">
+	                     <label for="typeName"  class="formlabel">Type name</label>
+	                  </td>
+	                  <td>
+	                     <input type="text" th:name="typeName" class="form-control" th:value="${conceptTypeAddForm.typeName}">
+	                     <input type="hidden" th:value="${conceptTypeAddForm.oldTypeName}" name="oldTypeName" />
+	                     <input type="hidden" th:value="${conceptTypeAddForm.typeid}" name="typeid" />
+	                    <div class="formErrorAlert" th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}"></div>
+	                  </td>
+	               </tr>
+	               <tr>
+	                  <td style="width:172px; vertical-align:top;">
+	                     <label for="typeDescription"  class="formlabel">Type description</label>
+	                  </td>
+	                  <td>
+	                     <textarea class="form-control" th:name="typeDescription" rows="3" th:text="${conceptTypeAddForm.typeDescription}"></textarea>
+	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('typeDescription')}" th:errors="*{typeName}"></div>
+	                  </td>
+	               </tr>
+	               <tr>
+	                  <td style="width:40px; vertical-align:top;">
+	                     <label for="matches"  class="formlabel">Matches</label>
+	                  </td>
+	                  <td>
+	                     <textarea class="form-control" th:name="matches" rows="3" th:text="${conceptTypeAddForm.matches}"></textarea>
+	                     <div class="formErrorAlert" th:if="${#fields.hasErrors('matches')}" th:errors="*{matches}"></div>
+	                  </td>
+	               </tr>
+	               <tr>
+	                  <td style="width:40px; vertical-align:top;">
+	                     <label for="SuperType" class="formlabel">Super Type</label>
+	                  </td>
+	                  <td>
+	                  	<div class="custom-dropdown">
+	                     <select th:name="superType" >
+	                     	<option th:selected="${conceptTypeAddForm.superType == null}" th:value='null' >No super type selected</option>
+						    <option th:each="types: ${conceptTypeAddForm.types}" th:selected="${types.value == conceptTypeAddForm.superType}" th:value="${types.value}" th:text="${types.value}">
+						    </option>
+				 		 </select>
+				 		</div>
+	                  </td>
+	               </tr>
+	            </tbody>
+	         </table>
+	         <div class="btnCenter">
+	         <a th:href="@{/auth/concepttype}">
+	         <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" type="button" >
+               		Cancel
+               	</button></a>
+	         <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" type="submit">
+	         	Save changes
+	         </button>
+	         </div>
+	         </form>
+         </div>
+   </body>
+</html>

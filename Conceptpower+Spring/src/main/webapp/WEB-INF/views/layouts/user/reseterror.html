@@ -1,0 +1,14 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <body class = "body" layout:fragment="content">
+      <div class="newConcept">
+         <h1 style="margin-bottom: 20px;">Reset your Password</h1>
+         <h3 style="margin-bottom: 20px;">Error verifying your identity.</h3>
+         <div th:text="${errormsg}"></div>
+      </div>
+      <div th:insert="layouts/modals/signin :: signin"></div>
+   </body>
+</html>

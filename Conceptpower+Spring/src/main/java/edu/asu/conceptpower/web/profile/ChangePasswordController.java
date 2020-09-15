@@ -27,7 +27,7 @@ public class ChangePasswordController {
     public String showChangePassword(Model model, Principal principal) {
         model.addAttribute("passwordBean", new PasswordBean());
 
-        return "auth/profile/password";
+        return "layouts/profile/changepassword";
     }
 
     @RequestMapping(value = "/auth/profile/password/change", method = RequestMethod.POST)
@@ -35,7 +35,7 @@ public class ChangePasswordController {
             Principal principal) {
         if (results.hasErrors()) {
             passwordBean.setOldPassword("");
-            return "auth/profile/password";
+            return "layouts/profile/changepassword";
         }
 
         User user = userManager.findUser(principal.getName());
@@ -49,6 +49,6 @@ public class ChangePasswordController {
         model.addAttribute("error_alert_msg",
                 "Your password could not be changed. The old password you've entered was incorrect.");
         model.addAttribute("passwordBean", new PasswordBean());
-        return "auth/profile/password";
+        return "layouts/profile/changepassword";
     }
 }

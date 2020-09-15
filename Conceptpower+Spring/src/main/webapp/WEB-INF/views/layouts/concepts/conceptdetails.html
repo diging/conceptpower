@@ -1,0 +1,55 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <body layout:fragment="content">
+   <div class="conceptDetailsModal" id="conceptDetailForm">
+      <div class="modal-content" >
+         <div class="modal-header">
+            <div class="modal-title" style="font-size: 20px;">Concept Details: <span th:text="${entry.id}"></span></div>
+         </div>
+         <div class="modal-body">
+            <ul class="list-group" style="margin-bottom: 0px;">
+            	<li class="list-group-item">
+                  <span class="conceptDetailsKey">Word:</span>
+                  <p class="conceptDetailsValue" id="conceptDetailsWordnetId" th:text="${entry.word}"></p>
+               </li>
+                 <li class="list-group-item list-group-item-info">
+                  <span class="conceptDetailsKey">Description:</span>
+                  <p class="conceptDetailsValue" id="conceptDetailsDesc" th:text="${entry.description}"></p>
+               </li>
+               <li class="list-group-item">
+                  <span class="conceptDetailsKey">POS:</span>
+                  <p class="conceptDetailsValue" id="conceptDetailsPos" th:text="${entry.pos}"></p>
+               </li>
+               <li class="list-group-item list-group-item-info">
+                  <span class="conceptDetailsKey">Concept List:</span>
+                  <p class="conceptDetailsValue" id="conceptDetailsList" th:text="${entry.conceptList}"></p>
+               </li>
+               <li class="list-group-item">
+                  <span class="conceptDetailsKey">WordNet Id:</span>
+                  <p class="conceptDetailsValue" id="conceptDetailsWordnetId" th:text="${entry.wordnetId}"></p>
+               </li>
+               <li class="list-group-item list-group-item-info">
+                  <span class="conceptDetailsKey">Synonym Ids:</span>
+                  <p class="conceptDetailsValue" id="conceptDetailsSynonymId" th:text="${entry.synonymIds}"></p>
+               </li>
+               <li class="list-group-item">
+                  <span class="conceptDetailsKey">Alternative Ids:</span>
+                  <p class="conceptDetailsValue" id="conceptDetailsAlternativeId" th:text="${entry.alternativeIds}"></p>
+               </li>
+               <li class="list-group-item list-group-item-info">
+                  <span class="conceptDetailsKey">URI:</span>
+                  <p class="conceptDetailsValue" id="conceptDetailsUri" th:text="${uri}"></p>
+               </li>
+               <li class="list-group-item">
+                  <span class="conceptDetailsKey">Creator:</span>
+                  <p class="conceptDetailsValue" id="conceptDetailsCreatorId" th:text="${entry.creatorId}"></p>
+               </li>
+            </ul>
+         </div>
+      </div>
+   </div>
+   </body>
+</html>

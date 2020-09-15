@@ -13,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 public class HomeController {
-    
 	/**
 	 * This method simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model,@ModelAttribute("conceptSearchBean")ConceptSearchBean conceptSearchBean) {
-		return "welcome";
+		return "home";
 	}
 	
 	@RequestMapping(value = "/forbidden", method = RequestMethod.GET)

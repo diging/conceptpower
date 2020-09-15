@@ -82,11 +82,12 @@ public class ConceptSearchController {
     public String search(HttpServletRequest req, ModelMap model, @RequestParam(defaultValue = "1") String page,
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(required = false) String sortColumn,
+            @RequestParam(required = false) String numberOfRecordsPerPage,
             @RequestParam(required = false) String conceptIdsToMerge,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results, ServletRequest request)
                     throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
-            return "conceptsearch";
+            return "home";
         }   
         
         conceptSearchBean.setWord(conceptSearchBean.getWord().trim());
@@ -102,19 +103,20 @@ public class ConceptSearchController {
             model.addAttribute("show_error_alert", true);
             model.addAttribute("error_alert_msg", indexerRunning);
             // Need to include command Object
-            return "conceptsearch";
+            return "home";
         }
         int pageInt = new Integer(page);
         int sortDirInt = new Integer(sortDir);
+        int numRecords = numberOfRecordsPerPage!=null&&numberOfRecordsPerPage!="" ? new Integer(numberOfRecordsPerPage) : defaultPageSize ;
         int pageCount = 0;
         try {
             found = conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos(), null, pageInt, defaultPageSize, sortColumn, sortDirInt);
+                    conceptSearchBean.getPos(), null, pageInt, numRecords, sortColumn, sortDirInt);
             pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos(), null);
+                    conceptSearchBean.getPos(), null, numRecords);
         } catch (IndexerRunningException e) {
             model.addAttribute(indexerStatus, e.getMessage());
-            return "conceptsearch";
+            return "home";
         }
        
        
@@ -136,8 +138,9 @@ public class ConceptSearchController {
         model.addAttribute("count", pageCount);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("sortColumn", sortColumn);
+        model.addAttribute("numRecords", numRecords);
         
-        return "conceptsearch";
+        return "home";
     }
 
 }

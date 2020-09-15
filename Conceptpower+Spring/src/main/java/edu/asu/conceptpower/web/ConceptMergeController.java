@@ -79,7 +79,7 @@ public class ConceptMergeController {
         mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
                 .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
         mav.addObject("posValues", POS.posValues);
-        mav.setViewName("/auth/conceptMerge");
+        mav.setViewName("/layouts/concepts/mergeconcepts");
         return mav;
     }
 
@@ -94,12 +94,17 @@ public class ConceptMergeController {
             Set<String> localConceptIds = conceptsMergeBean.getMergeIds().stream().filter(
                     conceptId -> IdType.LOCAL_CONCEPT_ID == conceptTypesService.getConceptTypeByConceptId(conceptId))
                     .collect(Collectors.toSet());
+            List<ConceptEntry> conceptEntries = new ArrayList<>();
+            for (String id : conceptsMergeBean.getMergeIds()) {
+                conceptEntries.add(conceptManager.getConceptEntry(id));
+            }
             mav.addObject("localConceptIds", localConceptIds);
             mav.addObject("types", conceptTypesManager.getAllTypes());
             mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
                     .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
             mav.addObject("posValues", POS.posValues);
-            mav.setViewName("/auth/conceptMerge");
+            mav.addObject("conceptEntries", conceptEntries);
+            mav.setViewName("/layouts/concepts/mergeconcepts");
             return mav;
         }
         conceptMergeService.mergeConcepts(conceptsMergeBean, principal.getName());
