@@ -10,14 +10,14 @@
          //Function to get required data for pagination
          $(document).on('click', '#paginationTag', function(e) {
              var paginateData = $(this).data();
-             paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, paginateData.numrecords)
+             paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, paginateData.numrecords, paginateData.searchondescription);
          });
          
          
          //Function to get required data for sorting
          $(document).on('click', '.sortTag', function(e) {
              var sortData = $(this).data();
-             paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos, sortData.numrecords)
+             paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos, sortData.numrecords, sortData.searchondescription)
          });
          
          function finalizeMerge() {
@@ -83,7 +83,7 @@
                  $("#mergeConcept").show();
                  $("#prepareMergeConcept").hide();
              });
-             $(':checkbox').change(function(e) {
+             $('.conceptMergeCheckbox').on('change', function(e) {
                  if (this.checked) {
                      mergeConcepts($(this).val())
                  } else {
@@ -193,14 +193,15 @@
          }
          
          //Function to handle pagination and sort
-         function paginate(page, sortDir, sortColumn, word, pos, numRecords) {
+         function paginate(page, sortDir, sortColumn, word, pos, numRecords, searchOnDescription) {
              var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
          
              if (conceptIdsToMerge) {
                  window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords 
-               		  +'&conceptIdsToMerge=' + conceptIdsToMerge;
+               		  +'&conceptIdsToMerge=' + conceptIdsToMerge + '&searchOnDescription=' +searchOnDescription;
              } else {
-                 window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords;
+                 window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords
+                 + '&searchOnDescription='+searchOnDescription;
              }
          }
          
@@ -266,7 +267,7 @@
                </select>
             </div>
          </div>
-         <label class="form-check-label">
+         <label style="margin-top: 5px;"class="form-check-label">
  			 <input th:if = "${conceptSearchBean.searchOnDescription == true}" type="checkbox" name="searchOnDescription" title='Search on description' checked/>
  			 <input th:if = "${conceptSearchBean.searchOnDescription != true}" type="checkbox" name="searchOnDescription" title='Search on description' />
  			 Search on description
@@ -385,7 +386,7 @@
                      <i class="fa fa-trash-o" th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" th:data-searchword="${conceptSearchBean.word}" data-toggle="modal" data-target="#deleteConcept"></i>
                   </td>
                   <td sec:authorize="isAuthenticated()">
-                     <input type="checkbox"  id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
+                     <input type="checkbox" class="conceptMergeCheckbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
                   </td>
                   <td data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #A34D63; cursor: pointer;"></td>
                   <td th:text="${concept.entry.id}"></td>
@@ -394,7 +395,6 @@
                   <td th:text="${concept.entry.conceptList}"></td>
                   <td th:text="${concept.description}"></td>
                   <td th:text="${concept.type != null ? concept.type.typeName : ''}"></td>
-                 <!--  <td><i class="fa fa-comment" aria-hidden="true"></i></td>  -->
                </tr>
             </tbody>
          </table>
@@ -404,24 +404,24 @@
          <ul class="pagination">
             <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" th:data-numRecords="${numRecords}" id="paginationTag">Previous</span>
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" th:data-numRecords="${numRecords}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" id="paginationTag">Previous</span>
             </li>
             <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="1" th:data-numRecords="${numRecords}" id="paginationTag">First</span>
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="1" th:data-numRecords="${numRecords}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" id="paginationTag">First</span>
             </li>
             <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${i}" th:data-numRecords="${numRecords}" id="paginationTag" th:text="${i}">
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${i}" th:data-numRecords="${numRecords}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" id="paginationTag" th:text="${i}">
                <span class="sr-only">(current)</span></span>
             </li>
             <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${count}" th:data-numRecords="${numRecords}" id="paginationTag">Last</span>
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${count}" th:data-numRecords="${numRecords}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" id="paginationTag">Last</span>
             </li>
             <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" th:data-numRecords="${numRecords}" id="paginationTag">Next</span>
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" th:data-numRecords="${numRecords}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" id="paginationTag">Next</span>
             </li>
          </ul>
       </div>
