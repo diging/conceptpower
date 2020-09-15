@@ -61,12 +61,15 @@ public class ConceptTypeEditController {
             @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm) {
 
         ConceptType type = typeManager.getType(typeid);
-
+        
+        if (type.getSupertypeId()==null) {
+            conceptTypeAddForm.setSuperType("none");
+        }
         conceptTypeAddForm.setTypeName(type.getTypeName());
         conceptTypeAddForm.setOldTypeName(type.getTypeName());
         conceptTypeAddForm.setTypeDescription(type.getDescription());
         conceptTypeAddForm.setMatches(type.getMatches());
-        conceptTypeAddForm.setSuperType(type.getSupertypeId().trim());
+        conceptTypeAddForm.setSuperType(type.getSupertypeId());
         conceptTypeAddForm.setTypeid(type.getTypeId());
 
         ConceptType[] allTypes = typeManager.getAllTypes();
@@ -79,7 +82,7 @@ public class ConceptTypeEditController {
         types.remove(typeid);
         conceptTypeAddForm.setTypes(types);
         conceptTypeAddForm.setTypeid(typeid);
-        return "/auth/concepttype/edittype";
+        return "/layouts/concepts/editconcepttype";
     }
 
     /**
@@ -98,7 +101,7 @@ public class ConceptTypeEditController {
             BindingResult results) {
 
         if (results.hasErrors()) {
-            return "/auth/concepttype/edittype";
+            return "/layouts/concepts/editconcepttype";
         }
         ConceptType type = typeManager.getType(conceptTypeAddForm.getTypeid());
         type.setTypeName(conceptTypeAddForm.getTypeName());
@@ -111,7 +114,7 @@ public class ConceptTypeEditController {
         if (!modified.trim().isEmpty())
             modified += ", ";
         type.setModified(modified + userId + "@" + (new Date()).toString());
-
+        
         typeManager.storeModifiedConceptType(type);
         return "redirect:/auth/concepttype";
     }

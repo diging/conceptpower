@@ -32,7 +32,7 @@ public class UserListController {
 		User[] users = userManager.getAllUsers();
 		model.addAttribute("users", users);
 
-		return "auth/user/list";
+		return "/layouts/user/usermanagement";
 	}
 
 }

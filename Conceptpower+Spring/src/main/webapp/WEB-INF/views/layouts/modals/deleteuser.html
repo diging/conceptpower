@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   <body class="body" layout:fragment="content">
+      <div class="modal fade" id="deleteButton" role="dialog">
+         <div class="modal-dialog" id="requestBox" style="margin-right: auto;margin-top: 300px;">
+            <div class="modal-content" >
+               <div class="modal-body">
+                  <form
+                     th:object="${user}"
+                     th:action="@{/auth/user/confirmdeleteuser/}"
+                     method='post' id="edituserform">
+                     <div>
+                        <input type="hidden" th:value="${user.username}" name="username" />
+                        <input type="hidden" th:value="${user.fullname}" name="fullname" />
+                        <h4 style="text-align: center;">Are you sure you want to delete?</h4>
+                        <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" data-dismiss="modal" type="button"  style="margin-left:15%">
+               				Cancel
+               			</button>
+                        <button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:5%">Delete User</button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

@@ -60,7 +60,7 @@ public class ConceptListController {
 
         List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
         model.addAttribute("result", conceptLists);
-        return "/auth/conceptlist";
+        return "/layouts/concepts/conceptlist";
     }
 
     /**
@@ -98,7 +98,7 @@ public class ConceptListController {
         model.addAttribute("result", foundConcepts);
         model.addAttribute("count", pageCount);
         model.addAttribute("listid", list);
-        return "/auth/conceptlist/concepts";
+        return "/layouts/concepts/conceptlistreferences";
     }
 
     /**

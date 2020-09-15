@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+   <body class="body" layout:fragment="content">
+      <div class="modal fade" id="deleteType" role="dialog">
+         <div class="modal-dialog" id="requestBox" style="margin-right: auto;margin-top: 300px;">
+            <div class="modal-content" >
+               <div class="modal-body">
+                  <div th:if="${enabledelete == false}">
+                     <h5>You cannot delete this type since some concepts are using this type.</h5>
+                     <h5>Delete all existing concepts that use this type to enable delete.</h5>
+                  </div>
+                  <div th:if="${enabledelete == true || enabledelete == null}">
+                     <h5 style="text-align: center;">Are you sure you want to delete?</h5>
+                     <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" data-dismiss="modal" type="button"  style="margin-left:15%">
+               			Cancel
+               		</button>
+                     <a th:href="@{'/auth/concepttype/deleteconcepttypeconfirm/'+${typeid}}">
+                     <button type="submit" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-left:5%">Delete Type</button>
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>

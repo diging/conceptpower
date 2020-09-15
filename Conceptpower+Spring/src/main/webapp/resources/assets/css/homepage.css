@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
+
+.navbar {
+    padding: 15px 0px 15px 0px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 40px 0px 40px;
+    margin: 15px 0px 15px 0px;
+}
+
+.navbar-brand{
+	padding: 0px !important;
+}
+
+.btn.signInBtn{
+	border-radius: 30px;
+	width: 115px;
+	height: 44px;
+	background-color: #A34D63;
+	color: white;
+	padding: 0px 20px 0px 20px;
+}
+
+html,body{
+	height: 100%;
+	font-family:Nunito Sans;
+  	margin: 0;
+}
+
+.conceptDetailsModal .modal-content{
+	border-radius:30px;
+	width:45%;
+	overflow:auto;
+	margin: auto;
+	margin-top: 200px;
+}
+
+.conceptDetailsModal .modal-header{
+	background-color:#A34D63;
+	color:white;
+	font-size:15px;
+}
+.form-control{
+	border-radius: 5px;
+}
+
+
+#modalFooter {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+
+}
+.modal-dialog {
+
+    width: 300px;
+    margin: 90px 40px auto auto;
+
+}
+
+#forgotPwd {
+    font-size: 14px;
+}
+
+.searchSection {
+    padding: 0px 40px 0px 40px;
+    align-content: stretch;
+    justify-content: space-between;
+}
+
+.input-group-append {
+    display: flex;
+}
+
+.input-group{
+	display:flex;
+}
+.dropdown-item {	
+    display: block;
+    text-align: center;
+	margin: 10px;
+	cursor: pointer;
+}
+
+.btn#searchDropDown{
+	border-radius: 0px 4px 4px 0px;
+	height: 46px;
+	width: 150px;
+	background-color: transparent;
+}
+
+.dropdown-menu {
+	left:auto;
+	right:0;
+}
+
+#searchInput{
+	border-radius: 30px !important;
+	height: 36px;
+	font-size: 16px;
+}
+
+#searchBtn, #modalSignInBtn {
+    margin-top: 10px;
+    width: unset;
+    padding: 4px 10px 4px 10px;
+    height: unset;
+}
+
+.footerBox {
+	color: #A34D63;
+    width: 100%;
+}
+
+.footer {
+   	margin: 15px 15px 15px 15px;
+	padding: 0px 30px 0px 30px;
+	display: flex;
+	justify-content: space-between;
+}	
+
+.resultsSection {
+    padding: 15px 40px 20px 40px;
+}
+
+thead{
+	background-color:#A34D63;
+	color:white;
+}
+
+.tableStyles {
+    -webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+}
+
+.pagination {
+	margin: 0px 20px 0px 20px;
+}
+
+.pagination>li>a {
+	color: #A34D63;
+}
+
+.pagination>li>a:hover {
+	color: #A34D63;
+}
+
+.pagination>.active>span {
+	background-color: #A34D63;
+	border-color: transparent;
+}
+
+.pagination>.active>span:hover {
+	background-color: #A34D63;
+	cursor: pointer;
+}
+
+table{
+	width: 100%;
+}
+
+.btn:active, .btn.active {
+    box-shadow: unset;
+}
+
+.wrapper {
+	
+  min-height: 100%;
+  
+  /* This is the same as the height of the footer */
+  margin-bottom: -75px; 
+}
+
+.footerBox,.push {
+  height: 75px;
+}
+
+.navbar-default {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #333;
+}
+
+
+.fa-user-circle-o {
+    font-size: 38px !important;
+    color: #A34D63;
+}
+
+.conceptPowerBtn {
+    margin: 15px 0px 15px 0px;
+    background-color: #A34D63;
+    color: white;
+    border-radius: 30px;
+    padding: 4px 10px 4px 10px
+}
+
+.cardLayout {
+    -webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+    text-align: center;
+    border-radius: 30px;
+    width: 200px;
+    padding: 15px;
+}
+
+.btn-primary {
+	width: 100%;
+	border-radius: 20px;
+	margin: 5px 0px 5px 0px;
+}
+
+#editBtn {
+	background-color: #A34D63;
+	border-color: transparent;
+	color: white;
+}
+
+#editBtn:hover {
+	background-color: #A34D63;
+	border-color: transparent;
+	color: white;
+	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+}
+
+.fa-trash-o{
+	color:	#888888;
+	cursor: pointer;
+}
+
+.fa-trash-o:hover{
+    color:#383838;
+}
+
+
+.signInBtn:hover {
+	background-color: #A34D63;
+	-webkit-box-shadow: 4px 4px 15px rgba(0,0,0,0.3);
+	
+}
+
+.dropdown-menu {
+	border: transparent;
+	border-radius: 20px;
+	overflow: auto;
+	min-width: 125px;
+}
+
+.cardLayout.dropdown-menu {
+	margin-left: 25px;
+    right: unset;
+}
+
+.conceptDetailsModal .modal-content, .conceptDetailsModal .modal-body{
+	padding: unset;	
+}
+
+
+.conceptDetailsModal .modal-title{
+	display: inline-block
+}
+
+.close, .close:hover, .close:focus{
+	opacity:unset;
+}
+
+.list-group-item-info {  
+    color: #333 !important;
+	background-color: #eee !important;
+}
+
+.list-group-item {
+    margin-bottom: unset;
+    border: unset;
+    padding: 5px 0px 5px 0px;
+    display:flex;
+}
+
+.conceptDetailsKey {
+	width: 20%;
+    margin-right: 15px;
+    display: inline-table;
+    text-align: right;
+    color: #A34D63;
+}
+
+.conceptDetailsValue {
+	width: 80%;
+}
+
+a {
+	color: #A34D63;
+}
+
+a:hover {
+	color: #333;
+}
+
+.custom-select {
+  position: relative;
+}
+
+.custom-select select {
+  display: none; /*hide original SELECT element: */
+}
+
+.select-selected {
+  background-color: DodgerBlue;
+}
+
+/* Style the arrow inside the select element: */
+.select-selected:after {
+  position: absolute;
+  content: "";
+  top: 14px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: #fff transparent transparent transparent;
+}
+
+/* Point the arrow upwards when the select box is open (active): */
+.select-selected.select-arrow-active:after {
+  border-color: transparent transparent #fff transparent;
+  top: 7px;
+}
+
+/* style the items (options), including the selected item: */
+.select-items div,.select-selected {
+  color: #ffffff;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+  cursor: pointer;
+}
+
+/* Style items (options): */
+.select-items {
+  position: absolute;
+  background-color: DodgerBlue;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+/* Hide the items when the select box is closed: */
+.select-hide {
+  display: none;
+}
+
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.pagination>li>a, .pagination>li>span, .pagination>li>span:hover{
+	color: #A34D63;
+}
+
+.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
+    background-color: #A34D63 !important;
+    border-color: #A34D63 !important;
+}
+
+#sortTag, #paginationTag{
+	cursor: pointer;
+}
+
+.table.indexTable.tableStyles {
+    margin-top: 40px;
+}
+
+.POS {
+	-moz-appearance: none; 
+	-webkit-appearance: none; 
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	margin-right: 10px;
+}
+
+.synonymDialog > .modal-content{
+    width: 800px;
+    overflow-y: auto;
+}
+.synonymDialog{
+	margin-top: 100px !important;
+	margin-right: auto;
+	margin-top: 300px;
+	width: 800px;
+}
+
+.logoutBtn {
+    border: none;
+    background: 
+    transparent;
+    padding: 0px;
+}
+
+.formErrorAlert {
+    color: red;
+}
+
+table#addedSynonymsTable {
+    font-size: 14px;
+    width: 90%;
+    margin-left: 5%;
+}
+
+.userProfile {
+    float: right;
+    margin-right: 2%;
+}
+
+.error {
+    color: red;
+}
