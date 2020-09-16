@@ -154,9 +154,10 @@ public class ConceptManager implements IConceptManager {
 
         Map<String, String> fieldMap = new HashMap<>();
         
-        fieldMap.put(SearchFieldNames.WORD, word);
-        if(isSearchOnDescription)
+        fieldMap.put(SearchFieldNames.WORD, word);   
+        if(isSearchOnDescription) {
             fieldMap.put(SearchFieldNames.DESCRIPTION, word );
+        }
         fieldMap.put(SearchFieldNames.POS, pos);
         fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
 
