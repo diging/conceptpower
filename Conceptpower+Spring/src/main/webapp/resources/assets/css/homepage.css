@@ -420,3 +420,11 @@ table#addedSynonymsTable {
 .error {
     color: red;
 }
+
+button:focus {
+    outline: none !important;
+}
+
+.pagination>li{
+	cursor: pointer;
+}
