@@ -9,7 +9,7 @@ import edu.asu.conceptpower.core.ReviewRequest;
 /**
  * This class is a custom argument matcher to compare Predicate<ReviewRequest> classes
  * 
- * @author keerthivasan
+ * @author Keerthivasan Krishnamurthy
  *
  */
 

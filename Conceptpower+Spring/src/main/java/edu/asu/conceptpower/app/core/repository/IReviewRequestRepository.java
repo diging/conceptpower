@@ -8,7 +8,7 @@ import edu.asu.conceptpower.app.core.model.impl.ReviewRequest;
 /**
  * Review Request repository
  * 
- * @author Keerthivasan
+ * @author Keerthivasan Krishnamurthy
  * 
  */
 

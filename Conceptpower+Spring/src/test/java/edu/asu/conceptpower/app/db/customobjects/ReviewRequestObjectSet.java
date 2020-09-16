@@ -8,12 +8,12 @@ import com.db4o.ext.ExtObjectSet;
 
 /*
  * This class is to construct a valid return object of type ObjectSet for queryByExample() method
- * @author: Keerthivasan
+ * @author: Keerthivasan Krishnamurthy
  */
 
 public class ReviewRequestObjectSet extends ArrayList<Object> implements ObjectSet<Object> {
 
-    private static final long serialVersionUID = 2102665110331711624L;
+    private static final long serialVersionUID = 1L;
 
     @Override
     public ExtObjectSet ext() {

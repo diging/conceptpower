@@ -9,12 +9,12 @@ import edu.asu.conceptpower.core.ReviewRequest;
 
 /*
  * This class is to construct a valid return object of type ObjectSet for query() method
- * @author: Keerthivasan
+ * @author: Keerthivasan Krishnamurthy
  */
 
 public class PredicateObjectSet extends ArrayList<ReviewRequest> implements ObjectSet<ReviewRequest> {
 
-    private static final long serialVersionUID = 2102665110331711624L;
+    private static final long serialVersionUID = 1L;
 
     @Override
     public ExtObjectSet ext() {

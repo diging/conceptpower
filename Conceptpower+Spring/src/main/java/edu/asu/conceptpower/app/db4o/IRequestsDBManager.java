@@ -6,8 +6,9 @@ import edu.asu.conceptpower.core.ReviewRequest;
 
 
 /**
+ * Manager interface holding all Review Request related services
  * 
- * @author Keerthivasan
+ * @author Keerthivasan Krishnamurthy
  * 
  */
 public interface IRequestsDBManager {
