@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.asu.conceptpower.app.core.IConceptListManager;
+import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.validation.ConceptListAddValidator;
 
 @Controller
 public class ConceptListAddController {
 
     @Autowired
-    private IConceptListManager conceptListManager;
+    private IConceptListService conceptListService;
 
     @Autowired
     private ConceptListAddValidator validator;
@@ -57,7 +57,7 @@ public class ConceptListAddController {
         if (result.hasErrors()) {
             return "/layouts/concepts/addconceptlist";
         }
-        conceptListManager.addConceptList(conceptListAddForm.getListName(), conceptListAddForm.getDescription());
+        conceptListService.addConceptList(conceptListAddForm.getListName(), conceptListAddForm.getDescription());
         return "redirect:/auth/conceptlist";
     }
 

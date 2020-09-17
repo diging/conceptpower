@@ -12,18 +12,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.core.impl.ConceptListManager;
-import edu.asu.conceptpower.app.db4o.DBNames;
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
-import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.app.core.impl.ConceptListService;
+import edu.asu.conceptpower.app.core.model.impl.ConceptList;
+import edu.asu.conceptpower.app.core.repository.IConceptListRepository;
 
 public class ConceptListManagerTest {
 
 	@Mock
-	private IConceptDBManager client = Mockito.mock(IConceptDBManager.class);
+	private IConceptListRepository client = Mockito.mock(IConceptListRepository.class);
 
 	@InjectMocks
-	private ConceptListManager conceptListManager;
+	private ConceptListService conceptListManager;
 
 	private ConceptList conceptList = new ConceptList();
 
@@ -31,31 +30,31 @@ public class ConceptListManagerTest {
 	public void init() {
 		MockitoAnnotations.initMocks(this);
 
-		List list = new ArrayList();
+		List<ConceptList> list = new ArrayList<>();
 		conceptList.setConceptListName("First List");
 		conceptList.setDescription("First List Description");
 		list.add(conceptList);
 
-		Mockito.when(client.getAllElementsOfType(ConceptList.class)).thenReturn(list);
-		Mockito.when(client.getConceptList("First List")).thenReturn(conceptList);
+		Mockito.when(client.findAll()).thenReturn(list);
+		Mockito.when(client.findByConceptListName("First List")).thenReturn(conceptList);
 	}
 
 	@Test
 	public void addConceptListTest() {
 		conceptListManager.addConceptList("List Name", "List Description");
-		Mockito.verify(client).store(ArgumentMatchers.any(ConceptList.class), Mockito.eq(DBNames.DICTIONARY_DB));
+		Mockito.verify(client).save(ArgumentMatchers.any(ConceptList.class));
 
 	}
 
 	@Test
 	public void deleteConceptListTest() {
 		conceptListManager.deleteConceptList("List Name");
-		Mockito.verify(client).deleteConceptList(Mockito.eq("List Name"));
+		Mockito.verify(client).deleteByConceptListName(Mockito.eq("List Name"));
 	}
 
 	@Test
 	public void getAllConceptListsTest() {
-		List list = conceptListManager.getAllConceptLists();
+		List<ConceptList> list = conceptListManager.getAllConceptLists();
 		Assert.assertNotNull(list);
 		Assert.assertEquals(1, list.size());
 	}
@@ -94,7 +93,7 @@ public class ConceptListManagerTest {
 		ConceptList list = new ConceptList();
 		list.setConceptListName("List Name");
 		conceptListManager.storeModifiedConceptList(list, "List Name 2");
-		Mockito.verify(client).update(Mockito.eq(list), Mockito.eq("List Name 2"), Mockito.eq(DBNames.DICTIONARY_DB));
+		Mockito.verify(client).save(Mockito.eq(list));
 
 	}
 }

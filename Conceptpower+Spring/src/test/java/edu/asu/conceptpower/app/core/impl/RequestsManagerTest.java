@@ -144,7 +144,6 @@ public class RequestsManagerTest {
     @Test
     public void test_getAllReviews_failure() {
         List<ReviewRequest> response = requestManager.getAllReviews("WID-10126926-N-05-Albert");
-        
-        assertNull(response);
+        assertEquals(true, response.isEmpty());
     }
 }

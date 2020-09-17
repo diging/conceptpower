@@ -11,14 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.asu.conceptpower.app.core.IConceptListManager;
+import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptManager;
+import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
@@ -26,7 +27,6 @@ import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 
 @Controller
@@ -36,7 +36,7 @@ public class ConceptListController {
     private IConceptManager conceptManager;
     
     @Autowired
-    private IConceptListManager conceptListManager;
+    private IConceptListService conceptListService;
 
     @Autowired
     private TypeDatabaseClient typeDatabaseClient;
@@ -58,7 +58,7 @@ public class ConceptListController {
     @RequestMapping(value = "auth/conceptlist")
     public String prepareShowConceptList(ModelMap model) {
 
-        List<ConceptList> conceptLists = conceptListManager.getAllConceptLists();
+        List<ConceptList> conceptLists = conceptListService.getAllConceptLists();
         model.addAttribute("result", conceptLists);
         return "/layouts/concepts/conceptlist";
     }
@@ -72,13 +72,13 @@ public class ConceptListController {
      * @return Return sting value to redirect user to a particular concept list
      *         page
      */
-    @RequestMapping(value = "auth/{listid}/concepts", method = RequestMethod.GET)
+    @GetMapping(value = "auth/{listid}/concepts")
     public String getConceptsOfConceptList(@PathVariable("listid") String list, ModelMap model,
             @RequestParam(defaultValue = "1") String page,
             @RequestParam(defaultValue = IConceptDBManager.DESCENDING + "") String sortDir) throws LuceneException {
 
-        int pageInt = new Integer(page);
-        int sortDirInt = new Integer(sortDir);
+        int pageInt = Integer.parseInt(page);
+        int sortDirInt = Integer.parseInt(sortDir);
         int pageCount = conceptManager.getPageCount(list);
         
         List<ConceptEntry> founds = conceptManager.getConceptListEntries(list, pageInt, -1, "id", sortDirInt);
@@ -109,7 +109,7 @@ public class ConceptListController {
      * @return Map containing concept details
      * @throws LuceneException 
      */
-    @RequestMapping(method = RequestMethod.GET, value = "conceptDetail", produces = "application/json")
+    @GetMapping(value = "conceptDetail", produces = "application/json")
     public @ResponseBody ResponseEntity<String> getConceptDetails(
             @RequestParam("conceptid") String conceptid) throws LuceneException {
         ConceptEntry entry = conceptManager.getConceptEntry(conceptid);
@@ -119,10 +119,10 @@ public class ConceptListController {
             wrapper = wrappers.get(0);
         }
         else {
-            return new ResponseEntity<String>("No entry for the provided id.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("No entry for the provided id.", HttpStatus.BAD_REQUEST);
         }
         
-        Map<String, String> details = new HashMap<String, String>();
+        Map<String, String> details = new HashMap<>();
 
         details.put("name", wrapper.getEntry().getWord());
         details.put("id", wrapper.getEntry().getId());
@@ -154,6 +154,6 @@ public class ConceptListController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-        return new ResponseEntity<String>(new JSONObject(details).toString(), responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new JSONObject(details).toString(), responseHeaders, HttpStatus.OK);
     }
 }

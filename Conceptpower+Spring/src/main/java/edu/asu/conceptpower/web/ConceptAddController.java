@@ -32,10 +32,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.asu.conceptpower.app.core.IConceptListManager;
+import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -44,7 +45,6 @@ import edu.asu.conceptpower.app.profile.impl.ServiceRegistry;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.app.validation.ConceptAddValidator;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.web.backing.ConceptAddBean;
 
@@ -63,7 +63,7 @@ public class ConceptAddController {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptListManager conceptListManager;
+    private IConceptListService conceptListService;
 
     @Autowired
     private IConceptTypeManger conceptTypesManager;
@@ -101,15 +101,15 @@ public class ConceptAddController {
         Map<String, String> serviceNameIdMap = serviceRegistry.getServiceNameIdMap();
         conceptAddBean.setServiceNameIdMap(serviceNameIdMap);
         ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-        Map<String, String> types = new LinkedHashMap<String, String>();
+        Map<String, String> types = new LinkedHashMap<>();
         for (ConceptType conceptType : allTypes) {
             types.put(conceptType.getTypeId(), conceptType.getTypeName());
         }
 
         conceptAddBean.setTypes(types);
 
-        List<ConceptList> allLists = conceptListManager.getAllConceptLists();
-        Map<String, String> lists = new LinkedHashMap<String, String>();
+        List<ConceptList> allLists = conceptListService.getAllConceptLists();
+        Map<String, String> lists = new LinkedHashMap<>();
         for (ConceptList conceptList : allLists) {
             lists.put(conceptList.getConceptListName(), conceptList.getConceptListName());
         }

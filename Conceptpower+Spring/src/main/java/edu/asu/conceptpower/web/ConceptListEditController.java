@@ -13,20 +13,21 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.conceptpower.app.core.IConceptListManager;
+import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.validation.ConceptListAddValidator;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
 
 /**
  * This class provides all the methods required for editing a concept list
@@ -41,7 +42,7 @@ public class ConceptListEditController {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptListManager conceptListManager;
+    private IConceptListService conceptListService;
 
     @Autowired
     private ConceptListAddValidator validator;
@@ -69,11 +70,11 @@ public class ConceptListEditController {
      *            Generic model holder for servlet
      * @return Returns a string value to redirect user to edit list page
      */
-    @RequestMapping(value = "auth/conceptlist/editlist/{listname}", method = RequestMethod.GET)
+    @GetMapping(value = "auth/conceptlist/editlist/{listname}")
     public String prepareEditList(@PathVariable("listname") String listName, ModelMap model,
             @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm) {
 
-        ConceptList list = conceptListManager.getConceptList(listName);
+        ConceptList list = conceptListService.getConceptList(listName);
         conceptListAddForm.setListName(list.getConceptListName());
         conceptListAddForm.setDescription(list.getDescription());
         conceptListAddForm.setOldListName(listName);
@@ -100,7 +101,7 @@ public class ConceptListEditController {
             return "/layouts/concepts/EditConceptList";
         }
 
-        ConceptList list = conceptListManager.getConceptList(conceptListAddForm.getOldListName());
+        ConceptList list = conceptListService.getConceptList(conceptListAddForm.getOldListName());
         list.setConceptListName(conceptListAddForm.getListName());
         list.setDescription(conceptListAddForm.getDescription());
 
@@ -111,7 +112,7 @@ public class ConceptListEditController {
             return "/layouts/concepts/EditConceptList";
         }
 
-        conceptListManager.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
+        conceptListService.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
 
         // modify the name for all the existing concepts under this concept
         // list

@@ -5,17 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.conceptpower.app.core.IConceptListManager;
+import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptManager;
+import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
 
 @Controller
 public class ConceptListDeleteController {
@@ -27,7 +26,7 @@ public class ConceptListDeleteController {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptListManager conceptListManager;
+    private IConceptListService conceptListService;
 
     /**
      * This method provides information of a concept list to be deleted
@@ -38,9 +37,9 @@ public class ConceptListDeleteController {
      *            A generic model holder for Servlet
      * @return String to redirect user to delete concept list page
      */
-    @RequestMapping(value = "auth/conceptlist/deletelist/{name}", method = RequestMethod.GET)
+    @GetMapping(value = "auth/conceptlist/deletelist/{name}")
     public String prepareDeleteConceptList(@PathVariable("name") String name, ModelMap model) throws LuceneException {
-        ConceptList list = conceptListManager.getConceptList(name);
+        ConceptList list = conceptListService.getConceptList(name);
         model.addAttribute("listName", list.getConceptListName());
         model.addAttribute("description", list.getDescription());
 
@@ -64,10 +63,10 @@ public class ConceptListDeleteController {
      *            Concept list name
      * @return String value to redirect user to concept list page
      */
-    @RequestMapping(value = "auth/conceptlist/deleteconceptlistconfirm/{listname}", method = RequestMethod.GET)
+    @GetMapping(value = "auth/conceptlist/deleteconceptlistconfirm/{listname}")
     public String deleteConceptList(@PathVariable("listname") String listName) {
 
-        conceptListManager.deleteConceptList(listName);
+        conceptListService.deleteConceptList(listName);
 
         return "redirect:/auth/conceptlist";
     }
@@ -78,7 +77,7 @@ public class ConceptListDeleteController {
      * 
      * @return String value to redirect user to concept list page
      */
-    @RequestMapping(value = "auth/conceptlist/canceldelete/", method = RequestMethod.GET)
+    @GetMapping(value = "auth/conceptlist/canceldelete/")
     public String cancelConceptListDelete() {
         return "redirect:/auth/conceptlist";
     }

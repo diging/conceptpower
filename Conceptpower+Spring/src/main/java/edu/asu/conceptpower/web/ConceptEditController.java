@@ -17,8 +17,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,10 +28,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.bean.ConceptEditBean;
 import edu.asu.conceptpower.app.core.Constants;
-import edu.asu.conceptpower.app.core.IConceptListManager;
+import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.service.IConceptEditService;
@@ -37,7 +40,6 @@ import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 
 /**
@@ -53,7 +55,7 @@ public class ConceptEditController {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptListManager conceptListManager;
+    private IConceptListService conceptListService;
 
     @Autowired
     private IConceptWrapperCreator wrapperCreator;
@@ -101,7 +103,7 @@ public class ConceptEditController {
         
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
         ConceptType[] allTypes = conceptTypesManager.getAllTypes();
-        List<ConceptList> allLists = conceptListManager.getAllConceptLists();
+        List<ConceptList> allLists = conceptListService.getAllConceptLists();
         conceptEditBean.setWord(concept.getWord());
         conceptEditBean.setSelectedPosValue(concept.getPos().toLowerCase());
         conceptEditBean.setConceptListValue(concept.getConceptList());
@@ -133,7 +135,7 @@ public class ConceptEditController {
      * @return String value which redirect user to a particular concept list
      *         page
      */
-    @RequestMapping(value = "auth/concepts/canceledit", method = RequestMethod.GET)
+    @GetMapping(value = "auth/concepts/canceledit")
     public String cancelEdit(@RequestParam(value = "fromHomeScreen", required = false) String fromHomeScreen) {
         if (fromHomeScreen.equalsIgnoreCase("true")) {
             return "redirect:/login";
@@ -155,7 +157,7 @@ public class ConceptEditController {
      * @throws IllegalAccessException
      * @throws IndexerRunningException
      */
-    @RequestMapping(value = "auth/conceptlist/editconcept/edit/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "auth/conceptlist/editconcept/edit/{id}")
     public String confirmEdit(@PathVariable("id") String id, HttpServletRequest req, Principal principal,
             @ModelAttribute("conceptEditBean") ConceptEditBean conceptEditBean, BindingResult result, Model model)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
@@ -175,7 +177,7 @@ public class ConceptEditController {
         conceptEntry.setModified(userId);
         
         if (indexService.isIndexerRunning()) {
-            List<ConceptList> allLists = conceptListManager.getAllConceptLists();
+            List<ConceptList> allLists = conceptListService.getAllConceptLists();
             conceptEditBean.setConceptList(allLists);
             ConceptType[] allTypes = conceptTypesManager.getAllTypes();
             conceptEditBean.setTypes(allTypes);
@@ -207,12 +209,12 @@ public class ConceptEditController {
      * @throws IllegalAccessException
      * @throws IndexerRunningException
      */
-    @RequestMapping(method = RequestMethod.GET, value = "conceptEditSynonymView")
+    @GetMapping(value = "conceptEditSynonymView")
     public ResponseEntity<String> searchConcept(@RequestParam("synonymname") String synonymname)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry[] entries = conceptManager.getConceptListEntriesForWord(synonymname.trim());
         List<ConceptEntry> synonyms = Arrays.asList(entries);
-        return new ResponseEntity<String>(buildJSON(synonyms, true, false), HttpStatus.OK);
+        return new ResponseEntity<>(buildJSON(synonyms, true, false), HttpStatus.OK);
     }
 
     /**
@@ -225,10 +227,10 @@ public class ConceptEditController {
      * @return List of existing synonyms
      * @throws JSONException
      */
-    @RequestMapping(method = RequestMethod.GET, value = "getConceptEditSynonyms")
+    @GetMapping(value = "getConceptEditSynonyms")
     public ResponseEntity<String> getSynonyms(@RequestParam("conceptid") String conceptid, ModelMap model)
             throws LuceneException {
-        List<ConceptEntry> synonyms = new ArrayList<ConceptEntry>();
+        List<ConceptEntry> synonyms = new ArrayList<>();
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
         String synonymIds = concept.getSynonymIds();
 
@@ -246,7 +248,7 @@ public class ConceptEditController {
                 }
             }
         }
-        return new ResponseEntity<String>(buildJSON(synonyms, false, true), HttpStatus.OK);
+        return new ResponseEntity<>(buildJSON(synonyms, false, true), HttpStatus.OK);
     }
 
     /**
@@ -259,21 +261,21 @@ public class ConceptEditController {
      *            A generic model holder for Servlet
      * @return synonym details
      */
-    @RequestMapping(method = RequestMethod.GET, value = "getConceptAddSynonyms")
+    @GetMapping(value = "getConceptAddSynonyms")
     public ResponseEntity<String> getSynonymRows(@RequestParam("synonymid") String synonymid, ModelMap model)
             throws LuceneException {
         ConceptEntry synonym = null;
         synonym = conceptManager.getConceptEntry(synonymid);
 
-        List<ConceptEntry> synonymList = new ArrayList<ConceptEntry>();
+        List<ConceptEntry> synonymList = new ArrayList<>();
         synonymList.add(synonym);
-        return new ResponseEntity<String>(buildJSON(synonymList, false, true), HttpStatus.OK);
+        return new ResponseEntity<>(buildJSON(synonymList, false, true), HttpStatus.OK);
     }
 
     private String buildJSON(List<ConceptEntry> synonyms, boolean posRequired, boolean synonymRequired) {
 
         int i = 0;
-        StringBuffer jsonStringBuilder = new StringBuffer("{");
+        StringBuilder jsonStringBuilder = new StringBuilder("{");
         jsonStringBuilder.append("\"Total\"");
         jsonStringBuilder.append(":");
         jsonStringBuilder.append(synonyms.size());
@@ -305,7 +307,7 @@ public class ConceptEditController {
         return jsonStringBuilder.toString();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "conceptEdit/search")
+    @GetMapping(value = "conceptEdit/search")
     public @ResponseBody ResponseEntity<Object> searchConcept(@RequestParam("concept") String concept,
             @RequestParam("pos") String pos) throws IllegalAccessException, LuceneException {
 
@@ -316,7 +318,7 @@ public class ConceptEditController {
             ConceptEntry[] found = null;
 
             if (indexService.isIndexerRunning()) {
-                return new ResponseEntity<Object>("Indexer is running. Please try again later.",
+                return new ResponseEntity<>("Indexer is running. Please try again later.",
                         HttpStatus.SERVICE_UNAVAILABLE);
             }
 
@@ -324,14 +326,14 @@ public class ConceptEditController {
                 found = conceptManager.getConceptListEntriesForWordPOS(concept, pos, Constants.WORDNET_DICTIONARY, -1,
                         numberOfRecords, null, 0);
             } catch (IndexerRunningException ie) {
-                return new ResponseEntity<Object>("Indexer is running. Please try again later.",
+                return new ResponseEntity<>("Indexer is running. Please try again later.",
                         HttpStatus.SERVICE_UNAVAILABLE);
             }
 
             foundConcepts = new CopyOnWriteArrayList<>(wrapperCreator.createWrappers(found));
         }
 
-        return new ResponseEntity<Object>(foundConcepts, HttpStatus.OK);
+        return new ResponseEntity<>(foundConcepts, HttpStatus.OK);
     }
 
 }
