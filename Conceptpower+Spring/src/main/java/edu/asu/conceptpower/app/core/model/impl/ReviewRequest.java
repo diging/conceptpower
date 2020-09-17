@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -37,6 +39,7 @@ public class ReviewRequest implements Serializable{
     private String request;
     
     @Column(name="status")
+    @Enumerated(EnumType.STRING)
     private ReviewStatus status;
     
     @Column(name="requestor")
