@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.core.repository;
+package edu.asu.conceptpower.app.repository;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;

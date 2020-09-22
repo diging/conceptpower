@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IConceptTypeService;
 import edu.asu.conceptpower.app.core.model.impl.ConceptType;
-import edu.asu.conceptpower.app.core.repository.IConceptTypeRepository;
+import edu.asu.conceptpower.app.repository.IConceptTypeRepository;
 
 @Service
 public class ConceptTypeService implements IConceptTypeService{
