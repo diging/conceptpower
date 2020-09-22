@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.conceptpower.app.core.IConceptTypeService;
-import edu.asu.conceptpower.app.core.model.impl.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.validation.ConceptTypeAddValidator;
 
 /**

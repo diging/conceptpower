@@ -2,8 +2,8 @@ package edu.asu.conceptpower.app.core;
 
 import java.util.List;
 
-import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.exceptions.DictionaryExistsException;
+import edu.asu.conceptpower.app.model.ConceptList;
 
 /*
  * Service to manage Concept List logics and transactions

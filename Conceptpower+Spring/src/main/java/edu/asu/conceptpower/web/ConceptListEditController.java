@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
-import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.validation.ConceptListAddValidator;
 import edu.asu.conceptpower.core.ConceptEntry;
 

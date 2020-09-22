@@ -2,7 +2,8 @@ package edu.asu.conceptpower.app.repository;
 
 import org.springframework.stereotype.Repository;
 
-import edu.asu.conceptpower.app.core.model.impl.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**

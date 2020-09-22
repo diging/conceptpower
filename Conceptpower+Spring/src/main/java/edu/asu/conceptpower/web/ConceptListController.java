@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;

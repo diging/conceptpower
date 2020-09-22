@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.core.model.impl;
+package edu.asu.conceptpower.app.model;
 
 import java.io.Serializable;
 

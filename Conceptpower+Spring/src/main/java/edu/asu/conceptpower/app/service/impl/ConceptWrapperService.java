@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptTypeService;
-import edu.asu.conceptpower.app.core.model.impl.ConceptList;
-import edu.asu.conceptpower.app.core.model.impl.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptList;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.service.IConceptWrapperService;
 
 /**

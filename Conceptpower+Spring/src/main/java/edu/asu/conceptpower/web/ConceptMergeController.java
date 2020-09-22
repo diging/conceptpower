@@ -24,11 +24,11 @@ import edu.asu.conceptpower.app.core.IConceptTypeService;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
 import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.core.POS;
-import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.service.IConceptMergeService;
 import edu.asu.conceptpower.core.ConceptEntry;
 

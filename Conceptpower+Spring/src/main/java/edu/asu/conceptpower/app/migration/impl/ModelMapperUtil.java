@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
-import edu.asu.conceptpower.app.core.model.impl.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
@@ -21,8 +21,8 @@ import edu.asu.conceptpower.servlet.core.ChangeEvent;
 @Component
 public class ModelMapperUtil {
     
-    public edu.asu.conceptpower.app.core.model.impl.ConceptType mapConceptType(ConceptType conceptType){  
-        edu.asu.conceptpower.app.core.model.impl.ConceptType mappedConceptType = new edu.asu.conceptpower.app.core.model.impl.ConceptType();
+    public edu.asu.conceptpower.app.model.ConceptType mapConceptType(ConceptType conceptType){  
+        edu.asu.conceptpower.app.model.ConceptType mappedConceptType = new edu.asu.conceptpower.app.model.ConceptType();
         mappedConceptType.setTypeId(conceptType.getTypeId());
         mappedConceptType.setCreatorId(conceptType.getCreatorId());
         mappedConceptType.setTypeName(conceptType.getTypeName());
@@ -34,8 +34,8 @@ public class ModelMapperUtil {
         return mappedConceptType;
     }
    
-    public edu.asu.conceptpower.app.core.model.impl.ConceptList mapConceptList(ConceptList conceptList){
-        edu.asu.conceptpower.app.core.model.impl.ConceptList mappedConceptList= new edu.asu.conceptpower.app.core.model.impl.ConceptList();
+    public edu.asu.conceptpower.app.model.ConceptList mapConceptList(ConceptList conceptList){
+        edu.asu.conceptpower.app.model.ConceptList mappedConceptList= new edu.asu.conceptpower.app.model.ConceptList();
         mappedConceptList.setConceptListName(conceptList.getConceptListName());
         mappedConceptList.setDescription(conceptList.getDescription());
         mappedConceptList.setId(conceptList.getId());
@@ -43,9 +43,9 @@ public class ModelMapperUtil {
         return mappedConceptList;
     }
     
-    public edu.asu.conceptpower.app.core.model.impl.ReviewRequest mapReviewRequest(ReviewRequest reviewRequest){
+    public edu.asu.conceptpower.app.model.ReviewRequest mapReviewRequest(ReviewRequest reviewRequest){
         
-        edu.asu.conceptpower.app.core.model.impl.ReviewRequest mappedRequest = new edu.asu.conceptpower.app.core.model.impl.ReviewRequest();
+        edu.asu.conceptpower.app.model.ReviewRequest mappedRequest = new edu.asu.conceptpower.app.model.ReviewRequest();
         mappedRequest.setConceptId(reviewRequest.getConceptId());
         mappedRequest.setCreatedAt(reviewRequest.getCreatedAt());
         mappedRequest.setId(reviewRequest.getId());
@@ -57,9 +57,9 @@ public class ModelMapperUtil {
         return mappedRequest;
     }
     
-    public edu.asu.conceptpower.app.core.model.impl.ConceptEntry mapConceptEntry(ConceptEntry conceptEntry) {
+    public edu.asu.conceptpower.app.model.ConceptEntry mapConceptEntry(ConceptEntry conceptEntry) {
         
-        edu.asu.conceptpower.app.core.model.impl.ConceptEntry mappedConceptEntry = new edu.asu.conceptpower.app.core.model.impl.ConceptEntry();
+        edu.asu.conceptpower.app.model.ConceptEntry mappedConceptEntry = new edu.asu.conceptpower.app.model.ConceptEntry();
         mappedConceptEntry.setId(conceptEntry.getId());
         mappedConceptEntry.setWordnetId(conceptEntry.getWordnetId());
         mappedConceptEntry.setWord(conceptEntry.getWord());
@@ -100,9 +100,9 @@ public class ModelMapperUtil {
         return null;
     }
     
-    private edu.asu.conceptpower.app.core.model.impl.ChangeEvent mapChangeEvent(ChangeEvent changeEvent){
+    private edu.asu.conceptpower.app.model.ChangeEvent mapChangeEvent(ChangeEvent changeEvent){
        
-        edu.asu.conceptpower.app.core.model.impl.ChangeEvent mappedChangeEvent = new edu.asu.conceptpower.app.core.model.impl.ChangeEvent();
+        edu.asu.conceptpower.app.model.ChangeEvent mappedChangeEvent = new edu.asu.conceptpower.app.model.ChangeEvent();
         mappedChangeEvent.setType(ChangeEventTypes.values()[changeEvent.getType().ordinal()]);
         mappedChangeEvent.setUserName(changeEvent.getUserName());
         mappedChangeEvent.setDate(changeEvent.getDate());

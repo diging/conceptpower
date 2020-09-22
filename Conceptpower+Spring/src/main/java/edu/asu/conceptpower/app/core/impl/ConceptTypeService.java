@@ -11,7 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IConceptTypeService;
-import edu.asu.conceptpower.app.core.model.impl.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.repository.IConceptTypeRepository;
 
 @Service
