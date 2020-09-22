@@ -2,6 +2,7 @@ package edu.asu.conceptpower.web;
 
 import java.security.Principal;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,12 +15,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeService;
+import edu.asu.conceptpower.app.core.model.impl.ConceptType;
 import edu.asu.conceptpower.app.validation.ConceptTypeAddValidator;
-import edu.asu.conceptpower.core.ConceptType;
 
 /**
  * This class provides required methods for concept type creation
@@ -31,7 +32,7 @@ import edu.asu.conceptpower.core.ConceptType;
 public class ConceptTypeAddController {
 
     @Autowired
-    private IConceptTypeManger conceptTypesManager;
+    private IConceptTypeService conceptTypeService;
 
     @Autowired
     private ConceptTypeAddValidator validator;
@@ -51,9 +52,9 @@ public class ConceptTypeAddController {
     @RequestMapping(value = "auth/concepttype/addtype")
     public String prepareTypeAddView(ModelMap model,
             @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm) {
-        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+        List<ConceptType> allTypes = conceptTypeService.getAllTypes();
 
-        Map<String, String> types = new LinkedHashMap<String, String>();
+        Map<String, String> types = new LinkedHashMap<>();
         for (ConceptType conceptType : allTypes) {
             types.put(conceptType.getTypeId(), conceptType.getTypeName());
         }
@@ -70,7 +71,7 @@ public class ConceptTypeAddController {
      *            Holds information of a logged in user
      * @return String value to redirect user to concept type list page
      */
-    @RequestMapping(value = "auth/concepts/createconcepttype", method = RequestMethod.POST)
+    @PostMapping(value = "auth/concepts/createconcepttype")
     public String createConceptType(HttpServletRequest req, Principal principal,
             @Validated @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm,
             BindingResult results) {
@@ -85,7 +86,7 @@ public class ConceptTypeAddController {
         type.setSupertypeId(conceptTypeAddForm.getSuperType());
         type.setCreatorId(principal.getName());
 
-        conceptTypesManager.addConceptType(type);
+        conceptTypeService.addConceptType(type);
         return "redirect:/auth/concepttype";
     }
 }

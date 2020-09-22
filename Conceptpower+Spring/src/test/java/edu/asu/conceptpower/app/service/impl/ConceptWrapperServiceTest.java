@@ -13,9 +13,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.core.impl.ConceptListService;
-import edu.asu.conceptpower.app.core.impl.ConceptTypesManager;
+import edu.asu.conceptpower.app.core.impl.ConceptTypeService;
 import edu.asu.conceptpower.app.core.model.impl.ConceptList;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.core.model.impl.ConceptType;
 
 public class ConceptWrapperServiceTest {
 
@@ -23,7 +23,7 @@ public class ConceptWrapperServiceTest {
     private ConceptListService conceptListManager;
 
     @Mock
-    private ConceptTypesManager conceptTypesManager;
+    private ConceptTypeService conceptTypeService;
 
     @InjectMocks
     private ConceptWrapperService conceptWrapperService;
@@ -96,13 +96,13 @@ public class ConceptWrapperServiceTest {
         secondConceptType.setTypeName("TYPE-2");
         secondConceptType.setTypeId("TYPE-4567");
 
-        ConceptType[] conceptTypes = new ConceptType[2];
-        conceptTypes[0] = firstConceptType;
-        conceptTypes[1] = secondConceptType;
+        List<ConceptType> conceptTypes = new ArrayList<>();
+        conceptTypes.add(firstConceptType);
+        conceptTypes.add(secondConceptType);
 
-        Mockito.when(conceptTypesManager.getAllTypes()).thenReturn(conceptTypes);
+        Mockito.when(conceptTypeService.getAllTypes()).thenReturn(conceptTypes);
         Map<String, String> conceptTypesMap = conceptWrapperService.fetchAllConceptTypes();
-        Mockito.verify(conceptTypesManager).getAllTypes();
+        Mockito.verify(conceptTypeService).getAllTypes();
         Assert.assertEquals(2, conceptTypesMap.size());
         Assert.assertEquals(firstConceptType.getTypeName(), conceptTypesMap.get(firstConceptType.getTypeId()));
         Assert.assertEquals(secondConceptType.getTypeName(), conceptTypesMap.get(secondConceptType.getTypeId()));
@@ -115,12 +115,12 @@ public class ConceptWrapperServiceTest {
         firstConceptType.setTypeName("Type-1");
         firstConceptType.setTypeId("TYPE-1234");
 
-        ConceptType[] conceptTypes = new ConceptType[1];
-        conceptTypes[0] = firstConceptType;
+        List<ConceptType> conceptTypes = new ArrayList<>();
+        conceptTypes.add(firstConceptType);
 
-        Mockito.when(conceptTypesManager.getAllTypes()).thenReturn(conceptTypes);
+        Mockito.when(conceptTypeService.getAllTypes()).thenReturn(conceptTypes);
         Map<String, String> conceptTypesMap = conceptWrapperService.fetchAllConceptTypes();
-        Mockito.verify(conceptTypesManager).getAllTypes();
+        Mockito.verify(conceptTypeService).getAllTypes();
         Assert.assertEquals(1, conceptTypesMap.size());
         Assert.assertEquals(firstConceptType.getTypeName(), conceptTypesMap.get(firstConceptType.getTypeId()));
     }
@@ -128,9 +128,9 @@ public class ConceptWrapperServiceTest {
     @Test
     public void test_fetchAllConceptTypes_successForEmptyConceptTypes() {
 
-        Mockito.when(conceptTypesManager.getAllTypes()).thenReturn(null);
+        Mockito.when(conceptTypeService.getAllTypes()).thenReturn(null);
         Map<String, String> conceptTypesMap = conceptWrapperService.fetchAllConceptTypes();
-        Mockito.verify(conceptTypesManager).getAllTypes();
+        Mockito.verify(conceptTypeService).getAllTypes();
         Assert.assertEquals(0, conceptTypesMap.size());
     }
 }

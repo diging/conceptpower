@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.app.core.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,10 +65,10 @@ public class ConceptListService implements IConceptListService{
         String id = prefix + UUID.randomUUID().toString();
 
         while (true) {
-            // if there doesn't exist an object with this id return id
-            Optional<ConceptList> results = conceptListRepository.findById(id);
-            if (!results.isPresent())
+
+            if (id != null && !conceptListRepository.existsById(id)) {
                 return id;
+            }
 
             // try other id
             id = prefix + UUID.randomUUID().toString();

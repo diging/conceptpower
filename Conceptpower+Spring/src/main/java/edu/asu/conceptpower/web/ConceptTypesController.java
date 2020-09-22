@@ -8,9 +8,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeService;
+import edu.asu.conceptpower.app.core.model.impl.ConceptType;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
-import edu.asu.conceptpower.core.ConceptType;
 
 /**
  * This class provides methods for viewing concepts of a particular type
@@ -22,7 +22,7 @@ import edu.asu.conceptpower.core.ConceptType;
 public class ConceptTypesController {
 
     @Autowired
-    private IConceptTypeManger conceptTypesManager;
+    private IConceptTypeService conceptTypeService;
 
     /**
      * This method provides information about all the types for concept type
@@ -35,31 +35,31 @@ public class ConceptTypesController {
      * @throws NoSuchFieldException
      */
     @RequestMapping(value = "auth/concepttype")
-    public String prepareShowConceptTypes(ModelMap model, @RequestParam(defaultValue = "1") String page,
+    public String prepareShowConceptTypes(ModelMap model, @RequestParam(defaultValue = "0") String page,
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(defaultValue = "typeName") String sortColumn) throws NoSuchFieldException, SecurityException {
 
-        ConceptType[] types = conceptTypesManager.getAllTypes();
+        List<ConceptType> types = conceptTypeService.getAllTypes();
 
-        int pageInt = new Integer(page);
-        int sortDirInt = new Integer(sortDir);
+        int pageInt = Integer.parseInt(page);
+        int sortDirInt = Integer.parseInt(sortDir);
 
-        List<ConceptType> conceptTypes = conceptTypesManager.getConceptTypes(pageInt, -1, sortColumn, sortDirInt);
+        List<ConceptType> conceptTypes = conceptTypeService.getConceptTypes(pageInt, -1, sortColumn, sortDirInt);
 
         // to show super type name instead of type id in type list view
         for (ConceptType type : types) {
             if (type.getSupertypeId() != null && !type.getSupertypeId().equals("")) {
-                ConceptType supertype = conceptTypesManager.getType(type.getSupertypeId());
+                ConceptType supertype = conceptTypeService.getType(type.getSupertypeId());
                 if (supertype != null)
                     type.setSupertypeId(supertype.getTypeName());
             }
         }
 
-        if (pageInt < 1) {
-            pageInt = 1;
+        if (pageInt < 0) {
+            pageInt = 0;
         }
 
-        int pageCount = conceptTypesManager.getPageCount();
+        int pageCount = conceptTypeService.getPageCount();
         if (pageInt > pageCount) {
             pageInt = pageCount;
         }

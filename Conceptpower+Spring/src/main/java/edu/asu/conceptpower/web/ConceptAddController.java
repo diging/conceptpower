@@ -34,9 +34,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeService;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.core.model.impl.ConceptList;
+import edu.asu.conceptpower.app.core.model.impl.ConceptType;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -45,7 +46,6 @@ import edu.asu.conceptpower.app.profile.impl.ServiceRegistry;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.app.validation.ConceptAddValidator;
 import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.web.backing.ConceptAddBean;
 
 /**
@@ -66,7 +66,7 @@ public class ConceptAddController {
     private IConceptListService conceptListService;
 
     @Autowired
-    private IConceptTypeManger conceptTypesManager;
+    private IConceptTypeService conceptTypeService;
 
     @Autowired
     private ServiceRegistry serviceRegistry;
@@ -100,7 +100,7 @@ public class ConceptAddController {
 
         Map<String, String> serviceNameIdMap = serviceRegistry.getServiceNameIdMap();
         conceptAddBean.setServiceNameIdMap(serviceNameIdMap);
-        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+        List<ConceptType> allTypes = conceptTypeService.getAllTypes();
         Map<String, String> types = new LinkedHashMap<>();
         for (ConceptType conceptType : allTypes) {
             types.put(conceptType.getTypeId(), conceptType.getTypeName());
