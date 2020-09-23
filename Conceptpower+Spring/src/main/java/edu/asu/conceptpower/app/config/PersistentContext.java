@@ -41,7 +41,7 @@ public class PersistentContext {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        entityManagerFactoryBean.setPackagesToScan("edu.asu.conceptpower.app.core.model");
+        entityManagerFactoryBean.setPackagesToScan("edu.asu.conceptpower.app.model");
  
         Properties jpaProperties = new Properties();
      
