@@ -15,8 +15,8 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
-import edu.asu.conceptpower.app.core.impl.RequestsManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.manager.RequestsManager;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.util.IURIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;

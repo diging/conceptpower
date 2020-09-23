@@ -12,13 +12,13 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.core.IAlternativeIdService;
 import edu.asu.conceptpower.app.core.IIndexService;
-import edu.asu.conceptpower.app.core.impl.ConceptManager;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneUtility;
+import edu.asu.conceptpower.app.manager.ConceptManager;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;

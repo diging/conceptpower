@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.core.impl.ConceptListService;
+import edu.asu.conceptpower.app.manager.ConceptListService;
 import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
 

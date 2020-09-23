@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.core.impl;
+package edu.asu.conceptpower.app.manager;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
