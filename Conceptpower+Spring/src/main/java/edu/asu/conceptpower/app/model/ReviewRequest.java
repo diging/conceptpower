@@ -13,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import edu.asu.conceptpower.core.ReviewStatus;
-
 /**
  * This model helps to keep track of information about a specific review request
  * 

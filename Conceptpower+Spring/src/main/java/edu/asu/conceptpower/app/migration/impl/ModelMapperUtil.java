@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
@@ -52,7 +53,7 @@ public class ModelMapperUtil {
         mappedRequest.setRequest(reviewRequest.getRequest());
         mappedRequest.setRequester(reviewRequest.getRequester());
         mappedRequest.setResolver(reviewRequest.getResolver());
-        mappedRequest.setStatus(reviewRequest.getStatus());
+        mappedRequest.setStatus(ReviewStatus.values()[reviewRequest.getStatus().ordinal()]);
         
         return mappedRequest;
     }

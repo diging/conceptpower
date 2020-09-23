@@ -66,7 +66,7 @@ public class ConceptListService implements IConceptListService{
 
         while (true) {
 
-            if (id != null && !conceptListRepository.existsById(id)) {
+            if (!conceptListRepository.existsById(id)) {
                 return id;
             }
 
