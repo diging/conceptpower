@@ -3,7 +3,7 @@ package edu.asu.conceptpower.app.wrapper;
 import java.util.List;
 
 import edu.asu.conceptpower.app.exceptions.LuceneException;
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 
 public interface IConceptWrapperCreator {
 

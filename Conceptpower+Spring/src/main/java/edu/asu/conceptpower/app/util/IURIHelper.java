@@ -1,6 +1,6 @@
 package edu.asu.conceptpower.app.util;
 
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 
 public interface IURIHelper {

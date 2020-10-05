@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.app.core.IAlternativeIdService;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
 import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 
 /**
  * This helper class is used for adding alternative ids to the concept entry.
@@ -36,23 +36,23 @@ public class AlternativeIdService implements IAlternativeIdService {
         }
 
         if (conceptTypesService.getConceptTypeByConceptId(queriedId) == IdType.GENERIC_WORDNET_CONCEPT_ID) {
-            entry.getAlternativeIds().add(queriedId);
+           entry.getAlternativeIds().add(queriedId);
         }
         // Specific Wordnet id is added irrespective of what is queried for
         if (entry.getWordnetId() != null) {
             String[] wordNetIds = entry.getWordnetId().split(",");
             for (String wordNetId : wordNetIds) {
-                entry.getAlternativeIds().add(wordNetId.trim());
+               entry.getAlternativeIds().add(wordNetId.trim());
             }
         }
         // This has been added to make sure local concept id is added.
-        entry.getAlternativeIds().add(entry.getId());
+       entry.getAlternativeIds().add(entry.getId());
 
         // Added the merged ids of the concepts to alternative id
         if (entry.getMergedIds() != null) {
             String[] mergedIds = entry.getMergedIds().split(",");
             for (String mergedId : mergedIds) {
-                entry.getAlternativeIds().add(mergedId.trim());
+               entry.getAlternativeIds().add(mergedId.trim());
             }
         }
     }

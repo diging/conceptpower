@@ -25,11 +25,11 @@ import edu.asu.conceptpower.app.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.util.CCPSort;
 import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
-import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.rest.SearchParamters;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
@@ -465,10 +465,10 @@ public class ConceptManager implements IConceptManager {
 
         // Creating the first change event
         ChangeEvent changeEvent = new ChangeEvent(userName, new Date(), ChangeEventTypes.CREATION);
-        entry.addNewChangeEvent(changeEvent);
+       entry.addNewChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
-        entry.getAlternativeIds().add(id);
+       entry.getAlternativeIds().add(id);
         client.store(entry, DBNames.DICTIONARY_DB);
         if (entry.getWordnetId() != null) {
             String[] wordnetIds = entry.getWordnetId().split(",");
@@ -498,7 +498,7 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setDate(new Date());
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
-        entry.addNewChangeEvent(changeEvent);
+       entry.addNewChangeEvent(changeEvent);
         indexService.updateConceptEntry(entry, userName);
 
         client.update(entry, DBNames.DICTIONARY_DB);
@@ -551,7 +551,7 @@ public class ConceptManager implements IConceptManager {
             changeEvent.setType(ChangeEventTypes.DELETION);
             changeEvent.setDate(new Date());
             changeEvent.setUserName(userName);
-            concept.addNewChangeEvent(changeEvent);
+           concept.addNewChangeEvent(changeEvent);
             client.update(concept, DBNames.DICTIONARY_DB);
             indexService.deleteById(concept.getId(), userName);
         }

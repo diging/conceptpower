@@ -3,8 +3,8 @@ package edu.asu.conceptpower.app.lucene;
 import java.util.Map;
 
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.util.CCPSort;
-import edu.asu.conceptpower.core.ConceptEntry;
 
 public interface ILuceneUtility {
 

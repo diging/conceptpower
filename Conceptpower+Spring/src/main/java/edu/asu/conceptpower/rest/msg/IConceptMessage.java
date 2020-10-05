@@ -7,7 +7,7 @@ import org.springframework.validation.ObjectError;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptType;
 
 /**

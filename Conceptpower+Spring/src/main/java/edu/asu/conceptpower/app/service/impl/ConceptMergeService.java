@@ -19,8 +19,8 @@ import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.service.IConceptMergeService;
-import edu.asu.conceptpower.core.ConceptEntry;
 
 @Service
 public class ConceptMergeService implements IConceptMergeService {
@@ -81,7 +81,7 @@ public class ConceptMergeService implements IConceptMergeService {
             }
             conceptsMergeBean.getAlternativeIds().add(entry.getId());
             if (!entry.getAlternativeIds().isEmpty()) {
-                conceptsMergeBean.getAlternativeIds().addAll(entry.getAlternativeIds());
+               conceptsMergeBean.getAlternativeIds().addAll(entry.getAlternativeIds());
             }
         }
 
@@ -199,9 +199,9 @@ public class ConceptMergeService implements IConceptMergeService {
         entry.setSimilarTo(similar);
         
         if (entry.getAlternativeIds() != null) {
-            entry.getAlternativeIds().addAll(conceptMergeBean.getAlternativeIds());
+           entry.getAlternativeIds().addAll(conceptMergeBean.getAlternativeIds());
         } else {
-            entry.setAlternativeIds(conceptMergeBean.getAlternativeIds());
+           entry.setAlternativeIds(conceptMergeBean.getAlternativeIds());
         }
 
         entry.setMergedIds(conceptMergeBean.getMergeIds().stream().collect(Collectors.joining(",")));
