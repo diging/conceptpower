@@ -4,14 +4,12 @@ import java.time.ZonedDateTime;
 import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.app.core.IConceptListManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
-import edu.asu.conceptpower.app.core.IRequestsManager;
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
+import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.app.repository.IConceptEntryRepository;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
 import edu.asu.conceptpower.app.repository.IConceptTypeRepository;
@@ -32,16 +30,17 @@ import edu.asu.conceptpower.core.ReviewRequest;
 public class MigrateToSql {
     
     @Autowired
-    private IConceptTypeManger typesManager;
+    @Qualifier("typesDatabaseManager")
+    private DatabaseManager typeDatabase;
     
     @Autowired
-    private IConceptListManager listManager;
+    @Qualifier("conceptDatabaseManager")
+    private DatabaseManager dictionary;
     
     @Autowired
-    private IRequestsManager reviewRequestManager;
+    @Qualifier("conceptReviewDatabaseManager")
+    private DatabaseManager dbManager;
     
-    @Autowired
-    private IConceptDBManager conceptManager;
     
     @Autowired
     private IReviewRequestRepository reviewRequestRepository;
@@ -82,7 +81,7 @@ public class MigrateToSql {
     public int migrateReviewRequestTable(){
         int count = 0;
         
-        for(ReviewRequest r: reviewRequestManager.getAllReviews()) {
+        for(ReviewRequest r: dbManager.getClient().query(ReviewRequest.class)) {
             /* Re map and save the model to the database */
             reviewRequestRepository.save(modelMapperUtil.mapReviewRequest(r));
             count++;
@@ -96,7 +95,7 @@ public class MigrateToSql {
     public int migrateConceptTypeTable() {
         int count = 0;
         
-        for(ConceptType c : typesManager.getAllTypes()) {
+        for(ConceptType c : typeDatabase.getClient().query(ConceptType.class)) {
           conceptTypeRepository.save(modelMapperUtil.mapConceptType(c));
           count++;
         }
@@ -108,7 +107,7 @@ public class MigrateToSql {
     public int migrateConceptListTable() {
         int count = 0;
         
-        for(ConceptList c:listManager.getAllConceptLists()) {
+        for(ConceptList c: dictionary.getClient().query(ConceptList.class)) {
             conceptListRepository.save(modelMapperUtil.mapConceptList(c));
             count++;
         }
@@ -120,7 +119,8 @@ public class MigrateToSql {
     public int migrateConceptEntryTable(){
         int count = 0;
         
-        for(ConceptEntry c : conceptManager.getAllConcepts()) {
+        for(ConceptEntry c : dictionary.getClient().query(ConceptEntry.class)) {
+            System.out.println(c.getConceptList());
             conceptEntryRepository.save(modelMapperUtil.mapConceptEntry(c));
             count++;
         }

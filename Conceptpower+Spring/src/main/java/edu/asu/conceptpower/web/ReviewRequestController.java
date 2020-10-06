@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.manager.RequestsManager;
-import edu.asu.conceptpower.core.Comment;
-import edu.asu.conceptpower.core.ReviewRequest;
-import edu.asu.conceptpower.core.ReviewStatus;
+import edu.asu.conceptpower.app.model.Comment;
+import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 @Controller
 public class ReviewRequestController {

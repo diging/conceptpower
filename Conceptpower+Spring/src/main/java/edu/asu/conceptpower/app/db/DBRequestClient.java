@@ -11,7 +11,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.query.Predicate;
 
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
-import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewRequest;
 
 @Component
 public class DBRequestClient implements IRequestsDBManager{

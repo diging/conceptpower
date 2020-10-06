@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IRequestsManager;
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
-import edu.asu.conceptpower.core.Comment;
-import edu.asu.conceptpower.core.ReviewRequest;
-import edu.asu.conceptpower.core.ReviewStatus;
+import edu.asu.conceptpower.app.model.Comment;
+import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 @Service
 public  class RequestsManager implements IRequestsManager{

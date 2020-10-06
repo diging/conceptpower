@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.db4o.ObjectSet;
 import com.db4o.ext.ExtObjectSet;
 
-import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewRequest;
 
 /*
  * This class is to construct a valid return object of type ObjectSet for query() method

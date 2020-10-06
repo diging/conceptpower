@@ -23,12 +23,21 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="change_event")
-public class ChangeEvent implements Serializable {
+public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
 
     private static final long serialVersionUID = 1L;
     
     public enum ChangeEventTypes {
         MODIFICATION, CREATION, DELETION
+    }
+    
+    public ChangeEvent() {
+    }
+
+    public ChangeEvent(String userName, Date date, ChangeEventTypes type) {
+        this.userName = userName;
+        this.date = date;
+        this.type = type;
     }
     
     @Id
@@ -88,5 +97,10 @@ public class ChangeEvent implements Serializable {
     
     public void setConcept(ConceptEntry c) {
         this.concept = c;
+    }
+
+    @Override
+    public int compareTo(ChangeEvent changeEvent) {
+        return date.before(changeEvent.getDate()) ? 1 : 0;
     }
 }

@@ -21,8 +21,10 @@ import edu.asu.conceptpower.app.lucene.ILuceneUtility;
 import edu.asu.conceptpower.app.manager.ConceptManager;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
-import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.app.model.ChangeEvent;
+import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptList;
 
 public class ConceptManagerTest {
 
@@ -71,7 +73,7 @@ public class ConceptManagerTest {
         addedConcept.setId("id1");
         addedConcept.setConceptList("list1");
 
-        addedConcept.addNewChangeEvent(changeEvent);
+        addedConcept.setChangeEvents(changeEvent);
         addedConcept.setDescription("description");
         addedConcept.setPos("noun");
         addedConcept.setWord("test");
@@ -83,7 +85,7 @@ public class ConceptManagerTest {
         wordnetConcept1 = new ConceptEntry();
         wordnetConcept1.setId("WID-1");
         wordnetConcept1.setConceptList("list1");
-        wordnetConcept1.addNewChangeEvent(changeEvent);
+        wordnetConcept1.setChangeEvents(changeEvent);
         wordnetConcept1.setDescription("description wid 1");
         wordnetConcept1.setPos("noun");
         wordnetConcept1.setWord("test wid 1");
@@ -93,7 +95,7 @@ public class ConceptManagerTest {
         wordnetConcept2 = new ConceptEntry();
         wordnetConcept2.setId("WID-2");
         wordnetConcept2.setConceptList("list1");
-        wordnetConcept2.addNewChangeEvent(changeEvent);
+        wordnetConcept2.setChangeEvents(changeEvent);
         wordnetConcept2.setDescription("description wid");
         wordnetConcept2.setPos("noun");
         wordnetConcept2.setWord("test wid");

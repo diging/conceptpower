@@ -30,7 +30,7 @@ import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.service.IConceptMergeService;
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 
 @Controller
 public class ConceptMergeController {

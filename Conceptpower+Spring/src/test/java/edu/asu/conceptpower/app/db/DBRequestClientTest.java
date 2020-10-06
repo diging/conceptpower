@@ -20,7 +20,7 @@ import edu.asu.conceptpower.app.db.custommatchers.PredicateReviewRequestMatcher;
 import edu.asu.conceptpower.app.db.custommatchers.ReviewRequestMatcher;
 import edu.asu.conceptpower.app.db.customobjects.PredicateObjectSet;
 import edu.asu.conceptpower.app.db.customobjects.ReviewRequestObjectSet;
-import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewRequest;
 
 public class DBRequestClientTest {
     

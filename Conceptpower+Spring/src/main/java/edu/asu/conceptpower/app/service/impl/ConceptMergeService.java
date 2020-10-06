@@ -201,7 +201,7 @@ public class ConceptMergeService implements IConceptMergeService {
         if (entry.getAlternativeIds() != null) {
            entry.getAlternativeIds().addAll(conceptMergeBean.getAlternativeIds());
         } else {
-           entry.setAlternativeIds(conceptMergeBean.getAlternativeIds());
+           entry.setAlternativeIds(String.join(",",conceptMergeBean.getAlternativeIds()));
         }
 
         entry.setMergedIds(conceptMergeBean.getMergeIds().stream().collect(Collectors.joining(",")));

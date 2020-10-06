@@ -27,7 +27,7 @@ import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.validation.ConceptListAddValidator;
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 
 /**
  * This class provides all the methods required for editing a concept list

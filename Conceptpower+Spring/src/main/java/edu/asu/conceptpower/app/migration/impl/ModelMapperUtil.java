@@ -81,10 +81,12 @@ public class ModelMapperUtil {
         mappedConceptEntry.setModifiedUser(conceptEntry.getModifiedUser());
         mappedConceptEntry.setAlternativeIds(setToCommaString(conceptEntry.getAlternativeIds()));
         
-        for(ChangeEvent changeEvent: conceptEntry.getChangeEvents()) {
-            mappedConceptEntry.setChangeEvents(mapChangeEvent(changeEvent));
+        if(conceptEntry.getChangeEvents() != null) {
+            for(ChangeEvent changeEvent: conceptEntry.getChangeEvents()) {
+                mappedConceptEntry.setChangeEvents(mapChangeEvent(changeEvent));
+            }
         }
-
+        
         return mappedConceptEntry;
     }
     

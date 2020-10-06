@@ -18,8 +18,8 @@ import com.db4o.ObjectSet;
 import com.db4o.query.Query;
 
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.util.URIHelper;
-import edu.asu.conceptpower.core.ConceptType;
 
 @Component
 public class TypeDatabaseClient {

@@ -26,8 +26,8 @@ import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptType;
 
 @Controller
 public class ConceptListController {

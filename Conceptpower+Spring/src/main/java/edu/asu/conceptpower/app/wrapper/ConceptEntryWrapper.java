@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import edu.asu.conceptpower.app.model.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.app.model.ConceptType;
+import edu.asu.conceptpower.app.model.ReviewRequest;
 import edu.asu.conceptpower.users.User;
 
 /**

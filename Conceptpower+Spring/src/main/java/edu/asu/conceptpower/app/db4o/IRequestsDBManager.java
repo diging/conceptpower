@@ -2,7 +2,7 @@ package edu.asu.conceptpower.app.db4o;
 
 import java.util.List;
 
-import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewRequest;
 
 
 /**

@@ -8,7 +8,7 @@ import org.springframework.validation.ObjectError;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.conceptpower.app.model.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 
 /**
  * This class acts as an interface for all concept messages. Currently concepts

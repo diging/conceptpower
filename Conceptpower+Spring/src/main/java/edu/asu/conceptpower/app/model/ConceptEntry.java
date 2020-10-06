@@ -2,7 +2,10 @@ package edu.asu.conceptpower.app.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -240,12 +243,17 @@ public class ConceptEntry implements Serializable{
         this.mergedIds = mergedIds;
     }
     
-    public String getAlternativeIds() {
-        return this.alternativeIds;
+    public Set<String> getAlternativeIds() {
+        String[] ids = this.alternativeIds.split(",");
+        return new HashSet<>(Arrays.asList(ids));
     }
     
     public void setAlternativeIds(String alternativeIds) {
-        this.alternativeIds = alternativeIds;
+        if(alternativeIds == null || alternativeIds.isEmpty()) {
+            this.alternativeIds = alternativeIds;
+        }else {
+            this.alternativeIds = this.alternativeIds+","+alternativeIds;
+        }
         
     }
 }

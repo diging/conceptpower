@@ -2,7 +2,7 @@ package edu.asu.conceptpower.app.core;
 
 import java.util.List;
 
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 
 /**
  * This class is the manager class for concept types. It provides methods for

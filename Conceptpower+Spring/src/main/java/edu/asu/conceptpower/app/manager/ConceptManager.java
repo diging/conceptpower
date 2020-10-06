@@ -25,15 +25,15 @@ import edu.asu.conceptpower.app.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ChangeEvent;
+import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.util.CCPSort;
 import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
-import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.rest.SearchParamters;
-import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 
 /**
  * This class handles concepts in general. It uses a DB4O client that contains
@@ -465,10 +465,10 @@ public class ConceptManager implements IConceptManager {
 
         // Creating the first change event
         ChangeEvent changeEvent = new ChangeEvent(userName, new Date(), ChangeEventTypes.CREATION);
-       entry.addNewChangeEvent(changeEvent);
+       entry.setChangeEvents(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
-       entry.getAlternativeIds().add(id);
+       entry.setAlternativeIds(id);
         client.store(entry, DBNames.DICTIONARY_DB);
         if (entry.getWordnetId() != null) {
             String[] wordnetIds = entry.getWordnetId().split(",");
@@ -498,7 +498,7 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setDate(new Date());
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
-       entry.addNewChangeEvent(changeEvent);
+       entry.setChangeEvents(changeEvent);
         indexService.updateConceptEntry(entry, userName);
 
         client.update(entry, DBNames.DICTIONARY_DB);
@@ -551,7 +551,7 @@ public class ConceptManager implements IConceptManager {
             changeEvent.setType(ChangeEventTypes.DELETION);
             changeEvent.setDate(new Date());
             changeEvent.setUserName(userName);
-           concept.addNewChangeEvent(changeEvent);
+            concept.setChangeEvents(changeEvent);
             client.update(concept, DBNames.DICTIONARY_DB);
             indexService.deleteById(concept.getId(), userName);
         }

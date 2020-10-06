@@ -21,10 +21,10 @@ import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.util.IURIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.impl.ConceptEntryWrapperCreator;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.app.model.ChangeEvent;
+import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.users.User;
 
 public class ConceptEntryWrapperCreatorTest {
@@ -59,7 +59,7 @@ public class ConceptEntryWrapperCreatorTest {
         changeEvent.setDate(new Date());
 
         entry.setTypeId("Type-1");
-        entry.addNewChangeEvent(changeEvent);
+        entry.setChangeEvents(changeEvent);
 
         entry.setCreatorId("Test");
         entry.setWordnetId("WNET_1");

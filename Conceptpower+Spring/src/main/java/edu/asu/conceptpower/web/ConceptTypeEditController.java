@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.validation.ConceptTypeAddValidator;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 
 /**
  * This class provides all the methods for editing a type

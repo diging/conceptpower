@@ -3,9 +3,9 @@ package edu.asu.conceptpower.app.core;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import edu.asu.conceptpower.core.Comment;
-import edu.asu.conceptpower.core.ReviewRequest;
-import edu.asu.conceptpower.core.ReviewStatus;
+import edu.asu.conceptpower.app.model.Comment;
+import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 /**This interface provides function declaration for adding new Request for review and 
  *      fetching an existing Review for the required conceptId.

@@ -40,7 +40,7 @@ import edu.asu.conceptpower.app.service.IConceptEditService;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 
 /**
  * This method provides all the required methods for editing a concept

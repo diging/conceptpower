@@ -2,7 +2,7 @@ package edu.asu.conceptpower.rest.msg;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 
 /**
  * This interface provides method for converting the concept type to JSON or XML

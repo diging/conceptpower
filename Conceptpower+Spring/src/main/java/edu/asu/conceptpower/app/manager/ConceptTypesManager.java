@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 
 @Service
 public class ConceptTypesManager implements IConceptTypeManger {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.config.XMLConfig;
 import edu.asu.conceptpower.app.model.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.rest.msg.xml.XMLConstants;
 
 /**

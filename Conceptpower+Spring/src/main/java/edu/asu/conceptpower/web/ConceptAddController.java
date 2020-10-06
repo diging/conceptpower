@@ -40,12 +40,12 @@ import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.profile.impl.ServiceRegistry;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.app.validation.ConceptAddValidator;
-import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.web.backing.ConceptAddBean;
 
 /**

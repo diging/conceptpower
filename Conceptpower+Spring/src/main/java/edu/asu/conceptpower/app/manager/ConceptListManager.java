@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.db4o.DBNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
-import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.app.model.ConceptList;
 
 /**
  * Manager class for concept lists.
