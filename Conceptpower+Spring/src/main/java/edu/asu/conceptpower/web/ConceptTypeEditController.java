@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.validation.ConceptTypeAddValidator;
 import edu.asu.conceptpower.app.model.ConceptType;
@@ -34,7 +34,7 @@ import edu.asu.conceptpower.app.model.ConceptType;
 public class ConceptTypeEditController {
 
     @Autowired
-    private IConceptTypeManger typeManager;
+    private IConceptTypeManager typeManager;
 
     @Autowired
     private IUserManager usersManager;

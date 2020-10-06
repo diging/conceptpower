@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
@@ -66,7 +66,7 @@ public class ConceptAddController {
     private IConceptListManager conceptListService;
 
     @Autowired
-    private IConceptTypeManger conceptTypesManager;
+    private IConceptTypeManager conceptTypesManager;
 
 
     @Autowired

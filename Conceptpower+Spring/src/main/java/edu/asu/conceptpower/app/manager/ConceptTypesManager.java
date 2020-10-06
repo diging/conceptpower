@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.model.ConceptType;
 
 @Service
-public class ConceptTypesManager implements IConceptTypeManger {
+public class ConceptTypesManager implements IConceptTypeManager {
 
     @Autowired
     private TypeDatabaseClient client;

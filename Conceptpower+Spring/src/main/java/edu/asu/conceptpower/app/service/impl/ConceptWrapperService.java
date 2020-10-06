@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.model.ConceptType;
@@ -30,7 +30,7 @@ public class ConceptWrapperService implements IConceptWrapperService {
     private IConceptListManager conceptListService;
     
     @Autowired
-    private IConceptTypeManger conceptTypeService;
+    private IConceptTypeManager conceptTypeService;
 
     /**
      * This method fetches all the concept types within the Conceptpower system

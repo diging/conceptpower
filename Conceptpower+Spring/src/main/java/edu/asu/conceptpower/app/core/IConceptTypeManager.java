@@ -11,7 +11,7 @@ import edu.asu.conceptpower.app.model.ConceptType;
  * @author jdamerow
  *
  */
-public interface IConceptTypeManger {
+public interface IConceptTypeManager {
 
     public void addConceptType(ConceptType type);
 

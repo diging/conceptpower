@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
 import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.core.POS;
@@ -42,7 +42,7 @@ public class ConceptMergeController {
     private IConceptMergeService conceptMergeService;
 
     @Autowired
-    private IConceptTypeManger conceptTypesManager;
+    private IConceptTypeManager conceptTypesManager;
 
     @Autowired
     private IConceptListManager conceptListService;

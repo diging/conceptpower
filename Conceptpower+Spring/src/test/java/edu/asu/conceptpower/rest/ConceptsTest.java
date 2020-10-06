@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -32,7 +32,7 @@ public class ConceptsTest {
     private IConceptManager conceptManager;
 
     @Mock
-    private IConceptTypeManger typeManager;
+    private IConceptTypeManager typeManager;
 
     @Mock
     private URIHelper uriHelper;

@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.core.POS;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
@@ -46,7 +46,7 @@ public class Concepts {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptTypeManger typeManager;
+    private IConceptTypeManager typeManager;
 
     @Autowired
     private URIHelper uriHelper;

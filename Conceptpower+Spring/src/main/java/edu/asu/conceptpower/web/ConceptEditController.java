@@ -30,7 +30,7 @@ import edu.asu.conceptpower.app.bean.ConceptEditBean;
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
@@ -64,7 +64,7 @@ public class ConceptEditController {
     private IUserManager usersManager;
 
     @Autowired
-    private IConceptTypeManger conceptTypesManager;
+    private IConceptTypeManager conceptTypesManager;
 
     @Autowired
     private IIndexService indexService;

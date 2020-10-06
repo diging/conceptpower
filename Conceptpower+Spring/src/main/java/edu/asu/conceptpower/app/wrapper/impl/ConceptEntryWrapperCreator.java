@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IRequestsManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ReviewRequest;
@@ -32,7 +32,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptTypeManger typesManager;
+    private IConceptTypeManager typesManager;
 
     @Autowired
     private IUserManager usersManager;

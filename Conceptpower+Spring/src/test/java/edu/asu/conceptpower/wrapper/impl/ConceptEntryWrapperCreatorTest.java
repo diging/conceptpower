@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.manager.RequestsManager;
 import edu.asu.conceptpower.app.users.IUserManager;
@@ -33,7 +33,7 @@ public class ConceptEntryWrapperCreatorTest {
     private IConceptManager conceptManager = Mockito.mock(IConceptManager.class);
 
     @Mock
-    private IConceptTypeManger typesManager = Mockito.mock(IConceptTypeManger.class);
+    private IConceptTypeManager typesManager = Mockito.mock(IConceptTypeManager.class);
 
     @Mock
     private IUserManager usersManager = Mockito.mock(IUserManager.class);

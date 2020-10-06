@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptType;
@@ -25,7 +25,7 @@ import edu.asu.conceptpower.app.model.ConceptType;
 public class ConcepTypeDeleteController {
 
     @Autowired
-    private IConceptTypeManger typeManager;
+    private IConceptTypeManager typeManager;
 
     @Autowired
     private IConceptManager conceptManager;
