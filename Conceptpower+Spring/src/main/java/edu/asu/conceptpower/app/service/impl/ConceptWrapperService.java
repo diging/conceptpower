@@ -7,11 +7,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.app.core.IConceptListService;
+
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
-import edu.asu.conceptpower.app.core.model.impl.ConceptList;
+import edu.asu.conceptpower.app.core.IConceptListManager;
+import edu.asu.conceptpower.app.model.ConceptList;
+import edu.asu.conceptpower.app.model.ConceptType;
+
 import edu.asu.conceptpower.app.service.IConceptWrapperService;
-import edu.asu.conceptpower.core.ConceptType;
 
 /**
  * This class acts as a helper class for ConceptWrapperAddController. This class
@@ -25,10 +27,10 @@ import edu.asu.conceptpower.core.ConceptType;
 public class ConceptWrapperService implements IConceptWrapperService {
 
     @Autowired
-    private IConceptListService conceptListService;
-
+    private IConceptListManager conceptListService;
+    
     @Autowired
-    private IConceptTypeManger conceptTypesManager;
+    private IConceptTypeManger conceptTypeService;
 
     /**
      * This method fetches all the concept types within the Conceptpower system
@@ -40,7 +42,7 @@ public class ConceptWrapperService implements IConceptWrapperService {
      */
     @Override
     public Map<String, String> fetchAllConceptTypes() {
-        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+        ConceptType[] allTypes = conceptTypeService.getAllTypes();
         Map<String, String> types = new LinkedHashMap<>();
         if (allTypes == null || allTypes.length == 0) {
             return types;

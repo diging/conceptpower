@@ -8,7 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import edu.asu.conceptpower.app.core.IConceptListService;
+import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
@@ -26,7 +26,7 @@ public class ConceptListDeleteController {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptListService conceptListService;
+    private IConceptListManager conceptListService;
 
     /**
      * This method provides information of a concept list to be deleted

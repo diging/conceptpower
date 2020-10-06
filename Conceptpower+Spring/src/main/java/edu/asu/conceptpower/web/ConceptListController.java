@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.asu.conceptpower.app.core.IConceptListService;
+import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
@@ -36,7 +36,7 @@ public class ConceptListController {
     private IConceptManager conceptManager;
     
     @Autowired
-    private IConceptListService conceptListService;
+    private IConceptListManager conceptListService;
 
     @Autowired
     private TypeDatabaseClient typeDatabaseClient;

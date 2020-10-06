@@ -12,7 +12,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
 import edu.asu.conceptpower.app.core.IConceptListManager;
-import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.validation.ConceptListAddValidator;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.web.ConceptListAddForm;
@@ -20,7 +19,7 @@ import edu.asu.conceptpower.web.ConceptListAddForm;
 public class ConceptListAddValidatorTest {
 
     @Mock
-    private IConceptListService conceptListService;
+    private IConceptListManager conceptListService;
 
     @InjectMocks
     private ConceptListAddValidator conceptListAddValidator;
@@ -33,7 +32,7 @@ public class ConceptListAddValidatorTest {
 
     @Before
     public void init() {
-        conceptListService = Mockito.mock(IConceptListService.class);
+        conceptListService = Mockito.mock(IConceptListManager.class);
         MockitoAnnotations.initMocks(this);
 
         emptyListName = new ConceptListAddForm();

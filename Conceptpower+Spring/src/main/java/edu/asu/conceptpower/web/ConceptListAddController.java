@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.asu.conceptpower.app.core.IConceptListService;
+import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.validation.ConceptListAddValidator;
 
 @Controller
 public class ConceptListAddController {
 
     @Autowired
-    private IConceptListService conceptListService;
+    private IConceptListManager conceptListService;
 
     @Autowired
     private ConceptListAddValidator validator;

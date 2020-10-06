@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.conceptpower.app.core.IConceptListService;
+import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -42,7 +42,7 @@ public class ConceptListEditController {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptListService conceptListService;
+    private IConceptListManager conceptListService;
 
     @Autowired
     private ConceptListAddValidator validator;

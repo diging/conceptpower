@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import edu.asu.conceptpower.app.core.IConceptListService;
+import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.web.ConceptListAddForm;
 
@@ -14,7 +14,7 @@ import edu.asu.conceptpower.web.ConceptListAddForm;
 public class ConceptListAddValidator implements Validator {
 
     @Autowired
-    private IConceptListService conceptListService;
+    private IConceptListManager conceptListService;
 
     @Override
     public boolean supports(Class<?> arg0) {

@@ -28,21 +28,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.bean.ConceptEditBean;
 import edu.asu.conceptpower.app.core.Constants;
-import edu.asu.conceptpower.app.core.IConceptListService;
+import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IIndexService;
-import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.service.IConceptEditService;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
 
 /**
  * This method provides all the required methods for editing a concept
@@ -57,7 +55,7 @@ public class ConceptEditController {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptListService conceptListService;
+    private IConceptListManager conceptListService;
 
     @Autowired
     private IConceptWrapperCreator wrapperCreator;

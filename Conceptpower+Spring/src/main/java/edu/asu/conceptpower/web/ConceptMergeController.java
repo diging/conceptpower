@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
-import edu.asu.conceptpower.app.core.IConceptListService;
+import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
@@ -45,7 +45,7 @@ public class ConceptMergeController {
     private IConceptTypeManger conceptTypesManager;
 
     @Autowired
-    private IConceptListService conceptListService;
+    private IConceptListManager conceptListService;
 
     @Autowired
     private ConceptsMergeBeanValidator validator;

@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.manager.ConceptListService;
+import edu.asu.conceptpower.app.manager.ConceptListManager;
 import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
 
@@ -22,7 +22,7 @@ public class ConceptListManagerTest {
 	private IConceptListRepository client = Mockito.mock(IConceptListRepository.class);
 
 	@InjectMocks
-	private ConceptListService conceptListManager;
+	private ConceptListManager conceptListManager;
 
 	private ConceptList conceptList = new ConceptList();
 
