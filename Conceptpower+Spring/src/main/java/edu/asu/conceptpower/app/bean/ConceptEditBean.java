@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.core.POS;
-import edu.asu.conceptpower.app.model.ConceptType;
+import edu.asu.conceptpower.core.ConceptType;
 
 @Component
 public class ConceptEditBean {
@@ -27,7 +27,7 @@ public class ConceptEditBean {
     private String similar;
     private String selectedTypeId;
     private String selectedTypeName;
-    private List<ConceptType> types;
+    private ConceptType[] types;
     private String conceptId;
     private List conceptEntryList;
     private boolean fromHomeScreen;
@@ -147,11 +147,11 @@ public class ConceptEditBean {
         this.conceptList = conceptList;
     }
 
-    public List<ConceptType> getTypes() {
+    public ConceptType[] getTypes() {
         return types;
     }
 
-    public void setTypes(List<ConceptType> types) {
+    public void setTypes(ConceptType[] types) {
         this.types = types;
     }
 

@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
 import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeService;
+import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
 import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.core.POS;
@@ -42,7 +42,7 @@ public class ConceptMergeController {
     private IConceptMergeService conceptMergeService;
 
     @Autowired
-    private IConceptTypeService conceptTypeService;
+    private IConceptTypeManger conceptTypesManager;
 
     @Autowired
     private IConceptListService conceptListService;
@@ -74,7 +74,7 @@ public class ConceptMergeController {
 
         ModelAndView mav = new ModelAndView();
         mav.addObject("localConceptIds", localConceptIds);
-        mav.addObject("types", conceptTypeService.getAllTypes());
+        mav.addObject("types", conceptTypesManager.getAllTypes());
         mav.addObject("conceptEntries", conceptEntries);
         mav.addObject("conceptListValues", conceptListService.getAllConceptLists().stream()
                 .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
@@ -99,7 +99,7 @@ public class ConceptMergeController {
                 conceptEntries.add(conceptManager.getConceptEntry(id));
             }
             mav.addObject("localConceptIds", localConceptIds);
-            mav.addObject("types", conceptTypeService.getAllTypes());
+            mav.addObject("types", conceptTypesManager.getAllTypes());
             mav.addObject("conceptListValues", conceptListService.getAllConceptLists().stream()
                     .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
             mav.addObject("posValues", POS.posValues);

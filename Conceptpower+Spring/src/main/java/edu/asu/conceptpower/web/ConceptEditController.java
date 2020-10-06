@@ -30,8 +30,9 @@ import edu.asu.conceptpower.app.bean.ConceptEditBean;
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IConceptListService;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeService;
+import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.core.IIndexService;
+import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.model.ConceptList;
@@ -40,7 +41,8 @@ import edu.asu.conceptpower.app.service.IConceptEditService;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
-import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.core.ConceptType;
 
 /**
  * This method provides all the required methods for editing a concept
@@ -64,7 +66,7 @@ public class ConceptEditController {
     private IUserManager usersManager;
 
     @Autowired
-    private IConceptTypeService conceptTypeService;
+    private IConceptTypeManger conceptTypesManager;
 
     @Autowired
     private IIndexService indexService;
@@ -102,7 +104,7 @@ public class ConceptEditController {
         }
         
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-        List<ConceptType> allTypes = conceptTypeService.getAllTypes();
+        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
         List<ConceptList> allLists = conceptListService.getAllConceptLists();
         conceptEditBean.setWord(concept.getWord());
         conceptEditBean.setSelectedPosValue(concept.getPos().toLowerCase());
@@ -179,7 +181,7 @@ public class ConceptEditController {
         if (indexService.isIndexerRunning()) {
             List<ConceptList> allLists = conceptListService.getAllConceptLists();
             conceptEditBean.setConceptList(allLists);
-            List<ConceptType> allTypes = conceptTypeService.getAllTypes();
+            ConceptType[] allTypes = conceptTypesManager.getAllTypes();
             conceptEditBean.setTypes(allTypes);
             conceptEditBean.setConceptId(conceptEntry.getId());
             model.addAttribute("conceptId", conceptEntry.getId());

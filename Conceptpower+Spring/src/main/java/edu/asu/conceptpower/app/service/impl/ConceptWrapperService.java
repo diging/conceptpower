@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IConceptListService;
-import edu.asu.conceptpower.app.core.IConceptTypeService;
-import edu.asu.conceptpower.app.model.ConceptList;
-import edu.asu.conceptpower.app.model.ConceptType;
+import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.model.impl.ConceptList;
 import edu.asu.conceptpower.app.service.IConceptWrapperService;
+import edu.asu.conceptpower.core.ConceptType;
 
 /**
  * This class acts as a helper class for ConceptWrapperAddController. This class
@@ -28,7 +28,7 @@ public class ConceptWrapperService implements IConceptWrapperService {
     private IConceptListService conceptListService;
 
     @Autowired
-    private IConceptTypeService conceptTypeService;
+    private IConceptTypeManger conceptTypesManager;
 
     /**
      * This method fetches all the concept types within the Conceptpower system
@@ -40,12 +40,11 @@ public class ConceptWrapperService implements IConceptWrapperService {
      */
     @Override
     public Map<String, String> fetchAllConceptTypes() {
-        List<ConceptType> allTypes = conceptTypeService.getAllTypes();
+        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
         Map<String, String> types = new LinkedHashMap<>();
-        if (allTypes == null || allTypes.isEmpty()) {
+        if (allTypes == null || allTypes.length == 0) {
             return types;
         }
-        
         for (ConceptType conceptType : allTypes) {
             types.put(conceptType.getTypeId(), conceptType.getTypeName());
         }
