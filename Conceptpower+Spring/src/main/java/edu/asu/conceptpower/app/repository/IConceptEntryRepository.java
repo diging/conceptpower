@@ -26,12 +26,17 @@ public interface IConceptEntryRepository extends PagingAndSortingRepository<Conc
     
     List<ConceptEntry> findByTypeId(String typeId);
     
-    //TODO
-    @Query("SELECT id FROM ConceptEntry WHERE :fieldName = :value")
+    List<ConceptEntry> findAllByTypeId(String typeId);
+    
+    List<ConceptEntry> findAllByConceptList(String listName);
+    
+    @Query("SELECT c from ConceptEntry c WHERE REPLACE(c.word, '_', ' ') LIKE LOWER(word) AND c.isDeleted = 0")
+    List<ConceptEntry> findByWord(String word);
+    
+    @Query("SELECT c FROM ConceptEntry c WHERE LOWER(TRIM(:fieldName)) LIKE LOWER(TRIM(:value))")
     List<ConceptEntry> getConceptsGivenFieldName(String fieldName, String value);
     
-    //TODO
-    @Query("SELECT id FROM ConceptEntry WHERE  id = :id")
+    @Query("SELECT c FROM ConceptEntry c WHERE c.synonymIds LIKE :id AND c.isDeleted = 0")
     List<ConceptEntry> getConceptsForGivenSynonymId(String id);
 }
    

@@ -11,18 +11,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.ConceptListManager;
 import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
 
 public class ConceptListManagerTest {
-
+    
 	@Mock
-	private IConceptListRepository client = Mockito.mock(IConceptListRepository.class);
-
+    private IConceptDBManager client;
+	
 	@InjectMocks
-	private ConceptListManager conceptListManager;
+    private ConceptListManager conceptListManager;
 
 	private ConceptList conceptList = new ConceptList();
 
@@ -35,21 +37,21 @@ public class ConceptListManagerTest {
 		conceptList.setDescription("First List Description");
 		list.add(conceptList);
 
-		Mockito.when(client.findAll()).thenReturn(list);
-		Mockito.when(client.findByConceptListName("First List")).thenReturn(conceptList);
+		Mockito.when(client.getAllConceptLists()).thenReturn(list);
+        Mockito.when(client.getConceptList("First List")).thenReturn(conceptList);
 	}
 
 	@Test
 	public void addConceptListTest() {
 		conceptListManager.addConceptList("List Name", "List Description");
-		Mockito.verify(client).save(ArgumentMatchers.any(ConceptList.class));
+		Mockito.verify(client).storeConceptList(ArgumentMatchers.any(ConceptList.class), "List Description");
 
 	}
 
 	@Test
 	public void deleteConceptListTest() {
 		conceptListManager.deleteConceptList("List Name");
-		Mockito.verify(client).deleteByConceptListName(Mockito.eq("List Name"));
+		Mockito.verify(client).deleteConceptList(Mockito.eq("List Name"));
 	}
 
 	@Test
@@ -93,7 +95,7 @@ public class ConceptListManagerTest {
 		ConceptList list = new ConceptList();
 		list.setConceptListName("List Name");
 		conceptListManager.storeModifiedConceptList(list, "List Name 2");
-		Mockito.verify(client).save(Mockito.eq(list));
+		Mockito.verify(client).storeConceptList(Mockito.eq(list), null);
 
 	}
 }

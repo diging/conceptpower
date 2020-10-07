@@ -1,46 +1,39 @@
 package edu.asu.conceptpower.app.db;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.query.Predicate;
-import com.db4o.query.Query;
 
 import edu.asu.conceptpower.app.db4o.DBNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.model.ChangeEvent;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
-import edu.asu.conceptpower.app.reflect.SearchField;
+import edu.asu.conceptpower.app.repository.IConceptEntryRepository;
+import edu.asu.conceptpower.app.repository.IConceptListRepository;
 
 @Component
 public class DatabaseClient implements IConceptDBManager {
-
-    private ObjectContainer dictionaryClient;
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
+    
     @Autowired
-    @Qualifier("conceptDatabaseManager")
-    private DatabaseManager dictionary;
-
-    @PostConstruct
-    public void init() {
-        this.dictionaryClient = dictionary.getClient();
-    }
-
+    private IConceptEntryRepository conceptEntryRepository;
+    
+    @Autowired
+    private IConceptListRepository conceptListRepository;
+    
+    @Value("${default_page_size}")
+    private Integer defaultPageSize;
+    
     /*
      * (non-Javadoc)
      * 
@@ -49,31 +42,14 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     public ConceptEntry getEntry(String id) {
-        ConceptEntry exampleEntry = new ConceptEntry();
-        exampleEntry.setId(id);
-        ObjectSet<ConceptEntry> results = dictionaryClient.queryByExample(exampleEntry);
-        // there should only be exactly one object with this id
-        if (results.size() == 1)
-            return results.get(0);
-
-        return null;
+        Optional<ConceptEntry> concept = conceptEntryRepository.findById(id);
+        
+        return concept.isPresent() ? concept.get() : null;
     }
 
     @Override
     public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId) {
         return Arrays.asList(getEntriesByFieldContains("wordnetid", wordnetId));
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#queryByExample(java.lang.
-     * Object)
-     */
-    @Override
-    public List<Object> queryByExample(Object example) {
-        return dictionaryClient.queryByExample(example);
     }
 
     /*
@@ -87,50 +63,9 @@ public class DatabaseClient implements IConceptDBManager {
     public ConceptEntry[] getEntriesByFieldContains(String field, String containsString) {
         if (containsString == null || field == null)
             return new ConceptEntry[0];
-        final String fField = field;
-        final String fSearchFor = containsString;
+        
+        List<ConceptEntry> results = conceptEntryRepository.getConceptsGivenFieldName(field, containsString);
 
-        ObjectSet<ConceptEntry> results = dictionaryClient.query(new Predicate<ConceptEntry>() {
-            public boolean match(ConceptEntry con) {
-
-                // go through all fields of class to find field that
-                // should be searched
-                Field[] fields = con.getClass().getDeclaredFields();
-                for (Field field : fields) {
-                    SearchField searchFieldAnnotation = field.getAnnotation(SearchField.class);
-                    if (searchFieldAnnotation != null) {
-                        // if we found the field that should be search
-                        // through
-                        if (searchFieldAnnotation.fieldName().equals(fField)) {
-                            String fieldContent = null;
-                            // check content
-                            try {
-                                field.setAccessible(true);
-                                Object contentOfField = field.get(con);
-                                if (contentOfField instanceof String)
-                                    fieldContent = contentOfField.toString();
-                            } catch (IllegalArgumentException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                                continue;
-                            } catch (IllegalAccessException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                                continue;
-                            }
-
-                            if (fieldContent != null) {
-                                if (fieldContent.trim().toLowerCase().contains(fSearchFor.trim().toLowerCase()))
-                                    return true;
-                            }
-                            return false;
-                        }
-                    }
-                }
-
-                return false;
-            }
-        });
 
         return results.toArray(new ConceptEntry[results.size()]);
     }
@@ -146,9 +81,9 @@ public class DatabaseClient implements IConceptDBManager {
     public ConceptEntry[] getEntriesForWord(String word, String pos) {
         ConceptEntry[] allConcepts = getEntriesForWord(word);
 
-        List<ConceptEntry> entries = new ArrayList<ConceptEntry>();
+        List<ConceptEntry> entries = new ArrayList<>();
         for (ConceptEntry entry : allConcepts) {
-            if (entry.getPos().toLowerCase().equals(pos.toLowerCase()) && !entry.isDeleted())
+            if (entry.getPos().equalsIgnoreCase(pos.toLowerCase()) && !entry.isDeleted())
                 entries.add(entry);
         }
 
@@ -164,19 +99,8 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     public ConceptEntry[] getSynonymsPointingToId(String id) {
-        List<ConceptEntry> entries = new ArrayList<ConceptEntry>();
-        final String wordId = id;
-
-        ObjectSet<ConceptEntry> results = dictionaryClient.query(new Predicate<ConceptEntry>() {
-            public boolean match(ConceptEntry con) {
-                return con.getSynonymIds().contains(wordId) && !con.isDeleted();
-            }
-        });
-
-        if (results.size() > 0) {
-            entries.addAll(results);
-        }
-
+        List<ConceptEntry> entries = conceptEntryRepository.getConceptsForGivenSynonymId(id);
+        
         return entries.toArray(new ConceptEntry[entries.size()]);
     }
 
@@ -189,18 +113,11 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     public ConceptEntry[] getEntriesForWord(String word) {
+        List<ConceptEntry> entries = new ArrayList<>();
+        
+        List<ConceptEntry> results = conceptEntryRepository.findByWord(word);
 
-        List<ConceptEntry> entries = new ArrayList<ConceptEntry>();
-
-        // check user build dictionary
-        final String fWord = word;
-        ObjectSet<ConceptEntry> results = dictionaryClient.query(new Predicate<ConceptEntry>() {
-            public boolean match(ConceptEntry con) {
-                return con.getWord().replace("_", " ").toLowerCase().contains(fWord.toLowerCase()) && !con.isDeleted();
-            }
-        });
-
-        if (results.size() > 0) {
+        if (!results.isEmpty()) {
             entries.addAll(results);
         }
 
@@ -217,28 +134,7 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     @SuppressWarnings("serial")
     public ConceptList getConceptList(String name) {
-        final String fName = name;
-        List<ConceptList> dicts = dictionaryClient.query(new Predicate<ConceptList>() {
-            public boolean match(ConceptList dict) {
-                return dict.getConceptListName().equals(fName);
-            }
-        });
-
-        if (dicts.size() == 1)
-            return dicts.get(0);
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#getAllElementsOfType(java.
-     * lang.Class)
-     */
-    @Override
-    public List<?> getAllElementsOfType(Class<?> clazz) {
-        return dictionaryClient.query(clazz);
+        return conceptListRepository.findByConceptListName(name);
     }
 
     /*
@@ -251,57 +147,15 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     public List<ConceptEntry> getAllEntriesFromList(String listname, int page, int pageSize, final String sortBy,
             final int sortDirection) {
-        ConceptEntry entry = new ConceptEntry();
-        entry.setConceptList(listname);
+        page = page< 0 ? 0 : page;
 
-        Query dictQuery = dictionaryClient.query();
-        dictQuery.constrain(ConceptEntry.class);
-        dictQuery.descend("conceptList").constrain(listname);
+        pageSize = pageSize == -1 ? defaultPageSize : pageSize;
 
-        try {
-            final Field sortField = ConceptEntry.class.getDeclaredField(sortBy);
-            sortField.setAccessible(true);
-
-            Comparator<ConceptEntry> conceptEntryComparator = new Comparator<ConceptEntry>() {
-
-                @Override
-                public int compare(ConceptEntry o1, ConceptEntry o2) {
-                    Object o1FieldContent;
-                    Object o2FieldContent;
-                    try {
-                        if (sortDirection == IConceptDBManager.ASCENDING) {
-                            o1FieldContent = sortField.get(o1);
-                            o2FieldContent = sortField.get(o2);
-                        } else {
-                            o2FieldContent = sortField.get(o1);
-                            o1FieldContent = sortField.get(o2);
-                        }
-                    } catch (IllegalArgumentException | IllegalAccessException e) {
-                        logger.error("Error accessing field.", e);
-                        return 0;
-                    }
-
-                    if (o1FieldContent instanceof Integer) {
-                        return ((Integer) o1FieldContent).compareTo((Integer) o2FieldContent);
-                    }
-                    return o1FieldContent.toString().compareTo(o2FieldContent.toString());
-                }
-            };
-            
-            dictQuery.sortBy(conceptEntryComparator);
-        } catch (NoSuchFieldException | SecurityException e) {
-            logger.error("Couldn't sort list.", e);
-            return null;
-        }
-
-        List<ConceptEntry> dictResults = dictQuery.execute();
-
-        int startIndex = (page - 1) * pageSize;
-        int endIndex = startIndex + pageSize;
-        if (endIndex > dictResults.size()) {
-            endIndex = dictResults.size();
-        }
-        return new ArrayList<ConceptEntry>(dictResults.subList(startIndex, endIndex));
+        return conceptEntryRepository.findAll(
+                    sortDirection == 1 ?
+                    PageRequest.of(page, pageSize, Sort.by(sortBy).ascending()) 
+                    :
+                    PageRequest.of(page, pageSize, Sort.by(sortBy).descending())).getContent();
     }
     
     /*
@@ -313,16 +167,12 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     public List<ConceptEntry> getAllEntriesFromList(String listname) {
-        ConceptEntry entry = new ConceptEntry();
-        entry.setConceptList(listname);
-        return dictionaryClient.queryByExample(entry);
+       return conceptEntryRepository.findAllByConceptList(listname);
     }
 
     @Override
     public List<ConceptEntry> getAllEntriesByTypeId(String typeId) {
-        ConceptEntry entry = new ConceptEntry();
-        entry.setTypeId(typeId);
-        return dictionaryClient.queryByExample(entry);
+        return conceptEntryRepository.findAllByTypeId(typeId);
     }
 
     /*
@@ -332,16 +182,9 @@ public class DatabaseClient implements IConceptDBManager {
      * java.lang.String)
      */
     @Override
-    public void store(Object element, String databasename) {
-        // FIXME no caching?
-        // if (databasename.equals(DBNames.WORDNET_CACHE)) {
-        // wordnetCacheClient.store(element);
-        // wordnetCacheClient.commit();
-        // return;
-        // }
+    public void store(ConceptEntry element, String databasename) {
         if (databasename.equals(DBNames.DICTIONARY_DB)) {
-            dictionaryClient.store(element);
-            dictionaryClient.commit();
+            conceptEntryRepository.save(element);
         }
     }
 
@@ -374,8 +217,7 @@ public class DatabaseClient implements IConceptDBManager {
                 toBeUpdated.setChangeEvents(changeEvent);
             }
             
-            dictionaryClient.store(toBeUpdated);
-            dictionaryClient.commit();
+            conceptEntryRepository.save(toBeUpdated);
         }
     }
 
@@ -388,14 +230,7 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     public void deleteConceptList(String name) {
-        ConceptList list = new ConceptList();
-        list.setConceptListName(name);
-
-        ObjectSet<ConceptList> results = dictionaryClient.queryByExample(list);
-        for (ConceptList res : results) {
-            dictionaryClient.delete(res);
-            dictionaryClient.commit();
-        }
+        conceptListRepository.deleteByConceptListName(name);
     }
 
     /*
@@ -411,14 +246,29 @@ public class DatabaseClient implements IConceptDBManager {
             ConceptList toBeUpdated = getConceptList(listname);
             toBeUpdated.setConceptListName(list.getConceptListName());
             toBeUpdated.setDescription(list.getDescription());
-            dictionaryClient.store(list);
-            dictionaryClient.commit();
+            conceptListRepository.save(toBeUpdated);
         }
     }
 
     @Override
     public List<ConceptEntry> getAllConcepts() {
-        return dictionaryClient.query(ConceptEntry.class);
+        return conceptEntryRepository.findAll();
     }
     
+    @Override
+    public List<ConceptList> getAllConceptLists() {
+        return conceptListRepository.findAll();
+    }
+    
+    @Override
+    public void storeConceptList(ConceptList element, String databasename) {
+        if (databasename.equals(DBNames.DICTIONARY_DB)) {
+            conceptListRepository.save(element);
+        }
+    }
+    
+    @Override
+    public boolean checkIfConceptListExists(String id) {
+        return conceptListRepository.existsById(id);
+    }
 }

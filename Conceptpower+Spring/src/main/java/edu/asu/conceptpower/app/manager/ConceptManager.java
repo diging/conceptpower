@@ -508,11 +508,9 @@ public class ConceptManager implements IConceptManager {
         while (true) {
             String id = prefix + generateUniqueId();
 
-            ConceptEntry example = new ConceptEntry();
-            example.setId(id);
             // if there doesn't exist an object with this id return id
-            List<Object> results = client.queryByExample(example);
-            if (results == null || results.size() == 0)
+            ConceptEntry results = client.getEntry(id);
+            if (results == null)
                 return id;
         }
     }

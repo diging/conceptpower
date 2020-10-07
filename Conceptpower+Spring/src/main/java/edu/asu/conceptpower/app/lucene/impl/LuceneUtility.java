@@ -432,8 +432,7 @@ public class LuceneUtility implements ILuceneUtility {
         }
 
         // Fetching DB4o Data
-        List<ConceptEntry> conceptEntriesList = (List<ConceptEntry>) databaseClient
-                .getAllElementsOfType(ConceptEntry.class);
+        List<ConceptEntry> conceptEntriesList = databaseClient.getAllConcepts();
 
         Set<String> wordnetIdsOfWrappers = getWordNetIdsOfWrappers(conceptEntriesList);
 
