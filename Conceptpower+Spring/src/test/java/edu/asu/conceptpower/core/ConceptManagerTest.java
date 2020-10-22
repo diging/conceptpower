@@ -125,7 +125,7 @@ public class ConceptManagerTest {
         ConceptEntry entry = managerToTest.getConceptEntry("id1");
         Assert.assertEquals(addedConcept, entry);
         // Test for fetching the creatorId from changeEvent
-        Assert.assertEquals("testuser", entry.getCreatorId());
+        Assert.assertEquals("testuser", entry.getChangeEvents().get(0).getUserName());
         Assert.assertTrue(entry.getSynonymIds().contains("WID-2"));
     }
 

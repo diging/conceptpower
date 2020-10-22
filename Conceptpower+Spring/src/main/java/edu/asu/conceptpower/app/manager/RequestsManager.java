@@ -77,6 +77,9 @@ public  class RequestsManager implements IRequestsManager{
             comment.setCreatedAt(createdAt);
             comment.setCreatedBy(updatedBy);
             
+            if(storedRequest.getComments() == null) {
+                storedRequest.setComments(new ArrayList<>());
+            }
             storedRequest.getComments().add(comment);
             storedRequest.setResolver(updatedBy);
             storedRequest.setStatus(reviewStatus);
