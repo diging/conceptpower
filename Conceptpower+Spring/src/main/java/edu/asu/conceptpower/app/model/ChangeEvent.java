@@ -56,7 +56,7 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
     private Date date;
 
     @Column(name="type")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private ChangeEventTypes type;
 
     public int getId() {
