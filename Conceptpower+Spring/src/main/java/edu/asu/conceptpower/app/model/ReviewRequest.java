@@ -40,7 +40,7 @@ public class ReviewRequest implements Serializable{
     @Enumerated(EnumType.STRING)
     private ReviewStatus status;
     
-    @Column(name="requestor")
+    @Column(name="requester")
     private String requester;
     
     @Column(name="resolver")
