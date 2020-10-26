@@ -6,6 +6,7 @@ import edu.asu.conceptpower.app.model.ConceptEntry;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -16,7 +17,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * 
  */
 @Repository
-public interface IConceptEntryRepository extends PagingAndSortingRepository<ConceptEntry, String>{
+public interface IConceptEntryRepository extends PagingAndSortingRepository<ConceptEntry, String>, JpaSpecificationExecutor{
     
     List<ConceptEntry> findAll();
     
@@ -32,9 +33,6 @@ public interface IConceptEntryRepository extends PagingAndSortingRepository<Conc
     
     @Query("SELECT c from ConceptEntry c WHERE REPLACE(c.word, '_', ' ') LIKE LOWER(word) AND c.isDeleted = 0")
     List<ConceptEntry> findByWord(String word);
-    
-    @Query("SELECT c FROM ConceptEntry c WHERE LOWER(TRIM(:fieldName)) LIKE LOWER(TRIM(:value))")
-    List<ConceptEntry> getConceptsGivenFieldName(String fieldName, String value);
     
     @Query("SELECT c FROM ConceptEntry c WHERE c.synonymIds LIKE :id AND c.isDeleted = 0")
     List<ConceptEntry> getConceptsForGivenSynonymId(String id);

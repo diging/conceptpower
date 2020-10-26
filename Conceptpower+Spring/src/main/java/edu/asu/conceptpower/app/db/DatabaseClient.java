@@ -18,6 +18,8 @@ import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.model.ChangeEvent;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
+import static edu.asu.conceptpower.app.repository.ConceptEntrySpecification.customFieldSearch;
+
 import edu.asu.conceptpower.app.repository.IConceptEntryRepository;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
 
@@ -49,7 +51,7 @@ public class DatabaseClient implements IConceptDBManager {
 
     @Override
     public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId) {
-        return Arrays.asList(getEntriesByFieldContains("wordnetid", wordnetId));
+        return Arrays.asList(getEntriesByFieldContains("wordnetId", wordnetId));
     }
 
     /*
@@ -64,9 +66,8 @@ public class DatabaseClient implements IConceptDBManager {
         if (containsString == null || field == null)
             return new ConceptEntry[0];
         
-        List<ConceptEntry> results = conceptEntryRepository.getConceptsGivenFieldName(field, containsString);
-
-
+        List<ConceptEntry> results = conceptEntryRepository.findAll(customFieldSearch(field, containsString));
+        
         return results.toArray(new ConceptEntry[results.size()]);
     }
 
