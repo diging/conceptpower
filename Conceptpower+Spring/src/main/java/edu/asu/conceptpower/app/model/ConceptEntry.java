@@ -14,6 +14,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import edu.asu.conceptpower.app.constants.LuceneFieldNames;
+import edu.asu.conceptpower.app.constants.SearchFieldNames;
+import edu.asu.conceptpower.app.reflect.LuceneField;
+import edu.asu.conceptpower.app.reflect.SearchField;
+
 /**
  * This model helps to keep track of information about a specific concept
  * 
@@ -29,33 +34,52 @@ public class ConceptEntry implements Serializable{
 
     @Id
     @Column(name="concept_id")
+    @LuceneField(lucenefieldName = LuceneFieldNames.ID, isTokenized = false, isMultiple = false, isSortAllowed = true)
     private String id;
 
     @Column(name="wordnet_id")
+    @SearchField(fieldName = SearchFieldNames.WORDNETID)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORDNETID, isTokenized = false, isMultiple = true, isSortAllowed = true)
     private String wordnetId;
     
     @Column(name="word")
+    @SearchField(fieldName = SearchFieldNames.WORD)
+    @LuceneField(lucenefieldName = LuceneFieldNames.WORD, isTokenized = true, isMultiple = false, isShortPhraseSearchable = true, isWildCardSearchEnabled = true, isSortAllowed = true)
     private String word;
 
     @Column(name="description")
+    @SearchField(fieldName = SearchFieldNames.DESCRIPTION)
+    @LuceneField(lucenefieldName = LuceneFieldNames.DESCRIPTION, isTokenized = true, isMultiple = false, isSortAllowed = true)
     private String description;
 
     @Column(name="pos")
+    @SearchField(fieldName = SearchFieldNames.POS)
+    @LuceneField(lucenefieldName = LuceneFieldNames.POS, isTokenized = true, isMultiple = false, isSortAllowed = true)
     private String pos;
 
     @Column(name="concept_list")
+    @SearchField(fieldName = SearchFieldNames.CONCEPT_LIST)
+    @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isTokenized = false, isMultiple = false, isSortAllowed = true)
     private String conceptList;
 
     @Column(name="type_id")
+    @SearchField(fieldName = SearchFieldNames.TYPE_ID)
+    @LuceneField(lucenefieldName = LuceneFieldNames.TYPE_ID, isTokenized = false, isMultiple = false, isSortAllowed = true)
     private String typeId;
 
     @Column(name="equal_to")
+    @SearchField(fieldName = SearchFieldNames.EQUAL_TO)
+    @LuceneField(lucenefieldName = LuceneFieldNames.EQUALS_TO, isTokenized = false, isMultiple = true)
     private String equalTo;
 
     @Column(name="similar_to")
+    @SearchField(fieldName = SearchFieldNames.SIMILAR_TO)
+    @LuceneField(lucenefieldName = LuceneFieldNames.SIMILAR_TO, isTokenized = false, isMultiple = true)
     private String similarTo;
 
     @Column(name="synonym_ids")
+    @SearchField(fieldName=SearchFieldNames.SYNONYM_ID)
+    @LuceneField(lucenefieldName = LuceneFieldNames.SYNONYMID, isTokenized = false, isMultiple = true)
     private String synonymIds;
 
     @Column(name="synset_ids")
@@ -68,12 +92,18 @@ public class ConceptEntry implements Serializable{
     private String broadens;
 
     @Column(name="creator_id")
+    @SearchField(fieldName = SearchFieldNames.CREATOR)
+    @LuceneField(lucenefieldName = LuceneFieldNames.CREATOR, isTokenized = false, isMultiple = false)
     private String creatorId;
 
     @Column(name="modified")
+    @SearchField(fieldName = SearchFieldNames.MODIFIED)
+    @LuceneField(lucenefieldName = LuceneFieldNames.MODIFIED, isTokenized = false, isMultiple = false)
     private String modified;
 
     @Column(name="merged_ids")
+    @SearchField(fieldName = SearchFieldNames.MERGED_IDS)
+    @LuceneField(lucenefieldName = LuceneFieldNames.MERGED_IDS, isTokenized = false, isMultiple = true)
     private String mergedIds;
 
     @Column(name="is_deleted")

@@ -235,7 +235,7 @@ public class ConceptManager implements IConceptManager {
 
         for (String fieldName : fieldMap.keySet()) {
             String searchString = fieldMap.get(fieldName);
-
+           
             ConceptEntry[] entries = client.getEntriesByFieldContains(fieldName, searchString);
 
             for (ConceptEntry e : entries) {
@@ -379,7 +379,7 @@ public class ConceptManager implements IConceptManager {
             page = pageCount;
         }
 
-        List<ConceptEntry> entries = client.getAllEntriesFromList(conceptList, page, pageSize, sortBy, sortDirection);
+        List<ConceptEntry> entries = new ArrayList<>(client.getAllEntriesFromList(conceptList, page, pageSize, sortBy, sortDirection));
         Collections.sort(entries, new Comparator<ConceptEntry>() {
 
             public int compare(ConceptEntry o1, ConceptEntry o2) {
