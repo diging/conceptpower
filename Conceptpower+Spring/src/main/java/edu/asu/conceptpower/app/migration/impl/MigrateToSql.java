@@ -120,7 +120,6 @@ public class MigrateToSql {
         int count = 0;
         
         for(ConceptEntry c : dictionary.getClient().query(ConceptEntry.class)) {
-            System.out.println(c.getConceptList());
             conceptEntryRepository.save(modelMapperUtil.mapConceptEntry(c));
             count++;
         }

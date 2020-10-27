@@ -282,7 +282,7 @@ public class ConceptEntry implements Serializable{
     }
     
     public void setAlternativeIds(String alternativeIds) {
-        if(alternativeIds == null || alternativeIds.isEmpty()) {
+        if(this.alternativeIds == null || this.alternativeIds.isEmpty()) {
             this.alternativeIds = alternativeIds;
         }else {
             this.alternativeIds = this.alternativeIds+","+alternativeIds;
