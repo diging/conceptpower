@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.core.impl;
+package edu.asu.conceptpower.app.manager;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,8 +15,8 @@ import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
 import edu.asu.conceptpower.app.lucene.ILuceneUtility;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.util.CCPSort;
-import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IndexingEvent;
 
 /**

@@ -12,18 +12,18 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.core.impl.ConceptListManager;
 import edu.asu.conceptpower.app.db4o.DBNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
-import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.app.manager.ConceptListManager;
+import edu.asu.conceptpower.app.model.ConceptList;
 
 public class ConceptListManagerTest {
-
+    
 	@Mock
-	private IConceptDBManager client = Mockito.mock(IConceptDBManager.class);
-
+    private IConceptDBManager client;
+	
 	@InjectMocks
-	private ConceptListManager conceptListManager;
+    private ConceptListManager conceptListManager;
 
 	private ConceptList conceptList = new ConceptList();
 
@@ -31,19 +31,19 @@ public class ConceptListManagerTest {
 	public void init() {
 		MockitoAnnotations.initMocks(this);
 
-		List list = new ArrayList();
+		List<ConceptList> list = new ArrayList<>();
 		conceptList.setConceptListName("First List");
 		conceptList.setDescription("First List Description");
 		list.add(conceptList);
 
-		Mockito.when(client.getAllElementsOfType(ConceptList.class)).thenReturn(list);
-		Mockito.when(client.getConceptList("First List")).thenReturn(conceptList);
+		Mockito.when(client.getAllConceptLists()).thenReturn(list);
+        Mockito.when(client.getConceptList("First List")).thenReturn(conceptList);
 	}
 
 	@Test
 	public void addConceptListTest() {
 		conceptListManager.addConceptList("List Name", "List Description");
-		Mockito.verify(client).store(ArgumentMatchers.any(ConceptList.class), Mockito.eq(DBNames.DICTIONARY_DB));
+		Mockito.verify(client).storeConceptList(ArgumentMatchers.any(ConceptList.class), Mockito.eq(DBNames.DICTIONARY_DB));
 
 	}
 
@@ -55,7 +55,7 @@ public class ConceptListManagerTest {
 
 	@Test
 	public void getAllConceptListsTest() {
-		List list = conceptListManager.getAllConceptLists();
+		List<ConceptList> list = conceptListManager.getAllConceptLists();
 		Assert.assertNotNull(list);
 		Assert.assertEquals(1, list.size());
 	}

@@ -25,9 +25,9 @@ import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.impl.ConceptEntryWrapperCreator;
-import edu.asu.conceptpower.core.ConceptEntry;
 
 /**
  * This class provides all the required methods for deleting a concept

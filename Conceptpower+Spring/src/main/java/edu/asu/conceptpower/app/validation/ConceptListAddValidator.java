@@ -14,7 +14,7 @@ import edu.asu.conceptpower.web.ConceptListAddForm;
 public class ConceptListAddValidator implements Validator {
 
     @Autowired
-    private IConceptListManager conceptListManager;
+    private IConceptListManager conceptListService;
 
     @Override
     public boolean supports(Class<?> arg0) {
@@ -35,7 +35,7 @@ public class ConceptListAddValidator implements Validator {
 
             if (!conceptListAddForm.getListName().equalsIgnoreCase(conceptListAddForm.getOldListName())) {
 
-                if (conceptListManager.checkExistingConceptList(conceptListAddForm.getListName())) {
+                if (conceptListService.checkExistingConceptList(conceptListAddForm.getListName())) {
                     errors.rejectValue("listName", "concept_unique.required");
                 }
             }

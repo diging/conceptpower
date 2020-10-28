@@ -8,9 +8,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 
 /**
  * This class provides methods for viewing concepts of a particular type
@@ -22,7 +22,7 @@ import edu.asu.conceptpower.core.ConceptType;
 public class ConceptTypesController {
 
     @Autowired
-    private IConceptTypeManger conceptTypesManager;
+    private IConceptTypeManager conceptTypesManager;
 
     /**
      * This method provides information about all the types for concept type

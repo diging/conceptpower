@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.core.impl;
+package edu.asu.conceptpower.app.manager;
 
 import java.util.List;
 import java.util.UUID;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.db4o.DBNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
-import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.app.model.ConceptList;
 
 /**
  * Manager class for concept lists.
@@ -42,7 +42,7 @@ public class ConceptListManager implements IConceptListManager {
 		dict.setConceptListName(name);
 		dict.setDescription(description);
 		dict.setId(generateId(LIST_PREFIX));
-		client.store(dict, DBNames.DICTIONARY_DB);
+		client.storeConceptList(dict, DBNames.DICTIONARY_DB);
 	}
 	
 	/* (non-Javadoc)
@@ -59,9 +59,9 @@ public class ConceptListManager implements IConceptListManager {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ConceptList> getAllConceptLists() {
-		List<?> results = client.getAllElementsOfType(ConceptList.class);
-		if (results != null)
-			return (List<ConceptList>) results;
+		List<ConceptList> results = client.getAllConceptLists();
+		if (results != null && !results.isEmpty())
+			return results;
 		return null;
 	}
 
@@ -91,14 +91,8 @@ public class ConceptListManager implements IConceptListManager {
 		String id = prefix + UUID.randomUUID().toString();
 
 		while (true) {
-			ConceptList example = null;
-			
-			example = new ConceptList();
-			example.setId(id);
-			
-			// if there doesn't exist an object with this id return id
-			List<Object> results = client.queryByExample(example);
-			if (results == null || results.size() == 0)
+			boolean result = client.checkIfConceptListExists(id);
+			if (!result)
 				return id;
 
 			// try other id

@@ -3,7 +3,7 @@ package edu.asu.conceptpower.app.core;
 import java.util.List;
 
 import edu.asu.conceptpower.app.exceptions.DictionaryExistsException;
-import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.app.model.ConceptList;
 
 public interface IConceptListManager {
 

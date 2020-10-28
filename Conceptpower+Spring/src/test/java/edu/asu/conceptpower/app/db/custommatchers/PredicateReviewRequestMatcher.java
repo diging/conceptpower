@@ -4,12 +4,12 @@ import org.mockito.ArgumentMatcher;
 
 import com.db4o.query.Predicate;
 
-import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewRequest;
 
 /**
  * This class is a custom argument matcher to compare Predicate<ReviewRequest> classes
  * 
- * @author keerthivasan
+ * @author Keerthivasan Krishnamurthy
  *
  */
 

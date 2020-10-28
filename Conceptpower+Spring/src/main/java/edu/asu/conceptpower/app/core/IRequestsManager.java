@@ -3,9 +3,9 @@ package edu.asu.conceptpower.app.core;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import edu.asu.conceptpower.core.Comment;
-import edu.asu.conceptpower.core.ReviewRequest;
-import edu.asu.conceptpower.core.ReviewStatus;
+import edu.asu.conceptpower.app.model.Comment;
+import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 /**This interface provides function declaration for adding new Request for review and 
  *      fetching an existing Review for the required conceptId.
@@ -41,4 +41,10 @@ public interface IRequestsManager {
      * @Return ReviewRequest - Returns back the updated reviewRequest
      */
     public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, Comment comment, OffsetDateTime createdAt, String updatedBy);
+    
+    /**
+     * 
+     * @return List<ReviewRequest> - return all the reviewRequests in the database.
+     */
+    public List<ReviewRequest> getAllReviews();
 }

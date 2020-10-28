@@ -22,9 +22,9 @@ import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.rdf.RDFMessageFactory;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.IConceptMessage;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 

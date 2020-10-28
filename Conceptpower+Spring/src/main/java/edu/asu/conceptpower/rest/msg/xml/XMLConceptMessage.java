@@ -9,12 +9,12 @@ import java.util.Map;
 import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.validation.ObjectError;
 
+import edu.asu.conceptpower.app.model.ChangeEvent;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.util.URIHelper;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.IConceptMessage;
 import edu.asu.conceptpower.rest.msg.Pagination;
-import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
 /**
  * This class is used to build XML messages that are sent back as responses to

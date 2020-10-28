@@ -2,12 +2,12 @@ package edu.asu.conceptpower.app.db.custommatchers;
 
 import org.mockito.ArgumentMatcher;
 
-import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewRequest;
 
 /**
  * This class is a custom argument matcher to compare ReviewRequest classes
  * 
- * @author keerthivasan
+ * @author Keerthivasan Krishnamurthy
  *
  */
 

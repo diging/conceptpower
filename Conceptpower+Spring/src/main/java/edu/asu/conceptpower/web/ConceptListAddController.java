@@ -19,7 +19,7 @@ import edu.asu.conceptpower.app.validation.ConceptListAddValidator;
 public class ConceptListAddController {
 
     @Autowired
-    private IConceptListManager conceptListManager;
+    private IConceptListManager conceptListService;
 
     @Autowired
     private ConceptListAddValidator validator;
@@ -57,7 +57,7 @@ public class ConceptListAddController {
         if (result.hasErrors()) {
             return "/layouts/concepts/addconceptlist";
         }
-        conceptListManager.addConceptList(conceptListAddForm.getListName(), conceptListAddForm.getDescription());
+        conceptListService.addConceptList(conceptListAddForm.getListName(), conceptListAddForm.getDescription());
         return "redirect:/auth/conceptlist";
     }
 

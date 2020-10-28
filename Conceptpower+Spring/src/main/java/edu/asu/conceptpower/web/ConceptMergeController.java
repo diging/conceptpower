@@ -11,16 +11,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
 import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.core.IConceptTypesService;
 import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.core.POS;
@@ -28,9 +28,9 @@ import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.service.IConceptMergeService;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 
 @Controller
 public class ConceptMergeController {
@@ -42,10 +42,10 @@ public class ConceptMergeController {
     private IConceptMergeService conceptMergeService;
 
     @Autowired
-    private IConceptTypeManger conceptTypesManager;
+    private IConceptTypeManager conceptTypesManager;
 
     @Autowired
-    private IConceptListManager conceptListManager;
+    private IConceptListManager conceptListService;
 
     @Autowired
     private ConceptsMergeBeanValidator validator;
@@ -58,7 +58,7 @@ public class ConceptMergeController {
         binder.setValidator(validator);
     }
 
-    @RequestMapping(value = "auth/concepts/merge", method = RequestMethod.GET)
+    @GetMapping(value = "auth/concepts/merge")
     public ModelAndView prepareMergeConcept(@ModelAttribute("conceptsMergeBean") ConceptsMergeBean conceptsMergeBean,
             BindingResult result) {
         List<ConceptEntry> conceptEntries = new ArrayList<>();
@@ -76,14 +76,14 @@ public class ConceptMergeController {
         mav.addObject("localConceptIds", localConceptIds);
         mav.addObject("types", conceptTypesManager.getAllTypes());
         mav.addObject("conceptEntries", conceptEntries);
-        mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
+        mav.addObject("conceptListValues", conceptListService.getAllConceptLists().stream()
                 .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
         mav.addObject("posValues", POS.posValues);
         mav.setViewName("/layouts/concepts/mergeconcepts");
         return mav;
     }
 
-    @RequestMapping(value = "auth/concepts/merge", method = RequestMethod.POST)
+    @PostMapping(value = "auth/concepts/merge")
     public ModelAndView mergeConcept(
             @ModelAttribute("conceptsMergeBean") @Validated ConceptsMergeBean conceptsMergeBean, BindingResult result,
             Principal principal) throws IllegalAccessException, LuceneException, IndexerRunningException,
@@ -100,7 +100,7 @@ public class ConceptMergeController {
             }
             mav.addObject("localConceptIds", localConceptIds);
             mav.addObject("types", conceptTypesManager.getAllTypes());
-            mav.addObject("conceptListValues", conceptListManager.getAllConceptLists().stream()
+            mav.addObject("conceptListValues", conceptListService.getAllConceptLists().stream()
                     .map(ConceptList::getConceptListName).collect(Collectors.toSet()));
             mav.addObject("posValues", POS.posValues);
             mav.addObject("conceptEntries", conceptEntries);

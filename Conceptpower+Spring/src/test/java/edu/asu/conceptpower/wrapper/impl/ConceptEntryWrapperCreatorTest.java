@@ -14,17 +14,17 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
-import edu.asu.conceptpower.app.core.impl.RequestsManager;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.manager.RequestsManager;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.util.IURIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.impl.ConceptEntryWrapperCreator;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
-import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.app.model.ChangeEvent;
+import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.users.User;
 
 public class ConceptEntryWrapperCreatorTest {
@@ -33,7 +33,7 @@ public class ConceptEntryWrapperCreatorTest {
     private IConceptManager conceptManager = Mockito.mock(IConceptManager.class);
 
     @Mock
-    private IConceptTypeManger typesManager = Mockito.mock(IConceptTypeManger.class);
+    private IConceptTypeManager typesManager = Mockito.mock(IConceptTypeManager.class);
 
     @Mock
     private IUserManager usersManager = Mockito.mock(IUserManager.class);
@@ -59,7 +59,7 @@ public class ConceptEntryWrapperCreatorTest {
         changeEvent.setDate(new Date());
 
         entry.setTypeId("Type-1");
-        entry.addNewChangeEvent(changeEvent);
+        entry.setChangeEvents(changeEvent);
 
         entry.setCreatorId("Test");
         entry.setWordnetId("WNET_1");

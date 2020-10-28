@@ -13,12 +13,12 @@ import org.springframework.validation.ObjectError;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.asu.conceptpower.app.model.ChangeEvent;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.util.URIHelper;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.IConceptMessage;
 import edu.asu.conceptpower.rest.msg.Pagination;
-import edu.asu.conceptpower.servlet.core.ChangeEvent;
 
 /**
  * This class helps to convert the given object to json. This class loads the

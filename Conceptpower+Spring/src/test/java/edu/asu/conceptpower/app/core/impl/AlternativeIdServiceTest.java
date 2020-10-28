@@ -15,7 +15,8 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.core.IConceptTypesService;
 import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.manager.AlternativeIdService;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 
 public class AlternativeIdServiceTest {
 

@@ -2,7 +2,7 @@ package edu.asu.conceptpower.app.service;
 
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 
 public interface IConceptEditService {
 

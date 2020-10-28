@@ -1,62 +1,41 @@
 package edu.asu.conceptpower.app.db;
 
 import java.util.List;
-import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.db4o.ObjectContainer;
-import com.db4o.query.Predicate;
-
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
-import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.repository.IReviewRequestRepository;
 
 @Component
 public class DBRequestClient implements IRequestsDBManager{
-
+     
     @Autowired
-    @Qualifier("conceptReviewDatabaseManager")
-    private DatabaseManager dbManager;
-    
-    private ObjectContainer client;
-
-    @PostConstruct
-    public void init() {
-        this.client = dbManager.getClient();
-    }
+    private IReviewRequestRepository reviewRequestRepository;
     
     @Override
     public void store(ReviewRequest reviewRequest) { 
-        client.store(reviewRequest);
-        client.commit();
+        reviewRequestRepository.save(reviewRequest);
     }
     
     @Override
     public ReviewRequest getReview(String reviewId) {
-        List<ReviewRequest> responses =  client.query(new Predicate<ReviewRequest>() {
-            private static final long serialVersionUID = 6495914730735826451L;
-
-            @Override
-            public boolean match(ReviewRequest review) {
-                return review.getId().equals(reviewId);
-            }
-            
-        });
+        Optional<ReviewRequest> response =  reviewRequestRepository.findById(reviewId);
         
-        if(responses == null || responses.size() == 0) {
-            return null;
-        }
-        return responses.get(0);
+        return response.isPresent() ? response.get() : null;
     }
     
     @Override
     public List<ReviewRequest> getAllReviews(String  conceptId){
-        ReviewRequest request = new ReviewRequest();
-        request.setConceptId(conceptId);
-        
-        return client.queryByExample(request);
+        return reviewRequestRepository.findAllByConceptId(conceptId);
+    }
+
+    @Override
+    public List<ReviewRequest> getAllReviews() {
+        return reviewRequestRepository.findAll();
     }
     
 }

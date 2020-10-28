@@ -69,13 +69,13 @@ import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
 import edu.asu.conceptpower.app.lucene.ILuceneUtility;
 import edu.asu.conceptpower.app.lucene.LuceneAction;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.reflect.LuceneField;
 import edu.asu.conceptpower.app.reflect.SearchField;
 import edu.asu.conceptpower.app.util.CCPSort;
 import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetConfiguration;
-import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.IndexingEvent;
 import edu.asu.conceptpower.rest.SearchParamters;
 import edu.mit.jwi.Dictionary;
@@ -432,8 +432,7 @@ public class LuceneUtility implements ILuceneUtility {
         }
 
         // Fetching DB4o Data
-        List<ConceptEntry> conceptEntriesList = (List<ConceptEntry>) databaseClient
-                .getAllElementsOfType(ConceptEntry.class);
+        List<ConceptEntry> conceptEntriesList = databaseClient.getAllConcepts();
 
         Set<String> wordnetIdsOfWrappers = getWordNetIdsOfWrappers(conceptEntriesList);
 

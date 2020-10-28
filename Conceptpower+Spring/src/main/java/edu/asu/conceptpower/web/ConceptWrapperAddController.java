@@ -36,7 +36,7 @@ import edu.asu.conceptpower.app.validation.ConceptWrapperAddBeanValidator;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.web.backing.ConceptWrapperAddBean;
 
 /**

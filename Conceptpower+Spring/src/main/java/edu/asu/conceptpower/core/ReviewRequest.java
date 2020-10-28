@@ -4,15 +4,26 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 public class ReviewRequest {
 
     private String id;
+    
     private String conceptId;
+    
     private String request;
+    
+    @Enumerated(EnumType.ORDINAL)
     private ReviewStatus status;
+    
     private String requester;
+    
     private String resolver;
+    
     private List<Comment> comments;
+    
     private OffsetDateTime createdAt;
     
     

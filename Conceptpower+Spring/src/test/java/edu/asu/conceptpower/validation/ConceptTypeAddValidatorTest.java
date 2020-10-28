@@ -13,7 +13,7 @@ import org.springframework.validation.ValidationUtils;
 
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.validation.ConceptTypeAddValidator;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.web.ConceptTypeAddForm;
 
 public class ConceptTypeAddValidatorTest {

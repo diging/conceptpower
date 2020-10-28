@@ -2,8 +2,8 @@ package edu.asu.conceptpower.app.db4o;
 
 import java.util.List;
 
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptList;
 
 public interface IConceptDBManager {
 
@@ -11,8 +11,6 @@ public interface IConceptDBManager {
     public static final int DESCENDING = -1;
 
 	public abstract ConceptEntry getEntry(String id);
-
-	public abstract List<Object> queryByExample(Object example);
 
 	public abstract ConceptEntry[] getEntriesByFieldContains(String field,
 			String containsString);
@@ -25,18 +23,10 @@ public interface IConceptDBManager {
 
 	public abstract ConceptList getConceptList(String name);
 
-	/**
-	 * Get all objects of a certain type from both databases
-	 * 
-	 * @param clazz
-	 * @return
-	 */
-	public abstract List<?> getAllElementsOfType(Class<?> clazz);
-
     public abstract List<ConceptEntry> getAllEntriesFromList(String conceptList, int pageNo, int pageSize,
             String sortBy, int sortDirection);
 
-	public abstract void store(Object element, String databasename);
+	public abstract void store(ConceptEntry element, String databasename);
 
 	public abstract void update(ConceptEntry entry, String databasename);
 
@@ -50,5 +40,13 @@ public interface IConceptDBManager {
     public List<ConceptEntry> getAllEntriesByTypeId(String typeId);
 
     public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId);
+    
+    public List<ConceptEntry> getAllConcepts();
+    
+    public List<ConceptList> getAllConceptLists();
+    
+    public void storeConceptList(ConceptList element, String databasename);
+    
+    public boolean checkIfConceptListExists(String id);
 
 }

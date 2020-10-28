@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.core.impl;
+package edu.asu.conceptpower.app.manager;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.core.IRequestsManager;
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
-import edu.asu.conceptpower.core.Comment;
-import edu.asu.conceptpower.core.ReviewRequest;
-import edu.asu.conceptpower.core.ReviewStatus;
+import edu.asu.conceptpower.app.model.Comment;
+import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 @Service
 public  class RequestsManager implements IRequestsManager{
@@ -40,7 +40,7 @@ public  class RequestsManager implements IRequestsManager{
     public ReviewRequest getLatestReview(String conceptId) {
         List<ReviewRequest> reviewRequests = getAllReviews(conceptId);
        
-        if(reviewRequests!= null && reviewRequests.size() > 0) {
+        if(reviewRequests!= null && !reviewRequests.isEmpty()) {
             return reviewRequests.get(reviewRequests.size() - 1);
         }
         
@@ -53,13 +53,13 @@ public  class RequestsManager implements IRequestsManager{
     public List<ReviewRequest> getAllReviews(String conceptId){
         List<ReviewRequest> reviewRequests = dbClient.getAllReviews(conceptId);
         
-        if(reviewRequests!= null && reviewRequests.size() > 0) {
+        if(reviewRequests!= null && !reviewRequests.isEmpty()) {
             reviewRequests = new ArrayList<>(reviewRequests);
             Collections.sort(reviewRequests, Comparator.comparing(ReviewRequest :: getCreatedAt, Comparator.nullsFirst(Comparator.naturalOrder())));
             return reviewRequests;
         }
         
-        return null;
+        return Collections.emptyList();
     }
     
     /* (non-Javadoc)
@@ -77,6 +77,9 @@ public  class RequestsManager implements IRequestsManager{
             comment.setCreatedAt(createdAt);
             comment.setCreatedBy(updatedBy);
             
+            if(storedRequest.getComments() == null) {
+                storedRequest.setComments(new ArrayList<>());
+            }
             storedRequest.getComments().add(comment);
             storedRequest.setResolver(updatedBy);
             storedRequest.setStatus(reviewStatus);
@@ -104,5 +107,10 @@ public  class RequestsManager implements IRequestsManager{
             // try other id
             id = prefix + UUID.randomUUID().toString();
         }
+    }
+
+    @Override
+    public List<ReviewRequest> getAllReviews() {
+       return dbClient.getAllReviews();
     }
 }

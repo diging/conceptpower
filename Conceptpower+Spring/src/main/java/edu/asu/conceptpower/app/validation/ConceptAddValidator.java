@@ -6,8 +6,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.profile.impl.ServiceBackBean;
-import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.web.backing.ConceptAddBean;
 
 @Component

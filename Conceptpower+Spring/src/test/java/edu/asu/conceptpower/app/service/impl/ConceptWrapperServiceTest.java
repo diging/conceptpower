@@ -12,10 +12,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.core.impl.ConceptListManager;
-import edu.asu.conceptpower.app.core.impl.ConceptTypesManager;
-import edu.asu.conceptpower.core.ConceptList;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.manager.ConceptListManager;
+import edu.asu.conceptpower.app.manager.ConceptTypesManager;
+import edu.asu.conceptpower.app.model.ConceptList;
+import edu.asu.conceptpower.app.model.ConceptType;
 
 public class ConceptWrapperServiceTest {
 

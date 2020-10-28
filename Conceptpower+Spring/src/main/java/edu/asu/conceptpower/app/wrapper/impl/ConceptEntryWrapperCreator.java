@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.app.core.Constants;
 import edu.asu.conceptpower.app.core.IRequestsManager;
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ReviewRequest;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.util.IURIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ReviewRequest;
 
 /**
  * This class provides methods required for creation concept wrappers
@@ -32,7 +32,7 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
     private IConceptManager conceptManager;
 
     @Autowired
-    private IConceptTypeManger typesManager;
+    private IConceptTypeManager typesManager;
 
     @Autowired
     private IUserManager usersManager;

@@ -2,8 +2,8 @@ package edu.asu.conceptpower.rest.msg.xml;
 
 import org.apache.commons.text.StringEscapeUtils;
 
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.util.URIHelper;
-import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.rest.msg.ITypeMessage;
 
 /**

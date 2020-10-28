@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManger;
+import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptType;
 
 /**
  * This class provides methods for concept type deletion
@@ -25,7 +25,7 @@ import edu.asu.conceptpower.core.ConceptType;
 public class ConcepTypeDeleteController {
 
     @Autowired
-    private IConceptTypeManger typeManager;
+    private IConceptTypeManager typeManager;
 
     @Autowired
     private IConceptManager conceptManager;

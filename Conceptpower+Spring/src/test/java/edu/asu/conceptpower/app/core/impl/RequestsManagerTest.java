@@ -16,9 +16,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
-import edu.asu.conceptpower.core.Comment;
-import edu.asu.conceptpower.core.ReviewRequest;
-import edu.asu.conceptpower.core.ReviewStatus;
+import edu.asu.conceptpower.app.manager.RequestsManager;
+import edu.asu.conceptpower.app.model.Comment;
+import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 public class RequestsManagerTest {
     
@@ -144,7 +145,6 @@ public class RequestsManagerTest {
     @Test
     public void test_getAllReviews_failure() {
         List<ReviewRequest> response = requestManager.getAllReviews("WID-10126926-N-05-Albert");
-        
-        assertNull(response);
+        assertEquals(true, response.isEmpty());
     }
 }

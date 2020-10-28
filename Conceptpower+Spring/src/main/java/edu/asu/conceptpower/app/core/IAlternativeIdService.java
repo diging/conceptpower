@@ -2,7 +2,7 @@ package edu.asu.conceptpower.app.core;
 
 import java.util.Collection;
 
-import edu.asu.conceptpower.core.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 
 public interface IAlternativeIdService {
 

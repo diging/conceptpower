@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.util.URIHelper;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.rest.msg.IMessageConverter;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.json.JsonTypeMessage;

@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.core.POS;
-import edu.asu.conceptpower.core.ConceptType;
+import edu.asu.conceptpower.app.model.ConceptType;
 
 @Component
 public class ConceptEditBean {

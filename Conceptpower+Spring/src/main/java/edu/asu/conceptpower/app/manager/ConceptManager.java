@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.core.impl;
+package edu.asu.conceptpower.app.manager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,15 +25,15 @@ import edu.asu.conceptpower.app.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.model.ChangeEvent;
+import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.util.CCPSort;
 import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
-import edu.asu.conceptpower.core.ConceptEntry;
-import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.rest.SearchParamters;
-import edu.asu.conceptpower.servlet.core.ChangeEvent;
-import edu.asu.conceptpower.servlet.core.ChangeEvent.ChangeEventTypes;
 
 /**
  * This class handles concepts in general. It uses a DB4O client that contains
@@ -235,7 +235,7 @@ public class ConceptManager implements IConceptManager {
 
         for (String fieldName : fieldMap.keySet()) {
             String searchString = fieldMap.get(fieldName);
-
+           
             ConceptEntry[] entries = client.getEntriesByFieldContains(fieldName, searchString);
 
             for (ConceptEntry e : entries) {
@@ -379,7 +379,7 @@ public class ConceptManager implements IConceptManager {
             page = pageCount;
         }
 
-        List<ConceptEntry> entries = client.getAllEntriesFromList(conceptList, page, pageSize, sortBy, sortDirection);
+        List<ConceptEntry> entries = new ArrayList<>(client.getAllEntriesFromList(conceptList, page, pageSize, sortBy, sortDirection));
         Collections.sort(entries, new Comparator<ConceptEntry>() {
 
             public int compare(ConceptEntry o1, ConceptEntry o2) {
@@ -465,10 +465,10 @@ public class ConceptManager implements IConceptManager {
 
         // Creating the first change event
         ChangeEvent changeEvent = new ChangeEvent(userName, new Date(), ChangeEventTypes.CREATION);
-        entry.addNewChangeEvent(changeEvent);
+       entry.setChangeEvents(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
-        entry.getAlternativeIds().add(id);
+       entry.setAlternativeIds(id);
         client.store(entry, DBNames.DICTIONARY_DB);
         if (entry.getWordnetId() != null) {
             String[] wordnetIds = entry.getWordnetId().split(",");
@@ -498,7 +498,7 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setDate(new Date());
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
-        entry.addNewChangeEvent(changeEvent);
+       entry.setChangeEvents(changeEvent);
         indexService.updateConceptEntry(entry, userName);
 
         client.update(entry, DBNames.DICTIONARY_DB);
@@ -508,11 +508,9 @@ public class ConceptManager implements IConceptManager {
         while (true) {
             String id = prefix + generateUniqueId();
 
-            ConceptEntry example = new ConceptEntry();
-            example.setId(id);
             // if there doesn't exist an object with this id return id
-            List<Object> results = client.queryByExample(example);
-            if (results == null || results.size() == 0)
+            ConceptEntry results = client.getEntry(id);
+            if (results == null)
                 return id;
         }
     }
@@ -551,7 +549,7 @@ public class ConceptManager implements IConceptManager {
             changeEvent.setType(ChangeEventTypes.DELETION);
             changeEvent.setDate(new Date());
             changeEvent.setUserName(userName);
-            concept.addNewChangeEvent(changeEvent);
+            concept.setChangeEvents(changeEvent);
             client.update(concept, DBNames.DICTIONARY_DB);
             indexService.deleteById(concept.getId(), userName);
         }
@@ -624,5 +622,10 @@ public class ConceptManager implements IConceptManager {
         }
 
         return null;
+    }
+
+    @Override
+    public List<ConceptEntry> getAllConcepts() {
+        return client.getAllConcepts();
     }
 }

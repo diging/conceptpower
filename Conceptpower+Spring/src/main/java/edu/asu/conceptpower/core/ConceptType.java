@@ -2,6 +2,8 @@ package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
 
+import javax.persistence.Id;
+
 public class ConceptType implements Serializable {
 
 	/**
@@ -9,7 +11,7 @@ public class ConceptType implements Serializable {
 	 */
 	private static final long serialVersionUID = 2354156550263013826L;
 	
-	private String typeId;
+	@Id private String typeId;
 	private String typeName;
 	private String description;
 	private String matches;
