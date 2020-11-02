@@ -9,7 +9,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -27,7 +29,7 @@ public class ReviewRequest implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name="review_id")
+    @Column(name="id")
     private String id;
     
     @Column(name="concept_id")
@@ -46,7 +48,8 @@ public class ReviewRequest implements Serializable{
     @Column(name="resolver")
     private String resolver;
     
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    @OneToMany( cascade = CascadeType.ALL, fetch= FetchType.EAGER)
+    @JoinColumn(name = "review_id", referencedColumnName="id")
     private List<Comment> comments;
     
     @Column(name="created_at")

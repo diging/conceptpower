@@ -10,8 +10,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -45,9 +43,8 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
     
-    @ManyToOne
-    @JoinColumn(name = "concept_entry_id", referencedColumnName="concept_id")
-    private ConceptEntry concept;
+    @Column(name = "concept_entry_id")
+    private String concept_entry_id;
 
     @Column(name="user_name")
     private String userName;
@@ -91,12 +88,12 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
         this.type = type;
     }
     
-    public ConceptEntry getConcept() {
-        return concept;
+    public String getConcept() {
+        return this.concept_entry_id;
     }
     
-    public void setConcept(ConceptEntry c) {
-        this.concept = c;
+    public void setConceptId(String id) {
+        this.concept_entry_id = id;
     }
 
     @Override

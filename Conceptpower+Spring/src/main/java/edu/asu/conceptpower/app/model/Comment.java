@@ -5,9 +5,9 @@ import java.time.OffsetDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -23,8 +23,9 @@ public class Comment implements Serializable{
     private static final long serialVersionUID = 1L;
     
     @Id
-    @Column(name="comment_id")
-    private String id;
+    @Column(name="id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
     
     @Column(name="comment_desc")
     private String commentDesc;
@@ -35,15 +36,15 @@ public class Comment implements Serializable{
     @Column(name="created_at")
     private OffsetDateTime createdAt;
     
-    @ManyToOne
-    @JoinColumn(name = "review_request_id", referencedColumnName="concept_id")
-    private ReviewRequest review;
+    @Column(name="review_id")
+    private String review_id;
     
-    public String getId() {
+    
+    public Integer getId() {
         return id;
     }
    
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     
@@ -71,12 +72,12 @@ public class Comment implements Serializable{
         this.createdAt = createdAt;
     }
     
-    public ReviewRequest getConcept() {
-        return this.review;
+    public String getReviewId() {
+        return this.review_id;
     }
     
-    public void setConcept(ReviewRequest r) {
-        this.review = r;
+    public void setReviewId(String id) {
+        this.review_id = id;
     }
     
 }
