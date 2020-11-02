@@ -6,6 +6,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 /**
  * Review Request repository
@@ -18,7 +19,7 @@ import edu.asu.conceptpower.app.model.ReviewRequest;
 public interface IReviewRequestRepository extends PagingAndSortingRepository<ReviewRequest, String>{
     
     /*
-     * Find all the reivew requests for the given conceptId
+     * Find all the reivew requests with the given conceptId
      * */
     List<ReviewRequest> findAllByConceptId(String conceptId);
     
@@ -26,4 +27,9 @@ public interface IReviewRequestRepository extends PagingAndSortingRepository<Rev
      * Return all the review requests from the database
      * */
     List<ReviewRequest> findAll();
+    
+    /*
+     * Find all the reivew requests with the given status
+     * */
+    List<ReviewRequest> findAllByStatus(ReviewStatus status);
 }

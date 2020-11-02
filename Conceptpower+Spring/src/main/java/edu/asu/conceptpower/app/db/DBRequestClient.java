@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 import edu.asu.conceptpower.app.repository.IReviewRequestRepository;
 
 @Component
@@ -36,6 +37,11 @@ public class DBRequestClient implements IRequestsDBManager{
     @Override
     public List<ReviewRequest> getAllReviews() {
         return reviewRequestRepository.findAll();
+    }
+    
+    @Override
+    public List<ReviewRequest> getReviewByStatus(ReviewStatus status){
+        return reviewRequestRepository.findAllByStatus(status);
     }
     
 }

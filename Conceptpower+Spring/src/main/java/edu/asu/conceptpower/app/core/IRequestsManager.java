@@ -47,4 +47,9 @@ public interface IRequestsManager {
      * @return List<ReviewRequest> - return all the reviewRequests in the database.
      */
     public List<ReviewRequest> getAllReviews();
+    
+    /**
+     * @return List<ReviewRequest> - return all the reviewRequests that are oven.
+     */
+    public List<ReviewRequest> getAllOpenReviews();
 }

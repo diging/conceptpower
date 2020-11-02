@@ -3,6 +3,7 @@ package edu.asu.conceptpower.app.db4o;
 import java.util.List;
 
 import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 
 /**
@@ -21,4 +22,6 @@ public interface IRequestsDBManager {
     public List<ReviewRequest> getAllReviews();
     
     public ReviewRequest getReview(String reviewId);
+    
+    public List<ReviewRequest> getReviewByStatus(ReviewStatus status);
 }

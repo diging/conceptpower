@@ -6,11 +6,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.conceptpower.app.manager.RequestsManager;
@@ -24,7 +25,7 @@ public class ReviewRequestController {
     @Autowired
     private RequestsManager requestsMgr;
            
-    @RequestMapping(value = "/auth/request/add", method = RequestMethod.POST )
+    @PostMapping(value = "/auth/request/add")
     public @ResponseBody ReviewRequest addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
         reviewRequest.setRequester(principal.getName());
         reviewRequest.setCreatedAt(OffsetDateTime.now());
@@ -33,18 +34,24 @@ public class ReviewRequestController {
         return reviewRequest;
     }
     
-    @RequestMapping(value = "/auth/request/resolve/{reviewId}", method = RequestMethod.POST )
+    @PostMapping(value = "/auth/request/resolve/{reviewId}")
     public @ResponseBody ReviewRequest resolveRequest(@PathVariable String reviewId,@RequestBody Comment comment,Principal principal) {
         return requestsMgr.updateReview(reviewId, ReviewStatus.RESOLVED, comment, OffsetDateTime.now(), principal.getName());
     }
     
-    @RequestMapping(value = "/auth/request/reopen/{reviewId}", method = RequestMethod.POST )
+    @PostMapping(value = "/auth/request/reopen/{reviewId}")
     public @ResponseBody ReviewRequest reopenRequest(@PathVariable String reviewId,@RequestBody Comment comment,Principal principal) {
         return requestsMgr.updateReview(reviewId, ReviewStatus.OPENED, comment, OffsetDateTime.now(), principal.getName());
     }
     
-    @RequestMapping(value = "/auth/request/{conceptId}/all", method = RequestMethod.GET)
+    @GetMapping(value = "/auth/request/{conceptId}/all")
     public @ResponseBody List<ReviewRequest> getAllReviews(@PathVariable String conceptId, Principal principal){
         return requestsMgr.getAllReviews(conceptId);  
+    }
+    
+    @GetMapping(value="/auth/openrequests")
+    public String viewOpenReviewRequests(ModelMap model) {
+        model.addAttribute("openRequests", requestsMgr.getAllOpenReviews());
+        return "layouts/concepts/openrequests";
     }
 }

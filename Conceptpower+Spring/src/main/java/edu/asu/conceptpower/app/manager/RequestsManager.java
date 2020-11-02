@@ -113,4 +113,9 @@ public  class RequestsManager implements IRequestsManager{
     public List<ReviewRequest> getAllReviews() {
        return dbClient.getAllReviews();
     }
+
+    @Override
+    public List<ReviewRequest> getAllOpenReviews() {
+        return dbClient.getReviewByStatus(ReviewStatus.RESOLVED);
+    }
 }
