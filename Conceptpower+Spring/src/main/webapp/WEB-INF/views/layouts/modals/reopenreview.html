@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+   <div class="modal fade" id="reopenModal" role="dialog" th:fragment="reopenrequest">
+      <div class="modal-dialog" id="requestBox">
+            <div class="modal-content" >
+               <div class="modal-header">
+                  <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h5 class="modal-title">Reopen Request</h5>
+               </div>
+               <div class="modal-body" style="padding-top:0px;">
+                  <h2 style="color:#19586B;"> History of Requests</h2>
+                  <div id="reviewHistoryForReopen"></div>
+                  <div id = "resolveArea" style="padding-top: 25px; display: inline-flex;">
+                     <textarea class="form-control" id="reopenComment" name="reopenComment" rows="1" cols="60" placeholder="Please enter a opening Comment"></textarea>
+                     <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin:unset" id="reopenButton">Reopen</button>
+                  </div>
+                  <div id="reopenError" class="error"></div>
+               </div>
+            </div>
+      </div>
+   </div>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+   <div class="modal" tabindex="-1" id="reviewModal" role="dialog" th:fragment="addrequest">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content" style="border-radius: 30px;">
+            <div class="modal-header">
+               <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+               <h5 class="modal-title">Request for Review</h5>
+            </div>
+            <div class="modal-body">
+               <div class="form-label"><b>Request</b></div>
+               <div class="form-field">
+                  <textarea class="form-control" id="request" name="request" rows="4" cols="30" placeholder="Please enter a request." ></textarea>
+                  <input type="hidden" name="conceptId" id="conceptId" value=""/>
+                  <div id="reviewError" class="error">Request cannot be empty</div>
+                  <div id="info" class="success"></div>
+               </div>
+               <div class="modal-footer" style="margin-top: 15px;padding: 10px 20px 0px;">
+                  <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin:unset" data-dismiss="modal">Close</button>
+                  <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin:unset" id="submitRequest">Submit</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</html>

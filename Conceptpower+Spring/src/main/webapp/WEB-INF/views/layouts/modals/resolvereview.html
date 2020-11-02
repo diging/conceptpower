@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+   <div class="modal fade" id="requestModal" role="dialog" th:fragment="resolverequest">
+      <div class="modal-dialog" id="requestBox">
+          <div class="modal-content" >
+             <div class="modal-header">
+                <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title">Resolve Request</h5>
+             </div>
+             <div class="modal-body">
+                <h2 style="color:#19586B;"> History of Requests</h2>
+                <div id="reviewHistoryForResolve"></div>
+                <div id = "resolveArea" style="padding-top: 25px;">
+                   <textarea class="form-control" id="resolveComment" name="resolveComment" rows="1" cols="60" placeholder="Please enter a closing Comment"></textarea>
+                   <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="resolveButton">Resolve</button>
+                </div>
+                <div id="resolveCommentError" class="error"></div>
+             </div>
+           </div>
+      </div>
+   </div>
+</html>
