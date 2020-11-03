@@ -300,7 +300,6 @@
 	      });
 	
 	      $(document).on("click", ".fa-exclamation-triangle", function() {
-	    	  console.log($(this).data())
 	          $('#reviewId').val($(this).data("review-id"));
 	          $("#request").val($(this).data("request"));
 	          $("#conceptId").val($(this).data("conceptId"));
@@ -584,8 +583,8 @@
 	                     </div>
 	                     <div  
 	                        th:if="${concept.reviewRequest != null
-	                        && concept.reviewRequest.status != null && concept.reviewRequest.status.name() != 'RESOLVED'}"
-	                        th:data-request="${concept.reviewRequest.request}" th:data-review-id="${concept.reviewRequest.id}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" th:data-concept-id="${concept.entry.id}"  id="exclamation" >
+	                        && concept.reviewRequest.status != null && concept.reviewRequest.status.name() != 'RESOLVED'}"   
+	                        th:data-request="${concept.reviewRequest.request}" th:data-review-id="${concept.reviewRequest.id}" class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" th:data-concept-id="${concept.entry.id}"  id="exclamation" >
 	                     </div>
 	                  </div>
 	               </td>
