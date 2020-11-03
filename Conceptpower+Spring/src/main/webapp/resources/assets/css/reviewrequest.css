@@ -1,0 +1,13 @@
+#reviewError{
+	display:none;
+}
+
+#reviewModal .modal-dialog, #requestModal .modal-dialog, #reopenModal .modal-dialog{
+	width:500px;
+	margin: 30px auto;
+}
+
+.fa{
+	cursor:pointer;
+	color:#a34e62;
+}

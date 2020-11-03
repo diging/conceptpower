@@ -116,6 +116,6 @@ public  class RequestsManager implements IRequestsManager{
 
     @Override
     public List<ReviewRequest> getAllOpenReviews() {
-        return dbClient.getReviewByStatus(ReviewStatus.RESOLVED);
+        return dbClient.getReviewByStatus(ReviewStatus.OPENED);
     }
 }

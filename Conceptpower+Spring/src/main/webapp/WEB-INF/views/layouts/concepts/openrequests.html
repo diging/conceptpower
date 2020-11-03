@@ -1,0 +1,168 @@
+<html
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+   layout:decorate="~{layouts/main}"
+   >
+   <head>
+      <link th:href="@{/resources/assets/css/reviewrequest.css}" rel="stylesheet" />
+      <script>
+      	$(document).on('click', '#conceptDetails', function(e) {
+    	    var conceptid = $(this).data('conceptid');
+
+    	    $.ajax({
+    	        type: "GET",
+    	        url: "[[@{'/conceptDetail'}]]",
+    	        data: {
+    	            conceptid: conceptid
+    	        },
+    	        success: function(details) {
+    	            details = $.parseJSON(details);
+    	            $("#conceptDetailsName").text(details.name);
+    	            $("#conceptDetailsId").text(details.id);
+    	            $("#conceptDetailsUri").text(details.uri);
+    	            $("#conceptDetailsWordnetId").text(details.wordnetid);
+    	            $("#conceptDetailsPos").text(details.pos);
+    	            $("#conceptDetailsList").text(details.conceptlist);
+    	            $("#conceptDetailsType").text(details.type);
+    	            $("#conceptDetailsEqualTo").text(details.equalto);
+    	            $("#conceptDetailsSimilarTo").text(details.similarto);
+    	            $("#conceptDetailsCreator").text(details.creator);
+    	            $("#conceptDetailsDesc").html(details.description);
+    	            $("#conceptDetailsMergedIds").html(details.mergedIds);
+
+    	            if (details.mergedIds) {
+    	                $.ajax({
+    	                    url: "[[@{'/rest/OriginalConcepts'}]]",
+    	                    type: 'GET',
+    	                    headers: {
+    	                        Accept: "application/json",
+    	                    },
+    	                    data: {
+    	                        ids: details.mergedIds
+    	                    },
+    	                    success: function(originalConcepts) {
+    	                        var mergedIdsHtml = '';
+    	                        $.each(originalConcepts.conceptEntries, function(index, conceptEntry) {
+    	                            if (mergedIdsHtml) {
+    	                                mergedIdsHtml += ", ";
+    	                            }
+    	                            mergedIdsHtml += '<span title =  "Id: ' + conceptEntry.id + ', Word: ' + conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
+    	                            mergedIdsHtml += "<i>" + conceptEntry.id + "</i>";
+    	                            mergedIdsHtml += "</span>";
+    	                        });
+    	                        $("#conceptDetailsMergedIds").html(mergedIdsHtml);
+    	                    }
+    	                });
+    	            }
+    	        }
+    	    });
+    	});
+
+    	function getListOfReviewRequests(conceptId, operation) {
+    	    $.ajax({
+    	        type: "GET",
+    	        url: "[[@{'/auth/request/'}]]" + conceptId + "/all",
+    	        success: function(response) {
+    	            var reviewHistory = '';
+    	            reviewHistory += '<div id="review-history-' + conceptId + '">';
+    	            $.each(response, function(index, element) {
+    	                var reviewNumber = index + 1;
+    	                reviewHistory += '<div>';
+    	                reviewHistory += '<div  class="reviewhistory">' +
+    	                    '<h4 data-toggle="tooltip" data-placement="right"><b>' + reviewNumber + '. ' + element.request + '</b></h4></div>'
+    	                reviewHistory += '<div  id="review-' + index + conceptId + '">'
+
+    	                $.each(element.comments, function(iterator, commentElement) {
+    	                    reviewHistory += '<div><h6 style="color:#19586B; display:inline-block;">' + commentElement.createdBy.toUpperCase() + ': </h6><span>' + '  ' + commentElement.comment + '</span></div>';
+    	                });
+
+    	                reviewHistory += '</div></div>';
+    	            });
+
+    	            reviewHistory += '</div>';
+    	            if (operation === 'resolve') {
+    	                $('#reviewHistoryForResolve').html(reviewHistory);
+    	            } else {
+    	                $('#reviewHistoryForReopen').html(reviewHistory);
+    	            }
+    	        },
+    	        error: function(e) {
+    	            if (operation === 'resolve') {
+    	                $('reopenError').text('Fetching Review History Failed')
+    	            } else {
+    	                $('resolveCommentError').text('Fetching Review History Failed')
+    	            }
+    	        }
+    	    });
+    	}
+
+    	$(document).on("click", ".fa-exclamation-triangle", function() {
+    	    $('#reviewId').val($(this).data("review-id"));
+    	    $("#request").val($(this).data("request"));
+    	    $("#conceptId").val($(this).data("conceptId"));
+    	    $('#resolveCommentError').hide();
+    	    $("#requestBox").show();
+
+    	    getListOfReviewRequests($("#conceptId").val(), 'resolve');
+    	});
+
+    	$(document).on('click', '#resolveButton', function() {
+    	    var comment = $('#resolveComment').val().trim();
+    	    var conceptId = $("#conceptId").val();
+    	    var request = $("#request").val();
+    	    var reviewId = $('#reviewId').val();
+
+    	    if (comment.length == 0) {
+    	        $('#resolveCommentError').text('Closing comment cannot be empty');
+    	        $('#resolveCommentError').show();
+    	    } else {
+    	        var comments = {
+    	            comment: comment
+    	        };
+    	        var token = $("meta[name='_csrf_token']").attr("content");
+    	        $.ajax({
+    	            type: "POST",
+    	            url: "[[@{'/auth/request/resolve/'}]]" + reviewId + "?_csrf=" + token,
+    	            data: JSON.stringify(comments),
+    	            contentType: "application/json",
+    	            success: function(response) {
+    	                window.location = "[[@{'/auth/openrequests'}]]"
+    	            },
+    	            error: function(e) {
+    	                $('#resolveCommentError').text("Something went wrong. Unable to resolve the request");
+    	                $('#resolveCommentError').show();
+    	            }
+    	        });
+    	    }
+    	});
+      </script>
+   </head>
+   <body class="body" layout:fragment="content">
+      <div class="resultsSection">
+         <h3 class="titleHeader">Open Review Requests</h3>
+         <div th:if="${openRequests == null || openRequests.size() == 0}">
+            There are no open review requests
+         </div>
+         <table th:if="${openRequests != null && openRequests.size() > 0}" class="table table-striped resultTable tableStyles" style="width:50%">
+            <thead>
+               <tr>
+                  <td>Concept id</td>
+                  <td></td>
+               </tr>
+            </thead>
+            <tbody>
+               <tr th:each="item: ${openRequests}">
+                  <td data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" th:data-conceptid="${item.conceptId}" th:text="${item.conceptId}" style="color: #A34D63; cursor: pointer;"></td>
+                  <td>
+                     <div  th:data-request="${item.request}" th:data-review-id="${item.id}" title="${fn:substring(item.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" th:data-concept-id="${item.conceptId}"  id="exclamation" ></div>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+      <input type="hidden" name="reviewId" id="reviewId" value=""/>
+      <input type="hidden" name="conceptId" id="conceptId" value=""/>
+      <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
+      <div th:insert="layouts/modals/resolvereview :: resolverequest"></div>
+   </body>
+</html>

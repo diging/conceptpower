@@ -6,423 +6,628 @@
    <head>
       <meta name="_csrf_token" th:content="${_csrf.token}"/>
       <meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
+      <link th:href="@{/resources/assets/css/reviewrequest.css}" rel="stylesheet" />
       <script>
-         //Function to get required data for pagination
-         $(document).on('click', '#paginationTag', function(e) {
-             var paginateData = $(this).data();
-             paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, paginateData.numrecords)
-         });
-         
-         
-         //Function to get required data for sorting
-         $(document).on('click', '.sortTag', function(e) {
-             var sortData = $(this).data();
-             paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos, sortData.numrecords)
-         });
-         
-         function finalizeMerge() {
-             var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-             var conceptIdsToBeMerged = conceptIdsToMerge.split(',');
-             if (conceptIdsToBeMerged.length < 2) {
-                 $('#mergeError').show();
-             } else {
-                 window.location = "[[@{'/auth/concepts/merge?mergeIds='}]]" + conceptIdsToMerge;
-             }
-         }
-         
-         
-         $(document).ready(function() {
-             function removeColumnFromTable(str) {
-                 var target = $('.resultTable').find('th[data-name="' + str + '"]');
-                 var index = (target).index();
-                 $('.resultTable tr').find('th:eq(' + index + '),td:eq(' + index + ')').hide();
-             }
-         
-             function showColumnFromTable(str) {
-                 var target = $('.resultTable').find('th[data-name="' + str + '"]');
-                 var index = (target).index();
-                 $('.resultTable tr').find('th:eq(' + index + '),td:eq(' + index + ')').show();
-             }
-             var conceptsToMerge = "";
-         
-             function prepareMergeConcept(conceptId) {
-                 var tis = $(this);
-                 var conceptsToMerge = $(this).attr("value");
-                 if (conceptsToMerge != '') {
-                     conceptsToMerge = conceptId;
-                 } else {
-                     conceptsToMerge = conceptsToMerge + "," + conceptId;
-                 }
-             }
-         
-             function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
-                 var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
-                 if (conceptsToBeMerged) {
-                     removeColumnFromTable('edit');
-                     $("#mergeConcept").show();
-                     $("#prepareMergeConcept").hide();
-                     // Check the checkboxes
-                     var conceptIds = conceptsToBeMerged.split(',');
-                     for (var i = 0; i < conceptIds.length; i++) {
-                         $("input[value='" + conceptIds[i] + "']").prop('checked', true);
-                     }
-                     $('#conceptIdsToMerge').val(conceptsToBeMerged);
-                 } else {
-                     removeColumnFromTable('merge');
-                     $("#mergeConcept").hide();
-                     $("#prepareMergeConcept").show();
-                 }
-             }
-             checkCheckBoxAndRemoveColumnsForMergeConcepts();
-         
-             $('#prepareMergeConcept').on('click', function(e) {
-                 e.preventDefault();
-                 // Get the column API object
-                 removeColumnFromTable('edit');
-                 showColumnFromTable('merge');
-                 $("#mergeConcept").show();
-                 $("#prepareMergeConcept").hide();
-             });
-             $(':checkbox').change(function(e) {
-                 if (this.checked) {
-                     mergeConcepts($(this).val())
-                 } else {
-                     removeMergedConcepts($(this).val());
-                 }
-             });
-         
-             function mergeConcepts(conceptId) {
-                 $('#mergeError').hide();
-                 var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-                 if (conceptsToMerge) {
-                     conceptsToMerge = conceptsToMerge + ',' + conceptId;
-                 } else {
-                     conceptsToMerge = conceptId;
-                 }
-                 $('#conceptIdsToMerge').val(conceptsToMerge);
-             }
-         
-             function removeMergedConcepts(conceptId) {
-                 var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-                 var conceptIds = conceptsToMerge.split(',');
-                 var updatedConceptIds = '';
-                 for (var i = 0; i < conceptIds.length; i++) {
-                     if (conceptIds[i] != conceptId) {
-                         updatedConceptIds = updatedConceptIds + conceptIds[i] + ",";
-                     }
-                 }
-                 if (updatedConceptIds != '') {
-                     $('#conceptIdsToMerge').val(updatedConceptIds.substring(0, updatedConceptIds.length - 1));
-                 } else {
-                     $('#conceptIdsToMerge').val(updatedConceptIds);
-                 }
-             }
-             $('#mergeError').hide();
-         
-             //Function to populate concept details Modal
-             $(document).on('click', '#conceptDetails', function(e) {
-                 var conceptid = $(this).data('conceptid');
-         
-                 $.ajax({
-                     type: "GET",
-                     url: "[[@{'/conceptDetail'}]]",
-                     data: {
-                         conceptid: conceptid
-                     },
-                     success: function(details) {
-                         details = $.parseJSON(details);
-                    	 $("#conceptDetailsName").text(details.name);
-    					 $("#conceptDetailsId").text(details.id);
-    					 $("#conceptDetailsUri").text(details.uri);
-    					 $("#conceptDetailsWordnetId").text(details.wordnetid);
-    					 $("#conceptDetailsPos").text(details.pos);
-    					 $("#conceptDetailsList").text(details.conceptlist);
-    					 $("#conceptDetailsType").text(details.type);
-    					 $("#conceptDetailsEqualTo").text(details.equalto);
-    					 $("#conceptDetailsSimilarTo").text(details.similarto);
-    					 $("#conceptDetailsCreator").text(details.creator);
-    					 $("#conceptDetailsDesc").html(details.description);
-    					 $("#conceptDetailsMergedIds").html(details.mergedIds);
-    					 
-                         if (details.mergedIds) {
-                             $.ajax({
-                                 url: "[[@{'/rest/OriginalConcepts'}]]",
-                                 type: 'GET',
-                                 headers: {
-                                     Accept: "application/json",
-                                 },
-                                 data: {
-                                     ids: details.mergedIds
-                                 },
-                                 success: function(originalConcepts) {
-                                     var mergedIdsHtml = '';
-                                     $.each(originalConcepts.conceptEntries, function(index, conceptEntry) {
-                                         if (mergedIdsHtml) {
-                                             mergedIdsHtml += ", ";
-                                         }
-                                         mergedIdsHtml += '<span title =  "Id: ' + conceptEntry.id + ', Word: ' + conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
-                                         mergedIdsHtml += "<i>" + conceptEntry.id + "</i>";
-                                         mergedIdsHtml += "</span>";
-                                     });
-                                     $("#conceptDetailsMergedIds").html(mergedIdsHtml);
-                                 }
-                             });
-                         }
-                     }
-                 });
-             });
-         
-             $(document).on('hidden.bs.modal', '#conceptDetail', function(event) {
-                 $('.conceptDetailsValue').empty();
-                 $('#conceptDetailsName').empty();
-             });
-         
-             $('#posList div div').on('click', function() {
-                 $('#posWord').text($(this).text());
-             });
-         });
-         
-         $(document).ready(hideFormProcessing);
-         
-         function hideFormProcessing() {
-             $('#floatingCirclesG').hide();
-         }
-         
-         function showFormProcessing() {
-             $('#floatingCirclesG').show();
-         }
-         
-         //Function to handle pagination and sort
-         function paginate(page, sortDir, sortColumn, word, pos, numRecords) {
-             var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
-         
-             if (conceptIdsToMerge) {
-                 window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords 
-               		  +'&conceptIdsToMerge=' + conceptIdsToMerge;
-             } else {
-                 window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords;
-             }
-         }
-         
-         $(document).ready(function() {
-             $(document).on('click', '#openDeleteModal', function(e) {
-                 var conceptId = $(this).data().conceptid;
-                 var searchword = $(this).data().searchword;
-                 $.ajax({
-                     type: "GET",
-                     url: "[[@{'/auth/conceptlist/deleteconcept/'}]]" + conceptId + '?fromHomeScreenDelete=true&searchword='+searchword,
-                     contentType: "application/json",
-                     success: function(data) {
-                    	 details = $.parseJSON(data);
-                    	 $("#conceptDeleteDetailsId").text(details.conceptId);
-                    	 $("#conceptDeleteId").text(details.conceptId);
-    					 $("#conceptDeleteWord").text(details.word);
-    					 $("#conceptDeleteDetailsWord").text(details.word);
-    					 $("#conceptDeleteDetailsWordnetId").text(details.wordnetid);
-    					 $("#conceptDeleteDetailsPos").text(details.pos);
-    					 $("#conceptDeleteDetailsList").text(details.conceptList);
-    					 $("#conceptDeleteDetailsType").text(details.type);
-    					 $("#conceptDeleteDetailsEqualTo").text(details.equalto);
-    					 $("#conceptDeleteDetailsSimilarTo").text(details.similarto);
-    					 $("#conceptDeleteDetailsCreator").text(details.creator);
-    					 $("#conceptDeleteDetailsDesc").text(details.description);
-    					 $("#conceptDeleteDetailsModified").text(details.modified);
-    					 $("#conceptDeleteDetailsSynonyms").text(details.synonyms);
-    					 
-    					 /* Set the delete url to an Id, so that it can be used for delete operation */
-    					 $("#deleteUrl").val("[[@{'/auth/conceptlist/deleteconceptconfirm/'}]]"+details.conceptId+"?fromHomeScreenDelete=true"+"&listName="+details.conceptList+"&searchword="+details.searchword)
-                         $('#deleteConcept').modal('show');
-                     }
-                 });
-             });
-         });
-         
-         $(document).on('submit','#deleteConfirmForm', function (event){
-        	 var action = '';
-        	 var url = $("#deleteUrl").val();
-        	 if(url)
-        	 	$(this).attr('action', $("#deleteUrl").val());
-        });
-         
-         $(document).on('hidden.bs.modal', '#deleteModalPlugin', function(event) {
-             $('#deleteModalPlugin').empty();
-         });
-         
-         $(document).on("change", "#numRecordsPerPage", function(e) {
-             var paginateData = $(this).data();
-             paginate(1, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, e.target.value)
-         });
+      	  //Function to get required data for pagination
+	      $(document).on('click', '#paginationTag', function(e) {
+	          var paginateData = $(this).data();
+	          paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, paginateData.numrecords)
+	      });
+	
+	
+	      //Function to get required data for sorting
+	      $(document).on('click', '.sortTag', function(e) {
+	          var sortData = $(this).data();
+	          paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos, sortData.numrecords)
+	      });
+	
+	      function finalizeMerge() {
+	          var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+	          var conceptIdsToBeMerged = conceptIdsToMerge.split(',');
+	          if (conceptIdsToBeMerged.length < 2) {
+	              $('#mergeError').show();
+	          } else {
+	              window.location = "[[@{'/auth/concepts/merge?mergeIds='}]]" + conceptIdsToMerge;
+	          }
+	      }
+	
+	
+	      $(document).ready(function() {
+	          function removeColumnFromTable(str) {
+	              var target = $('.resultTable').find('th[data-name="' + str + '"]');
+	              var index = (target).index();
+	              $('.resultTable tr').find('th:eq(' + index + '),td:eq(' + index + ')').hide();
+	          }
+	
+	          function showColumnFromTable(str) {
+	              var target = $('.resultTable').find('th[data-name="' + str + '"]');
+	              var index = (target).index();
+	              $('.resultTable tr').find('th:eq(' + index + '),td:eq(' + index + ')').show();
+	          }
+	          var conceptsToMerge = "";
+	
+	          function prepareMergeConcept(conceptId) {
+	              var tis = $(this);
+	              var conceptsToMerge = $(this).attr("value");
+	              if (conceptsToMerge != '') {
+	                  conceptsToMerge = conceptId;
+	              } else {
+	                  conceptsToMerge = conceptsToMerge + "," + conceptId;
+	              }
+	          }
+	
+	          function checkCheckBoxAndRemoveColumnsForMergeConcepts() {
+	              var conceptsToBeMerged = $('#conceptIdsToMerge').val().replace("\"", "");
+	              if (conceptsToBeMerged) {
+	                  removeColumnFromTable('edit');
+	                  $("#mergeConcept").show();
+	                  $("#prepareMergeConcept").hide();
+	                  // Check the checkboxes
+	                  var conceptIds = conceptsToBeMerged.split(',');
+	                  for (var i = 0; i < conceptIds.length; i++) {
+	                      $("input[value='" + conceptIds[i] + "']").prop('checked', true);
+	                  }
+	                  $('#conceptIdsToMerge').val(conceptsToBeMerged);
+	              } else {
+	                  removeColumnFromTable('merge');
+	                  $("#mergeConcept").hide();
+	                  $("#prepareMergeConcept").show();
+	              }
+	          }
+	          checkCheckBoxAndRemoveColumnsForMergeConcepts();
+	
+	          $('#prepareMergeConcept').on('click', function(e) {
+	              e.preventDefault();
+	              // Get the column API object
+	              removeColumnFromTable('edit');
+	              showColumnFromTable('merge');
+	              $("#mergeConcept").show();
+	              $("#prepareMergeConcept").hide();
+	          });
+	          $(':checkbox').change(function(e) {
+	              if (this.checked) {
+	                  mergeConcepts($(this).val())
+	              } else {
+	                  removeMergedConcepts($(this).val());
+	              }
+	          });
+	
+	          function mergeConcepts(conceptId) {
+	              $('#mergeError').hide();
+	              var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+	              if (conceptsToMerge) {
+	                  conceptsToMerge = conceptsToMerge + ',' + conceptId;
+	              } else {
+	                  conceptsToMerge = conceptId;
+	              }
+	              $('#conceptIdsToMerge').val(conceptsToMerge);
+	          }
+	
+	          function removeMergedConcepts(conceptId) {
+	              var conceptsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+	              var conceptIds = conceptsToMerge.split(',');
+	              var updatedConceptIds = '';
+	              for (var i = 0; i < conceptIds.length; i++) {
+	                  if (conceptIds[i] != conceptId) {
+	                      updatedConceptIds = updatedConceptIds + conceptIds[i] + ",";
+	                  }
+	              }
+	              if (updatedConceptIds != '') {
+	                  $('#conceptIdsToMerge').val(updatedConceptIds.substring(0, updatedConceptIds.length - 1));
+	              } else {
+	                  $('#conceptIdsToMerge').val(updatedConceptIds);
+	              }
+	          }
+	          $('#mergeError').hide();
+	
+	          //Function to populate concept details Modal
+	          $(document).on('click', '#conceptDetails', function(e) {
+	              var conceptid = $(this).data('conceptid');
+	
+	              $.ajax({
+	                  type: "GET",
+	                  url: "[[@{'/conceptDetail'}]]",
+	                  data: {
+	                      conceptid: conceptid
+	                  },
+	                  success: function(details) {
+	                      details = $.parseJSON(details);
+	                      $("#conceptDetailsName").text(details.name);
+	                      $("#conceptDetailsId").text(details.id);
+	                      $("#conceptDetailsUri").text(details.uri);
+	                      $("#conceptDetailsWordnetId").text(details.wordnetid);
+	                      $("#conceptDetailsPos").text(details.pos);
+	                      $("#conceptDetailsList").text(details.conceptlist);
+	                      $("#conceptDetailsType").text(details.type);
+	                      $("#conceptDetailsEqualTo").text(details.equalto);
+	                      $("#conceptDetailsSimilarTo").text(details.similarto);
+	                      $("#conceptDetailsCreator").text(details.creator);
+	                      $("#conceptDetailsDesc").html(details.description);
+	                      $("#conceptDetailsMergedIds").html(details.mergedIds);
+	
+	                      if (details.mergedIds) {
+	                          $.ajax({
+	                              url: "[[@{'/rest/OriginalConcepts'}]]",
+	                              type: 'GET',
+	                              headers: {
+	                                  Accept: "application/json",
+	                              },
+	                              data: {
+	                                  ids: details.mergedIds
+	                              },
+	                              success: function(originalConcepts) {
+	                                  var mergedIdsHtml = '';
+	                                  $.each(originalConcepts.conceptEntries, function(index, conceptEntry) {
+	                                      if (mergedIdsHtml) {
+	                                          mergedIdsHtml += ", ";
+	                                      }
+	                                      mergedIdsHtml += '<span title =  "Id: ' + conceptEntry.id + ', Word: ' + conceptEntry.lemma + ', Description: ' + conceptEntry.description + '">';
+	                                      mergedIdsHtml += "<i>" + conceptEntry.id + "</i>";
+	                                      mergedIdsHtml += "</span>";
+	                                  });
+	                                  $("#conceptDetailsMergedIds").html(mergedIdsHtml);
+	                              }
+	                          });
+	                      }
+	                  }
+	              });
+	          });
+	
+	          $(document).on('hidden.bs.modal', '#conceptDetail', function(event) {
+	              $('.conceptDetailsValue').empty();
+	              $('#conceptDetailsName').empty();
+	          });
+	
+	          $('#posList div div').on('click', function() {
+	              $('#posWord').text($(this).text());
+	          });
+	      });
+	
+	      $(document).ready(hideFormProcessing);
+	
+	      function hideFormProcessing() {
+	          $('#floatingCirclesG').hide();
+	      }
+	
+	      function showFormProcessing() {
+	          $('#floatingCirclesG').show();
+	      }
+	
+	      //Function to handle pagination and sort
+	      function paginate(page, sortDir, sortColumn, word, pos, numRecords) {
+	          var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
+	
+	          if (conceptIdsToMerge) {
+	              window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords +
+	                  '&conceptIdsToMerge=' + conceptIdsToMerge;
+	          } else {
+	              window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords;
+	          }
+	      }
+	
+	      function getListOfReviewRequests(conceptId, operation) {
+	          $.ajax({
+	              type: "GET",
+	              url: "[[@{'/auth/request/'}]]" + conceptId + "/all",
+	              success: function(response) {
+	                  var reviewHistory = '';
+	                  reviewHistory += '<div id="review-history-' + conceptId + '">';
+	                  $.each(response, function(index, element) {
+	                      var reviewNumber = index + 1;
+	                      reviewHistory += '<div>';
+	                      reviewHistory += '<div  class="reviewhistory">' +
+	                          '<h4 data-toggle="tooltip" data-placement="right"><b>' + reviewNumber + '. ' + element.request + '</b></h4></div>'
+	                      reviewHistory += '<div  id="review-' + index + conceptId + '">'
+	
+	                      $.each(element.comments, function(iterator, commentElement) {
+	                          reviewHistory += '<div><h6 style="color:#19586B; display:inline-block;">' + commentElement.createdBy.toUpperCase() + ': </h6><span>' + '  ' + commentElement.comment + '</span></div>';
+	                      });
+	
+	                      reviewHistory += '</div></div>';
+	                  });
+	
+	                  reviewHistory += '</div>';
+	                  if (operation === 'resolve') {
+	                      $('#reviewHistoryForResolve').html(reviewHistory);
+	                  } else {
+	                      $('#reviewHistoryForReopen').html(reviewHistory);
+	                  }
+	              },
+	              error: function(e) {
+	                  if (operation === 'resolve') {
+	                      $('reopenError').text('Fetching Review History Failed')
+	                  } else {
+	                      $('resolveCommentError').text('Fetching Review History Failed')
+	                  }
+	              }
+	          });
+	      }
+	
+	      $(document).ready(function() {
+	          $(document).on('click', '#openDeleteModal', function(e) {
+	              var conceptId = $(this).data().conceptid;
+	              var searchword = $(this).data().searchword;
+	              $.ajax({
+	                  type: "GET",
+	                  url: "[[@{'/auth/conceptlist/deleteconcept/'}]]" + conceptId + '?fromHomeScreenDelete=true&searchword=' + searchword,
+	                  contentType: "application/json",
+	                  success: function(data) {
+	                      details = $.parseJSON(data);
+	                      $("#conceptDeleteDetailsId").text(details.conceptId);
+	                      $("#conceptDeleteId").text(details.conceptId);
+	                      $("#conceptDeleteWord").text(details.word);
+	                      $("#conceptDeleteDetailsWord").text(details.word);
+	                      $("#conceptDeleteDetailsWordnetId").text(details.wordnetid);
+	                      $("#conceptDeleteDetailsPos").text(details.pos);
+	                      $("#conceptDeleteDetailsList").text(details.conceptList);
+	                      $("#conceptDeleteDetailsType").text(details.type);
+	                      $("#conceptDeleteDetailsEqualTo").text(details.equalto);
+	                      $("#conceptDeleteDetailsSimilarTo").text(details.similarto);
+	                      $("#conceptDeleteDetailsCreator").text(details.creator);
+	                      $("#conceptDeleteDetailsDesc").text(details.description);
+	                      $("#conceptDeleteDetailsModified").text(details.modified);
+	                      $("#conceptDeleteDetailsSynonyms").text(details.synonyms);
+	
+	                      /* Set the delete url to an Id, so that it can be used for delete operation */
+	                      $("#deleteUrl").val("[[@{'/auth/conceptlist/deleteconceptconfirm/'}]]" + details.conceptId + "?fromHomeScreenDelete=true" + "&listName=" + details.conceptList + "&searchword=" + details.searchword)
+	                      $('#deleteConcept').modal('show');
+	                  }
+	              });
+	          });
+	      });
+	
+	      $(document).on('submit', '#deleteConfirmForm', function(event) {
+	          var action = '';
+	          var url = $("#deleteUrl").val();
+	          if (url){
+	              $(this).attr('action', $("#deleteUrl").val());
+	          }
+	      });
+	
+	      $(document).on('hidden.bs.modal', '#deleteModalPlugin', function(event) {
+	          $('#deleteModalPlugin').empty();
+	      });
+	
+	      $(document).on("change", "#numRecordsPerPage", function(e) {
+	          var paginateData = $(this).data();
+	          paginate(1, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, e.target.value)
+	      });
+	
+	      $(document).on("click", ".fa-comment", function() {
+	          $('#reviewError').hide();
+	          $('#request').val('');
+	          $("#conceptId").val($(this).data("concept-id"));
+	      });
+	
+	      $(document).on("click", ".fa-exclamation-triangle", function() {
+	    	  console.log($(this).data())
+	          $('#reviewId').val($(this).data("review-id"));
+	          $("#request").val($(this).data("request"));
+	          $("#conceptId").val($(this).data("conceptId"));
+	          $('#resolveCommentError').hide();
+	          $("#requestBox").show();
+	
+	          getListOfReviewRequests($("#conceptId").val(), 'resolve');
+	      });
+	
+	      $(document).on("click", ".fa-refresh", function() {
+	          $('#reviewId').val($(this).data("review-id"));
+	          $("#conceptId").val($(this).data("concept-id"));
+	          $("#request").val($(this).data('request'));
+	          $('#reopenError').hide();
+	
+	          getListOfReviewRequests($("#conceptId").val(), 'reopen');
+	      });
+	
+	      $("#reopenModal").on("hide.bs.modal", function(e) {
+	          var conceptId = $("#conceptId").val().replace(/'/g, "\\'");
+	          var reviewHistoryId = $("#review-history-" + conceptId);
+	          $(reviewHistoryId).hide();
+	      });
+	
+	      $(document).on('click', '#submitRequest', function(e) {
+	          var request = $('#request').val().trim();
+	          var conceptId = $('#conceptId').val();
+	          var reviewId = '';
+	          if (request.length == 0) {
+	              $('#reviewError').show();
+	          } else {
+	              var token = $("meta[name='_csrf_token']").attr("content");
+	
+	              $.ajax({
+	                  type: "POST",
+	                  url: "[[@{'/auth/request/add?'}]]_csrf=" + token.trim(),
+	                  data: "request=" + request + "&conceptId=" + conceptId + "&status=OPENED",
+	                  success: function(response) {
+	                      $('#request').val('');
+	                      reviewId = response.id;
+	                      $('#reviewModal').modal('hide');
+	                      var request_subString = request.substring(0, 79);
+	                      //Escaping Single quotes
+	                      conceptId = conceptId.replace(/'/g, "\\'");
+	                      var idString = "comment-" + conceptId
+	                      var commentTd = $("#comment-" + conceptId);
+	
+	                      commentTd.replaceWith('<div id=' + idString + ' data-request="' + request + '"  title="' + request_subString + '" data-review-id="' + reviewId + '" data-toggle="modal" data-target="#requestModal" data-concept-id="' + conceptId + '" class="fa fa-exclamation-triangle"></div>');
+	                      $("#fetchRequests").val(request);
+	                  },
+	                  error: function(e) {
+	                      $('#alertMsg').html('<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Following error occurred in posting the request :' + e);
+	                      $('#alertMsg').show();
+	                  }
+	              });
+	          }
+	      });
+	
+	      $(document).on('click', '#resolveButton', function() {
+	          var comment = $('#resolveComment').val().trim();
+	          var conceptId = $("#conceptId").val();
+	          var request = $("#request").val();
+	          var reviewId = $('#reviewId').val();
+	
+	          if (comment.length == 0) {
+	              $('#resolveCommentError').text('Closing comment cannot be empty');
+	              $('#resolveCommentError').show();
+	          } else {
+	              var comments = {
+	                  comment: comment
+	              };
+	              var token = $("meta[name='_csrf_token']").attr("content");
+	              $.ajax({
+	                  type: "POST",
+	                  url: "[[@{'/auth/request/resolve/'}]]" + reviewId + "?_csrf=" + token,
+	                  data: JSON.stringify(comments),
+	                  contentType: "application/json",
+	                  success: function(response) {
+	                      $('#requestModal').modal('hide');
+	                      $('#resolveComment').val('');
+	                      conceptId = conceptId.replace(/'/g, "\\'");
+	                      var idString = "comment-" + conceptId
+	                      var commentTd = $("#comment-" + conceptId);
+	                      
+	                      commentTd.replaceWith('<div id="' + idString  + '" > <div data-concept-id="' + conceptId + '" title="Add a review request" data-toggle="modal" data-target="#reviewModal" class="fa fa-comment" ></div>' +
+	                          '<div id="' + idString + '" data-concept-id="' + conceptId + '" data-request="' + request + '" data-review-id="' + response.id + '" title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh" ></div></div>');
+	                  },
+	                  error: function(e) {
+	                      $('#resolveCommentError').text("Something went wrong. Unable to resolve the request");
+	                      $('#resolveCommentError').show();
+	                  }
+	              });
+	          }
+	      });
+	
+	      $(document).on('click', "#reopenButton", function() {
+	          var conceptId = $("#conceptId").val();
+	          var reviewId = $('#reviewId').val();
+	          var request = $("#request").val();
+	          var resolveComment = $('#reopenComment').val().trim();
+	
+	          if (resolveComment.length == 0) {
+	              $('#reopenError').text('Reopen comment cannot be empty');
+	              $('#reopenError').show();
+	          } else {
+	              var token = $("meta[name='_csrf_token']").attr("content");
+	              var comments = {
+	                  comment: resolveComment
+	              };
+	              $.ajax({
+	                  type: "POST",
+	                  url: "[[@{'/auth/request/reopen/'}]]" + reviewId + "/?_csrf=" + token,
+	                  data: JSON.stringify(comments),
+	                  contentType: "application/json",
+	                  success: function(response) {
+	                      $('#reopenModal').modal('hide');
+	                      $('#reopenComment').val('');
+	                      var request_subString = request.substring(0, 79);
+	                      conceptId = conceptId.replace(/'/g, "\\'");
+	                      var idString = "comment-" + conceptId
+	                      var commentTd = $("#comment-" + conceptId);
+	                      commentTd.replaceWith('<div id="' + idString + '" data-request="' + request + '"  title="' + request_subString + '"  data-toggle="modal" data-target="#requestModal" data-concept-id="' + conceptId + '"  class="fa fa-exclamation-triangle"></div>');
+	                  },
+	                  error: function(e) {
+	                      $('#reopenError').text("Something went wrong. Unable to reopen the request");
+	                  }
+	              });
+	          }
+	      });
       </script>
    </head>
    <body class = "body" layout:fragment="content">
-      <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection">
-         <h1>Welcome to Conceptpower</h1>
-         <div class="input-group input-group-lg">
-            <input type="text" class="form-control" id="searchInput" name="word" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
-            <div class='custom-dropdown' style="margin-left:10px">
-               <select class="selectDropdown" th:name="pos">
-                  <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
-                  </option>
-               </select>
-            </div>
-         </div>
-         <div class="error" id="searchAlert"></div>
-         <div class="error" th:if="${show_error_alert == true}" th:text="${error_alert_msg}"></div>
-         <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit" th:onclick="'showFormProcessing()'" th:onsubmit="'hideFormProcessing()'">
-         Search
-         <i class="fa fa-search" aria-hidden="true"></i>
-         </button>
-         <div class="row" style="margin-top: 15px;">
-            <div class="col-sm-12">
-               <div id="floatingCirclesG">
-                  <div class="f_circleG" id="frotateG_01"></div>
-                  <div class="f_circleG" id="frotateG_02"></div>
-                  <div class="f_circleG" id="frotateG_03"></div>
-                  <div class="f_circleG" id="frotateG_04"></div>
-                  <div class="f_circleG" id="frotateG_05"></div>
-                  <div class="f_circleG" id="frotateG_06"></div>
-                  <div class="f_circleG" id="frotateG_07"></div>
-                  <div class="f_circleG" id="frotateG_08"></div>
-               </div>
-            </div>
-         </div>
-      </form>
-      <input type='hidden' id='conceptIdsToMerge' th:value='${conceptIdsToMerge}' />
-      <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection"  th:with="sortDirection = ${sortDir == '1' ? '-1' : '1'}">
-         <h4>Results</h4>
-         <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-            <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="prepareMergeConcept" sec:authorize="isAuthenticated()">
-            Select Concepts To merge
-            </button>
-            <button id="mergeConcept" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-bottom: 15px;" th:onclick="'finalizeMerge();'">Merge selected concepts</button>
-            <div id="mergeError" class="alert alert-danger"> Please select at least two concepts to merge.</div>
-            <div class="btn-group showDrp">
-               <label for="dropdown">Show</label>
-               <div class='custom-dropdown' style="margin:0px 5px 0px 5px;">
-                  <select class="selectDropdown" style="padding:0 2.5em 0 .3em;" id="numRecordsPerPage" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}">
-                     <option th:value="5" th:text="5"   th:selected="${numRecords == 5}"></option>
-                     <option th:value="10" th:text="10" th:selected="${numRecords == 10}"></option>
-                     <option th:value="20" th:text="20" th:selected="${numRecords == 20}"></option>
-                     <option th:value="50" th:text="50" th:selected="${numRecords == 50}"></option>
-                  </select>
-               </div>
-               <label for="dropdown">entries </label>
-            </div>
-         </div>
-         <table class="table table-striped resultTable tableStyles" >
-            <thead>
-               <tr>
-                  <th scope="col" sec:authorize="isAuthenticated()" th:data-name='edit' style="width: 2%;"></th>
-                  <th scope="col" sec:authorize="isAuthenticated()" th:data-name='merge'style="width: 2%;"></th>
-                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="word" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" th:data-numRecords="${numRecords}" class="sortTag" style="width: 10%;">Term
-                     <i th:if="${sortColumn == 'word' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-                     <i th:if="${sortColumn == 'word' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-                     <i th:unless="${sortColumn == 'word'}" class="fa fa-sort"></i>
-                  </th>
-                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="id" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 15%;">Id
-                     <i th:if="${sortColumn == 'id' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-                     <i th:if="${sortColumn == 'id' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-                     <i th:unless="${sortColumn == 'id'}" class="fa fa-sort"></i>
-                  </th>
-                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 15%;">WordNet ID
-                     <i th:if="${sortColumn == 'wordnetid' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-                     <i th:if="${sortColumn == 'wordnetid' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-                     <i th:unless="${sortColumn == 'wordnetid'}" class="fa fa-sort"></i>
-                  </th>
-                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="pos" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 6%;">POS
-                     <i th:if="${sortColumn == 'pos' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-                     <i th:if="${sortColumn == 'pos' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-                     <i th:unless="${sortColumn == 'pos'}" class="fa fa-sort"></i>
-                  </th>
-                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="listname" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 10%;">Concept List
-                     <i th:if="${sortColumn == 'listName' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-                     <i th:if="${sortColumn == 'liestName' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-                     <i th:unless="${sortColumn == 'listName'}" class="fa fa-sort"></i>
-                  </th>
-                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="description" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 35%;">Description
-                     <i th:if="${sortColumn == 'description' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-                     <i th:if="${sortColumn == 'description' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-                     <i th:unless="${sortColumn == 'description' }" class="fa fa-sort"></i>
-                  </th>
-                  <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="types" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 5%;">Type
-                     <i th:if="${sortColumn == 'types' && sortDir == '1'}" class="fa fa-sort-desc"></i>
-                     <i th:if="${sortColumn == 'types' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
-                     <i th:unless="${sortColumn == 'types'}" class="fa fa-sort"></i>
-                  </th>
-                 <!--  <th style="width: 5%;" scope="col">Review Status</th>  -->
-               </tr>
-            </thead>
-            <tbody id="tableData">
-               <tr th:each="concept: ${conceptSearchBean.foundConcepts}">
-                  <td sec:authorize="isAuthenticated()" id="editConceptModal">
-                     <a 
-                        th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}"
-                        th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true&searchWord='+${conceptSearchBean.word}}" 
-                        role="button" aria-expanded="false">
-                     <i class="fa fa-pencil-square-o dropright" aria-hidden="true">
-                     </i>
-                     </a>
-                     <a 
-                        th:if="${#strings.containsIgnoreCase(concept.entry.id, 'WID')}"
-                        th:href="@{'/auth/conceptlist/addconceptwrapper?wrapperId='+${concept.entry.id}}" 
-                        role="button" aria-expanded="false">
-                     <i class="fa fa-pencil-square-o dropright" aria-hidden="true">
-                     </i>
-                     </a>
-                     <i class="fa fa-trash-o" th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" th:data-searchword="${conceptSearchBean.word}" data-toggle="modal" data-target="#deleteConcept"></i>
-                  </td>
-                  <td sec:authorize="isAuthenticated()">
-                     <input type="checkbox"  id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
-                  </td>
-                  <td data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #A34D63; cursor: pointer;"></td>
-                  <td th:text="${concept.entry.id}"></td>
-                  <td th:text="${concept.entry.wordnetId}" id="wordnet"> </td>
-                  <td th:text="${concept.entry.pos}"></td>
-                  <td th:text="${concept.entry.conceptList}"></td>
-                  <td th:text="${concept.description}"></td>
-                  <td th:text="${concept.type != null ? concept.type.typeName : ''}"></td>
-                 <!--  <td><i class="fa fa-comment" aria-hidden="true"></i></td>  -->
-               </tr>
-            </tbody>
-         </table>
-      </div>
-      <div class="pagination" id="paginationSection" th:if="${conceptSearchBean.foundConcepts != null && conceptSearchBean.foundConcepts.size() > 0}" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
-         th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}">
-         <ul class="pagination">
-            <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
-               <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" th:data-numRecords="${numRecords}" id="paginationTag">Previous</span>
-            </li>
-            <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
-               <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="1" th:data-numRecords="${numRecords}" id="paginationTag">First</span>
-            </li>
-            <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
-               <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${i}" th:data-numRecords="${numRecords}" id="paginationTag" th:text="${i}">
-               <span class="sr-only">(current)</span></span>
-            </li>
-            <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
-               <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${count}" th:data-numRecords="${numRecords}" id="paginationTag">Last</span>
-            </li>
-            <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
-               <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" th:data-numRecords="${numRecords}" id="paginationTag">Next</span>
-            </li>
-         </ul>
-      </div>
-      <input type='hidden' id='deleteUrl'/>
-      <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
-      <div sec:authorize="!isAuthenticated()" th:insert="layouts/modals/signin :: signin"></div>
-      <div th:insert="layouts/modals/deleteconcept :: deleteConcept"></div>
-   </body>
+	   <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection">
+	      <h1>Welcome to Conceptpower</h1>
+	      <div class="input-group input-group-lg">
+	         <input type="text" class="form-control" id="searchInput" name="word" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
+	         <div class='custom-dropdown' style="margin-left:10px">
+	            <select class="selectDropdown" th:name="pos">
+	               <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
+	               </option>
+	            </select>
+	         </div>
+	      </div>
+	      <div class="error" id="searchAlert"></div>
+	      <div class="error" th:if="${show_error_alert == true}" th:text="${error_alert_msg}"></div>
+	      <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit" th:onclick="'showFormProcessing()'" th:onsubmit="'hideFormProcessing()'">
+	      Search
+	      <i class="fa fa-search" aria-hidden="true" style="color: white !important"></i>
+	      </button>
+	      <div class="row" style="margin-top: 15px;">
+	         <div class="col-sm-12">
+	            <div id="floatingCirclesG">
+	               <div class="f_circleG" id="frotateG_01"></div>
+	               <div class="f_circleG" id="frotateG_02"></div>
+	               <div class="f_circleG" id="frotateG_03"></div>
+	               <div class="f_circleG" id="frotateG_04"></div>
+	               <div class="f_circleG" id="frotateG_05"></div>
+	               <div class="f_circleG" id="frotateG_06"></div>
+	               <div class="f_circleG" id="frotateG_07"></div>
+	               <div class="f_circleG" id="frotateG_08"></div>
+	            </div>
+	         </div>
+	      </div>
+	   </form>
+	   <input type='hidden' id='conceptIdsToMerge' th:value='${conceptIdsToMerge}' />
+	   <div th:if="${conceptSearchBean.foundConcepts != null}" class="resultsSection"  th:with="sortDirection = ${sortDir == '1' ? '-1' : '1'}">
+	      <h4>Results</h4>
+	      <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+	         <button class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" id="prepareMergeConcept" sec:authorize="isAuthenticated()">
+	         Select Concepts To merge
+	         </button>
+	         <button id="mergeConcept" class="btn btn-outline-success my-2 my-sm-0 conceptPowerBtn" style="margin-bottom: 15px;" th:onclick="'finalizeMerge();'">Merge selected concepts</button>
+	         <div id="mergeError" class="alert alert-danger"> Please select at least two concepts to merge.</div>
+	         <div class="btn-group showDrp">
+	            <label for="dropdown">Show</label>
+	            <div class='custom-dropdown' style="margin:0px 5px 0px 5px;">
+	               <select class="selectDropdown" style="padding:0 2.5em 0 .3em;" id="numRecordsPerPage" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
+	                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}">
+	                  <option th:value="5" th:text="5"   th:selected="${numRecords == 5}"></option>
+	                  <option th:value="10" th:text="10" th:selected="${numRecords == 10}"></option>
+	                  <option th:value="20" th:text="20" th:selected="${numRecords == 20}"></option>
+	                  <option th:value="50" th:text="50" th:selected="${numRecords == 50}"></option>
+	               </select>
+	            </div>
+	            <label for="dropdown">entries </label>
+	         </div>
+	      </div>
+	      <table class="table table-striped resultTable tableStyles" >
+	         <thead>
+	            <tr>
+	               <th scope="col" sec:authorize="isAuthenticated()" th:data-name='edit' style="width: 2%;"></th>
+	               <th scope="col" sec:authorize="isAuthenticated()" th:data-name='merge'style="width: 2%;"></th>
+	               <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="word" 
+	                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" th:data-numRecords="${numRecords}" class="sortTag" style="width: 10%;">Term
+	                  <i th:if="${sortColumn == 'word' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+	                  <i th:if="${sortColumn == 'word' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+	                  <i th:unless="${sortColumn == 'word'}" class="fa fa-sort"></i>
+	               </th>
+	               <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="id" 
+	                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 15%;">Id
+	                  <i th:if="${sortColumn == 'id' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+	                  <i th:if="${sortColumn == 'id' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+	                  <i th:unless="${sortColumn == 'id'}" class="fa fa-sort"></i>
+	               </th>
+	               <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
+	                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 15%;">WordNet ID
+	                  <i th:if="${sortColumn == 'wordnetid' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+	                  <i th:if="${sortColumn == 'wordnetid' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+	                  <i th:unless="${sortColumn == 'wordnetid'}" class="fa fa-sort"></i>
+	               </th>
+	               <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="pos" 
+	                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 6%;">POS
+	                  <i th:if="${sortColumn == 'pos' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+	                  <i th:if="${sortColumn == 'pos' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+	                  <i th:unless="${sortColumn == 'pos'}" class="fa fa-sort"></i>
+	               </th>
+	               <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="listname" 
+	                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 10%;">Concept List
+	                  <i th:if="${sortColumn == 'listName' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+	                  <i th:if="${sortColumn == 'liestName' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+	                  <i th:unless="${sortColumn == 'listName'}" class="fa fa-sort"></i>
+	               </th>
+	               <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="description" 
+	                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 35%;">Description
+	                  <i th:if="${sortColumn == 'description' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+	                  <i th:if="${sortColumn == 'description' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+	                  <i th:unless="${sortColumn == 'description' }" class="fa fa-sort"></i>
+	               </th>
+	               <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="types" 
+	                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 5%;">Type
+	                  <i th:if="${sortColumn == 'types' && sortDir == '1'}" class="fa fa-sort-desc"></i>
+	                  <i th:if="${sortColumn == 'types' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
+	                  <i th:unless="${sortColumn == 'types'}" class="fa fa-sort"></i>
+	               </th>
+	               <th style="width: 5%;" scope="col">Review Status</th>
+	            </tr>
+	         </thead>
+	         <tbody id="tableData">
+	            <tr th:each="concept: ${conceptSearchBean.foundConcepts}">
+	               <td sec:authorize="isAuthenticated()" id="editConceptModal">
+	                  <a 
+	                     th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}"
+	                     th:href="@{'/auth/conceptlist/editconcept/'+${concept.entry.id}+'?fromHomeScreen=true&searchWord='+${conceptSearchBean.word}}" 
+	                     role="button" aria-expanded="false">
+	                  <i class="fa fa-pencil-square-o dropright" aria-hidden="true">
+	                  </i>
+	                  </a>
+	                  <a 
+	                     th:if="${#strings.containsIgnoreCase(concept.entry.id, 'WID')}"
+	                     th:href="@{'/auth/conceptlist/addconceptwrapper?wrapperId='+${concept.entry.id}}" 
+	                     role="button" aria-expanded="false">
+	                  <i class="fa fa-pencil-square-o dropright" aria-hidden="true">
+	                  </i>
+	                  </a>
+	                  <i class="fa fa-trash-o" th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" th:data-searchword="${conceptSearchBean.word}" data-toggle="modal" data-target="#deleteConcept"></i>
+	               </td>
+	               <td sec:authorize="isAuthenticated()">
+	                  <input type="checkbox"  id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
+	               </td>
+	               <td data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #A34D63; cursor: pointer;"></td>
+	               <td th:text="${concept.entry.id}"></td>
+	               <td th:text="${concept.entry.wordnetId}" id="wordnet"> </td>
+	               <td th:text="${concept.entry.pos}"></td>
+	               <td th:text="${concept.entry.conceptList}"></td>
+	               <td th:text="${concept.description}"></td>
+	               <td th:text="${concept.type != null ? concept.type.typeName : ''}"></td>
+	               <td>
+	                  <div th:id="'comment-'+${concept.entry.id}">
+	                     <div 
+	                        th:if="${concept.reviewRequest == null
+	                        || (concept.reviewRequest.status != null && concept.reviewRequest.status.name() == 'RESOLVED')}" 
+	                        th:data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#reviewModal" class="fa fa-comment">
+	                     </div>
+	                     <div 
+	                        th:if="${concept.reviewRequest != null   
+	                        && concept.reviewRequest.status != null && concept.reviewRequest.status.name() == 'RESOLVED'}"
+	                        th:data-concept-id="${concept.entry.id}" th:data-request="${concept.reviewRequest.request}"
+	                        th:data-review-id="${concept.reviewRequest.id}" 
+	                        th:data-resolve-comment="${concept.reviewRequest}" 
+	                        title="Reopen Review Request" data-toggle="modal" data-target="#reopenModal" class="fa fa-refresh">
+	                     </div>
+	                     <div  
+	                        th:if="${concept.reviewRequest != null
+	                        && concept.reviewRequest.status != null && concept.reviewRequest.status.name() != 'RESOLVED'}"
+	                        th:data-request="${concept.reviewRequest.request}" th:data-review-id="${concept.reviewRequest.id}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" th:data-concept-id="${concept.entry.id}"  id="exclamation" >
+	                     </div>
+	                  </div>
+	               </td>
+	            </tr>
+	         </tbody>
+	      </table>
+	   </div>
+	   <div class="pagination" id="paginationSection" th:if="${conceptSearchBean.foundConcepts != null && conceptSearchBean.foundConcepts.size() > 0}" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
+	      th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}">
+	      <ul class="pagination">
+	         <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
+	               th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" th:data-numRecords="${numRecords}" id="paginationTag">Previous</span>
+	         </li>
+	         <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
+	               th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="1" th:data-numRecords="${numRecords}" id="paginationTag">First</span>
+	         </li>
+	         <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
+	               th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${i}" th:data-numRecords="${numRecords}" id="paginationTag" th:text="${i}">
+	            <span class="sr-only">(current)</span></span>
+	         </li>
+	         <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
+	               th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${count}" th:data-numRecords="${numRecords}" id="paginationTag">Last</span>
+	         </li>
+	         <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
+	            <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
+	               th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" th:data-numRecords="${numRecords}" id="paginationTag">Next</span>
+	         </li>
+	      </ul>
+	   </div>
+	   <input type='hidden' id='deleteUrl'/>
+	   <input type="hidden" name="reviewId" id="reviewId" value=""/>
+	   <input type="hidden" name="conceptId" id="conceptId" value=""/>
+	   
+	   <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
+	   <div th:insert="layouts/modals/requestreview :: addrequest"></div>
+	   <div th:insert="layouts/modals/resolvereview :: resolverequest"></div>
+	   <div th:insert="layouts/modals/reopenreview :: reopenrequest"></div>
+	   <div sec:authorize="!isAuthenticated()" th:insert="layouts/modals/signin :: signin"></div>
+	   <div th:insert="layouts/modals/deleteconcept :: deleteConcept"></div>
+	</body>
 </html>
