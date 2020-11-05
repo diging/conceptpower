@@ -126,7 +126,7 @@
     	            data: JSON.stringify(comments),
     	            contentType: "application/json",
     	            success: function(response) {
-    	                window.location = "[[@{'/auth/openrequests'}]]"
+    	                window.location = "[[@{'/auth/request/all/open'}]]"
     	            },
     	            error: function(e) {
     	                $('#resolveCommentError').text("Something went wrong. Unable to resolve the request");
