@@ -7,6 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import edu.asu.conceptpower.app.manager.RequestsManager;
 
+/**
+ * This endpoint renders the UI of the open review requests 
+ * 
+ * @author Keerthivasan Krishnamurthy
+ * 
+ */
+
 @Controller
 public class ViewOpenReviewRequestsController {
 	@Autowired

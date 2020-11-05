@@ -18,6 +18,13 @@ import edu.asu.conceptpower.app.model.Comment;
 import edu.asu.conceptpower.app.model.ReviewRequest;
 import edu.asu.conceptpower.app.model.ReviewStatus;
 
+/**
+ * This controller helps in managing review request related operations
+ * 
+ * @author Keerthivasan Krishnamurthy
+ * 
+ */
+
 @Controller
 public class ReviewRequestController {
  
