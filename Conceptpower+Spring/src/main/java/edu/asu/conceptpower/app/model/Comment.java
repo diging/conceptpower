@@ -37,7 +37,7 @@ public class Comment implements Serializable{
     private OffsetDateTime createdAt;
     
     @Column(name="review_id")
-    private String review_id;
+    private String reviewId;
     
     
     public Integer getId() {
@@ -73,11 +73,11 @@ public class Comment implements Serializable{
     }
     
     public String getReviewId() {
-        return this.review_id;
+        return this.reviewId;
     }
     
     public void setReviewId(String id) {
-        this.review_id = id;
+        this.reviewId = id;
     }
     
 }

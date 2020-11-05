@@ -44,7 +44,7 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
     private int id;
     
     @Column(name = "concept_entry_id")
-    private String concept_entry_id;
+    private String conceptEntryId;
 
     @Column(name="user_name")
     private String userName;
@@ -88,12 +88,12 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
         this.type = type;
     }
     
-    public String getConcept() {
-        return this.concept_entry_id;
+    public String getConceptEntryId() {
+        return this.conceptEntryId;
     }
     
-    public void setConceptId(String id) {
-        this.concept_entry_id = id;
+    public void setConceptEntryId(String conceptEntryId) {
+        this.conceptEntryId = conceptEntryId;
     }
 
     @Override

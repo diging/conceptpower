@@ -49,7 +49,7 @@ public interface IRequestsManager {
     public List<ReviewRequest> getAllReviews();
     
     /**
-     * @return List<ReviewRequest> - return all the reviewRequests that are oven.
+     * @return List<ReviewRequest> - return all the reviewRequests that are open.
      */
     public List<ReviewRequest> getAllOpenReviews();
 }
