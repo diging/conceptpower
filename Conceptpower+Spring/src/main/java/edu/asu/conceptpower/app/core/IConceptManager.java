@@ -9,6 +9,7 @@ import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 public interface IConceptManager {
 
@@ -202,4 +203,11 @@ public interface IConceptManager {
      * @return - List<ConceptEntry> return all the concepts stored in the database
      */
     public List<ConceptEntry> getAllConcepts();
+    
+    /**
+     * 
+     * @param status - required review status entries
+     * @return - List<ConceptEntry> that matches the given status
+     */
+    public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status);
 }

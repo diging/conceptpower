@@ -20,6 +20,7 @@ import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db4o.DBNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
+import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
@@ -29,6 +30,8 @@ import edu.asu.conceptpower.app.model.ChangeEvent;
 import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
+import edu.asu.conceptpower.app.model.ReviewRequest;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 import edu.asu.conceptpower.app.util.CCPSort;
 import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
 import edu.asu.conceptpower.app.wordnet.Constants;
@@ -49,6 +52,9 @@ public class ConceptManager implements IConceptManager {
 
     @Autowired
     private IConceptDBManager client;
+    
+    @Autowired
+    private IRequestsDBManager requestsManager;
 
     @Autowired
     private IIndexService indexService;
@@ -628,4 +634,15 @@ public class ConceptManager implements IConceptManager {
     public List<ConceptEntry> getAllConcepts() {
         return client.getAllConcepts();
     }
+
+	@Override
+	public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status) {
+		List<ConceptEntry> result = new ArrayList<>();
+		
+		for(ReviewRequest request: requestsManager.getReviewByStatus(status)) {
+			result.add(getConceptEntry(request.getConceptId()));
+		}
+		
+		return result;
+	}
 }
