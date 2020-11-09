@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.manager;
+package edu.asu.conceptpower.app.manager.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,9 +15,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.constants.SearchFieldNames;
-import edu.asu.conceptpower.app.core.IAlternativeIdService;
-import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db4o.DBNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
@@ -25,6 +22,9 @@ import edu.asu.conceptpower.app.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.manager.IAlternativeIdService;
+import edu.asu.conceptpower.app.manager.IConceptManager;
+import edu.asu.conceptpower.app.manager.IIndexService;
 import edu.asu.conceptpower.app.model.ChangeEvent;
 import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.app.model.ConceptEntry;

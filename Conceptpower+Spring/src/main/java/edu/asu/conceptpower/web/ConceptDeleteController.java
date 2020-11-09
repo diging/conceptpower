@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.manager.IConceptManager;
+import edu.asu.conceptpower.app.manager.IIndexService;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.impl.ConceptEntryWrapperCreator;

@@ -12,8 +12,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.manager.ConceptListManager;
-import edu.asu.conceptpower.app.manager.ConceptTypesManager;
+import edu.asu.conceptpower.app.manager.impl.ConceptListManager;
+import edu.asu.conceptpower.app.manager.impl.ConceptTypesManager;
 import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.model.ConceptType;
 

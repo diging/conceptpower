@@ -11,7 +11,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
-import edu.asu.conceptpower.app.core.IConceptListManager;
+import edu.asu.conceptpower.app.manager.IConceptListManager;
 import edu.asu.conceptpower.app.validation.ConceptListAddValidator;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.web.ConceptListAddForm;

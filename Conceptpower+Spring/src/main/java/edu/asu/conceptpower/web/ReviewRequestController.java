@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.asu.conceptpower.app.manager.RequestsManager;
+import edu.asu.conceptpower.app.manager.impl.RequestsManager;
 import edu.asu.conceptpower.app.model.Comment;
 import edu.asu.conceptpower.app.model.ReviewRequest;
 import edu.asu.conceptpower.app.model.ReviewStatus;

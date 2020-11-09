@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.manager;
+package edu.asu.conceptpower.app.manager.impl;
 
 import java.util.List;
 import java.util.UUID;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
+import edu.asu.conceptpower.app.manager.IConceptTypeManager;
 import edu.asu.conceptpower.app.model.ConceptType;
 
 @Service

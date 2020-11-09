@@ -11,14 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.bean.ConceptsMergeBean;
-import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypesService;
-import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.error.CPError;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.manager.IConceptManager;
+import edu.asu.conceptpower.app.manager.IConceptTypesService;
+import edu.asu.conceptpower.app.manager.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.service.IConceptMergeService;
 

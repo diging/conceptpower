@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
-import edu.asu.conceptpower.app.manager.ConceptTypesManager;
+import edu.asu.conceptpower.app.manager.impl.ConceptTypesManager;
 import edu.asu.conceptpower.app.model.ConceptType;
 
 public class ConceptTypesManagerTest {

@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.manager;
+package edu.asu.conceptpower.app.manager.impl;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.app.core.IRequestsManager;
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
+import edu.asu.conceptpower.app.manager.IRequestsManager;
 import edu.asu.conceptpower.app.model.Comment;
 import edu.asu.conceptpower.app.model.ReviewRequest;
 import edu.asu.conceptpower.app.model.ReviewStatus;

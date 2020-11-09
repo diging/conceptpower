@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.core.Constants;
-import edu.asu.conceptpower.app.core.IRequestsManager;
-import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.manager.IConceptManager;
+import edu.asu.conceptpower.app.manager.IConceptTypeManager;
+import edu.asu.conceptpower.app.manager.IRequestsManager;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ReviewRequest;
 import edu.asu.conceptpower.app.users.IUserManager;
