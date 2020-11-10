@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.core;
+package edu.asu.conceptpower.app.manager;
 
 import java.util.List;
 

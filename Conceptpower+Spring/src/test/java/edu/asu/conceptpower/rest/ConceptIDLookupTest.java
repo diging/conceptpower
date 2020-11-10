@@ -17,10 +17,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.xml.sax.SAXException;
 
-import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypesService;
-import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
+import edu.asu.conceptpower.app.manager.IConceptManager;
+import edu.asu.conceptpower.app.manager.IConceptTypesService;
+import edu.asu.conceptpower.app.manager.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.rest.msg.IMessageConverter;

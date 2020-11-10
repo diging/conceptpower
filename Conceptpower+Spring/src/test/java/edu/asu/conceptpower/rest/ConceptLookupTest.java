@@ -18,11 +18,11 @@ import org.springframework.http.ResponseEntity;
 import org.xml.sax.SAXException;
 
 import edu.asu.conceptpower.app.core.Constants;
-import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.core.POS;
 import edu.asu.conceptpower.app.db.TypeDatabaseClient;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.manager.IConceptManager;
 import edu.asu.conceptpower.app.rdf.RDFMessageFactory;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.app.model.ConceptEntry;

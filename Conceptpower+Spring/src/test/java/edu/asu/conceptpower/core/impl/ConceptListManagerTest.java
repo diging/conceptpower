@@ -14,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.conceptpower.app.db4o.DBNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
-import edu.asu.conceptpower.app.manager.ConceptListManager;
+import edu.asu.conceptpower.app.manager.impl.ConceptListManager;
 import edu.asu.conceptpower.app.model.ConceptList;
 
 public class ConceptListManagerTest {

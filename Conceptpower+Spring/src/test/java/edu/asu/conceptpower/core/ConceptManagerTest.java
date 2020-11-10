@@ -10,15 +10,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.core.IAlternativeIdService;
-import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneUtility;
-import edu.asu.conceptpower.app.manager.ConceptManager;
+import edu.asu.conceptpower.app.manager.IAlternativeIdService;
+import edu.asu.conceptpower.app.manager.IIndexService;
+import edu.asu.conceptpower.app.manager.impl.ConceptManager;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
 import edu.asu.conceptpower.app.model.ChangeEvent;
@@ -73,7 +73,7 @@ public class ConceptManagerTest {
         addedConcept.setId("id1");
         addedConcept.setConceptList("list1");
 
-        addedConcept.setChangeEvents(changeEvent);
+        addedConcept.addChangeEvent(changeEvent);
         addedConcept.setDescription("description");
         addedConcept.setPos("noun");
         addedConcept.setWord("test");
@@ -85,7 +85,7 @@ public class ConceptManagerTest {
         wordnetConcept1 = new ConceptEntry();
         wordnetConcept1.setId("WID-1");
         wordnetConcept1.setConceptList("list1");
-        wordnetConcept1.setChangeEvents(changeEvent);
+        wordnetConcept1.addChangeEvent(changeEvent);
         wordnetConcept1.setDescription("description wid 1");
         wordnetConcept1.setPos("noun");
         wordnetConcept1.setWord("test wid 1");
@@ -95,7 +95,7 @@ public class ConceptManagerTest {
         wordnetConcept2 = new ConceptEntry();
         wordnetConcept2.setId("WID-2");
         wordnetConcept2.setConceptList("list1");
-        wordnetConcept2.setChangeEvents(changeEvent);
+        wordnetConcept2.addChangeEvent(changeEvent);
         wordnetConcept2.setDescription("description wid");
         wordnetConcept2.setPos("noun");
         wordnetConcept2.setWord("test wid");

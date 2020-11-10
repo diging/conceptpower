@@ -1,13 +1,13 @@
-package edu.asu.conceptpower.app.manager;
+package edu.asu.conceptpower.app.manager.impl;
 
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.app.core.IAlternativeIdService;
-import edu.asu.conceptpower.app.core.IConceptTypesService;
-import edu.asu.conceptpower.app.core.IConceptTypesService.IdType;
+import edu.asu.conceptpower.app.manager.IAlternativeIdService;
+import edu.asu.conceptpower.app.manager.IConceptTypesService;
+import edu.asu.conceptpower.app.manager.IConceptTypesService.IdType;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 
 /**

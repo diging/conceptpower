@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.manager;
+package edu.asu.conceptpower.app.manager.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,9 +15,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.constants.SearchFieldNames;
-import edu.asu.conceptpower.app.core.IAlternativeIdService;
-import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.db4o.DBNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
@@ -26,6 +23,9 @@ import edu.asu.conceptpower.app.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.manager.IAlternativeIdService;
+import edu.asu.conceptpower.app.manager.IConceptManager;
+import edu.asu.conceptpower.app.manager.IIndexService;
 import edu.asu.conceptpower.app.model.ChangeEvent;
 import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.app.model.ConceptEntry;
@@ -471,7 +471,7 @@ public class ConceptManager implements IConceptManager {
 
         // Creating the first change event
         ChangeEvent changeEvent = new ChangeEvent(userName, new Date(), ChangeEventTypes.CREATION);
-       entry.setChangeEvents(changeEvent);
+       entry.addChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
        entry.setAlternativeIds(id);
@@ -504,7 +504,7 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setDate(new Date());
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
-       entry.setChangeEvents(changeEvent);
+       entry.addChangeEvent(changeEvent);
         indexService.updateConceptEntry(entry, userName);
 
         client.update(entry, DBNames.DICTIONARY_DB);
@@ -555,7 +555,7 @@ public class ConceptManager implements IConceptManager {
             changeEvent.setType(ChangeEventTypes.DELETION);
             changeEvent.setDate(new Date());
             changeEvent.setUserName(userName);
-            concept.setChangeEvents(changeEvent);
+            concept.addChangeEvent(changeEvent);
             client.update(concept, DBNames.DICTIONARY_DB);
             indexService.deleteById(concept.getId(), userName);
         }

@@ -8,10 +8,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import edu.asu.conceptpower.app.core.IConceptListManager;
-import edu.asu.conceptpower.app.core.IConceptManager;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
+import edu.asu.conceptpower.app.manager.IConceptListManager;
+import edu.asu.conceptpower.app.manager.IConceptManager;
 import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.model.ConceptEntry;

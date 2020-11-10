@@ -13,10 +13,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.core.IConceptManager;
-import edu.asu.conceptpower.app.core.IConceptTypeManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
-import edu.asu.conceptpower.app.manager.RequestsManager;
+import edu.asu.conceptpower.app.manager.IConceptManager;
+import edu.asu.conceptpower.app.manager.IConceptTypeManager;
+import edu.asu.conceptpower.app.manager.impl.RequestsManager;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.util.IURIHelper;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
@@ -59,7 +59,7 @@ public class ConceptEntryWrapperCreatorTest {
         changeEvent.setDate(new Date());
 
         entry.setTypeId("Type-1");
-        entry.setChangeEvents(changeEvent);
+        entry.addChangeEvent(changeEvent);
 
         entry.setCreatorId("Test");
         entry.setWordnetId("WNET_1");
