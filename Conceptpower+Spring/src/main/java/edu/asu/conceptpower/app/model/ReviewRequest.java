@@ -27,7 +27,7 @@ public class ReviewRequest implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name="review_id")
+    @Column(name="id")
     private String id;
     
     @Column(name="concept_id")

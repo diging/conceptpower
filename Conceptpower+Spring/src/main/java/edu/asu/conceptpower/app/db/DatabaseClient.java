@@ -215,7 +215,7 @@ public class DatabaseClient implements IConceptDBManager {
             toBeUpdated.setWordnetId(entry.getWordnetId());
             toBeUpdated.setDeleted(entry.isDeleted());
             for(ChangeEvent changeEvent : entry.getChangeEvents()) {
-                toBeUpdated.setChangeEvents(changeEvent);
+                toBeUpdated.addChangeEvent(changeEvent);
             }
             
             conceptEntryRepository.save(toBeUpdated);

@@ -83,7 +83,7 @@ public class ModelMapperUtil {
         
         if(conceptEntry.getChangeEvents() != null) {
             for(ChangeEvent changeEvent: conceptEntry.getChangeEvents()) {
-                mappedConceptEntry.setChangeEvents(mapChangeEvent(changeEvent));
+                mappedConceptEntry.addChangeEvent(mapChangeEvent(changeEvent));
             }
         }
         

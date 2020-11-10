@@ -59,7 +59,7 @@ public class ConceptEntryWrapperCreatorTest {
         changeEvent.setDate(new Date());
 
         entry.setTypeId("Type-1");
-        entry.setChangeEvents(changeEvent);
+        entry.addChangeEvent(changeEvent);
 
         entry.setCreatorId("Test");
         entry.setWordnetId("WNET_1");

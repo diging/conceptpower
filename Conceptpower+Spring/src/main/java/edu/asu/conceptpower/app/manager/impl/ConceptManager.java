@@ -465,7 +465,7 @@ public class ConceptManager implements IConceptManager {
 
         // Creating the first change event
         ChangeEvent changeEvent = new ChangeEvent(userName, new Date(), ChangeEventTypes.CREATION);
-       entry.setChangeEvents(changeEvent);
+       entry.addChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
        entry.setAlternativeIds(id);
@@ -498,7 +498,7 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setDate(new Date());
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
-       entry.setChangeEvents(changeEvent);
+       entry.addChangeEvent(changeEvent);
         indexService.updateConceptEntry(entry, userName);
 
         client.update(entry, DBNames.DICTIONARY_DB);
@@ -549,7 +549,7 @@ public class ConceptManager implements IConceptManager {
             changeEvent.setType(ChangeEventTypes.DELETION);
             changeEvent.setDate(new Date());
             changeEvent.setUserName(userName);
-            concept.setChangeEvents(changeEvent);
+            concept.addChangeEvent(changeEvent);
             client.update(concept, DBNames.DICTIONARY_DB);
             indexService.deleteById(concept.getId(), userName);
         }

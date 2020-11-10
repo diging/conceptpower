@@ -250,7 +250,7 @@ public class ConceptEntry implements Serializable{
          return this.changeEvents;
     }
    
-    public void setChangeEvents(ChangeEvent changeEvent) {
+    public void addChangeEvent(ChangeEvent changeEvent) {
         if(this.changeEvents == null) {
             this.changeEvents = new ArrayList<>();
         }
