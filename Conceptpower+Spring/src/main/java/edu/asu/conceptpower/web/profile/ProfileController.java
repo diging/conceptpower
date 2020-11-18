@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.users.IUserManager;
-import edu.asu.conceptpower.users.User;
 
 @Controller
 public class ProfileController {

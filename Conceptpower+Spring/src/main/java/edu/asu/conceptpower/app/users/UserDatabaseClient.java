@@ -2,41 +2,32 @@ package edu.asu.conceptpower.app.users;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.app.db.DatabaseManager;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
+import edu.asu.conceptpower.app.model.Token;
+import edu.asu.conceptpower.app.repository.ITokenRepository;
+import edu.asu.conceptpower.app.repository.IUserRepository;
 
 @Component
 public class UserDatabaseClient {
 
-    private ObjectContainer client;
+    @Autowired
+    private IUserRepository client;
+    
+    @Autowired
+    private ITokenRepository tokenClient;
     
     @Autowired
     @Qualifier("userDatabaseManager")
     private DatabaseManager userDatabase;
     
-    @PostConstruct
-    public void init() {
-        client = userDatabase.getClient();
-    }
-    
     public User getUser(String name, String pw) {
-        User user = new User(name, pw);
-        ObjectSet<User> results = client.queryByExample(user);
-        
-        // there should only be exactly one object with this id
-        if (results.size() ==  1)
-            return results.get(0);  
-        
-        return null;
+        return client.findByUserAndPw(name, pw);
     }
     
     /**
@@ -45,69 +36,41 @@ public class UserDatabaseClient {
      * @return found user or null
      */
     public User findUser(String name) {
-        User user = new User();
-        user.setUsername(name);
-        
-        ObjectSet<User> results = client.queryByExample(user);
-        // there should only be exactly one object with this id
-        if (results.size() >=  1) {
-            return results.get(0);  
-        }
-        
-        return null;
+        return client.findByUser(name);
     }
     
     public List<User> findUsers(User exampleUser) {
-        ObjectSet<User> results = client.queryByExample(exampleUser);
-        return results;
+        return client.findByEmail(exampleUser.getEmail());
     }
     
     public User[] getAllUser() {
-        ObjectSet<User> results = client.query(User.class);
+        List<User> results = client.findAll();
+         
         return results.toArray(new User[results.size()]);       
     }
     
     public User addUser(User user) {
-        client.store(user);
-        client.commit();
+        client.save(user);
         return user;
     }
     
     public void deleteUser(String name) {
-        User user = new User();
-        user.setUsername(name);
-        
-        ObjectSet<User> results = client.queryByExample(user);
-        for (User res : results) {
-            client.delete(res);
-            client.commit();
-        }
+        client.deleteByUser(name);
     }
     
     public void update(User user) {
-        client.store(user);
-        client.commit();            
+        client.save(user);         
     }
     
     public void storeRecoveryToken(Token token) {
-        client.store(token);
-        client.commit();
+        tokenClient.save(token);
     }
     
     public Token getToken(String token) {
-        ObjectSet<Token> tokens = client.queryByExample(new Token(token));
-        if (tokens.size() > 0)
-            return tokens.get(0);
-        return null;
+        return tokenClient.findByToken(token);
     }
     
     public Token deleteToken(String token) {
-        ObjectSet<Token> tokens = client.queryByExample(new Token(token));
-        if (tokens.size() > 0) {
-            Token foundToken = (tokens.get(0));
-            client.delete(foundToken);
-            return foundToken;
-        }
-        return null;
+        return tokenClient.deleteByToken(token);
     }
 }

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.validation.UserValidator;
-import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 /**

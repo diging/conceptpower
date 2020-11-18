@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.conceptpower.app.users.IUserManager;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
 
 @Controller
 public class UserEncryptPasswordController {

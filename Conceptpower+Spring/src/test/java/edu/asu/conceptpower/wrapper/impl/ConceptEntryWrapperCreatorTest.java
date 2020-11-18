@@ -25,7 +25,7 @@ import edu.asu.conceptpower.app.model.ChangeEvent;
 import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptType;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
 
 public class ConceptEntryWrapperCreatorTest {
 

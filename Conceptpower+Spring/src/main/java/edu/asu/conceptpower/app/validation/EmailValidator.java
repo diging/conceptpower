@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.users.IUserManager;
-import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 @Component

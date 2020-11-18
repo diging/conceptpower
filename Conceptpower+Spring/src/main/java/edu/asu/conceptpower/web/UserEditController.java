@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.validation.EmailValidator;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 /**

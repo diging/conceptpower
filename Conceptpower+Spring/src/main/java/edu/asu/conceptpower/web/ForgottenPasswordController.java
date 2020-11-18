@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.conceptpower.app.model.Token;
+import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.service.IEmailService;
 import edu.asu.conceptpower.app.users.IUserManager;
-import edu.asu.conceptpower.app.users.Token;
-import edu.asu.conceptpower.users.User;
 import edu.asu.conceptpower.web.backing.EmailBackBean;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
@@ -95,7 +95,9 @@ public class ForgottenPasswordController {
             model.addAttribute("errormsg", "Sorry, but Conceptpower is unable to verify the user.");
             return "/layouts/user/reseterror";
         }
-        if (!token.getUser().getEmail().equals(emailBean.getEmail().trim())) {
+        User user = userManager.findUser(token.getUserName());
+        
+        if (!user.getEmail().equals(emailBean.getEmail().trim())) {
             model.addAttribute("errormsg", "Sorry, but Conceptpower is unable to verify the user.");
             return "/layouts/user/reseterror";
         }
@@ -108,7 +110,7 @@ public class ForgottenPasswordController {
             return "/layouts/user/reseterror";
         }
 
-        UserBacking userBacking = new UserBacking(token.getUser().getUsername(), token.getUser().getFullname());
+        UserBacking userBacking = new UserBacking(user.getUsername(), user.getFullname());
         userBacking.setToken(token.getToken());
         model.addAttribute("userBacking", userBacking);
         return "reset";
