@@ -14,10 +14,12 @@ import edu.asu.conceptpower.app.repository.IConceptEntryRepository;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
 import edu.asu.conceptpower.app.repository.IConceptTypeRepository;
 import edu.asu.conceptpower.app.repository.IReviewRequestRepository;
+import edu.asu.conceptpower.app.repository.IUserRepository;
 import edu.asu.conceptpower.core.ConceptEntry;
 import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ReviewRequest;
+import edu.asu.conceptpower.users.User;
 
 /**
  * Service to perform SQL migration for all the tables in Conceptpower
@@ -41,6 +43,8 @@ public class MigrateToSql {
     @Qualifier("conceptReviewDatabaseManager")
     private DatabaseManager dbManager;
     
+    @Qualifier("userDatabaseManager")
+    private DatabaseManager userDatabase;
     
     @Autowired
     private IReviewRequestRepository reviewRequestRepository;
@@ -53,6 +57,9 @@ public class MigrateToSql {
      
     @Autowired
     private IConceptEntryRepository conceptEntryRepository;
+    
+    @Autowired
+    private IUserRepository userRepository;
     
     @Autowired
     private ModelMapperUtil modelMapperUtil;
@@ -73,6 +80,9 @@ public class MigrateToSql {
         
         /* Concept Type Table */
         fileCount += migrateConceptTypeTable();
+        
+        /*User Table*/
+        fileCount += migrateUserTable();
 
         return new AsyncResult<>(new MigrationResult(fileCount, ZonedDateTime.now()));
     }
@@ -122,6 +132,17 @@ public class MigrateToSql {
         for(ConceptEntry c : dictionary.getClient().query(ConceptEntry.class)) {
             conceptEntryRepository.save(modelMapperUtil.mapConceptEntry(c));
             count++;
+        }
+        
+        return count;
+    }
+    
+    @Async
+    public int migrateUserTable() {
+        int count = 0;
+        
+        for(User u: userDatabase.getClient().query(User.class)) {
+            userRepository.save(modelMapperUtil.mapUser(u));
         }
         
         return count;

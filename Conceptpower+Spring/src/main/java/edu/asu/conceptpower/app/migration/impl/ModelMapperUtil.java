@@ -11,6 +11,7 @@ import edu.asu.conceptpower.core.ConceptList;
 import edu.asu.conceptpower.core.ConceptType;
 import edu.asu.conceptpower.core.ReviewRequest;
 import edu.asu.conceptpower.servlet.core.ChangeEvent;
+import edu.asu.conceptpower.users.User;
 
 /**
  * Util Component to map the models from db4o version to SQL version
@@ -88,6 +89,18 @@ public class ModelMapperUtil {
         }
         
         return mappedConceptEntry;
+    }
+    
+    public edu.asu.conceptpower.app.model.User mapUser(User u){
+        edu.asu.conceptpower.app.model.User user = new edu.asu.conceptpower.app.model.User();
+        user.setEmail(u.getEmail());
+        user.setFullname(u.getFullname());
+        user.setIsAdmin(u.getIsAdmin());
+        user.setIsEncrypted(u.getIsEncrypted());
+        user.setPw(u.getPw());
+        user.setUsername(u.getUsername());
+        
+        return user;
     }
     
     private String setToCommaString(Set<String> alternativeIds) {
