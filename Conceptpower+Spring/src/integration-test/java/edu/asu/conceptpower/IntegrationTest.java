@@ -6,6 +6,7 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
@@ -17,6 +18,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import edu.asu.conceptpower.app.migration.impl.MigrationManager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(locations = "classpath:/test.properties")
@@ -32,6 +35,10 @@ public abstract class IntegrationTest {
     protected WebApplicationContext wac;
 
     protected MockMvc mockMvc;
+    
+    @Autowired 
+    @Qualifier("migrationService")
+    private MigrationManager migrationManager;
 
     protected Principal principal = new Principal() {
         public String getName() {
@@ -51,5 +58,6 @@ public abstract class IntegrationTest {
             } while (mr.getResponse().getStatus() != HttpStatus.OK.value());
             isSetupDone = true;
         }
+        migrationManager.runMigrations();
     }
 }
