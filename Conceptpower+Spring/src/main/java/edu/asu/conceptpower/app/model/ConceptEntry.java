@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -112,7 +113,7 @@ public class ConceptEntry implements Serializable{
     @Column(name="modified_user")
     private String modifiedUser;
 
-    @OneToMany(mappedBy = "concept", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "concept", cascade = CascadeType.ALL)
     private List<ChangeEvent> changeEvents = new ArrayList<>();
      
     @Column(name="alternative_ids")

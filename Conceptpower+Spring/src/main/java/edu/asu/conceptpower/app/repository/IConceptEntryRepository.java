@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Concept Entry repository
@@ -32,10 +33,10 @@ public interface IConceptEntryRepository extends PagingAndSortingRepository<Conc
     List<ConceptEntry> findAllByConceptList(String listName);
     
     @Query("SELECT c from ConceptEntry c WHERE REPLACE(c.word, '_', ' ') LIKE LOWER(word) AND c.isDeleted = 0")
-    List<ConceptEntry> findByWord(String word);
+    List<ConceptEntry> findByWord(@Param("word") String word);
     
     @Query("SELECT c FROM ConceptEntry c WHERE c.synonymIds LIKE :id AND c.isDeleted = 0")
-    List<ConceptEntry> getConceptsForGivenSynonymId(String id);
+    List<ConceptEntry> getConceptsForGivenSynonymId(@Param("id") String id);
 }
    
     
