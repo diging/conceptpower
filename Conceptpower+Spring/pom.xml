@@ -130,7 +130,7 @@
             <db.password>sa</db.password>
             
             <hibernate.dialect>edu.asu.conceptpower.app.config.SQLiteDialect</hibernate.dialect>
-            <hibernate.hbm2ddl.auto>create</hibernate.hbm2ddl.auto>
+            <hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
          </properties>
       </profile>
    </profiles>

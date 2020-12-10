@@ -14,10 +14,6 @@
             "deleted": false,
             "alternativeIds": [
                 {
-                    "concept_id": "",
-                    "concept_uri": "http://www.digitalhps.org/concepts/"
-                },
-                {
                     "concept_id": "CONf1b4b733-3994-458d-bea0-3fbc2110dc69",
                     "concept_uri": "http://www.digitalhps.org/concepts/CONf1b4b733-3994-458d-bea0-3fbc2110dc69"
                 }
