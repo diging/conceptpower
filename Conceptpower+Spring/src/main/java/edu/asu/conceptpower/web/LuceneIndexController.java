@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.manager.IIndexService;
-import edu.asu.conceptpower.core.IndexingEvent;
+import edu.asu.conceptpower.app.model.IndexingEvent;
 
 /**
  * This class provides methods for deleting and viewing lucene indexes

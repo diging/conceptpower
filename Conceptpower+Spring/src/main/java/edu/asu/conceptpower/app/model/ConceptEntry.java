@@ -279,7 +279,7 @@ public class ConceptEntry implements Serializable{
             String[] ids = this.alternativeIds.split(",");
             return new HashSet<>(Arrays.asList(ids));
         }
-        return null;
+        return new HashSet<>();
     }
     
     public void setAlternativeIds(String alternativeIds) {

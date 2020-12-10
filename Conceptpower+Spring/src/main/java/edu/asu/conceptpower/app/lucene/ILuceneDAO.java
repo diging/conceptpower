@@ -1,6 +1,6 @@
 package edu.asu.conceptpower.app.lucene;
 
-import edu.asu.conceptpower.core.IndexingEvent;
+import edu.asu.conceptpower.app.model.IndexingEvent;
 
 public interface ILuceneDAO {
 
