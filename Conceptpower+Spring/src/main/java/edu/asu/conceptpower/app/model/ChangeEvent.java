@@ -46,7 +46,7 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
     private int id;
     
     @ManyToOne
-    @JoinColumn(name = "concept_entry_id", referencedColumnName="concept_id")
+    @JoinColumn(name = "concept_id", referencedColumnName="concept_id")
     private ConceptEntry concept;
 
     @Column(name="user_name")
@@ -56,7 +56,7 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
     private Date date;
 
     @Column(name="type")
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private ChangeEventTypes type;
 
     public int getId() {
