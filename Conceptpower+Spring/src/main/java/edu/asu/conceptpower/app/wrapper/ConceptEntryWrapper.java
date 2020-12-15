@@ -6,7 +6,7 @@ import java.util.List;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.model.ReviewRequest;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
 
 /**
  * This class describes the concept entry wrapper in concept power. It provides

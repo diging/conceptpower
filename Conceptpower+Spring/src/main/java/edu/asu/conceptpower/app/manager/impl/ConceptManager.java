@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.app.manager.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -69,6 +70,8 @@ public class ConceptManager implements IConceptManager {
 
     @Autowired
     private IAlternativeIdService alternativeIdService;
+    
+    SimpleDateFormat ft = new SimpleDateFormat ("yyyy:MM:dd hh:mm:ss");
 
     /*
      * (non-Javadoc)
@@ -470,7 +473,7 @@ public class ConceptManager implements IConceptManager {
         }
 
         // Creating the first change event
-        ChangeEvent changeEvent = new ChangeEvent(userName, new Date(), ChangeEventTypes.CREATION);
+        ChangeEvent changeEvent = new ChangeEvent(userName, ft.format(new Date()), ChangeEventTypes.CREATION);
        entry.addChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
@@ -501,7 +504,7 @@ public class ConceptManager implements IConceptManager {
     public void storeModifiedConcept(ConceptEntry entry, String userName)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
         ChangeEvent changeEvent = new ChangeEvent();
-        changeEvent.setDate(new Date());
+        changeEvent.setDate(ft.format(new Date()));
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
        entry.addChangeEvent(changeEvent);
@@ -553,7 +556,7 @@ public class ConceptManager implements IConceptManager {
             concept.setDeleted(true);
             ChangeEvent changeEvent = new ChangeEvent();
             changeEvent.setType(ChangeEventTypes.DELETION);
-            changeEvent.setDate(new Date());
+            changeEvent.setDate(ft.format(new Date()));
             changeEvent.setUserName(userName);
             concept.addChangeEvent(changeEvent);
             client.update(concept, DBNames.DICTIONARY_DB);

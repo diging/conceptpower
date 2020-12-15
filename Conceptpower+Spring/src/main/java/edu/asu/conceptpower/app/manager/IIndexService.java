@@ -6,7 +6,7 @@ import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.util.CCPSort;
-import edu.asu.conceptpower.core.IndexingEvent;
+import edu.asu.conceptpower.app.model.IndexingEvent;
 
 public interface IIndexService {
 

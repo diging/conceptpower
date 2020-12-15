@@ -1,7 +1,6 @@
 package edu.asu.conceptpower.app.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +31,7 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
     public ChangeEvent() {
     }
 
-    public ChangeEvent(String userName, Date date, ChangeEventTypes type) {
+    public ChangeEvent(String userName, String date, ChangeEventTypes type) {
         this.userName = userName;
         this.date = date;
         this.type = type;
@@ -50,10 +49,10 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
     private String userName;
 
     @Column(name="date")
-    private Date date;
+    private String date;
 
     @Column(name="type")
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private ChangeEventTypes type;
 
     public int getId() {
@@ -72,11 +71,11 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
         this.userName = userName;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -98,6 +97,6 @@ public class ChangeEvent implements Serializable, Comparable<ChangeEvent> {
 
     @Override
     public int compareTo(ChangeEvent changeEvent) {
-        return date.before(changeEvent.getDate()) ? 1 : 0;
+        return date.compareTo(changeEvent.getDate());
     }
 }

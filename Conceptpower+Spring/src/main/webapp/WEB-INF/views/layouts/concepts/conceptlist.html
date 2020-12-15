@@ -37,7 +37,7 @@
             <i class="fa fa-plus" aria-hidden="true"></i> Add New Concept List
             </button></a>
          </div>
-         <table class="table table-striped resultTable tableStyles" th:if="${result.size() > 0}" >
+         <table class="table table-striped resultTable tableStyles" th:if="${result != null && result.size() > 0}" >
             <thead>
                <tr>
                   <th scope="col"></th>
@@ -60,7 +60,7 @@
                </tr>
             </tbody>
          </table>
-         <div th:if="${result.size() <= 0}">No Concept Lists to display</div>
+         <div th:if="${result == null ||  result.size() <= 0}">No Concept Lists to display</div>
       </div>
       <div id="deleteModalPlugin"></div>
    </body>

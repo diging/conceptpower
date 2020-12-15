@@ -16,7 +16,7 @@ import org.springframework.core.env.Environment;
 
 import edu.asu.conceptpower.app.users.UserDatabaseClient;
 import edu.asu.conceptpower.app.users.UsersManager;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
 
 public class UsersManagerTest {
 

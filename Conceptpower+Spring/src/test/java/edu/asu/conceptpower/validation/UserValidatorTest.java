@@ -13,7 +13,7 @@ import org.springframework.validation.ValidationUtils;
 
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.validation.UserValidator;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 public class UserValidatorTest {

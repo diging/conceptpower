@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.conceptpower.app.users.IUserManager;
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.web.backing.UserBacking;
 
 @Controller

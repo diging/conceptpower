@@ -9,7 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
+
 
 @Service("userService")
 public class UserService implements UserDetailsService {

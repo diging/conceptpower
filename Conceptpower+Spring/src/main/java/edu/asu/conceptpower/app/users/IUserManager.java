@@ -2,7 +2,8 @@ package edu.asu.conceptpower.app.users;
 
 import java.util.Map;
 
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
+import edu.asu.conceptpower.app.model.Token;
 
 public interface IUserManager {
 

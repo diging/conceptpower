@@ -1,1 +1,26 @@
-{"conceptEntries":[{"id":"CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a","lemma":"Abbott Henderson Thayer","pos":"noun","description":"American artist, naturalist and teacher. As a painter of portraits, figures, animals and landscapes, he enjoyed a certain prominence during his lifetime, and his paintings are represented in the major American art collections. He is perhaps best known for his 'angel' paintings, some of which use his children as models.","conceptList":"VogonWeb Concepts","deleted":false,"alternativeIds":[{"concept_id":"","concept_uri":"http://www.digitalhps.org/concepts/"},{"concept_id":"CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a","concept_uri":"http://www.digitalhps.org/concepts/CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a"}],"concept_uri":"http://www.digitalhps.org/concepts/CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a","creator_id":"admin","equal_to":"http://viaf.org/viaf/55043769","modified_by":"admin","similar_to":"","synonym_ids":"[],","wordnet_id":""}],"pagination":null}
+{
+    "conceptEntries": [
+        {
+            "id": "CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a",
+            "lemma": "Abbott Henderson Thayer",
+            "pos": "noun",
+            "description": "American artist, naturalist and teacher. As a painter of portraits, figures, animals and landscapes, he enjoyed a certain prominence during his lifetime, and his paintings are represented in the major American art collections. He is perhaps best known for his 'angel' paintings, some of which use his children as models.",
+            "conceptList": "VogonWeb Concepts",
+            "deleted": false,
+            "alternativeIds": [
+                {
+                    "concept_id": "CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a",
+                    "concept_uri": "http://www.digitalhps.org/concepts/CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a"
+                }
+            ],
+            "concept_uri": "http://www.digitalhps.org/concepts/CONdf62c00c-f4a9-4564-9dd6-c9b955650f3a",
+            "creator_id": "admin",
+            "equal_to": "http://viaf.org/viaf/55043769",
+            "modified_by": "admin",
+            "similar_to": "",
+            "synonym_ids": "[],",
+            "wordnet_id": ""
+        }
+    ],
+    "pagination": null
+}

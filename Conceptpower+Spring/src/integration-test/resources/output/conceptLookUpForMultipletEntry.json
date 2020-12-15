@@ -396,10 +396,6 @@
             "deleted": false,
             "alternativeIds": [
                 {
-                    "concept_id": "",
-                    "concept_uri": "http://www.digitalhps.org/concepts/"
-                },
-                {
                     "concept_id": "CONe40a6b36-dbaa-46c7-96ea-2c6a1cb080a4",
                     "concept_uri": "http://www.digitalhps.org/concepts/CONe40a6b36-dbaa-46c7-96ea-2c6a1cb080a4"
                 }

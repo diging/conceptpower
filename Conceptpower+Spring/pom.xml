@@ -20,17 +20,17 @@
       <deploy.path.test>conceptpower-test</deploy.path.test>
       <deploy.path.prod>conceptpower</deploy.path.prod>
       <db.files.path></db.files.path>
-		<email.username></email.username>
-		<email.password></email.password>
+      <email.username></email.username>
+      <email.password></email.password>
       <email.server.port>8081</email.server.port>
       <email.server.host></email.server.host>
-		<email.from></email.from>
+      <email.from></email.from>
       <admin.username>admin</admin.username>
       <admin.password>admin</admin.password>
       <wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
       <lucene.index></lucene.index>
-		<pullrequest></pullrequest>
-		<buildNumber></buildNumber>
+      <pullrequest></pullrequest>
+      <buildNumber></buildNumber>
       <debug_level>debug</debug_level>
       <skip.integration.tests>false</skip.integration.tests>
       <skip.unit.tests>false</skip.unit.tests>
@@ -38,12 +38,16 @@
       <concept.types.url>https://www.dropbox.com/s/nwn15s84fzz37s5/conceptTypes.db?raw=1</concept.types.url>
       <users.url>https://www.dropbox.com/s/p6h3974hmlouq0i/users.db?raw=1</users.url>
       <!-- DB config -->
-      <db.driver>com.mysql.jdbc.Driver</db.driver>
+      <db.driver>com.mysql.cj.jdbc.Driver</db.driver>
       <db.database.url></db.database.url>
-        <db.user></db.user>
-        <db.password></db.password>
+      <db.user></db.user>
+      <db.password></db.password>
+      
       <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
+      <hibernate.ejb.naming_strategy>org.hibernate.cfg.ImprovedNamingStrategy</hibernate.ejb.naming_strategy>
       <hibernate.log.sql>false</hibernate.log.sql>
+      <hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+      <hibernate.format_sql>true</hibernate.format_sql>
    </properties>
    <profiles>
       <profile>
@@ -61,6 +65,9 @@
             <admin.pw>${admin.password}</admin.pw>
             <wordnet.install.path>${wordnet.path}</wordnet.install.path>
             <lucene.path>${lucene.index}</lucene.path>
+            <db.database.url>jdbc:mysql://localhost:3306/testdb?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</db.database.url>
+            <db.user>root</db.user>
+            <db.password>password</db.password>
          </properties>
       </profile>
       <profile>
@@ -116,6 +123,14 @@
             <conceptTypes.url>${concept.types.url}</conceptTypes.url>
             <usersUrl>${users.url}</usersUrl>
             <debug_level>debug</debug_level>
+            
+            <db.driver>org.sqlite.JDBC</db.driver>
+            <db.database.url>jdbc:sqlite:memory:myDb?cache=shared</db.database.url>
+            <db.user>sa</db.user>
+            <db.password>sa</db.password>
+            
+            <hibernate.dialect>edu.asu.conceptpower.app.config.SQLiteDialect</hibernate.dialect>
+            <hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
          </properties>
       </profile>
    </profiles>
@@ -323,6 +338,14 @@
          <artifactId>mysql-connector-java</artifactId>
          <version>8.0.19</version>
       </dependency>
+     
+     <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
+	<dependency>
+	    <groupId>org.xerial</groupId>
+	    <artifactId>sqlite-jdbc</artifactId>
+	    <version>3.16.1</version>
+	</dependency>
+		     
       <dependency>
          <groupId>commons-httpclient</groupId>
          <artifactId>commons-httpclient</artifactId>

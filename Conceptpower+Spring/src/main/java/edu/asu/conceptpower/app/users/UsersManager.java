@@ -19,7 +19,8 @@ import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.users.User;
+import edu.asu.conceptpower.app.model.User;
+import edu.asu.conceptpower.app.model.Token;
 
 /**
  * Managing class for user management.
@@ -192,7 +193,8 @@ public class UsersManager implements IUserManager {
     @Override
     public Token createToken(User user) {
         Token token = new Token(UUID.randomUUID().toString(), new Date());
-        token.setUser(user);
+        token.setUserName(user.getUsername());
+
         client.storeRecoveryToken(token);
         return token;
     }

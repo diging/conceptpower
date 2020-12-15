@@ -5,17 +5,16 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {
@@ -24,15 +23,14 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableTransactionManagement
 public class PersistentContext {
 
-    @Bean(destroyMethod = "close")
-    DataSource dataSource(Environment env) {
-        HikariConfig dataSourceConfig = new HikariConfig();
-        dataSourceConfig.setDriverClassName(env.getRequiredProperty("db.driver"));
-        dataSourceConfig.setJdbcUrl(env.getRequiredProperty("db.url"));
-        dataSourceConfig.setUsername(env.getRequiredProperty("db.username"));
-        dataSourceConfig.setPassword(env.getRequiredProperty("db.password"));
-
-        return new HikariDataSource(dataSourceConfig);
+    @Bean
+    public DataSource dataSource(@Autowired Environment env) {
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(env.getProperty("db.driver"));
+        dataSource.setUrl(env.getProperty("db.url"));
+        dataSource.setUsername(env.getProperty("db.username"));
+        dataSource.setPassword(env.getProperty("db.password"));
+        return dataSource;
     }
     
     @Bean

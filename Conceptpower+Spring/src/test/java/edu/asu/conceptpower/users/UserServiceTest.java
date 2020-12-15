@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.users.UserService;
 

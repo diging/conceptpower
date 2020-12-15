@@ -51,5 +51,6 @@ public abstract class IntegrationTest {
             } while (mr.getResponse().getStatus() != HttpStatus.OK.value());
             isSetupDone = true;
         }
+
     }
 }
