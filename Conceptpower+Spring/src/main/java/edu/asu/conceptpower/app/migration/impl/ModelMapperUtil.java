@@ -121,7 +121,7 @@ public class ModelMapperUtil {
         edu.asu.conceptpower.app.model.ChangeEvent mappedChangeEvent = new edu.asu.conceptpower.app.model.ChangeEvent();
         mappedChangeEvent.setType(ChangeEventTypes.values()[changeEvent.getType().ordinal()]);
         mappedChangeEvent.setUserName(changeEvent.getUserName());
-        mappedChangeEvent.setDate(changeEvent.getDate());
+        mappedChangeEvent.setDate(changeEvent.getDate().toString());
 
         return mappedChangeEvent;
     }

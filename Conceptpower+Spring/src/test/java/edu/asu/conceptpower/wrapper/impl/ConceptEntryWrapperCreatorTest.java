@@ -3,6 +3,7 @@ package edu.asu.conceptpower.wrapper.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +50,8 @@ public class ConceptEntryWrapperCreatorTest {
 
     ConceptEntry[] entries = new ConceptEntry[1];
     ConceptEntry entry = new ConceptEntry();
+    
+    SimpleDateFormat ft = new SimpleDateFormat ("yyyy:MM:dd hh:mm:ss");
 
     @Before
     public void init() throws LuceneException {
@@ -56,7 +59,7 @@ public class ConceptEntryWrapperCreatorTest {
         ChangeEvent changeEvent = new ChangeEvent();
         changeEvent.setUserName("Test");
         changeEvent.setType(ChangeEventTypes.CREATION);
-        changeEvent.setDate(new Date());
+        changeEvent.setDate(ft.format(new Date()));
 
         entry.setTypeId("Type-1");
         entry.addChangeEvent(changeEvent);

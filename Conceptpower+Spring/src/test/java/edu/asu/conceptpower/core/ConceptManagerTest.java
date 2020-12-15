@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.core;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Before;
@@ -55,6 +56,8 @@ public class ConceptManagerTest {
     private ConceptEntry wordnetConcept2;
     private ConceptEntry addedConceptsForWordNet;
     private ConceptList list1;
+    
+    SimpleDateFormat ft = new SimpleDateFormat ("yyyy:MM:dd hh:mm:ss");
 
     @Before
     public void init() throws LuceneException {
@@ -63,7 +66,7 @@ public class ConceptManagerTest {
         ChangeEvent changeEvent = new ChangeEvent();
         changeEvent.setUserName("testuser");
         changeEvent.setType(ChangeEventTypes.CREATION);
-        changeEvent.setDate(new Date());
+        changeEvent.setDate(ft.format(new Date()));
 
         wordNetManager = Mockito.mock(WordNetManager.class);
         dbManager = Mockito.mock(IConceptDBManager.class);
