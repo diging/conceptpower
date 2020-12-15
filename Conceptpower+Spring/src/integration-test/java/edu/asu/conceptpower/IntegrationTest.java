@@ -35,10 +35,6 @@ public abstract class IntegrationTest {
     protected WebApplicationContext wac;
 
     protected MockMvc mockMvc;
-    
-    @Autowired 
-    @Qualifier("migrationService")
-    private MigrationManager migrationManager;
 
     protected Principal principal = new Principal() {
         public String getName() {

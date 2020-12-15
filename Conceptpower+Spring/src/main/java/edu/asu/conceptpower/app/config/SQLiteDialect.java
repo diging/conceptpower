@@ -5,6 +5,13 @@ import org.hibernate.dialect.identity.IdentityColumnSupport;
 
 import java.sql.Types;
 
+/**
+ * This config is to set a custom dialect for running SQlite during Integration test
+ * 
+ * @author Keerthivasan Krishnamurthy
+ * 
+ */
+
 public class SQLiteDialect extends Dialect {
 
     public SQLiteDialect() {

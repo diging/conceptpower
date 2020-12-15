@@ -3,6 +3,12 @@ package edu.asu.conceptpower.app.config;
 import org.hibernate.MappingException;
 import org.hibernate.dialect.identity.IdentityColumnSupportImpl;
 
+/**
+ * Identity Column  support for SQliteDialect Configuration
+ * 
+ * @author Keerthivasan Krishnamurthy
+ * 
+ */
 public class SQLiteIdentityColumnSupport extends IdentityColumnSupportImpl {
 
     @Override
