@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,11 +51,13 @@ public class ViewOpenReviewRequestsController {
 		}
 
 		List<ConceptEntry> openReviewConcepts = conceptsManager.getAllConceptsByStatus(ReviewStatus.OPENED);
-		List<ConceptEntryWrapper> foundConcepts = null;
+		List<ConceptEntryWrapper> foundConcepts = new ArrayList<>();
 
 		try {
-			foundConcepts = wrapperCreator
-					.createWrappers(openReviewConcepts.toArray(new ConceptEntry[openReviewConcepts.size()]));
+			if(!openReviewConcepts.isEmpty()) {
+				foundConcepts = wrapperCreator
+						.createWrappers(openReviewConcepts.toArray(new ConceptEntry[openReviewConcepts.size()]));
+			}
 		} catch (LuceneException e) {
 			model.addAttribute(indexerStatus, e.getMessage());
 			e.printStackTrace();
