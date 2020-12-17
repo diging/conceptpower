@@ -56,14 +56,12 @@ public class IndexService implements IIndexService {
     @Override
     public ConceptEntry[] searchForConcepts(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
-
-        boolean isSearchOnDescription = fieldMap.containsKey(SearchFieldNames.DESCRIPTION);
         
         if (indexerRunningFlag.get()) {
             throw new IndexerRunningException(indexerRunning);
         }
         // Fetches all the pages
-        return luceneUtility.queryIndex(fieldMap, operator, 0, -1, null, isSearchOnDescription);
+        return luceneUtility.queryIndex(fieldMap, operator, 0, -1, null, fieldMap.containsKey(SearchFieldNames.DESCRIPTION));
     }
 
     /**
@@ -78,9 +76,8 @@ public class IndexService implements IIndexService {
         if (indexerRunningFlag.get()) {
             throw new IndexerRunningException(indexerRunning);
         }
-        boolean isSearchOnDescription = fieldMap.containsKey(SearchFieldNames.DESCRIPTION);
         
-        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort, isSearchOnDescription);
+        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort, fieldMap.containsKey(SearchFieldNames.DESCRIPTION));
         alternativeIdService.addAlternativeIds(entries);
         return entries;
     }
