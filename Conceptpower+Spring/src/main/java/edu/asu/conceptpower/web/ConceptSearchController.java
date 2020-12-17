@@ -114,10 +114,10 @@ public class ConceptSearchController {
             found = conceptManager.getConceptListEntriesForWordPOSDescription(conceptSearchBean.getWord(),
                     conceptSearchBean.getPos(),
                     conceptSearchBean.isSearchOnDescription(), null, pageInt,
-                    defaultPageSize, sortColumn, sortDirInt);
+                    numRecords, sortColumn, sortDirInt);
             pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
                     conceptSearchBean.getPos(),
-                    conceptSearchBean.isSearchOnDescription(), null);
+                    conceptSearchBean.isSearchOnDescription(), null, numRecords);
         } catch (IndexerRunningException e) {
             model.addAttribute(indexerStatus, e.getMessage());
             return "home";

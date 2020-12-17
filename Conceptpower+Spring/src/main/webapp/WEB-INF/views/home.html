@@ -251,7 +251,7 @@
          
          $(document).on("change", "#numRecordsPerPage", function(e) {
              var paginateData = $(this).data();
-             paginate(1, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, e.target.value)
+             paginate(1, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, e.target.value, paginateData.searchondescription)
          });
       </script>
    </head>
@@ -306,7 +306,7 @@
                <label for="dropdown">Show</label>
                <div class='custom-dropdown' style="margin:0px 5px 0px 5px;">
                   <select class="selectDropdown" style="padding:0 2.5em 0 .3em;" id="numRecordsPerPage" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}">
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}">
                      <option th:value="5" th:text="5"   th:selected="${numRecords == 5}"></option>
                      <option th:value="10" th:text="10" th:selected="${numRecords == 10}"></option>
                      <option th:value="20" th:text="20" th:selected="${numRecords == 20}"></option>
