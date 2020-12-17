@@ -65,6 +65,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
+import edu.asu.conceptpower.app.constants.SearchFieldNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
@@ -495,7 +496,7 @@ public class LuceneUtility implements ILuceneUtility {
      * fieldMap contains the search criteria
      */
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
-            int numberOfRecordsPerPage, CCPSort ccpSort) throws LuceneException, IllegalAccessException {
+            int numberOfRecordsPerPage, CCPSort ccpSort, boolean isSearchOnDescription) throws LuceneException, IllegalAccessException {
 
         Map<String,Analyzer> analyzerPerField = new HashMap<>();
         BooleanClause.Occur occur = BooleanClause.Occur.SHOULD;
@@ -534,7 +535,7 @@ public class LuceneUtility implements ILuceneUtility {
                 String searchString = fieldMap.get(search.fieldName());
                 if (searchString != null) {
                     searchString = searchString.toLowerCase();
-                    buildQuery(occur, perFieldAnalyzerWrapper, qBuild, builder, luceneFieldAnnotation, searchString);
+                    buildQuery(occur, perFieldAnalyzerWrapper, qBuild, builder, luceneFieldAnnotation, searchString, isSearchOnDescription);
                 }
             }
         }
@@ -591,7 +592,8 @@ public class LuceneUtility implements ILuceneUtility {
         }
     }
 
-    private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, String searchString) {
+    private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, 
+            String searchString, boolean isSearchOnDescription) {
         if (luceneFieldAnnotation.isTokenized()) {
             BooleanQuery.Builder tokenizedQueryBuilder = new BooleanQuery.Builder();
             buildTokenizedOrWildCardQuery(luceneFieldAnnotation, searchString, qBuild, tokenizedQueryBuilder);
@@ -602,6 +604,13 @@ public class LuceneUtility implements ILuceneUtility {
                 // Short word searching
                 BooleanQuery.Builder shortWordSearchQueryBuilder = new BooleanQuery.Builder();
                 shortWordSearchQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX, searchString), Occur.SHOULD);
+                
+                /*If the searchDescription is enabled, add the query along with Word Query.
+                 * Rightnow isShortPhraseSearchable is enabled only for Word field which avoids multiple entry of search params */
+                if(isSearchOnDescription) {
+                    shortWordSearchQueryBuilder.add(new PhraseQuery(SearchFieldNames.DESCRIPTION, searchString), Occur.SHOULD);
+                }
+                
                 rootQueryBuilder.add(shortWordSearchQueryBuilder.build(), Occur.SHOULD);
                 tokenizedQueryBuilder = rootQueryBuilder;
             }

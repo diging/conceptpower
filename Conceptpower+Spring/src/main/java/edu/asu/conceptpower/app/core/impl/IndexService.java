@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import edu.asu.conceptpower.app.constants.SearchFieldNames;
 import edu.asu.conceptpower.app.core.IAlternativeIdService;
 import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -56,11 +57,13 @@ public class IndexService implements IIndexService {
     public ConceptEntry[] searchForConcepts(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
 
+        boolean isSearchOnDescription = fieldMap.containsKey(SearchFieldNames.DESCRIPTION);
+        
         if (indexerRunningFlag.get()) {
             throw new IndexerRunningException(indexerRunning);
         }
         // Fetches all the pages
-        return luceneUtility.queryIndex(fieldMap, operator, 0, -1, null);
+        return luceneUtility.queryIndex(fieldMap, operator, 0, -1, null, isSearchOnDescription);
     }
 
     /**
@@ -75,8 +78,9 @@ public class IndexService implements IIndexService {
         if (indexerRunningFlag.get()) {
             throw new IndexerRunningException(indexerRunning);
         }
-
-        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort);
+        boolean isSearchOnDescription = fieldMap.containsKey(SearchFieldNames.DESCRIPTION);
+        
+        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort, isSearchOnDescription);
         alternativeIdService.addAlternativeIds(entries);
         return entries;
     }

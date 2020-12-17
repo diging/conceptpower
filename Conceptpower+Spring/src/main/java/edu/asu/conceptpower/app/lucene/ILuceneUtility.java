@@ -17,7 +17,7 @@ public interface ILuceneUtility {
     public void indexConcepts(String userName) throws LuceneException, IllegalArgumentException, IllegalAccessException;
 
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int pageNumber,
-            int numberOfRecordsPerPage, CCPSort ccpSort)
+            int numberOfRecordsPerPage, CCPSort ccpSort, boolean isSearchOnDescription)
                     throws LuceneException, IllegalAccessException;
 
 }
