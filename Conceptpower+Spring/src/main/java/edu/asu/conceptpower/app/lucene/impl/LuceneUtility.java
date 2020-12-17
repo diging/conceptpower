@@ -630,7 +630,7 @@ public class LuceneUtility implements ILuceneUtility {
                 BooleanQuery.Builder analyzedBuilder = new BooleanQuery.Builder();             
                 createWildCardSearchQuery(luceneFieldAnnotation, searchString, analyzedBuilder, Occur.SHOULD);
                 analyzedBuilder.add(new BooleanClause(
-                        (qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), Occur.SHOULD));
+                        (qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), Occur.SHOULD));
                 tokenizedQueryBuilder.add(analyzedBuilder.build(), Occur.MUST);
             } else {
                 tokenizedQueryBuilder.add(new TermQuery(new Term(luceneFieldAnnotation.lucenefieldName(), searchString)),
