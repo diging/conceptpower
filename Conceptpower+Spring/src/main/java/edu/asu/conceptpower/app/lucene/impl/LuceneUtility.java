@@ -532,6 +532,9 @@ public class LuceneUtility implements ILuceneUtility {
             SearchField search = field.getAnnotation(SearchField.class);
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (search != null) {
+                if(isSearchOnDescription && search.fieldName().equals("description")){
+                    continue;
+                }
                 String searchString = fieldMap.get(search.fieldName());
                 if (searchString != null) {
                     searchString = searchString.toLowerCase();
@@ -596,19 +599,19 @@ public class LuceneUtility implements ILuceneUtility {
             String searchString, boolean isSearchOnDescription) {
         if (luceneFieldAnnotation.isTokenized()) {
             BooleanQuery.Builder tokenizedQueryBuilder = new BooleanQuery.Builder();
-            buildTokenizedOrWildCardQuery(luceneFieldAnnotation, searchString, qBuild, tokenizedQueryBuilder);
+            buildTokenizedOrWildCardQuery(luceneFieldAnnotation, searchString, qBuild, tokenizedQueryBuilder, isSearchOnDescription);
 
             if (luceneFieldAnnotation.isShortPhraseSearchable()) {
                 BooleanQuery.Builder rootQueryBuilder = new BooleanQuery.Builder();
                 rootQueryBuilder.add(tokenizedQueryBuilder.build(), Occur.SHOULD);
                 // Short word searching
                 BooleanQuery.Builder shortWordSearchQueryBuilder = new BooleanQuery.Builder();
-                shortWordSearchQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX, searchString), Occur.SHOULD);
+                shortWordSearchQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX, searchString), Occur.MUST);
                 
                 /*If the searchDescription is enabled, add the query along with Word Query.
                  * Rightnow isShortPhraseSearchable is enabled only for Word field which avoids multiple entry of search params */
                 if(isSearchOnDescription) {
-                    shortWordSearchQueryBuilder.add(new PhraseQuery(SearchFieldNames.DESCRIPTION, searchString), Occur.SHOULD);
+                    shortWordSearchQueryBuilder.add(new PhraseQuery(SearchFieldNames.DESCRIPTION, searchString), Occur.MUST);
                 }
                 
                 rootQueryBuilder.add(shortWordSearchQueryBuilder.build(), Occur.SHOULD);
@@ -625,12 +628,17 @@ public class LuceneUtility implements ILuceneUtility {
     }
 
     private void buildTokenizedOrWildCardQuery(LuceneField luceneFieldAnnotation, String searchString, QueryBuilder qBuild,
-            BooleanQuery.Builder tokenizedQueryBuilder) {       
+            BooleanQuery.Builder tokenizedQueryBuilder, boolean isSearchOnDescription) {       
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 BooleanQuery.Builder analyzedBuilder = new BooleanQuery.Builder();             
                 createWildCardSearchQuery(luceneFieldAnnotation, searchString, analyzedBuilder, Occur.SHOULD);
                 analyzedBuilder.add(new BooleanClause(
                         (qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), Occur.SHOULD));
+                if(isSearchOnDescription) {
+                    analyzedBuilder.add(new BooleanClause(
+                        (qBuild.createBooleanQuery(SearchFieldNames.DESCRIPTION, searchString)), Occur.SHOULD));
+                }
+       
                 tokenizedQueryBuilder.add(analyzedBuilder.build(), Occur.MUST);
             } else {
                 tokenizedQueryBuilder.add(new TermQuery(new Term(luceneFieldAnnotation.lucenefieldName(), searchString)),
