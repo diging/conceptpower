@@ -255,7 +255,7 @@
       </script>
    </head>
    <body class = "body" layout:fragment="content">
-      <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection">
+      <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection" accept-charset="UTF-8">
          <h1>Welcome to Conceptpower</h1>
          <div class="input-group input-group-lg">
             <input type="text" class="form-control" id="searchInput" name="word" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">

@@ -357,7 +357,7 @@
          <h4>Add a wrapper for concept in WordNet. Do that if you, for example, want to attach an<br/>"equals to" URI to a concept that already exists in WordNet.</h4>
          <form 
             th:action="@{'/auth/conceptlist/addconceptwrapper/conceptsearch'}" 
-            method='post' id="createconceptform">
+            method='post' id="createconceptform" accept-charset="UTF-8">
             <div class="wrapperSection">
                <div class="sectionHeading">
                   <h4 class="numeration">1</h4>
@@ -438,7 +438,7 @@
                <div id="noConceptAlert" th:if="${result == null || result.size() <= 0}">No Concept to display</div>
             </div>
          </form>
-         <form th:action="@{/auth/conceptlist/addconceptwrapper/add}" method='post' th:object="${conceptWrapperAddBean}">
+         <form th:action="@{/auth/conceptlist/addconceptwrapper/add}" method='post' th:object="${conceptWrapperAddBean}" accept-charset="UTF-8">
             <div class="wrapperSection">
                <div class="sectionHeading">
                   <h4 class="numeration">3</h4>

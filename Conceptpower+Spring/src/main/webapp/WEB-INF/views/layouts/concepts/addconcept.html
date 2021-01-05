@@ -441,7 +441,8 @@
          <h2 class="title">Add a new Concept</h2>
          <form
             th:action="@{/auth/conceptlist/addconcept/add}"
-            th:object="${conceptAddBean}" method='post'
+            th:object="${conceptAddBean}" method='post' 
+            accept-charset="UTF-8"
             id="createconceptform">
             <table class="conceptPowerForm">
                <tbody>

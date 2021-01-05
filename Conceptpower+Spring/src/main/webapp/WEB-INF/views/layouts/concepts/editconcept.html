@@ -323,7 +323,7 @@
          <p th:text="${conceptEditBean.description}"></p>
          <form
             th:action="@{'/auth/conceptlist/editconcept/edit/'+${conceptId}}"
-            th:object="${conceptEditBean}" method='post'
+            th:object="${conceptEditBean}" method='post' accept-charset="UTF-8"
             id="createconceptform">
             <table class="conceptPowerForm" style="margin-top: 0px;">
                <tbody>

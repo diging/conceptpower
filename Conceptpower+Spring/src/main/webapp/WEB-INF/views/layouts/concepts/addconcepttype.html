@@ -6,7 +6,10 @@
    <body class="body" layout:fragment="content">
       <div class="conceptPowerWrapper">
          <h3 class="title">Add a new concept type</h3>
-         <form th:action="@{/auth/concepts/createconcepttype}" method="post" th:object="${conceptTypeAddForm}">
+         <form th:action="@{/auth/concepts/createconcepttype}" 
+         method="post" 
+         accept-charset="UTF-8" 
+         th:object="${conceptTypeAddForm}">
             <table class="conceptPowerForm">
                <tbody>
                   <tr>

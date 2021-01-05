@@ -47,7 +47,7 @@
          
          <form
             th:action="@{/auth/concepts/merge}"
-            th:object="${conceptsMergeBean}" method='post'>
+            th:object="${conceptsMergeBean}" method='post' accept-charset="UTF-8">
             <div th:if="${conceptsMergeBean.errorMessages != null && conceptsMergeBean.errorMessages.size() > 0}">
             	<div class="alert alert-warning alert-dismissable">
             		<p th:each="error : ${conceptsMergeBean.errorMessages}" th:text=${error.errorCode}></p>
