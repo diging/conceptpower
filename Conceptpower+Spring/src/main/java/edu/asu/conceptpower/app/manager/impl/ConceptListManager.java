@@ -6,8 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.app.db4o.DBNames;
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
+import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.IConceptListManager;
 import edu.asu.conceptpower.app.model.ConceptList;
 
@@ -42,7 +41,7 @@ public class ConceptListManager implements IConceptListManager {
 		dict.setConceptListName(name);
 		dict.setDescription(description);
 		dict.setId(generateId(LIST_PREFIX));
-		client.storeConceptList(dict, DBNames.DICTIONARY_DB);
+		client.storeConceptList(dict);
 	}
 	
 	/* (non-Javadoc)
@@ -69,8 +68,8 @@ public class ConceptListManager implements IConceptListManager {
 	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#getConceptList(java.lang.String)
 	 */
 	@Override
-	public ConceptList getConceptList(String id) {
-		return client.getConceptList(id);
+	public ConceptList getConceptList(String name) {
+		return client.getConceptList(name);
 	}
 	
 	/* (non-Javadoc)
@@ -78,7 +77,7 @@ public class ConceptListManager implements IConceptListManager {
 	 */
 	@Override
 	public void storeModifiedConceptList(ConceptList list, String listname) {
-		client.update(list, listname, DBNames.DICTIONARY_DB);
+		client.update(list, listname);
 	}
 	
 	

@@ -12,8 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.db4o.DBNames;
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
+import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.impl.ConceptListManager;
 import edu.asu.conceptpower.app.model.ConceptList;
 
@@ -43,7 +42,7 @@ public class ConceptListManagerTest {
 	@Test
 	public void addConceptListTest() {
 		conceptListManager.addConceptList("List Name", "List Description");
-		Mockito.verify(client).storeConceptList(ArgumentMatchers.any(ConceptList.class), Mockito.eq(DBNames.DICTIONARY_DB));
+		Mockito.verify(client).storeConceptList(ArgumentMatchers.any(ConceptList.class));
 
 	}
 
@@ -94,7 +93,7 @@ public class ConceptListManagerTest {
 		ConceptList list = new ConceptList();
 		list.setConceptListName("List Name");
 		conceptListManager.storeModifiedConceptList(list, "List Name 2");
-		Mockito.verify(client).update(Mockito.eq(list), Mockito.eq("List Name 2"), Mockito.eq(DBNames.DICTIONARY_DB));
+		Mockito.verify(client).update(Mockito.eq(list), Mockito.eq("List Name 2"));
 
 	}
 }

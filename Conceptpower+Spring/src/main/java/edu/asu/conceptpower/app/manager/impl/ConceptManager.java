@@ -16,14 +16,13 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.constants.SearchFieldNames;
-import edu.asu.conceptpower.app.db4o.DBNames;
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.manager.IAlternativeIdService;
+import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.IConceptManager;
 import edu.asu.conceptpower.app.manager.IIndexService;
 import edu.asu.conceptpower.app.model.ChangeEvent;
@@ -445,7 +444,7 @@ public class ConceptManager implements IConceptManager {
 
         entry.setId(generateId(CONCEPT_PREFIX));
 
-        client.store(entry, DBNames.DICTIONARY_DB);
+        client.store(entry);
     }
 
     /*
@@ -472,7 +471,7 @@ public class ConceptManager implements IConceptManager {
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
        entry.setAlternativeIds(id);
-        client.store(entry, DBNames.DICTIONARY_DB);
+        client.store(entry);
         if (entry.getWordnetId() != null) {
             String[] wordnetIds = entry.getWordnetId().split(",");
             for (String wordnetId : wordnetIds) {
@@ -504,7 +503,7 @@ public class ConceptManager implements IConceptManager {
        entry.addChangeEvent(changeEvent);
         indexService.updateConceptEntry(entry, userName);
 
-        client.update(entry, DBNames.DICTIONARY_DB);
+        client.update(entry);
     }
 
     protected String generateId(String prefix) {
@@ -553,7 +552,7 @@ public class ConceptManager implements IConceptManager {
             changeEvent.setDate(ft.format(new Date()));
             changeEvent.setUserName(userName);
             concept.addChangeEvent(changeEvent);
-            client.update(concept, DBNames.DICTIONARY_DB);
+            client.update(concept);
             indexService.deleteById(concept.getId(), userName);
         }
     }
