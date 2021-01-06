@@ -49,8 +49,8 @@ public class ConceptListManager implements IConceptListManager {
 	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#deleteConceptList(java.lang.String)
 	 */
 	@Override
-	public void deleteConceptList(String name) {
-		client.deleteConceptList(name);
+	public void deleteConceptList(String id) {
+		client.deleteConceptList(id);
 	}
 	
 	/* (non-Javadoc)
@@ -69,8 +69,8 @@ public class ConceptListManager implements IConceptListManager {
 	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#getConceptList(java.lang.String)
 	 */
 	@Override
-	public ConceptList getConceptList(String name) {
-		return client.getConceptList(name);
+	public ConceptList getConceptList(String id) {
+		return client.getConceptList(id);
 	}
 	
 	/* (non-Javadoc)

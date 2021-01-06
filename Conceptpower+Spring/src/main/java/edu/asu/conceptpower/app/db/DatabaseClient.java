@@ -134,8 +134,10 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     @SuppressWarnings("serial")
-    public ConceptList getConceptList(String name) {
-        return conceptListRepository.findByConceptListName(name);
+    public ConceptList getConceptList(String id) {
+        Optional<ConceptList> c = conceptListRepository.findById(id);
+        
+        return c.isPresent() ? c.get() : null ;
     }
 
     /*
@@ -230,8 +232,8 @@ public class DatabaseClient implements IConceptDBManager {
      * String)
      */
     @Override
-    public void deleteConceptList(String name) {
-        conceptListRepository.deleteByConceptListName(name);
+    public void deleteConceptList(String id) {
+        conceptListRepository.deleteById(id);
     }
 
     /*

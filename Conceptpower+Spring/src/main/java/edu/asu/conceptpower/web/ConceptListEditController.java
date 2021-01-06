@@ -70,14 +70,14 @@ public class ConceptListEditController {
      *            Generic model holder for servlet
      * @return Returns a string value to redirect user to edit list page
      */
-    @GetMapping(value = "auth/conceptlist/editlist/{listname}")
-    public String prepareEditList(@PathVariable("listname") String listName, ModelMap model,
+    @GetMapping(value = "auth/conceptlist/editlist/{listId}")
+    public String prepareEditList(@PathVariable("listId") String listId, ModelMap model,
             @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm) {
 
-        ConceptList list = conceptListService.getConceptList(listName);
+        ConceptList list = conceptListService.getConceptList(listId);
         conceptListAddForm.setListName(list.getConceptListName());
         conceptListAddForm.setDescription(list.getDescription());
-        conceptListAddForm.setOldListName(listName);
+        conceptListAddForm.setOldListName(listId);
         return "/layouts/concepts/editconceptlist";
     }
 
@@ -117,7 +117,7 @@ public class ConceptListEditController {
         // modify the name for all the existing concepts under this concept
         // list
         List<ConceptEntry> entries = conceptManager
-                .getConceptEntriedByConceptListName(conceptListAddForm.getOldListName());
+                .getConceptEntriesByConceptListName(conceptListAddForm.getOldListName());
         Iterator<ConceptEntry> entriesIterator = entries.iterator();
 
         while (entriesIterator.hasNext()) {

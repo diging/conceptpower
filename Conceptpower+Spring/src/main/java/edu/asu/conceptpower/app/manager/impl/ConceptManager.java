@@ -591,7 +591,7 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public List<ConceptEntry> getConceptEntriedByConceptListName(String conceptListName) {
+    public List<ConceptEntry> getConceptEntriesByConceptListName(String conceptListName) {
         List<ConceptEntry> conceptEntries = client.getAllEntriesFromList(conceptListName);
         alternativeIdService.addAlternativeIds(conceptEntries);
         return conceptEntries;
