@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -64,8 +66,15 @@ public class ConceptManager implements IConceptManager {
     @Autowired
     private IAlternativeIdService alternativeIdService;
     
-    SimpleDateFormat ft = new SimpleDateFormat ("yyyy:MM:dd hh:mm:ss");
-
+    @Value("${date_format}")
+    private String dateFormat;
+    
+    SimpleDateFormat ft;
+    
+    @PostConstruct
+    public void init() {
+        ft = new SimpleDateFormat (dateFormat);
+    }
     /*
      * (non-Javadoc)
      * 
@@ -74,7 +83,6 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public ConceptEntry getConceptEntry(String id) {
-
         Map<String, String> fieldMap = new HashMap<>();
         fieldMap.put(SearchFieldNames.MERGED_IDS, id);
         ConceptEntry[] entries;
@@ -467,10 +475,10 @@ public class ConceptManager implements IConceptManager {
 
         // Creating the first change event
         ChangeEvent changeEvent = new ChangeEvent(userName, ft.format(new Date()), ChangeEventTypes.CREATION);
-       entry.addChangeEvent(changeEvent);
+        entry.addChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
-       entry.setAlternativeIds(id);
+        entry.setAlternativeIds(id);
         client.store(entry);
         if (entry.getWordnetId() != null) {
             String[] wordnetIds = entry.getWordnetId().split(",");
@@ -500,7 +508,7 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setDate(ft.format(new Date()));
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
-       entry.addChangeEvent(changeEvent);
+        entry.addChangeEvent(changeEvent);
         indexService.updateConceptEntry(entry, userName);
 
         client.update(entry);
