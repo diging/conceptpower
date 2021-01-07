@@ -2,9 +2,9 @@
 	display:none;
 }
 
-#reviewModal .modal-dialog, #requestModal .modal-dialog, #reopenModal .modal-dialog{
+#reviewModal .modal-dialog, #requestModal .modal-dialog, #reopenModal .modal-dialog, #invalidRequestModal .modal-dialog{
 	width:500px;
-	margin: 30px auto;
+	margin: 15% auto;
 }
 
 .fa{

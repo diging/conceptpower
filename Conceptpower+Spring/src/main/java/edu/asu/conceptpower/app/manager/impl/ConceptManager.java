@@ -27,6 +27,7 @@ import edu.asu.conceptpower.app.manager.IAlternativeIdService;
 import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.IConceptManager;
 import edu.asu.conceptpower.app.manager.IIndexService;
+import edu.asu.conceptpower.app.manager.IRequestsDBManager;
 import edu.asu.conceptpower.app.model.ChangeEvent;
 import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.app.model.ConceptEntry;

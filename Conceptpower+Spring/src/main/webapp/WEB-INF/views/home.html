@@ -210,6 +210,21 @@
 	          $('#reviewError').hide();
 	          $('#request').val('');
 	          $("#conceptId").val($(this).data("concept-id"));
+	          var conceptId = $(this).data("concept-id");
+	          
+	          $.ajax({
+                  type: "GET",
+                  url: "[[@{'/auth/request/validate/'}]]" + conceptId,
+                  contentType: "application/json",
+                  success: function(data) {
+                	  if(data == true){
+                		  $('#reviewModal').modal('show');
+                	  }else{
+                		  $('#invalidRequestModal').modal('show');
+                	  }
+                  }
+	          })
+	          
 	      });
 	
 	      $(document).on("click", ".fa-refresh", function() {
@@ -474,7 +489,7 @@
 	                     <div 
 	                        th:if="${concept.reviewRequest == null
 	                        || (concept.reviewRequest.status != null && concept.reviewRequest.status.name() == 'RESOLVED')}" 
-	                        th:data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" data-target="#reviewModal" class="fa fa-comment">
+	                        th:data-concept-id="${concept.entry.id}" title="Add a review request"  data-toggle="modal" class="fa fa-comment">
 	                     </div>
 	                     <div 
 	                        th:if="${concept.reviewRequest != null   
@@ -529,6 +544,7 @@
 	   <div th:insert="layouts/modals/requestreview :: addrequest"></div>
 	   <div th:insert="layouts/modals/resolvereview :: resolverequest"></div>
 	   <div th:insert="layouts/modals/reopenreview :: reopenrequest"></div>
+	   <div th:insert="layouts/modals/invalidrequest :: invalidRequest"></div>
 	   <div sec:authorize="!isAuthenticated()" th:insert="layouts/modals/signin :: signin"></div>
 	   <div th:insert="layouts/modals/deleteconcept :: deleteConcept"></div>
 	</body>

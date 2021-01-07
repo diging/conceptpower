@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.impl.RequestsManager;
 import edu.asu.conceptpower.app.model.Comment;
 import edu.asu.conceptpower.app.model.ReviewRequest;
@@ -30,6 +31,9 @@ public class ReviewRequestController {
  
     @Autowired
     private RequestsManager requestsMgr;
+    
+    @Autowired
+    private IConceptDBManager conceptDBManager;
            
     @PostMapping(value = "/auth/request/add")
     public @ResponseBody ReviewRequest addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
@@ -53,5 +57,10 @@ public class ReviewRequestController {
     @GetMapping(value = "/auth/request/{conceptId}/all")
     public @ResponseBody List<ReviewRequest> getAllReviews(@PathVariable String conceptId, Principal principal){
         return requestsMgr.getAllReviews(conceptId);  
+    }
+    
+    @GetMapping(value = "/auth/request/validate/{conceptId}")
+    public @ResponseBody boolean validateReviewRequest(@PathVariable String conceptId, Principal principal) {
+    	return conceptDBManager.getEntry(conceptId) != null;
     }
 }
