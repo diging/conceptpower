@@ -69,7 +69,7 @@ public class ConceptManager implements IConceptManager {
     @Value("${date_format}")
     private String dateFormat;
     
-    SimpleDateFormat ft;
+    private SimpleDateFormat ft;
     
     @PostConstruct
     public void init() {

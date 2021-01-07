@@ -5,18 +5,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
-import static edu.asu.conceptpower.app.repository.ConceptEntrySpecification.customFieldSearch;
 
 import edu.asu.conceptpower.app.repository.IConceptEntryRepository;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
@@ -242,4 +247,24 @@ public class DatabaseClient implements IConceptDBManager {
     public boolean checkIfConceptListExists(String id) {
         return conceptListRepository.existsById(id);
     }
+    
+    private Specification<ConceptEntry> customFieldSearch(String fieldName, String fieldQuery) {
+        return new Specification<ConceptEntry>() {
+          private static final long serialVersionUID = 1L;
+
+          @Override
+          public Predicate toPredicate(Root<ConceptEntry> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+              return criteriaBuilder.like(criteriaBuilder.lower(root.<String>get(fieldName)), getLikePattern(fieldQuery));
+          }
+          
+          private String getLikePattern(final String searchTerm) {
+              StringBuilder pattern = new StringBuilder();
+              pattern.append("%");
+              pattern.append(searchTerm.toLowerCase());
+              pattern.append("%");
+              return pattern.toString();
+          }
+          
+        };
+      }
 }

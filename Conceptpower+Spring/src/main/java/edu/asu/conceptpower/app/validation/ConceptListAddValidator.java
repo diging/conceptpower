@@ -32,13 +32,6 @@ public class ConceptListAddValidator implements Validator {
             if (conceptListAddForm.getListName().equals(Constants.WORDNET_DICTIONARY)) {
                 errors.rejectValue("listName", "concept_list_name.wordnet");
             }
-
-            if (!conceptListAddForm.getListName().equalsIgnoreCase(conceptListAddForm.getOldListName())) {
-
-                if (conceptListService.checkExistingConceptList(conceptListAddForm.getListName())) {
-                    errors.rejectValue("listName", "concept_unique.required");
-                }
-            }
         }
 
     }

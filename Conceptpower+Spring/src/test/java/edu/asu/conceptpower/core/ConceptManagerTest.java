@@ -57,7 +57,7 @@ public class ConceptManagerTest {
     private ConceptEntry addedConceptsForWordNet;
     private ConceptList list1;
     
-    SimpleDateFormat ft = new SimpleDateFormat ("yyyy:MM:dd hh:mm:ss");
+    private SimpleDateFormat ft = new SimpleDateFormat ("yyyy:MM:dd hh:mm:ss");
 
     @Before
     public void init() throws LuceneException {
