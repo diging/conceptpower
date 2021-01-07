@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.db4o;
+package edu.asu.conceptpower.app.manager;
 
 import java.util.List;
 
@@ -26,14 +26,13 @@ public interface IConceptDBManager {
     public abstract List<ConceptEntry> getAllEntriesFromList(String conceptList, int pageNo, int pageSize,
             String sortBy, int sortDirection);
 
-	public abstract void store(ConceptEntry element, String databasename);
+	public abstract void store(ConceptEntry element);
 
-	public abstract void update(ConceptEntry entry, String databasename);
+	public abstract void update(ConceptEntry entry);
 
-	public abstract void deleteConceptList(String name);
+	public abstract void deleteConceptList(String id);
 
-	public abstract void update(ConceptList list, String listname,
-			String databasename);
+	public abstract void update(ConceptList list, String listname);
 
     public List<ConceptEntry> getAllEntriesFromList(String listname);
 
@@ -45,7 +44,7 @@ public interface IConceptDBManager {
     
     public List<ConceptList> getAllConceptLists();
     
-    public void storeConceptList(ConceptList element, String databasename);
+    public void storeConceptList(ConceptList element);
     
     public boolean checkIfConceptListExists(String id);
 

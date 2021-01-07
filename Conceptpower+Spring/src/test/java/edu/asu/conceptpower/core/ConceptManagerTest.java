@@ -11,13 +11,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneUtility;
 import edu.asu.conceptpower.app.manager.IAlternativeIdService;
+import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.IIndexService;
 import edu.asu.conceptpower.app.manager.impl.ConceptManager;
 import edu.asu.conceptpower.app.wordnet.Constants;
@@ -29,6 +29,7 @@ import edu.asu.conceptpower.app.model.ConceptList;
 
 public class ConceptManagerTest {
 
+    private final String DATE_FORMAT = "yyyy:MM:dd hh:mm:ss";
     @Mock
     private ConceptManager conceptManager;
 
@@ -57,7 +58,7 @@ public class ConceptManagerTest {
     private ConceptEntry addedConceptsForWordNet;
     private ConceptList list1;
     
-    SimpleDateFormat ft = new SimpleDateFormat ("yyyy:MM:dd hh:mm:ss");
+    private SimpleDateFormat ft = new SimpleDateFormat (DATE_FORMAT);
 
     @Before
     public void init() throws LuceneException {
@@ -153,6 +154,7 @@ public class ConceptManagerTest {
         newConcept.setPos("noun");
         newConcept.setWord("test new");
         newConcept.setWordnetId("WID-1");
+        managerToTest.init();
         String id = managerToTest.addConceptListEntry(newConcept, "testuser").getId();
         Assert.assertNotNull(newConcept.getChangeEvents());
         Mockito.verify(indexService).insertConcept(newConcept, "testuser");

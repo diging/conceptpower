@@ -27,7 +27,6 @@ public class ConceptListAddValidatorTest {
     private ConceptListAddForm emptyListName;
     private ConceptListAddForm emptyDescription;
     private ConceptListAddForm wordNetConcepts;
-    private ConceptListAddForm existingListName;
     private ConceptListAddForm nameDescription;
 
     @Before
@@ -45,17 +44,9 @@ public class ConceptListAddValidatorTest {
         wordNetConcepts = new ConceptListAddForm();
         wordNetConcepts.setListName(Constants.WORDNET_DICTIONARY);
         wordNetConcepts.setDescription("WordNet Concept");
-
-        existingListName = new ConceptListAddForm();
-        existingListName.setListName("ExistingList");
-        existingListName.setDescription("Description");
-        existingListName.setOldListName("OldExistingList");
-        Mockito.when(conceptListService.checkExistingConceptList("ExistingList")).thenReturn(true);
-        
         nameDescription = new ConceptListAddForm();
         nameDescription.setListName("NewListName");
         nameDescription.setDescription("Description");
-        Mockito.when(conceptListService.checkExistingConceptList("NewListName")).thenReturn(false);
     }
 
     @Test
@@ -85,16 +76,6 @@ public class ConceptListAddValidatorTest {
         Assert.assertNull(errors.getFieldError("description"));
         Assert.assertEquals(errors.getFieldError("listName").getCode(), "concept_list_name.wordnet");
     }
-
-    @Test
-    public void testExistingListName() {
-        Errors errors = new BindException(existingListName, "conceptListAddForm");
-        ValidationUtils.invokeValidator(conceptListAddValidator, existingListName, errors);
-        Assert.assertEquals(1, errors.getFieldErrorCount());
-        Assert.assertNull(errors.getFieldError("description"));
-        Assert.assertEquals(errors.getFieldError("listName").getCode(), "concept_unique.required");
-    }
-    
     @Test
     public void testNameDescription() {
         Errors errors = new BindException(nameDescription, "conceptListAddForm");

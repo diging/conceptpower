@@ -34,7 +34,7 @@ public class PersistentContext {
     }
     
     @Bean
-    LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, 
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, 
                                                                 Environment env) {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
@@ -77,7 +77,7 @@ public class PersistentContext {
     }
     
     @Bean
-    JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;

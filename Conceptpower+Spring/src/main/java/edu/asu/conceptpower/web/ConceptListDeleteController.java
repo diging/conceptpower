@@ -8,19 +8,14 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.manager.IConceptListManager;
 import edu.asu.conceptpower.app.manager.IConceptManager;
 import edu.asu.conceptpower.app.model.ConceptList;
-import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 
 @Controller
 public class ConceptListDeleteController {
-
-    @Autowired
-    private IUserManager usersManager;
 
     @Autowired
     private IConceptManager conceptManager;
@@ -38,17 +33,16 @@ public class ConceptListDeleteController {
      * @return String to redirect user to delete concept list page
      */
     @GetMapping(value = "auth/conceptlist/deletelist/{name}")
-    public String prepareDeleteConceptList(@PathVariable("name") String name, ModelMap model) throws LuceneException {
-        ConceptList list = conceptListService.getConceptList(name);
-        model.addAttribute("listName", list.getConceptListName());
-        model.addAttribute("description", list.getDescription());
+    public String prepareDeleteConceptList(@PathVariable("name") String listId, ModelMap model) throws LuceneException {
+        ConceptList list = conceptListService.getConceptList(listId);
+        model.addAttribute("listId", list.getId());
 
         // condition to check enable whether to delete the conceptlist
         boolean enableDelete = true;
         List<ConceptEntry> conceptEntries = null;
-        conceptEntries = conceptManager.getConceptListEntries(name, 1, -1, "id", IConceptDBManager.DESCENDING);
+        conceptEntries = conceptManager.getConceptEntriesByConceptListName(list.getConceptListName());
 
-        if (conceptEntries.size() > 0)
+        if (!conceptEntries.isEmpty())
             enableDelete = false;
 
         model.addAttribute("enabledelete", enableDelete);
@@ -63,10 +57,10 @@ public class ConceptListDeleteController {
      *            Concept list name
      * @return String value to redirect user to concept list page
      */
-    @GetMapping(value = "auth/conceptlist/deleteconceptlistconfirm/{listname}")
-    public String deleteConceptList(@PathVariable("listname") String listName) {
+    @GetMapping(value = "auth/conceptlist/deleteconceptlistconfirm/{listid}")
+    public String deleteConceptList(@PathVariable("listid") String listId) {
 
-        conceptListService.deleteConceptList(listName);
+        conceptListService.deleteConceptList(listId);
 
         return "redirect:/auth/conceptlist";
     }

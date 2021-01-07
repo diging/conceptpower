@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
+import edu.asu.conceptpower.app.manager.IRequestsDBManager;
 import edu.asu.conceptpower.app.manager.impl.RequestsManager;
 import edu.asu.conceptpower.app.model.Comment;
 import edu.asu.conceptpower.app.model.ReviewRequest;

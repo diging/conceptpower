@@ -7,10 +7,11 @@
       <script>
          $(document).ready(function() {
             $(document).on('click','#deleteBtn', function(e){
-         	   var listName = $(this).data().listname;
+               var listId = $(this).data().listId;
+               
          	    $.ajax({
          			type : "GET",
-         			url : "[[@{'/auth/conceptlist/deletelist/'}]]"+listName,
+         			url : "[[@{'/auth/conceptlist/deletelist/'}]]"+listId,
          			contentType:"application/json",
          			success : function(data) {
           				$('#deleteModalPlugin').html(data);
@@ -48,8 +49,8 @@
             <tbody>
                <tr th:each="list : ${result}">
                   <td>
-                     <a th:href="@{'/auth/conceptlist/editlist/'+${list.conceptListName}}"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
-                     <i class="fa fa-trash-o" id="deleteBtn" th:data-listname="${list.conceptListName}" data-toggle="modal" data-target="#deleteList"  aria-hidden="true" ></i>
+                     <a th:href="@{'/auth/conceptlist/editlist/'+${list.id}}"><i class="fa fa-pencil-square-o dropright" aria-hidden="true"></i></a>
+                     <i class="fa fa-trash-o" id="deleteBtn" th:data-list-id="${list.id}" data-toggle="modal" data-target="#deleteList"  aria-hidden="true" ></i>
                   </td>
                   <td >
                      <font size="2"><a

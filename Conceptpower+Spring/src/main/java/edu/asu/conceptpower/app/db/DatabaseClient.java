@@ -5,20 +5,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import edu.asu.conceptpower.app.db4o.DBNames;
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
-import edu.asu.conceptpower.app.model.ChangeEvent;
+import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
-import static edu.asu.conceptpower.app.repository.ConceptEntrySpecification.customFieldSearch;
 
 import edu.asu.conceptpower.app.repository.IConceptEntryRepository;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
@@ -133,7 +136,6 @@ public class DatabaseClient implements IConceptDBManager {
      * String)
      */
     @Override
-    @SuppressWarnings("serial")
     public ConceptList getConceptList(String name) {
         return conceptListRepository.findByConceptListName(name);
     }
@@ -183,10 +185,8 @@ public class DatabaseClient implements IConceptDBManager {
      * java.lang.String)
      */
     @Override
-    public void store(ConceptEntry element, String databasename) {
-        if (databasename.equals(DBNames.DICTIONARY_DB)) {
-            conceptEntryRepository.save(element);
-        }
+    public void store(ConceptEntry element) {
+        conceptEntryRepository.save(element);
     }
 
     /*
@@ -197,29 +197,8 @@ public class DatabaseClient implements IConceptDBManager {
      * core.ConceptEntry, java.lang.String)
      */
     @Override
-    public void update(ConceptEntry entry, String databasename) {
-        if (databasename.equals(DBNames.DICTIONARY_DB)) {
-            ConceptEntry toBeUpdated = getEntry(entry.getId());
-            toBeUpdated.setBroadens(entry.getBroadens());
-            toBeUpdated.setConceptList(entry.getConceptList());
-            toBeUpdated.setDescription(entry.getDescription());
-            toBeUpdated.setEqualTo(entry.getEqualTo());
-            toBeUpdated.setModified(entry.getModified());
-            toBeUpdated.setNarrows(entry.getNarrows());
-            toBeUpdated.setPos(entry.getPos());
-            toBeUpdated.setSimilarTo(entry.getSimilarTo());
-            toBeUpdated.setSynonymIds(entry.getSynonymIds());
-            toBeUpdated.setSynsetIds(entry.getSynsetIds());
-            toBeUpdated.setTypeId(entry.getTypeId());
-            toBeUpdated.setWord(entry.getWord());
-            toBeUpdated.setWordnetId(entry.getWordnetId());
-            toBeUpdated.setDeleted(entry.isDeleted());
-            for(ChangeEvent changeEvent : entry.getChangeEvents()) {
-                toBeUpdated.addChangeEvent(changeEvent);
-            }
-            
-            conceptEntryRepository.save(toBeUpdated);
-        }
+    public void update(ConceptEntry entry) {
+        conceptEntryRepository.save(entry);
     }
 
     /*
@@ -230,8 +209,8 @@ public class DatabaseClient implements IConceptDBManager {
      * String)
      */
     @Override
-    public void deleteConceptList(String name) {
-        conceptListRepository.deleteByConceptListName(name);
+    public void deleteConceptList(String id) {
+        conceptListRepository.deleteById(id);
     }
 
     /*
@@ -242,13 +221,11 @@ public class DatabaseClient implements IConceptDBManager {
      * core.ConceptList, java.lang.String, java.lang.String)
      */
     @Override
-    public void update(ConceptList list, String listname, String databasename) {
-        if (databasename.equals(DBNames.DICTIONARY_DB)) {
-            ConceptList toBeUpdated = getConceptList(listname);
-            toBeUpdated.setConceptListName(list.getConceptListName());
-            toBeUpdated.setDescription(list.getDescription());
-            conceptListRepository.save(toBeUpdated);
-        }
+    public void update(ConceptList list, String listname) {
+        ConceptList toBeUpdated = getConceptList(listname);
+        toBeUpdated.setConceptListName(list.getConceptListName());
+        toBeUpdated.setDescription(list.getDescription());
+        conceptListRepository.save(toBeUpdated);
     }
 
     @Override
@@ -262,14 +239,32 @@ public class DatabaseClient implements IConceptDBManager {
     }
     
     @Override
-    public void storeConceptList(ConceptList element, String databasename) {
-        if (databasename.equals(DBNames.DICTIONARY_DB)) {
-            conceptListRepository.save(element);
-        }
+    public void storeConceptList(ConceptList element) {
+        conceptListRepository.save(element);
     }
     
     @Override
     public boolean checkIfConceptListExists(String id) {
         return conceptListRepository.existsById(id);
     }
+    
+    private Specification<ConceptEntry> customFieldSearch(String fieldName, String fieldQuery) {
+        return new Specification<ConceptEntry>() {
+          private static final long serialVersionUID = 1L;
+
+          @Override
+          public Predicate toPredicate(Root<ConceptEntry> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+              return criteriaBuilder.like(criteriaBuilder.lower(root.<String>get(fieldName)), getLikePattern(fieldQuery));
+          }
+          
+          private String getLikePattern(final String searchTerm) {
+              StringBuilder pattern = new StringBuilder();
+              pattern.append("%");
+              pattern.append(searchTerm.toLowerCase());
+              pattern.append("%");
+              return pattern.toString();
+          }
+          
+        };
+      }
 }

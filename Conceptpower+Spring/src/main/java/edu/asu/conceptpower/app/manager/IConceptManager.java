@@ -147,7 +147,7 @@ public interface IConceptManager {
      * @param conceptListName
      * @return
      */
-    public List<ConceptEntry> getConceptEntriedByConceptListName(String conceptListName);
+    public List<ConceptEntry> getConceptEntriesByConceptListName(String conceptListName);
 
     /**
      * This method fetches the concept entry details based on word, pos and

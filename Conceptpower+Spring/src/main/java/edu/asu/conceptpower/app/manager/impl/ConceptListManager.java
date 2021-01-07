@@ -6,8 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.conceptpower.app.db4o.DBNames;
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
+import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.IConceptListManager;
 import edu.asu.conceptpower.app.model.ConceptList;
 
@@ -42,15 +41,15 @@ public class ConceptListManager implements IConceptListManager {
 		dict.setConceptListName(name);
 		dict.setDescription(description);
 		dict.setId(generateId(LIST_PREFIX));
-		client.storeConceptList(dict, DBNames.DICTIONARY_DB);
+		client.storeConceptList(dict);
 	}
 	
 	/* (non-Javadoc)
 	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#deleteConceptList(java.lang.String)
 	 */
 	@Override
-	public void deleteConceptList(String name) {
-		client.deleteConceptList(name);
+	public void deleteConceptList(String id) {
+		client.deleteConceptList(id);
 	}
 	
 	/* (non-Javadoc)
@@ -78,7 +77,7 @@ public class ConceptListManager implements IConceptListManager {
 	 */
 	@Override
 	public void storeModifiedConceptList(ConceptList list, String listname) {
-		client.update(list, listname, DBNames.DICTIONARY_DB);
+		client.update(list, listname);
 	}
 	
 	
@@ -98,20 +97,5 @@ public class ConceptListManager implements IConceptListManager {
 			// try other id
 			id = prefix + UUID.randomUUID().toString();
 		}
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#
-	 * checkExistingConceptList(java. lang.String, java.lang.String)
-	 */
-	@Override
-	public boolean checkExistingConceptList(String name) {
-		ConceptList dict = client.getConceptList(name);
-		if (dict != null) {
-			return true;
-		}
-		return false;
 	}
 }

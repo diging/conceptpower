@@ -56,10 +56,7 @@ public class LuceneDAO implements ILuceneDAO {
         Date latestTimeStamp = null;
         for (IndexingEvent bean : result) {
             totalIndex += bean.getIndexedWordsCount();
-
-            Date t = bean.getLastRunDate();
-            
-            latestTimeStamp = t;
+            latestTimeStamp = bean.getLastRunDate();
             
         }
         return new IndexingEvent(latestTimeStamp, totalIndex);

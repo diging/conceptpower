@@ -10,21 +10,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.constants.SearchFieldNames;
-import edu.asu.conceptpower.app.db4o.DBNames;
-import edu.asu.conceptpower.app.db4o.IConceptDBManager;
-import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.app.exceptions.DictionaryDoesNotExistException;
 import edu.asu.conceptpower.app.exceptions.DictionaryEntryExistsException;
 import edu.asu.conceptpower.app.exceptions.DictionaryModifyException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.manager.IAlternativeIdService;
+import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.IConceptManager;
 import edu.asu.conceptpower.app.manager.IIndexService;
 import edu.asu.conceptpower.app.model.ChangeEvent;
@@ -51,6 +51,7 @@ import edu.asu.conceptpower.rest.SearchParamters;
 @PropertySource("classpath:config.properties")
 public class ConceptManager implements IConceptManager {
 
+    private final String DEFAULT_FORMAT = "yyyy:MM:dd hh:mm:ss";
     @Autowired
     private IConceptDBManager client;
     
@@ -71,8 +72,16 @@ public class ConceptManager implements IConceptManager {
     @Autowired
     private IAlternativeIdService alternativeIdService;
     
-    SimpleDateFormat ft = new SimpleDateFormat ("yyyy:MM:dd hh:mm:ss");
-
+    @Value("${date_format}")
+    private String dateFormat;
+    
+    private SimpleDateFormat ft;
+    
+    @PostConstruct
+    public void init() {
+        dateFormat = dateFormat == null ? DEFAULT_FORMAT : dateFormat;
+        ft = new SimpleDateFormat(dateFormat);
+    }
     /*
      * (non-Javadoc)
      * 
@@ -81,7 +90,6 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public ConceptEntry getConceptEntry(String id) {
-
         Map<String, String> fieldMap = new HashMap<>();
         fieldMap.put(SearchFieldNames.MERGED_IDS, id);
         ConceptEntry[] entries;
@@ -451,7 +459,7 @@ public class ConceptManager implements IConceptManager {
 
         entry.setId(generateId(CONCEPT_PREFIX));
 
-        client.store(entry, DBNames.DICTIONARY_DB);
+        client.store(entry);
     }
 
     /*
@@ -474,11 +482,11 @@ public class ConceptManager implements IConceptManager {
 
         // Creating the first change event
         ChangeEvent changeEvent = new ChangeEvent(userName, ft.format(new Date()), ChangeEventTypes.CREATION);
-       entry.addChangeEvent(changeEvent);
+        entry.addChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
-       entry.setAlternativeIds(id);
-        client.store(entry, DBNames.DICTIONARY_DB);
+        entry.setAlternativeIds(id);
+        client.store(entry);
         if (entry.getWordnetId() != null) {
             String[] wordnetIds = entry.getWordnetId().split(",");
             for (String wordnetId : wordnetIds) {
@@ -507,10 +515,10 @@ public class ConceptManager implements IConceptManager {
         changeEvent.setDate(ft.format(new Date()));
         changeEvent.setUserName(userName);
         changeEvent.setType(ChangeEventTypes.MODIFICATION);
-       entry.addChangeEvent(changeEvent);
+        entry.addChangeEvent(changeEvent);
         indexService.updateConceptEntry(entry, userName);
 
-        client.update(entry, DBNames.DICTIONARY_DB);
+        client.update(entry);
     }
 
     protected String generateId(String prefix) {
@@ -559,7 +567,7 @@ public class ConceptManager implements IConceptManager {
             changeEvent.setDate(ft.format(new Date()));
             changeEvent.setUserName(userName);
             concept.addChangeEvent(changeEvent);
-            client.update(concept, DBNames.DICTIONARY_DB);
+            client.update(concept);
             indexService.deleteById(concept.getId(), userName);
         }
     }
@@ -597,7 +605,7 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public List<ConceptEntry> getConceptEntriedByConceptListName(String conceptListName) {
+    public List<ConceptEntry> getConceptEntriesByConceptListName(String conceptListName) {
         List<ConceptEntry> conceptEntries = client.getAllEntriesFromList(conceptListName);
         alternativeIdService.addAlternativeIds(conceptEntries);
         return conceptEntries;
