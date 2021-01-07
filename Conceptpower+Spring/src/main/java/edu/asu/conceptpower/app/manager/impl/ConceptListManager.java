@@ -98,19 +98,4 @@ public class ConceptListManager implements IConceptListManager {
 			id = prefix + UUID.randomUUID().toString();
 		}
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#
-	 * checkExistingConceptList(java. lang.String, java.lang.String)
-	 */
-	@Override
-	public boolean checkExistingConceptList(String name) {
-		ConceptList dict = client.getConceptList(name);
-		if (dict != null) {
-			return true;
-		}
-		return false;
-	}
 }

@@ -75,20 +75,6 @@ public class ConceptListManagerTest {
 	}
 
 	@Test
-	public void checkExistingListForTrue() {
-		String listName = "First List";
-		boolean isExists = conceptListManager.checkExistingConceptList(listName);
-		Assert.assertTrue(isExists);
-	}
-
-	@Test
-	public void checkExistingListForFalse() {
-		String listName = "Second List";
-		boolean isExists = conceptListManager.checkExistingConceptList(listName);
-		Assert.assertFalse(isExists);
-	}
-
-	@Test
 	public void storeModifiedConceptList() {
 		ConceptList list = new ConceptList();
 		list.setConceptListName("List Name");

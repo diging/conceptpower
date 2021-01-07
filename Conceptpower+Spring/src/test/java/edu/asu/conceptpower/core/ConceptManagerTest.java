@@ -29,6 +29,7 @@ import edu.asu.conceptpower.app.model.ConceptList;
 
 public class ConceptManagerTest {
 
+    private final String DATE_FORMAT = "yyyy:MM:dd hh:mm:ss";
     @Mock
     private ConceptManager conceptManager;
 
@@ -57,7 +58,7 @@ public class ConceptManagerTest {
     private ConceptEntry addedConceptsForWordNet;
     private ConceptList list1;
     
-    private SimpleDateFormat ft = new SimpleDateFormat ("yyyy:MM:dd hh:mm:ss");
+    private SimpleDateFormat ft = new SimpleDateFormat (DATE_FORMAT);
 
     @Before
     public void init() throws LuceneException {
@@ -153,6 +154,7 @@ public class ConceptManagerTest {
         newConcept.setPos("noun");
         newConcept.setWord("test new");
         newConcept.setWordnetId("WID-1");
+        managerToTest.init();
         String id = managerToTest.addConceptListEntry(newConcept, "testuser").getId();
         Assert.assertNotNull(newConcept.getChangeEvents());
         Mockito.verify(indexService).insertConcept(newConcept, "testuser");

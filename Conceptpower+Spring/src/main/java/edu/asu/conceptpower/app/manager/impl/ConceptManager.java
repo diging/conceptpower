@@ -49,6 +49,7 @@ import edu.asu.conceptpower.rest.SearchParamters;
 @PropertySource("classpath:config.properties")
 public class ConceptManager implements IConceptManager {
 
+    private final String DEFAULT_FORMAT = "yyyy:MM:dd hh:mm:ss";
     @Autowired
     private IConceptDBManager client;
 
@@ -73,7 +74,8 @@ public class ConceptManager implements IConceptManager {
     
     @PostConstruct
     public void init() {
-        ft = new SimpleDateFormat (dateFormat);
+        dateFormat = dateFormat == null ? DEFAULT_FORMAT : dateFormat;
+        ft = new SimpleDateFormat(dateFormat);
     }
     /*
      * (non-Javadoc)
