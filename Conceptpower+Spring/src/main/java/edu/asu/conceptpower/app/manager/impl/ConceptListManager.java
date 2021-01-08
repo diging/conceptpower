@@ -71,13 +71,21 @@ public class ConceptListManager implements IConceptListManager {
 	public ConceptList getConceptList(String name) {
 		return client.getConceptList(name);
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#getConceptList(java.lang.String)
+	 */
+	@Override
+	public ConceptList getConceptListById(String id) {
+		return client.getConceptListById(id);
+	}
 	
 	/* (non-Javadoc)
 	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#storeModifiedConceptList(edu.asu.conceptpower.core.ConceptList, java.lang.String)
 	 */
 	@Override
-	public void storeModifiedConceptList(ConceptList list, String listname) {
-		client.update(list, listname);
+	public void storeModifiedConceptList(ConceptList list) {
+		client.update(list);
 	}
 	
 	
@@ -90,9 +98,9 @@ public class ConceptListManager implements IConceptListManager {
 		String id = prefix + UUID.randomUUID().toString();
 
 		while (true) {
-			boolean result = client.checkIfConceptListExists(id);
-			if (!result)
+			if (!client.checkIfConceptListExists(id)){
 				return id;
+			}
 
 			// try other id
 			id = prefix + UUID.randomUUID().toString();

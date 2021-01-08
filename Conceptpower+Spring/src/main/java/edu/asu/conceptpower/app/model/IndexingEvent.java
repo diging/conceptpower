@@ -45,7 +45,7 @@ public class IndexingEvent implements Serializable {
     }
     
     public IndexingEvent(long indexWordCount){
-        this.indexedWordsCount = indexedWordsCount;
+        this.indexedWordsCount = indexWordCount;
     }
 
     public IndexingEvent(Date run, long indexWordCount) {

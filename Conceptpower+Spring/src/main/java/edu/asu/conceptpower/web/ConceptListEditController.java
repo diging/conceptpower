@@ -74,10 +74,10 @@ public class ConceptListEditController {
     public String prepareEditList(@PathVariable("listId") String listId, ModelMap model,
             @ModelAttribute("conceptListAddForm") ConceptListAddForm conceptListAddForm) {
 
-        ConceptList list = conceptListService.getConceptList(listId);
+        ConceptList list = conceptListService.getConceptListById(listId);
         conceptListAddForm.setListName(list.getConceptListName());
         conceptListAddForm.setDescription(list.getDescription());
-        conceptListAddForm.setOldListName(listId);
+        conceptListAddForm.setOldListName(list.getConceptListName());
         return "/layouts/concepts/editconceptlist";
     }
 
@@ -112,7 +112,7 @@ public class ConceptListEditController {
             return "/layouts/concepts/EditConceptList";
         }
 
-        conceptListService.storeModifiedConceptList(list, conceptListAddForm.getOldListName());
+        conceptListService.storeModifiedConceptList(list);
 
         // modify the name for all the existing concepts under this concept
         // list

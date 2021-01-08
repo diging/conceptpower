@@ -34,7 +34,7 @@ public class ConceptListDeleteController {
      */
     @GetMapping(value = "auth/conceptlist/deletelist/{name}")
     public String prepareDeleteConceptList(@PathVariable("name") String listId, ModelMap model) throws LuceneException {
-        ConceptList list = conceptListService.getConceptList(listId);
+        ConceptList list = conceptListService.getConceptListById(listId);
         model.addAttribute("listId", list.getId());
 
         // condition to check enable whether to delete the conceptlist
