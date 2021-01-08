@@ -43,7 +43,7 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#getEntry(java.lang.String)
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getEntry(java.lang.String)
      */
     @Override
     public ConceptEntry getEntry(String id) {
@@ -61,7 +61,7 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#getEntriesByFieldContains(
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getEntriesByFieldContains(
      * java.lang.String, java.lang.String)
      */
     @Override
@@ -78,7 +78,7 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#getEntriesForWord(java.lang.
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getEntriesForWord(java.lang.
      * String, java.lang.String)
      */
     @Override
@@ -98,7 +98,7 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#getSynonymsPointingToId(java.
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getSynonymsPointingToId(java.
      * lang.String)
      */
     @Override
@@ -112,7 +112,7 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#getEntriesForWord(java.lang.
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getEntriesForWord(java.lang.
      * String)
      */
     @Override
@@ -132,7 +132,7 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#getConceptList(java.lang.
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getConceptList(java.lang.
      * String)
      */
     @Override
@@ -145,7 +145,7 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#getConceptListById(java.lang.
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getConceptListById(java.lang.
      * String)
      */
     @Override
@@ -159,7 +159,7 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#getAllEntriesFromList(java.
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getAllEntriesFromList(java.
      * lang.String)
      */
     @Override
@@ -180,7 +180,7 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#getAllEntriesFromList(java.
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getAllEntriesFromList(java.
      * lang.String)
      */
     @Override
@@ -196,7 +196,7 @@ public class DatabaseClient implements IConceptDBManager {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.conceptpower.db4o.IConceptDBManager#store(java.lang.Object,
+     * @see edu.asu.conceptpower.app.manager.IConceptDBManager#store(java.lang.Object,
      * java.lang.String)
      */
     @Override
@@ -208,8 +208,8 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#update(edu.asu.conceptpower.
-     * core.ConceptEntry, java.lang.String)
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#update(edu.asu.conceptpower.
+     * app.model.ConceptEntry, java.lang.String)
      */
     @Override
     public void update(ConceptEntry entry) {
@@ -220,7 +220,7 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#deleteConceptList(java.lang.
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#deleteConceptList(java.lang.
      * String)
      */
     @Override
@@ -232,29 +232,55 @@ public class DatabaseClient implements IConceptDBManager {
      * (non-Javadoc)
      * 
      * @see
-     * edu.asu.conceptpower.db4o.IConceptDBManager#update(edu.asu.conceptpower.
-     * core.ConceptList)
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#update(edu.asu.conceptpower.
+     * app.model.ConceptList)
      */
     @Override
     public void update(ConceptList list) {
         conceptListRepository.save(list);
     }
-
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getAllConcepts()
+     */
     @Override
     public List<ConceptEntry> getAllConcepts() {
         return conceptEntryRepository.findAll();
     }
     
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#getAllConceptLists()
+     */
     @Override
     public List<ConceptList> getAllConceptLists() {
         return conceptListRepository.findAll();
     }
     
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#storeConceptList(edu.asu.conceptpower.
+     * app.model.ConceptList)
+     */
     @Override
     public void storeConceptList(ConceptList element) {
         conceptListRepository.save(element);
     }
     
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.conceptpower.app.manager.IConceptDBManager#checkIfConceptListExists(java.lang.
+     * String)
+     */
     @Override
     public boolean checkIfConceptListExists(String id) {
         return conceptListRepository.existsById(id);
