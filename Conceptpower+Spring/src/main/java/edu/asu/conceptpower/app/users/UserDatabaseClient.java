@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.app.model.User;
@@ -17,17 +17,17 @@ import edu.asu.conceptpower.app.repository.IUserRepository;
 public class UserDatabaseClient {
 
     @Autowired
-    private IUserRepository client;
+    private IUserRepository userRepository;
     
     @Autowired
-    private ITokenRepository tokenClient;
+    private ITokenRepository tokenRepository;
     
     @Autowired
     @Qualifier("userDatabaseManager")
     private DatabaseManager userDatabase;
     
     public User getUser(String name, String pw) {
-        return client.findByUserAndPw(name, pw);
+        return userRepository.findByUserAndPw(name, pw);
     }
     
     /**
@@ -36,41 +36,43 @@ public class UserDatabaseClient {
      * @return found user or null
      */
     public User findUser(String name) {
-        return client.findByUser(name);
+        return userRepository.findByUser(name);
     }
     
     public List<User> findUsers(User exampleUser) {
-        return client.findByEmail(exampleUser.getEmail());
+        return userRepository.findByEmail(exampleUser.getEmail());
     }
     
     public User[] getAllUser() {
-        List<User> results = client.findAll();
+        List<User> results = userRepository.findAll();
          
         return results.toArray(new User[results.size()]);       
     }
     
     public User addUser(User user) {
-        client.save(user);
+        userRepository.save(user);
         return user;
     }
     
+    @Transactional
     public void deleteUser(String name) {
-        client.deleteByUser(name);
+        userRepository.deleteByUser(name);
     }
     
     public void update(User user) {
-        client.save(user);         
+        userRepository.save(user);         
     }
     
     public void storeRecoveryToken(Token token) {
-        tokenClient.save(token);
+        tokenRepository.save(token);
     }
     
     public Token getToken(String token) {
-        return tokenClient.findByToken(token);
+        return tokenRepository.findByToken(token);
     }
     
+    @Transactional
     public Token deleteToken(String token) {
-        return tokenClient.deleteByToken(token);
+        return tokenRepository.deleteByToken(token);
     }
 }

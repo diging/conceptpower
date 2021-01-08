@@ -78,8 +78,8 @@ public class ConceptListManagerTest {
 	public void storeModifiedConceptList() {
 		ConceptList list = new ConceptList();
 		list.setConceptListName("List Name");
-		conceptListManager.storeModifiedConceptList(list, "List Name 2");
-		Mockito.verify(client).update(Mockito.eq(list), Mockito.eq("List Name 2"));
+		conceptListManager.storeModifiedConceptList(list);
+		Mockito.verify(client).update(Mockito.eq(list));
 
 	}
 }

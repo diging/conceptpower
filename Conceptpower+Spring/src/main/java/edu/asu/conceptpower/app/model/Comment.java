@@ -36,7 +36,6 @@ public class Comment implements Serializable{
     private OffsetDateTime createdAt;
     
     @ManyToOne
-    // @JoinColumn(name = "review_request_id", referencedColumnName="concept_id")
     private ReviewRequest review;
     
     public String getId() {

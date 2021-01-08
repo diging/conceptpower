@@ -140,6 +140,21 @@ public class DatabaseClient implements IConceptDBManager {
         return conceptListRepository.findByConceptListName(name);
     }
 
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.conceptpower.db4o.IConceptDBManager#getConceptListById(java.lang.
+     * String)
+     */
+    @Override
+    public ConceptList getConceptListById(String id) {
+        Optional<ConceptList> c = conceptListRepository.findById(id);
+        
+        return c.isPresent() ? c.get() : null;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -218,14 +233,11 @@ public class DatabaseClient implements IConceptDBManager {
      * 
      * @see
      * edu.asu.conceptpower.db4o.IConceptDBManager#update(edu.asu.conceptpower.
-     * core.ConceptList, java.lang.String, java.lang.String)
+     * core.ConceptList)
      */
     @Override
-    public void update(ConceptList list, String listname) {
-        ConceptList toBeUpdated = getConceptList(listname);
-        toBeUpdated.setConceptListName(list.getConceptListName());
-        toBeUpdated.setDescription(list.getDescription());
-        conceptListRepository.save(toBeUpdated);
+    public void update(ConceptList list) {
+        conceptListRepository.save(list);
     }
 
     @Override

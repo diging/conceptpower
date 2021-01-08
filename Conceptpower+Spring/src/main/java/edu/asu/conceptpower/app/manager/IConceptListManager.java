@@ -34,13 +34,19 @@ public interface IConceptListManager {
 	 */
 	public abstract ConceptList getConceptList(String name);
 
+		/**
+	 * Retrieve the list with the specified id.
+	 * @param name id of the concept list to be retrieved.
+	 * @return Concept list or null.
+	 */
+	public abstract ConceptList getConceptListById(String id);
+
+
 	/**
 	 * Updates the concept list with the specified name with the information
 	 * in the passed {@link ConceptList}.
 	 * @param list {@link ConceptList} object that holds the new information.
-	 * @param listname Current/old name of the list that should be updated.
 	 */
-	public abstract void storeModifiedConceptList(ConceptList list,
-			String listname);
+	public abstract void storeModifiedConceptList(ConceptList list);
 
 }

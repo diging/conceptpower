@@ -22,6 +22,8 @@ public interface IConceptDBManager {
 	public abstract ConceptEntry[] getEntriesForWord(String word);
 
 	public abstract ConceptList getConceptList(String name);
+	
+	public abstract ConceptList getConceptListById(String id);
 
     public abstract List<ConceptEntry> getAllEntriesFromList(String conceptList, int pageNo, int pageSize,
             String sortBy, int sortDirection);
@@ -32,7 +34,7 @@ public interface IConceptDBManager {
 
 	public abstract void deleteConceptList(String id);
 
-	public abstract void update(ConceptList list, String listname);
+	public abstract void update(ConceptList list);
 
     public List<ConceptEntry> getAllEntriesFromList(String listname);
 
