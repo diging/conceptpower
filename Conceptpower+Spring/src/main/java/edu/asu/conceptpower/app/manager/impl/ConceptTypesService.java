@@ -3,7 +3,6 @@ package edu.asu.conceptpower.app.manager.impl;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.manager.IConceptTypesService;
-import edu.asu.conceptpower.app.manager.IConceptTypesService.IdType;
 
 /**
  * This helper class is used for identifying the concept type based on the

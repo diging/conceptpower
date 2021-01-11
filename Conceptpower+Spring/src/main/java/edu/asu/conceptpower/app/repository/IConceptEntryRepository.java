@@ -18,7 +18,7 @@ import org.springframework.data.repository.query.Param;
  * 
  */
 @Repository
-public interface IConceptEntryRepository extends PagingAndSortingRepository<ConceptEntry, String>, JpaSpecificationExecutor{
+public interface IConceptEntryRepository extends PagingAndSortingRepository<ConceptEntry, String>, JpaSpecificationExecutor<ConceptEntry>{
     
     List<ConceptEntry> findAll();
     

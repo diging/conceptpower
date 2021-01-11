@@ -22,7 +22,7 @@ import edu.asu.conceptpower.app.model.ConceptList;
 @Service
 public class ConceptListManager implements IConceptListManager {
 	
-	protected final String LIST_PREFIX = "LIST";
+	protected static final String LIST_PREFIX = "LIST";
 	
 	@Autowired
 	private IConceptDBManager client;
@@ -56,7 +56,6 @@ public class ConceptListManager implements IConceptListManager {
 	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#getAllConceptLists()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<ConceptList> getAllConceptLists() {
 		List<ConceptList> results = client.getAllConceptLists();
 		if (results != null && !results.isEmpty())

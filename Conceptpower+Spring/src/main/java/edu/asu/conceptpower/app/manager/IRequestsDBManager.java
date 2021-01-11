@@ -24,4 +24,6 @@ public interface IRequestsDBManager {
     public ReviewRequest getReview(String reviewId);
     
     public List<ReviewRequest> getReviewByStatus(ReviewStatus status);
+    
+    public List<ReviewRequest> getReviewByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize);
 }

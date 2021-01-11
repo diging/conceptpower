@@ -7,6 +7,11 @@
       <script th:src="@{/resources/assets/js/custom/reviewrequests.js}"></script>
       <link th:href="@{/resources/assets/css/reviewrequest.css}" rel="stylesheet" />
       <script>
+      	$(document).on('click', '#paginationTag', function(e) {
+      		var paginateData = $(this).data();
+      		window.location = '/conceptpower/auth/request/all/open?page=' + paginateData.page 
+      	})
+      	
       	$(document).on('click', '#resolveButton', function() {
     	    var comment = $('#resolveComment').val().trim();
     	    var conceptId = $("#conceptId").val();
@@ -42,12 +47,11 @@
 	   <div class="resultsSection">
 	      <h3 class="titleHeader">Open Review Requests</h3>
 	      <div class="error" th:if="${show_error_alert == true}" th:text="${error_alert_msg}"></div>
-	      
 	      <div th:if="${(openRequests == null || openRequests.size() == 0) && show_error_alert == null}">
 	         There are no open review requests
 	      </div>
 	      <table th:if="${openRequests != null && openRequests.size() != 0}" 
-	      		class="table table-striped conceptSearch tableStyles" id="conceptSearch" style="border-bottom:unset">
+	         class="table table-striped conceptSearch tableStyles" id="conceptSearch" style="border-bottom:unset">
 	         <thead>
 	            <tr>
 	               <th scope="col">Term</th>
@@ -70,15 +74,35 @@
 	               <td th:text="${concept.description}"></td>
 	               <td th:text="${concept.type != null} ? ${concept.type.typeName} :''"></td>
 	               <td>
-	                  <div th:data-request="${concept.reviewRequest.request}" th:data-review-id="${concept.reviewRequest.id}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" th:data-concept-id="${concept.reviewRequest.conceptId}"  id="exclamation" ></div>
+	                  <div th:if="${concept.reviewRequest != null}" th:data-request="${concept.reviewRequest.request}" th:data-review-id="${concept.reviewRequest.id}" title="${fn:substring(concept.reviewRequest.request,0,79)}"  class="fa fa-exclamation-triangle" data-toggle="modal" data-target="#requestModal" th:data-concept-id="${concept.reviewRequest.conceptId}"  id="exclamation" ></div>
 	               </td>
 	            </tr>
 	         </tbody>
 	      </table>
 	   </div>
+	   <div class="pagination" id="paginationSection" th:if="${openRequests != null && openRequests.size() > 0}">
+	      <ul class="pagination">
+	         <li class="page-item" th:classappend="${page == 0} ? disabled : '' ">
+	            <span class="page-link" th:data-page="${page - 1}" id="paginationTag">Previous</span>
+	         </li>
+	         <li class="page-item" th:classappend="${page == 0} ? disabled : '' ">
+	            <span class="page-link" th:data-page="0" id="paginationTag">First</span>
+	         </li>
+	         <li th:each="i: ${#numbers.sequence(0, count-1)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
+	            <span class="page-link" th:data-page="${i}"  id="paginationTag" th:text="${i+1}">
+	            <span class="sr-only">(current)</span></span>
+	         </li>
+	         <li class="page-item" th:classappend="${page+1 == count} ? disabled : '' ">
+	            <span class="page-link" th:data-page="${count-1}" id="paginationTag">Last</span>
+	         </li>
+	         <li class="page-item" th:classappend="${page+1 == count} ? disabled : '' ">
+	            <span class="page-link" th:data-page="${page + 1}" id="paginationTag">Next</span>
+	         </li>
+	      </ul>
+	   </div>
 	   <input type="hidden" name="reviewId" id="reviewId" value=""/>
 	   <input type="hidden" name="conceptId" id="conceptId" value=""/>
 	   <div th:insert="layouts/modals/conceptdetails :: conceptdetails"></div>
 	   <div th:insert="layouts/modals/resolvereview :: resolverequest"></div>
-   </body>
+	</body>
 </html>

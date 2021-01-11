@@ -210,4 +210,20 @@ public interface IConceptManager {
      * @return - List<ConceptEntry> that matches the given status
      */
     public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status);
+    
+    /**
+     * 
+     * @param status - required review status entries
+     * @param page - current page number
+     * @param pageSize - number of records per page
+     * @return - List<ConceptEntry> that matches the given status
+     */
+    public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize);
+    
+    /**
+     * 
+     * @param status - required review status entries
+     * @return - Integer denoting the number of concepts with the given status
+     */
+    public Integer getNumberOfConceptsByStatus(ReviewStatus status);
 }

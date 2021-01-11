@@ -41,29 +41,41 @@ public class ViewOpenReviewRequestsController {
 	@Value("#{messages['INDEXERSTATUS']}")
 	private String indexerStatus;
 
+	@Value("${open_req_default_page_size}")
+	private Integer defaultNumRecordsPerPage;
+	
 	@GetMapping(value = "/auth/request/all/open")
-	public String viewOpenReviewRequests(ModelMap model) {
+	public String viewOpenReviewRequests(ModelMap model, String page, String pageSize) {
 		if (indexService.isIndexerRunning()) {
 			model.addAttribute("show_error_alert", true);
 			model.addAttribute("error_alert_msg", indexerRunning);
 
 			return "layouts/concepts/openrequests";
 		}
-
-		List<ConceptEntry> openReviewConcepts = conceptsManager.getAllConceptsByStatus(ReviewStatus.OPENED);
+		
+		int pageNo = page == null ? 0 : Integer.parseInt(page);
+		int numRecordsPerPage = pageSize == null ? defaultNumRecordsPerPage : Integer.parseInt(pageSize);
+		int totalPageCount = (int) Math.ceil((double)conceptsManager.getNumberOfConceptsByStatus(ReviewStatus.OPENED)/(double) defaultNumRecordsPerPage); 
+		
+		
+		
+		List<ConceptEntry> openReviewConcepts = conceptsManager.getAllConceptsByStatusPaginated(ReviewStatus.OPENED, pageNo, numRecordsPerPage);
 		List<ConceptEntryWrapper> foundConcepts = new ArrayList<>();
-
+		
 		try {
-			if(!openReviewConcepts.isEmpty()) {
-				foundConcepts = wrapperCreator
-						.createWrappers(openReviewConcepts.toArray(new ConceptEntry[openReviewConcepts.size()]));
-			}
+		    if(!openReviewConcepts.isEmpty()) {
+		        foundConcepts = wrapperCreator
+		                .createWrappers(openReviewConcepts.toArray(new ConceptEntry[openReviewConcepts.size()]));
+		    }
 		} catch (LuceneException e) {
 			model.addAttribute(indexerStatus, e.getMessage());
 			e.printStackTrace();
 		}
 
 		model.addAttribute("openRequests", foundConcepts);
+		model.addAttribute("page",pageNo);
+		model.addAttribute("count",totalPageCount);
+		
 		return "layouts/concepts/openrequests";
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.manager.IRequestsDBManager;
@@ -42,6 +43,11 @@ public class DBRequestClient implements IRequestsDBManager{
     @Override
     public List<ReviewRequest> getReviewByStatus(ReviewStatus status){
         return reviewRequestRepository.findAllByStatus(status);
+    }
+    
+    @Override
+    public List<ReviewRequest> getReviewByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize){
+        return reviewRequestRepository.findAllByStatus(status, PageRequest.of(page, pageSize));
     }
     
 }

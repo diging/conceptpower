@@ -652,9 +652,25 @@ public class ConceptManager implements IConceptManager {
 		List<ConceptEntry> result = new ArrayList<>();
 		
 		for(ReviewRequest request: requestsManager.getReviewByStatus(status)) {
+			result.add(getConceptEntry(request.getConceptId()) );
+		}
+		
+		return result;
+    }
+    
+	@Override
+	public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize) {
+		List<ConceptEntry> result = new ArrayList<>();
+		
+		for(ReviewRequest request: requestsManager.getReviewByStatusPaginated(status, page, pageSize)) {
 			result.add(getConceptEntry(request.getConceptId()));
 		}
 		
 		return result;
+    }
+    
+	@Override
+	public Integer getNumberOfConceptsByStatus(ReviewStatus status) {
+		return requestsManager.getReviewByStatus(status).size();
 	}
 }
