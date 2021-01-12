@@ -57,7 +57,8 @@ public class ViewOpenReviewRequestsController {
 		int numRecordsPerPage = pageSize == null ? defaultNumRecordsPerPage : Integer.parseInt(pageSize);
 		int totalPageCount = (int) Math.ceil((double)conceptsManager.getNumberOfConceptsByStatus(ReviewStatus.OPENED)/(double) defaultNumRecordsPerPage); 
 		
-		
+		pageNo = pageNo < 0 ? 0 : pageNo;
+		numRecordsPerPage = numRecordsPerPage < 0 ? defaultNumRecordsPerPage : numRecordsPerPage;  
 		
 		List<ConceptEntry> openReviewConcepts = conceptsManager.getAllConceptsByStatusPaginated(ReviewStatus.OPENED, pageNo, numRecordsPerPage);
 		List<ConceptEntryWrapper> foundConcepts = new ArrayList<>();

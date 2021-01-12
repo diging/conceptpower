@@ -3,8 +3,6 @@ package edu.asu.conceptpower.app.manager;
 import java.util.List;
 
 import edu.asu.conceptpower.app.model.ReviewRequest;
-import edu.asu.conceptpower.app.model.ReviewStatus;
-
 
 /**
  * Manager interface holding all Review Request related services
