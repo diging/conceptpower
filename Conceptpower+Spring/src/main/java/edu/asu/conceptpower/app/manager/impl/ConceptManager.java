@@ -662,7 +662,7 @@ public class ConceptManager implements IConceptManager {
 	public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize) {
 		return client.getAllConceptsByStatus(status);
     }
-    
+	
 	@Override
 	public Integer getNumberOfConceptsByStatus(ReviewStatus status) {
 		return requestsManager.getReviewByStatus(status).size();
