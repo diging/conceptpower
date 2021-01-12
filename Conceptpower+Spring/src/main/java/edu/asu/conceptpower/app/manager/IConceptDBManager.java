@@ -47,6 +47,10 @@ public interface IConceptDBManager {
     
     public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status);
     
+    public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize);
+    
+    public Integer getNumberOfConceptsByStatus(ReviewStatus status); 
+    
     public List<ConceptList> getAllConceptLists();
     
     public void storeConceptList(ConceptList element);

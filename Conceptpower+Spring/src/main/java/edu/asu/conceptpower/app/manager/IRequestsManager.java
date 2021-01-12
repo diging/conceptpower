@@ -47,9 +47,4 @@ public interface IRequestsManager {
      * @return List<ReviewRequest> - return all the reviewRequests in the database.
      */
     public List<ReviewRequest> getAllReviews();
-    
-    /**
-     * @return List<ReviewRequest> - return all the reviewRequests with the given status.
-     */
-    public List<ReviewRequest> getAllReviewsByStatus(ReviewStatus status);
 }

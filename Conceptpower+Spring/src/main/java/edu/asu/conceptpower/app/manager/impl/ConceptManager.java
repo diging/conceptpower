@@ -27,12 +27,10 @@ import edu.asu.conceptpower.app.manager.IAlternativeIdService;
 import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.IConceptManager;
 import edu.asu.conceptpower.app.manager.IIndexService;
-import edu.asu.conceptpower.app.manager.IRequestsDBManager;
 import edu.asu.conceptpower.app.model.ChangeEvent;
 import edu.asu.conceptpower.app.model.ChangeEvent.ChangeEventTypes;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
-import edu.asu.conceptpower.app.model.ReviewRequest;
 import edu.asu.conceptpower.app.model.ReviewStatus;
 import edu.asu.conceptpower.app.util.CCPSort;
 import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
@@ -52,12 +50,9 @@ import edu.asu.conceptpower.rest.SearchParamters;
 @PropertySource("classpath:config.properties")
 public class ConceptManager implements IConceptManager {
 
-    private final String DEFAULT_FORMAT = "yyyy:MM:dd hh:mm:ss";
+    private static final String DEFAULT_FORMAT = "yyyy:MM:dd hh:mm:ss";
     @Autowired
     private IConceptDBManager client;
-    
-    @Autowired
-    private IRequestsDBManager requestsManager;
 
     @Autowired
     private IIndexService indexService;
@@ -646,25 +641,19 @@ public class ConceptManager implements IConceptManager {
     public List<ConceptEntry> getAllConcepts() {
         return client.getAllConcepts();
     }
-
-	@Override
-	public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status) {
-		List<ConceptEntry> result = new ArrayList<>();
-		
-		for(ReviewRequest request: requestsManager.getReviewByStatus(status)) {
-			result.add(getConceptEntry(request.getConceptId()) );
-		}
-		
-		return result;
+    
+    @Override
+    public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status) {
+    	return client.getAllConceptsByStatus(status);
     }
     
-	@Override
-	public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize) {
-		return client.getAllConceptsByStatus(status);
+    @Override
+    public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize) {
+    	return client.getAllConceptsByStatusPaginated(status, page, pageSize);
     }
-	
-	@Override
-	public Integer getNumberOfConceptsByStatus(ReviewStatus status) {
-		return requestsManager.getReviewByStatus(status).size();
-	}
+    
+    @Override
+    public Integer getNumberOfConceptsByStatus(ReviewStatus status) {
+    	return client.getNumberOfConceptsByStatus(status);
+    }
 }

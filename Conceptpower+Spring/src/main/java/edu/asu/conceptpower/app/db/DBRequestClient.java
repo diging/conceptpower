@@ -39,15 +39,4 @@ public class DBRequestClient implements IRequestsDBManager{
     public List<ReviewRequest> getAllReviews() {
         return reviewRequestRepository.findAll();
     }
-    
-    @Override
-    public List<ReviewRequest> getReviewByStatus(ReviewStatus status){
-        return reviewRequestRepository.findAllByStatus(status);
-    }
-    
-    @Override
-    public List<ReviewRequest> getReviewByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize){
-        return reviewRequestRepository.findAllByStatus(status, PageRequest.of(page, pageSize));
-    }
-    
 }
