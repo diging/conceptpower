@@ -660,13 +660,7 @@ public class ConceptManager implements IConceptManager {
     
 	@Override
 	public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize) {
-		List<ConceptEntry> result = new ArrayList<>();
-		
-		for(ReviewRequest request: requestsManager.getReviewByStatusPaginated(status, page, pageSize)) {
-			result.add(getConceptEntry(request.getConceptId()));
-		}
-		
-		return result;
+		return client.getAllConceptsByStatus(status);
     }
     
 	@Override

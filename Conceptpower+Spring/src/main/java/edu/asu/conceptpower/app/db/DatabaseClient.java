@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
-
+import edu.asu.conceptpower.app.model.ReviewStatus;
 import edu.asu.conceptpower.app.repository.IConceptEntryRepository;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
 
@@ -305,4 +305,9 @@ public class DatabaseClient implements IConceptDBManager {
           
         };
       }
+
+	@Override
+	public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status) {
+		return conceptEntryRepository.getConceptsForGivenStatus(status);
+	}
 }

@@ -3,6 +3,7 @@ package edu.asu.conceptpower.app.repository;
 import org.springframework.stereotype.Repository;
 
 import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 import java.util.List;
 
@@ -37,6 +38,9 @@ public interface IConceptEntryRepository extends PagingAndSortingRepository<Conc
     
     @Query("SELECT c FROM ConceptEntry c WHERE c.synonymIds LIKE :id AND c.isDeleted = 0")
     List<ConceptEntry> getConceptsForGivenSynonymId(@Param("id") String id);
+    
+    @Query("SELECT c FROM ConceptEntry c INNER JOIN c.reviewRequests r WHERE c.id = r.conceptId and r.status = :status")
+    List<ConceptEntry> getConceptsForGivenStatus(@Param("status") ReviewStatus status);
 }
    
     

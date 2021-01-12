@@ -120,6 +120,10 @@ public class ConceptEntry implements Serializable{
      
     @Column(name="alternative_ids")
     private String alternativeIds;
+    
+    @OneToMany()
+    @JoinColumn(name = "concept_id", referencedColumnName="concept_id")
+    private List<ReviewRequest> reviewRequests;
 
     public String getCreatorId() {
         return creatorId;
@@ -276,6 +280,13 @@ public class ConceptEntry implements Serializable{
         this.mergedIds = mergedIds;
     }
     
+    public List<ReviewRequest> getReviewRequest() {
+    	return this.reviewRequests;
+    }
+    
+    public void setReviewRequest(List<ReviewRequest> list) {
+    	this.reviewRequests = list;
+    }
     public Set<String> getAlternativeIds() {
         if(this.alternativeIds != null) {
             String[] ids = this.alternativeIds.split(",");

@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
+import edu.asu.conceptpower.app.model.ReviewStatus;
 
 public interface IConceptDBManager {
 
@@ -43,6 +44,8 @@ public interface IConceptDBManager {
     public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId);
     
     public List<ConceptEntry> getAllConcepts();
+    
+    public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status);
     
     public List<ConceptList> getAllConceptLists();
     
