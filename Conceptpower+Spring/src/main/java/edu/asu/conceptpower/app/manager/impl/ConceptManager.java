@@ -643,11 +643,6 @@ public class ConceptManager implements IConceptManager {
     }
     
     @Override
-    public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status) {
-    	return client.getAllConceptsByStatus(status);
-    }
-    
-    @Override
     public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize) {
     	return client.getAllConceptsByStatusPaginated(status, page, pageSize);
     }

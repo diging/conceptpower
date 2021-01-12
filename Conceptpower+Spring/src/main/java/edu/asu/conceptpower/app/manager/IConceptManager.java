@@ -205,13 +205,7 @@ public interface IConceptManager {
     public List<ConceptEntry> getAllConcepts();
     
     /**
-     * 
-     * @param status - required review status entries
-     * @return - List<ConceptEntry> that matches the given status
-     */
-    public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status);
-    
-    /**
+     * This method returns the paginated list of Concept entries with given review request status for the given page number and page size
      * 
      * @param status - required review status entries
      * @param page - current page number
@@ -221,6 +215,7 @@ public interface IConceptManager {
     public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize);
     
     /**
+     * This method returns the number of concepts with the given ReviewRequest status.
      * 
      * @param status - required review status entries
      * @return - Integer denoting the number of concepts with the given status

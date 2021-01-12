@@ -304,13 +304,8 @@ public class DatabaseClient implements IConceptDBManager {
           }
           
         };
-      }
+    }
 
-	@Override
-	public List<ConceptEntry> getAllConceptsByStatus(ReviewStatus status) {
-		return conceptEntryRepository.getConceptsForGivenStatus(status);
-	}
-	
 	@Override
 	public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize) {
 		return conceptEntryRepository.getConceptsForGivenStatus(status, PageRequest.of(page, pageSize));
@@ -318,6 +313,6 @@ public class DatabaseClient implements IConceptDBManager {
 	
 	@Override
 	public Integer getNumberOfConceptsByStatus(ReviewStatus status) {
-		return conceptEntryRepository.getConceptsForGivenStatus(status).size();
+		return conceptEntryRepository.getNumberofConceptsForGivenStatus(status);
 	}
 }
