@@ -8,17 +8,17 @@
       <link th:href="@{/resources/assets/css/reviewrequest.css}" rel="stylesheet" />
       <script>
       	$(document).on('click', '#paginationTag', function(e) {
-      		var paginateData = $(this).data();
-      		window.location = '/conceptpower/auth/request/all/open?page=' + paginateData.page 
-      	})
-      	
-      	$(document).on('click', '#resolveButton', function() {
+    	    var paginateData = $(this).data();
+    	    window.location = '/conceptpower/auth/request/all/open?page=' + paginateData.page
+    	})
+
+    	$(document).on('click', '#resolveButton', function() {
     	    var comment = $('#resolveComment').val().trim();
     	    var conceptId = $("#conceptId").val();
     	    var request = $("#request").val();
     	    var reviewId = $('#reviewId').val();
 
-    	    if (comment.length == 0) {
+    	    if (comment == null || comment.length == 0) {
     	        $('#resolveCommentError').text('Closing comment cannot be empty');
     	        $('#resolveCommentError').show();
     	    } else {

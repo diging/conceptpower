@@ -48,7 +48,7 @@ public class ReviewRequest implements Serializable{
     @Column(name="resolver")
     private String resolver;
     
-    @OneToMany( cascade = CascadeType.ALL, fetch= FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     @JoinColumn(name = "review_id", referencedColumnName="id")
     private List<Comment> comments;
     
