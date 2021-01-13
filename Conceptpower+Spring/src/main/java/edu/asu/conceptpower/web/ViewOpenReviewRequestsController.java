@@ -46,7 +46,7 @@ public class ViewOpenReviewRequestsController {
 	
 	@GetMapping(value = "/auth/request/all/open")
 	public String viewOpenReviewRequests(ModelMap model, String page, String pageSize) {
-		if (indexService.isIndexerRunning()) {
+		if(indexService.isIndexerRunning()) {
 			model.addAttribute("show_error_alert", true);
 			model.addAttribute("error_alert_msg", indexerRunning);
 
