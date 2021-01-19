@@ -46,7 +46,7 @@ public class JsonConceptMessage implements IConceptMessage {
         json.setLemma(StringEscapeUtils.escapeJson(entry.getWord()));
         json.setPos(entry.getPos());
         json.setDescription(StringEscapeUtils.escapeJson(entry.getDescription()));
-        json.setConceptList(StringEscapeUtils.escapeJson(entry.getConceptList()));
+        json.setConceptListId(StringEscapeUtils.escapeJson(entry.getConceptListId()));
 
         if (entry.getChangeEvents() != null && !entry.getChangeEvents().isEmpty()) {
             List<ChangeEvent> changeEvents = entry.getChangeEvents();

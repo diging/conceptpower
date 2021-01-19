@@ -97,7 +97,7 @@ public class ConceptMergeService implements IConceptMergeService {
 
         // By default new id will be created
         conceptsMergeBean.setSelectedConceptId("");
-        conceptsMergeBean.setSelectedListName("");
+        conceptsMergeBean.setSelectedListId("");
 
         // Removing all the wordnet ids from this list. Users can merge into any
         // of the user defined CCP id or can create a new id for the merging
@@ -170,13 +170,13 @@ public class ConceptMergeService implements IConceptMergeService {
         // concept search screen. If WID-1 and WID-2 are merged, then each time
         // we create a wrapper for WID-1 and WID-2, we need to have WID-1 and
         // WID-2 in wordnet id field to be deleted.
-        entry.setConceptList(conceptsMergeBean.getSelectedListName());
+        entry.setConceptListId(conceptsMergeBean.getSelectedListId());
         return conceptManager.addConceptListEntry(entry, userName).getId();
     }
 
     private void fillConceptEntry(ConceptEntry entry, ConceptsMergeBean conceptMergeBean) {
         entry.setPos(conceptMergeBean.getSelectedPosValue());
-        entry.setConceptList(conceptMergeBean.getSelectedListName());
+        entry.setConceptListId(conceptMergeBean.getSelectedListId());
         entry.setTypeId(conceptMergeBean.getSelectedTypeId());
 
         String prefix = ",";

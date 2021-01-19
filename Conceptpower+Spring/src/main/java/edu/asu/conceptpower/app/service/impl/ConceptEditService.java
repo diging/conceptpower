@@ -53,7 +53,8 @@ public class ConceptEditService implements IConceptEditService {
         for (String wordnetId : oldWordnetIds) {
             if (!wordnetId.trim().equalsIgnoreCase("")) {
                 ConceptEntry entry = conceptManager.getWordnetConceptEntry(wordnetId);
-                entry.setConceptList(Constants.WORDNET_DICTIONARY);
+                //TODO: Needs Handling
+                entry.setConceptListId(Constants.WORDNET_DICTIONARY);
                 conceptManager.updateIndex(entry, userName);
             }
         }

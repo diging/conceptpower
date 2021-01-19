@@ -67,7 +67,7 @@ public class RDFMessageFactory {
             resource.addProperty(schemaName, entry.getWord());
             resource.addProperty(schemaDescription, entry.getDescription());
 
-            if (entry.getConceptList() != null) {
+            if (entry.getConceptListId() != null) {
                 resource.addProperty(madsrdfCL, creator.getConceptListURI(entry));
             }
 

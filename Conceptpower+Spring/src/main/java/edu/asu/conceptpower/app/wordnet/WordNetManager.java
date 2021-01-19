@@ -110,7 +110,8 @@ public class WordNetManager {
         entry.setWordnetId(word.getID().toString());
         entry.setWord(word.getLemma().replace("_", " "));
         entry.setPos(word.getPOS().name());
-        entry.setConceptList(Constants.WORDNET_DICTIONARY);
+        //TODO: Needs Handling
+        entry.setConceptListId(Constants.WORDNET_DICTIONARY);
 
         entry.setDescription(word.getSynset().getGloss());
 

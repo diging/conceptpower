@@ -74,7 +74,8 @@ public class ConceptDeleteController {
         details.put("conceptId", concept.getId());
         details.put("wordnetId", concept.getWordnetId());
         details.put("pos", concept.getPos());
-        details.put("conceptList", concept.getConceptList());
+        //TODO: Needs Handling
+        details.put("conceptList", concept.getConceptListId());
         details.put("type", concept.getTypeId());
         details.put("equal", concept.getEqualTo());
         details.put("similar", concept.getSimilarTo());

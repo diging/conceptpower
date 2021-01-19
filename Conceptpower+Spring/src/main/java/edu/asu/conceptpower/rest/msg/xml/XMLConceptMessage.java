@@ -90,7 +90,7 @@ public class XMLConceptMessage implements IConceptMessage {
 
         // concept list
         sb.append("<" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_LIST + ">");
-        sb.append(StringEscapeUtils.escapeXml10(entry.getConceptList()));
+        sb.append(StringEscapeUtils.escapeXml10(entry.getConceptListId()));
         sb.append("</" + XMLConstants.NAMESPACE_PREFIX + ":" + XMLConstants.CONCEPT_LIST + ">");
 
         // creator id

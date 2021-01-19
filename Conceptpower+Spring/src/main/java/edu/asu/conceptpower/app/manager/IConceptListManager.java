@@ -28,13 +28,6 @@ public interface IConceptListManager {
 	public abstract List<ConceptList> getAllConceptLists();
 
 	/**
-	 * Retrieve the list with the specified name.
-	 * @param name Name of the concept list to be retrieved.
-	 * @return Concept list or null.
-	 */
-	public abstract ConceptList getConceptList(String name);
-
-		/**
 	 * Retrieve the list with the specified id.
 	 * @param name id of the concept list to be retrieved.
 	 * @return Concept list or null.

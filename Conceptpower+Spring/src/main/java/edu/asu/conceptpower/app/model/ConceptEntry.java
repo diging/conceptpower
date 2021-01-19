@@ -62,7 +62,7 @@ public class ConceptEntry implements Serializable{
     @Column(name="concept_list")
     @SearchField(fieldName = SearchFieldNames.CONCEPT_LIST)
     @LuceneField(lucenefieldName = LuceneFieldNames.CONCEPT_LIST, isTokenized = false, isMultiple = false, isSortAllowed = true)
-    private String conceptList;
+    private String conceptListId;
 
     @Column(name="type_id")
     @SearchField(fieldName = SearchFieldNames.TYPE_ID)
@@ -209,12 +209,12 @@ public class ConceptEntry implements Serializable{
         this.pos = pos;
     }
     
-    public String getConceptList() {
-        return conceptList;
+    public String getConceptListId() {
+        return conceptListId;
     }
   
-    public void setConceptList(String conceptList) {
-        this.conceptList = conceptList;
+    public void setConceptListId(String conceptListId) {
+        this.conceptListId = conceptListId;
     }   
     
     public String getSimilarTo() {

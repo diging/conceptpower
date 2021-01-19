@@ -106,8 +106,10 @@ public class ConceptEditController {
         List<ConceptList> allLists = conceptListService.getAllConceptLists();
         conceptEditBean.setWord(concept.getWord());
         conceptEditBean.setSelectedPosValue(concept.getPos().toLowerCase());
-        conceptEditBean.setConceptListValue(concept.getConceptList());
-        conceptEditBean.setSelectedListName(concept.getConceptList());
+        //TODO: Needs Handling
+        conceptEditBean.setConceptListValue(concept.getConceptListId());
+        //TODO: Needs Handling
+        conceptEditBean.setSelectedListName(concept.getConceptListId());
         conceptEditBean.setConceptList(allLists);
         conceptEditBean.setDescription(concept.getDescription().trim());
         conceptEditBean.setSynonymsids(concept.getSynonymIds());
@@ -164,7 +166,8 @@ public class ConceptEditController {
         ConceptEntry conceptEntry = conceptManager.getConceptEntry(id);
         conceptEntry.setWord(conceptEditBean.getWord());
         conceptEntry.setWordnetId(conceptEditBean.getWordnetIds());
-        conceptEntry.setConceptList(conceptEditBean.getConceptListValue());
+        //TODO: Needs Handling
+        conceptEntry.setConceptListId(conceptEditBean.getConceptListValue());
         conceptEntry.setPos(conceptEditBean.getSelectedPosValue());
         conceptEntry.setDescription(conceptEditBean.getDescription());
         conceptEntry.setEqualTo(conceptEditBean.getEquals());

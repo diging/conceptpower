@@ -101,7 +101,8 @@ public class ConceptListEditController {
             return "/layouts/concepts/EditConceptList";
         }
 
-        ConceptList list = conceptListService.getConceptList(conceptListAddForm.getOldListName());
+        //TODO: Needs Handling
+        ConceptList list = conceptListService.getConceptListById(conceptListAddForm.getOldListName());
         list.setConceptListName(conceptListAddForm.getListName());
         list.setDescription(conceptListAddForm.getDescription());
 
@@ -122,7 +123,8 @@ public class ConceptListEditController {
 
         while (entriesIterator.hasNext()) {
             ConceptEntry conceptEntry = (ConceptEntry) entriesIterator.next();
-            conceptEntry.setConceptList(list.getConceptListName());
+            //TODO: Needs Handling
+            conceptEntry.setConceptListId(list.getConceptListName());
             conceptManager.storeModifiedConcept(conceptEntry, principal.getName());
             model.addAttribute(indexerStatus, indexerRunning);
         }

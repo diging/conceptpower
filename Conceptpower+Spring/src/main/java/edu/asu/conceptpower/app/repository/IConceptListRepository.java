@@ -18,7 +18,4 @@ public interface IConceptListRepository extends PagingAndSortingRepository<Conce
     long deleteByConceptListName(String conceptListName);
     
     List<ConceptList> findAll();
-    
-    ConceptList findByConceptListName(String conceptListName);
-    
 }

@@ -127,19 +127,6 @@ public class DatabaseClient implements IConceptDBManager {
 
         return entries.toArray(new ConceptEntry[entries.size()]);
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.conceptpower.app.manager.IConceptDBManager#getConceptList(java.lang.
-     * String)
-     */
-    @Override
-    public ConceptList getConceptList(String name) {
-        return conceptListRepository.findByConceptListName(name);
-    }
-
     
     /*
      * (non-Javadoc)
@@ -185,7 +172,8 @@ public class DatabaseClient implements IConceptDBManager {
      */
     @Override
     public List<ConceptEntry> getAllEntriesFromList(String listname) {
-       return conceptEntryRepository.findAllByConceptList(listname);
+        //TODO Needs handling
+       return conceptEntryRepository.findAllByConceptListId(listname);
     }
 
     @Override

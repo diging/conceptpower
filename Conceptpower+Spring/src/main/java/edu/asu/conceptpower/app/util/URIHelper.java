@@ -50,7 +50,8 @@ public class URIHelper implements IURIHelper {
     }
 
     public String getConceptListURI(ConceptEntry entry) {
-        String list = entry.getConceptList();
+        //TODO Needs Handling
+        String list = entry.getConceptListId();
         return XMLConstants.LIST_NAMESPACE + list;
     }
 

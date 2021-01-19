@@ -146,7 +146,8 @@ public class ConceptAddController {
         try {
             conceptEntry.setSynonymIds(conceptAddBean.getSynonymsids());
             conceptEntry.setWord(conceptAddBean.getName());
-            conceptEntry.setConceptList(conceptAddBean.getSelectedList());
+            //TODO: Needs Handling
+            conceptEntry.setConceptListId(conceptAddBean.getSelectedList());
             conceptEntry.setPos(conceptAddBean.getPos());
             conceptEntry.setDescription(conceptAddBean.getDescription());
             conceptEntry.setEqualTo(conceptAddBean.getEquals());

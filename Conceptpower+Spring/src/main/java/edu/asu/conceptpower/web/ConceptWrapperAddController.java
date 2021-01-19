@@ -98,7 +98,8 @@ public class ConceptWrapperAddController {
 
             conceptWrapperAddBean.setDescription(entry.getDescription());
             conceptWrapperAddBean.setWord(entry.getWord());
-            conceptWrapperAddBean.setSelectedConceptList(entry.getConceptList());
+            //TODO: Needs Handling
+            conceptWrapperAddBean.setSelectedConceptList(entry.getConceptListId());
             conceptWrapperAddBean.setPos(entry.getPos());
             conceptWrapperAddBean.setWrapperids(wrapperId);
         }
@@ -137,7 +138,8 @@ public class ConceptWrapperAddController {
             conceptEntry.setPos(conceptManager.getConceptEntry(wrappers[0]).getPos());
             conceptEntry.setSynonymIds(conceptWrapperAddBean.getSynonymids());
             conceptEntry.setWordnetId(conceptWrapperAddBean.getWrapperids());
-            conceptEntry.setConceptList(conceptWrapperAddBean.getSelectedConceptList());
+            //TODO: Needs Handling
+            conceptEntry.setConceptListId(conceptWrapperAddBean.getSelectedConceptList());
             conceptEntry.setDescription(conceptWrapperAddBean.getDescription());
             conceptEntry.setEqualTo(conceptWrapperAddBean.getEquals());
             conceptEntry.setSimilarTo(conceptWrapperAddBean.getSimilar());

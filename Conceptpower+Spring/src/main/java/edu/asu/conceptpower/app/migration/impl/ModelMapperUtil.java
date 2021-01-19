@@ -67,7 +67,8 @@ public class ModelMapperUtil {
         mappedConceptEntry.setWord(conceptEntry.getWord());
         mappedConceptEntry.setDescription(conceptEntry.getDescription());
         mappedConceptEntry.setPos(conceptEntry.getPos());
-        mappedConceptEntry.setConceptList(conceptEntry.getConceptList());
+        //TODO: Need to handle the change from listName to Id.
+        mappedConceptEntry.setConceptListId(conceptEntry.getConceptList());
         mappedConceptEntry.setTypeId(conceptEntry.getTypeId());
         mappedConceptEntry.setEqualTo(conceptEntry.getEqualTo());
         mappedConceptEntry.setSimilarTo(conceptEntry.getSimilarTo());

@@ -20,8 +20,6 @@ public interface IConceptDBManager {
 	public abstract ConceptEntry[] getSynonymsPointingToId(String id);
 
 	public abstract ConceptEntry[] getEntriesForWord(String word);
-
-	public abstract ConceptList getConceptList(String name);
 	
 	public abstract ConceptList getConceptListById(String id);
 

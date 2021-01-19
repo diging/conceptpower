@@ -24,13 +24,13 @@ public interface IConceptEntryRepository extends PagingAndSortingRepository<Conc
     
     List<ConceptEntry> findByWordnetId(String wordnetId);
     
-    List<ConceptEntry> findByConceptList(String conceptList);
+    List<ConceptEntry> findByConceptListId(String conceptListId);
     
     List<ConceptEntry> findByTypeId(String typeId);
     
     List<ConceptEntry> findAllByTypeId(String typeId);
     
-    List<ConceptEntry> findAllByConceptList(String listName);
+    List<ConceptEntry> findAllByConceptListId(String conceptListId);
     
     @Query("SELECT c from ConceptEntry c WHERE REPLACE(c.word, '_', ' ') LIKE LOWER(word) AND c.isDeleted = 0")
     List<ConceptEntry> findByWord(@Param("word") String word);

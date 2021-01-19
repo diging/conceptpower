@@ -340,7 +340,7 @@ public class Concepts {
             conceptEntry.setWord(jsonObject.get(JsonFields.WORD).toString());
             conceptEntry.setPos(jsonObject.get(JsonFields.POS).toString());
         }
-        conceptEntry.setConceptList(jsonObject.get(JsonFields.CONCEPT_LIST).toString());
+        conceptEntry.setConceptListId(jsonObject.get(JsonFields.CONCEPT_LIST).toString());
         conceptEntry.setCreatorId(username);
         conceptEntry.setSynonymIds(jsonObject.get(JsonFields.SYNONYM_IDS) != null
                 ? jsonObject.get(JsonFields.SYNONYM_IDS).toString() : "");

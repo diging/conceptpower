@@ -24,7 +24,7 @@ public class ConceptEntryMessage {
     private String lemma;
     private String pos;
     private String description;
-    private String conceptList;
+    private String conceptListId;
 
     @JsonProperty("creator_id")
     private String creatorId;
@@ -86,12 +86,12 @@ public class ConceptEntryMessage {
         this.description = description;
     }
 
-    public String getConceptList() {
-        return conceptList;
+    public String getConceptListId() {
+        return conceptListId;
     }
 
-    public void setConceptList(String conceptList) {
-        this.conceptList = conceptList;
+    public void setConceptListId(String conceptListId) {
+        this.conceptListId = conceptListId;
     }
 
     public String getCreatorId() {

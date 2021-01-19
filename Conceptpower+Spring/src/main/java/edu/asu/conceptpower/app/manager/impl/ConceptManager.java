@@ -428,14 +428,14 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
-    public void addConceptListEntry(String word, String pos, String description, String conceptListName, String typeId,
+    public void addConceptListEntry(String word, String pos, String description, String conceptListId, String typeId,
             String equalTo, String similarTo, String synonymIds, String synsetIds, String narrows, String broadens)
                     throws DictionaryDoesNotExistException, DictionaryModifyException, DictionaryEntryExistsException {
-        ConceptList dict = client.getConceptList(conceptListName);
+        ConceptList dict = client.getConceptListById(conceptListId);
         if (dict == null)
             throw new DictionaryDoesNotExistException();
 
-        if (conceptListName.equals(Constants.WORDNET_DICTIONARY)) {
+        if (conceptListId.equals(Constants.WORDNET_DICTIONARY)) {
             throw new DictionaryModifyException();
         }
 
@@ -443,7 +443,7 @@ public class ConceptManager implements IConceptManager {
         entry.setWord(word);
         entry.setDescription(description);
         entry.setPos(pos);
-        entry.setConceptList(conceptListName);
+        entry.setConceptListId(conceptListId);
         entry.setTypeId(typeId);
         entry.setEqualTo(equalTo);
         entry.setSimilarTo(similarTo);
@@ -467,11 +467,11 @@ public class ConceptManager implements IConceptManager {
     @Override
     public ConceptEntry addConceptListEntry(ConceptEntry entry, String userName) throws DictionaryDoesNotExistException,
             DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
-        ConceptList dict = client.getConceptList(entry.getConceptList());
+        ConceptList dict = client.getConceptListById(entry.getConceptListId());
         if (dict == null)
             throw new DictionaryDoesNotExistException();
 
-        if (entry.getConceptList().equals(Constants.WORDNET_DICTIONARY)) {
+        if (entry.getConceptListId().equals(Constants.WORDNET_DICTIONARY)) {
             throw new DictionaryModifyException();
         }
 

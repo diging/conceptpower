@@ -10,7 +10,7 @@ import edu.asu.conceptpower.app.error.CPError;
 public class ConceptsMergeBean {
 
     private String selectedPosValue;
-    private String selectedListName;
+    private String selectedListId;
     private String selectedTypeId;
     private String selectedTypeName;
     private String selectedConceptId;
@@ -31,12 +31,12 @@ public class ConceptsMergeBean {
         this.selectedPosValue = selectedPosValue;
     }
 
-    public String getSelectedListName() {
-        return selectedListName;
+    public String getSelectedListId() {
+        return selectedListId;
     }
 
-    public void setSelectedListName(String selectedListName) {
-        this.selectedListName = selectedListName;
+    public void setSelectedListId(String selectedListId) {
+        this.selectedListId = selectedListId;
     }
 
     public String getSelectedTypeId() {

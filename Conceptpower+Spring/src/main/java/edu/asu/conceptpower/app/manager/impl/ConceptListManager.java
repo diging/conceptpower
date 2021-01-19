@@ -68,14 +68,6 @@ public class ConceptListManager implements IConceptListManager {
 	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#getConceptList(java.lang.String)
 	 */
 	@Override
-	public ConceptList getConceptList(String name) {
-		return client.getConceptList(name);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.asu.conceptpower.core.impl.IConceptListManager#getConceptList(java.lang.String)
-	 */
-	@Override
 	public ConceptList getConceptListById(String id) {
 		return client.getConceptListById(id);
 	}

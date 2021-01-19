@@ -130,7 +130,8 @@ public class ConceptListController {
         //This condition has been included to make sure null values are not displayed in the details dialog box
         details.put("wordnetid", wrapper.getEntry().getWordnetId()==null?"":wrapper.getEntry().getWordnetId());
         details.put("pos", wrapper.getEntry().getPos());
-        details.put("conceptlist", wrapper.getEntry().getConceptList());
+        //TODO: Needs Handling
+        details.put("conceptlist", wrapper.getEntry().getConceptListId());
 
         ConceptType type = wrapper.getEntry().getTypeId() == null ? null
                 : typeDatabaseClient.getType(
