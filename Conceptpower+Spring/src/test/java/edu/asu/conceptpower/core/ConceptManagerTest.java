@@ -75,7 +75,7 @@ public class ConceptManagerTest {
 
         addedConcept = new ConceptEntry();
         addedConcept.setId("id1");
-        addedConcept.setConceptList("list1");
+        addedConcept.setConceptListId("LISTf91d645d-64fa-498a-9855-e037538bc4df");
 
         addedConcept.addChangeEvent(changeEvent);
         addedConcept.setDescription("description");
@@ -88,7 +88,7 @@ public class ConceptManagerTest {
 
         wordnetConcept1 = new ConceptEntry();
         wordnetConcept1.setId("WID-1");
-        wordnetConcept1.setConceptList("list1");
+        wordnetConcept1.setConceptListId("LISTf91d645d-64fa-498a-9855-e037538bc4df");
         wordnetConcept1.addChangeEvent(changeEvent);
         wordnetConcept1.setDescription("description wid 1");
         wordnetConcept1.setPos("noun");
@@ -98,7 +98,7 @@ public class ConceptManagerTest {
 
         wordnetConcept2 = new ConceptEntry();
         wordnetConcept2.setId("WID-2");
-        wordnetConcept2.setConceptList("list1");
+        wordnetConcept2.setConceptListId("LISTf91d645d-64fa-498a-9855-e037538bc4df");
         wordnetConcept2.addChangeEvent(changeEvent);
         wordnetConcept2.setDescription("description wid");
         wordnetConcept2.setPos("noun");
@@ -111,12 +111,12 @@ public class ConceptManagerTest {
         list1 = new ConceptList();
         list1.setConceptListName("list1");
         list1.setDescription("test test");
-        Mockito.when(dbManager.getConceptList("list1")).thenReturn(list1);
+        Mockito.when(dbManager.getConceptListById("LISTf91d645d-64fa-498a-9855-e037538bc4df")).thenReturn(list1);
 
         ConceptList wordnet = new ConceptList();
         wordnet.setConceptListName(Constants.WORDNET_DICTIONARY);
         wordnet.setDescription("WordNet list");
-        Mockito.when(dbManager.getConceptList(Constants.WORDNET_DICTIONARY)).thenReturn(wordnet);
+        Mockito.when(dbManager.getConceptListById(Constants.WORDNET_DICTIONARY)).thenReturn(wordnet);
 
         addedConceptsForWordNet = new ConceptEntry();
         addedConceptsForWordNet.setWord("wordnetConcept2");
@@ -149,7 +149,7 @@ public class ConceptManagerTest {
     public void testAddConceptListEntry()
             throws DictionaryDoesNotExistException, DictionaryModifyException, LuceneException, IllegalAccessException, IndexerRunningException {
         ConceptEntry newConcept = new ConceptEntry();
-        newConcept.setConceptList("list1");
+        newConcept.setConceptListId("LISTf91d645d-64fa-498a-9855-e037538bc4df");
         newConcept.setDescription("description");
         newConcept.setPos("noun");
         newConcept.setWord("test new");
@@ -165,7 +165,7 @@ public class ConceptManagerTest {
     public void testAddConceptListEntryWrongDict()
             throws DictionaryModifyException, LuceneException, IllegalAccessException, DictionaryDoesNotExistException, IndexerRunningException {
         ConceptEntry newConcept = new ConceptEntry();
-        newConcept.setConceptList("list-not-exist");
+        newConcept.setConceptListId("list-not-exist");
         newConcept.setDescription("description");
         newConcept.setPos("noun");
         newConcept.setWord("test new");
@@ -181,7 +181,7 @@ public class ConceptManagerTest {
     public void testAddConceptListEntryToWordnet()
             throws DictionaryDoesNotExistException, LuceneException, IllegalAccessException, DictionaryModifyException, IndexerRunningException {
         ConceptEntry newConcept = new ConceptEntry();
-        newConcept.setConceptList(Constants.WORDNET_DICTIONARY);
+        newConcept.setConceptListId(Constants.WORDNET_DICTIONARY);
         newConcept.setDescription("description");
         newConcept.setPos("noun");
         newConcept.setWord("test new");

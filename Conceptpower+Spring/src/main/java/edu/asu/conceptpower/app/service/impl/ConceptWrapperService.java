@@ -70,7 +70,7 @@ public class ConceptWrapperService implements IConceptWrapperService {
             return lists;
         }
         for (ConceptList conceptList : allLists) {
-            lists.put(conceptList.getConceptListName(), conceptList.getConceptListName());
+            lists.put(conceptList.getId(), conceptList.getConceptListName());
         }
         return lists;
     }
