@@ -314,5 +314,5 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     public Integer getNumberOfConceptsByStatus(ReviewStatus status) {
     	return conceptEntryRepository.getNumberofConceptsForGivenStatus(status);
-	}
+    }
 }
