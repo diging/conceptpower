@@ -7,7 +7,7 @@
       <script th:src="@{/resources/assets/js/custom/reviewrequests.js}"></script>
       <link th:href="@{/resources/assets/css/reviewrequest.css}" rel="stylesheet" />
       <script>
-      		$(document).on('click', '#paginationTag', function(e) {
+      $(document).on('click', '#paginationTag', function(e) {
     	  		var paginateData = $(this).data();
     	  		window.location = '/conceptpower/auth/request/all/open?page=' + paginateData.page
     		})
