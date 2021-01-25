@@ -8,8 +8,8 @@
       <link th:href="@{/resources/assets/css/reviewrequest.css}" rel="stylesheet" />
       <script>
         $(document).on('click', '#paginationTag', function(e) {
-        	var paginateData = $(this).data();
-        	window.location = '/conceptpower/auth/request/all/open?page=' + paginateData.page
+    	    var paginateData = $(this).data();
+    	    window.location = '/conceptpower/auth/request/all/open?page=' + paginateData.page
     	})
 
     	$(document).on('click', '#resolveButton', function() {
