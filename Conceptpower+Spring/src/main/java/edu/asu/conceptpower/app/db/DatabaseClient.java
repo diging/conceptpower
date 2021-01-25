@@ -247,7 +247,7 @@ public class DatabaseClient implements IConceptDBManager {
      * edu.asu.conceptpower.app.manager.IConceptDBManager#getAllConcepts()
      */
     @Override
-    public List<ConceptEntry> getAllConcepts() {
+    public Iterable<ConceptEntry> getAllConcepts() {
         return conceptEntryRepository.findAll();
     }
     

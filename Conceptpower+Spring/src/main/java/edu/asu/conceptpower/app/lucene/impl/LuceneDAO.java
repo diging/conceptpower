@@ -39,7 +39,7 @@ public class LuceneDAO implements ILuceneDAO {
      * Retrieves the total number of words from the database
      */
     public IndexingEvent getTotalNumberOfWordsIndexed() {
-        List<IndexingEvent> result = luceneClient.findAll();
+        Iterable<IndexingEvent> result = luceneClient.findAll();
         return getTotalNumberFromResult(result);
 
     }
@@ -51,7 +51,7 @@ public class LuceneDAO implements ILuceneDAO {
      * @param result
      * @return
      */
-    private IndexingEvent getTotalNumberFromResult(List<IndexingEvent> result) {
+    private IndexingEvent getTotalNumberFromResult(Iterable<IndexingEvent> result) {
         int totalIndex = 0;
         Date latestTimeStamp = null;
         for (IndexingEvent bean : result) {

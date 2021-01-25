@@ -201,5 +201,5 @@ public interface IConceptManager {
      * 
      * @return - List<ConceptEntry> return all the concepts stored in the database
      */
-    public List<ConceptEntry> getAllConcepts();
+    public Iterable<ConceptEntry> getAllConcepts();
 }

@@ -42,7 +42,7 @@ public interface IConceptDBManager {
 
     public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId);
     
-    public List<ConceptEntry> getAllConcepts();
+    public Iterable<ConceptEntry> getAllConcepts();
     
     public List<ConceptList> getAllConceptLists();
     

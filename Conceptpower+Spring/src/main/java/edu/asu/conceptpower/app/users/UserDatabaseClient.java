@@ -54,7 +54,6 @@ public class UserDatabaseClient {
         return user;
     }
     
-    @Transactional
     public void deleteUser(String name) {
         userRepository.deleteByUser(name);
     }
@@ -71,7 +70,6 @@ public class UserDatabaseClient {
         return tokenRepository.findByToken(token);
     }
     
-    @Transactional
     public Token deleteToken(String token) {
         return tokenRepository.deleteByToken(token);
     }

@@ -637,7 +637,7 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public List<ConceptEntry> getAllConcepts() {
+    public Iterable<ConceptEntry> getAllConcepts() {
         return client.getAllConcepts();
     }
 }

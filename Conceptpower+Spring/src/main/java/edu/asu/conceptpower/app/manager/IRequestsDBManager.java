@@ -18,7 +18,5 @@ public interface IRequestsDBManager {
     
     public List<ReviewRequest> getAllReviews(String conceptId);
     
-    public List<ReviewRequest> getAllReviews();
-    
     public ReviewRequest getReview(String reviewId);
 }

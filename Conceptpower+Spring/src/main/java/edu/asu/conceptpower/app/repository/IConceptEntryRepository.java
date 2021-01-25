@@ -20,8 +20,6 @@ import org.springframework.data.repository.query.Param;
 @Repository
 public interface IConceptEntryRepository extends PagingAndSortingRepository<ConceptEntry, String>, JpaSpecificationExecutor{
     
-    List<ConceptEntry> findAll();
-    
     List<ConceptEntry> findByWordnetId(String wordnetId);
     
     List<ConceptEntry> findByConceptList(String conceptList);

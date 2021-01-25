@@ -387,7 +387,7 @@ public class LuceneUtility implements ILuceneUtility {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
-    protected int[] createDocumentsFromConceptEntries(List<ConceptEntry> conceptEntryList, String userName)
+    protected int[] createDocumentsFromConceptEntries(Iterable<ConceptEntry> conceptEntryList, String userName)
             throws IllegalArgumentException, IllegalAccessException {
         int numberOfIndexedConcepts = 0;
         int numberOfUnindexConcepts = 0;
@@ -433,7 +433,7 @@ public class LuceneUtility implements ILuceneUtility {
         }
 
         // Fetching DB4o Data
-        List<ConceptEntry> conceptEntriesList = databaseClient.getAllConcepts();
+        Iterable<ConceptEntry> conceptEntriesList = databaseClient.getAllConcepts();
 
         Set<String> wordnetIdsOfWrappers = getWordNetIdsOfWrappers(conceptEntriesList);
 
@@ -674,7 +674,7 @@ public class LuceneUtility implements ILuceneUtility {
      * @param conceptEntries
      * @return
      */
-    private Set<String> getWordNetIdsOfWrappers(List<ConceptEntry> conceptEntries) {
+    private Set<String> getWordNetIdsOfWrappers(Iterable<ConceptEntry> conceptEntries) {
         Set<String> wordnetIds = new HashSet<>();
         for (ConceptEntry conceptEntry : conceptEntries) {
             if (conceptEntry.getWordnetId() != null && !conceptEntry.getWordnetId().trim().isEmpty()) {
