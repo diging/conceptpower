@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -36,7 +39,9 @@ public class ConceptTypesManagerTest {
         type2.setTypeId("Type Id 2");
         type2.setTypeName("Type Name 2");
 
-        ConceptType[] types = { type, type2 };
+        List<ConceptType> types = new ArrayList<>();
+        types.add(type);
+        types.add(type2);
         Mockito.when(client.getAllTypes()).thenReturn(types);
 
         Mockito.when(client.getType(type.getTypeId())).thenReturn(type);
@@ -57,9 +62,9 @@ public class ConceptTypesManagerTest {
 
     @Test
     public void getAllTypesTest() {
-        ConceptType[] conceptTypes = conceptTypesManager.getAllTypes();
+        List<ConceptType> conceptTypes = conceptTypesManager.getAllTypes();
         assertNotNull(conceptTypes);
-        assertEquals(2, conceptTypes.length);
+        assertEquals(2, conceptTypes.size());
     }
 
     @Test

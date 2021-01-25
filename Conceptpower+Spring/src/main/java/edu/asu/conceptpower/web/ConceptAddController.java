@@ -102,7 +102,7 @@ public class ConceptAddController {
         Map<String, String> serviceNameIdMap = serviceRegistry.getServiceNameIdMap();
         conceptAddBean.setServiceNameIdMap(serviceNameIdMap);
 
-        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+        List<ConceptType> allTypes = conceptTypesManager.getAllTypes();
         Map<String, String> types = new LinkedHashMap<>();
         for (ConceptType conceptType : allTypes) {
             types.put(conceptType.getTypeId(), conceptType.getTypeName());

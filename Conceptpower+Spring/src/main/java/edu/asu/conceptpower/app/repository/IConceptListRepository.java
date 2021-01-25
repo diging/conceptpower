@@ -15,8 +15,6 @@ import edu.asu.conceptpower.app.model.ConceptList;
  */
 @Repository
 public interface IConceptListRepository extends PagingAndSortingRepository<ConceptList, String> {
-    long deleteByConceptListName(String conceptListName);
-    
     List<ConceptList> findAll();
     
     ConceptList findByConceptListName(String conceptListName);

@@ -39,7 +39,7 @@ public class ConceptTypesController {
             @RequestParam(defaultValue = IConceptDBManager.ASCENDING + "") String sortDir,
             @RequestParam(defaultValue = "typeName") String sortColumn) throws NoSuchFieldException, SecurityException {
 
-        ConceptType[] types = conceptTypesManager.getAllTypes();
+        List<ConceptType> types = conceptTypesManager.getAllTypes();
 
         int pageInt = new Integer(page);
         int sortDirInt = new Integer(sortDir);

@@ -49,9 +49,8 @@ public class TypeDatabaseClient {
         return null;
     }
 
-    public ConceptType[] getAllTypes() {
-        List<ConceptType> results = conceptTypeRepository.findAll();
-        return results.toArray(new ConceptType[results.size()]);
+    public List<ConceptType> getAllTypes() {
+        return conceptTypeRepository.findAll();
     }
 
     public ConceptType addType(ConceptType user) {
@@ -79,5 +78,8 @@ public class TypeDatabaseClient {
                     PageRequest.of(page, pageSize, Sort.by(sortBy).descending())).getContent();
 
     }
-
+    
+    public int getNumberOfConceptTypes() {
+        return (int)conceptTypeRepository.count();
+    }
 }
