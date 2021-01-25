@@ -62,9 +62,7 @@ public class IndexingEvent implements Serializable {
     }
 
     public String getLastRun() {
-        if (lastRun == null)
-            return "";
-        return lastRun.toString();
+        return lastRun == null ? "" : lastRun.toString();
     }
 
     public Date getLastRunDate() {

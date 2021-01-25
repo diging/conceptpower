@@ -106,8 +106,8 @@ public class MigrateToSql {
         int count = 0;
         
         for(ConceptType c : typeDatabase.getClient().query(ConceptType.class)) {
-        	conceptTypeRepository.save(modelMapperUtil.mapConceptType(c));
-        	count++;
+            conceptTypeRepository.save(modelMapperUtil.mapConceptType(c));
+            count++;
         }
         
         return count;
