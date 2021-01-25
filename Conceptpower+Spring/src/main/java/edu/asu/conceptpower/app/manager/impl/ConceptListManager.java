@@ -36,7 +36,7 @@ public class ConceptListManager implements IConceptListManager {
 	 */
 	@Override
 	public void addConceptList(String name, String description) {
-
+		
 		ConceptList dict = new ConceptList();
 		dict.setConceptListName(name);
 		dict.setDescription(description);

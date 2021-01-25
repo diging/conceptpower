@@ -37,26 +37,26 @@ public class ReviewRequestController {
            
     @PostMapping(value = "/auth/request/add")
     public @ResponseBody ReviewRequest addNewReviewRequest( @ModelAttribute(value="reviewRequest") ReviewRequest reviewRequest,Principal principal) {
-        reviewRequest.setRequester(principal.getName());
-        reviewRequest.setCreatedAt(OffsetDateTime.now());
-        requestsMgr.addReviewRequest(reviewRequest);
-        
-        return reviewRequest;
+    	reviewRequest.setRequester(principal.getName());
+    	reviewRequest.setCreatedAt(OffsetDateTime.now());
+    	requestsMgr.addReviewRequest(reviewRequest);
+    	
+    	return reviewRequest;
     }
     
     @PostMapping(value = "/auth/request/resolve/{reviewId}")
     public @ResponseBody ReviewRequest resolveRequest(@PathVariable String reviewId,@RequestBody Comment comment,Principal principal) {
-        return requestsMgr.updateReview(reviewId, ReviewStatus.RESOLVED, comment, OffsetDateTime.now(), principal.getName());
+    	return requestsMgr.updateReview(reviewId, ReviewStatus.RESOLVED, comment, OffsetDateTime.now(), principal.getName());
     }
     
     @PostMapping(value = "/auth/request/reopen/{reviewId}")
     public @ResponseBody ReviewRequest reopenRequest(@PathVariable String reviewId,@RequestBody Comment comment,Principal principal) {
-        return requestsMgr.updateReview(reviewId, ReviewStatus.OPENED, comment, OffsetDateTime.now(), principal.getName());
+    	return requestsMgr.updateReview(reviewId, ReviewStatus.OPENED, comment, OffsetDateTime.now(), principal.getName());
     }
     
     @GetMapping(value = "/auth/request/{conceptId}/all")
     public @ResponseBody List<ReviewRequest> getAllReviews(@PathVariable String conceptId, Principal principal){
-        return requestsMgr.getAllReviews(conceptId);  
+    	return requestsMgr.getAllReviews(conceptId);  
     }
     
     @GetMapping(value = "/auth/request/validate/{conceptId}")

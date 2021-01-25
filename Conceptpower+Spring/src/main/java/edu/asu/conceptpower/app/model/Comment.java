@@ -39,7 +39,6 @@ public class Comment implements Serializable{
     @Column(name="review_id")
     private String reviewId;
     
-    
     public Integer getId() {
         return id;
     }

@@ -55,7 +55,6 @@ public class ReviewRequest implements Serializable{
     @Column(name="created_at")
     private OffsetDateTime createdAt;
     
-    
     public String getConceptId() {
         return conceptId;
     }
