@@ -606,12 +606,12 @@ public class LuceneUtility implements ILuceneUtility {
                 rootQueryBuilder.add(tokenizedQueryBuilder.build(), Occur.SHOULD);
                 // Short word searching
                 BooleanQuery.Builder shortWordSearchQueryBuilder = new BooleanQuery.Builder();
-                shortWordSearchQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX, searchString), Occur.MUST);
+                shortWordSearchQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX, searchString), Occur.SHOULD);
                 
                 /*If the searchDescription is enabled, add the query along with Word Query.
                  * Rightnow isShortPhraseSearchable is enabled only for Word field which avoids multiple entry of search params */
                 if(isSearchOnDescription) {
-                    shortWordSearchQueryBuilder.add(new PhraseQuery(SearchFieldNames.DESCRIPTION, searchString), Occur.MUST);
+                    shortWordSearchQueryBuilder.add(new PhraseQuery(SearchFieldNames.DESCRIPTION, searchString), Occur.SHOULD);
                 }
                 
                 rootQueryBuilder.add(shortWordSearchQueryBuilder.build(), Occur.SHOULD);
