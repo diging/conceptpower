@@ -19,6 +19,7 @@ import edu.asu.conceptpower.app.model.ConceptType;
 @Repository
 public interface IConceptTypeRepository extends PagingAndSortingRepository<ConceptType, String>{
     
+    /*Used List<> instead of Iterable<> to avoid Refactoring the underlying logics in the services and controllers*/
     List<ConceptType> findAll();
     
     Optional<ConceptType> findByTypeName(String typeName);

@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.app.manager.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,13 +36,12 @@ public class ConceptListManager implements IConceptListManager {
 	 * lang.String, java.lang.String)
 	 */
 	@Override
-	public void addConceptList(String name, String description) {
-
-		ConceptList dict = new ConceptList();
-		dict.setConceptListName(name);
-		dict.setDescription(description);
-		dict.setId(generateId(LIST_PREFIX));
-		client.storeConceptList(dict);
+	public void addConceptList(String name, String description) { 
+	    ConceptList dict = new ConceptList();
+	    dict.setConceptListName(name);
+	    dict.setDescription(description);
+	    dict.setId(generateId(LIST_PREFIX));
+	    client.storeConceptList(dict);
 	}
 	
 	/* (non-Javadoc)
@@ -49,7 +49,7 @@ public class ConceptListManager implements IConceptListManager {
 	 */
 	@Override
 	public void deleteConceptList(String id) {
-		client.deleteConceptList(id);
+	    client.deleteConceptList(id);
 	}
 	
 	/* (non-Javadoc)
@@ -58,10 +58,12 @@ public class ConceptListManager implements IConceptListManager {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ConceptList> getAllConceptLists() {
-		List<ConceptList> results = client.getAllConceptLists();
-		if (results != null && !results.isEmpty())
-			return results;
-		return null;
+	    List<ConceptList> results = client.getAllConceptLists();
+	    if (results != null && !results.isEmpty()) {
+	        return results;
+	    }
+	    
+	    return Collections.emptyList();
 	}
 
 	/* (non-Javadoc)
@@ -69,7 +71,7 @@ public class ConceptListManager implements IConceptListManager {
 	 */
 	@Override
 	public ConceptList getConceptList(String name) {
-		return client.getConceptList(name);
+	    return client.getConceptList(name);
 	}
 
 	/* (non-Javadoc)
@@ -77,7 +79,7 @@ public class ConceptListManager implements IConceptListManager {
 	 */
 	@Override
 	public ConceptList getConceptListById(String id) {
-		return client.getConceptListById(id);
+	    return client.getConceptListById(id);
 	}
 	
 	/* (non-Javadoc)
@@ -85,7 +87,7 @@ public class ConceptListManager implements IConceptListManager {
 	 */
 	@Override
 	public void storeModifiedConceptList(ConceptList list) {
-		client.update(list);
+	    client.update(list);
 	}
 	
 	
@@ -95,15 +97,13 @@ public class ConceptListManager implements IConceptListManager {
 	 * =================================================================
 	 */
 	protected String generateId(String prefix) {
-		String id = prefix + UUID.randomUUID().toString();
-
-		while (true) {
-			if (!client.checkIfConceptListExists(id)){
-				return id;
-			}
-
-			// try other id
-			id = prefix + UUID.randomUUID().toString();
+	    String id = prefix + UUID.randomUUID().toString();
+	    while (true) {
+	        if (!client.checkIfConceptListExists(id)){
+	            return id;
+	        }
+	        // try other id 
+	        id = prefix + UUID.randomUUID().toString();
 		}
 	}
 }

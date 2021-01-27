@@ -1,6 +1,9 @@
 package edu.asu.conceptpower.app.lucene.impl;
 
 import java.util.Date;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
@@ -18,8 +21,12 @@ public class LuceneDAO implements ILuceneDAO {
     
 
     private String dbPath;
+    
     @Autowired
     private IIndexRepository luceneClient;
+    
+    @PostConstruct
+    public void init() {}
     /**
      * Stores the number of indexed word count along with the timestamp
      */

@@ -522,8 +522,9 @@ public class ConceptManager implements IConceptManager {
 
             // if there doesn't exist an object with this id return id
             ConceptEntry results = client.getEntry(id);
-            if (results == null)
+            if (results == null) {
                 return id;
+            }
         }
     }
 

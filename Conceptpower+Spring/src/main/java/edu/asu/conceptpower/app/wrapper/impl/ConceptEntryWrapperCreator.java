@@ -113,8 +113,9 @@ public class ConceptEntryWrapperCreator implements IConceptWrapperCreator {
                         if (id != null && !id.trim().isEmpty()) {
                             try {
                                 ConceptEntry synonym = conceptManager.getConceptEntry(id);
-                                if (synonym != null)
+                                if (synonym != null) {
                                     synonyms.add(synonym);
+                                }
                             } catch (IllegalArgumentException ie) {
                                 if (wrapper.isError()) {
                                     wrapper.setErrorMsg(

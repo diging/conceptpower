@@ -101,8 +101,9 @@ public  class RequestsManager implements IRequestsManager{
         while (true) {
             // if there doesn't exist an object with this id return id
             ReviewRequest results = dbClient.getReview(id);
-            if (results == null )
+            if (results == null ) {
                 return id;
+            }
 
             // try other id
             id = prefix + UUID.randomUUID().toString();

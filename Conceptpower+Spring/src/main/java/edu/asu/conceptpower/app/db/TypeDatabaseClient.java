@@ -34,8 +34,9 @@ public class TypeDatabaseClient {
         
         Optional<ConceptType> results = conceptTypeRepository.findById(id);
 
-        if (results.isPresent())
+        if (results.isPresent()) {
             return results.get();
+        }
 
         return null;
     }
@@ -43,8 +44,9 @@ public class TypeDatabaseClient {
     public ConceptType findType(String name) {
         Optional<ConceptType> results = conceptTypeRepository.findByTypeName(name);
 
-        if (results.isPresent())
+        if (results.isPresent()) {
             return results.get();
+        }
 
         return null;
     }
