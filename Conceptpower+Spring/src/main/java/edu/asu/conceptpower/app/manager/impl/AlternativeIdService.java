@@ -40,10 +40,7 @@ public class AlternativeIdService implements IAlternativeIdService {
         }
         // Specific Wordnet id is added irrespective of what is queried for
         if (entry.getWordnetId() != null) {
-            String[] wordNetIds = entry.getWordnetId().split(",");
-            for (String wordNetId : wordNetIds) {
-                entry.setAlternativeIds(wordNetId.trim());
-            }
+            entry.setAlternativeIds(entry.getWordnetId());
         }
         
         // This has been added to make sure local concept id is added.
