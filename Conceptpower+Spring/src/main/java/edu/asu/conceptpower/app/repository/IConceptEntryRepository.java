@@ -47,7 +47,7 @@ public interface IConceptEntryRepository extends PagingAndSortingRepository<Conc
     @Query(value = "SELECT * FROM concept_entry c INNER JOIN review_request r WHERE c.concept_id = r.concept_id and r.status = :status", 
     		countQuery = "SELECT count(*) FROM concept_entry c INNER JOIN review_request r WHERE c.concept_id = r.concept_id and r.status = :status",
     		nativeQuery = true)
-    List<ConceptEntry> getConceptsForGivenStatus(@Param("status") ReviewStatus status, Pageable pageable);
+    List<ConceptEntry> getConceptsForGivenStatus(@Param("status") String status, Pageable pageable);
 }
    
     

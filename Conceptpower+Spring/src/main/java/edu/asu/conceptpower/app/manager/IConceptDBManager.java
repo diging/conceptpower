@@ -50,5 +50,9 @@ public interface IConceptDBManager {
 	public void storeConceptList(ConceptList element);
 	
 	public boolean checkIfConceptListExists(String id);
+	
+	public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize);
+	
+	public Integer getNumberOfConceptsByStatus(ReviewStatus status);
 
 }
