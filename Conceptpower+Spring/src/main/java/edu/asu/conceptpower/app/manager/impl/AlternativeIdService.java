@@ -51,10 +51,7 @@ public class AlternativeIdService implements IAlternativeIdService {
 
         // Added the merged ids of the concepts to alternative id
         if (entry.getMergedIds() != null) {
-            String[] mergedIds = entry.getMergedIds().split(",");
-            for (String mergedId : mergedIds) {
-                entry.setAlternativeIds(mergedId.trim());
-            }
+            entry.setAlternativeIds(entry.getMergedIds());
         }
     }
 
