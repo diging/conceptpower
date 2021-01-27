@@ -11,7 +11,7 @@ public class ConceptType implements Serializable {
 	 */
 	private static final long serialVersionUID = 2354156550263013826L;
 	
-	@Id private String typeId;
+	private String typeId;
 	private String typeName;
 	private String description;
 	private String matches;

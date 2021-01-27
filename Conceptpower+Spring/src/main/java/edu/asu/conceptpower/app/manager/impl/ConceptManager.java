@@ -525,7 +525,7 @@ public class ConceptManager implements IConceptManager {
             if (results == null) {
                 return id;
             }
-        }
+       }
     }
 
     /**
