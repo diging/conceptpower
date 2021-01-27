@@ -21,9 +21,4 @@ public interface IReviewRequestRepository extends PagingAndSortingRepository<Rev
      * Find all the reivew requests with the given conceptId
      * */
     List<ReviewRequest> findAllByConceptId(String conceptId);
-    
-    /*
-     * Return all the review requests from the database
-     * */
-    List<ReviewRequest> findAll();
 }

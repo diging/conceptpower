@@ -60,7 +60,7 @@ public class ConceptTypesManager implements IConceptTypeManager {
      * @see edu.asu.conceptpower.core.IConceptTypeManger#getAllTypes()
      */
     @Override
-    public ConceptType[] getAllTypes() {
+    public List<ConceptType> getAllTypes() {
         return client.getAllTypes();
     }
 
@@ -88,8 +88,7 @@ public class ConceptTypesManager implements IConceptTypeManager {
 
     @Override
     public int getPageCount() {
-        ConceptType[] types = getAllTypes();
-        return (int) Math.ceil(new Double(types.length) / new Double(defaultPageSize));
+        return (int) Math.ceil((double) getTotalNumberOfConceptTypes() / (double) defaultPageSize);
     }
 
     /**
@@ -128,8 +127,7 @@ public class ConceptTypesManager implements IConceptTypeManager {
     }
 
     private int getTotalNumberOfConceptTypes() {
-        ConceptType[] types = client.getAllTypes();
-        return types.length;
+        return client.getNumberOfConceptTypes();
     }
 
 }

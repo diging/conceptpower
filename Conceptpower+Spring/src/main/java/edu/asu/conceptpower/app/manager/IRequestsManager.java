@@ -41,10 +41,4 @@ public interface IRequestsManager {
      * @Return ReviewRequest - Returns back the updated reviewRequest
      */
     public ReviewRequest updateReview(String reviewId, ReviewStatus reviewStatus, Comment comment, OffsetDateTime createdAt, String updatedBy);
-    
-    /**
-     * 
-     * @return List<ReviewRequest> - return all the reviewRequests in the database.
-     */
-    public List<ReviewRequest> getAllReviews();
 }

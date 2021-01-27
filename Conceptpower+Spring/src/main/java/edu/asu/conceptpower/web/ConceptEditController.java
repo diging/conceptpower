@@ -102,7 +102,7 @@ public class ConceptEditController {
         }
         
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
-        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+        List<ConceptType> allTypes = conceptTypesManager.getAllTypes();
         List<ConceptList> allLists = conceptListService.getAllConceptLists();
         conceptEditBean.setWord(concept.getWord());
         conceptEditBean.setSelectedPosValue(concept.getPos().toLowerCase());
@@ -179,7 +179,7 @@ public class ConceptEditController {
         if (indexService.isIndexerRunning()) {
             List<ConceptList> allLists = conceptListService.getAllConceptLists();
             conceptEditBean.setConceptList(allLists);
-            ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+            List<ConceptType> allTypes = conceptTypesManager.getAllTypes();
             conceptEditBean.setTypes(allTypes);
             conceptEditBean.setConceptId(conceptEntry.getId());
             model.addAttribute("conceptId", conceptEntry.getId());

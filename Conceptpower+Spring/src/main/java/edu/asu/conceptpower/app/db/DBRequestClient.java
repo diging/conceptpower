@@ -32,9 +32,4 @@ public class DBRequestClient implements IRequestsDBManager{
     public List<ReviewRequest> getAllReviews(String  conceptId){
         return reviewRequestRepository.findAllByConceptId(conceptId);
     }
-
-    @Override
-    public List<ReviewRequest> getAllReviews() {
-        return reviewRequestRepository.findAll();
-    }
 }

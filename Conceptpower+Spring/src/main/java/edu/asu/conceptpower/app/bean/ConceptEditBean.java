@@ -7,29 +7,30 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.core.POS;
+import edu.asu.conceptpower.app.model.ConceptEntry;
+import edu.asu.conceptpower.app.model.ConceptList;
 import edu.asu.conceptpower.app.model.ConceptType;
 
 @Component
 public class ConceptEditBean {
 
-    private Map<String, String> posMap = new LinkedHashMap<String, String>();
+    private Map<String, String> posMap = new LinkedHashMap<>();
     private String word;
     private String concept;
     private String selectedPosValue;
     private String selectedListName;
     private String conceptListValue;
-    private List conceptList;
+    private List<ConceptList> conceptList;
     private String description;
     private String synonymsids;
     private String conceptType;
-    private List conceptTypeList;
     private String equals;
     private String similar;
     private String selectedTypeId;
     private String selectedTypeName;
-    private ConceptType[] types;
+    private List<ConceptType> types;
     private String conceptId;
-    private List conceptEntryList;
+    private List<ConceptEntry> conceptEntryList;
     private boolean fromHomeScreen;
     private String luceneError;
     private String wordnetIds;
@@ -65,14 +66,6 @@ public class ConceptEditBean {
 
     public void setConceptType(String conceptType) {
         this.conceptType = conceptType;
-    }
-
-    public List getConceptTypeList() {
-        return conceptTypeList;
-    }
-
-    public void setConceptTypeList(List conceptTypeList) {
-        this.conceptTypeList = conceptTypeList;
     }
 
     public String getEquals() {
@@ -139,19 +132,19 @@ public class ConceptEditBean {
         this.word = word;
     }
 
-    public List getConceptList() {
+    public List<ConceptList> getConceptList() {
         return conceptList;
     }
 
-    public void setConceptList(List conceptList) {
+    public void setConceptList(List<ConceptList> conceptList) {
         this.conceptList = conceptList;
     }
 
-    public ConceptType[] getTypes() {
+    public List<ConceptType> getTypes() {
         return types;
     }
 
-    public void setTypes(ConceptType[] types) {
+    public void setTypes(List<ConceptType> types) {
         this.types = types;
     }
 
@@ -163,11 +156,11 @@ public class ConceptEditBean {
         this.synonymsids = synonymsids;
     }
 
-    public List getConceptEntryList() {
+    public List<ConceptEntry> getConceptEntryList() {
         return conceptEntryList;
     }
 
-    public void setConceptEntryList(List conceptEntryList) {
+    public void setConceptEntryList(List<ConceptEntry> conceptEntryList) {
         this.conceptEntryList = conceptEntryList;
     }
 

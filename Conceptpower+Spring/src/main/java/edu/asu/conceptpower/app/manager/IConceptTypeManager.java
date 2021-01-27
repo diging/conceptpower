@@ -17,7 +17,7 @@ public interface IConceptTypeManager {
 
     public void storeModifiedConceptType(ConceptType type);
 
-    public ConceptType[] getAllTypes();
+    public List<ConceptType> getAllTypes();
 
     /**
      * This method retrieves a type by the provided type ID. Returns null if

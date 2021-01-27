@@ -202,7 +202,7 @@ public interface IConceptManager {
      * 
      * @return - List<ConceptEntry> return all the concepts stored in the database
      */
-    public List<ConceptEntry> getAllConcepts();
+    public Iterable<ConceptEntry> getAllConcepts();
     
     /**
      * This method returns the paginated list of Concept entries with given review request status for the given page number and page size

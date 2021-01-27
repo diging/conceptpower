@@ -3,6 +3,7 @@ package edu.asu.conceptpower.web;
 import java.security.Principal;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,7 +73,7 @@ public class ConceptTypeEditController {
         conceptTypeAddForm.setSuperType(type.getSupertypeId());
         conceptTypeAddForm.setTypeid(type.getTypeId());
 
-        ConceptType[] allTypes = typeManager.getAllTypes();
+        List<ConceptType> allTypes = typeManager.getAllTypes();
 
         Map<String, String> types = new LinkedHashMap<String, String>();
         for (ConceptType conceptType : allTypes) {

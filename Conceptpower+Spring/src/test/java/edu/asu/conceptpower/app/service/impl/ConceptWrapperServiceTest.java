@@ -96,9 +96,9 @@ public class ConceptWrapperServiceTest {
         secondConceptType.setTypeName("TYPE-2");
         secondConceptType.setTypeId("TYPE-4567");
 
-        ConceptType[] conceptTypes = new ConceptType[2];
-        conceptTypes[0] = firstConceptType;
-        conceptTypes[1] = secondConceptType;
+        List<ConceptType> conceptTypes = new ArrayList<>();
+        conceptTypes.add(firstConceptType);
+        conceptTypes.add(secondConceptType);
 
         Mockito.when(conceptTypesManager.getAllTypes()).thenReturn(conceptTypes);
         Map<String, String> conceptTypesMap = conceptWrapperService.fetchAllConceptTypes();
@@ -115,8 +115,8 @@ public class ConceptWrapperServiceTest {
         firstConceptType.setTypeName("Type-1");
         firstConceptType.setTypeId("TYPE-1234");
 
-        ConceptType[] conceptTypes = new ConceptType[1];
-        conceptTypes[0] = firstConceptType;
+        List<ConceptType> conceptTypes = new ArrayList<>();
+        conceptTypes.add(firstConceptType);
 
         Mockito.when(conceptTypesManager.getAllTypes()).thenReturn(conceptTypes);
         Map<String, String> conceptTypesMap = conceptWrapperService.fetchAllConceptTypes();

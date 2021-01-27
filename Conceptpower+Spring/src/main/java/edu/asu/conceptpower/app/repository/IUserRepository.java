@@ -15,6 +15,7 @@ import edu.asu.conceptpower.app.model.User;
  * 
  */
 @Repository
+@Transactional
 public interface IUserRepository extends PagingAndSortingRepository<User, String>{
 
     User findByUserAndPw(String name, String pw);
@@ -23,7 +24,6 @@ public interface IUserRepository extends PagingAndSortingRepository<User, String
     
     List<User> findAll();
     
-    @Transactional
     void deleteByUser(String name);
     
     List<User> findByEmail(String email);

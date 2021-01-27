@@ -41,9 +41,9 @@ public class ConceptWrapperService implements IConceptWrapperService {
      */
     @Override
     public Map<String, String> fetchAllConceptTypes() {
-        ConceptType[] allTypes = conceptTypeService.getAllTypes();
+        List<ConceptType> allTypes = conceptTypeService.getAllTypes();
         Map<String, String> types = new LinkedHashMap<>();
-        if (allTypes == null || allTypes.length == 0) {
+        if (allTypes == null || allTypes.isEmpty()) {
             return types;
         }
         for (ConceptType conceptType : allTypes) {

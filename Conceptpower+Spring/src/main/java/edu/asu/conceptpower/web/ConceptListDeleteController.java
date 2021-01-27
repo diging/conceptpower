@@ -42,8 +42,9 @@ public class ConceptListDeleteController {
         List<ConceptEntry> conceptEntries = null;
         conceptEntries = conceptManager.getConceptEntriesByConceptListName(list.getConceptListName());
 
-        if (!conceptEntries.isEmpty())
+        if (!conceptEntries.isEmpty()) {
             enableDelete = false;
+        }
 
         model.addAttribute("enabledelete", enableDelete);
 

@@ -2,6 +2,7 @@ package edu.asu.conceptpower.web;
 
 import java.security.Principal;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +52,7 @@ public class ConceptTypeAddController {
     @RequestMapping(value = "auth/concepttype/addtype")
     public String prepareTypeAddView(ModelMap model,
             @ModelAttribute("conceptTypeAddForm") ConceptTypeAddForm conceptTypeAddForm) {
-        ConceptType[] allTypes = conceptTypesManager.getAllTypes();
+        List<ConceptType> allTypes = conceptTypesManager.getAllTypes();
 
         Map<String, String> types = new LinkedHashMap<String, String>();
         for (ConceptType conceptType : allTypes) {

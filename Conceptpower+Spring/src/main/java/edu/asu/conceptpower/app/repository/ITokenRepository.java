@@ -13,10 +13,10 @@ import edu.asu.conceptpower.app.model.Token;
  * 
  */
 @Repository
+@Transactional
 public interface  ITokenRepository extends PagingAndSortingRepository<Token, String>{
     
     Token findByToken(String token); 
     
-    @Transactional
     Token deleteByToken(String token);
 }

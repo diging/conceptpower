@@ -1,12 +1,10 @@
 package edu.asu.conceptpower.app.lucene.impl;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
 import edu.asu.conceptpower.app.model.IndexingEvent;
@@ -23,9 +21,10 @@ public class LuceneDAO implements ILuceneDAO {
     
 
     private String dbPath;
+    
     @Autowired
     private IIndexRepository luceneClient;
-
+    
     @PostConstruct
     public void init() {}
     /**
@@ -39,7 +38,7 @@ public class LuceneDAO implements ILuceneDAO {
      * Retrieves the total number of words from the database
      */
     public IndexingEvent getTotalNumberOfWordsIndexed() {
-        List<IndexingEvent> result = luceneClient.findAll();
+        Iterable<IndexingEvent> result = luceneClient.findAll();
         return getTotalNumberFromResult(result);
 
     }
@@ -51,7 +50,7 @@ public class LuceneDAO implements ILuceneDAO {
      * @param result
      * @return
      */
-    private IndexingEvent getTotalNumberFromResult(List<IndexingEvent> result) {
+    private IndexingEvent getTotalNumberFromResult(Iterable<IndexingEvent> result) {
         int totalIndex = 0;
         Date latestTimeStamp = null;
         for (IndexingEvent bean : result) {

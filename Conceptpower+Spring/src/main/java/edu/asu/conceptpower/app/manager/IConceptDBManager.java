@@ -25,34 +25,30 @@ public interface IConceptDBManager {
 	public abstract ConceptList getConceptList(String name);
 	
 	public abstract ConceptList getConceptListById(String id);
-
-    public abstract List<ConceptEntry> getAllEntriesFromList(String conceptList, int pageNo, int pageSize,
+	
+	public abstract List<ConceptEntry> getAllEntriesFromList(String conceptList, int pageNo, int pageSize,
             String sortBy, int sortDirection);
 
 	public abstract void store(ConceptEntry element);
 
 	public abstract void update(ConceptEntry entry);
-
+	
 	public abstract void deleteConceptList(String id);
-
+	
 	public abstract void update(ConceptList list);
-
-    public List<ConceptEntry> getAllEntriesFromList(String listname);
-
-    public List<ConceptEntry> getAllEntriesByTypeId(String typeId);
-
-    public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId);
-    
-    public List<ConceptEntry> getAllConcepts();
-    
-    public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize);
-    
-    public Integer getNumberOfConceptsByStatus(ReviewStatus status); 
-    
-    public List<ConceptList> getAllConceptLists();
-    
-    public void storeConceptList(ConceptList element);
-    
-    public boolean checkIfConceptListExists(String id);
+	
+	public List<ConceptEntry> getAllEntriesFromList(String listname);
+	
+	public List<ConceptEntry> getAllEntriesByTypeId(String typeId);
+	
+	public List<ConceptEntry> getWrapperEntryByWordnetId(String wordnetId);
+	
+	public Iterable<ConceptEntry> getAllConcepts();
+	
+	public List<ConceptList> getAllConceptLists();
+	
+	public void storeConceptList(ConceptList element);
+	
+	public boolean checkIfConceptListExists(String id);
 
 }
