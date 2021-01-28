@@ -304,7 +304,8 @@ public class ConceptEntry implements Serializable{
         }else {
             /*This loop is to handle alternativeId parameter with one or more alternativeIds*/
             for(String altId : alternativeId.split(",")) {
-                this.alternativeIds = checkDuplicate(altId) ? this.alternativeIds : this.alternativeIds+","+altId;
+            	altId = altId.trim();
+                this.alternativeIds = (altId.length() > 0 && checkDuplicate(altId)) ? this.alternativeIds : this.alternativeIds+","+altId;
             }
         }
     }
