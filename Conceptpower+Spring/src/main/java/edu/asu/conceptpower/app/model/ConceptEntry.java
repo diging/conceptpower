@@ -295,11 +295,17 @@ public class ConceptEntry implements Serializable{
         return new HashSet<>();
     }
     
-    public void setAlternativeIds(String alternativeId) {
+    public void addAlternativeId(String alternativeId) {
+        
+        if(alternativeId == null) return;
+        
         if(this.alternativeIds == null || this.alternativeIds.isEmpty()) {
             this.alternativeIds = alternativeId;
         }else {
-            this.alternativeIds = checkDuplicate(alternativeId) ? this.alternativeIds : this.alternativeIds+","+alternativeId;
+            /*This loop is to handle alternativeId parameter with one or more alternativeIds*/
+            for(String altId : alternativeId.split(",")) {
+                this.alternativeIds = checkDuplicate(altId) ? this.alternativeIds : this.alternativeIds+","+altId;
+            }
         }
     }
     

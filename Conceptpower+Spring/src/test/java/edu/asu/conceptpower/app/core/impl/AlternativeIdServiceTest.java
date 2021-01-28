@@ -181,7 +181,7 @@ public class AlternativeIdServiceTest {
         entry.setId("CONc3405898-074b-4b97-9a43-b4f869e59e81");
         entry.setWordnetId("WID-05562015-N-05-shank's_pony");
         entry.setMergedIds("WID-05562015-N-05-shank's_pony,WID-05562015-N-03-shank's_pony");
-        entry.setAlternativeIds(null);
+        entry.addAlternativeId(null);
 
         Mockito.when(conceptTypesService.getConceptTypeByConceptId(queriedId))
                 .thenReturn(IdType.GENERIC_WORDNET_CONCEPT_ID);

@@ -212,7 +212,7 @@ public interface IConceptManager {
      * @param pageSize - number of records per page
      * @return - List<ConceptEntry> that matches the given status
      */
-    public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize);
+    public List<ConceptEntry> getConceptsByStatus(ReviewStatus status, Integer page, Integer pageSize);
     
     /**
      * This method returns the count of concepts with the given ReviewRequest status.

@@ -3,6 +3,8 @@ package edu.asu.conceptpower.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,9 @@ import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
 
 @Controller
 public class ViewOpenReviewRequestsController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ViewOpenReviewRequestsController.class);
+    
     @Autowired
     private IConceptManager conceptsManager;
 
@@ -62,9 +67,9 @@ public class ViewOpenReviewRequestsController {
         int totalPageCount = (int) Math.ceil(
             (double) conceptsManager.getNumberOfConceptsByStatus(ReviewStatus.OPENED) / (double) numRecordsPerPage);
 
-        List < ConceptEntry > openReviewConcepts = conceptsManager.getAllConceptsByStatusPaginated(ReviewStatus.OPENED,
+        List <ConceptEntry> openReviewConcepts = conceptsManager.getConceptsByStatus(ReviewStatus.OPENED,
             pageNo, numRecordsPerPage);
-        List < ConceptEntryWrapper > foundConcepts = new ArrayList < > ();
+        List <ConceptEntryWrapper> foundConcepts = new ArrayList <> ();
 
         try {
             if (!openReviewConcepts.isEmpty()) {
@@ -73,7 +78,7 @@ public class ViewOpenReviewRequestsController {
             }
         } catch (LuceneException e) {
             model.addAttribute(indexerStatus, e.getMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         model.addAttribute("openRequests", foundConcepts);

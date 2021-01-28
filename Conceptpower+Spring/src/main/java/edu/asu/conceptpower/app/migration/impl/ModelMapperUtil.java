@@ -80,7 +80,7 @@ public class ModelMapperUtil {
         mappedConceptEntry.setMergedIds(conceptEntry.getMergedIds());
         mappedConceptEntry.setDeleted(conceptEntry.isDeleted());
         mappedConceptEntry.setModifiedUser(conceptEntry.getModifiedUser());
-        mappedConceptEntry.setAlternativeIds(setToCommaString(conceptEntry.getAlternativeIds()));
+        mappedConceptEntry.addAlternativeId(setToCommaString(conceptEntry.getAlternativeIds()));
         
         if(conceptEntry.getChangeEvents() != null) {
             for(ChangeEvent changeEvent: conceptEntry.getChangeEvents()) {

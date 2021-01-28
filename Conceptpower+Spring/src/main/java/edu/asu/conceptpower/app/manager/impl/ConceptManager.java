@@ -481,7 +481,7 @@ public class ConceptManager implements IConceptManager {
         entry.addChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
-        entry.setAlternativeIds(id);
+        entry.addAlternativeId(id);
         client.store(entry);
         if (entry.getWordnetId() != null) {
             String[] wordnetIds = entry.getWordnetId().split(",");
@@ -644,8 +644,8 @@ public class ConceptManager implements IConceptManager {
     }
     
     @Override
-    public List<ConceptEntry> getAllConceptsByStatusPaginated(ReviewStatus status, Integer page, Integer pageSize) {
-    	return client.getAllConceptsByStatusPaginated(status, page, pageSize);
+    public List<ConceptEntry> getConceptsByStatus(ReviewStatus status, Integer page, Integer pageSize) {
+    	return client.getConceptsByStatus(status, page, pageSize);
     }
     
     @Override
