@@ -10,7 +10,7 @@ import javax.persistence.Table;
 /**
  * This model helps to keep track of information about the list of users for authentication/authorization
  * 
- * @author Keerthivasan Krishnamurthy
+ * @author Keerthivasan Krishnamurthy, Digital Innovation Group
  * 
  */
 

@@ -71,7 +71,7 @@ public class TypeDatabaseClient {
     public List<ConceptType> getAllTypes(int page, int pageSize, final String sortBy, int sortDirection){
         page = page < 0 ? 0 : page;
 
-        pageSize = pageSize == 0 ? defaultPageSize : pageSize;
+        pageSize = pageSize < 0 ? defaultPageSize : pageSize;
 
         return conceptTypeRepository.findAll(
                     sortDirection == 1 ?

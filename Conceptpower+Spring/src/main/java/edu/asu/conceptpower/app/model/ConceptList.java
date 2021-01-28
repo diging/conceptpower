@@ -11,7 +11,7 @@ import javax.persistence.Table;
 /**
  * This model helps to keep track of information about a specific concept list
  * 
- * @author Keerthivasan Krishnamurthy
+ * @author Julia Damerow
  * 
  */
 @Entity
