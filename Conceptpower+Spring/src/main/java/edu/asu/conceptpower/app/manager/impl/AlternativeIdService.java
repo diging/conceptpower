@@ -36,19 +36,19 @@ public class AlternativeIdService implements IAlternativeIdService {
         }
 
         if (conceptTypesService.getConceptTypeByConceptId(queriedId) == IdType.GENERIC_WORDNET_CONCEPT_ID) {
-            entry.setAlternativeIds(queriedId);
+            entry.addAlternativeId(queriedId);
         }
         // Specific Wordnet id is added irrespective of what is queried for
         if (entry.getWordnetId() != null) {
-            entry.setAlternativeIds(entry.getWordnetId());
+            entry.addAlternativeId(entry.getWordnetId());
         }
         
         // This has been added to make sure local concept id is added.
-        entry.setAlternativeIds(entry.getId());
+        entry.addAlternativeId(entry.getId());
 
         // Added the merged ids of the concepts to alternative id
         if (entry.getMergedIds() != null) {
-            entry.setAlternativeIds(entry.getMergedIds());
+            entry.addAlternativeId(entry.getMergedIds());
         }
     }
 

@@ -480,7 +480,7 @@ public class ConceptManager implements IConceptManager {
         entry.addChangeEvent(changeEvent);
         String id = generateId(CONCEPT_PREFIX);
         entry.setId(id);
-        entry.setAlternativeIds(id);
+        entry.addAlternativeId(id);
         client.store(entry);
         if (entry.getWordnetId() != null) {
             String[] wordnetIds = entry.getWordnetId().split(",");
