@@ -24,7 +24,7 @@ import edu.asu.conceptpower.app.reflect.SearchField;
 /**
  * This model helps to keep track of information about a specific concept
  * 
- * @author Keerthivasan Krishnamurthy
+ * @author Julia Damerow
  * 
  */
 

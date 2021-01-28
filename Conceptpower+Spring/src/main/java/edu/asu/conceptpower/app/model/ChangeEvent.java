@@ -14,7 +14,7 @@ import javax.persistence.Table;
 /**
  * This Model holds information about the change events for a specific concept
  * 
- * @author Keerthivasan Krishnamurthy
+ * @author Keerthivasan Krishnamurthy, Digital Innovation Group
  * 
  */
 

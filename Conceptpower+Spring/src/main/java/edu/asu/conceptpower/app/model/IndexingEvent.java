@@ -8,6 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/*
+ * This model helps in storing information about an indexing event.
+ * 
+ * @author Keerthivasan Krishnamurthy, Digital Innovation Group
+ * */
 @Entity
 @Table(name="indexing_event")
 public class IndexingEvent implements Serializable {

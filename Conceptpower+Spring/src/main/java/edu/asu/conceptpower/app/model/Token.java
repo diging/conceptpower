@@ -12,7 +12,7 @@ import javax.persistence.OneToOne;
 /**
  * This model stores information about the generated tokens for a user
  * 
- * @author Keerthivasan Krishnamurthy
+ * @author Keerthivasan Krishnamurthy, Digital Innovation Group
  * 
  */
 @Entity(name="token")

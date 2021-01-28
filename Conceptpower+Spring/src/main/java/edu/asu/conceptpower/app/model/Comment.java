@@ -13,7 +13,7 @@ import javax.persistence.Table;
 /**
  * This model helps in storing the information a specific comment
  * 
- * @author Keerthivasan Krishnamurthy
+ * @author Keerthivasan Krishnamurthy, Digital Innovation Group
  * 
  */
 @Entity
