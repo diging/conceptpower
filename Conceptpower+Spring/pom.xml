@@ -13,7 +13,7 @@
 		<org.springframework-version>5.2.0.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.9.2</org.aspectj-version>
 		<org.slf4j-version>1.7.26</org.slf4j-version>
-		<spring-security-version>5.2.0.RELEASE</spring-security-version>
+		<spring-security-version>5.2.10.RELEASE</spring-security-version>
 		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
 		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
 		<tomcat.server.id>TomcatServer</tomcat.server.id>
