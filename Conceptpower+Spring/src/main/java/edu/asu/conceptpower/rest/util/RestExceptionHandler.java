@@ -1,7 +1,5 @@
 package edu.asu.conceptpower.rest.util;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.rest.msg.IConceptMessage;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This class handles the exceptions from rest interface calls.
