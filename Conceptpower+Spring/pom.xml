@@ -9,11 +9,12 @@
 	<packaging>war</packaging>
 	<version>2.0-BUILD-SNAPSHOT</version>
 	<properties>
-		<java-version>11</java-version>
+		<java-version>17</java-version>
 		<org.springframework-version>6.0.9</org.springframework-version>
 		<org.aspectj-version>1.9.2</org.aspectj-version>
 		<org.slf4j-version>1.7.26</org.slf4j-version>
-		<spring-security-version>5.6.10</spring-security-version>
+		<spring-security-version>6.1.0</spring-security-version>
+		<jakarta-version>10.0.0</jakarta-version>
 		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
 		<tomcat.deploy.path>http://localhost:8080/manager/text</tomcat.deploy.path>
 		<tomcat.server.id>TomcatServer</tomcat.server.id>
@@ -136,10 +137,19 @@
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-bom</artifactId>
-				<version>6.1.0</version>
+				<version>${spring-security-version}</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/jakarta.platform/jakarta.jakartaee-bom -->
+			<dependency>
+				<groupId>jakarta.platform</groupId>
+				<artifactId>jakarta.jakartaee-bom</artifactId>
+				<version>${jakarta-version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -293,7 +303,6 @@
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
-			<version>6.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -301,14 +310,11 @@
 		<dependency>
 			<groupId>jakarta.servlet.jsp</groupId>
 			<artifactId>jakarta.servlet.jsp-api</artifactId>
-			<version>3.0.0</version>
-			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.servlet.jsp.jstl/jakarta.servlet.jsp.jstl-api -->
 		<dependency>
 			<groupId>jakarta.servlet.jsp.jstl</groupId>
 			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-			<version>1.2.7</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Test -->
@@ -645,8 +651,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
-					<source>11</source>
-					<target>11</target>
+					<source>17</source>
+					<target>17</target>
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
