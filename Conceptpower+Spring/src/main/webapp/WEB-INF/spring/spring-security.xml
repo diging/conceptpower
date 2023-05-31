@@ -28,6 +28,8 @@
 	</http>
 
 	<beans:bean id="csrfRequestMatcher" class="edu.asu.conceptpower.app.config.CsrfSecurityRequestMatcher" />
+	
+	<beans:bean id="mvcHandlerMappingIntrospector" class="org.springframework.web.servlet.handler.HandlerMappingIntrospector" />
 
 	<beans:bean id="encoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
