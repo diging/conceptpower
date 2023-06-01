@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import com.db4o.query.Query;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.util.URIHelper;
 import edu.asu.conceptpower.core.ConceptType;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class TypeDatabaseClient {

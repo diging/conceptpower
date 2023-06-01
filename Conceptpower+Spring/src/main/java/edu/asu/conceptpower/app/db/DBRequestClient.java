@@ -3,8 +3,6 @@ package edu.asu.conceptpower.app.db;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -13,6 +11,7 @@ import com.db4o.ObjectContainer;
 
 import edu.asu.conceptpower.app.db4o.IRequestsDBManager;
 import edu.asu.conceptpower.core.ReviewRequest;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class DBRequestClient implements IRequestsDBManager{
