@@ -16,12 +16,12 @@
 		  logout-success-url="/"
 		  logout-url="/signout" delete-cookies="JSESSIONID" />
 		  
-		<intercept-url pattern="/conceptpower/rest/concept/add" access="hasRole('ROLE_CP_ADMIN')" />
+		<intercept-url pattern="/conceptpower/rest/concept/add" access="isAuthenticated()" />
 
 		<intercept-url pattern="/auth/user/**" access="hasRole('ROLE_CP_ADMIN')" />
 		<intercept-url pattern="/auth/index/**" access="hasRole('ROLE_CP_ADMIN')" />
-		<intercept-url pattern="/auth/conceptlist/**" access="hasRole('ROLE_CP_ADMIN')" />
-		<intercept-url pattern="/auth/concepttype/**" access="hasRole('ROLE_CP_ADMIN')" />	
+		<intercept-url pattern="/auth/conceptlist/**" access="isAuthenticated()" />
+		<intercept-url pattern="/auth/concepttype/**" access="isAuthenticated()" />	
 		
 		<intercept-url pattern="/auth/**" access="isAuthenticated()" />
 		    
