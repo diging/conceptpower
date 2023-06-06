@@ -2,9 +2,6 @@ package edu.asu.conceptpower.web;
 
 import java.util.List;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -28,6 +25,7 @@ import edu.asu.conceptpower.app.validation.ConceptSearchValidator;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
 import edu.asu.conceptpower.app.model.ConceptEntry;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This class provides concept search methods
@@ -105,9 +103,9 @@ public class ConceptSearchController {
             // Need to include command Object
             return "home";
         }
-        int pageInt = new Integer(page);
-        int sortDirInt = new Integer(sortDir);
-        int numRecords = numberOfRecordsPerPage!=null&&numberOfRecordsPerPage!="" ? new Integer(numberOfRecordsPerPage) : defaultPageSize ;
+        int pageInt = Integer.valueOf(page);
+        int sortDirInt = Integer.valueOf(sortDir);
+        int numRecords = numberOfRecordsPerPage!=null&&numberOfRecordsPerPage!="" ? Integer.valueOf(numberOfRecordsPerPage) : defaultPageSize ;
         int pageCount = 0;
         try {
             found = conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),

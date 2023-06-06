@@ -2,7 +2,6 @@ package edu.asu.conceptpower.rest;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
@@ -27,6 +26,7 @@ import edu.asu.conceptpower.rest.msg.IMessageConverter;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.json.JsonTypeMessage;
 import edu.asu.conceptpower.rest.msg.xml.XMLTypeMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import junit.framework.Assert;
 
 public class TypeIdLookupTest {

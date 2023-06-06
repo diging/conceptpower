@@ -2,13 +2,12 @@ package edu.asu.conceptpower.app.lucene.impl;
 
 import java.util.Date;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
 import edu.asu.conceptpower.app.model.IndexingEvent;
 import edu.asu.conceptpower.app.repository.IIndexRepository;
+import jakarta.annotation.PostConstruct;
 
 /**
  * This class access db40 database to store the lucene details such as number of
@@ -18,13 +17,13 @@ import edu.asu.conceptpower.app.repository.IIndexRepository;
  *
  */
 public class LuceneDAO implements ILuceneDAO {
-    
+
 
     private String dbPath;
-    
+
     @Autowired
     private IIndexRepository luceneClient;
-    
+
     @PostConstruct
     public void init() {}
     /**
@@ -56,7 +55,7 @@ public class LuceneDAO implements ILuceneDAO {
         for (IndexingEvent bean : result) {
             totalIndex += bean.getIndexedWordsCount();
             latestTimeStamp = bean.getLastRunDate();
-            
+
         }
         return new IndexingEvent(latestTimeStamp, totalIndex);
     }

@@ -12,20 +12,21 @@ import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.model.Token;
 import edu.asu.conceptpower.app.repository.ITokenRepository;
 import edu.asu.conceptpower.app.repository.IUserRepository;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class UserDatabaseClient {
 
     @Autowired
     private IUserRepository userRepository;
-    
+
     @Autowired
     private ITokenRepository tokenRepository;
     
     @Autowired
     @Qualifier("userDatabaseManager")
     private DatabaseManager userDatabase;
-    
+
     public User getUser(String name, String pw) {
         return userRepository.findByUserAndPw(name, pw);
     }
@@ -45,7 +46,7 @@ public class UserDatabaseClient {
     
     public User[] getAllUser() {
         List<User> results = userRepository.findAll();
-         
+
         return results.toArray(new User[results.size()]);       
     }
     
@@ -59,7 +60,7 @@ public class UserDatabaseClient {
     }
     
     public void update(User user) {
-        userRepository.save(user);         
+        userRepository.save(user);
     }
     
     public void storeRecoveryToken(Token token) {

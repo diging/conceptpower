@@ -1,7 +1,5 @@
 package edu.asu.conceptpower.rest;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +17,7 @@ import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.ITypeMessage;
 import edu.asu.conceptpower.rest.msg.xml.XMLConstants;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This class provides a method to query types by their ids. It answers requests

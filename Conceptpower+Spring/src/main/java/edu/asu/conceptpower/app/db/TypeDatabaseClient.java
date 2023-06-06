@@ -14,24 +14,25 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.repository.IConceptTypeRepository;
 import edu.asu.conceptpower.app.util.URIHelper;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class TypeDatabaseClient {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Autowired
     private IConceptTypeRepository conceptTypeRepository;
-    
+
     @Value("${default_page_size}")
     private Integer defaultPageSize;
-    
+
     @Autowired
     private URIHelper uriHelper;
 
     public ConceptType getType(String uriOrId) {
         String id = uriHelper.getTypeId(uriOrId);
-        
+
         Optional<ConceptType> results = conceptTypeRepository.findById(id);
 
         if (results.isPresent()) {
@@ -75,12 +76,12 @@ public class TypeDatabaseClient {
 
         return conceptTypeRepository.findAll(
                     sortDirection == 1 ?
-                    PageRequest.of(page, pageSize, Sort.by(sortBy).ascending()) 
+                    PageRequest.of(page, pageSize, Sort.by(sortBy).ascending())
                     :
                     PageRequest.of(page, pageSize, Sort.by(sortBy).descending())).getContent();
 
     }
-    
+
     public int getNumberOfConceptTypes() {
         return (int)conceptTypeRepository.count();
     }

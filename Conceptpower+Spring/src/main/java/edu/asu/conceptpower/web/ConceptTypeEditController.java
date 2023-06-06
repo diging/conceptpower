@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,6 +22,8 @@ import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.validation.ConceptTypeAddValidator;
 import edu.asu.conceptpower.app.manager.IConceptTypeManager;
 import edu.asu.conceptpower.app.model.ConceptType;
+import jakarta.servlet.http.HttpServletRequest;
+
 
 /**
  * This class provides all the methods for editing a type

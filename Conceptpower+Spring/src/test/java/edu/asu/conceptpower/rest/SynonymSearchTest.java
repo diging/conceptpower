@@ -3,7 +3,6 @@ package edu.asu.conceptpower.rest;
 import java.io.IOException;
 import java.util.Collections;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
@@ -31,6 +30,7 @@ import edu.asu.conceptpower.rest.msg.IMessageConverter;
 import edu.asu.conceptpower.rest.msg.IMessageRegistry;
 import edu.asu.conceptpower.rest.msg.json.JsonConceptMessage;
 import edu.asu.conceptpower.rest.msg.xml.XMLConceptMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import junit.framework.Assert;
 
 public class SynonymSearchTest {

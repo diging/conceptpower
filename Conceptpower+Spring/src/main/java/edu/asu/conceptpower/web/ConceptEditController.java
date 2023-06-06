@@ -6,8 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +39,7 @@ import edu.asu.conceptpower.app.service.IConceptEditService;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
-
+import jakarta.servlet.http.HttpServletRequest;
 /**
  * This method provides all the required methods for editing a concept
  * 

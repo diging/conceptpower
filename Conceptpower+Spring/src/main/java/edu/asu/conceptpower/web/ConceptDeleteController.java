@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,12 +61,13 @@ public class ConceptDeleteController {
      *            A generic model holder for Servlet
      * @return String value to redirect user to concept delete page
      * @throws IndexerRunningException
+     * @throws JSONException 
      */
     @RequestMapping(value = "auth/conceptlist/deleteconcept/{conceptid}", method = RequestMethod.GET)
     public ResponseEntity<String> prepareDeleteConcept(@PathVariable("conceptid") String conceptid,
             @RequestParam(value = "fromHomeScreenDelete", required = false) String fromHomeScreenDelete,
             @RequestParam(value = "searchword", required = false) String searchword)
-                    throws LuceneException, IndexerRunningException {
+                    throws LuceneException, IndexerRunningException, JSONException {
         ConceptEntry concept = conceptManager.getConceptEntry(conceptid);
         Map<String, String> details = new HashMap<String, String>();
         

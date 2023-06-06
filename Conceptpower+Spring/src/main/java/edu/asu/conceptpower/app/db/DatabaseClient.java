@@ -25,20 +25,21 @@ import edu.asu.conceptpower.app.model.ConceptList;
 
 import edu.asu.conceptpower.app.repository.IConceptEntryRepository;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class DatabaseClient implements IConceptDBManager {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Autowired
     private IConceptEntryRepository conceptEntryRepository;
-    
+
     @Autowired
     private IConceptListRepository conceptListRepository;
-    
+
     @Value("${default_page_size}")
     private Integer defaultPageSize;
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -48,7 +49,7 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     public ConceptEntry getEntry(String id) {
         Optional<ConceptEntry> concept = conceptEntryRepository.findById(id);
-        
+
         return concept.isPresent() ? concept.get() : null;
     }
 
@@ -68,9 +69,9 @@ public class DatabaseClient implements IConceptDBManager {
     public ConceptEntry[] getEntriesByFieldContains(String field, String containsString) {
         if (containsString == null || field == null)
             return new ConceptEntry[0];
-        
+
         List<ConceptEntry> results = conceptEntryRepository.findAll(customFieldSearch(field, containsString));
-        
+
         return results.toArray(new ConceptEntry[results.size()]);
     }
 
@@ -104,7 +105,7 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     public ConceptEntry[] getSynonymsPointingToId(String id) {
         List<ConceptEntry> entries = conceptEntryRepository.getConceptsForGivenSynonymId(id);
-        
+
         return entries.toArray(new ConceptEntry[entries.size()]);
     }
 
@@ -118,7 +119,7 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     public ConceptEntry[] getEntriesForWord(String word) {
         List<ConceptEntry> entries = new ArrayList<>();
-        
+
         List<ConceptEntry> results = conceptEntryRepository.findByWord(word);
 
         if (!results.isEmpty()) {
@@ -140,7 +141,7 @@ public class DatabaseClient implements IConceptDBManager {
         return conceptListRepository.findByConceptListName(name);
     }
 
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -151,10 +152,10 @@ public class DatabaseClient implements IConceptDBManager {
     @Override
     public ConceptList getConceptListById(String id) {
         Optional<ConceptList> c = conceptListRepository.findById(id);
-        
+
         return c.isPresent() ? c.get() : null;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -171,7 +172,7 @@ public class DatabaseClient implements IConceptDBManager {
 
         return conceptEntryRepository.findAll(
                     sortDirection == 1 ?
-                    PageRequest.of(page, pageSize, Sort.by(sortBy).ascending()) 
+                    PageRequest.of(page, pageSize, Sort.by(sortBy).ascending())
                     :
                     PageRequest.of(page, pageSize, Sort.by(sortBy).descending())).getContent();
     }
@@ -239,10 +240,10 @@ public class DatabaseClient implements IConceptDBManager {
     public void update(ConceptList list) {
         conceptListRepository.save(list);
     }
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * edu.asu.conceptpower.app.manager.IConceptDBManager#getAllConcepts()
      */
@@ -250,10 +251,10 @@ public class DatabaseClient implements IConceptDBManager {
     public Iterable<ConceptEntry> getAllConcepts() {
         return conceptEntryRepository.findAll();
     }
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * edu.asu.conceptpower.app.manager.IConceptDBManager#getAllConceptLists()
      */
@@ -261,10 +262,10 @@ public class DatabaseClient implements IConceptDBManager {
     public List<ConceptList> getAllConceptLists() {
         return conceptListRepository.findAll();
     }
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * edu.asu.conceptpower.app.manager.IConceptDBManager#storeConceptList(edu.asu.conceptpower.
      * app.model.ConceptList)
@@ -273,10 +274,10 @@ public class DatabaseClient implements IConceptDBManager {
     public void storeConceptList(ConceptList element) {
         conceptListRepository.save(element);
     }
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * edu.asu.conceptpower.app.manager.IConceptDBManager#checkIfConceptListExists(java.lang.
      * String)
@@ -285,7 +286,7 @@ public class DatabaseClient implements IConceptDBManager {
     public boolean checkIfConceptListExists(String id) {
         return conceptListRepository.existsById(id);
     }
-    
+
     private Specification<ConceptEntry> customFieldSearch(String fieldName, String fieldQuery) {
         return new Specification<ConceptEntry>() {
           private static final long serialVersionUID = 1L;
@@ -294,7 +295,7 @@ public class DatabaseClient implements IConceptDBManager {
           public Predicate toPredicate(Root<ConceptEntry> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
               return criteriaBuilder.like(criteriaBuilder.lower(root.<String>get(fieldName)), getLikePattern(fieldQuery));
           }
-          
+
           private String getLikePattern(final String searchTerm) {
               StringBuilder pattern = new StringBuilder();
               pattern.append("%");
@@ -302,7 +303,7 @@ public class DatabaseClient implements IConceptDBManager {
               pattern.append("%");
               return pattern.toString();
           }
-          
+
         };
       }
 }
