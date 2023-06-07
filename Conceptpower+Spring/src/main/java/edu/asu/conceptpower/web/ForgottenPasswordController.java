@@ -1,7 +1,5 @@
 package edu.asu.conceptpower.web;
 
-import javax.validation.Valid;
-
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +17,7 @@ import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.web.backing.EmailBackBean;
 import edu.asu.conceptpower.web.backing.UserBacking;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 /**
  * 

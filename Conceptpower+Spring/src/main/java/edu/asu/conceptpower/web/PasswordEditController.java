@@ -2,8 +2,6 @@ package edu.asu.conceptpower.web;
 
 import java.security.Principal;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,6 +14,7 @@ import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.web.backing.UserBacking;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @Controller
 public class PasswordEditController {

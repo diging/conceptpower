@@ -1,8 +1,7 @@
 package edu.asu.conceptpower.web.profile.backing;
 
-import javax.validation.constraints.NotEmpty;
-
 import edu.asu.conceptpower.app.validation.ValuesMatch;
+import jakarta.validation.constraints.NotEmpty;
 
 @ValuesMatch(first = "password", second = "passwordRepeat")
 public class PasswordBean {

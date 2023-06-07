@@ -16,7 +16,7 @@ import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.manager.IIndexService;
 import edu.asu.conceptpower.app.model.IndexingEvent;
-import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This class provides methods for deleting and viewing lucene indexes

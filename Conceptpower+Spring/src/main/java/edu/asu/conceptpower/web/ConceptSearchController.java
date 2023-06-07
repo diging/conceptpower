@@ -21,10 +21,11 @@ import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.manager.IConceptManager;
 import edu.asu.conceptpower.app.manager.IIndexService;
+import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.validation.ConceptSearchValidator;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 import edu.asu.conceptpower.app.wrapper.IConceptWrapperCreator;
-import edu.asu.conceptpower.app.model.ConceptEntry;
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**

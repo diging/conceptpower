@@ -14,7 +14,7 @@
 		<org.aspectj-version>1.9.2</org.aspectj-version>
 		<org.slf4j-version>1.7.26</org.slf4j-version>
 		<spring-security-version>6.1.0</spring-security-version>
-		<spring-data.version>Neumann-SR3</spring-data.version>
+		<spring-data.version>Neumann-SR9</spring-data.version>
 		<jakarta-version>10.0.0</jakarta-version>
 		<jaxb-version>4.0.2</jaxb-version>
 		<thymeleaf.version>3.1.1.RELEASE</thymeleaf.version>
@@ -440,35 +440,35 @@
 			<version>2.10.1</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>6.0.15.Final</version>
+			<version>8.0.0.Final</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
+		<!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
 		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.4.14.Final</version>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>6.2.4.Final</version>
 		</dependency>
 		<!-- Spring Data JPA -->
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
-			<version>2.3.3.RELEASE</version>
 		</dependency>
 		<!-- DataSource (HikariCP) -->
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
-			<version>3.4.5</version>
+			<version>5.0.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.12</version>
+			<version>42.6.0</version>
 		</dependency>
 
 		<!-- DB4O -->

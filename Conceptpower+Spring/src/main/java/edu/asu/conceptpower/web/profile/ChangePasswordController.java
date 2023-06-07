@@ -2,8 +2,6 @@ package edu.asu.conceptpower.web.profile;
 
 import java.security.Principal;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.users.IUserManager;
 import edu.asu.conceptpower.web.profile.backing.PasswordBean;
+import jakarta.validation.Valid;
 
 @Controller
 public class ChangePasswordController {
