@@ -2,7 +2,7 @@ package edu.asu.conceptpower.app.config;
 
 import java.util.Properties;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;

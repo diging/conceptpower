@@ -2,12 +2,12 @@ package edu.asu.conceptpower.app.validation;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /*
  * Taken from 

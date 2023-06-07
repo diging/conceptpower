@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -36,6 +34,7 @@ import edu.asu.conceptpower.app.util.CCPSort.SortOrder;
 import edu.asu.conceptpower.app.wordnet.Constants;
 import edu.asu.conceptpower.app.wordnet.WordNetManager;
 import edu.asu.conceptpower.rest.SearchParamters;
+import jakarta.annotation.PostConstruct;
 
 /**
  * This class handles concepts in general. It uses a DB4O client that contains
