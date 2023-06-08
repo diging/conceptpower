@@ -27,8 +27,8 @@ public class PersistentContext {
     public DataSource dataSource(@Autowired Environment env) {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("db.driver"));
-        dataSource.setUrl(env.getProperty("db.url"));
-        dataSource.setUsername(env.getProperty("db.username"));
+        dataSource.setUrl(env.getProperty("db.database.url"));
+        dataSource.setUsername(env.getProperty("db.user"));
         dataSource.setPassword(env.getProperty("db.password"));
         return dataSource;
     }

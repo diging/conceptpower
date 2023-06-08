@@ -1,4 +1,4 @@
-package edu.asu.conceptpower.app.core.impl;
+package edu.asu.conceptpower.manager.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
