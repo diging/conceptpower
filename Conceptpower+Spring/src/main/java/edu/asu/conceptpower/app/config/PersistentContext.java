@@ -22,9 +22,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 })
 @EnableTransactionManagement
 public class PersistentContext {
+    
+    @Autowired
+    private Environment env;
 
     @Bean
-    public DataSource dataSource(@Autowired Environment env) {
+    public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("db.driver"));
         dataSource.setUrl(env.getProperty("db.database.url"));
@@ -78,8 +81,6 @@ public class PersistentContext {
     
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory);
-        return transactionManager;
+        return new JpaTransactionManager(entityManagerFactory);
     }
 }
