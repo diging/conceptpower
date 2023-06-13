@@ -12,16 +12,16 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import edu.asu.conceptpower.app.lucene.impl.LuceneDAO;
 
 @Configuration
 @ComponentScan(basePackages = "edu.asu.conceptpower.app")
 //@Import({Db4oConfig.class, XmlConfig.class, SpringSecurityConfig.class, WordnetConfig.class, RestServiceConfig.class})
-@PropertySource("classpath:config.properties")
-@EnableAsync
-@EnableWebSecurity
+@PropertySource("classpath*:config.properties")
+@EnableWebMvc
 public class AppConfig {
     
     @Autowired
@@ -32,6 +32,13 @@ public class AppConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         return executor;
+    }
+    
+    @Bean
+    public LuceneDAO luceneDAO() {
+        LuceneDAO luceneDao = new LuceneDAO();
+        luceneDao.setDbPath(env.getProperty("db.path") + "/lucene.db");
+        return luceneDao;
     }
     
     @Bean
@@ -63,7 +70,7 @@ public class AppConfig {
     @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("validatormessages,pos");
+        messageSource.setBasenames("validatormessages","pos");
         return messageSource;
     }
 }
