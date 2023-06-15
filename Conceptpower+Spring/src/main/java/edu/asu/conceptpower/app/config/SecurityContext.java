@@ -26,14 +26,14 @@ public class SecurityContext {
 
     @Autowired
     private UserDetailsService userDetailsService;
-    
+
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder,
-            UserDetailsService userDetailsService) throws Exception {
+                                                       UserDetailsService userDetailsService) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userDetailsService)
                 .passwordEncoder(bCryptPasswordEncoder).and().build();
     }
-    
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
@@ -67,20 +67,20 @@ public class SecurityContext {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            .antMatchers("/forbidden").permitAll()
-            .antMatchers("/auth/user/**").hasRole("CP_ADMIN")
-            .antMatchers("/auth/index/**").hasRole("CP_ADMIN")
-            .antMatchers("/auth/**").authenticated()
-            .antMatchers("/conceptpower/rest/concept/add").authenticated()
-            .anyRequest().permitAll()
-            .and()
-            .formLogin().loginPage("/").permitAll()
-            .and()
-            .logout().logoutUrl("/signout").deleteCookies("JSESSIONID").logoutSuccessUrl("/")
-            .and()
-            .csrf().requireCsrfProtectionMatcher(csrfRequestMatcher())
-            .and()
-            .exceptionHandling().accessDeniedPage("/forbidden");
+                .antMatchers("/forbidden").permitAll()
+                .antMatchers("/auth/user/**").hasRole("CP_ADMIN")
+                .antMatchers("/auth/index/**").hasRole("CP_ADMIN")
+                .antMatchers("/auth/**").authenticated()
+                .antMatchers("/conceptpower/rest/concept/add").authenticated()
+                .anyRequest().permitAll()
+                .and()
+                .formLogin().loginPage("/").permitAll()
+                .and()
+                .logout().logoutUrl("/signout").deleteCookies("JSESSIONID").logoutSuccessUrl("/")
+                .and()
+                .csrf().requireCsrfProtectionMatcher(csrfRequestMatcher())
+                .and()
+                .exceptionHandling().accessDeniedPage("/forbidden");
     }
 
     @Bean
