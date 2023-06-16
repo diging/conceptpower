@@ -2,18 +2,28 @@ package edu.asu.conceptpower.app.config;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 @Configuration
+@PropertySource("classpath*:config.properties")
+@ComponentScan("edu.asu.conceptpower.rest")
 public class RestConfig {
     
     @Bean
@@ -78,4 +88,29 @@ public class RestConfig {
         factoryBean.setLocation(new ClassPathResource("locale/errormessages.properties"));
         return factoryBean;
     }
+    
+    @Bean
+    public StringHttpMessageConverter stringHttpMessageConverter() {
+        return new StringHttpMessageConverter();
+    }
+    
+    @Bean
+    public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
+        return new MappingJackson2HttpMessageConverter();
+    }
+
+    @Bean
+    public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
+        RequestMappingHandlerAdapter adapter = new RequestMappingHandlerAdapter();
+        adapter.setMessageConverters((List<HttpMessageConverter<?>>) jacksonMessageConverter());
+        return adapter;
+    }
+    
+    @Bean
+    public ResourceBundleMessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("validatormessages");
+        return messageSource;
+    }
+    
 }
