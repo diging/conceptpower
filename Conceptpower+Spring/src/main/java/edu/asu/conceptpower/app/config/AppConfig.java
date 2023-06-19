@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
@@ -13,14 +14,13 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import edu.asu.conceptpower.app.lucene.impl.LuceneDAO;
 
 @Configuration
 @ComponentScan(basePackages = "edu.asu.conceptpower.app")
-//@Import({Db4oConfig.class, XmlConfig.class, SpringSecurityConfig.class, WordnetConfig.class, RestServiceConfig.class})
+@Import({Db4oConfig.class, SecurityContext.class, WordnetConfig.class, RestConfig.class})
 @PropertySource("classpath*:config.properties")
 @EnableWebMvc
 public class AppConfig {
