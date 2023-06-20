@@ -50,37 +50,12 @@ public class SecurityContext {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        auth.authenticationProvider(authenticationProvider());
-    }
-
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/forbidden").permitAll()
-                .antMatchers("/auth/user/**").hasRole("CP_ADMIN")
-                .antMatchers("/auth/index/**").hasRole("CP_ADMIN")
-                .antMatchers("/auth/**").authenticated()
-                .antMatchers("/conceptpower/rest/concept/add").authenticated()
-                .anyRequest().permitAll()
-                .and()
-                .formLogin().loginPage("/").permitAll()
-                .and()
-                .logout().logoutUrl("/signout").deleteCookies("JSESSIONID").logoutSuccessUrl("/")
-                .and()
-                .csrf().requireCsrfProtectionMatcher(csrfRequestMatcher())
-                .and()
-                .exceptionHandling().accessDeniedPage("/forbidden");
     }
 
     @Bean
@@ -94,7 +69,6 @@ public class SecurityContext {
     }
 
     @Bean
-    @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }

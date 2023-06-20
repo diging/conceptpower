@@ -2,7 +2,6 @@ package edu.asu.conceptpower.app.config;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
@@ -22,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 @Configuration
-@PropertySource("classpath*:config.properties")
+@PropertySource(value = "classpath*:config.properties")
 @ComponentScan("edu.asu.conceptpower.rest")
 public class RestConfig {
     
@@ -78,7 +77,7 @@ public class RestConfig {
     @Bean
     public MarshallingHttpMessageConverter marshallingConverter() {
         MarshallingHttpMessageConverter converter = new MarshallingHttpMessageConverter(jaxbMarshaller());
-        converter.setSupportedMediaTypes(Collections.singletonList("application/xml"));
+        converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_XML));
         return converter;
     }
     
@@ -102,7 +101,7 @@ public class RestConfig {
     @Bean
     public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
         RequestMappingHandlerAdapter adapter = new RequestMappingHandlerAdapter();
-        adapter.setMessageConverters((List<HttpMessageConverter<?>>) jacksonMessageConverter());
+        adapter.setMessageConverters(Collections.singletonList(jacksonMessageConverter()));
         return adapter;
     }
     
