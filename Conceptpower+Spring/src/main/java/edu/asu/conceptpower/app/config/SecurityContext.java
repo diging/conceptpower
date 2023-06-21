@@ -36,9 +36,9 @@ public class SecurityContext {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                .antMatchers("/admin/**").hasAnyRole("ADMIN").antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/login/**").anonymous().anyRequest().authenticated().and().httpBasic().and()
+        http.csrf().disable().authorizeHttpRequests().requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
+                .requestMatchers("/admin/**").hasAnyRole("ADMIN").requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/login/**").anonymous().anyRequest().authenticated().and().httpBasic().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
