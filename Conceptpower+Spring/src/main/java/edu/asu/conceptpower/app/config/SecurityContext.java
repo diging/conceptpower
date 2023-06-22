@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.security.web.csrf.CsrfRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
@@ -35,11 +34,12 @@ public class SecurityContext {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeHttpRequests().requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                .requestMatchers("/admin/**").hasAnyRole("ADMIN").requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/login/**").anonymous().anyRequest().authenticated().and().httpBasic().and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests().requestMatchers(HttpMethod.DELETE).hasRole("ROLE_CP_ADMIN")
+                .requestMatchers("/auth/user/**").hasRole("ROLE_CP_ADMIN").requestMatchers("/auth/index/**")
+                .hasRole("ROLE_CP_ADMIN").requestMatchers("/auth/**").anonymous().anyRequest().authenticated()
+                .requestMatchers("/conceptpower/rest/concept/add").anonymous().anyRequest().authenticated().and()
+                .httpBasic().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
     }
@@ -60,7 +60,7 @@ public class SecurityContext {
 
     @Bean
     public RequestMatcher csrfRequestMatcher() {
-        return new CsrfRequestMatcher();
+        return new CsrfSecurityRequestMatcher();
     }
 
     @Bean
