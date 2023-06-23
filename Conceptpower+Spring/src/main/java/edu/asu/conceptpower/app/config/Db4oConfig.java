@@ -1,45 +1,52 @@
 package edu.asu.conceptpower.app.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import edu.asu.conceptpower.app.db.DatabaseManager;
 
 @Configuration
 public class Db4oConfig {
     
+    @Autowired
+    private Environment env;
+    
+    private String dbPath = env.getProperty("db.path");
+    
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager userDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath("${db.path}/users.db");
+        databaseManager.setDatabasePath(dbPath + "users.db");
         return databaseManager;
     }
     
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager conceptDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath("${db.path}/conceptLists.db");
+        databaseManager.setDatabasePath(dbPath + "conceptLists.db");
         return databaseManager;
     }
     
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager typesDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath("${db.path}/conceptTypes.db");
+        databaseManager.setDatabasePath(dbPath + "conceptTypes.db");
         return databaseManager;
     }
     
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager luceneDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath("${db.path}/lucene.db");
+        databaseManager.setDatabasePath(dbPath + "lucene.db");
         return databaseManager;
     }
     
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager conceptReviewDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath("${db.path}/conceptReview.db");
+        databaseManager.setDatabasePath(dbPath + "conceptReview.db");
         return databaseManager;
     }
 

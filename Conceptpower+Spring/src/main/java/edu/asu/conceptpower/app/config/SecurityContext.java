@@ -1,10 +1,13 @@
 package edu.asu.conceptpower.app.config;
 
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,12 +15,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
@@ -27,34 +29,30 @@ public class SecurityContext {
     private UserDetailsService userDetailsService;
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder,
-                                                       UserDetailsService userDetailsService) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder)
+            throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userDetailsService)
                 .passwordEncoder(bCryptPasswordEncoder).and().build();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests().requestMatchers(HttpMethod.DELETE).hasRole("ROLE_CP_ADMIN")
-                .requestMatchers("/auth/user/**").hasRole("ROLE_CP_ADMIN").requestMatchers("/auth/index/**")
-                .hasRole("ROLE_CP_ADMIN").requestMatchers("/auth/**").anonymous().anyRequest().authenticated()
+        http.authorizeHttpRequests().requestMatchers(HttpMethod.GET).permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/user/**").hasRole("ROLE_CP_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/auth/index/**").hasRole("ROLE_CP_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/auth/**").anonymous().anyRequest().authenticated()
+                .requestMatchers(HttpMethod.DELETE).hasRole("ROLE_CP_ADMIN")
                 .requestMatchers("/conceptpower/rest/concept/add").anonymous().anyRequest().authenticated().and()
                 .httpBasic().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+        http.csrf().requireCsrfProtectionMatcher(csrfRequestMatcher()).disable();
         return http.build();
-    }
-
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(bCryptPasswordEncoder());
         return authProvider;
     }
 
@@ -69,17 +67,27 @@ public class SecurityContext {
     }
 
     @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
+        return new HandlerMappingIntrospector();
     }
 
     @Bean
-    public PasswordEncoder noopPasswordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return new ProviderManager(Collections.singletonList(authenticationProvider()));
     }
+
+//    @Bean
+//    public PasswordEncoder noopPasswordEncoder() {
+//        return NoOpPasswordEncoder.getInstance();
+//    }
 
     @Bean
     public HttpStatusReturningLogoutSuccessHandler logoutSuccessHandler() {
         return new HttpStatusReturningLogoutSuccessHandler();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
