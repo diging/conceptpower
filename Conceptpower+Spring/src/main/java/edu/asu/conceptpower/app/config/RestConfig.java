@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 @Configuration
-@PropertySource(value = "classpath*:config.properties")
+//@PropertySource(value = "classpath*:config.properties")
 @ComponentScan("edu.asu.conceptpower.rest")
 public class RestConfig {
     
