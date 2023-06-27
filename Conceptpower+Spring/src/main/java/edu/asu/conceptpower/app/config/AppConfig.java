@@ -20,8 +20,8 @@ import edu.asu.conceptpower.app.lucene.impl.LuceneDAO;
 
 @Configuration
 @ComponentScan(basePackages = "edu.asu.conceptpower.app")
-@Import({Db4oConfig.class, SecurityContext.class, WordnetConfig.class, RestConfig.class, XMLContext.class, ServletContext.class})
-@PropertySource("classpath:config.properties")
+@Import({Db4oConfig.class, SecurityContext.class, WordnetConfig.class, RestConfig.class, XMLContext.class})
+@PropertySource("classpath*:config.properties")
 //@EnableWebMvc
 public class AppConfig {
     
@@ -64,7 +64,7 @@ public class AppConfig {
     @Bean
     public SimpleMailMessage preConfiguredMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("${email.from}");
+        message.setFrom(env.getProperty("email.from"));
         return message;
     }
     
