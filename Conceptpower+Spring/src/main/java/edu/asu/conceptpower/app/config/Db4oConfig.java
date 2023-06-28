@@ -10,10 +10,14 @@ import edu.asu.conceptpower.app.db.DatabaseManager;
 @Configuration
 public class Db4oConfig {
     
-    @Autowired
     private Environment env;
+    private String dbPath;
     
-    private String dbPath = env.getProperty("db.path");
+    @Autowired
+    public Db4oConfig(Environment env) {
+        this.env = env;
+        dbPath = this.env.getProperty("db.path");
+    }
     
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager userDatabaseManager() {

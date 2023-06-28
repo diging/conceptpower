@@ -2,6 +2,9 @@ package edu.asu.conceptpower.app.config;
 
 import java.util.Properties;
 
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,8 +24,8 @@ import edu.asu.conceptpower.app.lucene.impl.LuceneDAO;
 @Configuration
 @ComponentScan(basePackages = "edu.asu.conceptpower.app")
 @Import({Db4oConfig.class, SecurityContext.class, WordnetConfig.class, RestConfig.class, XMLContext.class})
-@PropertySource("classpath*:config.properties")
-//@EnableWebMvc
+@PropertySource("classpath:config.properties")
+@EnableWebMvc
 public class AppConfig {
     
     @Autowired
@@ -40,6 +43,21 @@ public class AppConfig {
         LuceneDAO luceneDao = new LuceneDAO();
         luceneDao.setDbPath(env.getProperty("db.path") + "/lucene.db");
         return luceneDao;
+    }
+    
+    @Bean
+    public StandardAnalyzer analyzer() {
+        return new StandardAnalyzer();
+    }
+    
+    @Bean
+    public WhitespaceAnalyzer whiteSpaceAnalyzer() {
+        return new WhitespaceAnalyzer();
+    }
+    
+    @Bean
+    public KeywordAnalyzer keywordAnalyzer() {
+        return new KeywordAnalyzer();
     }
     
     @Bean
