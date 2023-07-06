@@ -38,10 +38,10 @@ public class SecurityContext {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests().requestMatchers(HttpMethod.GET).permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/user/**").hasRole("ROLE_CP_ADMIN")
-                .requestMatchers(HttpMethod.POST, "/auth/index/**").hasRole("ROLE_CP_ADMIN")
-                .requestMatchers(HttpMethod.POST, "/auth/**").anonymous().anyRequest().authenticated()
-                .requestMatchers(HttpMethod.DELETE).hasRole("ROLE_CP_ADMIN")
+                .requestMatchers(HttpMethod.DELETE).hasRole("CP_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/auth/user/**").hasRole("CP_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/auth/index/**").hasRole("CP_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/auth/**").authenticated()
                 .requestMatchers("/conceptpower/rest/concept/add").anonymous().anyRequest().authenticated().and()
                 .httpBasic().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.csrf().requireCsrfProtectionMatcher(csrfRequestMatcher()).disable();

@@ -76,7 +76,7 @@ public class ConceptAddController {
     @Autowired
     private URIHelper uriHelper;
 
-    @Value("#{messages['INDEXER_RUNNING']}")
+    @Value("${messages['INDEXER_RUNNING']}")
     private String indexerRunning;
 
     @Autowired

@@ -14,7 +14,7 @@ public class ConceptPowerExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ConceptPowerExceptionHandler.class);
     
-    @Value("#{messages['INDEXER_RUNNING']}")
+    @Value("${messages['INDEXER_RUNNING']}")
     private String indexerRunning;
 
     /**
