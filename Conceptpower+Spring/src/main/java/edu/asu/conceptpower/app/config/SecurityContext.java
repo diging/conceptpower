@@ -18,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
@@ -27,13 +29,20 @@ public class SecurityContext {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder)
-            throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userDetailsService)
-                .passwordEncoder(bCryptPasswordEncoder).and().build();
+    
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    
+    @Autowired
+    public SecurityContext(AuthenticationManagerBuilder authenticationManagerBuilder) {
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
+
+//    @Bean
+//    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder)
+//            throws Exception {
+//        return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userDetailsService)
+//                .passwordEncoder(bCryptPasswordEncoder).and().build();
+//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -44,9 +53,9 @@ public class SecurityContext {
                 .requestMatchers(HttpMethod.POST, "/auth/**").authenticated()
                 .requestMatchers("/conceptpower/rest/concept/add").anonymous().anyRequest().authenticated().and()
                 .httpBasic().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.csrf().requireCsrfProtectionMatcher(csrfRequestMatcher()).disable();
+        http.csrf().requireCsrfProtectionMatcher(csrfRequestMatcher()).csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         return http.build();
-    }
+    } 
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -75,11 +84,6 @@ public class SecurityContext {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return new ProviderManager(Collections.singletonList(authenticationProvider()));
     }
-
-//    @Bean
-//    public PasswordEncoder noopPasswordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
 
     @Bean
     public HttpStatusReturningLogoutSuccessHandler logoutSuccessHandler() {

@@ -46,7 +46,7 @@ public class ServletContext implements WebMvcConfigurer {
     @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("validatormessages");
+        messageSource.setBasenames("validatormessages","pos");
         return messageSource;
     }
 }
