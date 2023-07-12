@@ -554,7 +554,7 @@
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
-			<version>3.1.1.RELEASE</version>
+			<version>${thymeleaf.version}</version>
 		</dependency>
 		
 		<!-- Add this dependency to work with Java 11 -->

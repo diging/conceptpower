@@ -3,8 +3,8 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
    <head>
-      <meta name="_csrf_token" th:content="${_csrf.token}"/>
-      <meta name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
+      <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf_token" th:content="${_csrf.token}"/>
+      <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
 
       <script
          th:src="@{/resources/js/jquery-3.1.0.min.js}"></script>
