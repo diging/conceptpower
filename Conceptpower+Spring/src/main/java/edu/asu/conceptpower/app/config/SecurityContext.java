@@ -19,10 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.security.web.server.csrf.ServerCsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.server.csrf.ServerCsrfTokenRequestHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
@@ -42,16 +39,13 @@ public class SecurityContext {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        CsrfTokenRequestAttributeHandler csrfTokenRequestHandler = new CsrfTokenRequestAttributeHandler();
-        csrfTokenRequestHandler.setCsrfRequestAttributeName("_csrf");
         http.authorizeHttpRequests().requestMatchers(HttpMethod.GET).permitAll().requestMatchers(HttpMethod.DELETE)
                 .hasRole("CP_ADMIN").requestMatchers(HttpMethod.POST, "/auth/user/**").hasRole("CP_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/auth/index/**").hasRole("CP_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/auth/**").authenticated()
-                .requestMatchers("/conceptpower/rest/concept/add").anonymous().anyRequest().authenticated().and()
-                .httpBasic().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .requestMatchers("/conceptpower/rest/concept/add").anonymous().anyRequest().authenticated();
         http.csrf().requireCsrfProtectionMatcher(csrfRequestMatcher())
-                .csrfTokenRepository(new HttpSessionCsrfTokenRepository()).csrfTokenRequestHandler(csrfTokenRequestHandler);
+                .csrfTokenRepository(new HttpSessionCsrfTokenRepository()).csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler());
         return http.build();
     }
 
