@@ -3,7 +3,7 @@
    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
    <head>
-      <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf" th:content="${_csrf.token}"/>
+      <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf_token" th:content="${_csrf.token}"/>
       <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf_header" th:content="${_csrf.headerName}"/>
       <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf_parameterName" th:content="${_csrf.parameterName}"/>
 
