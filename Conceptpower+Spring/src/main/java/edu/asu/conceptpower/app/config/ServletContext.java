@@ -3,6 +3,7 @@ package edu.asu.conceptpower.app.config;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -47,6 +48,7 @@ public class ServletContext implements WebMvcConfigurer {
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames("validatormessages","pos");
+        messageSource.setDefaultLocale(Locale.ENGLISH);
         return messageSource;
     }
 }

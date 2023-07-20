@@ -32,19 +32,12 @@ public class SecurityContext {
     private UserDetailsService userDetailsService;
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder)
-            throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userDetailsService)
-                .passwordEncoder(bCryptPasswordEncoder).and().build();
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests().requestMatchers(HttpMethod.GET).permitAll().requestMatchers(HttpMethod.DELETE)
-                .hasRole("CP_ADMIN").requestMatchers(HttpMethod.POST, "/auth/user/**").hasRole("CP_ADMIN")
-                .requestMatchers(HttpMethod.POST, "/auth/index/**").hasRole("CP_ADMIN")
-                .requestMatchers(HttpMethod.POST, "/auth/**").authenticated()
-                .requestMatchers("/conceptpower/rest/concept/add").anonymous().anyRequest().authenticated();
+        http.authorizeHttpRequests().requestMatchers("/auth/user/**", "/auth/index/**").hasRole("CP_ADMIN")
+                .requestMatchers("/auth/**").authenticated().requestMatchers("/conceptpower/rest/concept/add")
+                .authenticated().requestMatchers("/**").permitAll().and().formLogin().loginPage("/conceptpower/login")
+                .permitAll().and().logout().logoutSuccessUrl("/login?logout").logoutUrl("/signout").permitAll()
+                .deleteCookies("JSESSIONID").and().exceptionHandling().accessDeniedPage("/forbidden");
         http.csrf().requireCsrfProtectionMatcher(csrfRequestMatcher())
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler());
