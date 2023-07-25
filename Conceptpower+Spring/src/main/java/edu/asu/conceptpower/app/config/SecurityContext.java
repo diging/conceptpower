@@ -18,12 +18,10 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
-@EnableWebMvc
 public class SecurityContext {
 
     @Autowired
@@ -33,8 +31,8 @@ public class SecurityContext {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests().requestMatchers("/auth/user/**", "/auth/index/**").hasRole("CP_ADMIN")
                 .requestMatchers("/auth/**").authenticated().requestMatchers("/conceptpower/rest/concept/add")
-                .authenticated().requestMatchers("/**").permitAll().requestMatchers("/login");
-        http.formLogin().loginPage("/login").permitAll().and().logout().logoutSuccessUrl("/").logoutUrl("/signout")
+                .authenticated().requestMatchers("/**").permitAll();
+        http.formLogin().loginPage("/").permitAll().and().logout().logoutSuccessUrl("/").logoutUrl("/signout")
                 .permitAll().deleteCookies("JSESSIONID").and().exceptionHandling().accessDeniedPage("/forbidden");
         http.csrf().requireCsrfProtectionMatcher(csrfRequestMatcher())
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
