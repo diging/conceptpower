@@ -48,10 +48,10 @@ public class ConceptListEditController {
     @Autowired
     private IIndexService indexService;
     
-    @Value("#{messages['INDEXER_RUNNING']}")
+    @Value("${messages['INDEXER_RUNNING']}")
     private String indexerRunning;
     
-    @Value("#{messages['INDEXERSTATUS']}")
+    @Value("${messages['INDEXERSTATUS']}")
     private String indexerStatus;
 
     @InitBinder

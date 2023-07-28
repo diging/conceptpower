@@ -70,10 +70,10 @@ public class ConceptEditController {
     @Autowired
     private IConceptEditService conceptEditService;
 
-    @Value("#{messages['INDEXER_RUNNING']}")
+    @Value("${messages['INDEXER_RUNNING']}")
     private String indexerRunning;
 
-    @Value("#{messages['INDEXERSTATUS']}")
+    @Value("${messages['INDEXERSTATUS']}")
     private String indexerStatus;
 
     private static final int numberOfRecords = 20;

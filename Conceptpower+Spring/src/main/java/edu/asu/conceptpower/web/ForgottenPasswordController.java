@@ -33,14 +33,14 @@ public class ForgottenPasswordController {
     @Autowired
     private IEmailService emailService;
 
-    @Value("#{messages['email.forgot.subject']}")
+    @Value("${messages['email.forgot.subject']}")
     private String subject;
 
-    @Value("#{messages['email.forgot.body']}")
+    @Value("${messages['email.forgot.body']}")
     private String body;
 
-    @Value("#{config['password.recovery.expiration.hours']}")
-    private int expirationHours;
+    @Value("${config['password.recovery.expiration.hours']}")
+    private String expirationHours;
 
     @RequestMapping(value = "/forgot", method = RequestMethod.GET)
     public String preparePage(Model model) {
@@ -103,7 +103,7 @@ public class ForgottenPasswordController {
 
         DateTime creationDate = new DateTime(token.getCreationDate());
         DateTime currentDate = new DateTime();
-        if (!currentDate.isAfter(creationDate) || !creationDate.plusHours(expirationHours).isAfter(currentDate)) {
+        if (!currentDate.isAfter(creationDate) || !creationDate.plusHours(Integer.parseInt(expirationHours)).isAfter(currentDate)) {
             userManager.deleteToken(token.getToken());
             model.addAttribute("errormsg", "Sorry, but your reset link has expired.");
             return "/layouts/user/reseterror";
