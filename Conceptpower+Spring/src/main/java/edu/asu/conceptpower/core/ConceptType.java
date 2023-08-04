@@ -2,8 +2,6 @@ package edu.asu.conceptpower.core;
 
 import java.io.Serializable;
 
-import javax.persistence.Id;
-
 public class ConceptType implements Serializable {
 
 	/**

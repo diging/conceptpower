@@ -294,12 +294,12 @@ public class ConceptEntry implements Serializable{
             /*This loop is to handle alternativeId parameter with one or more alternativeIds*/
             for(String altId : alternativeId.split(",")) {
                 altId = altId.trim();
-                this.alternativeIds = (altId.length() > 0 && checkDuplicate(altId)) ? this.alternativeIds : this.alternativeIds+","+altId;
+                this.alternativeIds = (altId.length() > 0 && isDuplicate(altId)) ? this.alternativeIds : this.alternativeIds+","+altId;
             }
         }
     }
     
-    private boolean checkDuplicate(String alternativeId) {
+    private boolean isDuplicate(String alternativeId) {
         /*Split the string and check if the given alternativeId is duplicate or not*/
         Set<String> ids = new HashSet<>(Arrays.asList(this.alternativeIds.split(",")));
         
