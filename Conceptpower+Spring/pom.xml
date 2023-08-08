@@ -44,9 +44,7 @@
 		<!-- DB config -->
 		<db.driver>com.mysql.cj.jdbc.Driver</db.driver>
 		<db.database.url></db.database.url>
-		<db.user></db.user>
-		<db.password></db.password>
-		<hibernate.dialect>org.hibernate.dialect.MySQL57InnoDBDialect</hibernate.dialect>
+		<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
 		<hibernate.ejb.naming_strategy>org.hibernate.cfg.ImprovedNamingStrategy</hibernate.ejb.naming_strategy>
 		<hibernate.log.sql>false</hibernate.log.sql>
 		<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
@@ -75,9 +73,9 @@
 				<admin.pw>${admin.password}</admin.pw>
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
-				<db.database.url>jdbc:mysql://localhost:3306/testdb?useUnicode=true&amp;amp;useJDBCCompliantTimezoneShift=true&amp;amp;useLegacyDatetimeCode=false&amp;amp;serverTimezone=UTC</db.database.url>
-				<db.user></db.user>
-				<db.password></db.password>
+				<db.database.url>jdbc:mysql://localhost:3306/testdb?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</db.database.url>
+				<db.user>root</db.user>
+				<db.password>nqIfAdYh0n9g</db.password>
 			</properties>
 		</profile>
 		<profile>
