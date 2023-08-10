@@ -5,14 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.conceptpower.app.db.DatabaseManager;
-import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.model.Token;
+import edu.asu.conceptpower.app.model.User;
 import edu.asu.conceptpower.app.repository.ITokenRepository;
 import edu.asu.conceptpower.app.repository.IUserRepository;
-import jakarta.annotation.PostConstruct;
 
 @Component
 public class UserDatabaseClient {

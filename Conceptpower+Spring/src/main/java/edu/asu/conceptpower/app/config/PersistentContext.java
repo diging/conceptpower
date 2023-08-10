@@ -2,7 +2,6 @@ package edu.asu.conceptpower.app.config;
 
 import java.util.Properties;
 
-import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +16,12 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import jakarta.persistence.EntityManagerFactory;
+
 @Configuration
 @PropertySource("classpath:config.properties")
 @EnableJpaRepositories(basePackages = {
-        "edu.asu.conceptpower"
+        "edu.asu.conceptpower.app.repository"
 })
 @EnableTransactionManagement
 public class PersistentContext {

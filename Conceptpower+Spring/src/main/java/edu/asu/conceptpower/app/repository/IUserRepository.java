@@ -11,7 +11,7 @@ import edu.asu.conceptpower.app.model.User;
 /**
  * Token repository
  *  
- * @author Keerthivasan Krishnamurthy
+ * @author Keerthivasan Krishnamurthy, Digital Innovation Group
  * 
  */
 @Repository
