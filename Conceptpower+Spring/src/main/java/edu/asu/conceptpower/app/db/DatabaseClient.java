@@ -5,13 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -22,15 +15,15 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.app.manager.IConceptDBManager;
 import edu.asu.conceptpower.app.model.ConceptEntry;
 import edu.asu.conceptpower.app.model.ConceptList;
-
 import edu.asu.conceptpower.app.repository.IConceptEntryRepository;
 import edu.asu.conceptpower.app.repository.IConceptListRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 @Component
 public class DatabaseClient implements IConceptDBManager {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private IConceptEntryRepository conceptEntryRepository;
 

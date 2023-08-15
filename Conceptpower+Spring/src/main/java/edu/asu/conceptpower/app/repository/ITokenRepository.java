@@ -19,4 +19,6 @@ public interface  ITokenRepository extends PagingAndSortingRepository<Token, Str
     Token findByToken(String token); 
     
     Token deleteByToken(String token);
+    
+    void save(Token token);
 }

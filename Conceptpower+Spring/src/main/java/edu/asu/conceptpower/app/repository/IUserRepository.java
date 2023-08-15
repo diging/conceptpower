@@ -20,6 +20,8 @@ public interface IUserRepository extends PagingAndSortingRepository<User, String
 
     User findByUserAndPw(String name, String pw);
     
+    void save(User user);
+    
     User findByUser(String name);
     
     List<User> findAll();

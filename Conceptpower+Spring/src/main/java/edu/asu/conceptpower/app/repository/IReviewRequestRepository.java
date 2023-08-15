@@ -1,6 +1,7 @@
 package edu.asu.conceptpower.app.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,8 @@ public interface IReviewRequestRepository extends PagingAndSortingRepository<Rev
      * Find all the reivew requests for the given conceptId
      * */
     List<ReviewRequest> findAllByConceptId(String conceptId);
+
+    void save(ReviewRequest reviewRequest);
+
+    Optional<ReviewRequest> findById(String reviewId);
 }

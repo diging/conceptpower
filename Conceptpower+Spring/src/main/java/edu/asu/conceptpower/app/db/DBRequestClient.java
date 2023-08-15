@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.app.manager.IRequestsDBManager;
 import edu.asu.conceptpower.app.model.ReviewRequest;
 import edu.asu.conceptpower.app.repository.IReviewRequestRepository;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class DBRequestClient implements IRequestsDBManager{

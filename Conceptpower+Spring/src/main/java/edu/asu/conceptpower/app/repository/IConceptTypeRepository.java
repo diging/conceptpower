@@ -25,4 +25,12 @@ public interface IConceptTypeRepository extends PagingAndSortingRepository<Conce
     Optional<ConceptType> findByTypeName(String typeName);
     
     Page<ConceptType> findAll(Pageable pageable);
+
+    Optional<ConceptType> findById(String id);
+
+    void save(ConceptType user);
+
+    void deleteById(String id);
+
+    long count();
 }

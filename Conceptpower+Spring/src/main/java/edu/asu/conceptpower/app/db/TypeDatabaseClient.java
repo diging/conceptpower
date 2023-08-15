@@ -3,8 +3,6 @@ package edu.asu.conceptpower.app.db;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -14,12 +12,9 @@ import org.springframework.stereotype.Component;
 import edu.asu.conceptpower.app.model.ConceptType;
 import edu.asu.conceptpower.app.repository.IConceptTypeRepository;
 import edu.asu.conceptpower.app.util.URIHelper;
-import jakarta.annotation.PostConstruct;
 
 @Component
 public class TypeDatabaseClient {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IConceptTypeRepository conceptTypeRepository;

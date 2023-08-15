@@ -1,24 +1,28 @@
 package edu.asu.conceptpower.app.repository;
 
-import org.springframework.stereotype.Repository;
-
-import edu.asu.conceptpower.app.model.ConceptEntry;
-
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import edu.asu.conceptpower.app.model.ConceptEntry;
 
 /**
  * Concept Entry repository
  *  
- * @author Keerthivasan Krishnamurthy
+ * @author Keerthivasan Krishnamurthy, Digital Innovation Group
  * 
  */
 @Repository
 public interface IConceptEntryRepository extends PagingAndSortingRepository<ConceptEntry, String>, JpaSpecificationExecutor{
+    
+    Optional<ConceptEntry> findById(String id);
+    
+    void save(ConceptEntry element);
     
     List<ConceptEntry> findByWordnetId(String wordnetId);
     
@@ -35,6 +39,8 @@ public interface IConceptEntryRepository extends PagingAndSortingRepository<Conc
     
     @Query("SELECT c FROM ConceptEntry c WHERE c.synonymIds LIKE :id AND c.isDeleted = 0")
     List<ConceptEntry> getConceptsForGivenSynonymId(@Param("id") String id);
+
+    Iterable<ConceptEntry> findAll();
 }
    
     
