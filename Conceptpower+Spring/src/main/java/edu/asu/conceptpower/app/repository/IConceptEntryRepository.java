@@ -34,10 +34,10 @@ public interface IConceptEntryRepository extends PagingAndSortingRepository<Conc
     
     List<ConceptEntry> findAllByConceptList(String listName);
     
-    @Query("SELECT c from ConceptEntry c WHERE REPLACE(c.word, '_', ' ') LIKE LOWER(word) AND c.isDeleted = 0")
+    @Query("SELECT c from ConceptEntry c WHERE REPLACE(c.word, '_', ' ') LIKE LOWER(:word) AND c.isDeleted = false")
     List<ConceptEntry> findByWord(@Param("word") String word);
     
-    @Query("SELECT c FROM ConceptEntry c WHERE c.synonymIds LIKE :id AND c.isDeleted = 0")
+    @Query("SELECT c FROM ConceptEntry c WHERE c.synonymIds LIKE :id AND c.isDeleted = false")
     List<ConceptEntry> getConceptsForGivenSynonymId(@Param("id") String id);
 
     Iterable<ConceptEntry> findAll();
