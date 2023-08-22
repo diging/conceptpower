@@ -32,7 +32,7 @@ public class SecurityContext {
         http.authorizeHttpRequests().requestMatchers("/auth/user/**", "/auth/index/**").hasRole("CP_ADMIN")
                 .requestMatchers("/auth/**").authenticated().requestMatchers("/conceptpower/rest/concept/add")
                 .authenticated().requestMatchers("/**").permitAll();
-        http.formLogin().loginPage("/").permitAll().and().logout().logoutSuccessUrl("/").logoutUrl("/signout")
+        http.formLogin().loginPage("/").loginProcessingUrl("/login").permitAll().and().logout().logoutSuccessUrl("/").logoutUrl("/signout")
                 .permitAll().deleteCookies("JSESSIONID").and().exceptionHandling().accessDeniedPage("/forbidden");
         http.csrf().requireCsrfProtectionMatcher(csrfRequestMatcher())
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
