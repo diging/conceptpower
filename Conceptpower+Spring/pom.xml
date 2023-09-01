@@ -14,7 +14,6 @@
 		<org.aspectj-version>1.9.2</org.aspectj-version>
 		<org.slf4j-version>1.7.26</org.slf4j-version>
 		<spring-security-version>6.1.0</spring-security-version>
-		<spring-data.version>Neumann-SR9</spring-data.version>
 		<jakarta-version>10.0.0</jakarta-version>
 		<jaxb-version>4.0.2</jaxb-version>
 		<thymeleaf.version>3.1.1.RELEASE</thymeleaf.version>
@@ -62,18 +61,20 @@
 			<id>dev</id>
 			<!-- Dev Env. Properties -->
 			<properties>
-				<db.path>${db.files.path}</db.path>
+				<db.path>D:\Educational\Master's\DigiInG\code\conceptpower\Conceptpower+Spring\files</db.path>
 				<deploy.path>${deploy.path.dev}</deploy.path>
 				<tomcat.path>${tomcat.deploy.path}</tomcat.path>
+				<email.server.host>localhost</email.server.host>
+                <email.server.port>${email.server.port}</email.server.port>
 				<email.user>${email.username}</email.user>
 				<email.pw>${email.password}</email.pw>
 				<email.port>${email.server.port}</email.port>
 				<email.host>${email.server.host}</email.host>
 				<admin.user>${admin.username}</admin.user>
 				<admin.pw>${admin.password}</admin.pw>
-				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
+				<wordnet.install.path>C:\Program Files (x86)\WordNet\2.1</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
-				<db.database.url>jdbc:mysql://localhost:3306/testdb?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</db.database.url>
+				<db.database.url>jdbc:mysql://localhost:3306/conceptpower?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</db.database.url>
 				<db.user>root</db.user>
 				<db.password>nqIfAdYh0n9g</db.password>
 			</properties>
@@ -154,14 +155,6 @@
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-bom</artifactId>
 				<version>${spring-security-version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-releasetrain -->
-			<dependency>
-				<groupId>org.springframework.data</groupId>
-				<artifactId>spring-data-releasetrain</artifactId>
-				<version>${spring-data.version}</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -440,6 +433,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
+			<version>3.1.3</version>
 		</dependency>
 		<!-- DataSource (HikariCP) -->
 		<dependency>

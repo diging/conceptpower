@@ -22,7 +22,7 @@ public interface IConceptEntryRepository extends PagingAndSortingRepository<Conc
     
     Optional<ConceptEntry> findById(String id);
     
-    void save(ConceptEntry element);
+    ConceptEntry save(ConceptEntry element);
     
     List<ConceptEntry> findByWordnetId(String wordnetId);
     
