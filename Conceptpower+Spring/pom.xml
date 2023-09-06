@@ -46,7 +46,7 @@
 		<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
 		<hibernate.ejb.naming_strategy>org.hibernate.cfg.ImprovedNamingStrategy</hibernate.ejb.naming_strategy>
 		<hibernate.log.sql>false</hibernate.log.sql>
-		<hibernate.hbm2ddl.auto>none</hibernate.hbm2ddl.auto>
+		<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
 		<hibernate.format_sql>true</hibernate.format_sql>
 	</properties>
 	<repositories>
@@ -61,22 +61,20 @@
 			<id>dev</id>
 			<!-- Dev Env. Properties -->
 			<properties>
-				<db.path>D:\Educational\Master's\DigiInG\code\conceptpower\Conceptpower+Spring\files</db.path>
+				<db.path>${db.files.path}</db.path>
 				<deploy.path>${deploy.path.dev}</deploy.path>
 				<tomcat.path>${tomcat.deploy.path}</tomcat.path>
-				<email.server.host>localhost</email.server.host>
-                <email.server.port>${email.server.port}</email.server.port>
 				<email.user>${email.username}</email.user>
 				<email.pw>${email.password}</email.pw>
 				<email.port>${email.server.port}</email.port>
 				<email.host>${email.server.host}</email.host>
 				<admin.user>${admin.username}</admin.user>
 				<admin.pw>${admin.password}</admin.pw>
-				<wordnet.install.path>C:\Program Files (x86)\WordNet\2.1</wordnet.install.path>
+				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
 				<db.database.url>jdbc:mysql://localhost:3306/conceptpower?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</db.database.url>
-				<db.user>root</db.user>
-				<db.password>nqIfAdYh0n9g</db.password>
+				<db.user></db.user>
+				<db.password></db.password>
 			</properties>
 		</profile>
 		<profile>
