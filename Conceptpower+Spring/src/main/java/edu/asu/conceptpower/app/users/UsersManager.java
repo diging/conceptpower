@@ -76,6 +76,7 @@ public class UsersManager implements IUserManager {
     public User findUser(String name) {
         if (admins.containsKey(name)) {
             User admin = new User(name, admins.get(name));
+            admin.setIsAdmin(true);
             return admin;
         }
 

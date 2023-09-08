@@ -29,7 +29,7 @@
 		<email.server.host></email.server.host>
 		<email.from></email.from>
 		<admin.username>admin</admin.username>
-		<admin.password>admin</admin.password>
+		<admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
 		<wordnet.path>/usr/local/WordNet-3.0</wordnet.path>
 		<lucene.index></lucene.index>
 		<pullrequest></pullrequest>
