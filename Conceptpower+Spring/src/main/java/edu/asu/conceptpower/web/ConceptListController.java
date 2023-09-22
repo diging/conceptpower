@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -108,10 +109,11 @@ public class ConceptListController {
      *            ID of a concept
      * @return Map containing concept details
      * @throws LuceneException 
+     * @throws JSONException 
      */
     @RequestMapping(method = RequestMethod.GET, value = "conceptDetail", produces = "application/json")
     public @ResponseBody ResponseEntity<String> getConceptDetails(
-            @RequestParam("conceptid") String conceptid) throws LuceneException {
+            @RequestParam("conceptid") String conceptid) throws LuceneException, JSONException {
         ConceptEntry entry = conceptManager.getConceptEntry(conceptid);
         List<ConceptEntryWrapper> wrappers = wrapperCreator.createWrappers(new ConceptEntry[] { entry } );
         ConceptEntryWrapper wrapper = null;

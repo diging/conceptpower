@@ -4,14 +4,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import edu.asu.conceptpower.app.profile.IService;
 import edu.asu.conceptpower.app.profile.IServiceRegistry;
+import jakarta.annotation.PostConstruct;
 
 /***
  * this class registers all the services and creates one time objects for each

@@ -4,8 +4,6 @@ import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import edu.asu.conceptpower.app.core.IConceptTypeManger;
 import edu.asu.conceptpower.app.validation.ConceptTypeAddValidator;
 import edu.asu.conceptpower.core.ConceptType;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This class provides required methods for concept type creation

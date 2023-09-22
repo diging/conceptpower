@@ -2,8 +2,6 @@ package edu.asu.conceptpower.app.lucene.impl;
 
 import java.util.Date;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -13,6 +11,7 @@ import com.db4o.ObjectSet;
 import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
 import edu.asu.conceptpower.core.IndexingEvent;
+import jakarta.annotation.PostConstruct;
 
 /**
  * This class access db40 database to store the lucene details such as number of

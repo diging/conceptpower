@@ -2,8 +2,6 @@ package edu.asu.conceptpower.web;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -18,6 +16,7 @@ import edu.asu.conceptpower.app.core.IIndexService;
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.core.IndexingEvent;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This class provides methods for deleting and viewing lucene indexes

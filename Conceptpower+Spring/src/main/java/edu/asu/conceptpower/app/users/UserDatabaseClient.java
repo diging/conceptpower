@@ -2,8 +2,6 @@ package edu.asu.conceptpower.app.users;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -13,6 +11,7 @@ import com.db4o.ObjectSet;
 
 import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.users.User;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class UserDatabaseClient {

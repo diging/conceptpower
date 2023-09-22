@@ -15,19 +15,23 @@
 		<logout
 		  logout-success-url="/"
 		  logout-url="/signout" delete-cookies="JSESSIONID" />
-		
-		<intercept-url pattern="/welcome*" access="permitAll" />
-
-		<intercept-url pattern="/resources/**" access="permitAll" />
-
+		  
 		<intercept-url pattern="/auth/user/**" access="hasRole('ROLE_CP_ADMIN')" />
 		<intercept-url pattern="/auth/index/**" access="hasRole('ROLE_CP_ADMIN')" />
 		
 		<intercept-url pattern="/auth/**" access="isAuthenticated()" />
+		
+		<intercept-url pattern="/conceptpower/rest/concept/add" access="isAuthenticated()" />
+		    
+		<intercept-url pattern="/**" access="permitAll" />
 
 	</http>
+	
+	<beans:bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" /> 
 
 	<beans:bean id="csrfRequestMatcher" class="edu.asu.conceptpower.app.config.CsrfSecurityRequestMatcher" />
+	
+	<beans:bean id="mvcHandlerMappingIntrospector" class="org.springframework.web.servlet.handler.HandlerMappingIntrospector" />
 
 	<beans:bean id="encoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />

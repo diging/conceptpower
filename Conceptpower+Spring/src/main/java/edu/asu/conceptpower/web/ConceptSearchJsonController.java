@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,11 +46,12 @@ public class ConceptSearchJsonController {
 	 *         service search results for specific servicterm and serviceid
 	 *        
 	 * @author Chetan Ambi
+	 * @throws JSONException 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "serviceSearch")
 	public @ResponseBody ResponseEntity<String> serviceSearchForConcept(
 			@RequestParam("serviceterm") String serviceterm,
-			@RequestParam("serviceid") String serviceid) {
+			@RequestParam("serviceid") String serviceid) throws JSONException {
 
 		List<ISearchResult> searchResults = authorityFileSearch
 				.getSearchResultBackBeanList(serviceid, serviceterm);
