@@ -76,7 +76,6 @@
                   <li>
                      <hr style="margin-top: 10px; margin-bottom: 10px;"/>
                      <form th:action="@{/signout}" method="post" style="margin-left:18px;">
-                        <input type="hidden" th:name="_csrf" th:value="${_csrf.token}"/>
                         <button  type="submit" class="logoutBtn"><i
                            class="fa fa-sign-out"></i> Logout</button>
                      </form>
