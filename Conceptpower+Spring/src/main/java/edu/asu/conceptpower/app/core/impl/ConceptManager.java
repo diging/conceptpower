@@ -146,17 +146,17 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos, boolean isSearchOnDescription,
-            String conceptList, int page, int numberOfRecordsPerPage, String sortField, int sortOrder)
-                    throws LuceneException, IllegalAccessException, IndexerRunningException {
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos,
+            boolean isSearchOnDescription, String conceptList, int page, int numberOfRecordsPerPage, String sortField,
+            int sortOrder) throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)
             return null;
 
         Map<String, String> fieldMap = new HashMap<>();
-        
-        fieldMap.put(SearchFieldNames.WORD, word);   
-        if(isSearchOnDescription) {
-            fieldMap.put(SearchFieldNames.DESCRIPTION, word );
+
+        fieldMap.put(SearchFieldNames.WORD, word);
+        if (isSearchOnDescription) {
+            fieldMap.put(SearchFieldNames.DESCRIPTION, word);
         }
         fieldMap.put(SearchFieldNames.POS, pos);
         fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
@@ -524,8 +524,8 @@ public class ConceptManager implements IConceptManager {
     }
 
     /**
-     * This methods generates a new 12 character long id. Note that this method
-     * does not assure that the id isn't in use yet.
+     * This methods generates a new 12 character long id. Note that this method does
+     * not assure that the id isn't in use yet.
      * 
      * Adapted from
      * http://stackoverflow.com/questions/9543715/generating-human-readable
