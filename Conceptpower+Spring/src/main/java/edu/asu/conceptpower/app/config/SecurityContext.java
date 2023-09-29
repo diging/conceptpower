@@ -10,12 +10,12 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
@@ -27,18 +27,41 @@ public class SecurityContext {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    // @formatter:off                                           
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests().requestMatchers("/auth/user/**", "/auth/index/**").hasRole("CP_ADMIN")
-                .requestMatchers("/auth/**").authenticated().requestMatchers("/conceptpower/rest/concept/add")
-                .authenticated().requestMatchers("/**").permitAll();
-        http.formLogin().loginPage("/").loginProcessingUrl("/login").permitAll().and().logout().logoutSuccessUrl("/").logoutUrl("/signout")
-                .permitAll().deleteCookies("JSESSIONID").and().exceptionHandling().accessDeniedPage("/forbidden");
-        http.csrf().requireCsrfProtectionMatcher(csrfRequestMatcher())
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler());
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {        
+        http
+          .authorizeHttpRequests((authorizeRequests) -> 
+              authorizeRequests
+                  .requestMatchers("/").permitAll()
+              .requestMatchers("/auth/user/**", "/auth/index/**").hasRole("CP_ADMIN").requestMatchers("/auth/**")
+              .authenticated().requestMatchers("/rest/concept/add").authenticated()
+              .requestMatchers("/**").permitAll()
+          )
+          .formLogin((formLogin) -> 
+              formLogin
+                  .loginPage("/")
+              .loginProcessingUrl("/login")
+                  .permitAll()
+          )
+          .logout((logout) -> 
+              logout
+                  .logoutSuccessUrl("/").logoutUrl("/signout")
+                  .permitAll()
+          )
+          .sessionManagement((sessionManagement) -> 
+              sessionManagement.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+          )
+          .exceptionHandling((exceptionHanlder) -> 
+              exceptionHanlder.accessDeniedPage("/forbidden")
+          )
+          .csrf((csrf) ->
+              csrf.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+          );
+          
         return http.build();
     }
+    // @formatter:on
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {

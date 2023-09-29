@@ -43,6 +43,8 @@
 		<!-- DB config -->
 		<db.driver>com.mysql.cj.jdbc.Driver</db.driver>
 		<db.database.url></db.database.url>
+		<db.user></db.user>
+		<db.password></db.password>
 		<hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
 		<hibernate.ejb.naming_strategy>org.hibernate.cfg.ImprovedNamingStrategy</hibernate.ejb.naming_strategy>
 		<hibernate.log.sql>false</hibernate.log.sql>
@@ -675,7 +677,7 @@
 					<webResources>
 						<resource>
 							<filtering>true</filtering>
-							<directory>src/main/webapp</directory>
+							<directory>src/main/resources</directory>
 							<includes>
 								<include>**/*</include>
 								<!-- include any other file types you want to filter -->
