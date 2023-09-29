@@ -75,6 +75,8 @@
 				<wordnet.install.path>${wordnet.path}</wordnet.install.path>
 				<lucene.path>${lucene.index}</lucene.path>
 				<db.database.url>jdbc:mysql://localhost:3306/conceptpower?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</db.database.url>
+				<db.user>${db.user}</db.user>
+				<db.password>${db.password}</db.password>
 			</properties>
 		</profile>
 		<profile>

@@ -12,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
@@ -21,17 +22,31 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.app.lucene.impl.LuceneDAO;
 
 @Configuration
 @ComponentScan(basePackages = "edu.asu.conceptpower.app")
-@Import({ Db4oConfig.class, SecurityContext.class, WordnetConfig.class, RestConfig.class, XMLContext.class })
+@Import({ SecurityContext.class, WordnetConfig.class, RestConfig.class, XMLContext.class })
 @PropertySource("classpath:config.properties")
 @EnableWebMvc
 public class AppConfig {
 
     @Autowired
     private Environment env;
+    
+    private String dbPath;
+    
+    @Autowired
+    public AppConfig(Environment env) {
+        this.env = env;
+        dbPath = env.getProperty("db.path");
+    }
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     @Bean
     public TaskExecutor indexExecutor() {
@@ -104,5 +119,41 @@ public class AppConfig {
             System.out.println("An exception occured while loading messages" + e);
         }
         return messages;
+    }
+    
+    //DB4o config
+    @Bean(initMethod = "init", destroyMethod = "close")
+    public DatabaseManager userDatabaseManager() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.setDatabasePath(dbPath + "users.db");
+        return databaseManager;
+    }
+    
+    @Bean(initMethod = "init", destroyMethod = "close")
+    public DatabaseManager conceptDatabaseManager() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.setDatabasePath(dbPath + "conceptLists.db");
+        return databaseManager;
+    }
+    
+    @Bean(initMethod = "init", destroyMethod = "close")
+    public DatabaseManager typesDatabaseManager() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.setDatabasePath(dbPath + "conceptTypes.db");
+        return databaseManager;
+    }
+    
+    @Bean(initMethod = "init", destroyMethod = "close")
+    public DatabaseManager luceneDatabaseManager() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.setDatabasePath(dbPath + "lucene.db");
+        return databaseManager;
+    }
+    
+    @Bean(initMethod = "init", destroyMethod = "close")
+    public DatabaseManager conceptReviewDatabaseManager() {
+        DatabaseManager databaseManager = new DatabaseManager();
+        databaseManager.setDatabasePath(dbPath + "conceptReview.db");
+        return databaseManager;
     }
 }
