@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import org.apache.lucene.document.SortedDocValuesField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexableField;
@@ -40,9 +42,11 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MultiTermQuery;
 import org.apache.lucene.search.PhraseQuery;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopDocsCollector;
 import org.apache.lucene.search.TopFieldCollector;
@@ -586,6 +590,30 @@ public class LuceneUtility implements ILuceneUtility {
 
         catch (IOException ex) {
             throw new LuceneException("Issues in querying lucene index. Please retry", ex);
+        }
+    }
+    
+    public void queryIndexWithPOSAndConceptList(List<String> pos, List<String> conceptList) throws IOException {
+        // Create a query for the specified POS and concept list
+        Query query = new TermQuery(new Term(LuceneFieldNames.POS, pos));
+        Query conceptListQuery = new TermQuery(new Term(LuceneFieldNames.CONCEPT_LIST, conceptList));
+
+        // Combine the queries with a BooleanQuery if necessary (e.g., use a
+        // BooleanClause for AND or OR)
+        // Example: BooleanQuery combinedQuery = new BooleanQuery.Builder()
+        // .add(new BooleanClause(query, BooleanClause.Occur.MUST))
+        // .add(new BooleanClause(conceptListQuery, BooleanClause.Occur.MUST))
+        // .build();
+
+        // Execute the query
+        TopDocs topDocs = searcher.search(query, 10);
+
+        // Print the results
+        System.out.println("Results for POS: " + pos + " and Concept List: " + conceptList);
+        for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+            Document doc = searcher.doc(scoreDoc.doc);
+            System.out.println("Concept ID: " + doc.get(LuceneFieldNames.ID));
+            // Print other relevant information from the document
         }
     }
 
