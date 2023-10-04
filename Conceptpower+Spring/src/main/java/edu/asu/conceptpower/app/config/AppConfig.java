@@ -1,6 +1,8 @@
 package edu.asu.conceptpower.app.config;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -34,9 +36,9 @@ public class AppConfig {
 
     @Autowired
     private Environment env;
-    
+
     private String dbPath;
-    
+
     @Autowired
     public AppConfig(Environment env) {
         this.env = env;
@@ -44,8 +46,10 @@ public class AppConfig {
     }
 
     @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
+    public static PropertySourcesPlaceholderConfigurer properties() {
+        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+        configurer.setLocations(new ClassPathResource("locale/messages_en_US.properties"));
+        return configurer;
     }
 
     @Bean
@@ -106,54 +110,62 @@ public class AppConfig {
     @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("validatormessages,pos");
+        messageSource.setBasenames("validatormessages", "pos");
         return messageSource;
     }
 
     @Bean
-    public Properties messages() {
+    public Properties messages() throws IOException {
         Properties messages = new Properties();
-        try {
-            messages.load(new ClassPathResource("locale/messages_en_US.properties").getInputStream());
+        try (InputStream inputStream = getClass().getClassLoader()
+                .getResourceAsStream("locale/messages_en_US.properties")) {
+            if (inputStream != null) {
+                messages.load(inputStream);
+            } else {
+                throw new FileNotFoundException("messages_en_US.properties not found in classpath");
+            }
         } catch (IOException e) {
-            System.out.println("An exception occured while loading messages" + e);
+            throw new IOException("An exception occurred while loading messages", e);
         }
+
         return messages;
     }
-    
-    //DB4o config
+
+    // DB4o config
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager userDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.setDatabasePath(dbPath + "users.db");
         return databaseManager;
     }
-    
+
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager conceptDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.setDatabasePath(dbPath + "conceptLists.db");
         return databaseManager;
     }
-    
+
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager typesDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.setDatabasePath(dbPath + "conceptTypes.db");
         return databaseManager;
     }
-    
+
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager luceneDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.setDatabasePath(dbPath + "lucene.db");
         return databaseManager;
     }
-    
+
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager conceptReviewDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.setDatabasePath(dbPath + "conceptReview.db");
         return databaseManager;
     }
+
+    //
 }

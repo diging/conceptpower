@@ -30,7 +30,7 @@ public class LuceneIndexController {
     @Autowired
     private IIndexService manager;
     
-    @Value("${messages['INDEXER_RUNNING']}")
+    @Value("${INDEXER_RUNNING}")
     private String indexerRunning;
 
     /**

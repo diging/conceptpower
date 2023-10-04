@@ -49,10 +49,10 @@ public class ConceptSearchController {
     @Autowired
     private IIndexService indexService;
     
-    @Value("${messages['INDEXER_RUNNING']}")
+    @Value("${INDEXER_RUNNING}")
     private String indexerRunning;
     
-    @Value("${messages['INDEXERSTATUS']}")
+    @Value("${INDEXERSTATUS}")
     private String indexerStatus;
 
     @Value("${default_page_size}")

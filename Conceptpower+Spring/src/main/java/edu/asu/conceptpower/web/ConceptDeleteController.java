@@ -48,7 +48,7 @@ public class ConceptDeleteController {
     @Autowired
     private IIndexService indexService;
 
-    @Value("${messages['INDEXER_RUNNING']}")
+    @Value("${INDEXER_RUNNING}")
     private String indexerRunning;
 
     /**

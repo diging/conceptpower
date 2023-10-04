@@ -59,7 +59,7 @@ public class ConceptWrapperAddController {
     @Autowired
     private IConceptWrapperService conceptWrapperService;
 
-    @Value("${messages['INDEXER_RUNNING']}")
+    @Value("${INDEXER_RUNNING}")
     private String indexerRunning;
 
     @Autowired
