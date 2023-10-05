@@ -39,7 +39,7 @@ public class ForgottenPasswordController {
     @Value("${email.forgot.body}")
     private String body;
 
-    @Value("${config['password.recovery.expiration.hours']}")
+    @Value("${password.recovery.expiration.hours}")
     private String expirationHours;
 
     @RequestMapping(value = "/forgot", method = RequestMethod.GET)
@@ -64,8 +64,11 @@ public class ForgottenPasswordController {
             Token token = userManager.createToken(user);
             StringBuffer requestURL = request.getRequestURL();
             String url = requestURL.substring(0, requestURL.length() - request.getServletPath().length());
-            emailService.sendMail(email, subject, body.replace("${name}", user.getFullname()).replace("${link}",
-                    url + "/beginReset/" + token.getToken()));
+//            body = body.replace("${name}", user.getFullname());
+            String emailBody = body.replace("${name}", user.getFullname())
+                    .replace("${link}", url + "/beginReset/" + token.getToken());
+//            body = body.replace("${link}", url + "/beginReset/" + token.getToken());
+            emailService.sendMail(email, subject, emailBody);
         }
 
         model.addAttribute("email", email);
