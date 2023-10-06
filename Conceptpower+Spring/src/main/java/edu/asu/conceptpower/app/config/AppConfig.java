@@ -43,15 +43,14 @@ import edu.asu.conceptpower.app.wordnet.WordNetConfiguration;
 
 @Configuration
 @ComponentScan(basePackages = "edu.asu.conceptpower.app")
-@Import({ RestConfig.class, XMLContext.class })
+@Import({ SecurityContext.class, RestConfig.class, XMLContext.class })
 @PropertySource("classpath:config.properties")
 @EnableWebMvc
-@EnableWebSecurity
 public class AppConfig {
 
     @Autowired
     private Environment env;
-    
+
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -168,83 +167,8 @@ public class AppConfig {
         return databaseManager;
     }
 
-    //SecurityContext
- // @formatter:off                                           
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {        
-        http
-          .authorizeHttpRequests((authorizeRequests) -> 
-              authorizeRequests
-                  .requestMatchers("/").permitAll()
-              .requestMatchers("/auth/user/**", "/auth/index/**").hasRole("CP_ADMIN").requestMatchers("/auth/**")
-              .authenticated().requestMatchers("/rest/concept/add").authenticated()
-              .requestMatchers("/**").permitAll()
-          )
-          .formLogin((formLogin) -> 
-              formLogin
-                  .loginPage("/")
-              .loginProcessingUrl("/login")
-                  .permitAll()
-          )
-          .logout((logout) -> 
-              logout
-                  .logoutSuccessUrl("/").logoutUrl("/signout")
-                  .permitAll()
-          )
-          .sessionManagement((sessionManagement) -> 
-              sessionManagement.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-          )
-          .exceptionHandling((exceptionHanlder) -> 
-              exceptionHanlder.accessDeniedPage("/forbidden")
-          )
-          .csrf((csrf) ->
-              csrf.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-          );
-          
-        return http.build();
-    }
-    // @formatter:on
+    // WordnetConfig
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(bCryptPasswordEncoder());
-        return authProvider;
-    }
-
-    @Bean
-    public RequestMatcher csrfRequestMatcher() {
-        return new CsrfSecurityRequestMatcher();
-    }
-
-    @Bean
-    public DefaultWebSecurityExpressionHandler webExpressionHandler() {
-        return new DefaultWebSecurityExpressionHandler();
-    }
-
-    @Bean
-    public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-        return new HandlerMappingIntrospector();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return new ProviderManager(Collections.singletonList(authenticationProvider()));
-    }
-
-    @Bean
-    public HttpStatusReturningLogoutSuccessHandler logoutSuccessHandler() {
-        return new HttpStatusReturningLogoutSuccessHandler();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    
-    //WordnetConfig
-    
     @Bean
     public WordNetConfiguration wordNetConfiguration() {
         WordNetConfiguration wordNetConfig = new WordNetConfiguration();
@@ -252,7 +176,5 @@ public class AppConfig {
         wordNetConfig.setDictFolder("dict");
         return wordNetConfig;
     }
-    
-    
-    
+
 }

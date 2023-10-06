@@ -64,10 +64,8 @@ public class ForgottenPasswordController {
             Token token = userManager.createToken(user);
             StringBuffer requestURL = request.getRequestURL();
             String url = requestURL.substring(0, requestURL.length() - request.getServletPath().length());
-//            body = body.replace("${name}", user.getFullname());
             String emailBody = body.replace("${name}", user.getFullname())
                     .replace("${link}", url + "/beginReset/" + token.getToken());
-//            body = body.replace("${link}", url + "/beginReset/" + token.getToken());
             emailService.sendMail(email, subject, emailBody);
         }
 
