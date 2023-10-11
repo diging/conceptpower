@@ -33,10 +33,10 @@ public class ForgottenPasswordController {
     @Autowired
     private IEmailService emailService;
 
-    @Value("${email.forgot.subject}")
+    @Value("${messages['email.forgot.subject']}")
     private String subject;
 
-    @Value("${email.forgot.body}")
+    @Value("${messages['email.forgot.body']}")
     private String body;
 
     @Value("${password.recovery.expiration.hours}")

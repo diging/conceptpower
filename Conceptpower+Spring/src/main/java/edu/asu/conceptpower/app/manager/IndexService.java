@@ -34,7 +34,7 @@ public class IndexService implements IIndexService {
     @Qualifier("luceneDAO")
     private ILuceneDAO dao;
 
-    @Value("${INDEXER_RUNNING}")
+    @Value("${messages['INDEXER_RUNNING']}")
     private String indexerRunning;
 
     @Autowired
