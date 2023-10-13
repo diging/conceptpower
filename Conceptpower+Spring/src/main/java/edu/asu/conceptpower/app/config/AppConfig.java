@@ -12,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
@@ -36,9 +35,6 @@ public class AppConfig {
 
     @Autowired
     private Environment env;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
     
     private String dbPath;
     
@@ -46,11 +42,6 @@ public class AppConfig {
     public AppConfig(Environment env) {
         this.env = env;
         dbPath = env.getProperty("db.path");
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
     }
 
     @Bean
@@ -130,7 +121,7 @@ public class AppConfig {
     @Bean(initMethod = "init", destroyMethod = "close")
     public DatabaseManager userDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath(dbPath + "users.db");
+        databaseManager.setDatabasePath("D:\\Educational\\Master's\\DigiInG\\code\\conceptpower\\Conceptpower+Spring\\files\\" + "users.db");
         return databaseManager;
     }
     
