@@ -118,10 +118,10 @@ public class AppConfig {
     }
     
     //DB4o config
-    @Bean(initMethod = "init", destroyMethod = "close")
+    @Bean(initMethod = "init", destroyMethod = "close", name="userDatabaseManager")
     public DatabaseManager userDatabaseManager() {
         DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath("D:\\Educational\\Master's\\DigiInG\\code\\conceptpower\\Conceptpower+Spring\\files\\" + "users.db");
+        databaseManager.setDatabasePath(dbPath + "users.db");
         return databaseManager;
     }
     

@@ -21,7 +21,7 @@
 	</logger>
 	
 	<logger name="org.springframework.beans">
-		<level value="${debug_level}" />
+		<level value="DEBUG" />
 	</logger>
 	
 	<logger name="org.springframework.context">
