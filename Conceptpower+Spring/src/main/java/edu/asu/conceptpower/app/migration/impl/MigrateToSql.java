@@ -43,6 +43,7 @@ public class MigrateToSql {
     @Qualifier("conceptReviewDatabaseManager")
     private DatabaseManager dbManager;
     
+    @Autowired
     @Qualifier("userDatabaseManager")
     private DatabaseManager userDatabase;
     

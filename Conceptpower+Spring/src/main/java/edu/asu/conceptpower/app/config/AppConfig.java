@@ -18,30 +18,26 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import edu.asu.conceptpower.app.db.DatabaseManager;
 import edu.asu.conceptpower.app.lucene.impl.LuceneDAO;
-import edu.asu.conceptpower.app.wordnet.WordNetConfiguration;
 
 @Configuration
 @ComponentScan(basePackages = "edu.asu.conceptpower.app")
-@Import({ SecurityContext.class, RestConfig.class, XMLContext.class })
+@Import({ Db4oConfig.class, SecurityContext.class, RestConfig.class, WordnetConfig.class, XMLContext.class })
 @PropertySource("classpath:config.properties")
 @EnableWebMvc
+@EnableAsync
 public class AppConfig {
 
     @Autowired
     private Environment env;
-    
-    private String dbPath;
-    
+
     @Autowired
     public AppConfig(Environment env) {
         this.env = env;
-        dbPath = env.getProperty("db.path");
     }
 
     @Bean
@@ -115,52 +111,6 @@ public class AppConfig {
             System.out.println("An exception occured while loading messages" + e);
         }
         return messages;
-    }
-    
-    //DB4o config
-    @Bean(initMethod = "init", destroyMethod = "close", name="userDatabaseManager")
-    public DatabaseManager userDatabaseManager() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath(dbPath + "users.db");
-        return databaseManager;
-    }
-    
-    @Bean(initMethod = "init", destroyMethod = "close")
-    public DatabaseManager conceptDatabaseManager() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath(dbPath + "conceptLists.db");
-        return databaseManager;
-    }
-    
-    @Bean(initMethod = "init", destroyMethod = "close")
-    public DatabaseManager typesDatabaseManager() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath(dbPath + "conceptTypes.db");
-        return databaseManager;
-    }
-    
-    @Bean(initMethod = "init", destroyMethod = "close")
-    public DatabaseManager luceneDatabaseManager() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath(dbPath + "lucene.db");
-        return databaseManager;
-    }
-    
-    @Bean(initMethod = "init", destroyMethod = "close")
-    public DatabaseManager conceptReviewDatabaseManager() {
-        DatabaseManager databaseManager = new DatabaseManager();
-        databaseManager.setDatabasePath(dbPath + "conceptReview.db");
-        return databaseManager;
-    }
-
-    // WordnetConfig
-
-    @Bean
-    public WordNetConfiguration wordNetConfiguration() {
-        WordNetConfiguration wordNetConfig = new WordNetConfiguration();
-        wordNetConfig.setWordnetPath(env.getProperty("wordnet.install.path"));
-        wordNetConfig.setDictFolder("dict");
-        return wordNetConfig;
     }
 
 }

@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.web;
 
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +14,18 @@ import edu.asu.conceptpower.app.migration.impl.MigrationResult;
 
 /**
  * Controller to initiate Migration process and render Migration page
+ * 
  * @author Keerthivasan Krishnamurthy
  * 
  */
 
 @Controller
-public class MigrationController{
-    
-    @Autowired 
+public class MigrationController {
+
+    @Autowired
     @Qualifier("migrationService")
     private MigrationManager migrationManager;
-    
+
     @RequestMapping(value = "/auth/migrate")
     public String landingPage(Model model) throws InterruptedException, ExecutionException {
         MigrationResult result = migrationManager.migrationStatus();
@@ -31,12 +33,13 @@ public class MigrationController{
         if(result == null){
             model.addAttribute("isRunning", true);
         }else {
+            model.addAttribute("migrationDone", result.getFinished().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
             model.addAttribute("isRunning", false);
         }
         
         return "/layouts/migration/migrate";
     }
-    
+
     @RequestMapping(value = "/auth/migrate/startmigration")
     public String startMigration() {
         migrationManager.runMigrations();

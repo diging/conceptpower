@@ -24,6 +24,7 @@
 		        Start Migration
 	        </button>
 	       <div class="migrationAlert" th:if="${isRunning == true}">Migration is running</div>
-       </div>
+		<div class="migrationAlert" th:if="${isRunning == false}">Migration is completed at <span th:text="${migrationDone}">Time</span></div>
+	</div>
    </body>
 </html>
