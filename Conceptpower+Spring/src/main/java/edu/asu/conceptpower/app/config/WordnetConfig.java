@@ -8,10 +8,14 @@ import org.springframework.core.env.Environment;
 
 import edu.asu.conceptpower.app.wordnet.WordNetConfiguration;
 
+/**
+ * @author Digital Innovation Group
+ *
+ */
 @Configuration
 @PropertySource("classpath:config.properties")
 public class WordnetConfig {
-    
+
     @Autowired
     private Environment env;
 

@@ -4,9 +4,9 @@ import org.hibernate.MappingException;
 import org.hibernate.dialect.identity.IdentityColumnSupportImpl;
 
 /**
- * Identity Column  support for SQliteDialect Configuration
+ * Identity Column support for SQliteDialect Configuration
  * 
- * @author Keerthivasan Krishnamurthy
+ * @author Digital Innovation Group
  * 
  */
 public class SQLiteIdentityColumnSupport extends IdentityColumnSupportImpl {

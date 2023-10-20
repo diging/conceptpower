@@ -12,6 +12,10 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 
+/**
+ * @author Digital Innovation Group
+ *
+ */
 @Configuration
 public class ThymeleafConfig {
 

@@ -7,6 +7,10 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * @author Digital Innovation Group
+ *
+ */
 public class CsrfSecurityRequestMatcher implements RequestMatcher {
     private Pattern allowedMethods = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
     private RegexRequestMatcher unprotectedMatcher = new RegexRequestMatcher("/rest/.*", null);

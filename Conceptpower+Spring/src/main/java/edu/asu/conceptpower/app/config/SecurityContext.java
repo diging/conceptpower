@@ -20,6 +20,10 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+/**
+ * @author Digital Innovation Group
+ *
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityContext {
@@ -27,38 +31,20 @@ public class SecurityContext {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    // @formatter:off                                           
+    // @formatter:off
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {        
-        http
-          .authorizeHttpRequests((authorizeRequests) -> 
-              authorizeRequests
-                  .requestMatchers("/").permitAll()
-              .requestMatchers("/auth/user/**", "/auth/index/**").hasRole("CP_ADMIN").requestMatchers("/auth/**")
-              .authenticated().requestMatchers("/rest/concept/add").authenticated()
-              .requestMatchers("/**").permitAll()
-          )
-          .formLogin((formLogin) -> 
-              formLogin
-                  .loginPage("/")
-              .loginProcessingUrl("/login")
-                  .permitAll()
-          )
-          .logout((logout) -> 
-              logout
-                  .logoutSuccessUrl("/").logoutUrl("/signout")
-                  .permitAll()
-          )
-          .sessionManagement((sessionManagement) -> 
-              sessionManagement.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-          )
-          .exceptionHandling((exceptionHanlder) -> 
-              exceptionHanlder.accessDeniedPage("/forbidden")
-          )
-          .csrf((csrf) ->
-              csrf.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-          );
-          
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests((authorizeRequests) -> authorizeRequests.requestMatchers("/").permitAll()
+                .requestMatchers("/auth/user/**", "/auth/index/**").hasRole("CP_ADMIN").requestMatchers("/auth/**")
+                .authenticated().requestMatchers("/rest/concept/add").authenticated().requestMatchers("/**")
+                .permitAll())
+                .formLogin((formLogin) -> formLogin.loginPage("/").loginProcessingUrl("/login").permitAll())
+                .logout((logout) -> logout.logoutSuccessUrl("/").logoutUrl("/signout").permitAll())
+                .sessionManagement(
+                        (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+                .exceptionHandling((exceptionHanlder) -> exceptionHanlder.accessDeniedPage("/forbidden"))
+                .csrf((csrf) -> csrf.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()));
+
         return http.build();
     }
     // @formatter:on

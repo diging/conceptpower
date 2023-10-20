@@ -3,6 +3,10 @@ package edu.asu.conceptpower.app.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author Digital Innovation Group
+ *
+ */
 @Configuration
 public class XMLContext {
 

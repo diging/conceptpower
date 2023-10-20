@@ -24,6 +24,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import edu.asu.conceptpower.app.lucene.impl.LuceneDAO;
 
+/**
+ * @author Digital Innovation Group
+ *
+ */
 @Configuration
 @ComponentScan(basePackages = "edu.asu.conceptpower.app")
 @Import({ Db4oConfig.class, SecurityContext.class, RestConfig.class, WordnetConfig.class, XMLContext.class })
@@ -32,7 +36,6 @@ import edu.asu.conceptpower.app.lucene.impl.LuceneDAO;
 @EnableAsync
 public class AppConfig {
 
-    @Autowired
     private Environment env;
 
     @Autowired

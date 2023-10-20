@@ -246,7 +246,6 @@ public class ConceptManager implements IConceptManager {
 
         for (String fieldName : fieldMap.keySet()) {
             String searchString = fieldMap.get(fieldName);
-           
             ConceptEntry[] entries = client.getEntriesByFieldContains(fieldName, searchString);
 
             for (ConceptEntry e : entries) {

@@ -17,37 +17,41 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
+/**
+ * @author Digital Innovation Group
+ *
+ */
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "edu.asu.conceptpower.web")
 public class ServletContext implements WebMvcConfigurer {
-    
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
-    
+
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
     }
-    
+
     @Bean
     public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
         return new MappingJackson2HttpMessageConverter();
     }
-    
+
     @Bean
     public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
         RequestMappingHandlerAdapter adapter = new RequestMappingHandlerAdapter();
         adapter.setMessageConverters(Collections.singletonList(jacksonMessageConverter()));
         return adapter;
     }
-    
+
     @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("validatormessages","pos");
+        messageSource.setBasenames("validatormessages", "pos");
         messageSource.setDefaultLocale(Locale.ENGLISH);
         return messageSource;
     }

@@ -5,26 +5,30 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 import jakarta.servlet.Filter;
 
+/**
+ * @author Digital Innovation Group
+ *
+ */
 public class WebApplicationContext extends AbstractAnnotationConfigDispatcherServletInitializer {
-    
+
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{AppConfig.class};
+        return new Class[] { AppConfig.class };
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{ServletContext.class, RestConfig.class};
+        return new Class[] { ServletContext.class, RestConfig.class };
     }
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/"};
+        return new String[] { "/" };
     }
 
     @Override
     protected Filter[] getServletFilters() {
-        return new Filter[]{new CharacterEncodingFilter("UTF-8", true)};
+        return new Filter[] { new CharacterEncodingFilter("UTF-8", true) };
     }
 
     @Override
