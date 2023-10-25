@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +30,6 @@ import org.apache.lucene.document.SortedDocValuesField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexableField;
@@ -42,11 +40,9 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MultiTermQuery;
 import org.apache.lucene.search.PhraseQuery;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopDocsCollector;
 import org.apache.lucene.search.TopFieldCollector;
@@ -593,30 +589,109 @@ public class LuceneUtility implements ILuceneUtility {
         }
     }
     
-    public void queryIndexWithPOSAndConceptList(List<String> pos, List<String> conceptList) throws IOException {
-        // Create a query for the specified POS and concept list
-        Query query = new TermQuery(new Term(LuceneFieldNames.POS, pos));
-        Query conceptListQuery = new TermQuery(new Term(LuceneFieldNames.CONCEPT_LIST, conceptList));
+    public ConceptEntry[] queryIndexWithPosAndConceptList(Map<String,String> fieldMap, List<String> posList, List<String> conceptList, String operator,
+            int page, int numberOfRecordsPerPage, CCPSort ccpSort) throws LuceneException, IllegalAccessException {
+        Map<String, Analyzer> analyzerPerField = new HashMap<>();
+        BooleanClause.Occur occur = BooleanClause.Occur.SHOULD;
 
-        // Combine the queries with a BooleanQuery if necessary (e.g., use a
-        // BooleanClause for AND or OR)
-        // Example: BooleanQuery combinedQuery = new BooleanQuery.Builder()
-        // .add(new BooleanClause(query, BooleanClause.Occur.MUST))
-        // .add(new BooleanClause(conceptListQuery, BooleanClause.Occur.MUST))
-        // .build();
+        if (operator == null || operator.equalsIgnoreCase(SearchParamters.OP_AND)) {
+            occur = BooleanClause.Occur.MUST;
+        }
 
-        // Execute the query
-        TopDocs topDocs = searcher.search(query, 10);
+        java.lang.reflect.Field[] fields = ConceptEntry.class.getDeclaredFields();
 
-        // Print the results
-        System.out.println("Results for POS: " + pos + " and Concept List: " + conceptList);
-        for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-            Document doc = searcher.doc(scoreDoc.doc);
-            System.out.println("Concept ID: " + doc.get(LuceneFieldNames.ID));
-            // Print other relevant information from the document
+        for (java.lang.reflect.Field field : fields) {
+            LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
+            if (luceneFieldAnnotation != null) {
+                if (!luceneFieldAnnotation.isShortPhraseSearchable() && !luceneFieldAnnotation.isTokenized()) {
+                    analyzerPerField.put(luceneFieldAnnotation.lucenefieldName(), whiteSpaceAnalyzer);
+                }
+                if (luceneFieldAnnotation.isShortPhraseSearchable()) {
+                    analyzerPerField.put(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
+                            keywordAnalyzer);
+                }
+            }
+        }
+
+        PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(customAnalyzer, analyzerPerField);
+        QueryBuilder qBuild = new QueryBuilder(perFieldAnalyzerWrapper);
+        BooleanQuery.Builder builder = new BooleanQuery.Builder();
+
+        for (java.lang.reflect.Field field : fields) {
+            SearchField search = field.getAnnotation(SearchField.class);
+            LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
+            if (search != null) {
+                String searchString = fieldMap.get(search.fieldName());
+                if (searchString != null) {
+                    searchString = searchString.toLowerCase();
+                    buildQuery(occur, perFieldAnalyzerWrapper, qBuild, builder, luceneFieldAnnotation, searchString);
+                }
+            }
+        }
+
+        if (!posList.isEmpty()) {
+            BooleanQuery.Builder posQueryBuilder = new BooleanQuery.Builder();
+            for (String pos : posList) {
+                posQueryBuilder
+                        .add(new BooleanClause(qBuild.createBooleanQuery(LuceneFieldNames.POS, pos.toLowerCase()),
+                                BooleanClause.Occur.SHOULD));
+            }
+            builder.add(posQueryBuilder.build(), BooleanClause.Occur.MUST);
+        }
+
+        if (!conceptList.isEmpty()) {
+            BooleanQuery.Builder conceptListQueryBuilder = new BooleanQuery.Builder();
+            for (String concept : conceptList) {
+                // You can adjust the lucene field name as needed for the concept list field
+                conceptListQueryBuilder.add(new BooleanClause(
+                        qBuild.createBooleanQuery(LuceneFieldNames.CONCEPT_LIST, concept.toLowerCase()),
+                        BooleanClause.Occur.SHOULD));
+            }
+            builder.add(conceptListQueryBuilder.build(), BooleanClause.Occur.MUST);
+        }
+
+        List<ConceptEntry> concepts = new ArrayList<ConceptEntry>();
+
+        try {
+            int startIndex = 0;
+            int hitsPerPage = 0;
+            if (page > 0) {
+                startIndex = calculateStartIndex(page, numberOfRecordsPerPage);
+                hitsPerPage = numberOfRecordsPerPage;
+            } else if (numberOfRecordsPerPage > 0) {
+                startIndex = 0;
+                hitsPerPage = numberOfRecordsPerPage;
+            } else {
+                startIndex = 0;
+                hitsPerPage = numberOfResults;
+            }
+
+            TopDocsCollector collector = null;
+            if (ccpSort != null) {
+                SortField sortField = new SortField(ccpSort.getSortField() + LuceneFieldNames.SORT_SUFFIX,
+                        SortField.Type.STRING, ccpSort.getSortOrder() == SortOrder.DESCENDING ? false : true);
+                Sort sort = new Sort(sortField);
+                collector = TopFieldCollector.create(sort, numberOfResults, true, false, false);
+            } else {
+                collector = TopFieldCollector.create(Sort.RELEVANCE, numberOfResults, true, false, false);
+            }
+
+            searcher.search(builder.build(), collector);
+            TopDocs topDocs = collector.topDocs(startIndex, hitsPerPage);
+            ScoreDoc[] hits = topDocs.scoreDocs;
+            for (int i = 0; i < hits.length; ++i) {
+                int docId = hits[i].doc;
+                Document d = searcher.doc(docId);
+                ConceptEntry entry = getConceptFromDocument(d);
+                concepts.add(entry);
+            }
+            return concepts.toArray(new ConceptEntry[concepts.size()]);
+        } catch (IOException ex) {
+            throw new LuceneException("Issues in querying lucene index. Please retry", ex);
         }
     }
 
+    
     private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, String searchString) {
         if (luceneFieldAnnotation.isTokenized()) {
             BooleanQuery.Builder tokenizedQueryBuilder = new BooleanQuery.Builder();
