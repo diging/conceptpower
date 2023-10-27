@@ -55,8 +55,11 @@
         <property name="from" value="admin@diging.com"></property>
     </bean>
 
-    <bean id="analyzer"
-        class="org.apache.lucene.analysis.standard.StandardAnalyzer"></bean>
+    <bean id="analyzer" class="org.apache.lucene.analysis.standard.StandardAnalyzer">
+        <constructor-arg>
+            <util:constant static-field="org.apache.lucene.analysis.util.CharArraySet.EMPTY_SET"/>
+        </constructor-arg>
+    </bean>
     <bean id="whiteSpaceAnalyzer"
         class="org.apache.lucene.analysis.core.WhitespaceAnalyzer" />
     <bean id="keywordAnalyzer"

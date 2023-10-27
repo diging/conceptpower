@@ -320,8 +320,8 @@ public class ConceptEditController {
             }
 
             try {
-                found = conceptManager.getConceptListEntriesForWordPOS(concept, pos, Constants.WORDNET_DICTIONARY, -1,
-                        numberOfRecords, null, 0);
+                found = conceptManager.getConceptListEntriesForWordPOSDescription(concept, pos, false,
+                        Constants.WORDNET_DICTIONARY, -1, numberOfRecords, null, 0);
             } catch (IndexerRunningException ie) {
                 return new ResponseEntity<Object>("Indexer is running. Please try again later.",
                         HttpStatus.SERVICE_UNAVAILABLE);

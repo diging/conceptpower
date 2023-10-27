@@ -43,6 +43,7 @@ import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopDocsCollector;
 import org.apache.lucene.search.TopFieldCollector;
@@ -61,6 +62,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import edu.asu.conceptpower.app.constants.LuceneFieldNames;
+import edu.asu.conceptpower.app.constants.SearchFieldNames;
 import edu.asu.conceptpower.app.db4o.IConceptDBManager;
 import edu.asu.conceptpower.app.exceptions.LuceneException;
 import edu.asu.conceptpower.app.lucene.ILuceneDAO;
@@ -95,7 +97,7 @@ import jakarta.annotation.PreDestroy;
 @Component
 @PropertySource("classpath:/config.properties")
 public class LuceneUtility implements ILuceneUtility {
-    
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -122,7 +124,6 @@ public class LuceneUtility implements ILuceneUtility {
 
     private String lucenePath;
 
-
     private int numberOfResults;
 
     private IndexWriter writer = null;
@@ -132,20 +133,20 @@ public class LuceneUtility implements ILuceneUtility {
     private Path relativePath = null;
     private IndexSearcher searcher = null;
     private Analyzer customAnalyzer = null;
-            
+
     /**
      * 
      * @throws LuceneException
      */
     @PostConstruct
     public void init() throws LuceneException, IOException {
-        customAnalyzer = CustomAnalyzer.builder().withTokenizer("keyword").addTokenFilter("asciifolding").addTokenFilter("worddelimiter").
-                addTokenFilter("lowercase").build();
+        customAnalyzer = CustomAnalyzer.builder().withTokenizer("keyword").addTokenFilter("asciifolding")
+                .addTokenFilter("worddelimiter").addTokenFilter("lowercase").build();
         lucenePath = env.getProperty("lucenePath");
         numberOfResults = Integer.parseInt(env.getProperty("numberOfLuceneResults"));
         try {
             relativePath = FileSystems.getDefault().getPath(lucenePath, "index");
-             
+
             index = FSDirectory.open(relativePath);
             configWhiteSpace = new IndexWriterConfig(customAnalyzer);
             writer = new IndexWriter(index, configWhiteSpace);
@@ -197,9 +198,10 @@ public class LuceneUtility implements ILuceneUtility {
                                         Field.Store.YES));
                             }
                         } else {
-                            doc.add(new TextField(searchFieldAnnotation.lucenefieldName(),
-                                    contentOfField.toLowerCase(), Field.Store.YES));
-                            doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED, 
+                            doc.add(new TextField(searchFieldAnnotation.lucenefieldName(), contentOfField.toLowerCase(),
+                                    Field.Store.YES));
+                            doc.add(new StringField(
+                                    searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED,
                                     contentOfField, Field.Store.YES));
                         }
                     } else {
@@ -211,17 +213,19 @@ public class LuceneUtility implements ILuceneUtility {
                                         Field.Store.YES));
                             }
                         } else {
-                            doc.add(new StringField(searchFieldAnnotation.lucenefieldName(),
-                                    contentOfField, Field.Store.YES));
+                            doc.add(new StringField(searchFieldAnnotation.lucenefieldName(), contentOfField,
+                                    Field.Store.YES));
                         }
 
                     }
 
                     if (searchFieldAnnotation.isShortPhraseSearchable()) {
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
+                        doc.add(new StringField(
+                                searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
                                 contentOfField.toLowerCase(), Field.Store.YES));
-                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX + LuceneFieldNames.NOT_LOWERCASED,
-                                contentOfField, Field.Store.YES));
+                        doc.add(new StringField(searchFieldAnnotation.lucenefieldName()
+                                + LuceneFieldNames.UNTOKENIZED_SUFFIX + LuceneFieldNames.NOT_LOWERCASED, contentOfField,
+                                Field.Store.YES));
                     }
 
                     if (searchFieldAnnotation.isSortAllowed()) {
@@ -260,16 +264,18 @@ public class LuceneUtility implements ILuceneUtility {
             field.setAccessible(true);
             if (luceneFieldAnnotation != null && d.get(luceneFieldAnnotation.lucenefieldName()) != null)
                 if (luceneFieldAnnotation.isMultiple()) {
-                    IndexableField[] indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED);
+                    IndexableField[] indexableFields = d
+                            .getFields(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED);
                     if (indexableFields == null || indexableFields.length == 0) {
                         indexableFields = d.getFields(luceneFieldAnnotation.lucenefieldName());
                     }
                     String content = Arrays.asList(indexableFields).stream().filter(iF -> iF.stringValue() != null)
                             .map(iF -> iF.stringValue()).collect(Collectors.joining(","));
                     field.set(con, content);
-                    
+
                 } else {
-                    String fieldContent = d.get(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED);
+                    String fieldContent = d
+                            .get(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.NOT_LOWERCASED);
                     if (fieldContent == null || fieldContent.isEmpty()) {
                         fieldContent = d.get(luceneFieldAnnotation.lucenefieldName());
                     }
@@ -281,8 +287,8 @@ public class LuceneUtility implements ILuceneUtility {
     }
 
     /**
-     * This method deletes all the indexes in the lucene After deleting the
-     * index count is decremented in table
+     * This method deletes all the indexes in the lucene After deleting the index
+     * count is decremented in table
      */
     @Override
     public void deleteIndexes(String userName) throws LuceneException {
@@ -300,8 +306,8 @@ public class LuceneUtility implements ILuceneUtility {
     }
 
     /**
-     * This method iterates over the index word and from each index word the
-     * concept details are fetched and stored into lucene index
+     * This method iterates over the index word and from each index word the concept
+     * details are fetched and stored into lucene index
      * 
      * @param iterator
      * @param dict
@@ -342,8 +348,10 @@ public class LuceneUtility implements ILuceneUtility {
         doc.add(new StringField(LuceneFieldNames.POS, wordId.getPOS().toString().toLowerCase(), Field.Store.YES));
 
         IWord word = dict.getWord(wordId);
-        doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss().toLowerCase(), Field.Store.YES));
-        doc.add(new TextField(LuceneFieldNames.DESCRIPTION + LuceneFieldNames.NOT_LOWERCASED, word.getSynset().getGloss(), Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.DESCRIPTION, word.getSynset().getGloss().toLowerCase(),
+                Field.Store.YES));
+        doc.add(new TextField(LuceneFieldNames.DESCRIPTION + LuceneFieldNames.NOT_LOWERCASED,
+                word.getSynset().getGloss(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.ID, word.getID().toString(), Field.Store.YES));
         doc.add(new StringField(LuceneFieldNames.WORDNETID, word.getID().toString(), Field.Store.YES));
 
@@ -357,7 +365,8 @@ public class LuceneUtility implements ILuceneUtility {
         doc.add(new TextField(LuceneFieldNames.SYNONYMID, sb.toString(), Field.Store.YES));
         // Adding this new data to delete only wordnet concepts while
         // adding all wordnet concepts from jwi.
-        doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY.toLowerCase(), Field.Store.YES));
+        doc.add(new StringField(LuceneFieldNames.CONCEPT_LIST, Constants.WORDNET_DICTIONARY.toLowerCase(),
+                Field.Store.YES));
 
         // Fields for performing sorting
         doc.add(new SortedDocValuesField(LuceneFieldNames.ID + LuceneFieldNames.SORT_SUFFIX,
@@ -376,11 +385,11 @@ public class LuceneUtility implements ILuceneUtility {
     }
 
     /**
-     * This method will create the index for the concepts created by user and
-     * the concepts that are stored in the CCP database
+     * This method will create the index for the concepts created by user and the
+     * concepts that are stored in the CCP database
      * 
      * @param conceptEntryList
-     * @param writer
+     * @param
      * @return
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
@@ -406,8 +415,8 @@ public class LuceneUtility implements ILuceneUtility {
     }
 
     /**
-     * This method calls createDocument and creates the documents for all
-     * different POS and loads the data into lucene index
+     * This method calls createDocument and creates the documents for all different
+     * POS and loads the data into lucene index
      */
     @Override
     public void indexConcepts(String userName)
@@ -415,7 +424,7 @@ public class LuceneUtility implements ILuceneUtility {
 
         String wnhome = configuration.getWordnetPath();
         String path = wnhome + File.separator + configuration.getDictFolder();
-        
+
         URL url;
         try {
             url = new URL("file", null, path);
@@ -468,7 +477,6 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Issues in writing document", e);
         }
 
-
         numberOfWord = createDocumentsFromConceptEntries(conceptEntriesList, userName);
         numberOfIndexedWords += numberOfWord[0];
         numberOfUnIndexedWords += numberOfWord[1];
@@ -493,7 +501,8 @@ public class LuceneUtility implements ILuceneUtility {
      * contains the search criteria
      */
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
-            int numberOfRecordsPerPage, CCPSort ccpSort) throws LuceneException, IllegalAccessException {
+            int numberOfRecordsPerPage, CCPSort ccpSort, boolean isSearchOnDescription)
+            throws LuceneException, IllegalAccessException {
 
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
 
@@ -501,12 +510,12 @@ public class LuceneUtility implements ILuceneUtility {
         QueryBuilder qBuild = new QueryBuilder(perFieldAnalyzerWrapper);
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
 
-        return queryIndex(fieldMap, operator, page, numberOfRecordsPerPage, ccpSort, builder);
+        return queryIndex(fieldMap, operator, page, numberOfRecordsPerPage, ccpSort, builder, isSearchOnDescription);
     }
 
     public ConceptEntry[] queryIndexWithPosAndConceptList(Map<String, String> fieldMap, List<String> posList,
-            List<String> conceptList, String operator, int page, int numberOfRecordsPerPage, CCPSort ccpSort)
-            throws LuceneException, IllegalAccessException {
+            List<String> conceptList, String operator, int page, int numberOfRecordsPerPage, CCPSort ccpSort,
+            boolean isSearchOnDescription) throws LuceneException, IllegalAccessException {
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
 
         PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(customAnalyzer, analyzerPerField);
@@ -534,11 +543,11 @@ public class LuceneUtility implements ILuceneUtility {
             builder.add(conceptListQueryBuilder.build(), BooleanClause.Occur.MUST);
         }
 
-        return queryIndex(fieldMap, operator, page, numberOfRecordsPerPage, ccpSort, builder);
+        return queryIndex(fieldMap, operator, page, numberOfRecordsPerPage, ccpSort, builder, isSearchOnDescription);
     }
 
     private ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
-            int numberOfRecordsPerPage, CCPSort ccpSort, BooleanQuery.Builder builder)
+            int numberOfRecordsPerPage, CCPSort ccpSort, BooleanQuery.Builder builder, boolean isSearchOnDescription)
             throws LuceneException, IllegalAccessException {
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
         BooleanClause.Occur occur = BooleanClause.Occur.SHOULD;
@@ -573,10 +582,14 @@ public class LuceneUtility implements ILuceneUtility {
             SearchField search = field.getAnnotation(SearchField.class);
             LuceneField luceneFieldAnnotation = field.getAnnotation(LuceneField.class);
             if (search != null) {
+                if (isSearchOnDescription && search.fieldName().equals("description")) {
+                    continue;
+                }
                 String searchString = fieldMap.get(search.fieldName());
                 if (searchString != null) {
                     searchString = searchString.toLowerCase();
-                    buildQuery(occur, perFieldAnalyzerWrapper, qBuild, builder, luceneFieldAnnotation, searchString);
+                    buildQuery(occur, perFieldAnalyzerWrapper, qBuild, builder, luceneFieldAnnotation, searchString,
+                            isSearchOnDescription);
                 }
             }
         }
@@ -632,18 +645,35 @@ public class LuceneUtility implements ILuceneUtility {
             throw new LuceneException("Issues in querying lucene index. Please retry", ex);
         }
     }
-    
-    private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, String searchString) {
+
+    private void buildQuery(BooleanClause.Occur occur, PerFieldAnalyzerWrapper perFieldAnalyzerWrapper,
+            QueryBuilder qBuild, BooleanQuery.Builder builder, LuceneField luceneFieldAnnotation, String searchString,
+            boolean isSearchOnDescription) {
         if (luceneFieldAnnotation.isTokenized()) {
             BooleanQuery.Builder tokenizedQueryBuilder = new BooleanQuery.Builder();
-            buildTokenizedOrWildCardQuery(luceneFieldAnnotation, searchString, qBuild, tokenizedQueryBuilder);
+            buildTokenizedOrWildCardQuery(luceneFieldAnnotation, searchString, qBuild, tokenizedQueryBuilder,
+                    isSearchOnDescription);
 
             if (luceneFieldAnnotation.isShortPhraseSearchable()) {
                 BooleanQuery.Builder rootQueryBuilder = new BooleanQuery.Builder();
                 rootQueryBuilder.add(tokenizedQueryBuilder.build(), Occur.SHOULD);
                 // Short word searching
                 BooleanQuery.Builder shortWordSearchQueryBuilder = new BooleanQuery.Builder();
-                shortWordSearchQueryBuilder.add(new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX, searchString), Occur.SHOULD);
+                shortWordSearchQueryBuilder.add(
+                        new PhraseQuery(luceneFieldAnnotation.lucenefieldName() + LuceneFieldNames.UNTOKENIZED_SUFFIX,
+                                searchString),
+                        Occur.SHOULD);
+
+                /*
+                 * If the searchDescription is enabled, add the query along with Word Query.
+                 * Rightnow isShortPhraseSearchable is enabled only for Word field which avoids
+                 * multiple entry of search params
+                 */
+                if (isSearchOnDescription) {
+                    shortWordSearchQueryBuilder.add(new PhraseQuery(SearchFieldNames.DESCRIPTION, searchString),
+                            Occur.MUST);
+                }
+
                 rootQueryBuilder.add(shortWordSearchQueryBuilder.build(), Occur.SHOULD);
                 tokenizedQueryBuilder = rootQueryBuilder;
             }
@@ -653,29 +683,34 @@ public class LuceneUtility implements ILuceneUtility {
             if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
                 createWildCardSearchQuery(luceneFieldAnnotation, searchString, builder, occur);
             }
-            builder.add(new BooleanClause((qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
-        }        
+            builder.add(new BooleanClause(
+                    (qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), occur));
+        }
     }
 
-    private void buildTokenizedOrWildCardQuery(LuceneField luceneFieldAnnotation, String searchString, QueryBuilder qBuild,
-            BooleanQuery.Builder tokenizedQueryBuilder) {       
-            if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
-                BooleanQuery.Builder analyzedBuilder = new BooleanQuery.Builder();             
-                createWildCardSearchQuery(luceneFieldAnnotation, searchString, analyzedBuilder, Occur.SHOULD);
+    private void buildTokenizedOrWildCardQuery(LuceneField luceneFieldAnnotation, String searchString,
+            QueryBuilder qBuild, BooleanQuery.Builder tokenizedQueryBuilder, boolean isSearchOnDescription) {
+        if (luceneFieldAnnotation.isWildCardSearchEnabled()) {
+            BooleanQuery.Builder analyzedBuilder = new BooleanQuery.Builder();
+            createWildCardSearchQuery(luceneFieldAnnotation, searchString, analyzedBuilder, Occur.SHOULD);
+            analyzedBuilder.add(new BooleanClause(
+                    (qBuild.createBooleanQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), Occur.SHOULD));
+            if (isSearchOnDescription) {
                 analyzedBuilder.add(new BooleanClause(
-                        (qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString)), Occur.SHOULD));
-                tokenizedQueryBuilder.add(analyzedBuilder.build(), Occur.MUST);
-            } else {
-                tokenizedQueryBuilder.add(qBuild.createPhraseQuery(luceneFieldAnnotation.lucenefieldName(), searchString),
-                        Occur.MUST);
+                        (qBuild.createBooleanQuery(SearchFieldNames.DESCRIPTION, searchString)), Occur.SHOULD));
             }
-        }
 
+            tokenizedQueryBuilder.add(analyzedBuilder.build(), Occur.MUST);
+        } else {
+            tokenizedQueryBuilder.add(new TermQuery(new Term(luceneFieldAnnotation.lucenefieldName(), searchString)),
+                    Occur.MUST);
+        }
+    }
 
     /**
      * This method adds the wild card query to the query builder when the
-     * luceneFieldAnnotation has enabled wild card search. This wild card query
-     * is added with an 'OR' condition in the queryBuilder.
+     * luceneFieldAnnotation has enabled wild card search. This wild card query is
+     * added with an 'OR' condition in the queryBuilder.
      * 
      * @param luceneFieldAnnotation
      * @param searchString

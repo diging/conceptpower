@@ -134,7 +134,7 @@ public class ConceptManager implements IConceptManager {
     @Override
     public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
-        return getConceptListEntriesForWordPOS(word, pos, conceptList, -1, -1, null, 0);
+        return getConceptListEntriesForWordPOSDescription(word, pos, false, conceptList, -1, -1, null, 0);
     }
 
     /*
@@ -146,14 +146,18 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList, int page,
-            int numberOfRecordsPerPage, String sortField, int sortOrder)
-                    throws LuceneException, IllegalAccessException, IndexerRunningException {
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos,
+            boolean isSearchOnDescription, String conceptList, int page, int numberOfRecordsPerPage, String sortField,
+            int sortOrder) throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)
             return null;
 
-        Map<String, String> fieldMap = new HashMap<String, String>();
+        Map<String, String> fieldMap = new HashMap<>();
+
         fieldMap.put(SearchFieldNames.WORD, word);
+        if (isSearchOnDescription) {
+            fieldMap.put(SearchFieldNames.DESCRIPTION, word);
+        }
         fieldMap.put(SearchFieldNames.POS, pos);
         fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
 
@@ -166,9 +170,11 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public int getPageCountForConceptEntries(String word, String pos, String conceptList, int numRecords) throws IllegalAccessException, LuceneException, IndexerRunningException {
-        int totalEntries = getConceptListEntriesForWordPOS(word, pos, conceptList, -1, -1, null, 0).length;
-        return (int) Math.ceil(new Double(totalEntries) / new Double(numRecords));
+    public int getPageCountForConceptEntries(String word, String pos, boolean isSearchOnDescription, String conceptList, Integer numRecordsPerPage)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
+        int totalEntries = getConceptListEntriesForWordPOSDescription(word, pos, isSearchOnDescription, conceptList, -1, -1, null,
+                0).length;       
+        return (int) Math.ceil(new Double(totalEntries) / new Double(numRecordsPerPage));
     }
 
     /**
@@ -518,8 +524,8 @@ public class ConceptManager implements IConceptManager {
     }
 
     /**
-     * This methods generates a new 12 character long id. Note that this method
-     * does not assure that the id isn't in use yet.
+     * This methods generates a new 12 character long id. Note that this method does
+     * not assure that the id isn't in use yet.
      * 
      * Adapted from
      * http://stackoverflow.com/questions/9543715/generating-human-readable
