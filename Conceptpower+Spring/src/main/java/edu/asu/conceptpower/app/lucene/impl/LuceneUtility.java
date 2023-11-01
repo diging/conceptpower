@@ -503,19 +503,16 @@ public class LuceneUtility implements ILuceneUtility {
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
             int numberOfRecordsPerPage, CCPSort ccpSort, boolean isSearchOnDescription)
             throws LuceneException, IllegalAccessException {
-
-        Map<String, Analyzer> analyzerPerField = new HashMap<>();
-
-        PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(customAnalyzer, analyzerPerField);
-        QueryBuilder qBuild = new QueryBuilder(perFieldAnalyzerWrapper);
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
-
         return queryIndex(fieldMap, operator, page, numberOfRecordsPerPage, ccpSort, builder, isSearchOnDescription);
     }
 
-    public ConceptEntry[] queryIndexWithPosAndConceptList(Map<String, String> fieldMap, List<String> posList,
-            List<String> conceptList, String operator, int page, int numberOfRecordsPerPage, CCPSort ccpSort,
-            boolean isSearchOnDescription) throws LuceneException, IllegalAccessException {
+    /**
+     * This method fetches the concepts when a posList and conceptList is provided.
+     */
+    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page, int numberOfRecordsPerPage, CCPSort ccpSort,
+            boolean isSearchOnDescription, List<String> posList,
+            List<String> conceptList) throws LuceneException, IllegalAccessException {
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
 
         PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(customAnalyzer, analyzerPerField);

@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.app.core.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -78,6 +79,24 @@ public class IndexService implements IIndexService {
         }
         
         ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort, fieldMap.containsKey(SearchFieldNames.DESCRIPTION));
+        alternativeIdService.addAlternativeIds(entries);
+        return entries;
+    }
+    
+    /**
+     * This method searches in lucene when posList and conceptList are provided
+     */
+    @Override
+    public ConceptEntry[] searchForConceptWithPosAndConceptList(Map<String, String> fieldMap, String operator,
+            int pageNumber, int numberOfRecordsPerPage, CCPSort sort, List<String> posList, List<String> conceptList)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
+
+        if (indexerRunningFlag.get()) {
+            throw new IndexerRunningException(indexerRunning);
+        }
+
+        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort,
+                fieldMap.containsKey(SearchFieldNames.DESCRIPTION), posList, conceptList);
         alternativeIdService.addAlternativeIds(entries);
         return entries;
     }

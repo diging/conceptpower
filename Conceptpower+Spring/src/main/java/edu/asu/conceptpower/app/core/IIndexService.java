@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.app.core;
 
+import java.util.List;
 import java.util.Map;
 
 import edu.asu.conceptpower.app.exceptions.IndexerRunningException;
@@ -33,6 +34,10 @@ public interface IIndexService {
     public ConceptEntry[] searchForConceptByPageNumberAndFieldMap(Map<String, String> fieldMap, String operator,
             int pageNumber, int numberOfRecordsPerPage, CCPSort sort)
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
+    
+    public ConceptEntry[] searchForConceptWithPosAndConceptList(Map<String, String> fieldMap, String operator,
+            int pageNumber, int numberOfRecordsPerPage, CCPSort sort, List<String> posList, List<String> conceptList)
+            throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     public int getTotalNumberOfRecordsForSearch(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException, IndexerRunningException;
