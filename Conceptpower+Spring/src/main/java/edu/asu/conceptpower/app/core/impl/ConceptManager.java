@@ -132,9 +132,9 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList)
+    public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, List<String> conceptList, List<String> posList)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
-        return getConceptListEntriesForWordPOSDescription(word, pos, false, conceptList, -1, -1, null, 0);
+        return getConceptListEntriesForWordPOSDescription(word, pos, false, conceptList, posList, -1, -1, null, 0);
     }
 
     /*
@@ -147,7 +147,7 @@ public class ConceptManager implements IConceptManager {
      */
     @Override
     public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos,
-            boolean isSearchOnDescription, String conceptList, int page, int numberOfRecordsPerPage, String sortField,
+            boolean isSearchOnDescription, List<String> conceptList, List<String> posList, int page, int numberOfRecordsPerPage, String sortField,
             int sortOrder) throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)
             return null;
@@ -159,7 +159,7 @@ public class ConceptManager implements IConceptManager {
             fieldMap.put(SearchFieldNames.DESCRIPTION, word);
         }
         fieldMap.put(SearchFieldNames.POS, pos);
-        fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
+        fieldMap.put(SearchFieldNames.CONCEPT_LIST, String.join(sortField, conceptList));
 
         CCPSort ccpSort = null;
         if (sortField != null) {
@@ -170,9 +170,9 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public int getPageCountForConceptEntries(String word, String pos, boolean isSearchOnDescription, String conceptList, Integer numRecordsPerPage)
+    public int getPageCountForConceptEntries(String word, String pos, boolean isSearchOnDescription, List<String> conceptList, List<String> posList, Integer numRecordsPerPage)
             throws IllegalAccessException, LuceneException, IndexerRunningException {
-        int totalEntries = getConceptListEntriesForWordPOSDescription(word, pos, isSearchOnDescription, conceptList, -1, -1, null,
+        int totalEntries = getConceptListEntriesForWordPOSDescription(word, pos, isSearchOnDescription, conceptList, posList, -1, -1, null,
                 0).length;       
         return (int) Math.ceil(new Double(totalEntries) / new Double(numRecordsPerPage));
     }

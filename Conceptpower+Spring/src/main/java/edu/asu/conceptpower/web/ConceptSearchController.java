@@ -84,6 +84,8 @@ public class ConceptSearchController {
             @RequestParam(required = false) String numberOfRecordsPerPage,
             @RequestParam(required = false) String conceptIdsToMerge,
             @RequestParam(required = false) String searchOnDescription,
+            @RequestParam(required = false) List<String> posList,
+            @RequestParam(required = false) List<String> conceptList,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results, ServletRequest request)
                     throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
@@ -111,10 +113,10 @@ public class ConceptSearchController {
         int pageCount = 0;
         try {
             found = conceptManager.getConceptListEntriesForWordPOSDescription(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos(), conceptSearchBean.isSearchOnDescription(), null, pageInt,
+                    conceptSearchBean.getPos(), conceptSearchBean.isSearchOnDescription(), conceptList, posList, pageInt,
                     numRecords, sortColumn, sortDirInt);
             pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos(),conceptSearchBean.isSearchOnDescription(), null, numRecords);
+                    conceptSearchBean.getPos(),conceptSearchBean.isSearchOnDescription(), conceptList, posList, numRecords);
         } catch (IndexerRunningException e) {
             model.addAttribute(indexerStatus, e.getMessage());
             return "home";

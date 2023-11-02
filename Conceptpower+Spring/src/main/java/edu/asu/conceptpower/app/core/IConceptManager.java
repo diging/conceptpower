@@ -44,7 +44,7 @@ public interface IConceptManager {
      *            Part of speech of word (noun, verb, adjective, adverb).
      * @return matching concepts
      */
-    public abstract ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList)
+    public abstract ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, List<String> conceptList, List<String> posList)
             throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
@@ -167,7 +167,7 @@ public interface IConceptManager {
      * @throws IndexerRunningException
      */
     public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos, boolean isSearchOnDescription,
-            String conceptList, int page, int numberOfRecordsPerPage, String sortField, int sortOrder)
+            List<String> conceptList, List<String> posList, int page, int numberOfRecordsPerPage, String sortField, int sortOrder)
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
@@ -186,7 +186,7 @@ public interface IConceptManager {
 
     public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException;
 
-    public int getPageCountForConceptEntries(String word, String pos, boolean isSearchOnDescription, String conceptList, Integer numRecordsPerPage)
+    public int getPageCountForConceptEntries(String word, String pos, boolean isSearchOnDescription, List<String> conceptList, List<String> posList, Integer numRecordsPerPage)
             throws IllegalAccessException, LuceneException, IndexerRunningException;
 
     /**
