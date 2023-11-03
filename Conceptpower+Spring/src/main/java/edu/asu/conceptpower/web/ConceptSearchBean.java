@@ -18,6 +18,8 @@ public class ConceptSearchBean {
     private List<ConceptEntryWrapper> foundConcepts;
     private String luceneError;
     private boolean searchOnDescription;
+    private List<String> conceptList;
+    private List<String> posList;
 
     public String getWord() {
         return word;
@@ -71,6 +73,22 @@ public class ConceptSearchBean {
 
     public void setSearchOnDescription(boolean searchOnDescription) {
         this.searchOnDescription = searchOnDescription;
+    }
+
+    public List<String> getConceptList() {
+        return conceptList;
+    }
+
+    public void setConceptList(List<String> conceptList) {
+        this.conceptList = conceptList;
+    }
+
+    public List<String> getPosList() {
+        return posList;
+    }
+
+    public void setPosList(List<String> posList) {
+        this.posList = posList;
     }
 
 }

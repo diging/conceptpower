@@ -306,7 +306,7 @@ public class ConceptEditController {
 
     @RequestMapping(method = RequestMethod.GET, value = "conceptEdit/search")
     public @ResponseBody ResponseEntity<Object> searchConcept(@RequestParam("concept") String concept,
-            @RequestParam("pos") String pos) throws IllegalAccessException, LuceneException {
+            @RequestParam("pos") String pos, @RequestParam("cocneptList") List<String> conceptList, @RequestParam("posList") List<String> posList) throws IllegalAccessException, LuceneException {
 
         List<ConceptEntryWrapper> foundConcepts = null;
 
@@ -320,8 +320,8 @@ public class ConceptEditController {
             }
 
             try {
-                found = conceptManager.getConceptListEntriesForWordPOSDescription(concept, pos, false,
-                        Constants.WORDNET_DICTIONARY, -1, numberOfRecords, null, 0);
+                found = conceptManager.getConceptListEntriesForWordPOSDescription(concept, pos, false, conceptList, posList,
+                        -1, numberOfRecords, null, 0);
             } catch (IndexerRunningException ie) {
                 return new ResponseEntity<Object>("Indexer is running. Please try again later.",
                         HttpStatus.SERVICE_UNAVAILABLE);
