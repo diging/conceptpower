@@ -19,11 +19,11 @@ public interface ILuceneUtility {
     public void indexConcepts(String userName) throws LuceneException, IllegalArgumentException, IllegalAccessException;
 
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int pageNumber,
-            int numberOfRecordsPerPage, CCPSort ccpSort, boolean isSearchOnDescription)
+            int numberOfRecordsPerPage, CCPSort ccpSort)
                     throws LuceneException, IllegalAccessException;
     
-    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page, int numberOfRecordsPerPage, CCPSort ccpSort,
-            boolean isSearchOnDescription, List<String> posList,
-            List<String> conceptList) throws LuceneException, IllegalAccessException, IndexerRunningException;
+    public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
+            int numberOfRecordsPerPage, CCPSort ccpSort, boolean isSearchOnDescription, List<String> posList,
+            List<String> conceptLists) throws LuceneException, IllegalAccessException, IndexerRunningException;
 
 }

@@ -500,19 +500,21 @@ public class LuceneUtility implements ILuceneUtility {
      * This method fetches the concept power by iterating the fieldMap. The fieldMap
      * contains the search criteria
      */
+    @Override
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page,
-            int numberOfRecordsPerPage, CCPSort ccpSort, boolean isSearchOnDescription)
+            int numberOfRecordsPerPage, CCPSort ccpSort)
             throws LuceneException, IllegalAccessException {
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
-        return queryIndex(fieldMap, operator, page, numberOfRecordsPerPage, ccpSort, builder, isSearchOnDescription);
+        return queryIndex(fieldMap, operator, page, numberOfRecordsPerPage, ccpSort, builder, false);
     }
 
     /**
      * This method fetches the concepts when a posList and conceptList is provided.
      */
+    @Override
     public ConceptEntry[] queryIndex(Map<String, String> fieldMap, String operator, int page, int numberOfRecordsPerPage, CCPSort ccpSort,
             boolean isSearchOnDescription, List<String> posList,
-            List<String> conceptList) throws LuceneException, IllegalAccessException {
+            List<String> conceptLists) throws LuceneException, IllegalAccessException {
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
 
         PerFieldAnalyzerWrapper perFieldAnalyzerWrapper = new PerFieldAnalyzerWrapper(customAnalyzer, analyzerPerField);
@@ -529,12 +531,12 @@ public class LuceneUtility implements ILuceneUtility {
             builder.add(posQueryBuilder.build(), BooleanClause.Occur.MUST);
         }
 
-        if (!conceptList.isEmpty()) {
+        if (!conceptLists.isEmpty()) {
             BooleanQuery.Builder conceptListQueryBuilder = new BooleanQuery.Builder();
-            for (String concept : conceptList) {
+            for (String conceptList : conceptLists) {
                 // You can adjust the lucene field name as needed for the concept list field
                 conceptListQueryBuilder.add(new BooleanClause(
-                        qBuild.createBooleanQuery(LuceneFieldNames.CONCEPT_LIST, concept.toLowerCase()),
+                        qBuild.createBooleanQuery(LuceneFieldNames.CONCEPT_LIST, conceptList.toLowerCase()),
                         BooleanClause.Occur.SHOULD));
             }
             builder.add(conceptListQueryBuilder.build(), BooleanClause.Occur.MUST);

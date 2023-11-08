@@ -62,7 +62,18 @@ public class IndexService implements IIndexService {
             throw new IndexerRunningException(indexerRunning);
         }
         // Fetches all the pages
-        return luceneUtility.queryIndex(fieldMap, operator, 0, -1, null, fieldMap.containsKey(SearchFieldNames.DESCRIPTION));
+        return luceneUtility.queryIndex(fieldMap, operator, 0, -1, null);
+    }
+    
+    @Override
+    public ConceptEntry[] searchForConceptsOnDescription(Map<String, String> fieldMap, String operator)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
+        
+        if (indexerRunningFlag.get()) {
+            throw new IndexerRunningException(indexerRunning);
+        }
+        // Fetches all the pages
+        return luceneUtility.queryIndex(fieldMap, operator, 0, -1, null, fieldMap.containsKey(SearchFieldNames.DESCRIPTION), null, null);
     }
 
     /**
@@ -78,7 +89,21 @@ public class IndexService implements IIndexService {
             throw new IndexerRunningException(indexerRunning);
         }
         
-        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort, fieldMap.containsKey(SearchFieldNames.DESCRIPTION));
+        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort);
+        alternativeIdService.addAlternativeIds(entries);
+        return entries;
+    }
+    
+    @Override
+    public ConceptEntry[] searchForConceptByPageNumberAndFieldMapOnDescription(Map<String, String> fieldMap, String operator,
+            int pageNumber, int numberOfRecordsPerPage, CCPSort sort)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
+
+        if (indexerRunningFlag.get()) {
+            throw new IndexerRunningException(indexerRunning);
+        }
+        
+        ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort, fieldMap.containsKey(SearchFieldNames.DESCRIPTION), null, null);
         alternativeIdService.addAlternativeIds(entries);
         return entries;
     }

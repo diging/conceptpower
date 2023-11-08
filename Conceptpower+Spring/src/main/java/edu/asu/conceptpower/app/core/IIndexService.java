@@ -42,4 +42,11 @@ public interface IIndexService {
     public int getTotalNumberOfRecordsForSearch(Map<String, String> fieldMap, String operator)
             throws LuceneException, IllegalAccessException, IndexerRunningException;
 
+    ConceptEntry[] searchForConceptsOnDescription(Map<String, String> fieldMap, String operator)
+            throws LuceneException, IllegalAccessException, IndexerRunningException;
+
+    ConceptEntry[] searchForConceptByPageNumberAndFieldMapOnDescription(Map<String, String> fieldMap, String operator,
+            int pageNumber, int numberOfRecordsPerPage, CCPSort sort)
+            throws LuceneException, IllegalAccessException, IndexerRunningException;
+
 }
