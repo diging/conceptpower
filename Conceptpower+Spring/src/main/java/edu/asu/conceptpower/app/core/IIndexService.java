@@ -36,7 +36,7 @@ public interface IIndexService {
                     throws LuceneException, IllegalAccessException, IndexerRunningException;
     
     public ConceptEntry[] searchForConceptWithPosAndConceptList(Map<String, String> fieldMap, String operator,
-            int pageNumber, int numberOfRecordsPerPage, CCPSort sort, List<String> posList, List<String> conceptList)
+            int pageNumber, int numberOfRecordsPerPage, CCPSort sort, List<String> posList, List<String> conceptLists)
             throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     public int getTotalNumberOfRecordsForSearch(Map<String, String> fieldMap, String operator)

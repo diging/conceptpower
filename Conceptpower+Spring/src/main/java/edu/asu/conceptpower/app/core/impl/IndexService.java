@@ -84,11 +84,11 @@ public class IndexService implements IIndexService {
     }
     
     /**
-     * This method searches in lucene when posList and conceptList are provided
+     * This method searches in lucene when a list of POS and a list of ConceptLists are provided
      */
     @Override
     public ConceptEntry[] searchForConceptWithPosAndConceptList(Map<String, String> fieldMap, String operator,
-            int pageNumber, int numberOfRecordsPerPage, CCPSort sort, List<String> posList, List<String> conceptList)
+            int pageNumber, int numberOfRecordsPerPage, CCPSort sort, List<String> posList, List<String> conceptLists)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
 
         if (indexerRunningFlag.get()) {
@@ -96,7 +96,7 @@ public class IndexService implements IIndexService {
         }
 
         ConceptEntry[] entries = luceneUtility.queryIndex(fieldMap, operator, pageNumber, numberOfRecordsPerPage, sort,
-                fieldMap.containsKey(SearchFieldNames.DESCRIPTION), posList, conceptList);
+                fieldMap.containsKey(SearchFieldNames.DESCRIPTION), posList, conceptLists);
         alternativeIdService.addAlternativeIds(entries);
         return entries;
     }
