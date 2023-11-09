@@ -168,8 +168,8 @@ public interface IConceptManager {
      * @throws IllegalAccessException
      * @throws IndexerRunningException
      */
-    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos,
-            boolean isSearchOnDescription, String conceptList, int page, int numberOfRecordsPerPage, String sortField,
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, List<String> pos,
+            boolean isSearchOnDescription, List<String> conceptList, int page, int numberOfRecordsPerPage, String sortField,
             int sortOrder) throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
@@ -199,4 +199,8 @@ public interface IConceptManager {
      * @return
      */
     public ConceptEntry getOriginalConceptEntry(String id);
+
+    ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList, int page,
+            int numberOfRecordsPerPage, String sortField, int sortOrder)
+            throws LuceneException, IllegalAccessException, IndexerRunningException;
 }

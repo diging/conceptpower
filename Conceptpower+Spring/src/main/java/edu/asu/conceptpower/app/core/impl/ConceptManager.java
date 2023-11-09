@@ -136,6 +136,34 @@ public class ConceptManager implements IConceptManager {
             throws LuceneException, IllegalAccessException, IndexerRunningException {
         return getConceptListEntriesForWordPOSDescription(word, pos, false, conceptList, -1, -1, null, 0);
     }
+    
+    /*
+     * This method fetches the concepts based on word, pos and concept list
+     * details. This method also accepts parameters for pagination
+     * 
+     * @see
+     * edu.asu.conceptpower.core.IConceptManager#getConceptListEntriesForWord(
+     * java.lang.String, java.lang.String)
+     */
+    @Override
+    public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList, int page,
+            int numberOfRecordsPerPage, String sortField, int sortOrder)
+            throws LuceneException, IllegalAccessException, IndexerRunningException {
+        if (pos == null)
+            return null;
+
+        Map<String, String> fieldMap = new HashMap<String, String>();
+        fieldMap.put(SearchFieldNames.WORD, word);
+        fieldMap.put(SearchFieldNames.POS, pos);
+        fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
+
+        CCPSort ccpSort = null;
+        if (sortField != null) {
+            ccpSort = new CCPSort(sortField, sortOrder == -1 ? SortOrder.DESCENDING : SortOrder.ASCENDING);
+        }
+        return indexService.searchForConceptByPageNumberAndFieldMap(fieldMap, null, page, numberOfRecordsPerPage,
+                ccpSort);
+    }
 
     /*
      * This method fetches the concepts based on word, pos and concept list
@@ -146,8 +174,8 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos,
-            boolean isSearchOnDescription, String conceptList, int page, int numberOfRecordsPerPage, String sortField,
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, List<String> pos,
+            boolean isSearchOnDescription, List<String> conceptList, int page, int numberOfRecordsPerPage, String sortField,
             int sortOrder) throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)
             return null;

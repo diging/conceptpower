@@ -85,7 +85,7 @@ public class ConceptSearchController {
             @RequestParam(required = false) String conceptIdsToMerge,
             @RequestParam(required = false) String searchOnDescription,
             @RequestParam(required = false) List<String> posList,
-            @RequestParam(required = false) List<String> conceptList,
+            @RequestParam(required = false) List<String> conceptLists,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results, ServletRequest request)
                     throws LuceneException, IllegalAccessException {
         if (results.hasErrors()) {
@@ -112,17 +112,25 @@ public class ConceptSearchController {
         int numRecords = numberOfRecordsPerPage!=null&&numberOfRecordsPerPage!="" ? Integer.valueOf(numberOfRecordsPerPage) : defaultPageSize ;
         int pageCount = 0;
         try {
-            found = conceptManager.getConceptListEntriesForWordPOSDescription(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos(), conceptSearchBean.isSearchOnDescription(), conceptList, posList, pageInt,
-                    numRecords, sortColumn, sortDirInt);
-            pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
-                    conceptSearchBean.getPos(),conceptSearchBean.isSearchOnDescription(), conceptList, posList, numRecords);
+            if (!conceptSearchBean.isSearchOnDescription()) {
+                found = conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
+                        conceptSearchBean.getPos(), null, pageInt, numRecords, sortColumn, sortDirInt);
+                pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
+                        conceptSearchBean.getPos(), false, null, numRecords);
+            } else {
+                found = conceptManager.getConceptListEntriesForWordPOSDescription(conceptSearchBean.getWord(),
+                        conceptSearchBean.getPos(), conceptSearchBean.isSearchOnDescription(), conceptLists, posList,
+                        pageInt, numRecords, sortColumn, sortDirInt);
+                pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
+                        conceptSearchBean.getPos(), conceptSearchBean.isSearchOnDescription(), conceptLists, posList,
+                        numRecords);
+            }
+
         } catch (IndexerRunningException e) {
             model.addAttribute(indexerStatus, e.getMessage());
             return "home";
         }
-       
-       
+
         foundConcepts = wrapperCreator.createWrappers(found);
         conceptSearchBean.setFoundConcepts(foundConcepts);
         
