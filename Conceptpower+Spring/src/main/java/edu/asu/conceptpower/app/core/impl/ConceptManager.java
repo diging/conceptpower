@@ -174,7 +174,7 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, List<String> pos,
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, List<String> posList,
             boolean isSearchOnDescription, List<String> conceptList, int page, int numberOfRecordsPerPage, String sortField,
             int sortOrder) throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)
