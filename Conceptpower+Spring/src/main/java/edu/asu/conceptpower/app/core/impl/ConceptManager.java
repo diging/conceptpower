@@ -174,8 +174,8 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, List<String> posList,
-            boolean isSearchOnDescription, List<String> conceptList, int page, int numberOfRecordsPerPage, String sortField,
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos,
+            boolean isSearchOnDescription, String conceptList, int page, int numberOfRecordsPerPage, String sortField,
             int sortOrder) throws LuceneException, IllegalAccessException, IndexerRunningException {
         if (pos == null)
             return null;
@@ -186,6 +186,7 @@ public class ConceptManager implements IConceptManager {
         if (isSearchOnDescription) {
             fieldMap.put(SearchFieldNames.DESCRIPTION, word);
         }
+        //The following part needs to be changed as there are not field names available for posList and conceptLists, may need to create one
         fieldMap.put(SearchFieldNames.POS, pos);
         fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
 
