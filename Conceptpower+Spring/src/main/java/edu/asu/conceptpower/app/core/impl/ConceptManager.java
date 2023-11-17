@@ -134,7 +134,11 @@ public class ConceptManager implements IConceptManager {
     @Override
     public ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList)
             throws LuceneException, IllegalAccessException, IndexerRunningException {
-        return getConceptListEntriesForWordPOSDescription(word, pos, false, conceptList, -1, -1, null, 0);
+        List<String> listPos = new ArrayList<>();
+        listPos.add(pos);
+        List<String> conceptLists = new ArrayList<>();
+        conceptLists.add(conceptList);
+        return getConceptListEntriesForWordPOSDescription(word, listPos, false, conceptLists, -1, -1, null, 0);
     }
     
     /*
@@ -174,10 +178,10 @@ public class ConceptManager implements IConceptManager {
      * java.lang.String, java.lang.String)
      */
     @Override
-    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos,
-            boolean isSearchOnDescription, String conceptList, int page, int numberOfRecordsPerPage, String sortField,
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, List<String> posList,
+            boolean isSearchOnDescription, List<String> conceptLists, int page, int numberOfRecordsPerPage, String sortField,
             int sortOrder) throws LuceneException, IllegalAccessException, IndexerRunningException {
-        if (pos == null)
+        if (posList == null)
             return null;
 
         Map<String, String> fieldMap = new HashMap<>();
@@ -187,8 +191,8 @@ public class ConceptManager implements IConceptManager {
             fieldMap.put(SearchFieldNames.DESCRIPTION, word);
         }
         //The following part needs to be changed as there are not field names available for posList and conceptLists, may need to create one
-        fieldMap.put(SearchFieldNames.POS, pos);
-        fieldMap.put(SearchFieldNames.CONCEPT_LIST, conceptList);
+        fieldMap.put(SearchFieldNames.POS_LIST, String.join(",", posList));
+        fieldMap.put(SearchFieldNames.CONCEPT_LISTS, String.join(",", conceptLists));
 
         CCPSort ccpSort = null;
         if (sortField != null) {
@@ -199,10 +203,11 @@ public class ConceptManager implements IConceptManager {
     }
 
     @Override
-    public int getPageCountForConceptEntries(String word, String pos, boolean isSearchOnDescription, String conceptList,
-            Integer numRecordsPerPage) throws IllegalAccessException, LuceneException, IndexerRunningException {
-        int totalEntries = getConceptListEntriesForWordPOSDescription(word, pos, isSearchOnDescription, conceptList, -1,
-                -1, null, 0).length;
+    public int getPageCountForConceptEntries(String word, List<String> posList, boolean isSearchOnDescription,
+            List<String> conceptLists, Integer numRecordsPerPage)
+            throws IllegalAccessException, LuceneException, IndexerRunningException {
+        int totalEntries = getConceptListEntriesForWordPOSDescription(word, posList, isSearchOnDescription,
+                conceptLists, -1, -1, null, 0).length;
         return (int) Math.ceil(new Double(totalEntries) / new Double(numRecordsPerPage));
     }
 

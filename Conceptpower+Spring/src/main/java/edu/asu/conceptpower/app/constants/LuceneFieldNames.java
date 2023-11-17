@@ -19,4 +19,6 @@ public interface LuceneFieldNames {
     public final static String UNTOKENIZED_SUFFIX = "_untokenized";
     public final static String NOT_LOWERCASED = "_notLowercased";
     public final static String SORT_SUFFIX = "_sorted";
+    public final static String POS_LIST = "posList";
+    public final static String CONCEPT_LISTS = "conceptLists";
 }

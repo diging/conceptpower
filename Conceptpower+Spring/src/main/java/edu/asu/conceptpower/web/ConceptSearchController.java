@@ -1,5 +1,6 @@
 package edu.asu.conceptpower.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,7 @@ public class ConceptSearchController {
             @RequestParam(required = false) String numberOfRecordsPerPage,
             @RequestParam(required = false) String conceptIdsToMerge,
             @RequestParam(required = false) String searchOnDescription,
+            @RequestParam(required = false) String pos,
             @RequestParam(required = false) List<String> posList,
             @RequestParam(required = false) List<String> conceptLists,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results, ServletRequest request)
@@ -113,16 +115,20 @@ public class ConceptSearchController {
         int pageCount = 0;
         try {
             if (!conceptSearchBean.isSearchOnDescription()) {
+                List<String> listPos = new ArrayList<>();
+                if (!pos.isEmpty()) {
+                    listPos.add(pos);
+                }
                 found = conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
                         conceptSearchBean.getPos(), null, pageInt, numRecords, sortColumn, sortDirInt);
                 pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
-                        conceptSearchBean.getPos(), false, null, numRecords);
+                        listPos, false, null, numRecords);
             } else {
                 found = conceptManager.getConceptListEntriesForWordPOSDescription(conceptSearchBean.getWord(),
-                        conceptSearchBean.getPos(), conceptSearchBean.isSearchOnDescription(), conceptLists, posList,
+                        posList, conceptSearchBean.isSearchOnDescription(), conceptLists,
                         pageInt, numRecords, sortColumn, sortDirInt);
                 pageCount = conceptManager.getPageCountForConceptEntries(conceptSearchBean.getWord(),
-                        conceptSearchBean.getPos(), conceptSearchBean.isSearchOnDescription(), conceptLists, posList,
+                        posList, conceptSearchBean.isSearchOnDescription(), conceptLists,
                         numRecords);
             }
 

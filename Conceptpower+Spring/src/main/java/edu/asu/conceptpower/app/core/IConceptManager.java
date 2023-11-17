@@ -168,9 +168,9 @@ public interface IConceptManager {
      * @throws IllegalAccessException
      * @throws IndexerRunningException
      */
-    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, String pos,
-            boolean isSearchOnDescription, String conceptList, int page, int numberOfRecordsPerPage, String sortField,
-            int sortOrder) throws LuceneException, IllegalAccessException, IndexerRunningException;
+    public ConceptEntry[] getConceptListEntriesForWordPOSDescription(String word, List<String> posList,
+            boolean isSearchOnDescription, List<String> conceptLists, int page, int numberOfRecordsPerPage,
+            String sortField, int sortOrder) throws LuceneException, IllegalAccessException, IndexerRunningException;
 
     /**
      * 
@@ -188,8 +188,9 @@ public interface IConceptManager {
 
     public void deleteFromIndex(String id, String userName) throws LuceneException, IndexerRunningException;
 
-    public int getPageCountForConceptEntries(String word, String pos, boolean isSearchOnDescription, String conceptList,
-            Integer numRecordsPerPage) throws IllegalAccessException, LuceneException, IndexerRunningException;
+    public int getPageCountForConceptEntries(String word, List<String> posList, boolean isSearchOnDescription,
+            List<String> conceptLists, Integer numRecordsPerPage)
+            throws IllegalAccessException, LuceneException, IndexerRunningException;
 
     /**
      * This method fetches the original concept entry and not the merged concept

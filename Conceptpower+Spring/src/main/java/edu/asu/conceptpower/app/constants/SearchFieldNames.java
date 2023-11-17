@@ -17,4 +17,6 @@ public interface SearchFieldNames {
     public final static String SYNONYM_ID = "synonymId";
     public final static String PAGE = "page";
     public final static String MERGED_IDS = "mergedIds";
+    public final static String POS_LIST = "pos_list";
+    public final static String CONCEPT_LISTS = "concept_lists";
 }
