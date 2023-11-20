@@ -204,4 +204,7 @@ public interface IConceptManager {
     ConceptEntry[] getConceptListEntriesForWordPOS(String word, String pos, String conceptList, int page,
             int numberOfRecordsPerPage, String sortField, int sortOrder)
             throws LuceneException, IllegalAccessException, IndexerRunningException;
+
+    public int getPageCountForConceptEntries(String word, String pos, Object object, int numRecords)
+            throws IllegalAccessException, LuceneException, IndexerRunningException;
 }

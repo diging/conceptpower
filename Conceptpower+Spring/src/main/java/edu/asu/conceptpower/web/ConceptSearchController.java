@@ -85,7 +85,6 @@ public class ConceptSearchController {
             @RequestParam(required = false) String numberOfRecordsPerPage,
             @RequestParam(required = false) String conceptIdsToMerge,
             @RequestParam(required = false) String searchOnDescription,
-            @RequestParam(required = false) String pos,
             @RequestParam(required = false) List<String> posList,
             @RequestParam(required = false) List<String> conceptLists,
             @Validated @ModelAttribute("conceptSearchBean") ConceptSearchBean conceptSearchBean, BindingResult results, ServletRequest request)
@@ -116,8 +115,8 @@ public class ConceptSearchController {
         try {
             if (!conceptSearchBean.isSearchOnDescription()) {
                 List<String> listPos = new ArrayList<>();
-                if (!pos.isEmpty()) {
-                    listPos.add(pos);
+                if (!conceptSearchBean.getPos().isEmpty()) {
+                    listPos.add(conceptSearchBean.getPos());
                 }
                 found = conceptManager.getConceptListEntriesForWordPOS(conceptSearchBean.getWord(),
                         conceptSearchBean.getPos(), null, pageInt, numRecords, sortColumn, sortDirInt);
