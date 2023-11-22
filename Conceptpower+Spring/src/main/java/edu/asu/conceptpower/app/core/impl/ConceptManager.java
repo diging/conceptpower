@@ -672,6 +672,5 @@ public class ConceptManager implements IConceptManager {
         
         int totalEntries = getConceptListEntriesForWordPOS(word, pos, null).length;
         return (int) Math.ceil(new Double(totalEntries) / new Double(numRecords));
-        return 0;
     }
 }
