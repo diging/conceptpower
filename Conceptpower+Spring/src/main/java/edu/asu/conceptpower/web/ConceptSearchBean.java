@@ -15,10 +15,12 @@ public class ConceptSearchBean {
     private String word;
     private String pos;
     private Map<String, String> posMap;
+    // TODO Set this variable equal to the list of conceptLists
+    private List<String> conceptListMap;
     private List<ConceptEntryWrapper> foundConcepts;
     private String luceneError;
     private boolean searchOnDescription;
-    private List<String> conceptList;
+    private List<String> conceptLists;
     private List<String> posList;
 
     public String getWord() {
@@ -76,11 +78,11 @@ public class ConceptSearchBean {
     }
 
     public List<String> getConceptList() {
-        return conceptList;
+        return conceptLists;
     }
 
     public void setConceptList(List<String> conceptList) {
-        this.conceptList = conceptList;
+        this.conceptLists = conceptList;
     }
 
     public List<String> getPosList() {
@@ -89,6 +91,14 @@ public class ConceptSearchBean {
 
     public void setPosList(List<String> posList) {
         this.posList = posList;
+    }
+
+    public List<String> getConceptListMap() {
+        return conceptListMap;
+    }
+
+    public void setConceptListMap(List<String> conceptListMap) {
+        this.conceptListMap = conceptListMap;
     }
 
 }
