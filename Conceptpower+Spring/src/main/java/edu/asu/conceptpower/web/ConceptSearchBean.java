@@ -4,8 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import edu.asu.conceptpower.app.core.IConceptListManager;
 import edu.asu.conceptpower.app.core.POS;
 import edu.asu.conceptpower.app.wrapper.ConceptEntryWrapper;
 
@@ -15,8 +17,6 @@ public class ConceptSearchBean {
     private String word;
     private String pos;
     private Map<String, String> posMap;
-    // TODO Set this variable equal to the list of conceptLists
-    private List<String> conceptListMap;
     private List<ConceptEntryWrapper> foundConcepts;
     private String luceneError;
     private boolean searchOnDescription;
@@ -39,16 +39,15 @@ public class ConceptSearchBean {
         this.foundConcepts = foundConcepts;
     }
 
-
     public String getPos() {
-		return pos;
-	}
+        return pos;
+    }
 
-	public void setPos(String pos) {
-		this.pos = pos;
-	}
+    public void setPos(String pos) {
+        this.pos = pos;
+    }
 
-	public Map<String, String> getPosMap() {
+    public Map<String, String> getPosMap() {
         posMap = new LinkedHashMap<String, String>();
         posMap.put(POS.NOUN, "Noun");
         posMap.put(POS.VERB, "Verb");
@@ -91,14 +90,6 @@ public class ConceptSearchBean {
 
     public void setPosList(List<String> posList) {
         this.posList = posList;
-    }
-
-    public List<String> getConceptListMap() {
-        return conceptListMap;
-    }
-
-    public void setConceptListMap(List<String> conceptListMap) {
-        this.conceptListMap = conceptListMap;
     }
 
 }

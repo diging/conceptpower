@@ -260,16 +260,18 @@
          <h1>Welcome to Conceptpower</h1>
          <div class="input-group input-group-lg">
             <input type="text" class="form-control" id="searchInput" name="word" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
-            <div class='custom-dropdown' style="margin-left:10px">
-			  <select class="selectDropdown" multiple th:name="*{posList}">
-			    <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
-			    </option>
-			  </select>
-			  <select>
-			  	<option th:each="entry: ${conceptSearchBean.conceptMap}" th:value="${entry.key}" th:text="${entry.value}">
-			  </select>
+			<div class='custom-dropdown' style="margin-left: 10px">
+				<select class="selectDropdown" multiple th:name="*{posList}">
+					<option th:each="entry: ${conceptSearchBean.posMap}"
+						th:value="${entry.key}" th:text="${entry.value}"></option>
+				</select>
+				<select class="selectDropdown" multiple th:name="*{conceptLists}">
+					<option th:each="conceptList: ${conceptLists}"
+						th:value="${conceptList.name}" th:text="${conceptList.name}">
+					</option>
+				</select>
 			</div>
-         </div>
+		</div>
          <label style="margin-top: 5px;"class="form-check-label">
  			 <input th:if = "${conceptSearchBean.searchOnDescription == true}" type="checkbox" name="searchOnDescription" title='Search on description' checked/>
  			 <input th:if = "${conceptSearchBean.searchOnDescription != true}" type="checkbox" name="searchOnDescription" title='Search on description' />
