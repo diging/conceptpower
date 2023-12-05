@@ -252,34 +252,126 @@
              var paginateData = $(this).data();
              paginate(1, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, e.target.value)
          });
+         
+         (function($) {
+        	  var CheckboxDropdown = function(el) {
+        	    var _this = this;
+        	    this.isOpen = false;
+        	    this.areAllChecked = false;
+        	    this.$el = $(el);
+        	    this.$label = this.$el.find('.dropdown-label');
+        	    this.$checkAll = this.$el.find('[data-toggle="check-all"]').first();
+        	    this.$inputs = this.$el.find('[type="checkbox"]');
+        	    
+        	    this.onCheckBox();
+        	    
+        	    this.$label.on('click', function(e) {
+        	      e.preventDefault();
+        	      _this.toggleOpen();
+        	    });
+        	    
+        	    this.$checkAll.on('click', function(e) {
+        	      e.preventDefault();
+        	      _this.onCheckAll();
+        	    });
+        	    
+        	    this.$inputs.on('change', function(e) {
+        	      _this.onCheckBox();
+        	    });
+        	  };
+        	  
+        	  CheckboxDropdown.prototype.onCheckBox = function() {
+        	    this.updateStatus();
+        	  };
+        	  
+        	  CheckboxDropdown.prototype.updateStatus = function() {
+        	    var checked = this.$el.find(':checked');
+        	    
+        	    this.areAllChecked = false;
+        	    this.$checkAll.html('Check All');
+        	    
+        	    if(checked.length <= 0) {
+        	      this.$label.html('Select Options');
+        	    }
+        	    else if(checked.length === 1) {
+        	      this.$label.html(checked.parent('label').text());
+        	    }
+        	    else if(checked.length === this.$inputs.length) {
+        	      this.$label.html('All Selected');
+        	      this.areAllChecked = true;
+        	      this.$checkAll.html('Uncheck All');
+        	    }
+        	    else {
+        	      this.$label.html(checked.length + ' Selected');
+        	    }
+        	  };
+        	  
+        	  CheckboxDropdown.prototype.onCheckAll = function(checkAll) {
+        	    if(!this.areAllChecked || checkAll) {
+        	      this.areAllChecked = true;
+        	      this.$checkAll.html('Uncheck All');
+        	      this.$inputs.prop('checked', true);
+        	    }
+        	    else {
+        	      this.areAllChecked = false;
+        	      this.$checkAll.html('Check All');
+        	      this.$inputs.prop('checked', false);
+        	    }
+        	    
+        	    this.updateStatus();
+        	  };
+        	  
+        	  CheckboxDropdown.prototype.toggleOpen = function(forceOpen) {
+        	    var _this = this;
+        	    
+        	    if(!this.isOpen || forceOpen) {
+        	       this.isOpen = true;
+        	       this.$el.addClass('on');
+        	      $(document).on('click', function(e) {
+        	        if(!$(e.target).closest('[data-control]').length) {
+        	         _this.toggleOpen();
+        	        }
+        	      });
+        	    }
+        	    else {
+        	      this.isOpen = false;
+        	      this.$el.removeClass('on');
+        	      $(document).off('click');
+        	    }
+        	  };
+        	  
+        	  var checkboxesDropdowns = document.querySelectorAll('[data-control="checkbox-dropdown"]');
+        	  for(var i = 0, length = checkboxesDropdowns.length; i < length; i++) {
+        	    new CheckboxDropdown(checkboxesDropdowns[i]);
+        	  }
+        	})(jQuery);
       </script>
    </head>
    <body class = "body" layout:fragment="content">
       <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection">
          <h1>Welcome to Conceptpower</h1>
-         <div class="input-group input-group-lg">
-            <input type="text" class="form-control" id="searchInput" name="word" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
-            <div class='custom-dropdown' style="margin-left:10px">
-            	<label class="selectDropdown">Select</label>
-            	<a href="#" data-toggle="check-all">Check All</a>
-				<div>
-					<label for="selectedPOS">Selected POS:</label>
-					<div th:each="selectedPOS: ${conceptSearchBean.selectedPOS}">
-						<input type="checkbox" th:value="${selectedPOS}" checked="checked" />
-						<span th:text="${selectedPOS}"></span>
-					</div>
+		<div class="input-group input-group-lg">
+			<input type="text" class="form-control" id="searchInput" name="word"
+				placeholder="Type in noun, verb, adjective, adverb...."
+				aria-label="Text input with dropdown button">
+			<div class='custom-dropdown' style="margin-left: 10px"
+				data-control="checkbox-dropdown">
+				<label class="selectDropdown">Select</label>
+				<div class="selectDropdown">
+					<a href="#" data-toggle="check-all">Check All</a>
+					<label
+						th:each="pos : ${conceptSearchBean.posMap}" class="dropdown-option">
+							<input type="checkbox" th:name="posItem" th:value="${pos.key}">
+							<span th:text="${pos.value}"></span>
+					</label>
 				</div>
-				<select class="selectDropdown" th:name="pos">
-                  <option th:each="entry: ${conceptSearchBean.posMap}" th:value="${entry.key}" th:text="${entry.value}">
-                  </option>
-               </select>
-            </div>
-         </div>
-         <div class="error" id="searchAlert"></div>
+			</div>
+		</div>
+		<div class="error" id="searchAlert"></div>
          <div class="error" th:if="${show_error_alert == true}" th:text="${error_alert_msg}"></div>
          <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit" th:onclick="'showFormProcessing()'" th:onsubmit="'hideFormProcessing()'">
          Search
-         <i class="fa fa-search" aria-hidden="true"></i>
+         <i class="fa fa-search" aria-hidden="true"></i> 
          </button>
          <div class="row" style="margin-top: 15px;">
             <div class="col-sm-12">
@@ -434,4 +526,68 @@
       <div sec:authorize="!isAuthenticated()" th:insert="layouts/modals/signin :: signin"></div>
       <div th:insert="layouts/modals/deleteconcept :: deleteConcept"></div>
    </body>
+	<style>
+	.dropdown {
+		position: relative;
+		font-size: 14px;
+		color: #333;
+	}
+	
+	.dropdown-list {
+		padding: 12px;
+		background: #fff;
+		position: absolute;
+		top: 30px;
+		left: 2px;
+		right: 2px;
+		box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .15);
+		transform-origin: 50% 0;
+		transform: scale(1, 0);
+		transition: transform .15s ease-in-out .15s;
+		max-height: 66vh;
+		overflow-y: scroll;
+	}
+	
+	.dropdown-option {
+		display: block;
+		padding: 8px 12px;
+		opacity: 0;
+		transition: opacity .15s ease-in-out;
+	}
+	
+	.dropdown-label {
+		display: block;
+		height: 30px;
+		background: #fff;
+		border: 1px solid #ccc;
+		padding: 6px 12px;
+		line-height: 1;
+		cursor: pointer;
+	}
+	
+	:before {
+		content: '▼';
+		float: right;
+	}
+	
+	.dropdown-list {
+		transform: scale(1, 1);
+		transition-delay: 0s;
+	}
+	
+	.dropdown-option {
+		opacity: 1;
+		transition-delay: .2s;
+	}
+	
+	.dropdown-label:before {
+		content: '▲';
+	}
+	
+	[type="checkbox"] {
+		position: relative;
+		top: -1px;
+		margin-right: 4px;
+	}
+	</style>
 </html>
