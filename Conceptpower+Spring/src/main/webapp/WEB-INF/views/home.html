@@ -10,14 +10,14 @@
          //Function to get required data for pagination
          $(document).on('click', '#paginationTag', function(e) {
              var paginateData = $(this).data();
-             paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, paginateData.numrecords)
+             paginate(paginateData.page, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, paginateData.numrecords, paginateData.searchondescription);
          });
          
          
          //Function to get required data for sorting
          $(document).on('click', '.sortTag', function(e) {
              var sortData = $(this).data();
-             paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos, sortData.numrecords)
+             paginate(sortData.page, sortData.sortdir, sortData.sortcolumn, sortData.searchword, sortData.searchpos, sortData.numrecords, sortData.searchondescription)
          });
          
          function finalizeMerge() {
@@ -83,7 +83,7 @@
                  $("#mergeConcept").show();
                  $("#prepareMergeConcept").hide();
              });
-             $(':checkbox').change(function(e) {
+             $('.conceptMergeCheckbox').on('change', function(e) {
                  if (this.checked) {
                      mergeConcepts($(this).val())
                  } else {
@@ -193,14 +193,15 @@
          }
          
          //Function to handle pagination and sort
-         function paginate(page, sortDir, sortColumn, word, pos, numRecords) {
+         function paginate(page, sortDir, sortColumn, word, pos, numRecords, searchOnDescription) {
              var conceptIdsToMerge = $('#conceptIdsToMerge').val().replace("\"", "");
          
              if (conceptIdsToMerge) {
                  window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords 
-               		  +'&conceptIdsToMerge=' + conceptIdsToMerge;
+               		  +'&conceptIdsToMerge=' + conceptIdsToMerge + '&searchOnDescription=' +searchOnDescription;
              } else {
-                 window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords;
+                 window.location = 'conceptsearch?page=' + page + '&sortDir=' + sortDir + '&sortColumn=' + sortColumn + '&word=' + word + '&pos=' + pos + '&numberOfRecordsPerPage=' + numRecords
+                 + '&searchOnDescription='+searchOnDescription;
              }
          }
          
@@ -250,128 +251,37 @@
          
          $(document).on("change", "#numRecordsPerPage", function(e) {
              var paginateData = $(this).data();
-             paginate(1, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, e.target.value)
+             paginate(1, paginateData.sortdir, paginateData.sortcolumn, paginateData.searchword, paginateData.searchpos, e.target.value, paginateData.searchondescription)
          });
-         
-         (function($) {
-        	  var CheckboxDropdown = function(el) {
-        	    var _this = this;
-        	    this.isOpen = false;
-        	    this.areAllChecked = false;
-        	    this.$el = $(el);
-        	    this.$label = this.$el.find('.dropdown-label');
-        	    this.$checkAll = this.$el.find('[data-toggle="check-all"]').first();
-        	    this.$inputs = this.$el.find('[type="checkbox"]');
-        	    
-        	    this.onCheckBox();
-        	    
-        	    this.$label.on('click', function(e) {
-        	      e.preventDefault();
-        	      _this.toggleOpen();
-        	    });
-        	    
-        	    this.$checkAll.on('click', function(e) {
-        	      e.preventDefault();
-        	      _this.onCheckAll();
-        	    });
-        	    
-        	    this.$inputs.on('change', function(e) {
-        	      _this.onCheckBox();
-        	    });
-        	  };
-        	  
-        	  CheckboxDropdown.prototype.onCheckBox = function() {
-        	    this.updateStatus();
-        	  };
-        	  
-        	  CheckboxDropdown.prototype.updateStatus = function() {
-        	    var checked = this.$el.find(':checked');
-        	    
-        	    this.areAllChecked = false;
-        	    this.$checkAll.html('Check All');
-        	    
-        	    if(checked.length <= 0) {
-        	      this.$label.html('Select Options');
-        	    }
-        	    else if(checked.length === 1) {
-        	      this.$label.html(checked.parent('label').text());
-        	    }
-        	    else if(checked.length === this.$inputs.length) {
-        	      this.$label.html('All Selected');
-        	      this.areAllChecked = true;
-        	      this.$checkAll.html('Uncheck All');
-        	    }
-        	    else {
-        	      this.$label.html(checked.length + ' Selected');
-        	    }
-        	  };
-        	  
-        	  CheckboxDropdown.prototype.onCheckAll = function(checkAll) {
-        	    if(!this.areAllChecked || checkAll) {
-        	      this.areAllChecked = true;
-        	      this.$checkAll.html('Uncheck All');
-        	      this.$inputs.prop('checked', true);
-        	    }
-        	    else {
-        	      this.areAllChecked = false;
-        	      this.$checkAll.html('Check All');
-        	      this.$inputs.prop('checked', false);
-        	    }
-        	    
-        	    this.updateStatus();
-        	  };
-        	  
-        	  CheckboxDropdown.prototype.toggleOpen = function(forceOpen) {
-        	    var _this = this;
-        	    
-        	    if(!this.isOpen || forceOpen) {
-        	       this.isOpen = true;
-        	       this.$el.addClass('on');
-        	      $(document).on('click', function(e) {
-        	        if(!$(e.target).closest('[data-control]').length) {
-        	         _this.toggleOpen();
-        	        }
-        	      });
-        	    }
-        	    else {
-        	      this.isOpen = false;
-        	      this.$el.removeClass('on');
-        	      $(document).off('click');
-        	    }
-        	  };
-        	  
-        	  var checkboxesDropdowns = document.querySelectorAll('[data-control="checkbox-dropdown"]');
-        	  for(var i = 0, length = checkboxesDropdowns.length; i < length; i++) {
-        	    new CheckboxDropdown(checkboxesDropdowns[i]);
-        	  }
-        	})(jQuery);
       </script>
    </head>
    <body class = "body" layout:fragment="content">
       <form th:action="@{/home/conceptsearch}" th:object="${conceptSearchBean}" method="get" class="searchSection">
          <h1>Welcome to Conceptpower</h1>
-		<div class="input-group input-group-lg">
-			<input type="text" class="form-control" id="searchInput" name="word"
-				placeholder="Type in noun, verb, adjective, adverb...."
-				aria-label="Text input with dropdown button">
-			<div class='custom-dropdown' style="margin-left: 10px"
-				data-control="checkbox-dropdown">
-				<label class="selectDropdown">Select</label>
-				<div class="selectDropdown">
-					<a href="#" data-toggle="check-all">Check All</a>
-					<label
-						th:each="pos : ${conceptSearchBean.posMap}" class="dropdown-option">
-							<input type="checkbox" th:name="posItem" th:value="${pos.key}">
-							<span th:text="${pos.value}"></span>
-					</label>
-				</div>
+         <div class="input-group input-group-lg">
+            <input type="text" class="form-control" id="searchInput" name="word" placeholder="Type in noun, verb, adjective, adverb...." aria-label="Text input with dropdown button">
+			<div class='custom-dropdown' style="margin-left: 10px">
+				<select class="selectDropdown" multiple th:name="*{posList}">
+					<option th:each="entry: ${conceptSearchBean.posMap}"
+						th:value="${entry.key}" th:text="${entry.value}"></option>
+				</select>
+				<select class="selectDropdown" multiple th:name="*{conceptLists}">
+					<option th:each="conceptList: ${conceptLists}"
+						th:value="${conceptList.name}" th:text="${conceptList.name}">
+					</option>
+				</select>
 			</div>
 		</div>
-		<div class="error" id="searchAlert"></div>
+         <label style="margin-top: 5px;"class="form-check-label">
+ 			 <input th:if = "${conceptSearchBean.searchOnDescription == true}" type="checkbox" name="searchOnDescription" title='Search on description' checked/>
+ 			 <input th:if = "${conceptSearchBean.searchOnDescription != true}" type="checkbox" name="searchOnDescription" title='Search on description' />
+ 			 Search on description
+         </label>
+         <div class="error" id="searchAlert"></div>
          <div class="error" th:if="${show_error_alert == true}" th:text="${error_alert_msg}"></div>
          <button class="btn btn-outline-success my-2 my-sm-0 signInBtn" id="searchBtn" type="submit" th:onclick="'showFormProcessing()'" th:onsubmit="'hideFormProcessing()'">
          Search
-         <i class="fa fa-search" aria-hidden="true"></i> 
+         <i class="fa fa-search" aria-hidden="true"></i>
          </button>
          <div class="row" style="margin-top: 15px;">
             <div class="col-sm-12">
@@ -401,7 +311,7 @@
                <label for="dropdown">Show</label>
                <div class='custom-dropdown' style="margin:0px 5px 0px 5px;">
                   <select class="selectDropdown" style="padding:0 2.5em 0 .3em;" id="numRecordsPerPage" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}">
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}">
                      <option th:value="5" th:text="5"   th:selected="${numRecords == 5}"></option>
                      <option th:value="10" th:text="10" th:selected="${numRecords == 10}"></option>
                      <option th:value="20" th:text="20" th:selected="${numRecords == 20}"></option>
@@ -417,43 +327,50 @@
                   <th scope="col" sec:authorize="isAuthenticated()" th:data-name='edit' style="width: 2%;"></th>
                   <th scope="col" sec:authorize="isAuthenticated()" th:data-name='merge'style="width: 2%;"></th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="word" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" th:data-numRecords="${numRecords}" class="sortTag" style="width: 10%;">Term
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page }" th:data-numRecords="${numRecords}" 
+                     th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" class="sortTag" style="width: 10%;">Term
                      <i th:if="${sortColumn == 'word' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'word' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'word'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="id" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 15%;">Id
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" 
+                     th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" class="sortTag" style="width: 15%;">Id
                      <i th:if="${sortColumn == 'id' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'id' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'id'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="wordnetid" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 15%;">WordNet ID
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}"
+                      class="sortTag" style="width: 15%;">WordNet ID
                      <i th:if="${sortColumn == 'wordnetid' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'wordnetid' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'wordnetid'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="pos" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 6%;">POS
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" 
+                     th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" class="sortTag" style="width: 6%;">POS
                      <i th:if="${sortColumn == 'pos' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'pos' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'pos'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="listname" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 10%;">Concept List
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" 
+                     th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" class="sortTag" style="width: 10%;">Concept List
                      <i th:if="${sortColumn == 'listName' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'liestName' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'listName'}" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="description" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 35%;">Description
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" 
+                     th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" class="sortTag" style="width: 35%;">Description
                      <i th:if="${sortColumn == 'description' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'description' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'description' }" class="fa fa-sort"></i>
                   </th>
                   <th scope="col" th:data-sortdir="${sortDirection}" th:data-sortcolumn="types" 
-                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" class="sortTag" style="width: 5%;">Type
+                     th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page}" th:data-numRecords="${numRecords}" 
+                     th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" class="sortTag" style="width: 5%;">Type
                      <i th:if="${sortColumn == 'types' && sortDir == '1'}" class="fa fa-sort-desc"></i>
                      <i th:if="${sortColumn == 'types' && sortDir == '-1'}" class="fa fa-sort-asc"></i>
                      <i th:unless="${sortColumn == 'types'}" class="fa fa-sort"></i>
@@ -481,7 +398,7 @@
                      <i class="fa fa-trash-o" th:if="${!#strings.containsIgnoreCase(concept.entry.id, 'WID')}" aria-hidden="true"  id="openDeleteModal" th:data-conceptId="${concept.entry.id}" th:data-searchword="${conceptSearchBean.word}" data-toggle="modal" data-target="#deleteConcept"></i>
                   </td>
                   <td sec:authorize="isAuthenticated()">
-                     <input type="checkbox"  id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
+                     <input type="checkbox" class="conceptMergeCheckbox" id="conceptMergeCheckbox" name="conceptMergeCheckbox" th:value="${concept.entry.id}" />
                   </td>
                   <td data-toggle="modal" role="button" data-target="#conceptDetail" id="conceptDetails" th:data-conceptid="${concept.entry.id}" th:text="${concept.entry.word}" style="color: #A34D63; cursor: pointer;"></td>
                   <td th:text="${concept.entry.id}"></td>
@@ -490,7 +407,6 @@
                   <td th:text="${concept.entry.conceptList}"></td>
                   <td th:text="${concept.description}"></td>
                   <td th:text="${concept.type != null ? concept.type.typeName : ''}"></td>
-                 <!--  <td><i class="fa fa-comment" aria-hidden="true"></i></td>  -->
                </tr>
             </tbody>
          </table>
@@ -500,24 +416,24 @@
          <ul class="pagination">
             <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" th:data-numRecords="${numRecords}" id="paginationTag">Previous</span>
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page - 1}" th:data-numRecords="${numRecords}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" id="paginationTag">Previous</span>
             </li>
             <li class="page-item" th:classappend="${page == 1} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}"
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="1" th:data-numRecords="${numRecords}" id="paginationTag">First</span>
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="1" th:data-numRecords="${numRecords}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" id="paginationTag">First</span>
             </li>
             <li th:each="i: ${#numbers.sequence(1, count)}" th:class="page-item" th:classappend="${page == i} ? active: '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${i}" th:data-numRecords="${numRecords}" id="paginationTag" th:text="${i}">
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${i}" th:data-numRecords="${numRecords}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" id="paginationTag" th:text="${i}">
                <span class="sr-only">(current)</span></span>
             </li>
             <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${count}" th:data-numRecords="${numRecords}" id="paginationTag">Last</span>
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${count}" th:data-numRecords="${numRecords}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" id="paginationTag">Last</span>
             </li>
             <li class="page-item" th:classappend="${page == count} ? disabled : '' ">
                <span class="page-link" th:data-sortdir="${sortDir}" th:data-sortColumn="${sortColumn}" 
-                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" th:data-numRecords="${numRecords}" id="paginationTag">Next</span>
+                  th:data-searchword="${conceptSearchBean.word}" th:data-searchpos="${conceptSearchBean.pos}" th:data-page="${page + 1}" th:data-numRecords="${numRecords}" th:data-searchOnDescription="${conceptSearchBean.searchOnDescription}" id="paginationTag">Next</span>
             </li>
          </ul>
       </div>
@@ -526,68 +442,4 @@
       <div sec:authorize="!isAuthenticated()" th:insert="layouts/modals/signin :: signin"></div>
       <div th:insert="layouts/modals/deleteconcept :: deleteConcept"></div>
    </body>
-	<style>
-	.dropdown {
-		position: relative;
-		font-size: 14px;
-		color: #333;
-	}
-	
-	.dropdown-list {
-		padding: 12px;
-		background: #fff;
-		position: absolute;
-		top: 30px;
-		left: 2px;
-		right: 2px;
-		box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .15);
-		transform-origin: 50% 0;
-		transform: scale(1, 0);
-		transition: transform .15s ease-in-out .15s;
-		max-height: 66vh;
-		overflow-y: scroll;
-	}
-	
-	.dropdown-option {
-		display: block;
-		padding: 8px 12px;
-		opacity: 0;
-		transition: opacity .15s ease-in-out;
-	}
-	
-	.dropdown-label {
-		display: block;
-		height: 30px;
-		background: #fff;
-		border: 1px solid #ccc;
-		padding: 6px 12px;
-		line-height: 1;
-		cursor: pointer;
-	}
-	
-	:before {
-		content: '▼';
-		float: right;
-	}
-	
-	.dropdown-list {
-		transform: scale(1, 1);
-		transition-delay: 0s;
-	}
-	
-	.dropdown-option {
-		opacity: 1;
-		transition-delay: .2s;
-	}
-	
-	.dropdown-label:before {
-		content: '▲';
-	}
-	
-	[type="checkbox"] {
-		position: relative;
-		top: -1px;
-		margin-right: 4px;
-	}
-	</style>
 </html>
